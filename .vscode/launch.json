@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Backend Only",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/server.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Frontend Only",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/frontend",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "dev"],
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "Local:.*(http://localhost:\\d+)",
+                "uriFormat": "%s"
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "🚀 一键启动 3D 可视化客户端",
+            "configurations": ["Backend Only", "Frontend Only"],
+            "stopAll": true
+        }
+    ]
+}
