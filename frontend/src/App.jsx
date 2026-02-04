@@ -434,6 +434,7 @@ export default function App() {
   const [isAnimationPlaying, setIsAnimationPlaying] = useState(true);
   const [showStructurePanel, setShowStructurePanel] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [helpMode, setHelpMode] = useState('pro'); // 'simple' | 'pro'
   const [generating, setGenerating] = useState(false);
   const [layerNeuronState, setLayerNeuronState] = useState(null);
   const [loadingNeurons, setLoadingNeurons] = useState(false);
@@ -1429,194 +1430,278 @@ export default function App() {
                  }}
               >
                   <div style={{ padding: '16px', borderBottom: '1px solid #333', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', margin: 0 }}>
-                          {systemType === 'snn' ? '脉冲神经网络 (SNN) 算法原理' : 'Transformer 模型架构说明'}
-                      </h2>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                          <h2 style={{ fontSize: '16px', fontWeight: 'bold', color: '#fff', margin: 0 }}>
+                              {systemType === 'snn' ? 'SNN 原理说明' : '模型架构说明'}
+                          </h2>
+                          <div style={{ display: 'flex', background: '#000', borderRadius: '6px', padding: '2px', border: '1px solid #333' }}>
+                              <button 
+                                onClick={() => setHelpMode('pro')}
+                                style={{ 
+                                    padding: '4px 12px', borderRadius: '4px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold',
+                                    background: helpMode === 'pro' ? '#764ba2' : 'transparent', color: helpMode === 'pro' ? '#fff' : '#888', transition: 'all 0.2s'
+                                }}
+                              >
+                                🟣 专业版 (Pro)
+                              </button>
+                              <button 
+                                onClick={() => setHelpMode('simple')}
+                                style={{ 
+                                    padding: '4px 12px', borderRadius: '4px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold',
+                                    background: helpMode === 'simple' ? '#4488ff' : 'transparent', color: helpMode === 'simple' ? '#fff' : '#888', transition: 'all 0.2s'
+                                }}
+                              >
+                                🟢 通俗版 (General)
+                              </button>
+                          </div>
+                      </div>
                       <button onClick={() => setShowHelp(false)} style={{ background: 'transparent', border: 'none', color: '#888', cursor: 'pointer' }}>
                           <X size={20} />
                       </button>
                   </div>
                   <div style={{ padding: '20px', overflowY: 'auto', lineHeight: '1.6', fontSize: '13px', color: '#ddd' }}>
-                       {systemType === 'snn' ? (
-                          <>
-                             <div style={{ color: '#4ecdc4', fontWeight: 'bold', borderBottom: '1px solid rgba(78, 205, 196, 0.2)', paddingBottom: '4px', marginBottom: '10px' }}>[A] 专业原理解析 (Professional)</div>
-                             <h3 style={{fontSize: '14px', marginTop: 0, color: '#fff'}}>1. 核心模型：Leaky Integrate-and-Fire (LIF)</h3>
-                             <p>
-                                 SNN 模拟了生物神经元的电生理特性。每个神经元维护一个<strong>膜电位 (Membrane Potential, v)</strong>，遵循以下差分方程：
-                             </p>
-                             <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
-                                 v[t] = v[t-1] × (1 - dt/τ) + Σ(I_ext + Σ w_ij ⋅ x_j)
-                             </div>
-                             <ul style={{ paddingLeft: '20px', color: '#aaa', fontSize: '12px' }}>
-                                 <li><strong>积分与泄漏：</strong> 电位随输入增加，随时间常数 τ 衰减。</li>
-                                 <li><strong>发放与重置：</strong> 超过阈值时发放脉冲 (Spike) 并重置电位。</li>
-                                 <li><strong>STDP 学习：</strong> 时间相关的突触可塑性，根据脉冲因果调整权重。</li>
-                             </ul>
+                       {helpMode === 'simple' ? (
+                           // ================== SIMPLIFIED VIEW ==================
+                           systemType === 'snn' ? (
+                              <>
+                                 <h3 style={{fontSize: '18px', marginTop: 0, color: '#4ecdc4'}}>就像大脑在“跳舞”</h3>
+                                 <p>脉冲神经网络 (SNN) 模仿了真实生物大脑的工作方式。想象一下：</p>
+                                 <ul style={{ paddingLeft: '20px', color: '#ddd', fontSize: '13px', lineHeight: '1.8' }}>
+                                     <li><strong>蓄水杯 (神经元)：</strong> 每个神经元像一个小杯子。外界的信息像水一样滴进去。</li>
+                                     <li><strong>溢出 (发射脉冲)：</strong> 当水装满时，杯子就会“哗”地一下倒空（发射电信号），并通知下游的杯子。</li>
+                                     <li><strong>遗忘 (泄漏)：</strong> 如果水滴得太慢，杯底的小洞会让水慢慢漏光。这意味着只有<strong>强烈且频繁</strong>的信号才能被记住。</li>
+                                     <li><strong>默契 (STDP 学习)：</strong> 如果两个神经元经常先后“倒水”，它们之间的管道就会变粗（连接变强）。这就是“熟能生巧”的原理。</li>
+                                 </ul>
+                              </>
+                           ) : (
+                              <>
+                                 {(structureTab === 'agi' || structureTab === 'fiber') ? (
+                                    <>
+                                        <h3 style={{fontSize: '18px', marginTop: 0, color: '#00d2ff'}}>看见思维的“形状”</h3>
+                                        <p>我们通常觉得 AI 是个黑盒，但这个 3D 模型试图把 AI 思考的过程画出来。</p>
+                                        
+                                        <div style={{ background: 'rgba(0, 210, 255, 0.1)', padding: '15px', borderRadius: '8px', border: '1px solid rgba(0, 210, 255, 0.3)', marginBottom: '20px' }}>
+                                            <h4 style={{ margin: '0 0 10px 0', color: '#fff' }}>🔵 青色管道 (思维滑梯)</h4>
+                                            <p style={{ margin: 0, fontSize: '13px', color: '#ccc' }}>
+                                                这就是**思维流动的路径**。当你输入一句话，它就像坐滑梯一样，沿着这个管道一路滑下去，最后变成生成的回复。管道弯弯曲曲，代表 AI 在不断调整和加工这句话的意思。
+                                            </p>
+                                        </div>
 
-                             <div style={{ color: '#ff9f43', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 159, 67, 0.2)', paddingBottom: '4px', marginTop: '20px', marginBottom: '10px' }}>[B] 直观理解 (Simplified)</div>
-                             <h3 style={{fontSize: '14px', marginTop: 0, color: '#fff'}}>模拟大脑的运作</h3>
-                             <p>
-                                 脉冲神经网络就像一群在跳舞的精灵：
-                             </p>
-                             <ul style={{ paddingLeft: '20px', color: '#aaa', fontSize: '12px' }}>
-                                 <li><strong>蓄能：</strong> 精灵们像拿小杯子接水，接到一定程度就会大喊一声（发信号）。</li>
-                                 <li><strong>遗忘：</strong> 如果水接得太慢，杯子底部的洞会让水流掉（漏水机制）。</li>
-                                 <li><strong>同步：</strong> 当两个精灵经常一起喊叫，它们就会变得更有默契（学习过程）。</li>
-                             </ul>
-                          </>
-                      ) : (
-                          <>
-                             <div style={{ color: '#4ecdc4', fontWeight: 'bold', borderBottom: '1px solid rgba(78, 205, 196, 0.2)', paddingBottom: '4px', marginBottom: '10px' }}>[A] 当前分析算法解析 (Algorithm: {structureTab.toUpperCase()})</div>
-                             
-                             {structureTab === 'circuit' && (
-                                 <div>
-                                     <h3 style={{fontSize: '14px', marginTop: 0, color: '#fff'}}>Edge Attribution Patching (EAP)</h3>
-                                     <p>一种快速定位对特定任务有贡献的电路（子网络）的方法。</p>
-                                     <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
-                                         Attribution(e) = ∇_e Loss * Activation(e)
-                                     </div>
-                                     <ul style={{ paddingLeft: '20px', color: '#aaa', fontSize: '12px' }}>
-                                         <li><strong>原理：</strong> 线性近似。通过梯度和激活值的逐元素乘积，估算每条边被切断后对损失函数的影响。</li>
-                                         <li><strong>计算：</strong> 前向传播一次获取激活，反向传播一次获取梯度，无需多次运行模型。</li>
-                                     </ul>
-                                     
-                                     <div style={{ color: '#ff9f43', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 159, 67, 0.2)', paddingBottom: '4px', marginTop: '15px', marginBottom: '10px' }}>[C] 3D 可视化映射 (Visual Mapping)</div>
-                                     <ul style={{ paddingLeft: '20px', color: '#ddd', fontSize: '12px' }}>
-                                         <li style={{marginBottom: '6px'}}>
-                                             <strong>节点 (Spheres):</strong> 模型组件（注意力头或MLP神经元）。大小代表该组件的重要性或激活强度。
-                                         </li>
-                                         <li style={{marginBottom: '6px'}}>
-                                             <strong>连线 (Lines):</strong> 因果归因路径。
-                                             <br/><span style={{fontSize:'10px', color:'#888'}}>· 红色 = 正向贡献 (Excitation)</span>
-                                             <br/><span style={{fontSize:'10px', color:'#888'}}>· 蓝色 = 负向抑制 (Inhibition)</span>
-                                             <br/><span style={{fontSize:'10px', color:'#888'}}>· 粗细 = 归因值大小 (Gradient * Activation)</span>
-                                         </li>
-                                     </ul>
+                                        <div style={{ background: 'rgba(255, 68, 68, 0.1)', padding: '15px', borderRadius: '8px', border: '1px solid rgba(255, 68, 68, 0.3)', marginBottom: '20px' }}>
+                                            <h4 style={{ margin: '0 0 10px 0', color: '#fff' }}>🔴 红色光环 (含义的丰富度)</h4>
+                                            <p style={{ margin: 0, fontSize: '13px', color: '#ccc' }}>
+                                                你可以把它看作**“弦外之音”**。
+                                                <br/>
+                                                有些词很简单（如“桌子”），光环就很小。
+                                                <br/>
+                                                有些词很复杂（如“苹果”可能指水果，也可能指公司），光环就会很大、很红。这代表 AI 在这里犹豫了一下，考虑了多种可能性。
+                                            </p>
+                                        </div>
+
+                                        <div style={{ background: 'rgba(68, 136, 255, 0.1)', padding: '15px', borderRadius: '8px', border: '1px solid rgba(68, 136, 255, 0.3)' }}>
+                                            <h4 style={{ margin: '0 0 10px 0', color: '#fff' }}>🟦 蓝色方块 (语法骨架)</h4>
+                                            <p style={{ margin: 0, fontSize: '13px', color: '#ccc' }}>
+                                                这是句子的**骨架**。无论你说什么内容，都需要主语、谓语、宾语这些结构来支撑。蓝色方块确保了 AI 说的人话是通顺的，合乎语法的。
+                                            </p>
+                                        </div>
+                                    </>
+                                 ) : (
+                                    <>
+                                        <h3 style={{fontSize: '18px', marginTop: 0, color: '#fff'}}>Transformer 就像一个超级工厂</h3>
+                                        <p>想象你在读一本书，你的大脑在做两件事：</p>
+                                        <ul style={{ paddingLeft: '20px', color: '#ddd', fontSize: '13px', lineHeight: '1.8' }}>
+                                            <li style={{marginBottom:'10px'}}>
+                                                <strong>👀 注意力机制 (Attention)：</strong> 
+                                                <br/>
+                                                当你读到“它”这个字时，你会回头看前面的句子，找找“它”指代的是“小猫”还是“桌子”。
+                                                <br/>
+                                                <span style={{color:'#00d2ff'}}>在界面中：这就好比那些连接线，显示了 AI 在关注哪些词。</span>
+                                            </li>
+                                            <li>
+                                                <strong>🧠 记忆网络 (MLP)：</strong>
+                                                <br/>
+                                                这就像个巨大的知识库。读到“巴黎”，你会立刻联想到“法国”、“埃菲尔铁塔”。
+                                                <br/>
+                                                <span style={{color:'#5ec962'}}>在界面中：这就好比每一层里面密密麻麻的神经元被激活了。</span>
+                                            </li>
+                                        </ul>
+                                    </>
+                                 )}
+                              </>
+                           )
+
+                       ) : (
+                           // ================== PROFESSIONAL VIEW ==================
+                           systemType === 'snn' ? (
+                              <>
+                                 <div style={{ color: '#4ecdc4', fontWeight: 'bold', borderBottom: '1px solid rgba(78, 205, 196, 0.2)', paddingBottom: '4px', marginBottom: '10px' }}>[A] 专业原理解析 (Professional)</div>
+                                 <h3 style={{fontSize: '14px', marginTop: 0, color: '#fff'}}>1. 核心模型：Leaky Integrate-and-Fire (LIF)</h3>
+                                 <p>
+                                     SNN 模拟了生物神经元的电生理特性。每个神经元维护一个<strong>膜电位 (Membrane Potential, v)</strong>，遵循以下差分方程：
+                                 </p>
+                                 <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
+                                     v[t] = v[t-1] × (1 - dt/τ) + Σ(I_ext + Σ w_ij ⋅ x_j)
                                  </div>
-                             )}
-
-                             {structureTab === 'features' && (
-                                 <div>
-                                     <h3 style={{fontSize: '14px', marginTop: 0, color: '#fff'}}>Sparse Autoencoders (SAE)</h3>
-                                     <p>将稠密的神经网络激活分解为稀疏的、可解释的“特征”。</p>
-                                     <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
-                                         Min ||x - W_dec(ReLU(W_enc(x) + b))||² + λ||f||₁
+                                 <ul style={{ paddingLeft: '20px', color: '#aaa', fontSize: '12px' }}>
+                                     <li><strong>积分与泄漏：</strong> 电位随输入增加，随时间常数 τ 衰减。</li>
+                                     <li><strong>发放与重置：</strong> 超过阈值时发放脉冲 (Spike) 并重置电位。</li>
+                                     <li><strong>STDP 学习：</strong> 时间相关的突触可塑性，根据脉冲因果调整权重。</li>
+                                 </ul>
+                              </>
+                           ) : (
+                              <>
+                                 <div style={{ color: '#4ecdc4', fontWeight: 'bold', borderBottom: '1px solid rgba(78, 205, 196, 0.2)', paddingBottom: '4px', marginBottom: '10px' }}>[A] 当前分析算法解析 (Algorithm: {structureTab.toUpperCase()})</div>
+                                 
+                                 {structureTab === 'circuit' && (
+                                     <div>
+                                         <h3 style={{fontSize: '14px', marginTop: 0, color: '#fff'}}>Edge Attribution Patching (EAP)</h3>
+                                         <p>一种快速定位对特定任务有贡献的电路（子网络）的方法。</p>
+                                         <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
+                                             Attribution(e) = ∇_e Loss * Activation(e)
+                                         </div>
+                                         <ul style={{ paddingLeft: '20px', color: '#aaa', fontSize: '12px' }}>
+                                             <li><strong>原理：</strong> 线性近似。通过梯度和激活值的逐元素乘积，估算每条边被切断后对损失函数的影响。</li>
+                                             <li><strong>计算：</strong> 前向传播一次获取激活，反向传播一次获取梯度，无需多次运行模型。</li>
+                                         </ul>
+                                         
+                                         <div style={{ color: '#ff9f43', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 159, 67, 0.2)', paddingBottom: '4px', marginTop: '15px', marginBottom: '10px' }}>[C] 3D 可视化映射 (Visual Mapping)</div>
+                                         <ul style={{ paddingLeft: '20px', color: '#ddd', fontSize: '12px' }}>
+                                             <li style={{marginBottom: '6px'}}>
+                                                 <strong>节点 (Spheres):</strong> 模型组件（注意力头或MLP神经元）。大小代表该组件的重要性或激活强度。
+                                             </li>
+                                             <li style={{marginBottom: '6px'}}>
+                                                 <strong>连线 (Lines):</strong> 因果归因路径。
+                                                 <br/><span style={{fontSize:'10px', color:'#888'}}>· 红色 = 正向贡献 (Excitation)</span>
+                                                 <br/><span style={{fontSize:'10px', color:'#888'}}>· 蓝色 = 负向抑制 (Inhibition)</span>
+                                                 <br/><span style={{fontSize:'10px', color:'#888'}}>· 粗细 = 归因值大小 (Gradient * Activation)</span>
+                                             </li>
+                                         </ul>
                                      </div>
-                                     <ul style={{ paddingLeft: '20px', color: '#aaa', fontSize: '12px' }}>
-                                         <li><strong>编码器：</strong> 将激活 x 映射到高维稀疏特征 f。</li>
-                                         <li><strong>解码器：</strong> 尝试从 f 重构原始激活 x。</li>
-                                         <li><strong>L1 正则化：</strong> 强制绝大多数特征 f 为 0，确保稀疏性（可解释性的关键）。</li>
-                                     </ul>
-                                     
-                                     <div style={{ color: '#ff9f43', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 159, 67, 0.2)', paddingBottom: '4px', marginTop: '15px', marginBottom: '10px' }}>[C] 3D 可视化映射 (Visual Mapping)</div>
-                                     <ul style={{ paddingLeft: '20px', color: '#ddd', fontSize: '12px' }}>
-                                         <li style={{marginBottom: '6px'}}>
-                                             <strong>特征点 (Points/Voxels):</strong> 活跃的稀疏特征。
-                                         </li>
-                                         <li style={{marginBottom: '6px'}}>
-                                             <strong>坐标 (Position):</strong> 如果使用了降维（如 t-SNE），代表特征间的语义相似度。
-                                         </li>
-                                         <li style={{marginBottom: '6px'}}>
-                                             <strong>颜色/大小:</strong> 代表特征的激活强度 (Activation Magnitude)。更亮或更大的点表示该特征对当前输入的响应更强烈。
-                                         </li>
-                                     </ul>
+                                 )}
+
+                                 {structureTab === 'features' && (
+                                     <div>
+                                         <h3 style={{fontSize: '14px', marginTop: 0, color: '#fff'}}>Sparse Autoencoders (SAE)</h3>
+                                         <p>将稠密的神经网络激活分解为稀疏的、可解释的“特征”。</p>
+                                         <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
+                                             Min ||x - W_dec(ReLU(W_enc(x) + b))||² + λ||f||₁
+                                         </div>
+                                         <ul style={{ paddingLeft: '20px', color: '#aaa', fontSize: '12px' }}>
+                                             <li><strong>编码器：</strong> 将激活 x 映射到高维稀疏特征 f。</li>
+                                             <li><strong>解码器：</strong> 尝试从 f 重构原始激活 x。</li>
+                                             <li><strong>L1 正则化：</strong> 强制绝大多数特征 f 为 0，确保稀疏性（可解释性的关键）。</li>
+                                         </ul>
+                                         
+                                         <div style={{ color: '#ff9f43', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 159, 67, 0.2)', paddingBottom: '4px', marginTop: '15px', marginBottom: '10px' }}>[C] 3D 可视化映射 (Visual Mapping)</div>
+                                         <ul style={{ paddingLeft: '20px', color: '#ddd', fontSize: '12px' }}>
+                                             <li style={{marginBottom: '6px'}}>
+                                                 <strong>特征点 (Points/Voxels):</strong> 活跃的稀疏特征。
+                                             </li>
+                                             <li style={{marginBottom: '6px'}}>
+                                                 <strong>坐标 (Position):</strong> 如果使用了降维（如 t-SNE），代表特征间的语义相似度。
+                                             </li>
+                                             <li style={{marginBottom: '6px'}}>
+                                                 <strong>颜色/大小:</strong> 代表特征的激活强度 (Activation Magnitude)。更亮或更大的点表示该特征对当前输入的响应更强烈。
+                                             </li>
+                                         </ul>
+                                     </div>
+                                 )}
+
+                                 {structureTab === 'manifold' && (
+                                     <div>
+                                         <h3 style={{fontSize: '14px', marginTop: 0, color: '#fff'}}>Intrinsic Dimensionality (ID)</h3>
+                                         <p>测量数据云在高维空间中的实际形状复杂度和有效自由度。</p>
+                                         <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
+                                             PR = (Σ λ_i)² / Σ (λ_i²)
+                                         </div>
+                                         <ul style={{ paddingLeft: '20px', color: '#aaa', fontSize: '12px' }}>
+                                             <li><strong>PCA：</strong> 主成分分析，通过协方差矩阵特征分解寻找主方向。</li>
+                                             <li><strong>参与率 (PR)：</strong> 数值越低，表示激活主要集中在少数几个方向上（流形坍缩/低维结构）。</li>
+                                         </ul>
+
+                                         <div style={{ color: '#ff9f43', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 159, 67, 0.2)', paddingBottom: '4px', marginTop: '15px', marginBottom: '10px' }}>[C] 3D 可视化映射 (Visual Mapping)</div>
+                                         <ul style={{ paddingLeft: '20px', color: '#ddd', fontSize: '12px' }}>
+                                             <li style={{marginBottom: '6px'}}>
+                                                 <strong>散点 (Scatter Points):</strong> 输入序列中的每个 Token 的激活向量。
+                                             </li>
+                                             <li style={{marginBottom: '6px'}}>
+                                                 <strong>空间轴 (XYZ Axes):</strong> 前三个主成分 (PC1, PC2, PC3)。这三个方向保留了数据方差最大的信息。
+                                             </li>
+                                             <li style={{marginBottom: '6px'}}>
+                                                 <strong>聚类 (Clusters):</strong> 空间中相邻的点往往代表语义或语法功能相似的 Token。
+                                             </li>
+                                         </ul>
+                                     </div>
+                                 )}
+
+                                 {(structureTab === 'agi' || structureTab === 'fiber') && (
+                                     <div>
+                                         <h3 style={{fontSize: '14px', marginTop: 0, color: '#fff'}}>Neural Fiber Bundle Reconstruction (NFB-RA)</h3>
+                                         <p>基于“AGI 统一场论”，逆向还原大模型内部的数学几何结构。</p>
+                                         
+                                         <h4 style={{fontSize: '13px', color: '#4ecdc4'}}>Phase 1: RSA 流形分离 (Manifold Extraction)</h4>
+                                         <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
+                                             Score = RSA(Syn) / (RSA(Sem) + ε)
+                                         </div>
+                                         <p style={{fontSize:'12px', color:'#aaa'}}>比较层对“同句法异义”和“同义异句法”的敏感度。高分层为底流形 M（逻辑），低分层为纤维 F（语义）。</p>
+
+                                         <h4 style={{fontSize: '13px', color: '#4ecdc4'}}>Phase 2: 纤维基底提取 (Fiber Basis)</h4>
+                                         <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
+                                             Basis = PCA(Perturb(Meaning))
+                                         </div>
+                                         <p style={{fontSize:'12px', color:'#aaa'}}>在语义层引入微扰，通过局部 PCA 提取出表达该概念的切空间基底向量 F_p。</p>
+
+                                         <h4 style={{fontSize: '13px', color: '#4ecdc4'}}>Phase 3: 联络动力学 (Connection Dynamics)</h4>
+                                         <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
+                                             ∇_X Y ≈ (v_B - v_A) / ||A-B||
+                                         </div>
+                                         <p style={{fontSize:'12px', color:'#aaa'}}>计算概念间的平行移动向量（Steering Vector），揭示模型如何在流形上进行推理。</p>
+
+                                         <div style={{ color: '#ff9f43', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 159, 67, 0.2)', paddingBottom: '4px', marginTop: '15px', marginBottom: '10px' }}>[C] 3D 可视化映射 (Visual Mapping: Fiber Stream)</div>
+                                         <ul style={{ paddingLeft: '20px', color: '#ddd', fontSize: '12px' }}>
+                                             <li style={{marginBottom: '6px'}}>
+                                                 <strong>流形管道 (Manifold Stream):</strong> 青色的半透明玻璃管道。代表模型计算过程的拓扑流形 $M$。管道的弯曲反映了信息处理的非线性变换。
+                                             </li>
+                                             <li style={{marginBottom: '6px'}}>
+                                                 <strong>纤维丛 (Fiber Bundles):</strong> 环绕管道的粒子环或方块。
+                                                 <br/><span style={{fontSize:'10px', color:'#888'}}>· 🟦 蓝色立方体 = 基础空间 (Base Space): 代表句法或逻辑功能单元。</span>
+                                                 <br/><span style={{fontSize:'10px', color:'#888'}}>· 🟥 红色粒子环 = 纤维空间 (Fiber Space): 代表该位置的语义丰富度或多义性 (Polysemy)。</span>
+                                             </li>
+                                             <li style={{marginBottom: '6px'}}>
+                                                 <strong>思维流 (Thought Flow):</strong> 沿管道流动的发光粒子，模拟 Transformer 残差流中的信息传递方向。
+                                             </li>
+                                             <li style={{marginBottom: '6px'}}>
+                                                 <strong>空间几何:</strong> 整个结构是高维几何的低维投影 (t-SNE/PCA)，保留了原有计算路径的拓扑特征。
+                                             </li>
+                                         </ul>
+                                     </div>
+                                 )}
+                                 
+                                 {structureTab === 'compositional' && (
+                                     <div>
+                                          <h3 style={{fontSize: '14px', marginTop: 0, color: '#fff'}}>Compositionality (OLS)</h3>
+                                          <p>验证简单的线性加和是否能表示复杂的组合概念。</p>
+                                          <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
+                                             v_composite ≈ α * v_A + β * v_B
+                                         </div>
+                                     </div>
+                                 )}
+                                 
+                                 <div style={{ color: '#ff9f43', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 159, 67, 0.2)', paddingBottom: '4px', marginTop: '20px', marginBottom: '10px' }}>[B] 通用架构 (General)</div>
+                                 <h3 style={{fontSize: '14px', marginTop: 0, color: '#fff'}}>Transformer 基础</h3>
+                                 <p>
+                                     核心计算由<strong>多头自注意力 (MHA)</strong> 和<strong>前馈网络 (MLP)</strong> 构成，信息通过<strong>残差流</strong>传递。
+                                 </p>
+                                 <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
+                                     x_{'{l+1}'} = x_{'{l}'} + Attention(x_{'{l}'}) + MLP(x_{'{l}'})
                                  </div>
-                             )}
-
-                             {structureTab === 'manifold' && (
-                                 <div>
-                                     <h3 style={{fontSize: '14px', marginTop: 0, color: '#fff'}}>Intrinsic Dimensionality (ID)</h3>
-                                     <p>测量数据云在高维空间中的实际形状复杂度和有效自由度。</p>
-                                     <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
-                                         PR = (Σ λ_i)² / Σ (λ_i²)
-                                     </div>
-                                     <ul style={{ paddingLeft: '20px', color: '#aaa', fontSize: '12px' }}>
-                                         <li><strong>PCA：</strong> 主成分分析，通过协方差矩阵特征分解寻找主方向。</li>
-                                         <li><strong>参与率 (PR)：</strong> 数值越低，表示激活主要集中在少数几个方向上（流形坍缩/低维结构）。</li>
-                                     </ul>
-
-                                     <div style={{ color: '#ff9f43', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 159, 67, 0.2)', paddingBottom: '4px', marginTop: '15px', marginBottom: '10px' }}>[C] 3D 可视化映射 (Visual Mapping)</div>
-                                     <ul style={{ paddingLeft: '20px', color: '#ddd', fontSize: '12px' }}>
-                                         <li style={{marginBottom: '6px'}}>
-                                             <strong>散点 (Scatter Points):</strong> 输入序列中的每个 Token 的激活向量。
-                                         </li>
-                                         <li style={{marginBottom: '6px'}}>
-                                             <strong>空间轴 (XYZ Axes):</strong> 前三个主成分 (PC1, PC2, PC3)。这三个方向保留了数据方差最大的信息。
-                                         </li>
-                                         <li style={{marginBottom: '6px'}}>
-                                             <strong>聚类 (Clusters):</strong> 空间中相邻的点往往代表语义或语法功能相似的 Token。
-                                         </li>
-                                     </ul>
-                                 </div>
-                             )}
-
-                             {structureTab === 'agi' && (
-                                 <div>
-                                     <h3 style={{fontSize: '14px', marginTop: 0, color: '#fff'}}>Neural Fiber Bundle Reconstruction (NFB-RA)</h3>
-                                     <p>基于“AGI 统一场论”，逆向还原大模型内部的数学几何结构。</p>
-                                     
-                                     <h4 style={{fontSize: '13px', color: '#4ecdc4'}}>Phase 1: RSA 流形分离 (Manifold Extraction)</h4>
-                                     <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
-                                         Score = RSA(Syn) / (RSA(Sem) + ε)
-                                     </div>
-                                     <p style={{fontSize:'12px', color:'#aaa'}}>比较层对“同句法异义”和“同义异句法”的敏感度。高分层为底流形 M（逻辑），低分层为纤维 F（语义）。</p>
-
-                                     <h4 style={{fontSize: '13px', color: '#4ecdc4'}}>Phase 2: 纤维基底提取 (Fiber Basis)</h4>
-                                     <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
-                                         Basis = PCA(Perturb(Meaning))
-                                     </div>
-                                     <p style={{fontSize:'12px', color:'#aaa'}}>在语义层引入微扰，通过局部 PCA 提取出表达该概念的切空间基底向量 F_p。</p>
-
-                                     <h4 style={{fontSize: '13px', color: '#4ecdc4'}}>Phase 3: 联络动力学 (Connection Dynamics)</h4>
-                                     <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
-                                         ∇_X Y ≈ (v_B - v_A) / ||A-B||
-                                     </div>
-                                     <p style={{fontSize:'12px', color:'#aaa'}}>计算概念间的平行移动向量（Steering Vector），揭示模型如何在流形上进行推理。</p>
-
-                                     <div style={{ color: '#ff9f43', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 159, 67, 0.2)', paddingBottom: '4px', marginTop: '15px', marginBottom: '10px' }}>[C] 3D 可视化映射 (Visual Mapping)</div>
-                                     <ul style={{ paddingLeft: '20px', color: '#ddd', fontSize: '12px' }}>
-                                         <li style={{marginBottom: '6px'}}>
-                                             <strong>玻璃矩阵 (Glass Matrix):</strong> 32个层级节点组成的 4x8 阵列。每个球体代表一个Transformer层。
-                                         </li>
-                                         <li style={{marginBottom: '6px'}}>
-                                             <strong>节点颜色 (Node Color):</strong>
-                                             <br/><span style={{fontSize:'10px', color:'#888'}}>· 红色/橙色发光 = 语义活跃层 (High Semantic Score)</span>
-                                             <br/><span style={{fontSize:'10px', color:'#888'}}>· 蓝色透明 = 句法/逻辑基础层 (Base Logic)</span>
-                                         </li>
-                                         <li style={{marginBottom: '6px'}}>
-                                             <strong>连接线 (Glowing Links):</strong> 能量流。从活跃的语义节点汇聚到中心的“概念吸引子” (Concept Attractor)，模拟信息流向 Softmax 的过程。
-                                         </li>
-                                         <li style={{marginBottom: '6px'}}>
-                                             <strong>RGB 箭头:</strong> 局部纤维基底 (Fiber Geometry)。显示主语义层内部的几何方向。
-                                         </li>
-                                     </ul>
-                                 </div>
-                             )}
-                             
-                             {structureTab === 'compositional' && (
-                                 <div>
-                                      <h3 style={{fontSize: '14px', marginTop: 0, color: '#fff'}}>Compositionality (OLS)</h3>
-                                      <p>验证简单的线性加和是否能表示复杂的组合概念。</p>
-                                      <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
-                                         v_composite ≈ α * v_A + β * v_B
-                                     </div>
-                                 </div>
-                             )}
-                             
-                             <div style={{ color: '#ff9f43', fontWeight: 'bold', borderBottom: '1px solid rgba(255, 159, 67, 0.2)', paddingBottom: '4px', marginTop: '20px', marginBottom: '10px' }}>[B] 通用架构 (General)</div>
-                             <h3 style={{fontSize: '14px', marginTop: 0, color: '#fff'}}>Transformer 基础</h3>
-                             <p>
-                                 核心计算由<strong>多头自注意力 (MHA)</strong> 和<strong>前馈网络 (MLP)</strong> 构成，信息通过<strong>残差流</strong>传递。
-                             </p>
-                             <div style={{ background: '#000', padding: '10px', borderRadius: '6px', fontFamily: 'monospace', marginBottom: '10px', fontSize: '11px' }}>
-                                 x_{'{l+1}'} = x_{'{l}'} + Attention(x_{'{l}'}) + MLP(x_{'{l}'})
-                             </div>
-                             <ul style={{ paddingLeft: '20px', color: '#aaa', fontSize: '12px' }}>
-                                 <li><strong>Logit Lens：</strong> 将每一层残差流通过 unembedding 矩阵映射回词汇空间。</li>
-                                 <li><strong>激活分析：</strong> 观察神经元在处理特定的语义或语法任务时的响应方向。</li>
-                             </ul>
-                          </>
-                      )}
+                                 <ul style={{ paddingLeft: '20px', color: '#aaa', fontSize: '12px' }}>
+                                     <li><strong>Logit Lens：</strong> 将每一层残差流通过 unembedding 矩阵映射回词汇空间。</li>
+                                     <li><strong>激活分析：</strong> 观察神经元在处理特定的语义或语法任务时的响应方向。</li>
+                                 </ul>
+                              </>
+                           )
+                       )}
                   </div>
               </div>
           </div>
