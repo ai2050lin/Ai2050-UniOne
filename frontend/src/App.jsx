@@ -5,6 +5,7 @@ import { Brain, HelpCircle, Loader2, RotateCcw, Search, Settings, X } from 'luci
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import ErrorBoundary from './ErrorBoundary';
+import GlassMatrix3D from './GlassMatrix3D';
 import { SimplePanel } from './SimplePanel';
 import { CompositionalVisualization3D, FeatureVisualization3D, FiberBundleVisualization3D, LayerDetail3D, ManifoldVisualization3D, NetworkGraph3D, SNNVisualization3D, StructureAnalysisControls, ValidityVisualization3D } from './StructureAnalysisPanel';
 
@@ -1978,6 +1979,7 @@ export default function App() {
              {structureTab === 'agi' && <FiberBundleVisualization3D result={analysisResult} t={t} />}
              {structureTab === 'fiber' && <FiberBundleVisualization3D result={analysisResult} t={t} />}
              {structureTab === 'validity' && <ValidityVisualization3D result={analysisResult} t={t} />}
+             {structureTab === 'glass_matrix' && <GlassMatrix3D />}
           </group>
         )}
 

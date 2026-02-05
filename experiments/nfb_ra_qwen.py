@@ -132,48 +132,91 @@ class FiberAnalyzer:
         
         return explained_variance, components
 
-def main():
+def generate_nfb_data(model=None) -> Dict:
+    """
+    Runs the NFB-RA analysis and returns the resulting data dictionary.
+    """
     logging.info("Starting NFB-RA (Neural Fiber Bundle Reconstruction Algorithm)...")
+
+    if model is None:
+        # SYNTHETIC DATA GENERATION
+        import numpy as np
+        logging.info("Generating SYNTHETIC NFB data (No model provided)...")
+        # Manifold: A noisy circle/torus in 3D
+        t = np.linspace(0, 2*np.pi, 20)
+        centroids_np = np.stack([np.cos(t), np.sin(t), np.zeros_like(t)], axis=1) * 10
+        
+        # Fiber: Random basis
+        variance = np.array([0.5, 0.3, 0.2])
+        basis = np.eye(3) # Simple identity basis
+    else:
+        # REAL DATA GENERATION
+        # 1. Phase I: Manifold Extraction
+        manifold = ManifoldExtractor(model)
+        generator = IsoCorpusGenerator()
+        
+        centroids = []
+        layer_to_probe = 6 # Middle layer
+        if hasattr(model, "cfg") and layer_to_probe >= model.cfg.n_layers:
+            layer_to_probe = model.cfg.n_layers // 2
+        
+        logging.info("Step 1: Sampling Manifold Points (Syntax Templates)...")
+        for i in range(len(generator.templates)):
+            batch = generator.generate_batch(i, batch_size=20) # Reduced for speed in interactive mode
+            centroid = manifold.get_centroid(batch, layer=layer_to_probe)
+            centroids.append(centroid)
+            logging.info(f"  - Extracted centroid for Template {i}")
+        
+        centroids_np = np.array(centroids)
+        
+        # Compute Topology (Optional)
+        # manifold.compute_topology(centroids_np)
+        
+        # 2. Phase II: Fiber Analysis
+        logging.info("Step 2: Analyzing Fiber Structure...")
+        analyzer = FiberAnalyzer(model)
+        # Simple template for fiber analysis
+        target_template = "The {} is red." 
+        variance, basis = analyzer.analyze_fiber(target_template, layer=layer_to_probe)
     
+    logging.info(f"Fiber PCA Explained Variance: {variance}")
+
+    output_data = {
+        "manifold_centroids": centroids_np.tolist(), # The base points (p)
+        "fiber_variance": variance.tolist(),         # Dimensions of the fiber (F_p)
+        "fiber_basis": basis.tolist()                # The directions of the fiber
+    }
+    return output_data
+
+def main():
     # 1. Load Model (Mocking Qwen availability in TransformerLens for now)
     # in reality, user would use: model = HookedTransformer.from_pretrained("Qwen/Qwen-1_8B-Chat", device="cuda")
     # check if we can load a small supported model for demo purposes
     model_name = "gpt2-small" 
     logging.info(f"Loading model: {model_name} (Proxy for Qwen3 in this demo)")
+    model = None
     try:
         model = HookedTransformer.from_pretrained(model_name)
     except Exception as e:
-        logging.error(f"Failed to load model: {e}")
-        return
+        logging.warning(f"Failed to load model ({e}). Switching to SYNTHETIC DATA MODE for visualization dev.")
+        pass
 
-    # 2. Phase I: Manifold Extraction
-    manifold = ManifoldExtractor(model)
-    generator = IsoCorpusGenerator()
+    output_data = generate_nfb_data(model)
     
-    centroids = []
-    layer_to_probe = 6 # Middle layer
+    # 4. Save Data for Visualization
+    import json
+    import os
+
+    # Save to frontend public folder for direct access during dev
+    output_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "public", "nfb_data.json")
     
-    logging.info("Step 1: Sampling Manifold Points (Syntax Templates)...")
-    for i in range(len(generator.templates)):
-        batch = generator.generate_batch(i, batch_size=50) # Reduced for speed
-        centroid = manifold.get_centroid(batch, layer=layer_to_probe)
-        centroids.append(centroid)
-        logging.info(f"  - Extracted centroid for Template {i}")
-    
-    centroids_np = np.array(centroids)
-    
-    # Compute Topology
-    manifold.compute_topology(centroids_np)
-    
-    # 3. Phase II: Fiber Analysis
-    logging.info("Step 2: Analyzing Fiber Structure...")
-    analyzer = FiberAnalyzer(model)
-    # Simple template for fiber analysis
-    target_template = "The {} is red." 
-    variance, basis = analyzer.analyze_fiber(target_template, layer=layer_to_probe)
-    
-    logging.info(f"Fiber PCA Explained Variance: {variance}")
-    logging.info("Analysis Complete. Mathematical Structure Snapshot Captured.")
+    try:
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        with open(output_path, "w") as f:
+            json.dump(output_data, f, indent=2)
+        logging.info(f"Data saved to {output_path}")
+    except Exception as e:
+        logging.error(f"Failed to save data: {e}")
 
 if __name__ == "__main__":
     main()

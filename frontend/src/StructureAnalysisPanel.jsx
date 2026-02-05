@@ -1117,6 +1117,11 @@ function InfoPanel({ activeTab, t }) {
             title: t('validity.title', '语言有效性分析'),
             desc: "检查 AI 是否在胡言乱语。如果它的思维空间缩成了一个点（坍缩），说明它已经失去了逻辑能力。",
             tech: "Entropy, Anisotropy, PPL"
+        },
+        glass_matrix: {
+            title: "玻璃矩阵 (Glass Matrix)",
+            desc: "以3D方式可视化神经纤维丛的拓扑结构。观察流形（Manifold）作为基础空间，以及附着其上的纤维（Fibers）作为语义空间。",
+            tech: "NFB-RA, React Three Fiber"
         }
     };
 
@@ -1301,7 +1306,8 @@ export function StructureAnalysisControls({
                  { id: 'causal', icon: Brain, label: '因果 (Causal)' },
                  { id: 'manifold', icon: Network, label: '流形 (Manifold)' },
                  { id: 'compositional', icon: Network, label: '组合 (Compos)' },
-                 { id: 'agi', icon: Sparkles, label: '神经纤维丛 (Fiber)' }
+                 { id: 'agi', icon: Sparkles, label: '神经纤维丛 (Fiber)' },
+                 { id: 'glass_matrix', icon: Network, label: '玻璃矩阵 (Glass)' }
               ] : [
                  { id: 'snn', icon: Brain, label: 'SNN 仿真' },
                  { id: 'validity', icon: Activity, label: '有效性 (Valid)' }
@@ -1410,6 +1416,29 @@ export function StructureAnalysisControls({
                          </div>
                     </ControlGroup>
                     <ActionButton onClick={runConceptSteering} loading={loading} icon={Network}>执行概念干预</ActionButton>
+                </div>
+            )}
+
+            {activeTab === 'glass_matrix' && (
+                <div className="animate-fade-in">
+                    <ControlGroup label="Glass Matrix Visualization">
+                        <div style={{color: '#aaa', fontSize: '13px', lineHeight: '1.5', padding: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '12px'}}>
+                            <p style={{marginTop:0}}>玻璃矩阵可视化已激活。请在主视图中查看 3D 结构。</p>
+                            <ul style={{paddingLeft: '20px', margin: '10px 0'}}>
+                                <li style={{marginBottom:'4px'}}><strong style={{color:'#00ffff'}}>Manifold (Cyan):</strong> 句法/逻辑基础</li>
+                                <li><strong style={{color:'#ff4444'}}>Fibers (RGB Vectors):</strong> 语义向量空间</li>
+                            </ul>
+                            <p style={{marginBottom:0, fontSize:'12px', fontStyle:'italic'}}>数据来源: frontend/public/nfb_data.json</p>
+                        </div>
+                    </ControlGroup>
+                    
+                     <ActionButton onClick={() => window.location.reload()} loading={loading} icon={RotateCcw}>
+                        重置/刷新视图 (Refresh View)
+                    </ActionButton>
+                    
+                    <div style={{marginTop: '12px', fontSize: '11px', color: '#666', textAlign: 'center'}}>
+                        提示: 如需生成新数据，请运行 backend 脚本 experiments/nfb_ra_qwen.py
+                    </div>
                 </div>
             )}
 
