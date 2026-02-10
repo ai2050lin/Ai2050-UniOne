@@ -6,14 +6,10 @@ os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
 
 import json
 import os
-
-# Add parent directory to sys.path to resolve imports from root
 import sys
 
 # 添加父目录到路径，以便导入根目录的模块
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-# 添加当前目录到路径，以便导入同目录的模块
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from typing import Any, Dict, List, Optional
 
@@ -23,6 +19,7 @@ from agi_verification_api import run_agi_verification, run_concept_steering
 from experiments.surgery_hooks import ManifoldSurgeon
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fiber_memory import FiberMemory
 from neurofiber_snn import NeuroFiberNetwork
 from pydantic import BaseModel
 from structure_analyzer import (
@@ -38,6 +35,149 @@ from structure_analyzer import (
 import transformer_lens
 
 app = FastAPI(title="TransformerLens 3D API")
+
+# --- Fiber Memory API ---
+
+class FiberInjectionRequest(BaseModel):
+    source: str
+    target: str
+    R: List[List[float]]
+    layer_idx: int
+
+class PromptRequest(BaseModel):
+    prompt: str
+
+@app.post("/fiber/inject")
+async def inject_fiber(request: FiberInjectionRequest):
+    try:
+        R_np = np.array(request.R)
+        fiber_memory.store_transport(request.source, request.target, R_np, request.layer_idx)
+        return {"status": "success", "message": f"Transport {request.source}->{request.target} injected into L{request.layer_idx}"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/fiber/list")
+async def list_fibers():
+    return fiber_memory.list_injections()
+
+@app.post("/fiber/clear")
+async def clear_fibers():
+    fiber_memory.clear()
+    return {"status": "success"}
+
+fiber_hooks_enabled = False
+
+@app.post("/fiber/toggle")
+async def toggle_fiber_hooks(enabled: bool):
+    global fiber_hooks_enabled
+    fiber_hooks_enabled = enabled
+    
+    # Logic to add/remove hooks from the model
+    if model is not None:
+        if fiber_hooks_enabled:
+            # We will implement the actual hook injection in a separate function
+            apply_fiber_hooks(model)
+        else:
+            model.reset_hooks()
+            
+    return {"status": "success", "enabled": fiber_hooks_enabled}
+
+def apply_fiber_hooks(model):
+    """
+    Injects Fiber Memory transport matrices as forward hooks into the model.
+    x_new = x_old @ R
+    """
+    model.reset_hooks()
+    
+    def fiber_hook_fn(resid, hook, layer_idx):
+        # Fetch all matrices for this layer from memory
+        Rs = fiber_memory.get_all_for_layer(layer_idx)
+        if not Rs:
+            return resid
+        
+        # Collaborative correction: for now, we just apply the first one or average them
+        # In a real scenario, we might need context-based selection
+        R_combined = Rs[0] # Implementation choice: use the latest/first injection
+        R_torch = torch.from_numpy(R_combined).to(resid.device).to(resid.dtype)
+        
+        # resid shape: [batch, pos, d_model]
+        # R shape: [d_model, d_model]
+        return resid @ R_torch
+
+    # Register hooks for layers that have data
+    injections = fiber_memory.list_injections()
+    layers_to_hook = set([inj["layer_idx"] for inj in injections])
+    
+    for l in layers_to_hook:
+        model.add_hook(f"blocks.{l}.hook_resid_post", 
+                       lambda resid, hook, l_idx=l: fiber_hook_fn(resid, hook, l_idx))
+    
+    print(f"Fiber Hooks applied to layers: {layers_to_hook}")
+
+@app.post("/fiber/compare")
+async def fiber_compare(request: PromptRequest):
+    """
+    Returns dual-state data for visualization:
+    - baseline: activations without hooks
+    - corrected: activations with fiber hooks applied
+    - metrics: logit shifts for top tokens
+    """
+    if model is None:
+        raise HTTPException(status_code=503, detail="Model not loaded yet")
+    
+    try:
+        # 1. Capture Baseline
+        model.reset_hooks()
+        logits_base, cache_base = model.run_with_cache(request.prompt)
+        tokens = model.to_str_tokens(request.prompt)
+        
+        # 2. Capture Corrected (if hooks exist)
+        apply_fiber_hooks(model)
+        logits_corr, cache_corr = model.run_with_cache(request.prompt)
+        
+        # 3. Extract activations (simplified for PCA visualization)
+        # We'll return the last token's residual stream across all layers
+        n_layers = model.cfg.n_layers
+        activations_base = []
+        activations_corr = []
+        
+        for l in range(n_layers):
+            layer_key = f"blocks.{l}.hook_resid_post"
+            activations_base.append(cache_base[layer_key][0, -1, :].tolist())
+            activations_corr.append(cache_corr[layer_key][0, -1, :].tolist())
+            
+        # 4. Compute Metrics (Logit Shift)
+        last_logit_base = logits_base[0, -1, :]
+        last_logit_corr = logits_corr[0, -1, :]
+        
+        probs_base = torch.softmax(last_logit_base, dim=-1)
+        probs_corr = torch.softmax(last_logit_corr, dim=-1)
+        
+        top_k = 5
+        top_base_vals, top_base_idxs = torch.topk(probs_base, top_k)
+        
+        metrics = []
+        for i in range(top_k):
+            idx = top_base_idxs[i].item()
+            metrics.append({
+                "token": model.to_string(idx),
+                "prob_base": top_base_vals[i].item(),
+                "prob_corr": probs_corr[idx].item(),
+                "shift": probs_corr[idx].item() - top_base_vals[i].item()
+            })
+            
+        return {
+            "tokens": tokens,
+            "activations_base": activations_base,
+            "activations_corr": activations_corr,
+            "metrics": metrics
+        }
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+# --- End of API ---
 
 # Enable CORS for frontend
 app.add_middleware(
@@ -57,6 +197,7 @@ surgeon = None
 
 # Storage for structure analysis results
 analysis_cache = {}
+fiber_memory = FiberMemory()
 
 class PromptRequest(BaseModel):
     prompt: str
@@ -832,6 +973,76 @@ async def fiber_bundle_analysis(request: FiberAnalysisRequest):
 class ValidityRequest(BaseModel):
     prompt: str
     target_layers: Optional[List[int]] = None
+
+class RPTAnalysisRequest(BaseModel):
+    source_prompts: List[str]
+    target_prompts: List[str]
+    layer_idx: int = 6
+    n_components: int = 4
+
+@app.post("/nfb_ra/rpt")
+async def perform_rpt_analysis(request: RPTAnalysisRequest):
+    """
+    执行黎曼平行移动 (RPT) 分析：
+    1. 提取源语境和目标语境的切空间基底
+    2. 计算传输矩阵 R
+    3. 返回流形坐标、基底及传输结果供可视化使用
+    """
+    global model
+    if model is None:
+        load_model()
+    
+    try:
+        # 获取激活值
+        def get_acts(prompts):
+            acts = []
+            for p in prompts:
+                tokens = model.to_tokens(p)
+                _, cache = model.run_with_cache(tokens, names_filter=lambda name: name.endswith("resid_pre"))
+                # 取最后一个 token 的残差流
+                layer_act = cache[f"blocks.{request.layer_idx}.hook_resid_pre"]
+                acts.append(layer_act[0, -1, :].detach().cpu().numpy())
+            return np.array(acts)
+
+        src_acts = get_acts(request.source_prompts)
+        tgt_acts = get_acts(request.target_prompts)
+
+        # 降维以获得可视化坐标 (3D)
+        pca_vis = PCA(n_components=3)
+        all_acts = np.concatenate([src_acts, tgt_acts], axis=0)
+        vis_coords = pca_vis.fit_transform(all_acts)
+        
+        src_coords = vis_coords[:len(src_acts)].tolist()
+        tgt_coords = vis_coords[len(src_acts):].tolist()
+
+        # 计算切空间基底 (n_components)
+        pca_basis = PCA(n_components=request.n_components)
+        pca_basis.fit(src_acts)
+        basis_src = pca_basis.components_
+        
+        pca_basis.fit(tgt_acts)
+        basis_tgt = pca_basis.components_
+
+        # 计算 RPT 传输矩阵
+        R, _ = orthogonal_procrustes(basis_src, basis_tgt)
+
+        return {
+            "status": "success",
+            "source": {
+                "coords": src_coords,
+                "center": np.mean(src_coords, axis=0).tolist(),
+                "basis": basis_src.tolist()
+            },
+            "target": {
+                "coords": tgt_coords,
+                "center": np.mean(tgt_coords, axis=0).tolist(),
+                "basis": basis_tgt.tolist()
+            },
+            "transport_matrix": R.tolist(),
+            "layer_idx": request.layer_idx
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 
 @app.post("/analyze_validity")
 async def analyze_validity(request: ValidityRequest):
