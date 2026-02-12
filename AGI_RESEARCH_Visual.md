@@ -45,3 +45,33 @@
 1. 使用 `Three.js` / `React Three Fiber` 构建 3D 场景。
 2. 数据源直接接入 `global_holonomy_scan.py` 的输出 JSON。
 3. 实现 Shader 渲染动态的光流和曲率场。
+
+---
+# 3D 训练动力学可视化 (Training Dynamics 3D)
+---
+好的。我们为 AGI 系统增加了实时训练动态的可视化模块，将抽象的张量训练过程转化为几何空间的演化。
+
+### 可视化原理
+1. **精度曲面 (Accuracy Manifold)**：使用动态折线展示 Transformer 与 FiberNet 的准确率。红色线代表 Transformer，蓝色线代表 FiberNet。
+2. **逻辑误差场 (Logic Error / Curvature)**：右侧设有 Ω 指标计，代表模型在学习过程中对群论一致性（零曲率）的偏离程度。
+3. **时间-空间映射**：X 轴代表 Epoch，Y 轴代表精度，Z 轴代表模型类型。
+
+### 交互说明
+- 在 **Structure Analysis** 面板中选择 **Training** 标签页即可进入。
+- 该视图通过 TrainingDynamics3D.jsx 实现，与后端 	raining_log.json 实时同步。
+
+---
+
+---
+# Ricci 流几何正则化可视化
+---
+好的。我们在 AGI 可视化系统中增加了关于 Ricci 流 优化过程的原理说明。
+
+### 几何原理
+1. **流形平滑**：Ricci 流在神经网络权重空间中起到了类似于热传导的作用，它会惩罚那些曲率过高（不稳定性高）的区域。
+2. **正交性诱导**：通过 W * W^T - I 的修正项，我们诱导权重复现正交性，从而在逻辑推理过程中最大限度地保留纤维束 (Fiber Bundle) 的范数。
+
+### 技术实现
+- **RicciFlowOptimizer**：在每一轮更新中加入曲率修正项：$W_{new} = W - \eta (\nabla L + \alpha \cdot Ricci(W))$。
+
+---

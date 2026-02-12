@@ -42,12 +42,12 @@ $$ \nabla_{\dot{\gamma}} \Psi \equiv (\partial_{\mu} + A_{\mu}) \dot{x}^{\mu} \P
 
 ### III. 曲率方程 (The Curvature Equation)
 $$ \Omega_{\mu\nu} = \partial_{\mu} A_{\nu} - \partial_{\nu} A_{\mu} + [A_{\mu}, A_{\nu}] $$
-*   **含义**：曲率 $\Omega$ 代表了**语义的语境依赖性**与路径依赖。联络 $A_\mu$ 是取值于李代数 $\mathfrak{g}$ 的 1-形式，这意味着推理本质上是对语义基底的**规范旋转 (Gauge Rotation)**。
+*   **含义**：曲率 $\Omega$ 代表了**语义的语境依赖性**与路径依赖。联络 $A_\mu$ 是取值于李代数 $\mathfrak{g}$ 的 1-形式，其表现出的**非阿贝尔性 (Non-Abelian)** 解释了复杂思维的路径依赖性：算子间的不可交换性决定了推理顺序的决定性作用。
 *   **数学约束**：系统必须满足 **Bianchi 恒等式 $D\Omega = 0$** 以确保护理逻辑的全局一致性。
 
-### IV. 演化方程 (The Evolution Equation)
-$$ D_{\mu} \Omega^{\mu\nu} = J^{\nu} $$
-*   **含义**：描述了学习的本质。曲率的改变是由外部数据流（源项 $J$）驱动的能耗最小化过程。
+### IV. 演化方程与里奇流 (The Evolution Equation & Ricci Flow)
+$$ \frac{\partial g_{ij}}{\partial t} = -2 R_{ij} \quad \text{and} \quad D_{\mu} \Omega^{\mu\nu} = J^{\nu} $$
+*   **含义**：描述了智能的自组织与自我修正过程。里奇流 (Ricci Flow) 方程规定了流形度量 $g_{ij}$ 随里奇曲率反向演化的动态，从而实现自动“逻辑缝合”与去幻觉。学习不再仅是拟合标签，而是流形自发回归几何平坦态的过程。
 
 ---
 

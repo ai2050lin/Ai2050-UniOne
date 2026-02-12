@@ -951,6 +951,18 @@ async def toy_experiment_metrics():
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
+@app.get("/toy_experiment/ricci_metrics")
+async def toy_experiment_ricci_metrics():
+    log_file = r"d:\develop\TransformerLens-main\experiments\toy_experiment\ricci_flow_data.json"
+    if not os.path.exists(log_file):
+        return {"status": "success", "data": []}
+    try:
+        with open(log_file, 'r') as f:
+            data = json.load(f)
+        return {"status": "success", "data": data}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=5000)
