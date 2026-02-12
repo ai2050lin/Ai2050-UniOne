@@ -90,7 +90,7 @@ def train_model(model, train_loader, epochs=500, lr=0.001, name="Model", opt_typ
 def main():
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--group", type=str, default="Z_n", choices=["Z_n", "S_3"])
+    parser.add_argument("--group", type=str, default="Z_n", choices=["Z_n", "S_3", "S_n", "SO3"])
     parser.add_argument("--order", type=int, default=113)
     parser.add_argument("--epochs", type=int, default=1000)
     parser.add_argument("--compare", action="store_true")
@@ -99,16 +99,19 @@ def main():
     # Configuration
     GROUP_TYPE = args.group
     GROUP_ORDER = args.order
-    NUM_SAMPLES = 5000
+    NUM_SAMPLES = 10000 # Increased for larger groups
     BATCH_SIZE = 64
     EPOCHS = args.epochs
     
     ricci_alpha = 0.001
-    d_manifold = None # Default for RicciFlowOptimizer
+    d_manifold = None 
 
     if GROUP_TYPE == "S_3":
-        ricci_alpha = 0.0001 # Reduced for S3
-        d_manifold = 100 # Increased for S3
+        ricci_alpha = 0.0001
+    elif GROUP_TYPE == "S_n":
+        ricci_alpha = 0.00001 # Even softer for high-dim
+    elif GROUP_TYPE == "SO3":
+        ricci_alpha = 0.0001
     
     # Clear log file at start
     if os.path.exists(LOG_FILE):
@@ -121,15 +124,23 @@ def main():
     print(f"Dataset: {GROUP_TYPE} (Order {GROUP_ORDER}). {len(dataset)} samples.")
     
     # Models
-    vocab_size = GROUP_ORDER if GROUP_TYPE == "Z_n" else 6
+    if GROUP_TYPE == "Z_n":
+        vocab_size = GROUP_ORDER
+    elif GROUP_TYPE == "S_3":
+        vocab_size = 6
+    elif GROUP_TYPE == "S_n":
+        # In our implementation, we limited S_n vocab to 10000
+        vocab_size = 10000
+    elif GROUP_TYPE == "SO3":
+        vocab_size = GROUP_ORDER
     
     # Transformer Baseline
-    transformer = ToyTransformer(vocab_size=vocab_size, d_model=64, n_head=4, n_layer=2)
+    transformer = ToyTransformer(vocab_size=vocab_size, d_model=128, n_head=8, n_layer=4) # Scaled up
     train_model(transformer, train_loader, epochs=EPOCHS, name="Transformer")
     
     if args.compare:
-        # FiberNet with softer Ricci Flow Optimization
-        fibernet = ToyFiberNet(vocab_size=vocab_size, d_model=128)
+        # FiberNet with RiccF Flow Optimization
+        fibernet = ToyFiberNet(vocab_size=vocab_size, d_model=256) # Scaled up
         train_model(fibernet, train_loader, epochs=EPOCHS * 2, name="FiberNet", opt_type="Ricci",
                     ricci_alpha=ricci_alpha, d_manifold=d_manifold)
 
