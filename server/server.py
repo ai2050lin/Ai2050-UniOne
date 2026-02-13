@@ -246,6 +246,65 @@ async def fiber_compare(request: PromptRequest):
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
+# ... (existing code)
+
+@app.get("/training/status")
+async def get_training_status():
+    """Reads all training log files and returns the latest metrics for all agents."""
+    log_dir = r"d:\develop\TransformerLens-main\experiments\toy_experiment"
+    if not os.path.exists(log_dir):
+        return {"status": "no_training", "message": "Log directory not found."}
+    
+    agents_data = []
+    
+    try:
+        # Scan for all files matching training_log_*.json
+        files = [f for f in os.listdir(log_dir) if f.startswith("training_log_") and f.endswith(".json")]
+        
+        if not files:
+             # Fallback for legacy single file
+             if os.path.exists(os.path.join(log_dir, "training_log.json")):
+                 files = ["training_log.json"]
+             else:
+                 return {"status": "no_training", "message": "No training logs found."}
+
+        for fname in files:
+            fpath = os.path.join(log_dir, fname)
+            try:
+                with open(fpath, 'r') as f:
+                    data = json.load(f)
+                    
+                # Identify agent name from filename or content
+                # Filename format: training_log_{name}.json
+                if fname == "training_log.json":
+                    agent_name = "default"
+                else:
+                    # Remove prefix and suffix
+                    agent_name = fname[13:-5]
+                
+                # Use name from inside JSON if available
+                if "agent_name" in data:
+                    agent_name = data["agent_name"]
+
+                mtime = os.path.getmtime(fpath)
+                
+                agents_data.append({
+                    "id": agent_name,
+                    "last_updated": mtime,
+                    "data": data
+                })
+            except Exception as e:
+                print(f"Error reading log {fname}: {e}")
+                continue
+        
+        return {
+            "status": "running",
+            "agents": agents_data
+        }
+
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
 # --- End of API ---
 
 # Enable CORS for frontend

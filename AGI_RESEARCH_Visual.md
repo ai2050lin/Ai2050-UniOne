@@ -75,3 +75,31 @@
 - **RicciFlowOptimizer**：在每一轮更新中加入曲率修正项：$W_{new} = W - \eta (\nabla L + \alpha \cdot Ricci(W))$。
 
 ---
+
+---
+# AGI 拓扑结构实验可视化 (Phase 8-9) - [2026-02-13]
+---
+
+### 1. $Z_{113}$ 模加法的频率与圆环 (Frequency Circles)
+- **数据源**: `verify_z113_topology.py`
+- **图表**: `z113_circles.png`
+- **视觉表达**:
+    - **FFT 频谱柱状图**: 展示 Transformer Embedding 在特定频率（如 $k=1, 9, 18$）上的能量集中。
+    - **相位圆环**: 将 Embedding 投影到主频对应的 2D 子空间，点 ($a, b$) 形成完美的单位圆 $S^1$。
+    - **意义**: 证明神经网络内部使用**三角函数基底**来表示循环群结构。
+
+### 2. GPT-2 真实语义拓扑 (Real World Embeddings)
+- **数据源**: `verify_realworld_topology.py`
+- **图表**: `gpt2_week_en.png`, `gpt2_month_en.png`
+- **视觉表达**:
+    - **2D 散点图**: 展示 Weekdays (Mon-Sun) 和 Months (Jan-Dec) 的向量投影。
+    - **几何形态**: 点按顺序排列成闭合的**椭圆**或**圆环**。
+    - **Loop Gap**: 连接 Dec -> Jan 的连线闭合，显示出明显的周期性。
+
+### 3. Embed-Unembed 对偶性 (Duality)
+- **图表**: `z113_duality.png`
+- **视觉表达**:
+    - 并排展示输入嵌入矩阵 ($W_E$) 和输出解嵌入矩阵 ($W_U$) 的频谱热力图。
+    - 两者显示出高度一致的对角线结构，证明模型在输入和输出端使用同一套几何语言。
+
+---

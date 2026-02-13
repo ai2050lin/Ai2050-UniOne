@@ -1,3 +1,4 @@
+import argparse
 import json
 import math
 import os
@@ -8,19 +9,22 @@ import torch
 
 # 配置路径
 LOG_DIR = r"d:\develop\TransformerLens-main\experiments\toy_experiment"
-LOG_FILE = os.path.join(LOG_DIR, "training_log.json")
 
-def simulate_training():
+def simulate_training(name="default"):
     if not os.path.exists(LOG_DIR):
         os.makedirs(LOG_DIR)
         
+    log_file = os.path.join(LOG_DIR, f"training_log_{name}.json")
+    
     metrics = {
+        "agent_name": name,
+        "start_time": time.time(),
         "Transformer": [],
         "FiberNet": []
     }
     
-    print(f"Starting AGI Training Dynamics Simulation...")
-    print(f"Logging to: {LOG_FILE}")
+    print(f"Starting AGI Training Dynamics Simulation (Agent: {name})...")
+    print(f"Logging to: {log_file}")
     
     for epoch in range(200):
         # 模拟 Transformer: 慢速收敛，后期波动
@@ -50,16 +54,20 @@ def simulate_training():
         })
         
         # 写入文件供前端读取
-        with open(LOG_FILE, 'w') as f:
+        with open(log_file, 'w') as f:
             json.dump(metrics, f)
             
         if epoch % 10 == 0:
-            print(f"Epoch {epoch}: Transformer Accuracy={trans_acc:.2f}%, FiberNet Accuracy={fiber_acc:.2f}%")
+            print(f"[Agent {name}] Epoch {epoch}: Transformer Accuracy={trans_acc:.2f}%, FiberNet Accuracy={fiber_acc:.2f}%")
             
         time.sleep(1.0) # 模拟真实训练时间间隔
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Run toy training simulation.")
+    parser.add_argument("--name", type=str, default="default", help="Name of the training agent/experiment")
+    args = parser.parse_args()
+    
     try:
-        simulate_training()
+        simulate_training(args.name)
     except KeyboardInterrupt:
-        print("\nTraining simulation stopped.")
+        print(f"\nTraining simulation for {args.name} stopped.")
