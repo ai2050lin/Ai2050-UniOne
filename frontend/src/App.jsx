@@ -1835,6 +1835,8 @@ export default function App() {
                   {systemType === 'snn' ? 'SNN 网络状态' : '模型配置'}
               </div>
 
+              <EvolutionMonitor data={evolutionData} onStartSleep={handleStartSleep} />
+
               {systemType === 'snn' ? (
                  /* SNN System Info */
                  <div style={{ fontSize: '12px', lineHeight: '1.6', background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '6px' }}>
@@ -2094,7 +2096,6 @@ export default function App() {
                                const content = helpMode === 'simple' ? doc.simple : doc.pro;
                                return (
                                    <div className="animate-fade-in">
-                                       <EvolutionMonitor data={evolutionData} onStartSleep={handleStartSleep} />
                                        <h3 style={{ fontSize: '20px', color: helpMode === 'simple' ? '#4ecdc4' : '#a29bfe', marginTop: 0, marginBottom: '20px' }}>
                                            {content.title}
                                        </h3>

@@ -360,7 +360,7 @@ export const HLAIBlueprint = ({ onClose }) => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '50px', height: '100%' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <Brain size={28} color="#00d2ff" />
-            <span style={{ fontSize: '18px', fontWeight: 'bold', letterSpacing: '2px' }}>PROJECT GENESIS</span>
+            <span style={{ fontSize: '18px', fontWeight: 'bold', letterSpacing: '2px' }}>PROJECT GENESIS [DEBUG: V5]</span>
           </div>
 
           <nav style={{ display: 'flex', gap: '10px', height: '100%' }}>
