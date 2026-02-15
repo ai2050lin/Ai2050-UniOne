@@ -608,12 +608,65 @@ export const HLAIBlueprint = ({ onClose }) => {
               )}
 
               {activePhase.id === 'engineering' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  {activePhase.sub_phases.map((s, idx) => (
-                    <div key={idx} style={{ padding: '24px', background: s.status === 'in_progress' ? 'rgba(0,210,255,0.05)' : 'rgba(255,255,255,0.02)', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)', display: 'grid', gridTemplateColumns: '1fr 2fr 100px', alignItems: 'center', gap: '30px' }}>
-                      <div style={{ fontWeight: 'bold', fontSize: '16px' }}>{s.name}</div>
-                      <div style={{ fontSize: '13px', color: '#888' }}>{s.test_result}</div>
-                      <div style={{ textAlign: 'right', fontWeight: 'bold', color: s.status === 'done' ? '#00ff88' : (s.status === 'in_progress' ? '#00d2ff' : '#333'), fontSize: '10px' }}>{s.status.toUpperCase()}</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  {activePhase.sub_phases.map((p, i) => (
+                    <div key={i} style={{ borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.01)', transition: 'all 0.3s' }}>
+                      <div 
+                        onClick={() => setExpandedEngPhase(expandedEngPhase === i ? null : i)}
+                        style={{ 
+                          padding: '24px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                          background: expandedEngPhase === i ? 'rgba(245, 158, 11, 0.05)' : 'transparent'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                          <div style={{ 
+                            width: '40px', height: '40px', borderRadius: '12px', background: p.status === 'done' ? '#10b98120' : '#f59e0b20',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', color: p.status === 'done' ? '#10b981' : '#f59e0b'
+                          }}>
+                            {p.status === 'done' ? <CheckCircle size={20} /> : <Activity size={20} />}
+                          </div>
+                          <div>
+                            <div style={{ fontWeight: 'bold', fontSize: '18px', color: '#fff', marginBottom: '4px' }}>{p.name}</div>
+                            <div style={{ fontSize: '12px', color: '#666' }}>{p.focus}</div>
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                          <div style={{ 
+                            padding: '4px 12px', borderRadius: '20px', fontSize: '10px', fontWeight: 'bold',
+                            background: p.status === 'done' ? '#10b98120' : '#f59e0b20',
+                            color: p.status === 'done' ? '#10b981' : '#f59e0b',
+                            border: `1px solid ${p.status === 'done' ? '#10b98140' : '#f59e0b40'}`
+                          }}>
+                            {p.status.toUpperCase()}
+                          </div>
+                          <div style={{ color: '#444', transition: 'transform 0.3s', transform: expandedEngPhase === i ? 'rotate(180deg)' : 'rotate(0)' }}>▼</div>
+                        </div>
+                      </div>
+
+                      {expandedEngPhase === i && (
+                        <div style={{ padding: '0 24px 24px 84px', animation: 'fadeIn 0.4s ease' }}>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '24px' }}>
+                            <div>
+                              <div style={{ marginBottom: '20px' }}>
+                                <div style={{ fontSize: '11px', color: '#f59e0b', fontWeight: 'bold', marginBottom: '8px', letterSpacing: '1px' }}>测试目标 (TARGET)</div>
+                                <div style={{ fontSize: '13px', color: '#bbb', lineHeight: '1.6' }}>{p.target}</div>
+                              </div>
+                              <div style={{ marginBottom: '20px' }}>
+                                <div style={{ fontSize: '11px', color: '#00d2ff', fontWeight: 'bold', marginBottom: '8px', letterSpacing: '1px' }}>工作内容 (WORK CONTENT)</div>
+                                <div style={{ fontSize: '13px', color: '#bbb', lineHeight: '1.6' }}>{p.work_content}</div>
+                              </div>
+                              <div>
+                                <div style={{ fontSize: '11px', color: '#10b981', fontWeight: 'bold', marginBottom: '8px', letterSpacing: '1px' }}>测试结果 (TEST RESULTS)</div>
+                                <div style={{ fontSize: '13px', color: '#eee', lineHeight: '1.6', fontWeight: 'bold' }}>{p.test_results}</div>
+                              </div>
+                            </div>
+                            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                               <div style={{ fontSize: '11px', color: '#666', fontWeight: 'bold', marginBottom: '12px' }}>EXPERT ANALYSIS</div>
+                               <div style={{ fontSize: '13px', color: '#888', fontStyle: 'italic', lineHeight: '1.7' }}>"{p.analysis}"</div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
