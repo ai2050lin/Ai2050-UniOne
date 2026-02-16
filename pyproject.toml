@@ -92,7 +92,7 @@
 
 [tool.mypy]
     check_untyped_defs=true
-    exclude=[".venv/", "assets", "demos", "docs", "easy_transformer", "tests"]
+    exclude=[".venv/", "assets", "demos", "docs", "tests"]
     ignore_missing_imports=true
 
 [tool.black]
