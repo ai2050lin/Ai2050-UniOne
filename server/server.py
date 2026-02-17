@@ -867,16 +867,24 @@ async def topology_scan_api(request: Optional[Dict[str, Any]] = None):
     if model is None: raise HTTPException(status_code=503, detail="Model not loaded yet")
     try:
         from scripts.global_topology_scanner import TopologyScanner
-        
+
         scanner = TopologyScanner(model)
         # 根据请求选择扫描层级，默认为 1/4, 2/4, 3/4 位置的层
         n = model.cfg.n_layers
         default_layers = [n//4, n//2, (3*n)//4]
         layers = request.get("layers", default_layers) if request else default_layers
-        
+
         print(f"Starting global topology scan for layers: {layers}")
         scan_results = scanner.run_full_scan(layers=layers)
-        
+
+        # Save results to file for visualization
+        output_path = "tempdata/topology.json"
+        if not os.path.exists("tempdata"):
+            os.makedirs("tempdata")
+        with open(output_path, "w") as f:
+            json.dump({"layers": scan_results}, f)
+        print(f"Topology scan saved to {output_path}")
+
         return {
             "status": "success",
             "results": scan_results,
