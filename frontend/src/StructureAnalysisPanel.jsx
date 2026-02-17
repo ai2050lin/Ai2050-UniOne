@@ -1,15 +1,29 @@
 import { OrbitControls, Text } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
 import axios from 'axios';
-import { Activity, Brain, Globe, Network, RotateCcw, Settings, Sparkles } from 'lucide-react';
+import { 
+  Activity, ArrowRightLeft, BarChart, BarChart2, Brain, CheckCircle, 
+  Eye, FlaskConical, GitBranch, Globe, Globe2, Grid3x3, Hexagon, 
+  Layers, Network, RefreshCw, RotateCcw, Scale, Settings, Share2, 
+  Sparkles, Target, TrendingUp, Zap 
+} from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import BrainVis3D from './BrainVis3D';
 import HolonomyLoopVisualizer from './HolonomyLoopVisualizer';
 import TrainingDynamics3D from './TrainingDynamics3D';
+import { STRUCTURE_TABS_V2, COLORS } from './config/panels';
+
+// 图标名称到组件的映射
+const ICON_MAP = {
+  Eye, BarChart2, Grid3x3, GitBranch,
+  Zap, Share2, Sparkles, Target, Globe2, Layers,
+  Hexagon, Network, ArrowRightLeft, TrendingUp, BarChart, Globe, RefreshCw,
+  FlaskConical, Brain, Scale, CheckCircle, Activity
+};
 
 
-const API_BASE = 'http://localhost:5002';
+const API_BASE = 'http://localhost:5001';
 
 // ... existing imports
 
@@ -1574,32 +1588,79 @@ export function StructureAnalysisControls({
       {/* Middle Section: Algorithm Tabs & content */}
       <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
           
-          {/* Algorithm List */}
-          <div style={{ 
-              display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '4px', p: '8px',
-              padding: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)'
-          }}>
-              {(systemType === 'dnn' ? [
-                 { id: 'circuit', icon: Network, label: '回路 (Circuit)' },
-                 { id: 'features', icon: Sparkles, label: '特征 (Features)' },
-                 { id: 'causal', icon: Brain, label: '因果 (Causal)' },
-                 { id: 'manifold', icon: Network, label: '流形几何 (Manifold)' },
-                 { id: 'compositional', icon: Network, label: '组合泛化 (Compos)' },
-                 { id: 'tda', icon: Activity, label: '拓扑分析 (TDA)' },
-                 { id: 'agi', icon: Sparkles, label: '神经纤维丛 (Fiber)' },
-                 { id: 'glass_matrix', icon: Network, label: '玻璃矩阵 (Glass)' },
-                 { id: 'flow_tubes', icon: Activity, label: '动力学 (Dynamics)' },
-                 { id: 'rpt', icon: Activity, label: '传输分析 (RPT)' },
-                 { id: 'curvature', icon: Activity, label: '曲率分析 (Curv)' },
-                 { id: 'debias', icon: Sparkles, label: '几何去偏 (Debias)' },
-                 { id: 'global_topology', icon: Globe, label: '全局拓扑 (Topo)' },
-                 { id: 'fibernet_v2', icon: Network, label: 'FiberNet V2 (Demo)' },
-                 { id: 'holonomy', icon: RotateCcw, label: '全纯扫描 (Holo)' },
-                 { id: 'training', icon: Activity, label: '训练动力学 (Training)' }
-              ] : [
+          {/* Algorithm List - Grouped */}
+          {systemType === 'dnn' ? (
+            <div style={{ padding: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+              {STRUCTURE_TABS_V2.groups.map(group => {
+                const GroupIcon = ICON_MAP[group.icon];
+                return (
+                <div key={group.id} style={{ marginBottom: '8px' }}>
+                  {/* Group Header */}
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '6px', 
+                    marginBottom: '6px',
+                    padding: '4px 8px',
+                    background: 'rgba(255,255,255,0.03)',
+                    borderRadius: '4px'
+                  }}>
+                    {GroupIcon && <GroupIcon size={14} color="#888" />}
+                    <span style={{ 
+                      fontSize: '11px', 
+                      fontWeight: '600',
+                      color: '#888'
+                    }}>
+                      {group.label}
+                    </span>
+                  </div>
+                  
+                  {/* Group Items */}
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    gap: '4px'
+                  }}>
+                    {group.items.map(tab => {
+                      const TabIcon = ICON_MAP[tab.icon];
+                      return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        title={tab.desc}
+                        style={{
+                          padding: '8px 4px',
+                          backgroundColor: activeTab === tab.id ? 'rgba(68, 136, 255, 0.2)' : 'transparent',
+                          color: activeTab === tab.id ? '#4488ff' : '#666',
+                          border: activeTab === tab.id ? '1px solid rgba(68, 136, 255, 0.4)' : '1px solid transparent',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '11px',
+                          fontWeight: '500',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}
+                      >
+                        {TabIcon && <TabIcon size={14} />}
+                        <span>{tab.label}</span>
+                      </button>
+                    )})}
+                  </div>
+                </div>
+              )})}
+            </div>
+          ) : (
+            /* SNN Mode - Simple buttons */
+            <div style={{ 
+                display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '4px',
+                padding: '12px', borderBottom: '1px solid rgba(255,255,255,0.05)'
+            }}>
+              {[
                  { id: 'snn', icon: Brain, label: 'SNN 仿真' },
                  { id: 'validity', icon: Activity, label: '有效性 (Valid)' }
-              ]).map(tab => (
+              ].map(tab => (
                  <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
@@ -1616,7 +1677,8 @@ export function StructureAnalysisControls({
                     {tab.label}
                  </button>
               ))}
-          </div>
+            </div>
+          )}
 
           {/* Form Content */}
           <div style={{ padding: '16px', flex: 1 }}>
@@ -1772,16 +1834,34 @@ export function StructureAnalysisControls({
                                 <li style={{marginBottom:'4px'}}><strong style={{color:'#00ffff'}}>Manifold (Cyan):</strong> 句法/逻辑基础</li>
                                 <li><strong style={{color:'#ff4444'}}>Fibers (RGB Vectors):</strong> 语义向量空间</li>
                             </ul>
-                            <p style={{marginBottom:0, fontSize:'12px', fontStyle:'italic'}}>数据来源: frontend/public/nfb_data.json</p>
+                            <p style={{marginBottom:0, fontSize:'12px', fontStyle:'italic'}}>数据来源: tempdata/topology.json</p>
                         </div>
                     </ControlGroup>
                     
-                     <ActionButton onClick={() => window.location.reload()} loading={loading} icon={RotateCcw}>
-                        重置/刷新视图 (Refresh View)
-                    </ActionButton>
-                    
-                    <div style={{marginTop: '12px', fontSize: '11px', color: '#666', textAlign: 'center'}}>
-                        提示: 如需生成新数据，请运行 backend 脚本 experiments/nfb_ra_qwen.py
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                        <ActionButton 
+                            onClick={async () => {
+                                setLoading(true);
+                                try {
+                                    const res = await axios.post(`${API_BASE}/nfb/topology/generate`);
+                                    alert(`✅ 拓扑数据生成成功！\n分析了 ${res.data.layers?.length || 0} 个层`);
+                                } catch (err) {
+                                    alert(`❌ 生成失败: ${err.response?.data?.detail || err.message}`);
+                                }
+                                setLoading(false);
+                            }} 
+                            loading={loading} 
+                            icon={RotateCcw}
+                        >
+                            生成新数据
+                        </ActionButton>
+                        <ActionButton 
+                            onClick={() => window.location.reload()} 
+                            loading={loading}
+                            style={{ background: '#333' }}
+                        >
+                            刷新视图
+                        </ActionButton>
                     </div>
                 </div>
             )}
@@ -1800,9 +1880,31 @@ export function StructureAnalysisControls({
                         </div>
                     </ControlGroup>
                     
-                    <ActionButton onClick={() => window.location.reload()} loading={loading} icon={RotateCcw}>
-                        刷新数据 (Refresh Data)
-                    </ActionButton>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                        <ActionButton 
+                            onClick={async () => {
+                                setLoading(true);
+                                try {
+                                    const res = await axios.post(`${API_BASE}/nfb/flow_tubes/generate`);
+                                    alert(`✅ 流管数据生成成功！\n生成了 ${res.data.tubes?.length || 0} 条轨迹`);
+                                } catch (err) {
+                                    alert(`❌ 生成失败: ${err.response?.data?.detail || err.message}`);
+                                }
+                                setLoading(false);
+                            }} 
+                            loading={loading} 
+                            icon={RotateCcw}
+                        >
+                            生成新数据
+                        </ActionButton>
+                        <ActionButton 
+                            onClick={() => window.location.reload()} 
+                            loading={loading}
+                            style={{ background: '#333' }}
+                        >
+                            刷新视图
+                        </ActionButton>
+                    </div>
                 </div>
             )}
 

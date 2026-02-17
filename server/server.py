@@ -112,17 +112,17 @@ async def lifespan(app: FastAPI):
         state_dict = load_safetensors(weights_path, device=str(model.cfg.device))
         model.load_state_dict(state_dict, strict=False)
         
-        print(f"✓ Forced 12-layer GPT-2 loaded successfully on {model.cfg.device}!")
+        print(f"[OK] Forced 12-layer GPT-2 loaded successfully on {model.cfg.device}!")
     except Exception as e:
-        print(f"✗ Error during forced 12-layer load: {e}")
+        print(f"[ERROR] Error during forced 12-layer load: {e}")
         import traceback
         traceback.print_exc()
         try:
             # Emergency Fallback
             model = transformer_lens.HookedTransformer.from_pretrained("gpt2-small")
-            print("✓ Successfully loaded gpt2-small as emergency fallback.")
+            print("[OK] Successfully loaded gpt2-small as emergency fallback.")
         except Exception as fallback_error:
-            print(f"✗ Critical failure during fallback: {fallback_error}")
+            print(f"[ERROR] Critical failure during fallback: {fallback_error}")
             model = None
 
     if model:
@@ -134,9 +134,9 @@ async def lifespan(app: FastAPI):
             # Fix: GeometricInterceptor might fail if it tries to access parameters of a partially loaded/restricted model
             # We initialize it, but add_interception is where device access happens.
             interceptor = GeometricInterceptor(model)
-            print("✓ ManifoldSurgeon and GeometricInterceptor initialized.")
+            print("[OK] ManifoldSurgeon and GeometricInterceptor initialized.")
         except Exception as init_err:
-            print(f"✗ Error initializing components (Surgeon/Interceptor): {init_err}")
+            print(f"[ERROR] Error initializing components (Surgeon/Interceptor): {init_err}")
             import traceback
             traceback.print_exc()
             print("  Continuing with model only...")
@@ -153,9 +153,9 @@ async def lifespan(app: FastAPI):
         try:
             agi_core = AGICoreEngine(manifold_dim=32)
             rlmf_node = RLMFManager(agi_core)
-            print("✓ AGI Core Engine and RLMF Provider initialized.")
+            print("[OK] AGI Core Engine and RLMF Provider initialized.")
         except Exception as agi_err:
-            print(f"✗ Error initializing AGI Core: {agi_err}")
+            print(f"[ERROR] Error initializing AGI Core: {agi_err}")
 
     yield
     # Shutdown logic
@@ -1268,6 +1268,96 @@ async def flow_tubes_api():
             {"id": "neutral", "color": "#2ecc71", "points": [[0,0,0], [1,0,3], [2,0,6], [3,0,9]]}
         ]
     }
+
+@app.post("/nfb/topology/generate")
+async def generate_nfb_topology():
+    """Generate topology data by running model analysis"""
+    global model, surgeon
+    if model is None:
+        raise HTTPException(status_code=503, detail="Model not loaded yet")
+    
+    try:
+        from structure_analyzer import ManifoldAnalysis
+        
+        topology_data = {"layers": {}}
+        
+        # 分析每个层
+        for layer_idx in range(model.cfg.n_layers):
+            analyzer = ManifoldAnalysis(model)
+            # 使用默认提示词生成激活
+            prompt = "The quick brown fox jumps over the lazy dog"
+            tokens = model.to_tokens(prompt)
+            acts = analyzer.get_layer_activations(tokens, layer_idx)
+            pca_result = analyzer.compute_pca(acts, n_components=3)
+            
+            topology_data["layers"][str(layer_idx)] = {
+                "pca": pca_result.get("points", [[0, 0, 0] for _ in range(10)]).tolist() if hasattr(pca_result.get("points", []), 'tolist') else pca_result.get("points", []),
+                "pca_components": pca_result.get("components", []).tolist() if hasattr(pca_result.get("components", []), 'tolist') else pca_result.get("components", []),
+                "pca_mean": pca_result.get("mean", []).tolist() if hasattr(pca_result.get("mean", []), 'tolist') else pca_result.get("mean", []),
+                "intrinsic_dim": pca_result.get("intrinsic_dim", 3)
+            }
+        
+        # 保存到文件
+        output_path = "tempdata/topology_generated.json"
+        with open(output_path, "w") as f:
+            json.dump(topology_data, f)
+        
+        return {"status": "success", "message": "Topology data generated", "path": output_path, "layers": list(topology_data["layers"].keys())}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.post("/nfb/flow_tubes/generate")
+async def generate_flow_tubes():
+    """Generate flow tubes data by analyzing token trajectories"""
+    global model
+    if model is None:
+        raise HTTPException(status_code=503, detail="Model not loaded yet")
+    
+    try:
+        import numpy as np
+        from sklearn.decomposition import PCA
+        
+        # 定义不同语义类别的提示词
+        prompts = {
+            "male": ["The man walked to the store", "A boy plays football", "He is a king"],
+            "female": ["The woman walked to the store", "A girl plays football", "She is a queen"],
+            "neutral": ["The person walked to the store", "Someone plays football", "They are royalty"]
+        }
+        
+        tubes = []
+        colors = {"male": "#3498db", "female": "#e74c3c", "neutral": "#2ecc71"}
+        
+        for category, texts in prompts.items():
+            trajectories = []
+            for text in texts:
+                _, cache = model.run_with_cache(text)
+                # 提取每层激活
+                layer_acts = []
+                for layer_idx in range(model.cfg.n_layers):
+                    act = cache[f"blocks.{layer_idx}.hook_resid_post"][0, -1, :].cpu().numpy()
+                    layer_acts.append(act)
+                
+                trajectories.append(np.array(layer_acts))
+            
+            # PCA 降维到 3D
+            all_points = np.vstack(trajectories)
+            pca = PCA(n_components=3)
+            pca.fit(all_points)
+            
+            # 取平均轨迹
+            avg_trajectory = np.mean(trajectories, axis=0)
+            points_3d = pca.transform(avg_trajectory).tolist()
+            
+            tubes.append({
+                "id": category,
+                "color": colors[category],
+                "path": points_3d,
+                "label": category.capitalize()
+            })
+        
+        return {"status": "success", "tubes": tubes}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 
 @app.post("/manifold_analysis")
 async def perform_manifold_analysis(request: ManifoldAnalysisRequest):

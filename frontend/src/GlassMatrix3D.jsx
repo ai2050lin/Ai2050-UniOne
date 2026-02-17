@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import * as THREE from 'three';
 import { Vector3 } from 'three';
 
-const API_BASE = "http://localhost:5002";
+const API_BASE = "http://localhost:5001";
 
 // Locales mock for standalone functionality
 const locales = {

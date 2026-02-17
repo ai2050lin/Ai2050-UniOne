@@ -26,7 +26,7 @@ const FiberNetPanel = () => {
   const handleInference = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5002/fibernet/inference', {
+      const response = await fetch('http://localhost:5001/fibernet/inference', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: inputText, lang: language })

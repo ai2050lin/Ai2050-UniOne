@@ -18,6 +18,10 @@ import { CompositionalVisualization3D, CurvatureField3D, FeatureVisualization3D,
 import TDAVisualization3D from './TDAVisualization3D';
 
 import { locales } from './locales';
+import { INPUT_PANEL_TABS, STRUCTURE_TABS_V2, COLORS } from './config/panels';
+import { AnalysisDataDisplay, MetricsRow, MetricCard } from './components/shared/DataDisplayTemplates';
+import { OperationHistoryPanel, useOperationHistory } from './components/shared/OperationHistory';
+import { DataComparisonView } from './components/shared/DataComparisonView';
 
 const API_BASE = 'http://localhost:5001';
 
@@ -962,6 +966,9 @@ export default function App() {
   const [analysisResult, setAnalysisResult] = useState(null);
   const [structureTab, setStructureTab] = useState('circuit');
   
+  // 操作历史
+  const { history, addHistory, clearHistory, restoreHistory } = useOperationHistory();
+
 
   // Analysis Forms State (Lifted from StructureAnalysisPanel)
   const [circuitForm, setCircuitForm] = useState({
@@ -1550,60 +1557,39 @@ export default function App() {
         />
       )}
 
-      {/* Top-left Input Panel */}
+      {/* ==================== 左上: 控制面板 ==================== */}
       {panelVisibility.inputPanel && (
-      <div style={{
-        position: 'absolute', top: 60, left: 20, zIndex: 10, // Moved down to avoid overlap with settings button
-        background: 'rgba(20, 20, 25, 0.9)', padding: '20px', borderRadius: '12px',
-        backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)',
-        width: '380px', maxHeight: '85vh', display: 'flex', flexDirection: 'column'
-      }}>
-        <h1 style={{ margin: '0 0 16px 0', fontSize: '20px', fontWeight: 'bold', background: 'linear-gradient(45deg, #00d2ff, #3a7bd5)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Brain size={24} color="#00d2ff"/> 智能一号
-        </h1>
-        
-        {/* Tabs for Input Panel */}
-        <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '16px', background: 'rgba(0,0,0,0.2)', borderRadius: '6px', padding: '2px' }}>
-          <button
-             onClick={() => {
-                 setInputPanelTab('dnn');
-                 setSystemType('dnn');
-             }}
-             style={{
-               flex: 1, padding: '8px', background: inputPanelTab === 'dnn' ? '#3a7bd5' : 'transparent', border: 'none', borderRadius: '4px',
-               color: inputPanelTab === 'dnn' ? '#fff' : '#888',
-               cursor: 'pointer', fontWeight: '600', fontSize: '12px', transition: 'all 0.2s'
-             }}
-          >
-            深度神经网络 (DNN)
-          </button>
-          <button
-             onClick={() => {
-                 setInputPanelTab('snn'); 
-                 setSystemType('snn');
-             }}
-             style={{
-               flex: 1, padding: '8px', background: inputPanelTab === 'snn' ? '#4ecdc4' : 'transparent', border: 'none', borderRadius: '4px',
-               color: inputPanelTab === 'snn' ? '#000' : '#888',
-               cursor: 'pointer', fontWeight: '600', fontSize: '12px', transition: 'all 0.2s'
-             }}
-          >
-            脉冲神经网络 (SNN)
-          </button>
-          <button
-             onClick={() => {
-                 setInputPanelTab('fibernet'); 
-                 setSystemType('fibernet');
-             }}
-             style={{
-               flex: 1, padding: '8px', background: inputPanelTab === 'fibernet' ? '#6c5ce7' : 'transparent', border: 'none', borderRadius: '4px',
-               color: inputPanelTab === 'fibernet' ? '#fff' : '#888',
-               cursor: 'pointer', fontWeight: '600', fontSize: '12px', transition: 'all 0.2s'
-             }}
-          >
-            FiberNet Lab
-          </button>
-        </div>
+      <SimplePanel 
+        title="控制面板"
+        style={{
+          position: 'absolute', top: 60, left: 20, zIndex: 10,
+          width: '360px', maxHeight: '85vh',
+          display: 'flex', flexDirection: 'column'
+        }}
+        actions={
+          <div style={{ display: 'flex', gap: '4px' }}>
+            {INPUT_PANEL_TABS.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => { setInputPanelTab(tab.id); setSystemType(tab.id); }}
+                style={{
+                  padding: '6px 10px',
+                  background: inputPanelTab === tab.id ? tab.color : 'transparent',
+                  border: inputPanelTab === tab.id ? 'none' : '1px solid rgba(255,255,255,0.2)',
+                  borderRadius: '4px',
+                  color: inputPanelTab === tab.id ? '#fff' : '#888',
+                  cursor: 'pointer',
+                  fontSize: '11px',
+                  fontWeight: '600',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        }
+      >
 
         {/* Content Container with Scroll */}
         <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
@@ -1797,7 +1783,7 @@ export default function App() {
             )}
         
         </div>
-      </div>
+      </SimplePanel>
       )}
 
       {/* Bottom-left Info Panel */}
@@ -1807,7 +1793,7 @@ export default function App() {
         title={t('panels.modelInfo')}
         style={{
           position: 'absolute', top: 20, right: 20, zIndex: 100,
-          minWidth: '320px', maxWidth: '400px',
+          width: '360px',
           maxHeight: '80vh',
           display: 'flex', flexDirection: 'column',
           userSelect: 'text', // Explicitly allow text selection
@@ -1967,6 +1953,87 @@ export default function App() {
                                          <br/>重构误差: {analysisResult.reconstruction_error?.toFixed(5)}
                                      </div>
                                  )}
+                                 {structureTab === 'causal' && (
+                                     <div>
+                                         分析了 {analysisResult.n_components_analyzed} 个组件，
+                                         发现 {analysisResult.n_important_components} 个关键组件。
+                                     </div>
+                                 )}
+                                 {structureTab === 'manifold' && (
+                                     <div>
+                                         内在维度: {analysisResult.intrinsic_dimensionality?.participation_ratio?.toFixed(2)}
+                                         <br/>分析层数: {manifoldForm.layer_idx}
+                                     </div>
+                                 )}
+                                 {structureTab === 'compositional' && (
+                                     <div>
+                                         组合泛化 R² 分数: {analysisResult.r2_score?.toFixed(4)}
+                                     </div>
+                                 )}
+                                 {structureTab === 'tda' && (
+                                     <div>
+                                         0维连通分量: {analysisResult.ph_0d?.length || 0}
+                                         <br/>1维环: {analysisResult.ph_1d?.length || 0}
+                                     </div>
+                                 )}
+                                 {structureTab === 'agi' && (
+                                     <div>
+                                         神经纤维丛分析完成
+                                         <br/>层间传输矩阵已计算
+                                     </div>
+                                 )}
+                                 {structureTab === 'rpt' && (
+                                     <div>
+                                         黎曼平行传输分析完成
+                                     </div>
+                                 )}
+                                 {structureTab === 'curvature' && (
+                                     <div>
+                                         标量曲率: {analysisResult.curvature?.toFixed(4)}
+                                     </div>
+                                 )}
+                                 {structureTab === 'glass_matrix' && (
+                                     <div>
+                                         玻璃矩阵可视化激活
+                                         <br/>显示激活值的几何结构
+                                     </div>
+                                 )}
+                                 {structureTab === 'flow_tubes' && (
+                                     <div>
+                                         信息流动轨迹可视化
+                                         <br/>追踪语义向量演化
+                                     </div>
+                                 )}
+                                 {structureTab === 'global_topology' && (
+                                     <div>
+                                         全局拓扑结构分析
+                                     </div>
+                                 )}
+                                 {structureTab === 'fibernet_v2' && (
+                                     <div>
+                                         FiberNet V2 纤维丛拓扑演示
+                                     </div>
+                                 )}
+                                 {structureTab === 'holonomy' && (
+                                     <div>
+                                         全纯扫描分析
+                                     </div>
+                                 )}
+                                 {structureTab === 'debias' && (
+                                     <div>
+                                         几何去偏分析
+                                     </div>
+                                 )}
+                                 {structureTab === 'validity' && (
+                                     <div>
+                                         有效性检验完成
+                                     </div>
+                                 )}
+                                 {structureTab === 'training' && (
+                                     <div>
+                                         训练动力学可视化
+                                     </div>
+                                 )}
                              </div>
                         )}
 
@@ -1982,6 +2049,19 @@ export default function App() {
                     </div>
                  )
               )}
+              
+              {/* ==================== 数据对比视图 ==================== */}
+              <div style={{ 
+                marginTop: '12px', 
+                paddingTop: '12px', 
+                borderTop: '1px solid rgba(255,255,255,0.1)' 
+              }}>
+                <DataComparisonView 
+                  currentData={data}
+                  analysisResult={analysisResult}
+                  mode={structureTab}
+                />
+              </div>
           </div>
         </div>
       </SimplePanel>
@@ -2011,25 +2091,31 @@ export default function App() {
                           {[
                               { id: 'architect', label: '模型架构 (Architecture)', icon: '🏗️' },
                               { type: 'sep' },
+                              // 观测
+                              { id: 'logit_lens', label: '预测演化 (Logit)', icon: '📊' },
+                              { id: 'glass_matrix', label: '玻璃矩阵 (Glass)', icon: '🔮' },
+                              { id: 'flow_tubes', label: '信息流 (Flow)', icon: '🌊' },
+                              { type: 'sep' },
+                              // 分析
                               { id: 'circuit', label: '回路发现 (Circuit)', icon: '🔌' },
                               { id: 'features', label: '稀疏特征 (SAE)', icon: '💎' },
                               { id: 'causal', label: '因果分析 (Causal)', icon: '🎯' },
                               { id: 'manifold', label: '流形几何 (Manifold)', icon: '🗺️' },
                               { id: 'compositional', label: '组合泛化 (Compos)', icon: '🧩' },
-                              { id: 'tda', label: '拓扑分析 (TDA)', icon: '📊' },
                               { type: 'sep' },
-                              { id: 'agi', label: '神经纤维丛 (Fiber)', icon: '🌌' },
-                              { id: 'glass_matrix', label: '玻璃矩阵 (Glass)', icon: '🧊' },
-                              { id: 'flow_tubes', label: '动力学 (Dynamics)', icon: '🌊' },
-                              { type: 'sep' },
+                              // 几何
+                              { id: 'fibernet_v2', label: '纤维丛 (Fiber)', icon: '🧬' },
                               { id: 'rpt', label: '传输分析 (RPT)', icon: '↔️' },
                               { id: 'curvature', label: '曲率分析 (Curv)', icon: '📈' },
-                              { id: 'debias', label: '几何去偏 (Debias)', icon: '⚖️' },
-                              { id: 'topology', label: '全局拓扑 (Topo)', icon: '🌐' },
+                              { id: 'tda', label: '拓扑分析 (TDA)', icon: '📊' },
+                              { id: 'global_topology', label: '全局拓扑 (Topo)', icon: '🌐' },
+                              { id: 'holonomy', label: '全纯扫描 (Holo)', icon: '🔄' },
                               { type: 'sep' },
-                              { id: 'fibernet_v2', label: 'FiberNet V2 (Demo)', icon: '🚀' },
-                              { id: 'snn', label: '脉冲网络 (SNN)', icon: '🧠' },
+                              // 高级
+                              { id: 'agi', label: '神经纤维丛 (AGI)', icon: '🤖' },
+                              { id: 'debias', label: '几何去偏 (Debias)', icon: '⚖️' },
                               { id: 'validity', label: '有效性 (Validity)', icon: '📉' },
+                              { id: 'training', label: '训练动力学 (Training)', icon: '📈' },
                           ].map((item, idx) => (
                               item.type === 'sep' ? 
                                 <div key={idx} style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '8px 0' }} /> :
@@ -2314,160 +2400,77 @@ export default function App() {
         </SimplePanel>
       )}
 
-      {/* Model Info Panel (Renamed from Layers Panel) */}
+      {/* ==================== 右下: 操作面板 ==================== */}
       {panelVisibility.layersPanel && (
       <SimplePanel 
         title="操作面板"
         style={{
           position: 'absolute', bottom: 20, right: 20, zIndex: 10,
-          minWidth: '320px', maxWidth: '400px', maxHeight: '60vh',
+          width: '360px', maxHeight: '60vh',
           display: 'flex', flexDirection: 'column'
         }}
       >
+        {/* ==================== 数据展示模板 ==================== */}
+        <div style={{ 
+          marginBottom: '12px', 
+          padding: '8px', 
+          background: 'rgba(0,0,0,0.2)', 
+          borderRadius: '6px',
+          flex: 1,
+          overflowY: 'auto'
+        }}>
+          <AnalysisDataDisplay 
+            mode={structureTab}
+            data={data}
+            analysisResult={analysisResult}
+            selectedLayer={selectedLayer}
+            onLayerSelect={(layerIdx) => {
+              setSelectedLayer(layerIdx);
+              loadLayerDetails(layerIdx);
+            }}
+            hoveredInfo={hoveredInfo}
+          />
+        </div>
         
-        {/* Dynamic Content based on structureTab */}
-        <div style={{ padding: '4px' }}>
-            
-            {/* 1. Logit Lens Mode (Default) */}
-            {(!structureTab || structureTab === 'logit_lens') && data?.logit_lens && (
-              <div style={{ fontSize: '12px' }}>
-                <div style={{ paddingBottom: '8px', borderBottom: '1px solid #333', marginBottom: '8px', color: '#aaa' }}>
-                   Logit Lens Analysis
-                </div>
-                {data.logit_lens.map((layerData, layerIdx) => {
-                  const avgConfidence = layerData.reduce((sum, pos) => sum + pos.prob, 0) / layerData.length;
-                  const isHovered = hoveredInfo?.layer === layerIdx;
-                  const isSelected = selectedLayer === layerIdx;
-                  
-                  return (
-                    <div 
-                      key={layerIdx}
-                      onClick={() => {
-                        setSelectedLayer(layerIdx);
-                        loadLayerDetails(layerIdx);
-                      }}
-                      style={{
-                        padding: '8px',
-                        marginBottom: '6px',
-                        background: isSelected ? 'rgba(0, 210, 255, 0.2)' : isHovered ? 'rgba(0, 210, 255, 0.1)' : 'rgba(255,255,255,0.05)',
-                        border: isSelected ? '2px solid rgba(0, 210, 255, 0.8)' : isHovered ? '1px solid rgba(0, 210, 255, 0.5)' : '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '6px',
-                        transition: 'all 0.2s',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      <div style={{ fontWeight: 'bold', color: '#fff', marginBottom: '4px' }}>
-                        {t('validity.layer', { layer: layerIdx })}
-                      </div>
-                      <div style={{ color: '#aaa', fontSize: '11px' }}>
-                        平均置信度: <span style={{ color: avgConfidence > 0.5 ? '#5ec962' : '#fde725' }}>
-                          {(avgConfidence * 100).toFixed(1)}%
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* 2. FiberNet V2 Mode */}
-            {structureTab === 'global_topology' && <GlobalTopologyDashboard results={topologyResults} />}
-            {structureTab === 'fibernet_v2' && (
-                <div style={{ fontSize: '12px', color: '#ddd' }}>
-                    <div style={{ paddingBottom: '8px', borderBottom: '1px solid #333', marginBottom: '8px', color: '#4ecdc4', fontWeight: 'bold' }}>
-                       FiberNet V2 Topology
-                    </div>
-                    <p><strong>Base Manifold:</strong> 4D Grid (Low-Rank)</p>
-                    <p><strong>Fiber Space:</strong> 1024D (High-Precision)</p>
-                    <p><strong>Transport:</strong> Affine Connection</p>
-                    
-                    <div style={{ marginTop: '12px', borderTop: '1px solid #444', paddingTop: '8px' }}>
-                        <div style={{ fontWeight: 'bold', color: '#fff', marginBottom: '4px' }}>📚 观察指南</div>
-                        <ul style={{ paddingLeft: '16px', margin: '4px 0', color: '#aaa' }}>
-                            <li><strong>底流形 (Grid)</strong>: 蓝色网格，代表句法逻辑骨架。</li>
-                            <li><strong>纤维 (Columns)</strong>: 垂直柱体，代表具体语义概念 (如 King)。</li>
-                            <li><strong>平行四边形</strong>: 观察 "King-Man" 与 "Queen-Woman" 的几何平行性。</li>
-                        </ul>
-                    </div>
-
-                    <div style={{ marginTop: '12px', borderTop: '1px solid #444', paddingTop: '8px' }}>
-                         <div style={{ fontWeight: 'bold', color: '#fff', marginBottom: '4px' }}>🎮 操作指南</div>
-                         <ul style={{ paddingLeft: '16px', margin: '4px 0', color: '#aaa' }}>
-                            <li><strong>视角</strong>: 左键旋转，右键平移，滚轮缩放。</li>
-                            <li><strong>手术 (Surgery)</strong>: 点击右下角开启。
-                                <ul style={{ paddingLeft: '12px', marginTop: '2px' }}>
-                                    <li><strong>Graft</strong>: 选源点+终点，建立连接。</li>
-                                    <li><strong>Ablate</strong>: 选点，切除概念。</li>
-                                </ul>
-                            </li>
-                            <li><strong>动画</strong>: 右下角控制 Inject/Transport 演示。</li>
-                         </ul>
-                    </div>
-                </div>
-            )}
-
-            {/* 3. Circuit Discovery Mode */}
-            {structureTab === 'circuit' && analysisResult && (
-                <div style={{ fontSize: '12px', color: '#ddd' }}>
-                    <div style={{ paddingBottom: '8px', borderBottom: '1px solid #333', marginBottom: '8px', color: '#ff6b6b', fontWeight: 'bold' }}>
-                       Circuit Statistics
-                    </div>
-                    <p><strong>Nodes:</strong> {analysisResult.nodes?.length || 0}</p>
-                    <p><strong>Edges:</strong> {analysisResult.graph?.links?.length || 0}</p>
-                    <p><strong>Metric:</strong> Logit Difference</p>
-                </div>
-            )}
-
-            {/* 4. Feature Extraction Mode */}
-            {structureTab === 'features' && analysisResult && (
-                <div style={{ fontSize: '12px', color: '#ddd' }}>
-                    <div style={{ paddingBottom: '8px', borderBottom: '1px solid #333', marginBottom: '8px', color: '#ffd93d', fontWeight: 'bold' }}>
-                       SAE Features
-                    </div>
-                    <p><strong>Layer:</strong> {analysisResult.layer_idx}</p>
-                    <p><strong>Features Found:</strong> {analysisResult.n_features}</p>
-                    <p><strong>Sparsity:</strong> {analysisResult.sparsity?.toFixed(4) || 'N/A'}</p>
-                </div>
-            )}
-             
-             {/* 5. Causal Analysis Mode */}
-             {structureTab === 'causal' && analysisResult && (
-                <div style={{ fontSize: '12px', color: '#ddd' }}>
-                     <div style={{ paddingBottom: '8px', borderBottom: '1px solid #333', marginBottom: '8px', color: '#6c5ce7', fontWeight: 'bold' }}>
-                       Causal Mediation
-                    </div>
-                    <p><strong>Analyzed:</strong> {analysisResult.n_components_analyzed}</p>
-                    <p><strong>Important:</strong> {analysisResult.n_important_components}</p>
-                </div>
-             )}
-
-             {/* 6. TDA Mode */}
-             {structureTab === 'tda' && (
-                <div style={{ fontSize: '12px', color: '#ddd' }}>
-                    <div style={{ paddingBottom: '8px', borderBottom: '1px solid #333', marginBottom: '8px', color: '#e056fd', fontWeight: 'bold' }}>
-                       Topological Features
-                    </div>
-                    <p><strong>Method:</strong> Persistent Homology</p>
-                    <div style={{ marginTop: '8px', background: '#222', padding: '8px', borderRadius: '4px' }}>
-                         <div style={{fontWeight:'bold', marginBottom:'4px'}}>Betti Numbers ($\beta_k$):</div>
-                         <ul style={{paddingLeft:'16px', margin:0, color:'#aaa'}}>
-                             <li>$\beta_0$: 连通分量 (Connected Components)</li>
-                             <li>$\beta_1$: 环/孔 (Loops/Holes)</li>
-                             <li>$\beta_2$: 空腔 (Cavities)</li>
-                         </ul>
-                    </div>
-                    <p style={{marginTop:'8px', fontSize:'11px', color:'#888'}}>
-                        Use the "Structure Analysis" panel to compute barcodes.
-                    </p>
-                </div>
-             )}
-
-            {/* Fallback for No Data */}
-            {!data && structureTab !== 'fibernet_v2' && (
-              <div style={{ fontSize: '13px', color: '#888', fontStyle: 'italic' }}>
-                暂无数据。运行分析以查看模型信息。
-              </div>
-            )}
+        {/* ==================== 快速指标栏 ==================== */}
+        <div style={{ 
+          display: 'flex', 
+          gap: '6px', 
+          marginBottom: '10px',
+          padding: '6px',
+          background: 'rgba(255,255,255,0.03)',
+          borderRadius: '6px'
+        }}>
+          <MetricCard label="当前层" value={selectedLayer !== null ? `L${selectedLayer}` : '-'} color={COLORS.primary} />
+          <MetricCard label="计算状态" value={loading ? '计算中...' : '就绪'} color={loading ? COLORS.warning : COLORS.success} />
+          <MetricCard label="历史" value={`${history.length}条`} color={COLORS.purple} />
+        </div>
+        
+        {/* ==================== 操作历史 ==================== */}
+        <div style={{ 
+          padding: '8px', 
+          background: 'rgba(0,0,0,0.2)', 
+          borderRadius: '6px',
+          maxHeight: '150px',
+          overflowY: 'auto'
+        }}>
+          <OperationHistoryPanel 
+            history={history}
+            onRestore={(item) => {
+              if (item.details?.mode) {
+                setStructureTab(item.details.mode);
+              }
+            }}
+            onClear={clearHistory}
+            onRemove={(id) => {
+              // 简单过滤掉指定id
+              const idx = history.findIndex(h => h.id === id);
+              if (idx !== -1) {
+                history.splice(idx, 1);
+              }
+            }}
+            maxVisible={3}
+          />
         </div>
       </SimplePanel>
       )}
@@ -2544,11 +2547,7 @@ export default function App() {
         )}
 
         {/* Independent Visualizations (No Analysis Result Needed) */}
-        {structureTab === 'glass_matrix' && (
-            <group position={[0, 0, 0]}>
-                <GlassMatrix3D />
-            </group>
-        )}
+        {/* Note: GlassMatrix3D and FlowTubesVisualizer have their own Canvas, rendered outside */}
 
         {structureTab === 'flow_tubes' && (
             <group position={[0, -5, 0]}>
@@ -2609,6 +2608,13 @@ export default function App() {
         <ContactShadows resolution={1024} scale={20} blur={2} opacity={0.35} far={10} color="#000000" />
         <gridHelper args={[100, 50, '#222', '#111']} position={[0, -0.6, 0]} />
       </Canvas>
+      )}
+
+      {/* GlassMatrix3D - Has its own Canvas, must be rendered outside main Canvas */}
+      {structureTab === 'glass_matrix' && (
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
+          <GlassMatrix3D />
+        </div>
       )}
 
       {/* Head Analysis Panel - Draggable */}

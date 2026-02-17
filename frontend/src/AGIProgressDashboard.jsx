@@ -18,7 +18,7 @@ export const AGIProgressDashboard = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:5002/agi/progress')
+    fetch('http://localhost:5001/agi/progress')
       .then(res => res.json())
       .then(d => {
         if (d.status === 'success') {

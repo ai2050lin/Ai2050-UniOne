@@ -19,7 +19,7 @@ const AGICentralCommand = ({ onClose }) => {
   const [selectedPhaseId, setSelectedPhaseId] = useState('theory'); // Default to top-level Theory
 
   useEffect(() => {
-    fetch('http://localhost:5002/agi/progress')
+    fetch('http://localhost:5001/agi/progress')
       .then(res => res.json())
       .then(d => {
         if (d.status === 'success') {

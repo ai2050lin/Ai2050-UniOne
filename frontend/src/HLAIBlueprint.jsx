@@ -773,7 +773,7 @@ export const HLAIBlueprint = ({ onClose }) => {
                    {consciousField ? '实时意识场 (Active Consciousness)' : '系统状态 (System Status)'}
                 </h2>
                 <p style={{ color: '#666', fontSize: '14px' }}>
-                  {consciousField ? `当前内稳态平衡: ${(consciousField.stability * 100).toFixed(1)}% | GWS 竞争强度: ${consciousField.gws_intensity.toFixed(2)}` : '基于 Project Genesis 协议的核心能力对齐报告'}
+                  {consciousField ? `当前内稳态平衡: ${((consciousField.stability || 0) * 100).toFixed(1)}% | GWS 竞争强度: ${(consciousField.gws_intensity || 0).toFixed(2)}` : '基于 Project Genesis 协议的核心能力对齐报告'}
                 </p>
               </div>
 
@@ -781,10 +781,10 @@ export const HLAIBlueprint = ({ onClose }) => {
               {consciousField && (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '40px', animation: 'fadeIn 1s' }}>
                   {[
-                    { label: '能效优化 (DMS)', value: `${(consciousField.energy_saving * 100).toFixed(1)}%`, color: '#a855f7' },
-                    { label: '记忆活跃度', value: `${consciousField.memory_load}%`, color: '#00d2ff' },
-                    { label: '跨域共振率', value: consciousField.resonance.toFixed(3), color: '#ffaa00' },
-                    { label: '对齐稳定性', value: consciousField.stability.toFixed(2), color: '#10b981' }
+                    { label: '能效优化 (DMS)', value: `${((consciousField.energy_saving || 0) * 100).toFixed(1)}%`, color: '#a855f7' },
+                    { label: '记忆活跃度', value: `${consciousField.memory_load || 0}%`, color: '#00d2ff' },
+                    { label: '跨域共振率', value: (consciousField.resonance || 0).toFixed(3), color: '#ffaa00' },
+                    { label: '对齐稳定性', value: (consciousField.stability || 0).toFixed(2), color: '#10b981' }
                   ].map((m, i) => (
                     <div key={i} style={{ padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '20px', border: `1px solid ${m.color}30`, textAlign: 'center' }}>
                       <div style={{ fontSize: '10px', color: '#666', marginBottom: '8px', fontWeight: 'bold' }}>{m.label}</div>
