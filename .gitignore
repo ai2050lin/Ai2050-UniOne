@@ -29,3 +29,10 @@ tempdata/*.json
 # Node.js
 node_modules/
 frontend/node_modules/
+
+# Config files
+.vscode/
+.python-version
+package.json
+package-lock.json
+pyproject.toml
