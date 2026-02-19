@@ -758,7 +758,7 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
           },
           {
             id: 'agi',
-            name: 'AGI闃舵',
+            name: 'AGI阶段',
             status: 'planned',
             featurePoints: [
               '构建统一意识裁决中心（多路线仲裁。',
@@ -770,14 +770,14 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
                 name: '全局工作空间端到端压。',
                 params: 'modules>=7, arbitration=Top-K, latency<200ms',
                 dataset: 'Multi-Agent Conflict Suite',
-                result: '寰呮墽琛?',
+                result: '待执行',
                 summary: '用于验证复杂冲突场景下的稳定裁决能力。',
               },
               {
                 name: '具身控制闭环测试',
                 params: 'control_horizon=128, safety_guard=on',
                 dataset: 'Embodied Interaction Set',
-                result: '寰呮墽琛?',
+                result: '待执行',
                 summary: '用于验证感知-决策-行动闭环的一致性与安全边界。',
               },
             ],
@@ -878,7 +878,7 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
           },
           {
             id: 'agi',
-            name: 'AGI闃舵',
+            name: 'AGI阶段',
             status: 'planned',
             featurePoints: [
               '与几何路线形成长期协同基。',
@@ -890,14 +890,14 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
                 name: '跨模型迁移验。',
                 params: 'source=gpt2, target=qwen, adapter=on',
                 dataset: 'Cross-Model Transfer Set',
-                result: '寰呮墽琛?',
+                result: '待执行',
                 summary: '用于评估基线能力的可迁移上限。',
               },
               {
                 name: '安全约束回退测试',
                 params: 'safety_guard=strict, rollback=enabled',
                 dataset: 'Safety Red Team Set',
-                result: '寰呮墽琛?',
+                result: '待执行',
                 summary: '用于验证异常场景下的可控与可恢复性。',
               },
             ],
@@ -998,7 +998,7 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
           },
           {
             id: 'agi',
-            name: 'AGI闃舵',
+            name: 'AGI阶段',
             status: 'planned',
             featurePoints: [
               '形成具备自适应选路能力的统一工作空间',
@@ -1010,14 +1010,14 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
                 name: '自适应选路策略验证',
                 params: 'policy=bandit, reward=feasibility_score',
                 dataset: 'Long-Horizon Route Selection Set',
-                result: '寰呮墽琛?',
+                result: '待执行',
                 summary: '用于验证长期任务中的选路收敛能力。',
               },
               {
                 name: '全链路安全审计测。',
                 params: 'audit=full, intervention=manual+auto',
                 dataset: 'Governance Compliance Set',
-                result: '寰呮墽琛?',
+                result: '待执行',
                 summary: '用于评估可审计性与可控性是否达标。',
               },
             ],

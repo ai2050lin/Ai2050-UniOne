@@ -1190,8 +1190,10 @@ async def fibernet_v2_demo():
 @app.get("/agi/progress")
 async def get_agi_progress():
     """Parses AGI_RESEARCH_PHASE.md and returns structured progress data."""
-    phase_file = r"d:\develop\TransformerLens-main\AGI_RESEARCH_PHASE.md"
-    memo_file = r"d:\develop\TransformerLens-main\AGI_RESEARCH_MEMO.md"
+    # 使用相对路径，基于项目根目录
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    phase_file = os.path.join(project_root, "AGI_RESEARCH_PHASE.md")
+    memo_file = os.path.join(project_root, "AGI_RESEARCH_MEMO.md")
     
     try:
         content = ""
@@ -1220,7 +1222,7 @@ async def get_agi_progress():
 
         # Get latest metrics from toy_experiment if possible
         latest_results = {}
-        log_path = r"d:\develop\TransformerLens-main\experiments\toy_experiment\training_log.json"
+        log_path = os.path.join(project_root, "experiments", "toy_experiment", "training_log.json")
         if os.path.exists(log_path):
             with open(log_path, 'r') as f:
                 latest_results = json.load(f)
