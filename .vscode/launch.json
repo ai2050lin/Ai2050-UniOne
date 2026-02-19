@@ -1,8 +1,8 @@
-﻿{
+{
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Backend",
+            "name": "Backend Only",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/server/server.py",
@@ -10,7 +10,7 @@
             "justMyCode": true
         },
         {
-            "name": "Frontend",
+            "name": "Frontend Only",
             "type": "node",
             "request": "launch",
             "cwd": "${workspaceFolder}/frontend",
@@ -19,7 +19,6 @@
                 "run",
                 "dev"
             ],
-            "console": "integratedTerminal",
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "Local:.*(http://localhost:\\d+)",
@@ -29,10 +28,10 @@
     ],
     "compounds": [
         {
-            "name": "Full Stack (Backend + Frontend)",
+            "name": "🚀 Start 3D Visualization Client",
             "configurations": [
-                "Backend",
-                "Frontend"
+                "Backend Only",
+                "Frontend Only"
             ],
             "stopAll": true
         }

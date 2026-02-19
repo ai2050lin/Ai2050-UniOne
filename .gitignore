@@ -36,3 +36,7 @@ frontend/node_modules/
 package.json
 package-lock.json
 pyproject.toml
+launch.json
+
+# Models
+*.pth
