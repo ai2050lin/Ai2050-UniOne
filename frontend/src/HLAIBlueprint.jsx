@@ -983,10 +983,10 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
               },
               {
                 name: 'WikiText 几何涌现 (Phase 3)',
-                params: '20M Params, Split Stream, 1250 steps/ep',
+                params: '20M Params, Split Stream',
                 dataset: 'WikiText-2 (10M Tokens)',
-                result: 'ID: 10.5(压缩)->27.2(膨胀), Loss: 0.86',
-                summary: '验证了“流形呼吸”效应。ID 的非单调演化证实了模型正在经历从压缩去噪到结构重组的相变过程。',
+                result: 'Loss: 0.529, ID Peak: 31.5',
+                summary: '时间: 2026-02-19 | 数据: Ep 1-47 | 分析: 观测到完整的 ID 压缩(10.5)->膨胀(31.5)->微调(29.3) 呼吸周期。 | 结论: 验证了 SHMC 理论中流形动态重组的物理机制。',
               },
             ],
           },
@@ -1021,6 +1021,11 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
           assessment:
             '里程碑已从“功能演示”升级为“规模化证据链”：完成 full 矩阵、专项调参与多 seed 复现，证明大模型可训练性与稳定性。',
           suggestions: [
+
+            '将每阶段验收门槛量化（准确率、稳定性、时延、成本）。',
+            '规模化阶段增加故障注入与恢复时间指标（MTTR）。',
+            'Phase 4: TinyStories 规模化结晶实验 (100M Params) 正在运行 (Batch 500+, ID~12.0)。',
+
             '将规模化阶段验收门槛固定为：mean/std、训练耗时、吞吐、失败率四项硬指标。',
             '补充 OOD 与噪声扰动测试，验证高分是否可迁移而非数据内记忆。',
             '针对 d_100k 低资源场景继续优化（更长训练、正则与学习率策略），形成小数据稳态方案。',
