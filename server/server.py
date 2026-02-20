@@ -10,6 +10,7 @@ import json
 import os
 import sys
 import time
+from pathlib import Path
 
 # 添加路径，以便导入根目录及 scripts 目录的模块
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -1701,6 +1702,70 @@ async def get_multimodal_alignment(model: str = "gpt2"):
             "status": "success",
             "anchors": vision_anchors
         }
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+def _load_json_if_exists(path: str):
+    file_path = Path(path)
+    if not file_path.exists():
+        return None
+    try:
+        with file_path.open("r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return None
+
+
+def _latest_test_for_analysis(tests: List[Dict[str, Any]], analysis_type: str):
+    for test in tests:
+        if test.get("analysis_type") == analysis_type:
+            return test
+    return None
+
+
+@app.get("/nfb/multimodal/summary")
+async def get_multimodal_summary():
+    """
+    Unified summary for multimodal experiments.
+    Used by frontend to switch between:
+    1) vision_alignment
+    2) multimodal_connector
+    """
+    try:
+        timeline = run_service.get_experiment_timeline(route="fiber_bundle", limit_per_route=400)
+        routes = timeline.get("routes", []) if isinstance(timeline, dict) else []
+        route_item = routes[0] if routes else {}
+        tests = route_item.get("tests", []) if isinstance(route_item, dict) else []
+
+        vision_report_path = "tempdata/vision_training_report.json"
+        connector_report_path = "tempdata/fiber_multimodal_report.json"
+        vision_report = _load_json_if_exists(vision_report_path)
+        connector_report = _load_json_if_exists(connector_report_path)
+
+        payload = {
+            "status": "success",
+            "route": "fiber_bundle",
+            "route_stats": route_item.get("stats", {}),
+            "available_views": ["vision_alignment", "multimodal_connector"],
+            "views": {
+                "vision_alignment": {
+                    "analysis_type": "vision_alignment",
+                    "report_path": vision_report_path,
+                    "report": vision_report,
+                    "latest_test": _latest_test_for_analysis(tests, "vision_alignment"),
+                },
+                "multimodal_connector": {
+                    "analysis_type": "multimodal_connector",
+                    "report_path": connector_report_path,
+                    "report": connector_report,
+                    "latest_test": _latest_test_for_analysis(tests, "multimodal_connector"),
+                },
+            },
+        }
+        return payload
     except Exception as e:
         import traceback
         traceback.print_exc()
