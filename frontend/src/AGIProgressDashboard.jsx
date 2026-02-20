@@ -2,11 +2,13 @@ import {
   Activity,
   AlertCircle,
   BookOpen,
+  Brain,
   CheckCircle2,
   Clock,
   TrendingUp,
 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import DNNAnalysisPanel from './components/evaluation/DNNAnalysisPanel';
 import MilestoneProgressPanel from './components/evaluation/MilestoneProgressPanel';
 import RouteABComparePanel from './components/evaluation/RouteABComparePanel';
 import RouteScoreTrendPanel from './components/evaluation/RouteScoreTrendPanel';
@@ -259,6 +261,15 @@ export const AGIProgressDashboard = () => {
               </li>
             </ul>
           </div>
+        </section>
+
+        {/* 深度神经网络数学结构分析 */}
+        <section>
+          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <Brain className="text-violet-400" size={18} />
+            深度神经网络数学结构分析
+          </h2>
+          <DNNAnalysisPanel />
         </section>
 
         <section>
