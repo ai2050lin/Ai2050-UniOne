@@ -30,14 +30,11 @@ tempdata/*.json
 node_modules/
 frontend/node_modules/
 
-# Config files
-.vscode/
-.vscode/*
+# Config files - 只忽略个人配置，保留共享配置
+.vscode/settings.json
 .python-version
-package.json
-package-lock.json
-pyproject.toml
-launch.json
+# 注意：package.json, package-lock.json, pyproject.toml 不应忽略
+# launch.json 保留以便共享调试配置
 
 # Models
 *.pth
