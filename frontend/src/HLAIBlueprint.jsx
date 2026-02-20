@@ -224,49 +224,49 @@ const PHASES = [
       summary: "从理智诞生到意识涌现的工程闭环，旨在通过物理级干预实现完全对齐的通用智能。",
       pillars: ["Logical Closure", "Multimodal Alignment", "Value Formation"]
     },
-    theory_content: [], 
+    theory_content: [],
     analysis_sections: [],
     desc: "AGI 的分阶段落地，将逻辑核心与感官能力集成至统一意识框架。",
     sub_phases: [
-      { 
-        name: "理性的诞生", 
-        status: "done", 
+      {
+        name: "理性的诞生",
+        status: "done",
         focus: "閫昏緫闂寘涓?Z113 楠岃瘉",
         target: "验证智能底层是否具备几何化的非线性逻辑骨架。",
         work_content: "实现 FiberNet 核心逻辑层；。Z113 模运算任务上观察从统计拟合到代数跃迁。Grokking 现象。",
         test_results: "Z113 准确。99.4%；成功从向量点云中恢复出完整。S1 环面流形。",
         analysis: "证明了智能的底层是几何化的逻辑骨架，而非简单的线性回归。"
       },
-      { 
+      {
         name: "鎰熷畼鐨勮閱?",
-        status: "done", 
+        status: "done",
         focus: "多模态语义对。",
         target: "解决‘符号接地’问题，实现视觉特征与逻辑语义的物理对齐。",
         work_content: "开发跨模态投影算子；。MNIST 视觉空间流形映射。SYM 逻辑流形。",
         test_results: "对齐误差 MSE 下降。0.042；模型具备‘以理性的方式解读感官数据’的能力。",
         analysis: "视觉特征被精准翻译为内部逻辑坐标，模型初步具备了‘观察并理解’的能力。"
       },
-      { 
+      {
         name: "鏅烘収鐨勬秾鐜?",
-        status: "done", 
+        status: "done",
         focus: "流形曲率优化。Ricci Flow",
         target: "通过流形平滑机制，实现无监督下的逻辑冲突自修复。",
         work_content: "集成 Ricci Flow 演化管道；在睡眠周期执行隐层激活曲率的热传导方程平滑。",
         test_results: "拓扑亏格。15 优化。2；复杂逻辑推理下的‘幻觉’发生率显着降低。",
         analysis: "验证了‘睡眠机制’在解开拓扑纠缠和修补逻辑死结中的必要性。"
       },
-      { 
-        name: "价值的形成", 
-        status: "done", 
+      {
+        name: "价值的形成",
+        status: "done",
         focus: "神经流形手术与人类对。",
         target: "实现。AI 内在价值取向的直接几何干预，由‘提示词对齐’跃迁至‘流形对齐’。",
         work_content: "开。Manifold Surgery 交互接口；实现基。3D 空间拖拽的语义向量场实时重构。",
         test_results: "Surgery Alignment Loss 0.0082；成功通过物理手术剥离模型偏见，实现价值稳定对齐。",
         analysis: "流形手术允许直接修改模型认知，是通往可控 AGI 的物理路径。"
       },
-      { 
-        name: "统一意识", 
-        status: "in_progress", 
+      {
+        name: "统一意识",
+        status: "in_progress",
         focus: "全球工作空间 (GWT) 集成",
         target: "构建跨模态的实时裁决中心，实现具备‘关注点’的动态意识流。",
         work_content: "实现 Top-K 全局竞争机制；集成全局工作空间投影矩阵；实现注意力焦点的拓扑漂移控制。",
@@ -311,38 +311,38 @@ const PHASES = [
     progress: 75,
     color: "#10b981",
     definition: {
-        headline: "System Capabilities Report",
-        summary: "基于 Project Genesis 协议的核心能力对齐报告。目前系统已实现 128 维逻辑流形压缩，并在测地线推理路径上取得了 11.15% 的效能提升。",
-        pillars: ["Capability Tracking", "Homeostatic Check", "Alignment Metrics"]
+      headline: "System Capabilities Report",
+      summary: "基于 Project Genesis 协议的核心能力对齐报告。目前系统已实现 128 维逻辑流形压缩，并在测地线推理路径上取得了 11.15% 的效能提升。",
+      pillars: ["Capability Tracking", "Homeostatic Check", "Alignment Metrics"]
     },
     parameters: [
-      { 
-        name: "流形维度 (Manifold Dim)", 
-        value: "128D", 
+      {
+        name: "流形维度 (Manifold Dim)",
+        value: "128D",
         detail: "浠?1024D 鍏ㄦ伅鎶曞奖",
         desc: "系统底层语义逻辑被压缩至 128 维的流形空间，确保逻辑闭包的紧凑性。",
         value_meaning: "维度越高蕴含信息越丰富，。128D 是目前兼顾“计算效率”与“逻辑解析力”的最佳平衡点。",
         why_important: "它是智能的‘骨架’。维度过低会导致语义丢失（幻觉），维度过高则会导致维度灾难。28D 确保了推理的稳定性。"
       },
-      { 
-        name: "鍘嬬缉鍊嶇巼 (Compression)", 
-        value: "26.67x", 
+      {
+        name: "鍘嬬缉鍊嶇巼 (Compression)",
+        value: "26.67x",
         detail: "SHDC 稀疏编。",
         desc: "通过全息稀疏投影技术，将庞大的原始神经元参数集压缩至极小规模，同时不损失结构信息。",
         value_meaning: "意味着系统可以以极低的显存占用（约 4GB）维持千亿级参数模型的逻辑核心。",
         why_important: "这是实现‘小型化 AGI’的关键。只有高的压缩比，智能才能脱离昂贵的算力集群，进入单机甚至移动端实时运行。"
       },
-      { 
-        name: "语义保真。(Fidelity)", 
-        value: "93%", 
+      {
+        name: "语义保真。(Fidelity)",
+        value: "93%",
         detail: "几何特征保留。",
         desc: "测量压缩后的流形几何特征（如曲率、测地线分布）与原始空间的对齐程度。",
         value_meaning: "93% 的保真度意味着在推理决策中，系统能够保持与原始超大型模型几乎一致的逻辑链路。",
         why_important: "它是‘一致性’的保障。过低的保真度会导致模型产生逻辑偏差。3% 确保了‘智能核心’从未在压缩中变质。"
       },
-      { 
-        name: "测地线一致。(Geodesic)", 
-        value: "98.8%", 
+      {
+        name: "测地线一致。(Geodesic)",
+        value: "98.8%",
         detail: "推理路径对齐。",
         desc: "衡量系统实际推理路径与流形上理论‘最小作用量路径’（最短路径）的重合程度。",
         value_meaning: "极高的一致性体现了推理过程的‘丝滑性’，几乎没有多余的语义波动或算力浪费。",
@@ -350,33 +350,33 @@ const PHASES = [
       }
     ],
     passed_tests: [
-      { 
-        name: "持久同调结构验证 (TDA Structure)", 
-        date: "2026-02-14", 
+      {
+        name: "持久同调结构验证 (TDA Structure)",
+        date: "2026-02-14",
         result: "PASS",
         target: "验证隐层激活空间是否存在非随机的拓扑环面或空腔。",
         process: "通过 Rips Complex 算法构建点云单纯复形，持久化扫描 β₀ 。β。贝蒂数。",
         significance: "确保 AI 不是在拟合孤立样本，而是在构建具备全局拓扑一致性的语义形状。"
       },
-      { 
-        name: "里奇流流形平滑测。(Ricci Smoothing)", 
-        date: "2026-02-15", 
+      {
+        name: "里奇流流形平滑测。(Ricci Smoothing)",
+        date: "2026-02-15",
         result: "PASS",
         target: "消除推理过程中的逻辑尖峰（幻觉诱因），降低流形局部曲率。",
         process: "在睡眠周期运行离线里奇流处理，平滑度量张量的非连续跳变。",
         significance: "使模型推理轨迹更符合测地线分布，大幅提升逻辑自洽性。"
       },
-      { 
-        name: "SHDC 正交性基准测。(Orthogonality)", 
-        date: "2026-02-15", 
+      {
+        name: "SHDC 正交性基准测。(Orthogonality)",
+        date: "2026-02-15",
         result: "PASS",
         target: "验证 128 维全息编码在稀疏投影下的几乎正交性。",
         process: "随机采样 10,000 个核心特征向量，计算其余切距离（Cos Dist）分布。",
         significance: "解决了维度灾难。正交性确保了特征间无干扰覆盖，支持海量知识的高效读写。"
       },
-      { 
-        name: "测地线路径丝滑化 (Geodesic Silkiness)", 
-        date: "2026-02-15", 
+      {
+        name: "测地线路径丝滑化 (Geodesic Silkiness)",
+        date: "2026-02-15",
         result: "PASS (+11.15%)",
         target: "优化推理路径，使激活流沿最小作用量路径滑行。",
         process: "引入 Geodesic Regularization 约束项，对比 baseline 与优化后的推理物理作用量。",
@@ -478,14 +478,14 @@ const PHASES = [
       }
     ],
     goals: [
-        "实现 100% 核心能力对齐",
-        "完成物理躯体集成与控。",
-        "建立多维情感稳定反馈系统"
+      "实现 100% 核心能力对齐",
+      "完成物理躯体集成与控。",
+      "建立多维情感稳定反馈系统"
     ],
     metrics: {
-        "Capabilities Ready": "3/6",
-        "Safety Alignment": "Secure",
-        "Status Verifier": "Active"
+      "Capabilities Ready": "3/6",
+      "Safety Alignment": "Secure",
+      "Status Verifier": "Active"
     }
   }
 ];
@@ -739,10 +739,10 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
         const result = await pollRuntimeWithFallback({
           apiBase: API_BASE,
           runRequest: {
-          route: 'fiber_bundle',
-          analysis_type: 'unified_conscious_field',
-          params: { step_id: stepId, noise_scale: 0.4 },
-          input_payload: {},
+            route: 'fiber_bundle',
+            analysis_type: 'unified_conscious_field',
+            params: { step_id: stepId, noise_scale: 0.4 },
+            input_payload: {},
           },
           mapRuntimeEvents: mapRuntimeConsciousField,
           fetchLegacy: fetchLegacyConsciousField,
@@ -980,6 +980,13 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
                 dataset: 'd_100k',
                 result: 'best_val_acc：0.794689 / 0.788311 / 0.791244；mean=0.791415，std=0.002607',
                 summary: '与 epochs=24 的 d_100k 结果相比无显著提升，说明低资源场景应优先补充数据或引入更强正则与数据增强策略。',
+              },
+              {
+                name: 'WikiText 几何涌现 (Phase 3)',
+                params: '20M Params, Split Stream, 1250 steps/ep',
+                dataset: 'WikiText-2 (10M Tokens)',
+                result: 'ID: 10.5(压缩)->27.2(膨胀), Loss: 0.86',
+                summary: '验证了“流形呼吸”效应。ID 的非单调演化证实了模型正在经历从压缩去噪到结构重组的相变过程。',
               },
             ],
           },
@@ -1299,9 +1306,9 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
       const routeProgress =
         totalRuns > 0
           ? Math.max(
-              0,
-              Math.min(100, Math.round((completedRuns / Math.max(1, totalRuns)) * 60 + avgScore * 40))
-            )
+            0,
+            Math.min(100, Math.round((completedRuns / Math.max(1, totalRuns)) * 60 + avgScore * 40))
+          )
           : 0;
       return {
         ...base,
@@ -1622,9 +1629,9 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
         position: 'absolute', width: '85%', height: '85%', border: '1px dashed rgba(168, 85, 247, 0.3)',
         borderRadius: '50%', animation: 'brainRotateReverse 15s linear infinite'
       }} />
-      <Brain size={180} color="#00d2ff" style={{ 
+      <Brain size={180} color="#00d2ff" style={{
         filter: 'drop-shadow(0 0 30px rgba(0, 210, 255, 0.4))',
-        zIndex: 2 
+        zIndex: 2
       }} />
       {/* Dynamic Synaptic Nodes */}
       {Array.from({ length: 8 }).map((_, i) => (
@@ -1655,7 +1662,7 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
 
       {/* Top Header / Navigation */}
       <div style={{
-        padding: '0 40px', height: '80px', display: 'flex', justifyContent: 'space-between', 
+        padding: '0 40px', height: '80px', display: 'flex', justifyContent: 'space-between',
         alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '50px', height: '100%' }}>
@@ -1696,7 +1703,7 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
 
       {/* Main Content Area */}
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
-        
+
         {/* Sub-Sidebar for Research Progress */}
         {activeTab === 'progress' && (
           <div style={{
@@ -1705,10 +1712,10 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
             position: 'relative'
           }}>
             <div style={{ fontSize: '10px', color: '#444', textTransform: 'uppercase', marginBottom: '30px', letterSpacing: '2px', fontWeight: 'bold' }}>Research Routes</div>
-            
+
             {/* Vertical Timeline Line */}
-            <div style={{ 
-              position: 'absolute', left: '38px', top: '80px', bottom: '40px', 
+            <div style={{
+              position: 'absolute', left: '38px', top: '80px', bottom: '40px',
               width: '1px', background: 'linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
               zIndex: 0
             }} />
@@ -1718,7 +1725,7 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
                 <div key={routeItem.id} style={{ position: 'relative' }}>
                   {/* Timeline Dot */}
                   <div style={{
-                    position: 'absolute', left: '15px', top: '22px', 
+                    position: 'absolute', left: '15px', top: '22px',
                     width: '6px', height: '6px', borderRadius: '50%',
                     background: selectedRoute?.id === routeItem.id ? '#00d2ff' : '#222',
                     border: `2px solid ${selectedRoute?.id === routeItem.id ? '#000' : 'rgba(255,255,255,0.1)'}`,
@@ -1729,7 +1736,7 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
                   <button
                     onClick={() => setSelectedRouteId(routeItem.id)}
                     style={{
-                      width: '100%', padding: '12px 12px 12px 45px', borderRadius: '14px', 
+                      width: '100%', padding: '12px 12px 12px 45px', borderRadius: '14px',
                       textAlign: 'left', cursor: 'pointer',
                       background: selectedRoute?.id === routeItem.id ? 'rgba(255,255,255,0.03)' : 'transparent',
                       border: 'none',
@@ -1741,9 +1748,9 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
                       <span style={{ fontSize: '14px', fontWeight: 'bold', color: selectedRoute?.id === routeItem.id ? '#fff' : '#888' }}>
                         {routeItem.title}
                       </span>
-                      <span style={{ 
-                        fontSize: '11px', fontFamily: 'monospace', fontWeight: 'bold', 
-                        color: selectedRoute?.id === routeItem.id ? '#00d2ff' : '#444' 
+                      <span style={{
+                        fontSize: '11px', fontFamily: 'monospace', fontWeight: 'bold',
+                        color: selectedRoute?.id === routeItem.id ? '#00d2ff' : '#444'
                       }}>
                         {routeItem.stats.routeProgress}%
                       </span>
@@ -1759,11 +1766,11 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
         )}
 
         {/* Content Details */}
-        <div style={{ 
+        <div style={{
           flex: 1, padding: '50px 80px', overflowY: 'auto',
           background: 'radial-gradient(circle at 50% 10%, rgba(0, 100, 200, 0.05) 0%, transparent 70%)'
         }}>
-          
+
           {/* TAB: Project Roadmap */}
           {activeTab === 'roadmap' && (
             <div style={{ animation: 'roadmapFade 0.6s ease-out', maxWidth: '1000px', margin: '0 auto' }}>
@@ -1911,12 +1918,12 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
               </div>
 
               {/* 下：分析成果列表 */}
-                <div style={{
-                  padding: '30px',
-                  borderRadius: '24px',
-                  border: '1px solid rgba(16,185,129,0.24)',
-                  background: 'linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(16,185,129,0.02) 100%)'
-                }}>
+              <div style={{
+                padding: '30px',
+                borderRadius: '24px',
+                border: '1px solid rgba(16,185,129,0.24)',
+                background: 'linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(16,185,129,0.02) 100%)'
+              }}>
                 <div style={{ color: '#10b981', fontWeight: 'bold', fontSize: '18px', marginBottom: '8px' }}>
                   分析成果
                 </div>
@@ -2272,7 +2279,7 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
               <BrainModel />
               <div style={{ textAlign: 'center', marginBottom: '60px' }}>
                 <h2 style={{ fontSize: '32px', fontWeight: '900', color: consciousField?.glow_color === 'amber' ? '#ffaa00' : '#10b981', margin: '20px 0 8px 0', transition: 'color 1s' }}>
-                   {consciousField ? '实时意识场 (Active Consciousness)' : '系统状态 (System Status)'}
+                  {consciousField ? '实时意识场 (Active Consciousness)' : '系统状态 (System Status)'}
                 </h2>
                 <p style={{ color: '#666', fontSize: '14px' }}>
                   {consciousField
@@ -2372,11 +2379,11 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                     {(activeSystemProfile?.parameterCards || []).map((p, i) => (
-                      <div 
-                        key={i} 
+                      <div
+                        key={i}
                         onClick={() => setExpandedParam(expandedParam === i ? null : i)}
-                        style={{ 
-                          padding: '16px', background: 'rgba(0,0,0,0.3)', borderRadius: '16px', 
+                        style={{
+                          padding: '16px', background: 'rgba(0,0,0,0.3)', borderRadius: '16px',
                           border: `1px solid ${expandedParam === i ? 'rgba(0, 210, 255, 0.5)' : 'rgba(0, 210, 255, 0.1)'}`,
                           cursor: 'pointer', transition: 'all 0.3s',
                           gridColumn: expandedParam === i ? 'span 2' : 'span 1' // Expand to full width if active
@@ -2389,7 +2396,7 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
                         <div style={{ fontSize: '11px', color: '#7dd3fc', marginBottom: '4px' }}>人脑能力：{p.brain_ability || '-'}</div>
                         <div style={{ fontSize: '18px', fontWeight: '900', color: '#fff', fontFamily: 'monospace' }}>{p.route_param}</div>
                         <div style={{ fontSize: '10px', color: '#00d2ff88', marginTop: '4px' }}>{p.detail}</div>
-                        
+
                         {/* Expanded Content for Parameters */}
                         {expandedParam === i && (
                           <div style={{ marginTop: '16px', borderTop: '1px solid rgba(0, 210, 255, 0.1)', paddingTop: '16px', animation: 'fadeIn 0.3s ease' }}>

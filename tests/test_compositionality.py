@@ -62,20 +62,35 @@ class TestCompositionality(unittest.TestCase):
         self.assertAlmostEqual(result['cosine_similarity'], 1.0, places=5)
 
     def test_noise_compositionality(self):
-        # Override get_token_activation to return noisy vectors
+        # Use more samples to make the system overdetermined (N > 2*d)
+        # d_model = 3, so inputs have dim 6. We need > 6 samples.
+        np_random = torch.randn
+        
         def mock_get_activation(text, layer_idx):
-            if text == "A": return torch.tensor([1.0, 0.0, 0.0])
-            if text == "B": return torch.tensor([0.0, 1.0, 0.0])
-            if text == "AB": return torch.tensor([0.8, 0.0, 0.0]) # Bad addition
+            # Parse text "A_i", "B_i", "AB_i"
+            prefix, idx = text.split('_')
+            i = int(idx)
+            torch.manual_seed(i) # Deterministic per sample
+            v1 = torch.randn(3)
+            torch.manual_seed(i + 1000)
+            v2 = torch.randn(3)
+            
+            if prefix == "A": return v1
+            if prefix == "B": return v2
+            if prefix == "AB":
+                # Non-linear relation: v1 * v2 + noise
+                return v1 * v2 + torch.randn(3) * 0.5
             return torch.zeros(3)
             
         self.analyzer.get_token_activation = mock_get_activation
         
-        phrases = [("A", "B", "AB")]
+        # Generate 10 samples
+        phrases = [(f"A_{i}", f"B_{i}", f"AB_{i}") for i in range(10)]
         result = self.analyzer.analyze_compositionality(phrases, layer_idx=0)
         
         print("Noisy Case Result:", result)
-        self.assertTrue(result['r2_score'] < 1.0)
+        # R2 should be low (definitely not 1.0)
+        self.assertTrue(result['r2_score'] < 0.9)
 
 if __name__ == '__main__':
     unittest.main()
