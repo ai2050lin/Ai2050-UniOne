@@ -33,6 +33,7 @@ export const API_ENDPOINTS = {
     gwtStatus: `${API_CONFIG.main}/nfb/gwt/status`,
     evolutionStatus: `${API_CONFIG.main}/nfb/evolution/status`,
     multimodalAlign: `${API_CONFIG.main}/nfb/multimodal/align`,
+    multimodalSummary: `${API_CONFIG.main}/nfb/multimodal/summary`,
   },
 
   training: {

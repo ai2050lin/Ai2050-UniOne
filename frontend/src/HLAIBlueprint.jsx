@@ -528,6 +528,182 @@ const IMPROVEMENTS = [
   }
 ];
 
+const DNN_ANALYSIS_PLAN = {
+  title: '深度神经网络分析',
+  subtitle: '还原“人脑数学结构”的系统方案',
+  goals: [
+    'H1：网络内部存在跨模型稳定的低维几何/拓扑结构',
+    'H2：该结构对能力是因果必要，而不是训练副产物',
+    'H3：将结构先验注入新模型，可复现关键能力并提升可解释性',
+  ],
+  framework: [
+    '观测层：统一采集激活、注意力、梯度、残差流、训练轨迹',
+    '结构层：流形学习 + TDA + 谱分解 + 群对称分析',
+    '动力学层：分析训练相变点、吸引子与曲率演化',
+    '因果层：激活手术、路径阻断、子回路替换',
+    '跨模型层：跨架构/参数/数据规模验证结构共性',
+    '重建层：构建结构先验模型并做能力复现',
+  ],
+  experimentMatrix: [
+    '模型族：Transformer / MoE / RNN-StateSpace / 视觉模型',
+    '任务族：语言推理 / 视觉语义 / 跨模态对齐 / 长程记忆',
+    '阶段轴：训练早期-中期-收敛后 + 小中大规模',
+  ],
+  metrics: [
+    '共性分：跨模型稳定性',
+    '因果分：干预后性能变化与可复现性',
+    '压缩分：低自由度解释高行为复杂度',
+    '重建分：结构先验模型复现原能力程度',
+    '迁移分：新任务/新模型泛化增益',
+  ],
+  milestones: [
+    '阶段A 结构发现：形成候选结构库',
+    '阶段B 因果确认：淘汰非因果候选',
+    '阶段C 结构重建：验证“结构 -> 能力”复现链条',
+  ],
+  successCriteria: [
+    '成功：结构先验模型在关键任务接近或超过基线，且解释更紧凑',
+    '失败：结构只在单模型/单任务成立，或干预无稳定因果效应',
+  ],
+};
+
+const MATH_ROUTE_SYSTEM_PLAN = {
+  title: '数学路线系统方案',
+  subtitle: '多路线分层组合：主线产出 + 验证保真 + 前沿突破',
+  routeAnalysis: [
+    {
+      route: '流形几何',
+      depth: '⭐⭐⭐⭐',
+      compute: '⭐⭐⭐',
+      interpret: '⭐⭐⭐⭐',
+      compatibility: '⭐⭐⭐⭐⭐',
+      pros: [
+        '与 SHMC/NFBT 直接兼容，可复用现有几何可视化与曲率分析链路',
+        '对“语义空间形状”和“推理路径”解释力强',
+      ],
+      cons: [
+        '高维曲率估计对噪声敏感，数值稳定性要求高',
+        '跨模型比较时需要统一坐标与归一化协议',
+      ],
+      feasibility: '高：建议作为主线长期投入',
+    },
+    {
+      route: '代数拓扑',
+      depth: '⭐⭐⭐⭐⭐',
+      compute: '⭐⭐',
+      interpret: '⭐⭐⭐',
+      compatibility: '⭐⭐⭐⭐',
+      pros: [
+        '能捕捉全局结构不变量，适合跨尺度稳定性验证',
+        '对坐标变换鲁棒，可作为路线一致性验收工具',
+      ],
+      cons: [
+        '计算代价高，尤其在大样本高维下成本明显',
+        '指标到任务性能之间的因果链需要额外实验补充',
+      ],
+      feasibility: '中高：适合作为验证层，而非主训练闭环',
+    },
+    {
+      route: '动力系统',
+      depth: '⭐⭐⭐⭐',
+      compute: '⭐⭐⭐',
+      interpret: '⭐⭐⭐⭐',
+      compatibility: '⭐⭐⭐⭐⭐',
+      pros: [
+        '可解释训练相变、吸引子与稳定性边界',
+        '与流形几何联合可形成“结构+演化”闭环',
+      ],
+      cons: [
+        '实验设计复杂，需要长时间轨迹与多种对照',
+        '参数敏感，结论依赖严格的可重复配置',
+      ],
+      feasibility: '高：建议与流形几何组成主干双路线',
+    },
+    {
+      route: '信息瓶颈',
+      depth: '⭐⭐⭐⭐',
+      compute: '⭐⭐⭐',
+      interpret: '⭐⭐⭐⭐',
+      compatibility: '⭐⭐⭐',
+      pros: [
+        '可量化压缩-保真平衡，工程指标明确',
+        '工具成熟，便于快速落地到基线系统',
+      ],
+      cons: [
+        '互信息估计在高维场景下存在偏差风险',
+        '对几何结构本身的刻画能力有限',
+      ],
+      feasibility: '高：适合作为工程实证层核心指标路线',
+    },
+    {
+      route: '张量分解',
+      depth: '⭐⭐⭐',
+      compute: '⭐⭐⭐⭐⭐',
+      interpret: '⭐⭐⭐⭐',
+      compatibility: '⭐⭐⭐',
+      pros: [
+        '计算可行性高，便于大规模批量分析',
+        '有助于提取低秩结构与模块耦合模式',
+      ],
+      cons: [
+        '理论抽象层次有限，难单独支撑统一理论',
+        '分解形式较多，结论可能依赖具体分解假设',
+      ],
+      feasibility: '高：适合与信息瓶颈配对形成实用工具链',
+    },
+    {
+      route: '范畴论',
+      depth: '⭐⭐⭐⭐⭐',
+      compute: '⭐',
+      interpret: '⭐⭐',
+      compatibility: '⭐⭐⭐⭐⭐',
+      pros: [
+        '有潜力统一描述模块组合、跨模态映射与可迁移结构',
+        '对 SHMC/NFBT 的架构级抽象能力最强',
+      ],
+      cons: [
+        '工程可计算性弱，短期缺少直接可测指标',
+        '与任务分数的桥接路径仍需大量中间理论工作',
+      ],
+      feasibility: '中：定位为前沿突破研究，不作为近期主线交付',
+    },
+    {
+      route: '统计物理/重整化群',
+      depth: '⭐⭐⭐⭐',
+      compute: '⭐⭐⭐',
+      interpret: '⭐⭐⭐',
+      compatibility: '⭐⭐⭐',
+      pros: [
+        '适合解释尺度律、层级粗粒化与涌现现象',
+        '有机会揭示网络深层层次结构的统一机制',
+      ],
+      cons: [
+        '从神经网络到严格 RG 映射尚不统一',
+        '理论结论往往依赖近似，需要谨慎验证',
+      ],
+      feasibility: '中高：适合与主线并行的小规模探索项目',
+    },
+  ],
+  architecture: [
+    '主干理论层：流形几何 + 动力系统（SHMC/NFBT 主轴）',
+    '工程实证层：信息瓶颈 + 张量分解（高可行性与高复现）',
+    '结构验证层：代数拓扑（跨模型拓扑稳定性验证）',
+    '前沿突破层：范畴论 + 重整化群（统一描述与层级本质）',
+  ],
+  allocation: [
+    '45%：流形几何 + 动力系统',
+    '30%：信息瓶颈 + 张量分解',
+    '15%：代数拓扑',
+    '10%：范畴论 + 重整化群',
+  ],
+  milestones: [
+    '阶段A 可行性：四条高可行路线全部跑通并复现',
+    '阶段B 一致性：代数拓扑验证跨模型/跨任务稳定性',
+    '阶段C 统一化：形成范畴论 + 重整化群解释草案',
+    '阶段D 反证：对关键假设做干预反证，保留可证伪结论',
+  ],
+};
+
 export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
   const [activeTab, setActiveTab] = useState(initialTab); // roadmap, progress, system
   const [selectedRouteId, setSelectedRouteId] = useState('fiber_bundle');
@@ -536,6 +712,9 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
   const [expandedParam, setExpandedParam] = useState(null);
   const [expandedEngPhase, setExpandedEngPhase] = useState(null);
   const [consciousField, setConsciousField] = useState(null);
+  const [multimodalSummary, setMultimodalSummary] = useState(null);
+  const [multimodalView, setMultimodalView] = useState('multimodal_connector');
+  const [multimodalError, setMultimodalError] = useState(null);
   const runtimeStepRef = useRef(0);
 
   useEffect(() => {
@@ -605,6 +784,39 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
       mounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchMultimodalSummary = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/nfb/multimodal/summary`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const payload = await res.json();
+        if (!mounted) return;
+        if (payload?.status !== 'success') throw new Error('invalid payload');
+        setMultimodalSummary(payload);
+        setMultimodalError(null);
+      } catch (err) {
+        if (!mounted) return;
+        setMultimodalError(err?.message || 'multimodal summary unavailable');
+      }
+    };
+    fetchMultimodalSummary();
+    const interval = setInterval(fetchMultimodalSummary, 15000);
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
+  }, []);
+
+  useEffect(() => {
+    const available = Array.isArray(multimodalSummary?.available_views)
+      ? multimodalSummary.available_views
+      : [];
+    if (available.length > 0 && !available.includes(multimodalView)) {
+      setMultimodalView(available[0]);
+    }
+  }, [multimodalSummary, multimodalView]);
 
   const statusData = PHASES.find(p => p.id === 'agi_status');
   const roadmapData = PHASES.find(p => p.id === 'roadmap');
@@ -732,27 +944,42 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
           },
           {
             id: 'scale',
-            name: '规模化阶。',
+            name: '规模化阶段',
             status: 'in_progress',
             featurePoints: [
-              '扩展跨模态对齐与纤维记忆容量',
-              '集成 Ricci Flow 与全局工作空间协同机制',
-              '建立时间线、周报、失败归因的治理闭环',
+              '完成参数规模 × 数据规模的系统化训练矩阵验证（full preset）',
+              '完成 8.5M 大模型专项调参（warmup + grad accumulation）并恢复收敛',
+              '完成 5-seed 大规模稳定性复现实验，沉淀统计报告与基准文件',
+              '完成 d_100k 低资源长程训练对照（36 epochs），确认当前瓶颈主要来自数据规模而非训练轮次',
             ],
             tests: [
               {
-                name: '跨模态对齐回。',
-                params: 'projection_dim=128, topk=32, loss=cos+mse',
-                dataset: 'MNIST-SYM paired set + Prompt Bench',
-                result: 'MSE=0.042，一致性提。',
-                summary: '视觉-逻辑映射稳定，但长链任务仍有局部漂移。',
+                name: 'Full Matrix 基线测试（16 runs）',
+                params: 'preset=full, epochs=12, batch=256, eval_batch=2048, device=cuda',
+                dataset: 'Modular Addition 合成集：d_100k/d_300k/d_700k/d_1200k',
+                result: '总耗时 18.15 分钟；m_0.4m/m_1.4m/m_3.2m 在中大数据规模可收敛；m_8.5m 在默认超参下失稳（~0.009）。',
+                summary: '验证了“参数放大后训练策略敏感性显著增加”，大模型不可直接复用小模型超参。',
               },
               {
-                name: 'Ricci Flow 稳定性测。',
-                params: 'iterations=100, step=1e-2, reg=1e-3',
-                dataset: '内部推理轨迹集合（多任务。',
-                result: '曲率尖峰下降，幻觉率降低',
-                summary: '平滑机制有效，下一步需优化演化效率与时延。',
+                name: 'm_8.5m 专项调参测试（4 runs）',
+                params: 'epochs=24, lr=2e-4, weight_decay=0.01, warmup=0.1, min_lr_scale=0.1, grad_accum=2, grad_clip=0.5, dropout=0.0',
+                dataset: '同 full 数据规模四档：d_100k/d_300k/d_700k/d_1200k',
+                result: 'best_val_acc：0.7984 / 0.9905 / 0.9999 / 1.0000（由默认配置的 ~0.009 全面恢复）。',
+                summary: '调参后 8.5M 已具备稳定收敛能力，且随数据规模增加表现持续提升。',
+              },
+              {
+                name: 'm_8.5m 多随机种子稳定性（5 seeds, 20 runs）',
+                params: '固定 tuned 配置，seed 组：42 / 314 / 2026 / 4096 / 8192',
+                dataset: 'd_100k/d_300k/d_700k/d_1200k',
+                result: '均值(best)：0.793640 / 0.990581 / 0.999949 / 1.000000；std：0.004160 / 0.000616 / 0.000042 / 0.000000',
+                summary: '300k+ 数据规模下结果稳定且高分，100k 档位仍存在数据瓶颈（约 0.79 上限）。',
+              },
+              {
+                name: 'm_8.5m 低资源长程训练（3 seeds, d_100k, epochs=36）',
+                params: '同 tuned 配置，epochs 从 24 提升到 36；seed：10001 / 20002 / 30003',
+                dataset: 'd_100k',
+                result: 'best_val_acc：0.794689 / 0.788311 / 0.791244；mean=0.791415，std=0.002607',
+                summary: '与 epochs=24 的 d_100k 结果相比无显著提升，说明低资源场景应优先补充数据或引入更强正则与数据增强策略。',
               },
             ],
           },
@@ -785,11 +1012,11 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
         ],
         milestonePlanEvaluation: {
           assessment:
-            '三阶段路径清晰，覆盖从原型验证到规模化再。AGI 的关键演进链路。',
+            '里程碑已从“功能演示”升级为“规模化证据链”：完成 full 矩阵、专项调参与多 seed 复现，证明大模型可训练性与稳定性。',
           suggestions: [
-            '将每阶段验收门槛量化（准确率、稳定性、时延、成本）。',
-            '规模化阶段增加故障注入与恢复时间指标（MTTR）。',
-            'AGI阶段提前定义安全红线与人工干预回退策略。',
+            '将规模化阶段验收门槛固定为：mean/std、训练耗时、吞吐、失败率四项硬指标。',
+            '补充 OOD 与噪声扰动测试，验证高分是否可迁移而非数据内记忆。',
+            '针对 d_100k 低资源场景继续优化（更长训练、正则与学习率策略），形成小数据稳态方案。',
           ],
         },
       },
@@ -1106,6 +1333,28 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
   const systemRouteOptions = routeList.filter((item) =>
     ['fiber_bundle', 'transformer_baseline', 'hybrid_workspace'].includes(item.id)
   );
+  const selectedMultimodalData = multimodalSummary?.views?.[multimodalView] || null;
+  const selectedMultimodalReport = selectedMultimodalData?.report || null;
+  const selectedMultimodalBest = selectedMultimodalReport?.summary?.best || null;
+  const selectedMultimodalLatest = selectedMultimodalData?.latest_test || null;
+
+  const multimodalMetricRows = useMemo(() => {
+    if (!selectedMultimodalBest) return [];
+    if (multimodalView === 'vision_alignment') {
+      return [
+        { label: '最佳轮次', value: selectedMultimodalBest.epoch },
+        { label: 'Val Accuracy', value: Number(selectedMultimodalBest.val_acc || 0).toFixed(4) },
+        { label: 'Anchor Cos', value: Number(selectedMultimodalBest.val_anchor_cos || 0).toFixed(4) },
+        { label: 'Val Loss', value: Number(selectedMultimodalBest.val_loss || 0).toFixed(4) },
+      ];
+    }
+    return [
+      { label: '最佳轮次', value: selectedMultimodalBest.epoch },
+      { label: 'Val Fused Acc', value: Number(selectedMultimodalBest.val_fused_acc || 0).toFixed(4) },
+      { label: 'Retrieval@1', value: Number(selectedMultimodalBest.val_retrieval_top1 || 0).toFixed(4) },
+      { label: 'Align Cos', value: Number(selectedMultimodalBest.val_alignment_cos || 0).toFixed(4) },
+    ];
+  }, [selectedMultimodalBest, multimodalView]);
 
   const getRouteImpl = (capability) => {
     const map = capability?.implementation_by_route || {};
@@ -1534,14 +1783,102 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
                 <div style={{ color: '#ffaa00', fontWeight: 'bold', fontSize: '18px', marginBottom: '16px' }}>项目核心思路</div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '10px' }}>
                   {[
-                    '1，大脑有非常特殊的数学结构，产生了智。',
-                    '2，深度神经网络部分还原了这个结构，产生了语言能力',
-                    '3，通过分析深度神经网络，研究这个数学结构，完成智能理论',
+                    '1，大脑有非常特殊的数学结构，产生了智能。',
+                    '2，深度神经网络部分还原了这个结构，产生了语言能力。',
+                    '3，通过分析深度神经网络，研究这个数学结构，完成智能理论。',
                   ].map((line, idx) => (
                     <div key={idx} style={{ padding: '14px 16px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', color: '#f4e4c1', fontSize: '14px', lineHeight: '1.6' }}>
                       {line}
                     </div>
                   ))}
+                </div>
+              </div>
+
+              <div style={{
+                padding: '30px',
+                borderRadius: '24px',
+                border: '1px solid rgba(99,102,241,0.28)',
+                background: 'linear-gradient(135deg, rgba(99,102,241,0.10) 0%, rgba(99,102,241,0.03) 100%)',
+                marginBottom: '28px'
+              }}>
+                <div style={{ color: '#818cf8', fontWeight: 'bold', fontSize: '18px', marginBottom: '8px' }}>
+                  {MATH_ROUTE_SYSTEM_PLAN.title}
+                </div>
+                <div style={{ color: '#c7d2fe', fontSize: '13px', lineHeight: '1.7', marginBottom: '14px' }}>
+                  {MATH_ROUTE_SYSTEM_PLAN.subtitle}
+                </div>
+
+                <div style={{ marginTop: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.22)', padding: '12px' }}>
+                  <div style={{ color: '#a5b4fc', fontSize: '11px', fontWeight: 'bold', marginBottom: '8px' }}>
+                    数学路线
+                  </div>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', minWidth: '1260px', borderCollapse: 'collapse' }}>
+                      <thead>
+                        <tr style={{ background: 'rgba(255,255,255,0.05)' }}>
+                          <th style={{ textAlign: 'left', padding: '8px 10px', color: '#c7d2fe', fontSize: '11px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>路线</th>
+                          <th style={{ textAlign: 'left', padding: '8px 10px', color: '#c7d2fe', fontSize: '11px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>理论深度</th>
+                          <th style={{ textAlign: 'left', padding: '8px 10px', color: '#c7d2fe', fontSize: '11px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>计算可行性</th>
+                          <th style={{ textAlign: 'left', padding: '8px 10px', color: '#c7d2fe', fontSize: '11px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>可解释性</th>
+                          <th style={{ textAlign: 'left', padding: '8px 10px', color: '#c7d2fe', fontSize: '11px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>与 SHMC/NFBT 兼容</th>
+                          <th style={{ textAlign: 'left', padding: '8px 10px', color: '#86efac', fontSize: '11px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>优点</th>
+                          <th style={{ textAlign: 'left', padding: '8px 10px', color: '#fca5a5', fontSize: '11px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>缺点</th>
+                          <th style={{ textAlign: 'left', padding: '8px 10px', color: '#93c5fd', fontSize: '11px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>可行性结论</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(MATH_ROUTE_SYSTEM_PLAN.routeAnalysis || []).map((item, idx) => (
+                          <tr key={idx} style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                            <td style={{ padding: '9px 10px', color: '#e0e7ff', fontSize: '12px', fontWeight: 'bold', verticalAlign: 'top' }}>{item.route}</td>
+                            <td style={{ padding: '9px 10px', color: '#dbeafe', fontSize: '12px', verticalAlign: 'top' }}>{item.depth}</td>
+                            <td style={{ padding: '9px 10px', color: '#dbeafe', fontSize: '12px', verticalAlign: 'top' }}>{item.compute}</td>
+                            <td style={{ padding: '9px 10px', color: '#dbeafe', fontSize: '12px', verticalAlign: 'top' }}>{item.interpret}</td>
+                            <td style={{ padding: '9px 10px', color: '#dbeafe', fontSize: '12px', verticalAlign: 'top' }}>{item.compatibility}</td>
+                            <td style={{ padding: '9px 10px', color: '#dcfce7', fontSize: '11px', lineHeight: '1.55', verticalAlign: 'top' }}>
+                              {(item.pros || []).map((line, pIdx) => (
+                                <div key={pIdx}>{pIdx + 1}. {line}</div>
+                              ))}
+                            </td>
+                            <td style={{ padding: '9px 10px', color: '#fee2e2', fontSize: '11px', lineHeight: '1.55', verticalAlign: 'top' }}>
+                              {(item.cons || []).map((line, cIdx) => (
+                                <div key={cIdx}>{cIdx + 1}. {line}</div>
+                              ))}
+                            </td>
+                            <td style={{ padding: '9px 10px', color: '#bae6fd', fontSize: '11px', lineHeight: '1.55', verticalAlign: 'top' }}>{item.feasibility}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div style={{ marginTop: '12px', display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr', gap: '12px' }}>
+                  <div style={{ padding: '14px', borderRadius: '12px', background: 'rgba(0,0,0,0.22)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                    <div style={{ color: '#a5b4fc', fontSize: '11px', fontWeight: 'bold', marginBottom: '6px' }}>分层架构</div>
+                    {(MATH_ROUTE_SYSTEM_PLAN.architecture || []).map((line, idx) => (
+                      <div key={idx} style={{ color: '#e0e7ff', fontSize: '12px', lineHeight: '1.6', marginBottom: '4px' }}>
+                        {idx + 1}. {line}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{ padding: '14px', borderRadius: '12px', background: 'rgba(0,0,0,0.22)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                    <div style={{ color: '#a5b4fc', fontSize: '11px', fontWeight: 'bold', marginBottom: '6px' }}>资源配比</div>
+                    {(MATH_ROUTE_SYSTEM_PLAN.allocation || []).map((line, idx) => (
+                      <div key={idx} style={{ color: '#dbeafe', fontSize: '12px', lineHeight: '1.6', marginBottom: '4px' }}>
+                        {line}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{ padding: '14px', borderRadius: '12px', background: 'rgba(0,0,0,0.22)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                    <div style={{ color: '#a5b4fc', fontSize: '11px', fontWeight: 'bold', marginBottom: '6px' }}>阶段里程碑</div>
+                    {(MATH_ROUTE_SYSTEM_PLAN.milestones || []).map((line, idx) => (
+                      <div key={idx} style={{ color: '#dbeafe', fontSize: '12px', lineHeight: '1.6', marginBottom: '4px' }}>
+                        {idx + 1}. {line}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -1671,6 +2008,72 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
                   ) : null}
                 </div>
 
+                <div style={{ padding: '28px', background: 'rgba(99, 102, 241, 0.06)', border: '1px solid rgba(99, 102, 241, 0.26)', borderRadius: '22px' }}>
+                  <div style={{ fontSize: '12px', color: '#818cf8', fontWeight: 'bold', letterSpacing: '2px', marginBottom: '10px' }}>
+                    深度神经网络分析
+                  </div>
+                  <div style={{ fontSize: '20px', color: '#fff', fontWeight: 'bold', marginBottom: '8px' }}>
+                    {DNN_ANALYSIS_PLAN.subtitle}
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+                    <div style={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.22)', padding: '12px' }}>
+                      <div style={{ fontSize: '11px', color: '#a5b4fc', fontWeight: 'bold', marginBottom: '6px' }}>研究目标与假设</div>
+                      {(DNN_ANALYSIS_PLAN.goals || []).map((item, idx) => (
+                        <div key={idx} style={{ fontSize: '12px', color: '#e0e7ff', lineHeight: '1.6', marginBottom: '4px' }}>
+                          {idx + 1}. {item}
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.22)', padding: '12px' }}>
+                      <div style={{ fontSize: '11px', color: '#a5b4fc', fontWeight: 'bold', marginBottom: '6px' }}>核心评估指标</div>
+                      {(DNN_ANALYSIS_PLAN.metrics || []).map((item, idx) => (
+                        <div key={idx} style={{ fontSize: '12px', color: '#dbeafe', lineHeight: '1.6', marginBottom: '4px' }}>
+                          {idx + 1}. {item}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div style={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.22)', padding: '12px', marginBottom: '12px' }}>
+                    <div style={{ fontSize: '11px', color: '#a5b4fc', fontWeight: 'bold', marginBottom: '6px' }}>六层分析框架</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                      {(DNN_ANALYSIS_PLAN.framework || []).map((item, idx) => (
+                        <div key={idx} style={{ fontSize: '12px', color: '#c7d2fe', lineHeight: '1.6', padding: '8px 10px', borderRadius: '10px', background: 'rgba(255,255,255,0.03)' }}>
+                          {item}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+                    <div style={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.22)', padding: '12px' }}>
+                      <div style={{ fontSize: '11px', color: '#a5b4fc', fontWeight: 'bold', marginBottom: '6px' }}>实验矩阵</div>
+                      {(DNN_ANALYSIS_PLAN.experimentMatrix || []).map((item, idx) => (
+                        <div key={idx} style={{ fontSize: '12px', color: '#dbeafe', lineHeight: '1.6', marginBottom: '4px' }}>
+                          {idx + 1}. {item}
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.22)', padding: '12px' }}>
+                      <div style={{ fontSize: '11px', color: '#a5b4fc', fontWeight: 'bold', marginBottom: '6px' }}>里程碑</div>
+                      {(DNN_ANALYSIS_PLAN.milestones || []).map((item, idx) => (
+                        <div key={idx} style={{ fontSize: '12px', color: '#dbeafe', lineHeight: '1.6', marginBottom: '4px' }}>
+                          {item}
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.22)', padding: '12px' }}>
+                      <div style={{ fontSize: '11px', color: '#a5b4fc', fontWeight: 'bold', marginBottom: '6px' }}>成败判据</div>
+                      {(DNN_ANALYSIS_PLAN.successCriteria || []).map((item, idx) => (
+                        <div key={idx} style={{ fontSize: '12px', color: '#dbeafe', lineHeight: '1.6', marginBottom: '4px' }}>
+                          {item}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
                 <div style={{ padding: '28px', background: 'rgba(245, 158, 11, 0.05)', border: '1px solid rgba(245, 158, 11, 0.22)', borderRadius: '22px' }}>
                   <div style={{ fontSize: '12px', color: '#f59e0b', fontWeight: 'bold', letterSpacing: '2px', marginBottom: '14px' }}>工程实现</div>
                   <div style={{ marginBottom: '12px', padding: '10px 12px', borderRadius: '10px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', fontSize: '12px', color: '#f8d7a6', lineHeight: '1.65' }}>
@@ -1798,6 +2201,67 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
                     </div>
                   ) : null}
                 </div>
+
+                {selectedRoute?.id === 'fiber_bundle' ? (
+                  <div style={{ padding: '28px', background: 'rgba(59, 130, 246, 0.06)', border: '1px solid rgba(59, 130, 246, 0.22)', borderRadius: '22px' }}>
+                    <div style={{ fontSize: '12px', color: '#60a5fa', fontWeight: 'bold', letterSpacing: '2px', marginBottom: '10px' }}>
+                      多模态纤维训练结果
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', marginBottom: '14px', flexWrap: 'wrap' }}>
+                      {[
+                        { id: 'vision_alignment', label: '视觉纤维训练' },
+                        { id: 'multimodal_connector', label: '视觉-语言联络训练' },
+                      ].map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => setMultimodalView(item.id)}
+                          style={{
+                            border: '1px solid rgba(255,255,255,0.2)',
+                            borderRadius: '999px',
+                            cursor: 'pointer',
+                            padding: '6px 10px',
+                            fontSize: '11px',
+                            color: multimodalView === item.id ? '#dbeafe' : '#93c5fd',
+                            background: multimodalView === item.id ? 'rgba(59,130,246,0.25)' : 'rgba(59,130,246,0.08)',
+                          }}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {multimodalError ? (
+                      <div style={{ fontSize: '12px', color: '#fca5a5', lineHeight: '1.6' }}>
+                        加载失败：{multimodalError}
+                      </div>
+                    ) : null}
+
+                    {!multimodalError && !selectedMultimodalReport ? (
+                      <div style={{ fontSize: '12px', color: '#93c5fd' }}>
+                        暂无结果。先运行对应训练脚本后可在这里切换查看。
+                      </div>
+                    ) : null}
+
+                    {!multimodalError && selectedMultimodalReport ? (
+                      <div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(120px, 1fr))', gap: '10px', marginBottom: '12px' }}>
+                          {multimodalMetricRows.map((item) => (
+                            <div key={item.label} style={{ border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', background: 'rgba(0,0,0,0.2)', padding: '10px' }}>
+                              <div style={{ fontSize: '10px', color: '#93c5fd', marginBottom: '4px' }}>{item.label}</div>
+                              <div style={{ fontSize: '14px', color: '#e0f2fe', fontWeight: 'bold', fontFamily: 'monospace' }}>{item.value}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#cbd5e1', lineHeight: '1.65' }}>
+                          <div><span style={{ color: '#93c5fd' }}>分析类型：</span>{selectedMultimodalData?.analysis_type || '-'}</div>
+                          <div><span style={{ color: '#93c5fd' }}>数据集：</span>{selectedMultimodalReport?.meta?.dataset || selectedMultimodalReport?.config?.dataset || '-'}</div>
+                          <div><span style={{ color: '#93c5fd' }}>最新运行：</span>{selectedMultimodalLatest?.run_id || '-'}</div>
+                          <div><span style={{ color: '#93c5fd' }}>时间：</span>{selectedMultimodalLatest?.timestamp || '-'}</div>
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+                ) : null}
               </div>
             </div>
           )}
