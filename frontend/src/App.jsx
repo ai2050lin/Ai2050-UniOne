@@ -20,6 +20,7 @@ import { CompositionalVisualization3D, CurvatureField3D, FeatureVisualization3D,
 import TDAVisualization3D from './TDAVisualization3D';
 import { AGIChatPanel } from './AGIChatPanel';
 import { MotherEnginePanel } from './components/MotherEnginePanel';
+import FiberNetPanel from './components/FiberNetPanel';
 
 import { locales } from './locales';
 import { INPUT_PANEL_TABS, STRUCTURE_TABS_V2, COLORS } from './config/panels';
@@ -2126,23 +2127,6 @@ export default function App() {
         <Settings size={20} />
       </button>
 
-      {/* AGI Chat Terminal Button */}
-      <button
-        onClick={() => togglePanelVisibility('agiChatPanel')}
-        style={{ ...navButtonStyle(panelVisibility.agiChatPanel, '#10b981'), left: 120 }}
-        title="AGI Chat Terminal: O(1) 代数引擎交互"
-      >
-        <Bot size={20} />
-      </button>
-
-      {/* Mother Engine Button */}
-      <button
-        onClick={() => togglePanelVisibility('motherEnginePanel')}
-        style={{ ...navButtonStyle(panelVisibility.motherEnginePanel, '#ff69b4'), left: 170 }} // Adjust left position
-        title="Mother Engine (物理大模型引擎)"
-      >
-        <Zap size={20} />
-      </button>
 
       {/* Project Genesis Blueprint Button - Strategic Roadmap */}
       <button
@@ -2403,10 +2387,10 @@ export default function App() {
               </div>
             )}
 
-            {/* FiberNet Lab Content */}
+            {/* FiberNet Lab Content - Phase XXXIV Unified Lab */}
             {inputPanelTab === 'fibernet' && (
-              <div className="animate-fade-in" style={{ height: '100%' }}>
-                <FiberNetV2Demo t={t} />
+              <div className="animate-fade-in" style={{ height: '100%', overflowY: 'auto' }}>
+                <FiberNetPanel lang={lang} />
               </div>
             )}
 

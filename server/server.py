@@ -50,6 +50,7 @@ from server.fibernet_service import fibernet_service
 from server.global_workspace_service import global_workspace_controller
 from server.rag_fiber_service import rag_fiber_manager
 from server.ricci_flow_service import ricci_flow_service
+from server.evolution_service import evolution_service
 from server.runtime.run_service import RunService
 from server.vision_service import vision_service
 from server.agi_chat_service import agi_chat_engine
@@ -438,20 +439,23 @@ async def cross_bundle_sync(modality: str, layer_idx: int, x: float, y: float, z
     return sync_result
 
 @app.post("/nfb/evolution/ricci")
-async def start_ricci_evolution(iterations: int = 50):
-    """启动里奇流演化 (睡眠模式)"""
-    if model is None: return {"error": "Model not loaded"}
-    embeddings = model.embed.W_E
-    return await ricci_flow_service.run_evolution_step(embeddings, iterations)
+async def start_ricci_evolution(iterations: int = 20, mode: str = "adaptive"):
+    """Phase XXXIII: 启动 Ricci 睡眠演化"""
+    return await evolution_service.enter_sleep(
+        mother_engine=mother_engine_service,
+        iterations=iterations,
+        mode=mode
+    )
 
 @app.get("/nfb/evolution/status")
 async def get_evolution_status():
-    """获取当前演化/睡眠进度"""
-    return {
-        "is_evolving": ricci_flow_service.is_evolving,
-        "progress": ricci_flow_service.evolution_progress,
-        "curvature": ricci_flow_service.current_curvature
-    }
+    """Phase XXXIII: 获取演化/睡眠进度"""
+    return evolution_service.get_status()
+
+@app.get("/api/evolution/chart")
+async def get_evolution_chart():
+    """Phase XXXIII: 获取演化曲率图表数据"""
+    return evolution_service.get_curvature_chart_data()
 
 class FiberRegisterRequest(BaseModel):
     key: str
