@@ -12,7 +12,7 @@
 
 ---
 
-## 核心愿景：AGI 统一场论 (The Unified Vision)
+## AI2050计划：当前宇宙的一般性智能理论 (The Unified Vision)
 
 我们不仅在研究如何“解释”模型，更在探索智能的数学本质。本项目基于最新提出的 **神经纤维丛理论 (Neural Fiber Bundle Theory)**，将智能建模为定义在高维底流形上的主丛 $P(M, G)$。
 
