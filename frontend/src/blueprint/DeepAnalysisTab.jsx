@@ -65,7 +65,7 @@ export const DeepAnalysisTab = ({
                         setExpandedImprovementTest={setExpandedImprovementTest}
                     />
                 ) : (
-                    <GLM5Tab activeModelTab={activeModelTab} />
+                    <GLM5Tab />
                 )}
             </div>
         </div>

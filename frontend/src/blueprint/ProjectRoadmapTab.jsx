@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { GeminiTab } from './GeminiTab';
 import { GPT5Tab } from './GPT5Tab';
-import { GLM5Tab } from './GLM5Tab';
 
 export const ProjectRoadmapTab = ({
   roadmapData,
