@@ -868,7 +868,7 @@ const IMPROVEMENTS = [
     title: "阶段3：最小生成模型重建",
     status: "in_progress",
     objective: "用最少公理和最低自由度重建关键能力，验证“结构 -> 能力”的生成链条。",
-    summary: "最小结构模型已启动，部分任务达到基线 80% 以上表现。",
+    summary: "最小结构模型已形成可复现高分基线（m_1.4m+d_120k），但配置敏感性仍需收敛。",
     issues: [
       "最小模型在跨任务泛化上仍存在性能缺口，尚未达到全面替代基线。",
       "跨模态联络项仍是主要瓶颈，结构约束与表达能力需要进一步平衡。"
@@ -914,6 +914,42 @@ const IMPROVEMENTS = [
             alignment_mse: 0.047
           },
           related_service: "server/vision_service.py"
+        }
+      },
+      {
+        id: "p3_t3",
+        name: "最小重建高分复现（m_1.4m+d_120k）",
+        testDate: "2026-02-28",
+        target: "验证历史最优 Stage C 配置在当前环境下是否可复现，排除“结构无效”误判。",
+        params: {
+          script: "scripts/scaling_validation_matrix.py",
+          preset: "quick",
+          model_filter: "m_1.4m",
+          data_filter: "d_120k",
+          epochs: 20,
+          lr: 0.001,
+          weight_decay: 0.1,
+          warmup_ratio: 0.0,
+          min_lr_scale: 0.05,
+          seed: 42
+        },
+        result: "best_val_acc=0.856667，final_val_acc=0.856120，复现成功。",
+        analysis: "Stage C 的关键问题是配置敏感而非结构失效；已可将该组合作为默认基线继续做多 seed 与跨任务复验。",
+        details: {
+          key_metrics: {
+            best_val_acc: 0.856667,
+            final_val_acc: 0.85612,
+            final_train_acc: 0.98725,
+            generalization_gap: 0.13113,
+            samples_per_second: 11551.2
+          },
+          reports: [
+            "tempdata/pipeline_stage_c_minimal_rebuild_20260228_m14_repro.json",
+            "tempdata/pipeline_stage_c_minimal_rebuild_20260228_m14_repro.md",
+            "tempdata/pipeline_stage_c_minimal_rebuild_20260228_v2.json",
+            "tempdata/structure_recovery_pipeline_kickoff_20260228_v2.json"
+          ],
+          timeline_analysis_type: "minimal_reconstruction"
         }
       }
     ]
