@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ClaudeTab } from './ClaudeTab';
+import { GeminiTab } from './GeminiTab';
 import { GPT5Tab } from './GPT5Tab';
 import { GLM5Tab } from './GLM5Tab';
 
@@ -11,8 +11,8 @@ export const DeepAnalysisTab = ({
     expandedImprovementTest,
     setExpandedImprovementTest,
 }) => {
-    const [activeModelTab, setActiveModelTab] = useState('Claude');
-    const modelTabs = ['Claude', 'GPT5', 'GLM5'];
+    const [activeModelTab, setActiveModelTab] = useState('Gemini');
+    const modelTabs = ['Gemini', 'GPT5', 'GLM5'];
 
     return (
         <div style={{ animation: 'roadmapFade 0.6s ease-out', maxWidth: '1000px', margin: '0 auto' }}>
@@ -53,8 +53,8 @@ export const DeepAnalysisTab = ({
                 </div>
 
                 {/* Tab 内容区 */}
-                {activeModelTab === 'Claude' ? (
-                    <ClaudeTab />
+                {activeModelTab === 'Gemini' ? (
+                    <GeminiTab />
                 ) : activeModelTab === 'GPT5' ? (
                     <GPT5Tab
                         evidenceDrivenPlan={evidenceDrivenPlan}

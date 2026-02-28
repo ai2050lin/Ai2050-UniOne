@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ClaudeTab } from './ClaudeTab';
+import { GeminiTab } from './GeminiTab';
 import { GPT5Tab } from './GPT5Tab';
 import { GLM5Tab } from './GLM5Tab';
 
@@ -14,8 +14,8 @@ export const ProjectRoadmapTab = ({
   expandedImprovementTest,
   setExpandedImprovementTest,
 }) => {
-  const [activeModelTab, setActiveModelTab] = useState('Claude');
-  const modelTabs = ['Claude', 'GPT5', 'GLM5'];
+  const [activeModelTab, setActiveModelTab] = useState('Gemini');
+  const modelTabs = ['Gemini', 'GPT5', 'GLM5'];
 
   return (
     <div style={{ animation: 'roadmapFade 0.6s ease-out', maxWidth: '1000px', margin: '0 auto' }}>
