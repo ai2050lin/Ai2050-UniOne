@@ -19,7 +19,7 @@ export const ClaudeTab = () => {
 
                 {/* 1. 整体研究框架与进展 */}
                 <div style={{ marginBottom: '28px' }}>
-                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#e9d5ff', marginBottom: '12px', borderBottom: '1px solid rgba(168,85,247,0.3)', paddingBottom: '8px' }}>一、整体研究框架与核心进展</div>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#e9d5ff', marginBottom: '12px', borderBottom: '1px solid rgba(168,85,247,0.3)', paddingBottom: '8px' }}>一、分析框架</div>
                     <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7' }}>
                         构建基于微分几何、神经纤维丛拓扑（NFBT）和纯代数演化的智能引擎（Mother Engine），抛弃传统 BP 黑盒与堆叠算力路线。<br />
                         <span style={{ color: '#a855f7', fontWeight: 'bold' }}>进展突破: </span>建立“极效三定律”（侧抑制正交、引力雕刻、能量坍塌）；通过解剖 DNN 证实大脑的激活稀疏性编码方式；发现 Attention 的极低秩关联拓扑；在无 BP 下利用局部规则实现空白网络自发涌现稀疏特征（峰度激增至 19.7）。
@@ -28,7 +28,7 @@ export const ClaudeTab = () => {
 
                 {/* 2. 完整路线图 */}
                 <div style={{ marginBottom: '28px' }}>
-                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#e9d5ff', marginBottom: '12px', borderBottom: '1px solid rgba(168,85,247,0.3)', paddingBottom: '8px' }}>二、路线图全景 </div>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#e9d5ff', marginBottom: '12px', borderBottom: '1px solid rgba(168,85,247,0.3)', paddingBottom: '8px' }}>二、路线图 </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
                         {[
                             { title: "H1", status: "已完成", desc: "理论奠基与小规模实证、极效三定律、可视化并网" },
@@ -47,7 +47,7 @@ export const ClaudeTab = () => {
 
                 {/* 3. 测试记录 (E1~E5) */}
                 <div style={{ marginBottom: '28px' }}>
-                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#e9d5ff', marginBottom: '12px', borderBottom: '1px solid rgba(168,85,247,0.3)', paddingBottom: '8px' }}>三、化石解剖与自发涌现测试记录 (Phase XXXVI)</div>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#e9d5ff', marginBottom: '12px', borderBottom: '1px solid rgba(168,85,247,0.3)', paddingBottom: '8px' }}>三、测试记录 (Phase XXXVI)</div>
                     <div style={{ display: 'grid', gap: '16px' }}>
                         {[
                             { name: 'E1: MLP 稀疏激活解剖', metrics: '峰度 31.99, |act|<0.1 占 41.4%', result: '发现极端尖峰重尾分布，专家神经元领域重叠100%，跨领域仅47%', sig: '证实大脑"知识"存放在高特异化、极度稀疏的专家神经元中，而非密集分布。' },
@@ -71,7 +71,7 @@ export const ClaudeTab = () => {
 
                 {/* 4. 问题与硬伤 */}
                 <div style={{ marginBottom: '28px' }}>
-                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#ef4444', marginBottom: '12px', borderBottom: '1px solid rgba(239,68,68,0.3)', paddingBottom: '8px' }}>四、当前问题与核心硬伤</div>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#ef4444', marginBottom: '12px', borderBottom: '1px solid rgba(239,68,68,0.3)', paddingBottom: '8px' }}>四、存在问题</div>
                     <div style={{ display: 'grid', gap: '10px' }}>
                         <div style={{ padding: '12px', background: 'rgba(239,68,68,0.05)', borderRadius: '8px', borderLeft: '3px solid #ef4444' }}>
                             <div style={{ color: '#ef4444', fontSize: '13px', fontWeight: 'bold', marginBottom: '4px' }}>🔴 致命硬伤: 信用分配 (Credit Assignment) 危机</div>
