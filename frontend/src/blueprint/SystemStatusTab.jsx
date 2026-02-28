@@ -231,7 +231,7 @@ export const SystemStatusTab = ({
           <Search size={16} /> 测试记录迁移
         </div>
         <div style={{ fontSize: '13px', color: '#d1fae5', lineHeight: '1.7' }}>
-          系统状态中的路线测试记录已整合到“研发进展 → 里程碑 → 路线测试记录”阶段。
+          系统状态中的路线测试记录已整合到“模型研发 → 里程碑 → 路线测试记录”阶段。
         </div>
         <div style={{ marginTop: '10px', fontSize: '12px', color: '#86efac' }}>
           当前路线测试数：{(activeSystemProfile?.validationRecords || []).length}

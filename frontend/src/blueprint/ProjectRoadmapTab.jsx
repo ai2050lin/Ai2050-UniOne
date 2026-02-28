@@ -250,61 +250,6 @@ export const ProjectRoadmapTab = ({
           </div>
         </div>
       </div>
-
-
-      {/* ====== 模型结构对比模块 ====== */}
-      <div
-        style={{
-          padding: '30px',
-          borderRadius: '24px',
-          border: '1px solid rgba(244,114,182,0.28)',
-          background: 'linear-gradient(135deg, rgba(244,114,182,0.10) 0%, rgba(168,85,247,0.06) 100%)',
-          marginBottom: '28px',
-        }}
-      >
-        <div style={{ color: '#f472b6', fontWeight: 'bold', fontSize: '18px', marginBottom: '16px' }}>
-          模型结构对比
-        </div>
-        <div style={{ display: 'flex', gap: '0', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
-          {modelTabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveModelTab(tab)}
-              style={{
-                padding: '10px 28px',
-                background: activeModelTab === tab
-                  ? 'linear-gradient(135deg, rgba(244,114,182,0.22) 0%, rgba(168,85,247,0.18) 100%)'
-                  : 'transparent',
-                border: 'none',
-                borderBottom: activeModelTab === tab ? '2px solid #f472b6' : '2px solid transparent',
-                color: activeModelTab === tab ? '#f9a8d4' : '#9ca3af',
-                fontSize: '14px',
-                fontWeight: activeModelTab === tab ? 'bold' : 'normal',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-        {/* Tab 内容区 */}
-
-        {activeModelTab === 'Claude' ? (
-          <ClaudeTab />
-        ) : activeModelTab === 'GPT5' ? (
-          <GPT5Tab
-            evidenceDrivenPlan={evidenceDrivenPlan}
-            improvements={improvements}
-            expandedImprovementPhase={expandedImprovementPhase}
-            setExpandedImprovementPhase={setExpandedImprovementPhase}
-            expandedImprovementTest={expandedImprovementTest}
-            setExpandedImprovementTest={setExpandedImprovementTest}
-          />
-        ) : (
-          <GLM5Tab activeModelTab={activeModelTab} />
-        )}
-      </div>
     </div >
   );
 };

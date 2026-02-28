@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { pollRuntimeWithFallback } from './utils/runtimeClient';
 import { ProjectRoadmapTab } from './blueprint/ProjectRoadmapTab';
+import { DeepAnalysisTab } from './blueprint/DeepAnalysisTab';
 import { ResearchProgressTab } from './blueprint/ResearchProgressTab';
 import { SystemStatusTab } from './blueprint/SystemStatusTab';
 
@@ -2421,7 +2422,8 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
           <nav style={{ display: 'flex', gap: '10px', height: '100%' }}>
             {[
               { id: 'roadmap', label: '项目大纲' },
-              { id: 'progress', label: '研发进展' },
+              { id: 'analysis', label: '深度分析' },
+              { id: 'progress', label: '模型研发' },
               { id: 'system', label: '系统状态' }
             ].map(t => (
               <button
@@ -2526,6 +2528,18 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
               evidenceDrivenPlan={EVIDENCE_DRIVEN_PLAN}
               executionPlaybook={EXECUTION_PLAYBOOK}
               mathRouteSystemPlan={MATH_ROUTE_SYSTEM_PLAN}
+              improvements={IMPROVEMENTS}
+              expandedImprovementPhase={expandedImprovementPhase}
+              setExpandedImprovementPhase={setExpandedImprovementPhase}
+              expandedImprovementTest={expandedImprovementTest}
+              setExpandedImprovementTest={setExpandedImprovementTest}
+            />
+          )}
+
+          {/* TAB: Deep Analysis / Model Comparison */}
+          {activeTab === 'analysis' && (
+            <DeepAnalysisTab
+              evidenceDrivenPlan={EVIDENCE_DRIVEN_PLAN}
               improvements={IMPROVEMENTS}
               expandedImprovementPhase={expandedImprovementPhase}
               setExpandedImprovementPhase={setExpandedImprovementPhase}
