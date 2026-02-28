@@ -21,6 +21,119 @@ from server.runtime.experiment_store import ExperimentTimelineStore
 from scripts.h3_category_adaptive_search import build_candidate_configs, eval_one_config
 
 
+def _load_json(path: Path) -> Dict[str, Any]:
+    with path.open("r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _parse_report_paths(raw: str) -> List[Path]:
+    if not raw:
+        return []
+    out: List[Path] = []
+    for item in raw.split(","):
+        p = Path(item.strip())
+        if p.exists():
+            out.append(p)
+    return out
+
+
+def _summarize_seed_block(
+    report_paths: List[Path],
+    support_models_min: int,
+    falsify_models_max: int,
+) -> Dict[str, Any]:
+    if not report_paths:
+        return {
+            "run_count": 0,
+            "support_models_min": None,
+            "support_models_max": None,
+            "support_models_avg": None,
+            "falsify_models_max": None,
+            "strict_gate_pass": False,
+            "reports": [],
+        }
+    support_values: List[int] = []
+    falsify_values: List[int] = []
+    reports: List[str] = []
+    for p in report_paths:
+        payload = _load_json(p)
+        ag = payload.get("aggregates", {})
+        support_values.append(int(ag.get("support_models", 0)))
+        falsify_values.append(int(ag.get("falsify_models", 0)))
+        reports.append(str(p).replace("\\", "/"))
+    support_floor = min(support_values) if support_values else 0
+    falsify_ceiling = max(falsify_values) if falsify_values else 999
+    strict_gate_pass = support_floor >= support_models_min and falsify_ceiling <= falsify_models_max
+    return {
+        "run_count": len(report_paths),
+        "support_models_min": support_floor,
+        "support_models_max": max(support_values) if support_values else 0,
+        "support_models_avg": round(float(np.mean(support_values)), 4) if support_values else 0.0,
+        "falsify_models_max": falsify_ceiling if falsify_values else 0,
+        "strict_gate_pass": bool(strict_gate_pass),
+        "reports": reports,
+    }
+
+
+def _build_layered_goals(
+    *,
+    runs: List[Dict[str, Any]],
+    support_models: int,
+    falsify_models: int,
+    support_models_min: int,
+    falsify_models_max: int,
+    seed_block_summary: Dict[str, Any],
+) -> Dict[str, Any]:
+    g1_seed_pass = bool(seed_block_summary.get("strict_gate_pass", False))
+    g2_arch_pass = support_models >= support_models_min and falsify_models <= falsify_models_max
+    g3_task_pass = True
+    if not runs:
+        g3_task_pass = False
+    for r in runs:
+        ms = r.get("model_summary", {})
+        if int(ms.get("falsify_categories", 0)) > 0 or int(ms.get("support_categories", 0)) < 2:
+            g3_task_pass = False
+            break
+
+    if not g1_seed_pass:
+        progression = "goal_1_pending"
+    elif not g2_arch_pass:
+        progression = "goal_2_pending"
+    elif not g3_task_pass:
+        progression = "goal_3_pending"
+    else:
+        progression = "all_goals_pass"
+
+    return {
+        "goal_1_same_arch_seed_stability": {
+            "status": "pass" if g1_seed_pass else "pending",
+            "criterion": f"seed_block: support_models_min>={support_models_min} and falsify_models_max<={falsify_models_max}",
+            "evidence": seed_block_summary,
+        },
+        "goal_2_cross_arch_stability": {
+            "status": "pass" if g2_arch_pass else "pending",
+            "criterion": f"current_run: support_models>={support_models_min} and falsify_models<={falsify_models_max}",
+            "evidence": {
+                "support_models": support_models,
+                "falsify_models": falsify_models,
+            },
+        },
+        "goal_3_cross_task_family_stability": {
+            "status": "pass" if g3_task_pass else "pending",
+            "criterion": "per_model: falsify_categories=0 and support_categories>=2",
+            "evidence": [
+                {
+                    "model": r.get("model"),
+                    "support_categories": r.get("model_summary", {}).get("support_categories"),
+                    "falsify_categories": r.get("model_summary", {}).get("falsify_categories"),
+                }
+                for r in runs
+            ],
+        },
+        "progression": progression,
+    }
+
+
 def build_holdout_tasks(
     seed: int = 20260221,
     max_per_category: int = 24,
@@ -604,6 +717,9 @@ def main() -> None:
     )
     parser.add_argument("--adapter-strength", type=float, default=1.0)
     parser.add_argument("--fallback-config-index", type=int, default=1)
+    parser.add_argument("--support-models-min", type=int, default=2)
+    parser.add_argument("--falsify-models-max", type=int, default=0)
+    parser.add_argument("--seed-block-reports", default="")
     parser.add_argument("--seed", type=int, default=20260221)
     parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     parser.add_argument("--timeline", default="tempdata/agi_route_test_timeline.json")
@@ -718,22 +834,42 @@ def main() -> None:
     open_models = sum(1 for v in model_verdicts if v == "open_h3_holdout")
     consistency_score = round(1.0 - (falsify_models > 0 and support_models > 0) * 0.5, 4)
 
+    current_gate_pass = support_models >= args.support_models_min and falsify_models <= args.falsify_models_max
     if support_models > 0 and falsify_models > 0:
         status = "mixed_conflict"
-    elif support_models >= 2 and falsify_models == 0:
+    elif current_gate_pass:
         status = "provisional_support"
-    elif falsify_models >= 2 and support_models == 0:
+    elif falsify_models >= max(2, args.falsify_models_max + 1) and support_models == 0:
         status = "falsified"
     else:
         status = "open"
+
+    seed_block_paths = _parse_report_paths(args.seed_block_reports)
+    seed_block_summary = _summarize_seed_block(
+        report_paths=seed_block_paths,
+        support_models_min=args.support_models_min,
+        falsify_models_max=args.falsify_models_max,
+    )
+    layered_goals = _build_layered_goals(
+        runs=runs,
+        support_models=support_models,
+        falsify_models=falsify_models,
+        support_models_min=args.support_models_min,
+        falsify_models_max=args.falsify_models_max,
+        seed_block_summary=seed_block_summary,
+    )
 
     result = {
         "schema_version": "1.0",
         "test_date": datetime.now(timezone.utc).date().isoformat(),
         "analysis_type": "h3_holdout_validation",
+        "status": status,
+        "verdict": status,
         "config": {
             "models": models,
             "max_per_category": args.max_per_category,
+            "sampling_strategy": "balanced_equal_per_category",
+            "category_task_counts": {k: len(v) for k, v in holdout_tasks.items()},
             "task_profile": args.task_profile,
             "locked_configs_from": args.locked_configs_from,
             "lock_mode": args.lock_mode,
@@ -741,6 +877,9 @@ def main() -> None:
             "adapter_profile": args.adapter_profile,
             "adapter_strength": args.adapter_strength,
             "fallback_config_index": args.fallback_config_index,
+            "support_models_min": args.support_models_min,
+            "falsify_models_max": args.falsify_models_max,
+            "seed_block_reports": [str(p).replace("\\", "/") for p in seed_block_paths],
             "device": device,
             "seed": args.seed,
         },
@@ -751,7 +890,15 @@ def main() -> None:
             "open_models": open_models,
             "consistency_score": consistency_score,
             "status": status,
+            "strict_gate": {
+                "support_models_min_required": args.support_models_min,
+                "falsify_models_max_allowed": args.falsify_models_max,
+                "current_run_pass": current_gate_pass,
+                "seed_block": seed_block_summary,
+                "promotion_basis": "task_metrics_only",
+            },
         },
+        "layered_goals": layered_goals,
         "missing_locked_configs": sorted(set(missing_locked)),
         "conclusion": (
             "Holdout validation completed using locked in-pool configs (no holdout retuning)."

@@ -375,9 +375,138 @@ def run_stage_e_falsification(
     stage_d: Dict[str, Any],
     output_path: Path,
     store: ExperimentTimelineStore,
+    tempdata: Path,
+    support_models_min: int = 2,
+    falsify_models_max: int = 0,
+    seed_block_size: int = 6,
 ) -> Dict[str, Any]:
+    def _find_latest(pattern: str) -> Path | None:
+        matches = sorted(tempdata.glob(pattern), key=lambda p: p.stat().st_mtime, reverse=True)
+        return matches[0] if matches else None
+
+    def _summarize_seed_block(paths: List[Path]) -> Dict[str, Any]:
+        if not paths:
+            return {
+                "run_count": 0,
+                "support_models_min": None,
+                "support_models_max": None,
+                "support_models_avg": None,
+                "falsify_models_max": None,
+                "strict_gate_pass": False,
+                "reports": [],
+            }
+        support_values: List[int] = []
+        falsify_values: List[int] = []
+        reports: List[str] = []
+        for p in paths:
+            payload = _load_json(p)
+            ag = payload.get("aggregates", {})
+            support_values.append(int(ag.get("support_models", 0)))
+            falsify_values.append(int(ag.get("falsify_models", 0)))
+            reports.append(str(p).replace("\\", "/"))
+        support_floor = min(support_values) if support_values else 0
+        falsify_ceiling = max(falsify_values) if falsify_values else 999
+        strict_gate_pass = support_floor >= support_models_min and falsify_ceiling <= falsify_models_max
+        return {
+            "run_count": len(paths),
+            "support_models_min": support_floor,
+            "support_models_max": max(support_values) if support_values else 0,
+            "support_models_avg": round(sum(support_values) / len(support_values), 4) if support_values else 0.0,
+            "falsify_models_max": falsify_ceiling if falsify_values else 0,
+            "strict_gate_pass": bool(strict_gate_pass),
+            "reports": reports,
+        }
+
+    def _holdout_signature(payload: Dict[str, Any]) -> Dict[str, Any]:
+        cfg = payload.get("config", {}) or {}
+        return {
+            "analysis_type": payload.get("analysis_type", "h3_holdout_validation"),
+            "models": cfg.get("models", []),
+            "task_profile": cfg.get("task_profile", "standard"),
+            "max_per_category": cfg.get("max_per_category"),
+            "locked_configs_from": cfg.get("locked_configs_from", ""),
+            "lock_mode": cfg.get("lock_mode", ""),
+            "adapter_profile": cfg.get("adapter_profile", ""),
+            "adapter_strength": cfg.get("adapter_strength"),
+            "adapter_failure_report": cfg.get("adapter_failure_report", ""),
+            "support_models_min": cfg.get("support_models_min"),
+            "falsify_models_max": cfg.get("falsify_models_max"),
+        }
+
     layerwide_fail = stage_b.get("metrics", {}).get("layerwise_max_uplift", 0.0) < 0.03
     selective_pass = stage_b.get("metrics", {}).get("feature_avg_top1_uplift", 0.0) > 0.05
+    task_summary_path = _find_latest("task_level_causal_eval_summary_*.json")
+    holdout_reports = sorted(tempdata.glob("h3_holdout_validation_*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
+    holdout_latest = holdout_reports[0] if holdout_reports else None
+    seed_block_reports: List[Path] = []
+    seed_block_signature: Dict[str, Any] = {}
+    if holdout_latest and holdout_latest.exists():
+        latest_payload = _load_json(holdout_latest)
+        seed_block_signature = _holdout_signature(latest_payload)
+        for p in holdout_reports:
+            payload = _load_json(p)
+            if _holdout_signature(payload) == seed_block_signature:
+                seed_block_reports.append(p)
+            if len(seed_block_reports) >= max(0, int(seed_block_size)):
+                break
+    if not seed_block_reports:
+        seed_block_reports = holdout_reports[: max(0, int(seed_block_size))]
+
+    task_eval: Dict[str, Any] = {}
+    if task_summary_path and task_summary_path.exists():
+        task_payload = _load_json(task_summary_path)
+        ag = task_payload.get("aggregates", {})
+        task_eval = {
+            "summary_report": str(task_summary_path).replace("\\", "/"),
+            "support_count": int(ag.get("support_count", 0)),
+            "falsify_count": int(ag.get("falsify_count", 0)),
+            "open_count": int(ag.get("open_count", 0)),
+            "avg_task_score_uplift_logprob": float(ag.get("avg_task_score_uplift_logprob", 0.0)),
+            "avg_win_rate": float(ag.get("avg_win_rate", 0.0)),
+            "status": str(ag.get("h3_status", "open")),
+        }
+
+    holdout_ag = {}
+    if holdout_latest and holdout_latest.exists():
+        holdout_payload = _load_json(holdout_latest)
+        holdout_ag = holdout_payload.get("aggregates", {})
+
+    seed_block = _summarize_seed_block(seed_block_reports)
+    current_support_models = int(holdout_ag.get("support_models", 0)) if holdout_ag else 0
+    current_falsify_models = int(holdout_ag.get("falsify_models", 0)) if holdout_ag else 0
+    current_gate_pass = current_support_models >= support_models_min and current_falsify_models <= falsify_models_max
+
+    layered_goals = {
+        "goal_1_same_arch_seed_stability": {
+            "status": "pass" if seed_block.get("strict_gate_pass") else "pending",
+            "criterion": f"seed_block: support_models_min>={support_models_min} and falsify_models_max<={falsify_models_max}",
+            "evidence": seed_block,
+        },
+        "goal_2_cross_arch_stability": {
+            "status": "pass" if current_gate_pass else "pending",
+            "criterion": f"current_holdout: support_models>={support_models_min} and falsify_models<={falsify_models_max}",
+            "evidence": {
+                "support_models": current_support_models,
+                "falsify_models": current_falsify_models,
+                "report": str(holdout_latest).replace("\\", "/") if holdout_latest else None,
+            },
+        },
+        "goal_3_cross_task_family_stability": {
+            "status": "pass" if task_eval.get("falsify_count", 0) == 0 and task_eval.get("support_count", 0) >= 2 else "pending",
+            "criterion": "task_level: support_count>=2 and falsify_count=0",
+            "evidence": task_eval,
+        },
+    }
+
+    if layered_goals["goal_1_same_arch_seed_stability"]["status"] != "pass":
+        layered_goals["progression"] = "goal_1_pending"
+    elif layered_goals["goal_2_cross_arch_stability"]["status"] != "pass":
+        layered_goals["progression"] = "goal_2_pending"
+    elif layered_goals["goal_3_cross_task_family_stability"]["status"] != "pass":
+        layered_goals["progression"] = "goal_3_pending"
+    else:
+        layered_goals["progression"] = "all_goals_pass"
+
     open_hypotheses = [
         {
             "hypothesis": "H1: Layer-wide smoothing is sufficient for causal control.",
@@ -389,7 +518,11 @@ def run_stage_e_falsification(
         },
         {
             "hypothesis": "H3: Selective causal signal transfers to task-score improvement.",
-            "status": "open",
+            "status": (
+                "supported"
+                if layered_goals["goal_3_cross_task_family_stability"]["status"] == "pass"
+                else "open"
+            ),
         },
     ]
     falsified_count = sum(1 for h in open_hypotheses if h["status"] == "falsified")
@@ -400,14 +533,24 @@ def run_stage_e_falsification(
         "status": "pass" if falsified_count >= 1 else "watch",
         "hypotheses": open_hypotheses,
         "conclusion": (
-            "Open falsification started: at least one high-level assumption was rejected, "
-            "and one selective mechanism remains provisionally supported."
+            "Open falsification updated with strict task-metric gate: keep H3 open until "
+            "seed-block and holdout strict gates both pass."
         ),
         "inputs": {
             "stage_b": stage_b.get("metrics", {}),
             "stage_c": stage_c.get("metrics", {}),
             "stage_d": stage_d.get("metrics", {}),
         },
+        "task_level_eval": task_eval,
+        "strict_gate": {
+            "support_models_min_required": support_models_min,
+            "falsify_models_max_allowed": falsify_models_max,
+            "current_run_pass": current_gate_pass,
+            "seed_block_signature": seed_block_signature,
+            "seed_block": seed_block,
+            "promotion_basis": "task_metrics_only",
+        },
+        "layered_goals": layered_goals,
     }
     _save_json(output_path, summary)
 
@@ -513,7 +656,7 @@ def main() -> None:
     )
     stage_c = run_stage_c_minimal(stage_c_json, stage_c_md, store)
     stage_d = run_stage_d_multimodal(stage_d_json, stage_d_md, store)
-    stage_e = run_stage_e_falsification(stage_b, stage_c, stage_d, stage_e_path, store)
+    stage_e = run_stage_e_falsification(stage_b, stage_c, stage_d, stage_e_path, store, tempdata)
 
     stages = [stage_a, stage_b, stage_c, stage_d, stage_e]
     status = "pass" if all(s.get("status") == "pass" for s in stages[:4]) else "in_progress"

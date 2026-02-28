@@ -34,7 +34,46 @@ class HeatKernelDiffuser:
         return (1 - self.alpha) * activations + self.alpha * diffused
 
 
-def _build_task_suite(seed: int = 20260220, max_tasks: int = 200) -> List[Tuple[str, str, str]]:
+def _resolve_layer_stack(model):
+    """Resolve transformer block list across common decoder architectures."""
+    candidates = [
+        ("transformer.h", lambda m: getattr(getattr(m, "transformer", None), "h", None)),
+        ("model.decoder.layers", lambda m: getattr(getattr(getattr(m, "model", None), "decoder", None), "layers", None)),
+        ("model.layers", lambda m: getattr(getattr(m, "model", None), "layers", None)),
+        ("gpt_neox.layers", lambda m: getattr(getattr(m, "gpt_neox", None), "layers", None)),
+    ]
+    for name, getter in candidates:
+        layers = getter(model)
+        if layers is None:
+            continue
+        try:
+            if len(layers) > 0:
+                return layers, name
+        except TypeError:
+            continue
+    raise RuntimeError(
+        "Unsupported model architecture for layer hooks. "
+        "Expected one of: transformer.h / model.decoder.layers / model.layers / gpt_neox.layers."
+    )
+
+
+def _get_layer_module(model, layer_idx: int):
+    layers, stack_name = _resolve_layer_stack(model)
+    total = len(layers)
+    if layer_idx < 0:
+        layer_idx = total + layer_idx
+    if layer_idx < 0 or layer_idx >= total:
+        raise IndexError(f"layer_idx={layer_idx} out of range for {stack_name} (num_layers={total})")
+    return layers[layer_idx]
+
+
+def _build_task_suite(
+    seed: int = 20260220,
+    max_tasks: int = 200,
+    sampling: str = "balanced",
+    max_per_category: int = 64,
+    suite_version: str = "legacy",
+) -> List[Tuple[str, str, str]]:
     math_tasks = []
     for a in range(2, 32):
         for b in range(2, 13):
@@ -58,7 +97,20 @@ def _build_task_suite(seed: int = 20260220, max_tasks: int = 200) -> List[Tuple[
         ("South Korea", "Seoul"),
         ("Thailand", "Bangkok"),
     ]
-    capital_tasks = [("capital", f"The capital of {c} is", f" {city}") for c, city in capitals]
+    if suite_version == "expanded":
+        capital_templates = [
+            "The capital of {country} is",
+            "{country}'s capital city is",
+            "In geography, the capital of {country} is",
+            "People know that the capital of {country} is",
+        ]
+        capital_tasks = [
+            ("capital", tpl.format(country=c), f" {city}")
+            for c, city in capitals
+            for tpl in capital_templates
+        ]
+    else:
+        capital_tasks = [("capital", f"The capital of {c} is", f" {city}") for c, city in capitals]
 
     antonyms = [
         ("hot", "cold"),
@@ -72,23 +124,84 @@ def _build_task_suite(seed: int = 20260220, max_tasks: int = 200) -> List[Tuple[
         ("dry", "wet"),
         ("strong", "weak"),
     ]
-    antonym_tasks = [("antonym", f"The opposite of {w} is", f" {a}") for w, a in antonyms]
+    if suite_version == "expanded":
+        antonym_templates = [
+            "The opposite of {word} is",
+            "An antonym of {word} is",
+            "A reverse meaning of {word} is",
+            "Linguistically, the opposite of {word} is",
+            "In plain words, the opposite of {word} is",
+        ]
+        antonym_tasks = [
+            ("antonym", tpl.format(word=w), f" {a}")
+            for w, a in antonyms
+            for tpl in antonym_templates
+        ]
+    else:
+        antonym_tasks = [("antonym", f"The opposite of {w} is", f" {a}") for w, a in antonyms]
 
-    facts = [
-        ("fact", "Water freezes at", " 0 degrees Celsius"),
-        ("fact", "Water boils at", " 100 degrees Celsius"),
-        ("fact", "One week has", " 7 days"),
-        ("fact", "A triangle has", " 3 sides"),
-        ("fact", "A square has", " 4 sides"),
-        ("fact", "The Earth revolves around", " the Sun"),
-        ("fact", "The largest ocean is", " the Pacific Ocean"),
-        ("fact", "The human heart has", " 4 chambers"),
-        ("fact", "The chemical symbol for oxygen is", " O"),
-        ("fact", "The chemical symbol for gold is", " Au"),
+    fact_pairs = [
+        ("Water freezes at", " 0 degrees Celsius"),
+        ("Water boils at", " 100 degrees Celsius"),
+        ("One week has", " 7 days"),
+        ("A triangle has", " 3 sides"),
+        ("A square has", " 4 sides"),
+        ("The Earth revolves around", " the Sun"),
+        ("The largest ocean is", " the Pacific Ocean"),
+        ("The human heart has", " 4 chambers"),
+        ("The chemical symbol for oxygen is", " O"),
+        ("The chemical symbol for gold is", " Au"),
     ]
+    if suite_version == "expanded":
+        fact_templates = [
+            "{head}",
+            "A basic fact: {head}",
+            "Science says {head}",
+            "Textbook statement: {head}",
+            "Common knowledge: {head}",
+        ]
+        facts = [
+            ("fact", tpl.format(head=head), target)
+            for head, target in fact_pairs
+            for tpl in fact_templates
+        ]
+    else:
+        facts = [("fact", head, target) for head, target in fact_pairs]
+
+    buckets = {
+        "math_add": math_tasks,
+        "capital": capital_tasks,
+        "antonym": antonym_tasks,
+        "fact": facts,
+    }
+    rnd = random.Random(seed)
+
+    if sampling == "balanced":
+        # Enforce equal category quotas to prevent one task-family dominating the global score.
+        category_count = len(buckets)
+        per_category_quota = max(1, min(max_per_category, max_tasks // category_count))
+        selected: List[Tuple[str, str, str]] = []
+        category_counts = []
+        for _, tasks in buckets.items():
+            shuffled = list(tasks)
+            rnd.shuffle(shuffled)
+            take_n = min(per_category_quota, len(shuffled))
+            selected.extend(shuffled[:take_n])
+            category_counts.append(take_n)
+        # Keep total close to requested budget if some categories are short.
+        if sum(category_counts) < max_tasks:
+            remaining = max_tasks - sum(category_counts)
+            pool = []
+            for _, tasks in buckets.items():
+                shuffled = list(tasks)
+                rnd.shuffle(shuffled)
+                pool.extend(shuffled[per_category_quota:])
+            rnd.shuffle(pool)
+            selected.extend(pool[:remaining])
+        rnd.shuffle(selected)
+        return selected[: max_tasks if max_tasks > 0 else len(selected)]
 
     tasks = math_tasks + capital_tasks + antonym_tasks + facts
-    rnd = random.Random(seed)
     rnd.shuffle(tasks)
     return tasks[:max_tasks]
 
@@ -107,7 +220,8 @@ def _extract_reference_tokens(
     def _hook(_module, _input, output):
         storage["value"] = output[0].detach() if isinstance(output, tuple) else output.detach()
 
-    handle = model.transformer.h[layer_idx].register_forward_hook(_hook)
+    layer_module = _get_layer_module(model, layer_idx)
+    handle = layer_module.register_forward_hook(_hook)
     try:
         for prompt in prompts:
             inp = tokenizer(prompt, return_tensors="pt").to(device)
@@ -177,7 +291,8 @@ def _sequence_avg_logprob(
             out[..., feature_idx] = mixed[..., feature_idx]
             return out
 
-        hook_handle = model.transformer.h[layer_idx].register_forward_hook(_hook)
+        layer_module = _get_layer_module(model, layer_idx)
+        hook_handle = layer_module.register_forward_hook(_hook)
 
     try:
         with torch.no_grad():
@@ -241,6 +356,9 @@ def run_eval(
     seed: int = 20260220,
     max_refs: int = 128,
     max_tasks: int = 200,
+    sampling: str = "balanced",
+    max_per_category: int = 64,
+    task_suite_version: str = "legacy",
     bootstrap_samples: int = 2000,
     device: str = "auto",
     output_path: str = "",
@@ -273,7 +391,13 @@ def run_eval(
     )
     top_idx, rand_idx = _pick_feature_dims(reference, top_k=top_k, seed=seed)
 
-    tasks = _build_task_suite(seed=seed, max_tasks=max_tasks)
+    tasks = _build_task_suite(
+        seed=seed,
+        max_tasks=max_tasks,
+        sampling=sampling,
+        max_per_category=max_per_category,
+        suite_version=task_suite_version,
+    )
     rows = []
     deltas = []
     category_to_deltas: Dict[str, List[float]] = {}
@@ -362,6 +486,9 @@ def run_eval(
         },
         "summary": {
             "task_count": len(rows),
+            "sampling": sampling,
+            "task_suite_version": task_suite_version,
+            "max_per_category": int(max_per_category),
             "device": device,
             "avg_baseline_logprob": round(avg_base, 8),
             "avg_treatment_logprob": round(avg_treat, 8),
@@ -400,6 +527,9 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=20260220)
     parser.add_argument("--max-refs", type=int, default=128)
     parser.add_argument("--max-tasks", type=int, default=200)
+    parser.add_argument("--sampling", choices=["balanced", "random"], default="balanced")
+    parser.add_argument("--max-per-category", type=int, default=64)
+    parser.add_argument("--task-suite-version", choices=["legacy", "expanded"], default="legacy")
     parser.add_argument("--bootstrap-samples", type=int, default=2000)
     parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     parser.add_argument("--output-path", default="")
@@ -414,6 +544,9 @@ def main() -> None:
         seed=args.seed,
         max_refs=args.max_refs,
         max_tasks=args.max_tasks,
+        sampling=args.sampling,
+        max_per_category=args.max_per_category,
+        task_suite_version=args.task_suite_version,
         bootstrap_samples=args.bootstrap_samples,
         device=args.device,
         output_path=args.output_path,
