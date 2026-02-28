@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Brain, ChevronDown, ChevronRight, Activity } from 'lucide-react';
+import { FeatureEmergenceAnimation } from './FeatureEmergenceAnimation';
+import QwenAblationReport from './QwenAblationReport';
+import ManifoldStructureGraph from './ManifoldStructureGraph';
 
 export const GeminiTab = () => {
     const [expandedSteps, setExpandedSteps] = useState({});
@@ -126,13 +129,24 @@ export const GeminiTab = () => {
             title: "H1 阶段",
             status: "已完成",
             desc: "理论奠基与小规模实证、极效三定律、可视化并网",
-            details: "在此阶段，我们彻底验证了抛弃BP反向传播黑盒的可行性。建立了基于微积分几何和神经纤维丛理论的基础模型原型。完成了极效三定律的论证，并通过第一阶段的前端交互式可视化面板（Glass Matrix），成功对小规模纯代数引力场引擎（Mother Engine）进行了观察并网。"
+            details: (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div>在此阶段，我们彻底验证了抛弃BP反向传播黑盒的可行性。建立了基于微积分几何和神经纤维丛理论的基础模型原型。完成了极效三定律的论证，并通过第一阶段的前端交互式可视化面板（Glass Matrix），成功对小规模纯代数引力场引擎（Mother Engine）进行了观察并网。</div>
+                    <FeatureEmergenceAnimation />
+                </div>
+            )
         },
         {
             title: "H2 阶段 (当前)",
             status: "攻坚期",
             desc: "深度解剖化石与局部学习机制攻坚，信用分配突围",
-            details: "直面最严峻的'信用分配'危机。我们正在开发能与BP匹敌，但保持极高局部约束的新一代信用下放机制。通过持续解刨现存大规模DNN化石（如GPT-2），尝试从中提取自发涌现的专家化聚类及对偶关联机制，以构建完整的分层预测编码（Predictive Coding）体系，目标是突破基础泛化能力的门槛。"
+            details: (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div>直面最严峻的'信用分配'危机。我们正在开发能与BP匹敌，但保持极高局部约束的新一代信用下放机制。通过持续解刨现存大规模DNN化石（如GPT-2、Qwen3 等），尝试从中提取自发涌现的专家化聚类及对偶关联机制，以构建完整的分层预测编码（Predictive Coding）体系，目标是突破基础泛化能力的门槛。</div>
+                    <QwenAblationReport />
+                    <ManifoldStructureGraph />
+                </div>
+            )
         },
         {
             title: "H3 阶段",
