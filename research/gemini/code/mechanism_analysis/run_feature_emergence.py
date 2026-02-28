@@ -658,7 +658,7 @@ def train_and_track():
     
     print("\n关键发现:")
     for finding in analysis.get("key_findings", []):
-        print(f"  • {finding}")
+        print(f"  - {finding}")
     
     # 保存结果
     tracker.save_results()
