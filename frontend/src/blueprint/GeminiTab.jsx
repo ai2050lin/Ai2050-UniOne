@@ -236,7 +236,7 @@ export const GeminiTab = () => {
                     }}
                 >
                     <div style={{ color: '#a855f7', fontWeight: 'bold', fontSize: '15px', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Activity size={18} /> 三、分阶段测试记录溯源表
+                        <Activity size={18} /> 三、测试记录
                     </div>
                     <div style={{ color: '#9ca3af', fontSize: '12px', lineHeight: '1.7', marginBottom: '16px' }}>
                         按核心探索阶段展开，查看解剖底层机理、捕捉数学结构到规律泛化的一系列历史完整试验点对。
