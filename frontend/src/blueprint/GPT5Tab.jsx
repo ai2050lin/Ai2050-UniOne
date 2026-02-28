@@ -53,17 +53,6 @@ export const GPT5Tab = ({
         pending: '#94a3b8',
     };
 
-    const allTests = (improvements || []).flatMap((phase) =>
-        (phase.tests || []).map((test) => ({
-            ...test,
-            phaseTitle: phase.title,
-        })),
-    );
-
-    const latestTests = [...allTests]
-        .sort((a, b) => String(b.testDate || '').localeCompare(String(a.testDate || '')))
-        .slice(0, 8);
-
     return (
         <div style={{ display: 'grid', gap: '20px' }}>
             <div
@@ -118,22 +107,6 @@ export const GPT5Tab = ({
                 <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#e0f2fe', marginBottom: '10px', borderBottom: '1px solid rgba(56,189,248,0.35)', paddingBottom: '8px' }}>
                     三、测试记录
                 </div>
-                <div style={{ display: 'grid', gap: '8px', marginBottom: '18px' }}>
-                    {latestTests.map((test, idx) => (
-                        <div key={`${test.id}-${idx}`} style={{ padding: '10px', borderRadius: '10px', background: 'rgba(0,0,0,0.2)', borderLeft: '3px solid #0ea5e9' }}>
-                            <div style={{ color: '#e0f2fe', fontSize: '12px', fontWeight: 'bold', marginBottom: '4px' }}>
-                                {idx + 1}. {test.name}
-                            </div>
-                            <div style={{ color: '#7dd3fc', fontSize: '11px', lineHeight: '1.5' }}>
-                                所属阶段：{test.phaseTitle} | 日期：{test.testDate || '未记录'}
-                            </div>
-                            <div style={{ color: '#cbd5e1', fontSize: '11px', lineHeight: '1.5', marginTop: '2px' }}>
-                                结果：{test.result}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
                 <div
                     style={{
                         padding: '16px',
