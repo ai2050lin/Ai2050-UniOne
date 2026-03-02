@@ -1,26 +1,77 @@
 import { useState } from 'react';
-import { GeminiTab } from './GeminiTab';
-import { GPT5Tab } from './GPT5Tab';
+import { AppleNeuron3DTab } from './AppleNeuron3DTab';
 
 export const ProjectRoadmapTab = ({
   roadmapData,
-  analysisPhase,
-  evidenceDrivenPlan,
   mathRouteSystemPlan,
-  improvements,
-  expandedImprovementPhase,
-  setExpandedImprovementPhase,
-  expandedImprovementTest,
-  setExpandedImprovementTest,
+  onOpenAppleNeuron3D,
 }) => {
-  const [activeModelTab, setActiveModelTab] = useState('Gemini');
-  const modelTabs = ['Gemini', 'GPT5', 'GLM5'];
+  const [showAppleNeuron3D, setShowAppleNeuron3D] = useState(false);
 
   return (
-    <div style={{ animation: 'roadmapFade 0.6s ease-out', maxWidth: '1000px', margin: '0 auto' }}>
-      <div style={{ marginBottom: '34px' }}>
-        <h2 style={{ fontSize: '30px', fontWeight: '900', color: '#ffaa00', marginBottom: '10px' }}>项目大纲</h2>
-        <div style={{ color: '#777', fontSize: '14px' }}>{roadmapData?.definition?.summary}</div>
+    <div style={{ animation: 'roadmapFade 0.6s ease-out', maxWidth: '1180px', margin: '0 auto' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <h2 style={{ fontSize: '30px', fontWeight: '900', color: '#ffaa00', marginBottom: '10px' }}>战略层级路线图</h2>
+        <div style={{ color: '#9ca3af', fontSize: '14px' }}>{roadmapData?.definition?.summary || '聚焦结构智能路线。'}</div>
+      </div>
+
+      <div
+        style={{
+          padding: '18px',
+          background: 'linear-gradient(135deg, rgba(57,208,255,0.16) 0%, rgba(57,208,255,0.04) 100%)',
+          border: '1px solid rgba(57,208,255,0.28)',
+          borderRadius: '16px',
+          marginBottom: '20px',
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div>
+            <div style={{ color: '#cceeff', fontWeight: 'bold', fontSize: '16px', marginBottom: '6px' }}>苹果神经元3D</div>
+            <div style={{ color: '#96b1cc', fontSize: '12px' }}>
+              在路线图页面直接查看苹果核心神经元、水果相关神经元、Layer 全景对比与快速概念生成。
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              onClick={() => setShowAppleNeuron3D((prev) => !prev)}
+              style={{
+                border: '1px solid rgba(57,208,255,0.45)',
+                background: showAppleNeuron3D ? 'rgba(57,208,255,0.22)' : 'rgba(57,208,255,0.12)',
+                color: '#d9f3ff',
+                borderRadius: '10px',
+                padding: '8px 12px',
+                fontSize: '12px',
+                cursor: 'pointer',
+              }}
+            >
+              {showAppleNeuron3D ? '收起界面' : '显示界面'}
+            </button>
+            {typeof onOpenAppleNeuron3D === 'function' && (
+              <button
+                type="button"
+                onClick={onOpenAppleNeuron3D}
+                style={{
+                  border: '1px solid rgba(120,170,255,0.45)',
+                  background: 'rgba(30,46,85,0.6)',
+                  color: '#d9e4ff',
+                  borderRadius: '10px',
+                  padding: '8px 12px',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                }}
+              >
+                在独立3D页打开
+              </button>
+            )}
+          </div>
+        </div>
+
+        {showAppleNeuron3D && (
+          <div style={{ marginTop: '14px' }}>
+            <AppleNeuron3DTab panelPosition="left" sceneHeight="68vh" />
+          </div>
+        )}
       </div>
 
       <div
@@ -35,9 +86,9 @@ export const ProjectRoadmapTab = ({
         <div style={{ color: '#ffaa00', fontWeight: 'bold', fontSize: '18px', marginBottom: '16px' }}>核心思路</div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '10px' }}>
           {[
-            '1，大脑有非常特殊的数学结构，产生了智能。',
-            '2，深度神经网络部分还原了这个结构，产生了语言能力。',
-            '3，通过分析深度神经网络，研究这个数学结构，完成智能理论。',
+            '1. 大脑应存在高度结构化的数学组织，这可能是智能产生的基础。',
+            '2. 深度神经网络可能部分还原了该结构，因此具备可扩展的语言与推理能力。',
+            '3. 通过结构分析与可控干预，提取可验证的编码规律，形成更通用的智能理论。',
           ].map((line, idx) => (
             <div
               key={idx}
@@ -66,10 +117,10 @@ export const ProjectRoadmapTab = ({
         }}
       >
         <div style={{ color: '#818cf8', fontWeight: 'bold', fontSize: '18px', marginBottom: '8px' }}>
-          {mathRouteSystemPlan.title}
+          {mathRouteSystemPlan?.title || '数学路线'}
         </div>
         <div style={{ color: '#c7d2fe', fontSize: '13px', lineHeight: '1.7', marginBottom: '14px' }}>
-          {mathRouteSystemPlan.subtitle}
+          {mathRouteSystemPlan?.subtitle || '对比多路线理论深度、计算可行性与解释性。'}
         </div>
 
         <div
@@ -81,138 +132,42 @@ export const ProjectRoadmapTab = ({
             padding: '12px',
           }}
         >
-          <div style={{ color: '#a5b4fc', fontSize: '11px', fontWeight: 'bold', marginBottom: '8px' }}>数学路线</div>
+          <div style={{ color: '#a5b4fc', fontSize: '11px', fontWeight: 'bold', marginBottom: '8px' }}>路线对比</div>
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', minWidth: '1440px', borderCollapse: 'collapse' }}>
+            <table style={{ width: '100%', minWidth: '1180px', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ background: 'rgba(255,255,255,0.05)' }}>
-                  <th
-                    style={{
-                      textAlign: 'left',
-                      padding: '8px 10px',
-                      color: '#c7d2fe',
-                      fontSize: '11px',
-                      borderBottom: '1px solid rgba(255,255,255,0.08)',
-                    }}
-                  >
-                    路线
-                  </th>
-                  <th
-                    style={{
-                      textAlign: 'left',
-                      padding: '8px 10px',
-                      color: '#93c5fd',
-                      fontSize: '11px',
-                      borderBottom: '1px solid rgba(255,255,255,0.08)',
-                    }}
-                  >
-                    路线说明
-                  </th>
-                  <th
-                    style={{
-                      textAlign: 'left',
-                      padding: '8px 10px',
-                      color: '#86efac',
-                      fontSize: '11px',
-                      borderBottom: '1px solid rgba(255,255,255,0.08)',
-                    }}
-                  >
-                    优点
-                  </th>
-                  <th
-                    style={{
-                      textAlign: 'left',
-                      padding: '8px 10px',
-                      color: '#fca5a5',
-                      fontSize: '11px',
-                      borderBottom: '1px solid rgba(255,255,255,0.08)',
-                    }}
-                  >
-                    缺点
-                  </th>
-                  <th
-                    style={{
-                      textAlign: 'left',
-                      padding: '8px 10px',
-                      color: '#93c5fd',
-                      fontSize: '11px',
-                      borderBottom: '1px solid rgba(255,255,255,0.08)',
-                    }}
-                  >
-                    可行性结论
-                  </th>
-                  <th
-                    style={{
-                      textAlign: 'left',
-                      padding: '8px 10px',
-                      color: '#c7d2fe',
-                      fontSize: '11px',
-                      borderBottom: '1px solid rgba(255,255,255,0.08)',
-                    }}
-                  >
-                    理论深度
-                  </th>
-                  <th
-                    style={{
-                      textAlign: 'left',
-                      padding: '8px 10px',
-                      color: '#c7d2fe',
-                      fontSize: '11px',
-                      borderBottom: '1px solid rgba(255,255,255,0.08)',
-                    }}
-                  >
-                    计算可行性
-                  </th>
-                  <th
-                    style={{
-                      textAlign: 'left',
-                      padding: '8px 10px',
-                      color: '#c7d2fe',
-                      fontSize: '11px',
-                      borderBottom: '1px solid rgba(255,255,255,0.08)',
-                    }}
-                  >
-                    可解释性
-                  </th>
-                  <th
-                    style={{
-                      textAlign: 'left',
-                      padding: '8px 10px',
-                      color: '#c7d2fe',
-                      fontSize: '11px',
-                      borderBottom: '1px solid rgba(255,255,255,0.08)',
-                    }}
-                  >
-                    与 SHMC/NFBT 兼容
-                  </th>
+                  <th style={cellHeaderStyle('#c7d2fe')}>路线</th>
+                  <th style={cellHeaderStyle('#93c5fd')}>路线说明</th>
+                  <th style={cellHeaderStyle('#86efac')}>优点</th>
+                  <th style={cellHeaderStyle('#fca5a5')}>缺点</th>
+                  <th style={cellHeaderStyle('#93c5fd')}>可行性结论</th>
+                  <th style={cellHeaderStyle('#c7d2fe')}>理论深度</th>
+                  <th style={cellHeaderStyle('#c7d2fe')}>计算可行性</th>
+                  <th style={cellHeaderStyle('#c7d2fe')}>可解释性</th>
+                  <th style={cellHeaderStyle('#c7d2fe')}>与 SHMC/NFBT 兼容</th>
                 </tr>
               </thead>
               <tbody>
-                {(mathRouteSystemPlan.routeAnalysis || []).map((item, idx) => (
+                {(mathRouteSystemPlan?.routeAnalysis || []).map((item, idx) => (
                   <tr key={idx} style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                    <td style={{ padding: '9px 10px', color: '#e0e7ff', fontSize: '12px', fontWeight: 'bold', verticalAlign: 'top' }}>
-                      {item.route}
-                    </td>
-                    <td style={{ padding: '9px 10px', color: '#bfdbfe', fontSize: '11px', lineHeight: '1.55', verticalAlign: 'top' }}>
-                      {item.routeSummary || item.description || item.routeDesc || ((item.pros || [])[0] || '—')}
-                    </td>
-                    <td style={{ padding: '9px 10px', color: '#dcfce7', fontSize: '11px', lineHeight: '1.55', verticalAlign: 'top' }}>
+                    <td style={cellBodyStyle('#e0e7ff', true)}>{item.route}</td>
+                    <td style={cellBodyStyle('#bfdbfe')}>{item.routeSummary || item.description || item.routeDesc || '-'}</td>
+                    <td style={cellBodyStyle('#dcfce7')}>
                       {(item.pros || []).map((line, pIdx) => (
-                        <div key={pIdx}>{pIdx + 1}. {line}</div>
+                        <div key={pIdx}>{`${pIdx + 1}. ${line}`}</div>
                       ))}
                     </td>
-                    <td style={{ padding: '9px 10px', color: '#fee2e2', fontSize: '11px', lineHeight: '1.55', verticalAlign: 'top' }}>
+                    <td style={cellBodyStyle('#fee2e2')}>
                       {(item.cons || []).map((line, cIdx) => (
-                        <div key={cIdx}>{cIdx + 1}. {line}</div>
+                        <div key={cIdx}>{`${cIdx + 1}. ${line}`}</div>
                       ))}
                     </td>
-                    <td style={{ padding: '9px 10px', color: '#bae6fd', fontSize: '11px', lineHeight: '1.55', verticalAlign: 'top' }}>
-                      {item.feasibility}
-                    </td>
-                    <td style={{ padding: '9px 10px', color: '#dbeafe', fontSize: '12px', verticalAlign: 'top' }}>{item.depth}</td>
-                    <td style={{ padding: '9px 10px', color: '#dbeafe', fontSize: '12px', verticalAlign: 'top' }}>{item.compute}</td>
-                    <td style={{ padding: '9px 10px', color: '#dbeafe', fontSize: '12px', verticalAlign: 'top' }}>{item.interpret}</td>
-                    <td style={{ padding: '9px 10px', color: '#dbeafe', fontSize: '12px', verticalAlign: 'top' }}>{item.compatibility}</td>
+                    <td style={cellBodyStyle('#bae6fd')}>{item.feasibility}</td>
+                    <td style={cellBodyStyle('#dbeafe')}>{item.depth}</td>
+                    <td style={cellBodyStyle('#dbeafe')}>{item.compute}</td>
+                    <td style={cellBodyStyle('#dbeafe')}>{item.interpret}</td>
+                    <td style={cellBodyStyle('#dbeafe')}>{item.compatibility}</td>
                   </tr>
                 ))}
               </tbody>
@@ -221,34 +176,72 @@ export const ProjectRoadmapTab = ({
         </div>
 
         <div style={{ marginTop: '12px', display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr', gap: '12px' }}>
-          <div style={{ padding: '14px', borderRadius: '12px', background: 'rgba(0,0,0,0.22)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <div style={{ color: '#a5b4fc', fontSize: '11px', fontWeight: 'bold', marginBottom: '6px' }}>分层架构</div>
-            {(mathRouteSystemPlan.architecture || []).map((line, idx) => (
-              <div key={idx} style={{ color: '#e0e7ff', fontSize: '12px', lineHeight: '1.6', marginBottom: '4px' }}>
-                {idx + 1}. {line}
+          <div style={infoCardStyle}>
+            <div style={infoCardTitleStyle}>分层架构</div>
+            {(mathRouteSystemPlan?.architecture || []).map((line, idx) => (
+              <div key={idx} style={infoLineStyle}>
+                {`${idx + 1}. ${line}`}
               </div>
             ))}
           </div>
 
-          <div style={{ padding: '14px', borderRadius: '12px', background: 'rgba(0,0,0,0.22)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <div style={{ color: '#a5b4fc', fontSize: '11px', fontWeight: 'bold', marginBottom: '6px' }}>资源配比</div>
-            {(mathRouteSystemPlan.allocation || []).map((line, idx) => (
-              <div key={idx} style={{ color: '#dbeafe', fontSize: '12px', lineHeight: '1.6', marginBottom: '4px' }}>
+          <div style={infoCardStyle}>
+            <div style={infoCardTitleStyle}>资源配比</div>
+            {(mathRouteSystemPlan?.allocation || []).map((line, idx) => (
+              <div key={idx} style={infoLineStyle}>
                 {line}
               </div>
             ))}
           </div>
 
-          <div style={{ padding: '14px', borderRadius: '12px', background: 'rgba(0,0,0,0.22)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <div style={{ color: '#a5b4fc', fontSize: '11px', fontWeight: 'bold', marginBottom: '6px' }}>阶段里程碑</div>
-            {(mathRouteSystemPlan.milestones || []).map((line, idx) => (
-              <div key={idx} style={{ color: '#dbeafe', fontSize: '12px', lineHeight: '1.6', marginBottom: '4px' }}>
-                {idx + 1}. {line}
+          <div style={infoCardStyle}>
+            <div style={infoCardTitleStyle}>阶段里程碑</div>
+            {(mathRouteSystemPlan?.milestones || []).map((line, idx) => (
+              <div key={idx} style={infoLineStyle}>
+                {`${idx + 1}. ${line}`}
               </div>
             ))}
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
+};
+
+const cellHeaderStyle = (color) => ({
+  textAlign: 'left',
+  padding: '8px 10px',
+  color,
+  fontSize: '11px',
+  borderBottom: '1px solid rgba(255,255,255,0.08)',
+});
+
+const cellBodyStyle = (color, bold = false) => ({
+  padding: '9px 10px',
+  color,
+  fontSize: '11px',
+  lineHeight: '1.55',
+  verticalAlign: 'top',
+  fontWeight: bold ? 'bold' : 'normal',
+});
+
+const infoCardStyle = {
+  padding: '14px',
+  borderRadius: '12px',
+  background: 'rgba(0,0,0,0.22)',
+  border: '1px solid rgba(255,255,255,0.08)',
+};
+
+const infoCardTitleStyle = {
+  color: '#a5b4fc',
+  fontSize: '11px',
+  fontWeight: 'bold',
+  marginBottom: '6px',
+};
+
+const infoLineStyle = {
+  color: '#dbeafe',
+  fontSize: '12px',
+  lineHeight: '1.6',
+  marginBottom: '4px',
 };

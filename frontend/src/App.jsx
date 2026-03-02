@@ -1,4 +1,4 @@
-import { ContactShadows, OrbitControls, PerspectiveCamera, Text } from '@react-three/drei';
+﻿import { ContactShadows, OrbitControls, PerspectiveCamera, Text } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
 import axios from 'axios';
 import {
@@ -14,6 +14,7 @@ import FlowTubesVisualizer from './FlowTubesVisualizer';
 import GlassMatrix3D from './GlassMatrix3D';
 import { GlobalTopologyDashboard } from './GlobalTopologyDashboard';
 import { HLAIBlueprint } from './HLAIBlueprint';
+import { AppleNeuronControlPanels, AppleNeuronSceneContent, useAppleNeuronWorkspace } from './blueprint/AppleNeuron3DTab';
 import ResonanceField3D from './ResonanceField3D';
 import { SimplePanel } from './SimplePanel';
 import { CompositionalVisualization3D, CurvatureField3D, FeatureVisualization3D, FiberBundleVisualization3D, LayerDetail3D, ManifoldVisualization3D, NetworkGraph3D, RPTVisualization3D, SNNVisualization3D, StructureAnalysisControls, ValidityVisualization3D } from './StructureAnalysisPanel';
@@ -1607,6 +1608,8 @@ export default function App() {
 
   // UI Tabs State
   const [inputPanelTab, setInputPanelTab] = useState('dnn'); // 'dnn' | 'snn'
+  const appleNeuronWorkspace = useAppleNeuronWorkspace();
+  const isAppleMainView = inputPanelTab === 'main';
 
   // Sync Auto Analysis Result (Single Step) to Main Result State
   // This ensures results show up even if StructureAnalysisControls is not mounted (Basic Tab)
@@ -2183,7 +2186,10 @@ export default function App() {
               {INPUT_PANEL_TABS.map(tab => (
                 <button
                   key={tab.id}
-                  onClick={() => { setInputPanelTab(tab.id); setSystemType(tab.id); }}
+                  onClick={() => {
+                    setInputPanelTab(tab.id);
+                    setSystemType(tab.id === 'main' ? 'dnn' : tab.id);
+                  }}
                   style={{
                     padding: '6px 10px',
                     background: inputPanelTab === tab.id ? tab.color : 'transparent',
@@ -2205,6 +2211,13 @@ export default function App() {
 
           {/* Content Container with Scroll */}
           <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
+
+            {/* Main Content: Apple Neuron control cards */}
+            {inputPanelTab === 'main' && (
+              <div className="animate-fade-in">
+                <AppleNeuronControlPanels workspace={appleNeuronWorkspace} />
+              </div>
+            )}
 
             {/* DNN Content: Generation + Structure Analysis */}
             {inputPanelTab === 'dnn' && (
@@ -3321,35 +3334,66 @@ export default function App() {
       )}
 
       {/* 3D Canvas - Conditionally Render FiberNetV2Demo */}
-      {structureTab === 'fibernet_v2' ? (
+      {!isAppleMainView && structureTab === 'fibernet_v2' ? (
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
           <FiberNetV2Demo t={t} />
         </div>
       ) : (
         <Canvas shadows>
-          <PerspectiveCamera makeDefault position={[20, 20, 20]} fov={50} />
-          <OrbitControls makeDefault target={structureTab === 'rpt' ? [0, 0, 0] : [0, 0, 0]} />
+          {isAppleMainView && <color attach="background" args={['#090b15']} />}
+          {isAppleMainView && <fog attach="fog" args={['#090b15', 14, 42]} />}
 
-          <ambientLight intensity={0.5} />
-          <pointLight position={[10, 10, 10]} intensity={1} castShadow />
-          <spotLight position={[-10, 20, 10]} angle={0.15} penumbra={1} intensity={1} />
-
-          {/* Standard LogitLens Visualization - Always visible if data exists */}
-          {data && (
-            <Text position={[0, 15, -5]} fontSize={1} color="#ffffff" anchorX="center" anchorY="bottom">
-              Logit Lens (Token Probabilities)
-            </Text>
-          )}
-          <Visualization data={data} hoveredInfo={hoveredInfo} setHoveredInfo={setHoveredInfo} activeLayer={activeLayer} />
-
-          {/* PGRF: Pan-Geometric Resonance Field - 全局大一统背景 */}
-          <ResonanceField3D
-            topologyResults={topologyResults}
-            activeTab={structureTab}
+          <PerspectiveCamera makeDefault position={isAppleMainView ? [16, 12, 26] : [20, 20, 20]} fov={isAppleMainView ? 42 : 50} />
+          <OrbitControls
+            makeDefault
+            target={[0, 0, 0]}
+            enablePan
+            enableZoom
+            minDistance={isAppleMainView ? 10 : undefined}
+            maxDistance={isAppleMainView ? 44 : undefined}
           />
 
+          <ambientLight intensity={0.5} />
+          {isAppleMainView ? (
+            <>
+              <pointLight position={[12, 12, 16]} intensity={70} color="#8fc4ff" />
+              <pointLight position={[-14, -8, -15]} intensity={30} color="#ff9e6b" />
+            </>
+          ) : (
+            <>
+              <pointLight position={[10, 10, 10]} intensity={1} castShadow />
+              <spotLight position={[-10, 20, 10]} angle={0.15} penumbra={1} intensity={1} />
+            </>
+          )}
+
+          {isAppleMainView ? (
+            <AppleNeuronSceneContent
+              nodes={appleNeuronWorkspace.nodes}
+              links={appleNeuronWorkspace.links}
+              selected={appleNeuronWorkspace.selected}
+              onSelect={appleNeuronWorkspace.setSelected}
+              prediction={appleNeuronWorkspace.prediction}
+            />
+          ) : (
+            <>
+              {/* Standard LogitLens Visualization - Always visible if data exists */}
+              {data && (
+                <Text position={[0, 15, -5]} fontSize={1} color="#ffffff" anchorX="center" anchorY="bottom">
+                  Logit Lens (Token Probabilities)
+                </Text>
+              )}
+              <Visualization data={data} hoveredInfo={hoveredInfo} setHoveredInfo={setHoveredInfo} activeLayer={activeLayer} />
+
+              {/* PGRF: Pan-Geometric Resonance Field - 全局大一统背景 */}
+              <ResonanceField3D
+                topologyResults={topologyResults}
+                activeTab={structureTab}
+              />
+            </>
+          )}
+
           {/* Analysis Overlays - 模态观测图层叠加 */}
-          {analysisResult && structureTab !== 'glass_matrix' && structureTab !== 'flow_tubes' && (
+          {!isAppleMainView && analysisResult && structureTab !== 'glass_matrix' && structureTab !== 'flow_tubes' && (
             <group position={data ? [-data.tokens.length, 0, -data.logit_lens.length] : [0, 0, 0]}>
               {/* 场景标签 - 动态显示当前观测模态 */}
               <Text position={[0, 14, 0]} fontSize={1} color="#4ecdc4" anchorX="center">
@@ -3394,20 +3438,20 @@ export default function App() {
           {/* Independent Visualizations (No Analysis Result Needed) */}
           {/* Note: GlassMatrix3D and FlowTubesVisualizer have their own Canvas, rendered outside */}
 
-          {structureTab === 'flow_tubes' && (
+          {!isAppleMainView && structureTab === 'flow_tubes' && (
             <group position={[0, -5, 0]}>
               <FlowTubesVisualizer />
             </group>
           )}
 
-          {structureTab === 'tda' && (
+          {!isAppleMainView && structureTab === 'tda' && (
             <group position={[0, 0, 0]}>
               <TDAVisualization3D result={analysisResult} t={t} />
             </group>
           )}
 
           {/* Debug Log for SNN Rendering Conditions */}
-          {(() => {
+          {!isAppleMainView && (() => {
             if (inputPanelTab === 'snn' || snnState.initialized) {
               console.log('[App] SNN Render Check:', { inputPanelTab, initialized: snnState.initialized, hasStructure: !!snnState.structure });
             }
@@ -3416,7 +3460,7 @@ export default function App() {
 
 
           {/* SNN Visualization - Independent of structure analysis result */}
-          {(inputPanelTab === 'snn' || systemType === 'snn') && snnState.initialized && snnState.structure && (
+          {!isAppleMainView && (inputPanelTab === 'snn' || systemType === 'snn') && snnState.initialized && snnState.structure && (
             <group position={(!data || systemType === 'snn') ? [0, 0, 0] : [-(data?.tokens?.length || 10) - 20, 0, 0]}>
               <SNNVisualization3D
                 t={t}
@@ -3427,7 +3471,7 @@ export default function App() {
           )}
 
           {/* Magnified Layer Visualization during generation */}
-          {activeLayer !== null && activeLayerInfo && (
+          {!isAppleMainView && activeLayer !== null && activeLayerInfo && (
             <group position={[30, 0, 0]}>
               <Text
                 position={[0, 8, 0]}
@@ -3450,13 +3494,17 @@ export default function App() {
             </group>
           )}
 
-          <ContactShadows resolution={1024} scale={20} blur={2} opacity={0.35} far={10} color="#000000" />
-          <gridHelper args={[100, 50, '#222', '#111']} position={[0, -0.6, 0]} />
+          {!isAppleMainView && (
+            <>
+              <ContactShadows resolution={1024} scale={20} blur={2} opacity={0.35} far={10} color="#000000" />
+              <gridHelper args={[100, 50, '#222', '#111']} position={[0, -0.6, 0]} />
+            </>
+          )}
         </Canvas>
       )}
 
       {/* GlassMatrix3D - Has its own Canvas, must be rendered outside main Canvas */}
-      {structureTab === 'glass_matrix' && (
+      {!isAppleMainView && structureTab === 'glass_matrix' && (
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
           <GlassMatrix3D />
         </div>

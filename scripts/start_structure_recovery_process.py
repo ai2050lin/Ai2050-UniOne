@@ -309,11 +309,13 @@ def run_stage_d_multimodal(output_json: Path, output_md: Path, store: Experiment
         sys.executable,
         "scripts/train_fiber_multimodal_connector.py",
         "--dataset",
-        "synthetic",
+        "auto",
+        "--mnist-root",
+        "tempdata/data",
         "--total-samples",
-        "4000",
+        "12000",
         "--epochs",
-        "2",
+        "6",
         "--batch-size",
         "128",
         "--d-model",
@@ -323,7 +325,7 @@ def run_stage_d_multimodal(output_json: Path, output_md: Path, store: Experiment
         "--report-md",
         str(output_md).replace("\\", "/"),
         "--analysis-type",
-        "multimodal_connector_kickoff",
+        "multimodal_connector_baseline",
         "--timeline",
         "tempdata/agi_route_test_timeline.json",
         "--route",
@@ -368,15 +370,15 @@ def run_stage_d_multimodal(output_json: Path, output_md: Path, store: Experiment
         ],
         conclusion=ConclusionCard(
             objective="Assemble language/vision routes into a shared representation space.",
-            method="Train fiber multimodal connector on synthetic paired data.",
+            method="Train fiber multimodal connector on MNIST/auto-selected paired data.",
             evidence=[
                 f"val_fused_acc={fused}",
                 f"val_retrieval_top1={retrieval}",
             ],
             result=summary["conclusion"],
             confidence=0.72 if status == "pass" else 0.6,
-            limitations=["Synthetic-only kickoff; needs real-world multi-domain eval."],
-            next_action="Expand to richer multimodal datasets and conflict-routing tests.",
+            limitations=["Current baseline is still limited to simple vision-language domains."],
+            next_action="Expand to richer multimodal datasets and conflict-routing tests (beyond MNIST).",
         ),
         artifacts=[{"path": str(output_json).replace("\\", "/")}],
     )
@@ -481,14 +483,23 @@ def run_stage_e_falsification(
         }
 
     holdout_ag = {}
+    holdout_layered_goal3_status = None
     if holdout_latest and holdout_latest.exists():
         holdout_payload = _load_json(holdout_latest)
         holdout_ag = holdout_payload.get("aggregates", {})
+        holdout_layered_goal3_status = (
+            ((holdout_payload.get("layered_goals", {}) or {}).get("goal_3_cross_task_family_stability", {}) or {})
+            .get("status")
+        )
 
     seed_block = _summarize_seed_block(seed_block_reports)
     current_support_models = int(holdout_ag.get("support_models", 0)) if holdout_ag else 0
     current_falsify_models = int(holdout_ag.get("falsify_models", 0)) if holdout_ag else 0
     current_gate_pass = current_support_models >= support_models_min and current_falsify_models <= falsify_models_max
+
+    task_goal3_pass = task_eval.get("falsify_count", 0) == 0 and task_eval.get("support_count", 0) >= 2
+    holdout_goal3_pass = holdout_layered_goal3_status == "pass" if holdout_layered_goal3_status is not None else True
+    goal3_pass = bool(task_goal3_pass and holdout_goal3_pass)
 
     layered_goals = {
         "goal_1_same_arch_seed_stability": {
@@ -506,9 +517,13 @@ def run_stage_e_falsification(
             },
         },
         "goal_3_cross_task_family_stability": {
-            "status": "pass" if task_eval.get("falsify_count", 0) == 0 and task_eval.get("support_count", 0) >= 2 else "pending",
-            "criterion": "task_level: support_count>=2 and falsify_count=0",
-            "evidence": task_eval,
+            "status": "pass" if goal3_pass else "pending",
+            "criterion": "task_level: support_count>=2 and falsify_count=0, and latest_holdout goal_3=pass (if available)",
+            "evidence": {
+                "task_level_eval": task_eval,
+                "latest_holdout_goal3_status": holdout_layered_goal3_status,
+                "latest_holdout_report": str(holdout_latest).replace("\\", "/") if holdout_latest else None,
+            },
         },
     }
 
@@ -630,7 +645,7 @@ def to_markdown(summary: Dict[str, Any]) -> str:
             "1. Upgrade A0 with trajectory-level encoding-formation probes.",
             "2. Extend stage-B with task-level metric deltas and significance tests.",
             "3. Run constrained MDL minimal reconstruction using selected causal subspaces.",
-            "4. Expand stage-D to non-synthetic multimodal data and route conflicts.",
+            "4. Expand stage-D beyond MNIST to richer multimodal data and route conflicts.",
             "5. Build explicit counterfactual falsification tasks for open hypotheses.",
             "",
         ]

@@ -1,9 +1,9 @@
-/**
- * 面板配置文件
- * 统一管理所有面板的位置、样式、标签页分组和数据模板
+﻿/**
+ * 闈㈡澘閰嶇疆鏂囦欢
+ * 缁熶竴绠＄悊鎵€鏈夐潰鏉跨殑浣嶇疆銆佹牱寮忋€佹爣绛鹃〉鍒嗙粍鍜屾暟鎹ā鏉?
  */
 
-// 面板位置配置
+// 闈㈡澘浣嶇疆閰嶇疆
 export const PANEL_POSITIONS = {
   inputPanel: {
     position: 'absolute',
@@ -41,7 +41,7 @@ export const PANEL_POSITIONS = {
   },
 };
 
-// 面板基础样式
+// 闈㈡澘鍩虹鏍峰紡
 export const PANEL_BASE_STYLE = {
   background: 'rgba(20, 20, 25, 0.95)',
   padding: '16px',
@@ -53,67 +53,67 @@ export const PANEL_BASE_STYLE = {
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
 };
 
-// 结构分析标签页分组配置（二级菜单）
+// 缁撴瀯鍒嗘瀽鏍囩椤靛垎缁勯厤缃紙浜岀骇鑿滃崟锛?
 export const STRUCTURE_TABS_V2 = {
   groups: [
     {
       id: 'observation',
-      label: '观测',
+      label: '瑙傛祴',
       icon: 'Eye',
       color: '#00d2ff',
-      description: '层间预测演化与激活可视化',
+      description: '灞傞棿棰勬祴婕斿寲涓庢縺娲诲彲瑙嗗寲',
       items: [
-        { id: 'logit_lens', label: '预测演化 (Logit)', desc: '层间预测演化', icon: 'BarChart2' },
-        { id: 'glass_matrix', label: '玻璃矩阵 (Glass)', desc: '激活矩阵可视化', icon: 'Grid3x3' },
-        { id: 'flow_tubes', label: '信息流 (Flow)', desc: '信息流动轨迹', icon: 'GitBranch' },
+        { id: 'logit_lens', label: '棰勬祴婕斿寲 (Logit)', desc: '灞傞棿棰勬祴婕斿寲', icon: 'BarChart2' },
+        { id: 'glass_matrix', label: '鐜荤拑鐭╅樀 (Glass)', desc: '婵€娲荤煩闃靛彲瑙嗗寲', icon: 'Grid3x3' },
+        { id: 'flow_tubes', label: '淇℃伅娴?(Flow)', desc: '淇℃伅娴佸姩杞ㄨ抗', icon: 'GitBranch' },
       ]
     },
     {
       id: 'analysis',
-      label: '分析',
+      label: '鍒嗘瀽',
       icon: 'Zap',
       color: '#ff9f43',
-      description: '因果回路与特征提取',
+      description: '鍥犳灉鍥炶矾涓庣壒寰佹彁鍙?',
       items: [
-        { id: 'circuit', label: '回路 (Circuit)', desc: '因果回路发现', icon: 'Share2' },
-        { id: 'features', label: '特征 (Features)', desc: 'SAE稀疏特征', icon: 'Sparkles' },
-        { id: 'causal', label: '因果 (Causal)', desc: '因果中介分析', icon: 'Target' },
-        { id: 'manifold', label: '流形 (Manifold)', desc: '流形几何分析', icon: 'Globe2' },
-        { id: 'compositional', label: '组合 (Compos)', desc: '组合泛化', icon: 'Layers' },
+        { id: 'circuit', label: '鍥炶矾 (Circuit)', desc: '鍥犳灉鍥炶矾鍙戠幇', icon: 'Share2' },
+        { id: 'features', label: '鐗瑰緛 (Features)', desc: 'SAE绋€鐤忕壒寰?', icon: 'Sparkles' },
+        { id: 'causal', label: '鍥犳灉 (Causal)', desc: '鍥犳灉涓粙鍒嗘瀽', icon: 'Target' },
+        { id: 'manifold', label: '娴佸舰 (Manifold)', desc: '娴佸舰鍑犱綍鍒嗘瀽', icon: 'Globe2' },
+        { id: 'compositional', label: '缁勫悎 (Compos)', desc: '缁勫悎娉涘寲', icon: 'Layers' },
       ]
     },
     {
       id: 'geometry',
-      label: '几何',
+      label: '鍑犱綍',
       icon: 'Hexagon',
       color: '#6c5ce7',
-      description: '纤维丛与拓扑分析',
+      description: '绾ょ淮涓涗笌鎷撴墤鍒嗘瀽',
       items: [
-        { id: 'fibernet_v2', label: '纤维丛 (Fiber)', desc: '纤维丛拓扑', icon: 'Network' },
-        { id: 'rpt', label: '传输 (RPT)', desc: '黎曼平行传输', icon: 'ArrowRightLeft' },
-        { id: 'curvature', label: '曲率 (Curv)', desc: '曲率场分析', icon: 'TrendingUp' },
-        { id: 'tda', label: '拓扑 (TDA)', desc: '拓扑数据分析', icon: 'BarChart' },
-        { id: 'global_topology', label: '全局拓扑 (Topo)', desc: '全局拓扑', icon: 'Globe' },
-        { id: 'holonomy', label: '全纯 (Holo)', desc: '全纯扫描', icon: 'RefreshCw' },
+        { id: 'fibernet_v2', label: '绾ょ淮涓?(Fiber)', desc: '绾ょ淮涓涙嫇鎵?', icon: 'Network' },
+        { id: 'rpt', label: '浼犺緭 (RPT)', desc: '榛庢浖骞宠浼犺緭', icon: 'ArrowRightLeft' },
+        { id: 'curvature', label: '鏇茬巼 (Curv)', desc: '鏇茬巼鍦哄垎鏋?', icon: 'TrendingUp' },
+        { id: 'tda', label: '鎷撴墤 (TDA)', desc: '鎷撴墤鏁版嵁鍒嗘瀽', icon: 'BarChart' },
+        { id: 'global_topology', label: '鍏ㄥ眬鎷撴墤 (Topo)', desc: '鍏ㄥ眬鎷撴墤', icon: 'Globe' },
+        { id: 'holonomy', label: '鍏ㄧ函 (Holo)', desc: '鍏ㄧ函鎵弿', icon: 'RefreshCw' },
       ]
     },
     {
       id: 'advanced',
-      label: '高级',
+      label: '楂樼骇',
       icon: 'FlaskConical',
       color: '#ff6b9d',
-      description: 'AGI与去偏分析',
+      description: 'AGI涓庡幓鍋忓垎鏋?',
       items: [
-        { id: 'agi', label: '神经丛 (AGI)', desc: '神经纤维丛AGI', icon: 'Brain' },
-        { id: 'debias', label: '去偏 (Debias)', desc: '几何去偏', icon: 'Scale' },
-        { id: 'validity', label: '有效性 (Valid)', desc: '有效性检验', icon: 'CheckCircle' },
-        { id: 'training', label: '训练 (Training)', desc: '训练动力学', icon: 'Activity' },
+        { id: 'agi', label: '绁炵粡涓?(AGI)', desc: '绁炵粡绾ょ淮涓汚GI', icon: 'Brain' },
+        { id: 'debias', label: '鍘诲亸 (Debias)', desc: '鍑犱綍鍘诲亸', icon: 'Scale' },
+        { id: 'validity', label: '鏈夋晥鎬?(Valid)', desc: '鏈夋晥鎬ф楠?', icon: 'CheckCircle' },
+        { id: 'training', label: '璁粌 (Training)', desc: '璁粌鍔ㄥ姏瀛?', icon: 'Activity' },
       ]
     }
   ]
 };
 
-// 扁平化的标签页列表（向后兼容）
+// 鎵佸钩鍖栫殑鏍囩椤靛垪琛紙鍚戝悗鍏煎锛?
 export const STRUCTURE_TABS = {
   observation: STRUCTURE_TABS_V2.groups.find(g => g.id === 'observation').items,
   analysis: STRUCTURE_TABS_V2.groups.find(g => g.id === 'analysis').items,
@@ -121,65 +121,66 @@ export const STRUCTURE_TABS = {
   advanced: STRUCTURE_TABS_V2.groups.find(g => g.id === 'advanced').items,
 };
 
-// 输入面板标签页配置
+// 杈撳叆闈㈡澘鏍囩椤甸厤缃?
 export const INPUT_PANEL_TABS = [
-  { id: 'dnn', label: 'DNN', color: '#3a7bd5', description: '深度神经网络' },
-  { id: 'snn', label: 'SNN', color: '#4ecdc4', description: '脉冲神经网络' },
-  { id: 'fibernet', label: 'FiberNet', color: '#6c5ce7', description: '纤维丛实验室' },
+  { id: 'main', label: 'Main', color: '#38bdf8', description: 'Apple Neuron 3D Main' },
+  { id: 'dnn', label: 'DNN', color: '#3a7bd5', description: '娣卞害绁炵粡缃戠粶' },
+  { id: 'snn', label: 'SNN', color: '#4ecdc4', description: '鑴夊啿绁炵粡缃戠粶' },
+  { id: 'fibernet', label: 'FiberNet', color: '#6c5ce7', description: '绾ょ淮涓涘疄楠屽' },
 ];
 
-// 数据展示模板配置
+// 鏁版嵁灞曠ず妯℃澘閰嶇疆
 export const ANALYSIS_DATA_TEMPLATES = {
   logit_lens: {
-    title: 'Logit Lens 分析',
+    title: 'Logit Lens 鍒嗘瀽',
     color: '#00d2ff',
     metrics: [
-      { key: 'avg_confidence', label: '平均置信度', format: 'percent' },
-      { key: 'entropy', label: '熵值', format: 'decimal' },
+      { key: 'avg_confidence', label: '骞冲潎缃俊搴?', format: 'percent' },
+      { key: 'entropy', label: '鐔靛€?', format: 'decimal' },
     ],
     sections: [
-      { type: 'layer_list', title: '层间预测', source: 'logit_lens' },
+      { type: 'layer_list', title: '灞傞棿棰勬祴', source: 'logit_lens' },
     ]
   },
   circuit: {
-    title: '因果回路发现',
+    title: '鍥犳灉鍥炶矾鍙戠幇',
     color: '#ff6b6b',
     metrics: [
-      { key: 'nodes', label: '节点数', format: 'number' },
-      { key: 'edges', label: '边数', format: 'number' },
-      { key: 'density', label: '密度', format: 'percent' },
+      { key: 'nodes', label: '鑺傜偣鏁?', format: 'number' },
+      { key: 'edges', label: '杈规暟', format: 'number' },
+      { key: 'density', label: '瀵嗗害', format: 'percent' },
     ],
     sections: [
-      { type: 'graph_summary', title: '图结构', source: 'graph' },
+      { type: 'graph_summary', title: '鍥剧粨鏋?', source: 'graph' },
     ]
   },
   features: {
-    title: 'SAE 特征提取',
+    title: 'SAE 鐗瑰緛鎻愬彇',
     color: '#ffd93d',
     metrics: [
-      { key: 'n_features', label: '特征数', format: 'number' },
-      { key: 'sparsity', label: '稀疏度', format: 'decimal' },
-      { key: 'reconstruction_error', label: '重构误差', format: 'decimal' },
+      { key: 'n_features', label: '鐗瑰緛鏁?', format: 'number' },
+      { key: 'sparsity', label: '绋€鐤忓害', format: 'decimal' },
+      { key: 'reconstruction_error', label: '閲嶆瀯璇樊', format: 'decimal' },
     ],
     sections: [
-      { type: 'feature_table', title: 'Top特征', source: 'top_features' },
+      { type: 'feature_table', title: 'Top鐗瑰緛', source: 'top_features' },
     ]
   },
   causal: {
-    title: '因果中介分析',
+    title: '鍥犳灉涓粙鍒嗘瀽',
     color: '#6c5ce7',
     metrics: [
-      { key: 'n_components_analyzed', label: '分析组件', format: 'number' },
-      { key: 'n_important_components', label: '关键组件', format: 'number' },
+      { key: 'n_components_analyzed', label: '鍒嗘瀽缁勪欢', format: 'number' },
+      { key: 'n_important_components', label: '鍏抽敭缁勪欢', format: 'number' },
     ],
     sections: []
   },
   manifold: {
-    title: '流形几何分析',
+    title: '娴佸舰鍑犱綍鍒嗘瀽',
     color: '#4ecdc4',
     metrics: [
-      { key: 'intrinsic_dim', label: '内在维度', format: 'number' },
-      { key: 'curvature', label: '曲率', format: 'decimal' },
+      { key: 'intrinsic_dim', label: '鍐呭湪缁村害', format: 'number' },
+      { key: 'curvature', label: '鏇茬巼', format: 'decimal' },
     ],
     sections: []
   },
@@ -187,42 +188,42 @@ export const ANALYSIS_DATA_TEMPLATES = {
     title: 'FiberNet V2',
     color: '#6c5ce7',
     metrics: [
-      { key: 'base_dim', label: '底流形维度', format: 'number' },
-      { key: 'fiber_dim', label: '纤维维度', format: 'number' },
+      { key: 'base_dim', label: '搴曟祦褰㈢淮搴?', format: 'number' },
+      { key: 'fiber_dim', label: '绾ょ淮缁村害', format: 'number' },
     ],
     sections: []
   },
   tda: {
-    title: '拓扑数据分析',
+    title: '鎷撴墤鏁版嵁鍒嗘瀽',
     color: '#e056fd',
     metrics: [
-      { key: 'betti_0', label: 'β₀ 连通分量', format: 'number' },
-      { key: 'betti_1', label: 'β₁ 环', format: 'number' },
-      { key: 'betti_2', label: 'β₂ 空腔', format: 'number' },
+      { key: 'betti_0', label: '尾鈧€ 杩為€氬垎閲?', format: 'number' },
+      { key: 'betti_1', label: '尾鈧?鐜?', format: 'number' },
+      { key: 'betti_2', label: '尾鈧?绌鸿厰', format: 'number' },
     ],
     sections: []
   },
   rpt: {
-    title: '黎曼平行传输',
+    title: '榛庢浖骞宠浼犺緭',
     color: '#00d2ff',
     metrics: [
-      { key: 'transport_distance', label: '传输距离', format: 'decimal' },
-      { key: 'alignment', label: '对齐度', format: 'percent' },
+      { key: 'transport_distance', label: '浼犺緭璺濈', format: 'decimal' },
+      { key: 'alignment', label: '瀵归綈搴?', format: 'percent' },
     ],
     sections: []
   },
   curvature: {
-    title: '曲率场分析',
+    title: '鏇茬巼鍦哄垎鏋?',
     color: '#ff9f43',
     metrics: [
-      { key: 'scalar_curvature', label: '标量曲率', format: 'decimal' },
-      { key: 'ricci_curvature', label: 'Ricci曲率', format: 'decimal' },
+      { key: 'scalar_curvature', label: '鏍囬噺鏇茬巼', format: 'decimal' },
+      { key: 'ricci_curvature', label: 'Ricci鏇茬巼', format: 'decimal' },
     ],
     sections: []
   },
 };
 
-// 颜色主题
+// 棰滆壊涓婚
 export const COLORS = {
   primary: '#00d2ff',
   secondary: '#3a7bd5',
@@ -240,16 +241,18 @@ export const COLORS = {
   textMuted: '#666666',
 };
 
-// 操作历史配置
+// 鎿嶄綔鍘嗗彶閰嶇疆
 export const HISTORY_CONFIG = {
   maxItems: 50,
   storageKey: 'transformerlens_history',
 };
 
-// 默认面板可见性
+// 榛樿闈㈡澘鍙鎬?
 export const DEFAULT_PANEL_VISIBILITY = {
   inputPanel: true,
   infoPanel: true,
   operationPanel: true,
   detailPanel: false,
 };
+
+
