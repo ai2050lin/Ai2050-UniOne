@@ -3,6 +3,19 @@ import { Brain, ChevronDown, ChevronRight, Activity } from 'lucide-react';
 import { FeatureEmergenceAnimation } from './FeatureEmergenceAnimation';
 import QwenAblationReport from './QwenAblationReport';
 import ManifoldStructureGraph from './ManifoldStructureGraph';
+import CategorySubspaceGraph from './CategorySubspaceGraph';
+import UniversalManifoldGraph from './UniversalManifoldGraph';
+import DeepManifoldEvolutionGraph from './DeepManifoldEvolutionGraph';
+import TrajectoryCodebookGraph from './TrajectoryCodebookGraph';
+import ConceptSimilarityGraph from './ConceptSimilarityGraph';
+import AnchorRelativeTopologyGraph from './AnchorRelativeTopologyGraph';
+import ConceptSubspaceNetwork from './ConceptSubspaceNetwork';
+import KnowledgeCascadeTreeGraph from './KnowledgeCascadeTreeGraph';
+import ConceptVectorAlgebraGraph from './ConceptVectorAlgebraGraph';
+import HyperSpaceBindingGraph from './HyperSpaceBindingGraph';
+import AGIUnifiedTheoryEngine from './AGIUnifiedTheoryEngine';
+import SNNBrainMappingGraph from './SNNBrainMappingGraph';
+import EPS_SNN_Dashboard from './EPS_SNN_Dashboard';
 
 export const GeminiTab = () => {
     const [expandedSteps, setExpandedSteps] = useState({});
@@ -145,6 +158,10 @@ export const GeminiTab = () => {
                     <div>直面最严峻的'信用分配'危机。我们正在开发能与BP匹敌，但保持极高局部约束的新一代信用下放机制。通过持续解刨现存大规模DNN化石（如GPT-2、Qwen3 等），尝试从中提取自发涌现的专家化聚类及对偶关联机制，以构建完整的分层预测编码（Predictive Coding）体系，目标是突破基础泛化能力的门槛。</div>
                     <QwenAblationReport />
                     <ManifoldStructureGraph />
+                    <CategorySubspaceGraph />
+                    <UniversalManifoldGraph />
+                    <DeepManifoldEvolutionGraph />
+                    <TrajectoryCodebookGraph />
                 </div>
             )
         },
