@@ -4,46 +4,105 @@ import { OrbitControls, Html, Line } from '@react-three/drei';
 import * as THREE from 'three';
 
 // 神经元组件
-const Neuron = ({ position, layerTarget, isActive, isConcept, label, color }) => {
+const Neuron = ({ position, layerIdx, isActive, isConcept, label, color }) => {
     const meshRef = useRef();
+    const materialRef = useRef();
+    const labelRef = useRef();
 
     useFrame((state, delta) => {
-        if (isActive) {
-            meshRef.current.rotation.x += delta;
-            meshRef.current.rotation.y += delta;
+        const time = state.clock.elapsedTime;
+        const cycleLength = 6;
+        const currentPhase = time % cycleLength;
+
+        // 时序逐层点亮控制 (保持节奏, 但放大特效)
+        const layerActivationTime = layerIdx * 1.0;
+        let layerActiveOpacity = 0;
+
+        if (currentPhase >= layerActivationTime) {
+            if (currentPhase < 4.5) {
+                // 亮起阶段变快
+                layerActiveOpacity = Math.min(1.0, (currentPhase - layerActivationTime) * 3.5);
+            } else {
+                layerActiveOpacity = Math.max(0, 1.0 - (currentPhase - 4.5) * 2.0);
+            }
+        }
+
+        // 基础动画: 旋转速度加快
+        if (isActive && layerActiveOpacity > 0.05 && meshRef.current) {
+            meshRef.current.rotation.x += delta * (isConcept ? 3 : 1.5);
+            meshRef.current.rotation.y += delta * (isConcept ? 3 : 1.5);
+        }
+
+        // 材质更新
+        if (materialRef.current && meshRef.current) {
+            // 休眠时刻变得更暗更萎缩，以此衬托点亮时的爆发感
+            let currentScale = 0.5;
+            let currentOpacity = 0.1;
+            let currentEmissive = 0;
+
+            if (isActive) {
+                // 点亮瞬间给个"脉冲式爆发"的缩放弹射感 (Bouncing scale)
+                const pulse = Math.max(0, Math.sin(layerActiveOpacity * Math.PI));
+
+                // 基础尺寸变大
+                currentScale = 0.6 + ((isConcept ? 1.8 : 0.8) * layerActiveOpacity) + (pulse * 0.4);
+                currentOpacity = 0.1 + (0.9 * layerActiveOpacity);
+
+                // 基础发光极大增强
+                let baseEmissive = isConcept ? 4.5 : 2.5;
+
+                // 核心概念节点的呼吸灯效果: 加快频率并极大地增强光度
+                if (isConcept && layerActiveOpacity > 0.8) {
+                    const breathe = (Math.sin(time * 8.0) + 1) / 2;
+                    baseEmissive += breathe * 6.5; // 之前是3.5
+                    currentScale += breathe * 0.3;
+                }
+
+                currentEmissive = baseEmissive * layerActiveOpacity;
+            }
+
+            meshRef.current.scale.set(currentScale, currentScale, currentScale);
+            materialRef.current.opacity = currentOpacity;
+            materialRef.current.emissiveIntensity = currentEmissive;
+        }
+
+        // 标签透明度渐变 (也做一个提前显示)
+        if (labelRef.current && isActive) {
+            labelRef.current.style.opacity = Math.min(1.0, layerActiveOpacity * 1.5);
+            // 让字体背景跟着活跃度变化，使其更明显
+            labelRef.current.style.transform = `translate3d(-50%, -150%, 0) scale(${0.8 + layerActiveOpacity * 0.4})`;
         }
     });
 
-    const scale = isActive ? (isConcept ? 2.0 : 1.3) : 0.8;
-    const opacity = isActive ? 1.0 : 0.2;
-    const emissiveInt = isActive ? (isConcept ? 3.0 : 1.5) : 0;
-
     return (
         <group position={position}>
-            <mesh ref={meshRef} scale={[scale, scale, scale]}>
+            <mesh ref={meshRef}>
                 <sphereGeometry args={[0.3, 32, 32]} />
                 <meshStandardMaterial
+                    ref={materialRef}
                     color={color}
                     emissive={color}
-                    emissiveIntensity={emissiveInt}
                     transparent
-                    opacity={opacity}
-                    roughness={0.2}
-                    metalness={0.8}
+                    roughness={0.1} // 让表面更光滑反光
+                    metalness={0.9} // 更金属感
                 />
             </mesh>
             {isActive && label && (
-                <Html distanceFactor={15}>
-                    <div style={{
+                <Html distanceFactor={15} zIndexRange={[100, 0]}>
+                    <div ref={labelRef} style={{
                         color: 'white',
-                        background: isConcept ? 'rgba(255, 50, 50, 0.8)' : 'rgba(0, 150, 255, 0.6)',
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        fontSize: isConcept ? '12px' : '10px',
-                        fontWeight: 'bold',
+                        background: isConcept ? 'rgba(255, 40, 40, 0.9)' : 'rgba(20, 150, 255, 0.8)', // 增强背景不透明度
+                        padding: '6px 10px',
+                        borderRadius: '6px',
+                        fontSize: isConcept ? '16px' : '14px', // 放大字号
+                        border: isConcept ? '1px solid #ffcc00' : '1px solid rgba(255,255,255,0.2)', // 概念节点加个边框
+                        fontWeight: 900,
                         whiteSpace: 'nowrap',
-                        transform: 'translate3d(-50%, -150%, 0)',
-                        pointerEvents: 'none'
+                        transformOrigin: 'bottom center',
+                        pointerEvents: 'none',
+                        opacity: 0,
+                        boxShadow: `0 0 10px ${color}`, // 加个外发光
+                        transition: 'opacity 0.1s, transform 0.1s'
                     }}>
                         {label}
                     </div>
@@ -54,15 +113,34 @@ const Neuron = ({ position, layerTarget, isActive, isConcept, label, color }) =>
 };
 
 // 神经连接连线组件
-const NeuralConnection = ({ start, end, isActive }) => {
-    const lineMaterial = useMemo(() => {
-        return new THREE.LineBasicMaterial({
-            color: isActive ? 0xffea00 : 0x444444,
-            transparent: true,
-            opacity: isActive ? 0.8 : 0.1,
-            linewidth: isActive ? 2 : 1,
-        });
-    }, [isActive]);
+const NeuralConnection = ({ start, end, isActive, startLayerIdx }) => {
+    const materialRef = useRef();
+
+    useFrame((state) => {
+        if (!materialRef.current) return;
+
+        const time = state.clock.elapsedTime;
+        const cycleLength = 6;
+        const currentPhase = time % cycleLength;
+
+        // 连线比源节点晚0.3秒亮起，模拟流动感
+        const activationStart = startLayerIdx * 1.0 + 0.3;
+
+        // 非激活连线降为极底透明度，激活连线则极高
+        let currentOpacity = isActive ? 0.05 : 0.02;
+
+        if (isActive && currentPhase >= activationStart) {
+            if (currentPhase < 4.5) {
+                // 连线爆发
+                currentOpacity = Math.min(1.0, 0.05 + (currentPhase - activationStart) * 3.0);
+            } else {
+                currentOpacity = Math.max(0.05, 1.0 - (currentPhase - 4.5) * 2.0);
+            }
+        }
+
+        materialRef.current.opacity = currentOpacity;
+        materialRef.current.linewidth = currentOpacity > 0.5 ? 4 : 1; // 线宽加大
+    });
 
     const geometry = useMemo(() => {
         const geo = new THREE.BufferGeometry().setFromPoints([
@@ -73,7 +151,9 @@ const NeuralConnection = ({ start, end, isActive }) => {
     }, [start, end]);
 
     return (
-        <line geometry={geometry} material={lineMaterial} />
+        <line geometry={geometry}>
+            <lineBasicMaterial ref={materialRef} color={isActive ? 0xffea00 : 0x444444} transparent={true} opacity={isActive ? 0.8 : 0.1} linewidth={isActive ? 2 : 1} />
+        </line>
     );
 };
 
@@ -151,7 +231,8 @@ const generateAppleNetwork = () => {
                     connections.push({
                         start: src.pos,
                         end: tgt.pos,
-                        isActive: isBothActive
+                        isActive: isBothActive,
+                        startLayerIdx: src.layerIdx
                     });
                 }
             });
@@ -176,6 +257,7 @@ const AppleNeuronVis3D = () => {
                     {neurons.map(n => (
                         <Neuron
                             key={`neuron-${n.id}`}
+                            layerIdx={n.layerIdx}
                             position={n.pos}
                             isActive={n.isActive}
                             isConcept={n.isConcept}
@@ -190,6 +272,7 @@ const AppleNeuronVis3D = () => {
                             start={c.start}
                             end={c.end}
                             isActive={c.isActive}
+                            startLayerIdx={c.startLayerIdx}
                         />
                     ))}
                 </group>
