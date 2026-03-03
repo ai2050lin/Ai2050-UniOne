@@ -338,17 +338,19 @@ function PulsingNeuron({ node, selected, onSelect, predictionStrength = 0, mode 
 function LayerGuides({ activeLayer = null }) {
   const layers = useMemo(() => Array.from({ length: LAYER_COUNT }, (_, i) => i), []);
   const hasActiveLayer = Number.isFinite(activeLayer);
+  const activeLayerIndex = hasActiveLayer
+    ? Math.max(0, Math.min(LAYER_COUNT - 1, Math.round(activeLayer)))
+    : null;
   return (
     <group>
       {layers.map((layer) => {
         const z = (layer - (LAYER_COUNT - 1) / 2) * 0.92;
         const isMajor = layer % 4 === 0 || layer === LAYER_COUNT - 1;
-        const distance = hasActiveLayer ? Math.abs(layer - activeLayer) : Number.POSITIVE_INFINITY;
-        const influence = hasActiveLayer ? Math.max(0, 1 - distance / 4.4) : 0;
-        const lineColor = influence > 0.08 ? '#ffffff' : isMajor ? '#dbeafe' : '#8ea4c7';
-        const lineOpacity = (isMajor ? 0.2 : 0.1) + influence * 0.55;
-        const labelColor = influence > 0.08 ? '#ffffff' : isMajor ? '#d8ecff' : '#9cb6dc';
-        const labelSize = (isMajor ? 0.3 : 0.22) + influence * 0.09;
+        const isActive = activeLayerIndex === layer;
+        const lineColor = isActive ? '#ffffff' : isMajor ? '#dbeafe' : '#8ea4c7';
+        const lineOpacity = isActive ? 0.8 : isMajor ? 0.2 : 0.1;
+        const labelColor = isActive ? '#ffffff' : isMajor ? '#d8ecff' : '#9cb6dc';
+        const labelSize = isActive ? 0.38 : isMajor ? 0.3 : 0.22;
         return (
           <group key={`layer-${layer}`}>
             <Line
@@ -386,7 +388,7 @@ function LayerGuides({ activeLayer = null }) {
             >
               {`L${layer}`}
             </Text>
-            {influence > 0.15 && (
+            {isActive && (
               <Line
                 points={[
                   [-6.2, -6.2, z],
@@ -397,7 +399,7 @@ function LayerGuides({ activeLayer = null }) {
                 ]}
                 color="#ffffff"
                 transparent
-                opacity={0.12 + influence * 0.45}
+                opacity={0.58}
                 lineWidth={1.6}
               />
             )}

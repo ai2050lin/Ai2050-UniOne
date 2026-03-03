@@ -829,3 +829,29 @@ pm run build (workdir=rontend) -> 通过
 - 理论/数学研究进展:
   - 把“移动主体”作为时间驱动变量，层级响应函数 influence = f(|layer-activeLayer|) 可视化了层深与激活传播关系。
   - 该可视化更贴近“层间编码传播”机制观察，而非仅看单点激活。
+
+## [2026-03-03 11:43:17] Codex 进展记录
+- 任务: 将 layer 动画从“多层同时高亮”改为“单层高亮”，提升可读性。
+- 代码变更:
+  - rontend/src/blueprint/AppleNeuron3DTab.jsx
+    - LayerGuides(activeLayer) 改为单层模式：
+      - 计算 ctiveLayerIndex = round(activeLayer) 并限制在 [0, 27]
+      - 仅 ctiveLayerIndex 对应层触发高亮线框/标签放大/内层高亮框
+      - 其余 layer 仅保留静态参考线
+- 执行命令:
+  - 
+pm run build (workdir=rontend) -> 通过
+- 理论/数学研究进展:
+  - 单层高亮将“层级响应”从分布式模糊带改为离散主响应层，便于观察“主导层随时间迁移”的编码路径。
+
+## [2026-03-03 11:44:17] Codex 进展记录
+- 任务: 分析 MAIN 控制面板动画效果并提出“更清楚展示每层算法影响”的优化思路。
+- 当前观察:
+  - 已有单层高亮、模式差异化载体、机制模式控制与 metrics 文本。
+  - 仍缺“每层量化影响面板”和“基线差分视图”。
+- 理论/数学研究进展:
+  - 提出“层影响可视化三元组”框架：
+    1) Layer Impact（每层强度）
+    2) Layer Delta（相对基线变化）
+    3) Layer Uncertainty（方差/稳定性）
+  - 该三元组可统一映射到不同机制模式，形成跨算法可比性。
