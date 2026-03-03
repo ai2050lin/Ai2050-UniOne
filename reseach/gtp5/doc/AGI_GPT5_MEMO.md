@@ -746,3 +746,86 @@ pm run build (workdir=rontend) -> 通过
 pm run build (workdir=rontend) -> 通过
 - 理论/数学研究进展:
   - 显式层序号可作为“深度坐标系”观察基准，便于将动态预测轨迹与层级结构对应，支持后续层级因果路径分析。
+
+## [2026-03-03 00:58:45] Codex 进展记录
+- 任务: 回答“除静态分析/动态预测外，观察神经元编码机制还有哪些方案”。
+- 输出方案方向:
+  - 因果干预、子空间几何、特征解码、跨层传输、组合性、鲁棒性、反事实、最小子回路等。
+- 理论/数学研究进展:
+  - 明确从“相关性观察”升级到“机制识别”的关键路径：
+    1) 先定位候选表征（几何/特征）
+    2) 再做可逆干预验证（ablation/patching/steering）
+    3) 最后抽取最小因果子回路并做跨任务复验。
+
+## [2026-03-03 01:30:54] Codex 进展记录
+- 任务: 在 MAIN 中完成“静态分析/动态预测 + 8种编码机制观测方案”的完整实现。
+- 代码变更:
+  - rontend/src/blueprint/AppleNeuron3DTab.jsx
+    - 新增 10 种分析模式按钮：
+      - static, dynamic_prediction
+      - causal_intervention, subspace_geometry, feature_decomposition, cross_layer_transport
+      - compositionality, counterfactual, robustness, minimal_circuit
+    - 在 useAppleNeuronWorkspace 中实现各模式的激活映射计算（activationMap）与状态指标（metrics/status）。
+    - 新增机制控制参数：
+      - 因果干预稀疏度、特征轴选择、组合权重、反事实提示词、鲁棒试验次数、最小子回路规模。
+    - 新增机制播放控制（Play/Pause/Step/Reset + speed），并与主3D场景联动。
+    - 重构 AppleNeuronControlPanels 为完整多模式控制台，动态显示对应控件。
+- 执行命令:
+  - 
+pm run build (workdir=rontend) -> 通过
+- 理论/数学研究进展:
+  - 从单一“下一词预测动画”扩展到“机制族对照框架”，统一抽象为：
+    - mode -> activationMap -> 3D响应
+  - 形成了机制级可比较实验面板，可在同一空间下对比：
+    - 因果性（intervention/minimal circuit）
+    - 几何性（subspace/transport）
+    - 表征分解（feature/compositional）
+    - 稳定性与反事实（robustness/counterfactual）
+
+## [2026-03-03 11:05:55] Codex 进展记录
+- 任务: 修复苹果3D动画中“黑色组件与黑色背景对比不足”的可视性问题，组件改为白色系。
+- 代码变更:
+  - rontend/src/blueprint/AppleNeuron3DTab.jsx
+    - ROLE_COLORS.background 从深色改为 #ffffff。
+    - Layer 网格线与中轴线改为白色/浅色，提升对比度。
+    - 神经元提示浮层改为浅色背景与深色文字，避免深色叠加不可读。
+- 执行命令:
+  - 
+pm run build (workdir=rontend) -> 通过
+- 理论/数学研究进展:
+  - 提升低激活背景节点和层结构参考线的可见性，有助于更准确观察“弱激活编码”与“层间几何骨架”的关系。
+
+## [2026-03-03 11:10:38] Codex 进展记录
+- 任务: 解决 MAIN 中不同模式动画“看起来一样”的问题，做模式级差异化可视表达。
+- 代码变更:
+  - rontend/src/blueprint/AppleNeuron3DTab.jsx
+    - 新增 MODE_VISUALS，为每种模式定义视觉参数（accent、脉冲速度/幅度、链路强度、载体形态）。
+    - PulsingNeuron 支持按模式调整脉冲频率/发光颜色/缩放波形。
+    - TokenPredictionCarrier 按模式切换几何：torus/octa/plane/tetra/cylinder/tri_ring/dual_ring/shield/hex。
+    - 新增 ModeVisualOverlay，为每种机制模式叠加专属几何特征（子空间平面、特征轴、传输轴、组合三环、反事实双球、鲁棒护罩、最小回路骨架等）。
+    - AppleNeuronSceneContent 根据模式改变链路颜色与线宽，并注入模式叠层。
+  - rontend/src/App.jsx
+    - 主空间渲染 AppleNeuronSceneContent 时传入 mode={appleNeuronWorkspace.analysisMode}，确保 MAIN 中同样生效。
+- 执行命令:
+  - 
+pm run build (workdir=rontend) -> 通过
+- 理论/数学研究进展:
+  - 将“算法机制差异”映射到“视觉语法差异”，形成一一对应：
+    - 因果/子空间/特征/传输/组合/反事实/鲁棒/最小回路 各有独立动态符号。
+  - 这有助于在同一3D空间中做跨机制对照，减少“同构动画导致的认知歧义”。
+
+## [2026-03-03 11:32:50] Codex 进展记录
+- 任务: 将移动中的3D主体改为白色，并让主体移动时每个layer产生对应变化。
+- 代码变更:
+  - rontend/src/blueprint/AppleNeuron3DTab.jsx
+    - TokenPredictionCarrier 所有移动几何材质统一改为白色发光。
+    - LayerGuides 新增 ctiveLayer 参数：
+      - 根据与当前层距离计算 influence，动态调整层线框颜色/透明度、标签字号/颜色。
+      - 高影响层增加内层高亮框，形成“逐层响应”效果。
+    - AppleNeuronSceneContent 根据 prediction.layerProgress 计算当前活动层并传入 LayerGuides。
+- 执行命令:
+  - 
+pm run build (workdir=rontend) -> 通过
+- 理论/数学研究进展:
+  - 把“移动主体”作为时间驱动变量，层级响应函数 influence = f(|layer-activeLayer|) 可视化了层深与激活传播关系。
+  - 该可视化更贴近“层间编码传播”机制观察，而非仅看单点激活。

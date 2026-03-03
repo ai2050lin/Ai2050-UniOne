@@ -3373,6 +3373,7 @@ export default function App() {
               selected={appleNeuronWorkspace.selected}
               onSelect={appleNeuronWorkspace.setSelected}
               prediction={appleNeuronWorkspace.prediction}
+              mode={appleNeuronWorkspace.analysisMode}
             />
           ) : (
             <>
