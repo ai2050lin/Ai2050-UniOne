@@ -14,7 +14,7 @@ import FlowTubesVisualizer from './FlowTubesVisualizer';
 import GlassMatrix3D from './GlassMatrix3D';
 import { GlobalTopologyDashboard } from './GlobalTopologyDashboard';
 import { HLAIBlueprint } from './HLAIBlueprint';
-import { AppleNeuronControlPanels, AppleNeuronSceneContent, useAppleNeuronWorkspace } from './blueprint/AppleNeuron3DTab';
+import { AppleNeuronCategoryComparePanel, AppleNeuronCompareFilterPanel, AppleNeuronControlPanels, AppleNeuronEncodingInfoPanels, AppleNeuronSceneContent, AppleNeuronSelectedLegendPanels, useAppleNeuronWorkspace } from './blueprint/AppleNeuron3DTab';
 import ResonanceField3D from './ResonanceField3D';
 import { SimplePanel } from './SimplePanel';
 import { CompositionalVisualization3D, CurvatureField3D, FeatureVisualization3D, FiberBundleVisualization3D, LayerDetail3D, ManifoldVisualization3D, NetworkGraph3D, RPTVisualization3D, SNNVisualization3D, StructureAnalysisControls, ValidityVisualization3D } from './StructureAnalysisPanel';
@@ -25,11 +25,42 @@ import FiberNetPanel from './components/FiberNetPanel';
 
 import { locales } from './locales';
 import { INPUT_PANEL_TABS, STRUCTURE_TABS_V2, COLORS } from './config/panels';
-import { AnalysisDataDisplay, MetricsRow, MetricCard } from './components/shared/DataDisplayTemplates';
+import { AnalysisDataDisplay, MetricCard } from './components/shared/DataDisplayTemplates';
 import { OperationHistoryPanel, useOperationHistory } from './components/shared/OperationHistory';
 import { DataComparisonView } from './components/shared/DataComparisonView';
 
 const API_BASE = (import.meta.env.VITE_API_BASE || 'http://localhost:5001').replace(/\/$/, '');
+
+const CONTROL_PANEL_BLUEPRINT = {
+  main: {
+    label: 'Main',
+    mission: '分析深度神经网络中的语言数学结构，还原大脑的数学原理。',
+    operationFocus: '按阶段观测、提取、验证、系统归纳，构建编码证据链。',
+    formula: 'E = {Layer Signature, FS, PI, HI, Δ-neuron}',
+    model3d: '层级骨架 + 关键神经元 + 动态编码轨迹。',
+  },
+  dnn: {
+    label: 'DNN',
+    mission: '分析深度神经网络中的各种特性，作为综合观察工具。',
+    operationFocus: '围绕结构分析算法切换参数，做多视角验证。',
+    formula: 'f(x) = W_L σ(...σ(W_2 σ(W_1 x)))',
+    model3d: 'Logit-Lens、流形、回路、拓扑等观测图层叠加。',
+  },
+  snn: {
+    label: 'SNN',
+    mission: '作为脉冲神经网络分析工具，观测放电、可塑性与动力学。',
+    operationFocus: '控制刺激、步进、播放与有效性检验参数。',
+    formula: 'τ dV/dt = -(V - V_rest) + I(t), spike when V > θ',
+    model3d: '脉冲活动热区 + 层间传播轨迹。',
+  },
+  fibernet: {
+    label: 'FiberNet',
+    mission: '作为纤维丛神经网络工具，研究底流形-纤维解耦与快速写入。',
+    operationFocus: '围绕快慢权重协作、注入策略和稳定性做参数探索。',
+    formula: 'y = SlowLogic(x) + Σ α_i · FastFiber_i(x)',
+    model3d: '底流形承载通用结构，纤维方向承载快速语义写入。',
+  },
+};
 
 const navButtonStyle = (isActive, activeColor) => ({
   position: 'absolute',
@@ -56,14 +87,15 @@ const navButtonStyle = (isActive, activeColor) => ({
 function GlassNode({ position, probability, color, label, actual, layer, posIndex, onHover, isActiveLayer }) {
   const mesh = useRef();
 
-  // Size based on probability (0.0 - 1.0)
-  const baseSize = 0.3 + (probability * 0.5);
+  // Height based on probability (0.0 - 1.0)
+  const baseHeight = 0.4 + (probability * 0.8);
 
   useFrame((state) => {
     if (mesh.current) {
       // Gentle pulse for high prob nodes
       if (probability > 0.5) {
-        mesh.current.scale.setScalar(baseSize + Math.sin(state.clock.elapsedTime * 2) * 0.05);
+        const pulse = Math.sin(state.clock.elapsedTime * 2) * 0.06;
+        mesh.current.scale.set(0.28, baseHeight + pulse, 0.28);
       }
     }
   });
@@ -81,9 +113,9 @@ function GlassNode({ position, probability, color, label, actual, layer, posInde
           onHover(null);
           document.body.style.cursor = 'default';
         }}
-        scale={[baseSize, baseSize, baseSize]}
+        scale={[0.28, baseHeight, 0.28]}
       >
-        <sphereGeometry args={[1, 32, 32]} />
+        <boxGeometry args={[1, 1, 1]} />
         <meshPhysicalMaterial
           color={color}
           emissive={color}
@@ -464,6 +496,121 @@ const ALGO_DOCS = {
         'Residual Connections & LayerNorm: 缓解梯度消失，稳定训练。'
       ],
       formula: 'Block(x) = x + MHSA(LN1(x)) + MLP(LN2(x + MHSA(...)))'
+    }
+  },
+  'main_workspace': {
+    title: 'Main 控制面板 (Main Workspace)',
+    simple: {
+      title: '如何用 Main 面板做“编码拼图”',
+      desc: 'Main 面板不是单一图表，而是一条从宏观到微观的证据链。',
+      points: [
+        '拼图管理器：设置实验标签、样本规模、稳定性探针，保存当前证据快照。',
+        '层级编码签名：看每层“编码变化强度”和“稀疏度”，再看层间 Drift。',
+        '编码机制指标：看 FS（稳定度）、PI（可塑性）、HI（稳态）和跨任务一致性。',
+        '影响神经元：查看 Top-K Δ 神经元，并在 3D 中聚焦高影响节点。',
+        'Selected Neuron：把宏观结论落到单神经元的 current / baseline / delta。'
+      ]
+    },
+    pro: {
+      title: 'Main as Evidence Pipeline',
+      desc: 'Main 将机制分析拆成“版本化证据管理 + 层级结构指标 + 机制指标 + 微观差分定位”。',
+      points: [
+        'Evidence Versioning: 通过 experimentTag / sampleScale / stabilityProbeCount 固化实验上下文并可回放对比。',
+        'Layer Signature: 以 meanAbsDelta / sparsity / drift 衡量编码在层内与层间的重排强度。',
+        'Mechanism Metrics: 通过 feature stability、task consistency、PI/HI 捕捉稳定-可塑平衡。',
+        'Neuron-Level Causality Proxy: 以 Δ=current-baseline 排序定位高影响神经元并联动 3D 聚焦。',
+        'Closed Loop: 形成“全局统计 -> 层级迁移 -> 单神经元验证”的闭环解释流程。'
+      ],
+      formula: 'Evidence = {FS, PI, HI, Drift, Δ-neuron map}'
+    }
+  },
+  'main_system': {
+    title: 'Main 模块定位',
+    simple: {
+      title: 'Main 是“编码还原主工作台”',
+      desc: '目标是沿着证据链还原语言能力背后的数学结构。',
+      points: [
+        '先观测：看层间和神经元随时间如何变化。',
+        '再提取：找稳定特征、子空间和组合规律。',
+        '再验证：做因果/反事实/鲁棒性检查。',
+        '最后系统化：沉淀最小子回路与跨任务规律。'
+      ]
+    },
+    pro: {
+      title: 'Main = 编码证据链引擎',
+      desc: 'Main 将研究流程组织为观测-提取-验证-系统四阶段闭环，避免只看单帧现象。',
+      points: [
+        '从 Layer Signature 到神经元 Δ 的多尺度联动。',
+        '将可视化结果绑定到可复现指标（FS/PI/HI/Drift）。',
+        '支持从宏观结构结论下钻到微观节点。'
+      ],
+      formula: 'Pipeline = Observe -> Extract -> Verify -> Systemize'
+    }
+  },
+  'dnn_system': {
+    title: 'DNN 模块定位',
+    simple: {
+      title: 'DNN 是“多算法观察台”',
+      desc: '用于从不同角度观察深度网络行为，不直接替代 Main 的编码还原主线。',
+      points: [
+        '可切换回路、特征、因果、流形、拓扑等算法。',
+        '用于发现异常层、关键路径和候选规律。',
+        '输出可作为 Main 证据链的输入。'
+      ]
+    },
+    pro: {
+      title: 'DNN = 结构分析与观测工具集',
+      desc: '以多算法横向观察构建候选假设，再进入 Main 做纵向验证。',
+      points: [
+        '结构分析强调“多视角覆盖率”。',
+        '参数面板强调“可控实验变量”。',
+        '结果面板强调“可解释指标与可视化一致性”。'
+      ],
+      formula: 'Hypothesis Space H = {circuit, feature, causal, manifold, topology, ...}'
+    }
+  },
+  'snn_system': {
+    title: 'SNN 模块定位',
+    simple: {
+      title: 'SNN 是“脉冲动力学分析台”',
+      desc: '关注放电时序、刺激响应和可塑性，不是静态特征图。',
+      points: [
+        '看神经元什么时候放电。',
+        '看刺激如何传播到后续层。',
+        '看系统是否稳定和可重复。'
+      ]
+    },
+    pro: {
+      title: 'SNN = 时序因果动力学观测',
+      desc: '以事件驱动机制补充连续激活模型，强调时间维度与可塑性。',
+      points: [
+        '时间步进与刺激实验是关键操作。',
+        '有效性指标用于验证动态行为可靠性。',
+        '可与 DNN/Main 的结构结论做映射对照。'
+      ],
+      formula: 'Spike(t) = 1[V(t) > θ],  Δw ∝ STDP(Δt)'
+    }
+  },
+  'fibernet_system': {
+    title: 'FiberNet 模块定位',
+    simple: {
+      title: 'FiberNet 是“纤维丛网络实验台”',
+      desc: '核心是把通用结构和快速写入解耦，提高效率与可控性。',
+      points: [
+        '底流形负责稳定推理骨架。',
+        '纤维负责快速注入任务知识。',
+        '关注快速学习与全局稳态平衡。'
+      ]
+    },
+    pro: {
+      title: 'FiberNet = 底流形-纤维双尺度机制',
+      desc: '通过快慢权重协同，把即时学习与长期稳定统一到同一框架。',
+      points: [
+        '慢权重保持全局一致性。',
+        '快权重承载局部任务适配。',
+        '可用于研究“局部可塑、全局稳态”的工程实现。'
+      ],
+      formula: 'h = h_base + U_fiber z_fast'
     }
   },
   // --- Circuit ---
@@ -939,6 +1086,86 @@ const GUIDE_STRUCTURED = {
       metricRanges: ['层数多=表达更强', '参数大=可能更强也更难解释', '头数多=注意力模式更丰富']
     }
   },
+  main_workspace: {
+    pro: {
+      goal: '把 Main 面板用于系统化编码还原，而不是只看单次动画现象。',
+      approach: ['先定义实验上下文并存证', '再看层级签名与机制指标', '最后下钻到受影响神经元做核验'],
+      model3d: '3D 主空间展示节点与层，控制面板提供同一时刻的统计证据与微观差分读数。',
+      algorithm: '基于 activationMap 与 baseline 计算 Δ，结合 FS/PI/HI/Drift 形成多尺度证据链。',
+      metricRanges: ['FS 越高越稳定', 'PI 高表示局部可塑', 'HI 高表示全局稳态', 'Drift 高表示层间重排强']
+    },
+    simple: {
+      goal: '把“看起来像规律”变成“可复盘的证据”。',
+      approach: ['先打标签并保存快照', '看层级变化', '看关键神经元是不是反复出现'],
+      model3d: '左边看指标，右边看 3D 变化，两边要互相印证。',
+      algorithm: '先看全局，再看层，再看单点，避免只凭直觉判断。',
+      metricRanges: ['FS 高=稳定', 'PI/HI 平衡=健康', 'Drift 过高需警惕', 'Top-K Δ 重复出现更可信']
+    }
+  },
+  main_system: {
+    pro: {
+      goal: '将 Main 明确为“语言编码数学结构还原”的主流程。',
+      approach: ['按四阶段推进实验', '建立指标与3D联动证据', '沉淀可复现结论'],
+      model3d: '通过层级与节点联动展示编码形成过程，支持从宏观到微观追踪。',
+      algorithm: '四阶段流程管理 + 多尺度指标（层、机制、神经元）统一。',
+      metricRanges: ['FS高=稳定', 'PI高=可塑', 'HI高=稳态', 'Δ稳定重现=高可信']
+    },
+    simple: {
+      goal: '把 Main 当作“还原语言机制”的主战场。',
+      approach: ['先观察', '再提取', '再验证', '最后总结规律'],
+      model3d: '3D里看到的变化要和指标同步变化。',
+      algorithm: '用同一条证据链反复验证，不靠直觉下结论。',
+      metricRanges: ['多次一致更可信', '只出现一次先保留', '跨样本重复=强证据']
+    }
+  },
+  dnn_system: {
+    pro: {
+      goal: '将 DNN 定位为“多算法观测工具箱”。',
+      approach: ['横向跑多算法', '提取候选规律', '回流 Main 做系统验证'],
+      model3d: '不同分析图层并置对照，突出结构与行为差异。',
+      algorithm: '以结构分析算法族构建候选假设空间。',
+      metricRanges: ['覆盖算法越全，漏检风险越低', '跨算法一致性高=置信提升']
+    },
+    simple: {
+      goal: '用 DNN 找线索，而不是直接下最终结论。',
+      approach: ['多看几种分析', '记下重复出现现象', '交给Main做深挖'],
+      model3d: '不同图层像不同镜头，合起来更完整。',
+      algorithm: '先广泛观察，再聚焦验证。',
+      metricRanges: ['重复出现=重点', '偶发现象=待验证', '冲突结果=继续查']
+    }
+  },
+  snn_system: {
+    pro: {
+      goal: '将 SNN 定位为“时序脉冲动力学分析工具”。',
+      approach: ['刺激-响应实验', '时序放电追踪', '稳定性与有效性检验'],
+      model3d: '以时间维展示放电传播路径和活跃区迁移。',
+      algorithm: '事件驱动神经动力学 + 可塑性规则观测。',
+      metricRanges: ['放电模式可重复=可靠', '噪声主导=需调参', '响应延迟稳定=结构健康']
+    },
+    simple: {
+      goal: '看脉冲网络“什么时候、在哪里、为什么放电”。',
+      approach: ['注入刺激', '逐步播放', '观察是否稳定复现'],
+      model3d: '亮起的节点就是当前在放电的区域。',
+      algorithm: '按时间看神经活动而不是只看静态分布。',
+      metricRanges: ['重复放电路径=可解释', '到处随机放电=不稳定', '延迟规律=可建模']
+    }
+  },
+  fibernet_system: {
+    pro: {
+      goal: '将 FiberNet 定位为“纤维丛快慢权重协同实验工具”。',
+      approach: ['分离底流形与纤维更新', '比较注入前后性能', '验证全局稳态'],
+      model3d: '底流形与纤维轨迹分层渲染，展示结构稳定与快速适配并存。',
+      algorithm: 'Base manifold + fiber injection + fast/slow coupling。',
+      metricRanges: ['快速收益高且旧能力不退化=理想', '漂移过大=全局稳态风险']
+    },
+    simple: {
+      goal: '看模型能不能“快学新知识又不忘旧知识”。',
+      approach: ['先注入', '再测试新旧任务', '观察是否稳定'],
+      model3d: '主干保持稳定，纤维局部变化代表快速学习。',
+      algorithm: '把新知识尽量写到纤维，不破坏主干。',
+      metricRanges: ['新任务提升+旧任务稳定=好', '旧任务下降=需回退']
+    }
+  },
   logit_lens: {
     pro: {
       goal: '观察 token 概率在各层的演化路径，定位何时形成最终预测。',
@@ -1254,6 +1481,67 @@ const buildGuideConclusion = ({ tab, activeTab, analysisResult, topologyResults,
     ]);
   }
 
+  if (tab === 'main_workspace') {
+    return make(true, '当前结论', [
+      'Main 面板用于做“编码证据链”管理：先存证，再看层级，再看微观节点。',
+      '建议每次切换分析类型后保存快照，比较 FS/PI/HI 与 Top-K 神经元是否稳定。'
+    ], [
+      { label: '工作流', value: '拼图 -> 层级 -> 机制 -> 神经元' },
+      { label: '核心指标', value: 'FS / PI / HI / Drift / Δ' }
+    ]);
+  }
+
+  if (tab === 'main_system' || tab === 'dnn_system' || tab === 'snn_system' || tab === 'fibernet_system') {
+    const mapping = {
+      main_system: {
+        title: 'Main 模块结论',
+        lines: [
+          'Main 应作为“编码结构还原主线”统一入口，强调证据链闭环。',
+          '建议将 DNN/SNN/FiberNet 结果回流到 Main 做统一验证。',
+        ],
+        metrics: [
+          { label: '定位', value: '主研究流程' },
+          { label: '流程', value: '观测->提取->验证->系统' },
+        ],
+      },
+      dnn_system: {
+        title: 'DNN 模块结论',
+        lines: [
+          'DNN 适合做多算法横向观测与假设发现。',
+          '应避免仅凭单一算法结果下结论，需与 Main 交叉验证。',
+        ],
+        metrics: [
+          { label: '定位', value: '结构观测工具箱' },
+          { label: '输出', value: '候选规律/异常层' },
+        ],
+      },
+      snn_system: {
+        title: 'SNN 模块结论',
+        lines: [
+          'SNN 提供时间维脉冲动力学证据，可补足静态激活视角。',
+          '重点关注刺激-响应可重复性与时序稳定性。'
+        ],
+        metrics: [
+          { label: '定位', value: '脉冲动力学分析' },
+          { label: '关键', value: '时序/可塑性/稳定性' },
+        ],
+      },
+      fibernet_system: {
+        title: 'FiberNet 模块结论',
+        lines: [
+          'FiberNet 用于快慢权重协同实验，评估局部可塑与全局稳态平衡。',
+          '重点验证“快速收益是否伴随旧能力退化”。'
+        ],
+        metrics: [
+          { label: '定位', value: '纤维丛实验平台' },
+          { label: '关键', value: '快写入+稳主干' },
+        ],
+      },
+    };
+    const v = mapping[tab];
+    return make(true, v.title, v.lines, v.metrics);
+  }
+
   if (tab === 'logit_lens' || tab === 'glass_matrix' || tab === 'flow_tubes') {
     if (!data?.logit_lens?.length) return make(false, '当前结论', ['尚无token概率轨迹，请先运行 analyze。']);
     const probs = data.logit_lens.flatMap(layer => layer.map(item => item.prob)).filter(v => typeof v === 'number');
@@ -1351,14 +1639,14 @@ const EvolutionMonitor = ({ data, onStartSleep }) => {
       border: '1px solid rgba(0,210,255,0.2)', borderRadius: '12px', marginBottom: '20px',
       fontFamily: 'monospace'
     }}>
-      <h3 style={{ margin: '0 0 10px 0', borderBottom: '1px solid rgba(0,210,255,0.2)', fontSize: '14px' }}>EVOLUTION MONITOR</h3>
+      <h3 style={{ margin: '0 0 10px 0', borderBottom: '1px solid rgba(0,210,255,0.2)', fontSize: '14px' }}>演化监视器</h3>
       <div style={{ marginBottom: '8px', fontSize: '12px' }}>
-        STATUS: <span style={{ color: data.is_evolving ? '#ff00ff' : '#00ffcc' }}>
-          {data.is_evolving ? 'SLEEPING (EVOLVING)' : 'AWAKE (READY)'}
+        状态: <span style={{ color: data.is_evolving ? '#ff00ff' : '#00ffcc' }}>
+          {data.is_evolving ? '休眠中（演化进行中）' : '唤醒（可分析）'}
         </span>
       </div>
       <div style={{ marginBottom: '8px', fontSize: '12px' }}>
-        CURVATURE (Ω): {data.curvature?.toFixed(6) || 'N/A'}
+        曲率 (Ω): {data.curvature?.toFixed(6) || '无数据'}
       </div>
       <div style={{ marginBottom: '15px', width: '100%', background: 'rgba(255,255,255,0.05)', height: '4px', borderRadius: '2px', overflow: 'hidden' }}>
         <div style={{
@@ -1377,7 +1665,7 @@ const EvolutionMonitor = ({ data, onStartSleep }) => {
           onMouseOver={e => e.target.style.background = 'rgba(255,0,255,0.1)'}
           onMouseOut={e => e.target.style.background = 'transparent'}
         >
-          ENTER SLEEP CYCLE
+          进入休眠演化周期
         </button>
       )}
     </div>
@@ -1594,22 +1882,48 @@ export default function App() {
     return () => clearInterval(interval);
   }, [snnState.isPlaying, snnState.initialized]);
 
-  const [infoPanelTab, setInfoPanelTab] = useState('model'); // 'model' | 'detail'
+  const [infoPanelTab, setInfoPanelTab] = useState('overview'); // 'overview' | 'encoding' | 'detail'
   const [displayInfo, setDisplayInfo] = useState(null); // Persisted hover info
   const [topologyResults, setTopologyResults] = useState(null); // Global Scan Data
 
-  // Auto-switch Info Panel tab on hover and persist info
-  useEffect(() => {
-    if (hoveredInfo) {
-      setInfoPanelTab('detail');
-      setDisplayInfo(hoveredInfo);
-    }
-  }, [hoveredInfo]);
-
   // UI Tabs State
-  const [inputPanelTab, setInputPanelTab] = useState('dnn'); // 'dnn' | 'snn'
+  const [inputPanelTab, setInputPanelTab] = useState('main'); // 'main' | 'dnn' | 'snn' | 'fibernet'
   const appleNeuronWorkspace = useAppleNeuronWorkspace();
   const isAppleMainView = inputPanelTab === 'main';
+  const functionTypePanelMap = {
+    main: { label: 'Main', hasInfo: true, hasOperation: true },
+    dnn: { label: 'DNN', hasInfo: true, hasOperation: true },
+    snn: { label: 'SNN', hasInfo: true, hasOperation: true },
+    fibernet: { label: 'FiberNet', hasInfo: true, hasOperation: true }
+  };
+  const activeFunctionPanel = functionTypePanelMap[inputPanelTab] || {
+    label: inputPanelTab,
+    hasInfo: false,
+    hasOperation: false
+  };
+  const hasInfoPanelContent = activeFunctionPanel.hasInfo;
+  const hasOperationPanelContent = activeFunctionPanel.hasOperation;
+  const isSnnFunctionType = inputPanelTab === 'snn';
+  const isFiberNetFunctionType = inputPanelTab === 'fibernet';
+  const showEvolutionMonitor = inputPanelTab === 'dnn';
+
+  // Auto-switch Info Panel tab on hover and persist info
+  // Main 视图下保留“编码焦点”阅读，不强制跳到“细节”。
+  useEffect(() => {
+    if (hoveredInfo) {
+      setDisplayInfo(hoveredInfo);
+      if (!isAppleMainView) {
+        setInfoPanelTab('detail');
+      }
+    }
+  }, [hoveredInfo, isAppleMainView]);
+
+  // 切换到 Main 时，默认进入“编码焦点”页签，便于查看编码模块。
+  useEffect(() => {
+    if (inputPanelTab === 'main') {
+      setInfoPanelTab('encoding');
+    }
+  }, [inputPanelTab]);
 
   // Sync Auto Analysis Result (Single Step) to Main Result State
   // This ensures results show up even if StructureAnalysisControls is not mounted (Basic Tab)
@@ -1652,8 +1966,31 @@ export default function App() {
   });
   const [isInfoPanelMinimized, setIsInfoPanelMinimized] = useState(false);
   const [isLayersPanelMinimized, setIsLayersPanelMinimized] = useState(false);
+  const [showOperationData, setShowOperationData] = useState(true);
+  const [showOperationCompare, setShowOperationCompare] = useState(false);
+  const [showOperationHistory, setShowOperationHistory] = useState(false);
   const [showBlueprint, setShowBlueprint] = useState(false);
   const [blueprintInitialTab, setBlueprintInitialTab] = useState('roadmap');
+
+  useEffect(() => {
+    if (!hasInfoPanelContent) {
+      setIsInfoPanelMinimized(true);
+    } else {
+      setIsInfoPanelMinimized(false);
+    }
+
+    if (!hasOperationPanelContent) {
+      setIsLayersPanelMinimized(true);
+      setShowOperationData(false);
+      setShowOperationCompare(false);
+      setShowOperationHistory(false);
+    } else {
+      setIsLayersPanelMinimized(false);
+      setShowOperationData(true);
+      setShowOperationCompare(false);
+      setShowOperationHistory(false);
+    }
+  }, [inputPanelTab, hasInfoPanelContent, hasOperationPanelContent]);
 
   const togglePanelVisibility = (key) => {
     setPanelVisibility(prev => ({
@@ -2037,6 +2374,32 @@ export default function App() {
   };
   const currentStructureUI = structureTabUI[structureTab] || { name: structureTab, category: 'analysis', focus: '关注当前分析结果与关键指标' };
   const isObservationMode = currentStructureUI.category === 'observation';
+  const currentPanelBlueprint = CONTROL_PANEL_BLUEPRINT[inputPanelTab] || {
+    label: activeFunctionPanel.label,
+    mission: '当前模块用于观察与分析神经网络编码行为。',
+    operationFocus: '根据当前算法配置参数并做对照实验。',
+    formula: '-',
+    model3d: '以3D场景展示结构变化。',
+  };
+  const currentMainMode = appleNeuronWorkspace.analysisModes.find((m) => m.id === appleNeuronWorkspace.analysisMode);
+  const currentAlgorithmInfo = (() => {
+    if (isAppleMainView) {
+      return {
+        name: currentMainMode?.label || 'Main 分析',
+        focus: currentMainMode?.desc || 'Main 四阶段编码分析',
+      };
+    }
+    if (isFiberNetFunctionType) {
+      return {
+        name: 'FiberNet 实验流程',
+        focus: '在左侧 FiberNet 面板中配置实验，并在 3D 空间观察结构变化。',
+      };
+    }
+    return {
+      name: currentStructureUI.name,
+      focus: currentStructureUI.focus,
+    };
+  })();
 
   const probValues = data?.logit_lens
     ? data.logit_lens.flatMap(layer => layer.map(item => item.prob)).filter(v => typeof v === 'number')
@@ -2091,6 +2454,81 @@ export default function App() {
     }
   })();
 
+  const encodingFocusItems = (() => {
+    switch (structureTab) {
+      case 'features':
+        return [
+          { label: '稀疏特征', value: `${analysisResult?.top_features?.length || 0}` },
+          { label: '重构误差', value: analysisResult?.reconstruction_error?.toFixed?.(5) || '-' },
+          { label: '观测层', value: selectedLayer !== null ? `L${selectedLayer}` : '-' }
+        ];
+      case 'circuit':
+      case 'causal':
+        return [
+          { label: '关键节点', value: `${analysisResult?.nodes?.length || analysisResult?.n_components_analyzed || 0}` },
+          { label: '关键连边', value: `${analysisResult?.graph?.edges?.length || analysisResult?.n_important_components || 0}` },
+          { label: '历史样本', value: `${history.length}` }
+        ];
+      case 'manifold':
+      case 'rpt':
+      case 'curvature':
+        return [
+          { label: '参与比', value: analysisResult?.intrinsic_dimensionality?.participation_ratio?.toFixed?.(2) || '-' },
+          { label: '曲率', value: analysisResult?.curvature?.toFixed?.(4) || '-' },
+          { label: '观测层', value: selectedLayer !== null ? `L${selectedLayer}` : '-' }
+        ];
+      case 'tda':
+      case 'global_topology':
+      case 'holonomy':
+        return [
+          { label: '连通分量 β0', value: `${analysisResult?.ph_0d?.length || 0}` },
+          { label: '环结构 β1', value: `${analysisResult?.ph_1d?.length || 0}` },
+          { label: '历史样本', value: `${history.length}` }
+        ];
+      case 'glass_matrix':
+      case 'flow_tubes':
+        return [
+          { label: '平均概率', value: avgProb !== null ? `${(avgProb * 100).toFixed(1)}%` : '-' },
+          { label: '高置信占比', value: highProbRatio !== null ? `${(highProbRatio * 100).toFixed(1)}%` : '-' },
+          { label: '活跃层', value: activeLayer !== null ? `L${activeLayer}` : '-' }
+        ];
+      default:
+        return [
+          { label: '观测层', value: selectedLayer !== null ? `L${selectedLayer}` : '-' },
+          { label: '计算状态', value: loading ? '计算中...' : '就绪' },
+          { label: '历史样本', value: `${history.length}` }
+        ];
+    }
+  })();
+
+  const analysisSummaryText = (() => {
+    if (isAppleMainView) {
+      return `Main 当前处于“${currentAlgorithmInfo.name}”：${currentAlgorithmInfo.focus}`;
+    }
+    if (isFiberNetFunctionType) {
+      return `FiberNet 当前聚焦：${currentPanelBlueprint.operationFocus}`;
+    }
+    if (!analysisResult) return '尚未生成分析结果。可先在左侧控制面板运行一次分析。';
+    switch (structureTab) {
+      case 'circuit':
+        return `发现 ${analysisResult.nodes?.length || 0} 个节点和 ${analysisResult.graph?.edges?.length || 0} 条因果边。`;
+      case 'features':
+        return `提取 ${analysisResult.top_features?.length || 0} 个特征，重构误差 ${analysisResult.reconstruction_error?.toFixed?.(5) || '-'}.`;
+      case 'causal':
+        return `分析 ${analysisResult.n_components_analyzed || 0} 个组件，关键组件 ${analysisResult.n_important_components || 0} 个。`;
+      case 'manifold':
+        return `参与比维度 ${analysisResult.intrinsic_dimensionality?.participation_ratio?.toFixed?.(2) || '-'}。`;
+      case 'compositional':
+        return `组合泛化 R² = ${analysisResult.r2_score?.toFixed?.(4) || '-'}.`;
+      case 'tda':
+        return `拓扑特征：β0=${analysisResult.ph_0d?.length || 0}, β1=${analysisResult.ph_1d?.length || 0}.`;
+      case 'curvature':
+        return `标量曲率 ${analysisResult.curvature?.toFixed?.(4) || '-'}.`;
+      default:
+        return `${currentStructureUI.name} 已完成，重点关注 ${currentStructureUI.focus}。`;
+    }
+  })();
+
   const structureGuideItems = STRUCTURE_TABS_V2.groups.flatMap((group, groupIdx) => ([
     ...(groupIdx === 0 ? [] : [{ type: 'sep' }]),
     ...group.items.map(item => ({
@@ -2104,9 +2542,23 @@ export default function App() {
     { id: 'outline', label: '大纲 (Overview)', iconName: 'Settings' },
     { type: 'sep' },
     { id: 'architect', label: '模型架构 (Architecture)', iconName: 'Settings' },
+    { id: 'main_workspace', label: 'Main 控制面板', iconName: 'Brain' },
+    { id: 'main_system', label: 'Main 模块定位', iconName: 'Brain' },
+    { id: 'dnn_system', label: 'DNN 模块定位', iconName: 'Grid3x3' },
+    { id: 'snn_system', label: 'SNN 模块定位', iconName: 'Activity' },
+    { id: 'fibernet_system', label: 'FiberNet 模块定位', iconName: 'Network' },
     { type: 'sep' },
     ...structureGuideItems
   ];
+  const showGlobalResonanceField = inputPanelTab !== 'dnn' && inputPanelTab !== 'snn';
+  const infoPanelTitle = `${t('panels.modelInfo')} · ${activeFunctionPanel.label}`;
+  const operationPanelTitle = isAppleMainView
+    ? `操作面板 · Main / ${currentAlgorithmInfo.name}`
+    : isFiberNetFunctionType
+    ? `操作面板 · FiberNet / ${currentAlgorithmInfo.name}`
+    : hasOperationPanelContent
+    ? `操作面板 · ${currentStructureUI.name}`
+    : `操作面板 · ${activeFunctionPanel.label}`;
 
   return (
     <div style={{ width: '100vw', height: '100vh', background: '#050505', color: 'white' }}>
@@ -2211,6 +2663,23 @@ export default function App() {
 
           {/* Content Container with Scroll */}
           <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
+            <div style={{
+              marginBottom: '12px',
+              padding: '10px',
+              background: 'rgba(255,255,255,0.03)',
+              borderRadius: '8px',
+              border: '1px solid rgba(255,255,255,0.08)',
+              fontSize: '11px',
+              color: '#bfc8d8',
+              lineHeight: '1.6'
+            }}>
+              <div style={{ color: '#fff', fontWeight: '600', marginBottom: '4px' }}>
+                {`模块定位 · ${currentPanelBlueprint.label}`}
+              </div>
+              <div>{currentPanelBlueprint.mission}</div>
+              <div style={{ marginTop: '4px', color: '#9ea7b7' }}>{`当前算法: ${currentAlgorithmInfo.name}`}</div>
+              <div style={{ color: '#8ea5c5' }}>{`操作重点: ${currentPanelBlueprint.operationFocus}`}</div>
+            </div>
 
             {/* Main Content: Apple Neuron control cards */}
             {inputPanelTab === 'main' && (
@@ -2415,7 +2884,7 @@ export default function App() {
       {/* Model Info Panel (Top-Right) */}
       {panelVisibility.infoPanel && (
         <SimplePanel
-          title={t('panels.modelInfo')}
+          title={infoPanelTitle}
           style={{
             position: 'absolute', top: 20, right: 20, zIndex: 100,
             width: '360px',
@@ -2428,15 +2897,17 @@ export default function App() {
           headerStyle={{ marginBottom: '0', cursor: 'grab' }}
           actions={
             <>
-              <button
-                onClick={() => { setHelpTab('outline'); setShowHelp(true); }}
-                style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#888', padding: '4px', display: 'flex', transition: 'color 0.2s' }}
-                onMouseOver={(e) => e.currentTarget.style.color = '#fff'}
-                onMouseOut={(e) => e.currentTarget.style.color = '#888'}
-                title="算法原理说明"
-              >
-                <HelpCircle size={16} />
-              </button>
+              {hasInfoPanelContent && (
+                <button
+                  onClick={() => { setHelpTab('outline'); setShowHelp(true); }}
+                  style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#888', padding: '4px', display: 'flex', transition: 'color 0.2s' }}
+                  onMouseOver={(e) => e.currentTarget.style.color = '#fff'}
+                  onMouseOut={(e) => e.currentTarget.style.color = '#888'}
+                  title="算法原理说明"
+                >
+                  <HelpCircle size={16} />
+                </button>
+              )}
               <button
                 onClick={() => setIsInfoPanelMinimized(prev => !prev)}
                 style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#888', padding: '4px', display: 'flex', transition: 'color 0.2s' }}
@@ -2450,47 +2921,54 @@ export default function App() {
           }
         >
           {!isInfoPanelMinimized && (
-            <div style={{ padding: '0', height: '100%', display: 'flex', flexDirection: 'column' }}>
-
-              {/* SECTION 1: Model / System Information */}
-              <div style={{ flex: '0 0 auto', marginBottom: '12px' }}>
+            hasInfoPanelContent ? (
+              <div style={{ padding: '0', height: '100%', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ flex: '0 0 auto' }}>
                 <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#888', marginBottom: '8px', textTransform: 'uppercase' }}>
-                  {systemType === 'snn' ? 'SNN 网络状态' : '模型配置'}
+                  {isSnnFunctionType ? '系统概览' : isFiberNetFunctionType ? 'FiberNet 概览' : '模型概览'}
                 </div>
 
-                <EvolutionMonitor data={evolutionData} onStartSleep={handleStartSleep} />
+                {showEvolutionMonitor && (
+                  <EvolutionMonitor data={evolutionData} onStartSleep={handleStartSleep} />
+                )}
 
-                {systemType === 'snn' ? (
-                  /* SNN System Info */
+                <div style={{ fontSize: '12px', lineHeight: '1.6', background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '6px', marginBottom: '8px' }}>
+                  <div style={{ color: '#fff', fontWeight: '600', marginBottom: '4px' }}>{`${currentPanelBlueprint.label} · ${currentAlgorithmInfo.name}`}</div>
+                  <div style={{ color: '#c8d1df', marginBottom: '4px' }}>{currentPanelBlueprint.mission}</div>
+                  <div style={{ color: '#9ea7b7', fontSize: '11px' }}>{`当前算法焦点: ${currentAlgorithmInfo.focus}`}</div>
+                  <div style={{ color: '#8ea5c5', fontSize: '11px' }}>{`核心公式: ${currentPanelBlueprint.formula}`}</div>
+                  <div style={{ color: '#8ea5c5', fontSize: '11px' }}>{`3D原理: ${currentPanelBlueprint.model3d}`}</div>
+                </div>
+
+                {isSnnFunctionType ? (
                   <div style={{ fontSize: '12px', lineHeight: '1.6', background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '6px' }}>
                     <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr', gap: '4px', color: '#aaa' }}>
                       <span>状态:</span>
                       <span style={{ color: snnState.initialized ? '#4ecdc4' : '#666', fontWeight: 'bold' }}>
                         {snnState.initialized ? (snnState.isPlaying ? '运行中' : '就绪') : '未初始化'}
                       </span>
-
                       <span>仿真时间:</span>
                       <span style={{ color: '#fff' }}>{snnState.time.toFixed(1)} ms</span>
-
                       <span>神经元数:</span>
                       <span style={{ color: '#fff' }}>{snnState.structure?.neurons?.length || 0}</span>
                     </div>
                   </div>
+                ) : isFiberNetFunctionType ? (
+                  <div style={{ fontSize: '12px', lineHeight: '1.6', background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '6px' }}>
+                    <div style={{ color: '#fff', fontWeight: '600', marginBottom: '4px' }}>FiberNet 模型说明</div>
+                    <div style={{ color: '#aaa' }}>该模块专注“底流形 + 纤维”双尺度机制，参数入口位于左侧 FiberNet 控制区。</div>
+                  </div>
                 ) : (
-                  /* DNN Model Info */
                   data?.model_config ? (
                     <div style={{ fontSize: '12px', lineHeight: '1.6', background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '6px' }}>
-                      <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '4px', color: '#aaa' }}>
-                        <span>架构:</span>
+                      <div style={{ display: 'grid', gridTemplateColumns: '110px 1fr', gap: '4px', color: '#aaa' }}>
+                        <span>架构</span>
                         <span style={{ color: '#fff', fontWeight: 'bold' }}>{data.model_config.name}</span>
-
-                        <span>层数:</span>
+                        <span>层数</span>
                         <span style={{ color: '#fff' }}>{data.model_config.n_layers}</span>
-
-                        <span>模型维度:</span>
-                        <span style={{ color: '#fff' }}>{data.model_config.d_model} (H: {data.model_config.n_heads})</span>
-
-                        <span>参数量:</span>
+                        <span>模型维度</span>
+                        <span style={{ color: '#fff' }}>{data.model_config.d_model} (Heads: {data.model_config.n_heads})</span>
+                        <span>参数量</span>
                         <span style={{ color: '#fff' }}>{(data.model_config.total_params / 1e9).toFixed(2)}B</span>
                       </div>
                     </div>
@@ -2500,22 +2978,36 @@ export default function App() {
                 )}
               </div>
 
-              {/* Divider */}
-              <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', marginBottom: '12px' }} />
-
-              {/* SECTION 2: Analysis / Detail Information */}
-              <div style={{ flex: 1, overflowY: 'auto' }}>
-                <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#888', marginBottom: '8px', textTransform: 'uppercase' }}>
-                  {systemType === 'snn' ? '实时动态' : `${currentStructureUI.name}详情`}
+              {!isSnnFunctionType && !isFiberNetFunctionType && (
+                <div style={{
+                  display: 'flex',
+                  gap: '6px',
+                  padding: '6px',
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: '6px'
+                }}>
+                  {(isAppleMainView ? [
+                    { label: '分析阶段', value: currentAlgorithmInfo.name },
+                    { label: '当前词元', value: appleNeuronWorkspace.summary?.currentToken || '-' },
+                    { label: '查询神经元', value: `${appleNeuronWorkspace.summary?.query || 0}` }
+                  ] : encodingFocusItems).map((item) => (
+                    <div key={item.label} style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: '10px', color: '#8ea5c5' }}>{item.label}</div>
+                      <div style={{ fontSize: '12px', color: '#fff', fontWeight: '600', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {item.value}
+                      </div>
+                    </div>
+                  ))}
                 </div>
+              )}
 
-                {systemType === 'snn' ? (
-                  /* SNN Live Details */
+              <div style={{ flex: 1, overflowY: 'auto', paddingTop: '2px' }}>
+                {isSnnFunctionType ? (
                   <div style={{ fontSize: '12px' }}>
                     <div style={{ marginBottom: '8px', color: '#aaa', fontSize: '11px' }}>
                       实时脉冲活动 (STDP 已启用)
                     </div>
-                    {/* Compact Spike Visualization */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                       {snnState.layers.map(layer => {
                         const isActive = snnState.spikes[layer] && snnState.spikes[layer].length > 0;
@@ -2533,196 +3025,139 @@ export default function App() {
                         );
                       })}
                     </div>
-                    <div style={{ marginTop: '12px', fontSize: '11px', color: '#666' }}>
-                      使用左侧面板控制注入刺激信号。
+                  </div>
+                ) : isFiberNetFunctionType ? (
+                  <div style={{ fontSize: '12px', color: '#c8d1df', lineHeight: '1.6', display: 'grid', gap: '8px' }}>
+                    <div style={{
+                      background: 'rgba(255,255,255,0.03)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      borderRadius: '6px',
+                      padding: '8px'
+                    }}>
+                      <div style={{ color: '#fff', fontWeight: 600, marginBottom: '3px' }}>FiberNet 当前目标</div>
+                      <div style={{ color: '#9ea7b7', fontSize: '11px' }}>{currentPanelBlueprint.operationFocus}</div>
+                    </div>
+                    <div style={{ fontSize: '11px', color: '#8ea5c5' }}>
+                      建议流程：先在左侧配置 FiberNet 实验参数，再在 3D 主空间检查结构变化与稳定性。
                     </div>
                   </div>
                 ) : (
-                  /* DNN Analysis Details - Handles both Hover and Active Analysis */
-                  (
-                    <div>
-                      <div style={{
-                        marginBottom: '12px',
-                        background: 'rgba(255,255,255,0.03)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        borderRadius: '6px',
-                        padding: '8px',
-                        fontSize: '11px',
-                        color: '#bbb'
-                      }}>
-                        <div style={{ color: '#fff', fontWeight: '600', marginBottom: '4px' }}>
-                          当前模式: {currentStructureUI.name}
+                  <div>
+                    <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
+                      {[
+                        { key: 'overview', label: '概览' },
+                        { key: 'encoding', label: '编码焦点' },
+                        { key: 'detail', label: '细节' }
+                      ].map(tab => (
+                        <button
+                          key={tab.key}
+                          onClick={() => setInfoPanelTab(tab.key)}
+                          style={{
+                            flex: 1,
+                            border: '1px solid rgba(255,255,255,0.14)',
+                            borderRadius: '6px',
+                            background: infoPanelTab === tab.key ? 'rgba(0,210,255,0.18)' : 'rgba(255,255,255,0.02)',
+                            color: infoPanelTab === tab.key ? '#e9f9ff' : '#9aa4b4',
+                            fontSize: '11px',
+                            padding: '6px 8px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {tab.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {infoPanelTab === 'overview' && (
+                      <div style={{ fontSize: '12px', color: '#c8d1df', lineHeight: '1.6' }}>
+                        <div style={{
+                          marginBottom: '10px',
+                          background: 'rgba(255,255,255,0.03)',
+                          border: '1px solid rgba(255,255,255,0.08)',
+                          borderRadius: '6px',
+                          padding: '8px'
+                        }}>
+                          <div style={{ color: '#fff', fontWeight: '600', marginBottom: '3px' }}>{`当前算法: ${currentAlgorithmInfo.name}`}</div>
+                          <div style={{ color: '#9ea7b7', fontSize: '11px' }}>{currentAlgorithmInfo.focus}</div>
                         </div>
-                        <div>分析重点: {currentStructureUI.focus}</div>
+                        <div style={{ marginBottom: '8px' }}>{analysisSummaryText}</div>
+                        <div style={{ fontSize: '11px', color: '#8ea5c5' }}>
+                          {`模块定位: ${currentPanelBlueprint.mission}`}
+                        </div>
                       </div>
-                      {/* 2A. Hover/Selected Info (Highest Priority for immediate feedback) */}
-                      {(displayInfo || hoveredInfo) && (
-                        <div style={{ marginBottom: '16px', background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '6px', borderLeft: '3px solid #00d2ff' }}>
-                          <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#00d2ff', marginBottom: '6px' }}>
-                            选中信息
+                    )}
+
+                    {infoPanelTab === 'encoding' && (
+                      isAppleMainView ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <div style={{ fontSize: '11px', color: '#9ea7b7', lineHeight: '1.6' }}>
+                            Main 编码观测区：类别比较、层级编码签名与机制指标已移动到此处。
                           </div>
-                          <div style={{ fontSize: '12px', lineHeight: '1.5', color: '#ddd' }}>
-                            {(hoveredInfo || displayInfo).type === 'feature' ? (
-                              <div>
-                                <div>特证 <strong>#{(hoveredInfo || displayInfo).featureId}</strong></div>
-                                <div>激活值: <span style={{ color: '#4ecdc4' }}>{(hoveredInfo || displayInfo).activation?.toFixed(4)}</span></div>
-                                <div style={{ fontSize: '10px', color: '#aaa', marginTop: '4px' }}>
-                                  潜在表示单元。
+                          <AppleNeuronCategoryComparePanel workspace={appleNeuronWorkspace} compact />
+                          <AppleNeuronEncodingInfoPanels workspace={appleNeuronWorkspace} compact />
+                          <AppleNeuronSelectedLegendPanels workspace={appleNeuronWorkspace} compact />
+                        </div>
+                      ) : (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          {encodingFocusItems.map((item) => (
+                            <div key={`encoding-${item.label}`} style={{
+                              background: 'rgba(255,255,255,0.03)',
+                              border: '1px solid rgba(255,255,255,0.08)',
+                              borderRadius: '6px',
+                              padding: '8px'
+                            }}>
+                              <div style={{ color: '#8ea5c5', fontSize: '10px' }}>{item.label}</div>
+                              <div style={{ color: '#fff', fontSize: '13px', fontWeight: '600' }}>{item.value}</div>
+                            </div>
+                          ))}
+                          <div style={{ fontSize: '11px', color: '#9ea7b7', lineHeight: '1.5' }}>
+                            重点看层间变化: 若某指标在相邻层出现阶跃，通常意味着编码从局部特征转向组合语义。
+                          </div>
+                        </div>
+                      )
+                    )}
+
+                    {infoPanelTab === 'detail' && (
+                      <div>
+                        {(displayInfo || hoveredInfo) ? (
+                          <div style={{ background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '6px', borderLeft: '3px solid #00d2ff' }}>
+                            <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#00d2ff', marginBottom: '6px' }}>
+                              当前选中对象
+                            </div>
+                            <div style={{ fontSize: '12px', lineHeight: '1.5', color: '#ddd' }}>
+                              {(hoveredInfo || displayInfo).type === 'feature' ? (
+                                <div>
+                                  <div>特征 <strong>#{(hoveredInfo || displayInfo).featureId}</strong></div>
+                                  <div>激活值: <span style={{ color: '#4ecdc4' }}>{(hoveredInfo || displayInfo).activation?.toFixed(4)}</span></div>
                                 </div>
-                              </div>
-                            ) : (hoveredInfo || displayInfo).type === 'manifold' ? (
-                              <div>
-                                <div>数据点: {(hoveredInfo || displayInfo).index}</div>
-                                <div>PC1/2/3: {(hoveredInfo || displayInfo).pc1?.toFixed(2)}, {(hoveredInfo || displayInfo).pc2?.toFixed(2)}, {(hoveredInfo || displayInfo).pc3?.toFixed(2)}</div>
-                              </div>
-                            ) : (
-                              <div>
-                                <div>词元: <strong>"{(hoveredInfo || displayInfo).label}"</strong></div>
-                                <div>概率: <span style={{ color: getColor((hoveredInfo || displayInfo).probability) }}>{((hoveredInfo || displayInfo).probability * 100).toFixed(1)}%</span></div>
-                                {(hoveredInfo || displayInfo).actual && <div>实际: "{(hoveredInfo || displayInfo).actual}"</div>}
-                              </div>
-                            )}
+                              ) : (hoveredInfo || displayInfo).type === 'manifold' ? (
+                                <div>
+                                  <div>数据点: {(hoveredInfo || displayInfo).index}</div>
+                                  <div>PC1/2/3: {(hoveredInfo || displayInfo).pc1?.toFixed(2)}, {(hoveredInfo || displayInfo).pc2?.toFixed(2)}, {(hoveredInfo || displayInfo).pc3?.toFixed(2)}</div>
+                                </div>
+                              ) : (
+                                <div>
+                                  <div>词元: <strong>"{(hoveredInfo || displayInfo).label}"</strong></div>
+                                  <div>概率: <span style={{ color: getColor((hoveredInfo || displayInfo).probability) }}>{((hoveredInfo || displayInfo).probability * 100).toFixed(1)}%</span></div>
+                                  {(hoveredInfo || displayInfo).actual && <div>实际: "{(hoveredInfo || displayInfo).actual}"</div>}
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      )}
-
-                      {/* 2B. Analysis Method Summary (Context) */}
-                      {analysisResult && !hoveredInfo && (
-                        <div style={{ fontSize: '12px', color: '#aaa' }}>
-                          <div style={{ color: '#fff', marginBottom: '4px' }}>
-                            当前分析方法: {structureTab.toUpperCase()}
+                        ) : (
+                          <div style={{ color: '#666', fontStyle: 'italic', fontSize: '12px' }}>
+                            悬停 3D 元素后，这里会显示精确对象细节。
                           </div>
-
-                          {structureTab === 'circuit' && (
-                            <div>
-                              在因果图中发现 {analysisResult.nodes?.length} 个节点和 {analysisResult.graph?.edges?.length} 条边。
-                            </div>
-                          )}
-                          {structureTab === 'features' && (
-                            <div>
-                              从第 {featureForm.layer_idx} 层提取了 {analysisResult.top_features?.length} 个稀疏特征。
-                              <br />重构误差: {analysisResult.reconstruction_error?.toFixed(5)}
-                            </div>
-                          )}
-                          {structureTab === 'causal' && (
-                            <div>
-                              分析了 {analysisResult.n_components_analyzed} 个组件，
-                              发现 {analysisResult.n_important_components} 个关键组件。
-                            </div>
-                          )}
-                          {structureTab === 'manifold' && (
-                            <div>
-                              内在维度: {analysisResult.intrinsic_dimensionality?.participation_ratio?.toFixed(2)}
-                              <br />分析层数: {manifoldForm.layer_idx}
-                            </div>
-                          )}
-                          {structureTab === 'compositional' && (
-                            <div>
-                              组合泛化 R² 分数: {analysisResult.r2_score?.toFixed(4)}
-                            </div>
-                          )}
-                          {structureTab === 'tda' && (
-                            <div>
-                              0维连通分量: {analysisResult.ph_0d?.length || 0}
-                              <br />1维环: {analysisResult.ph_1d?.length || 0}
-                            </div>
-                          )}
-                          {structureTab === 'agi' && (
-                            <div>
-                              神经纤维丛分析完成
-                              <br />层间传输矩阵已计算
-                            </div>
-                          )}
-                          {structureTab === 'rpt' && (
-                            <div>
-                              黎曼平行传输分析完成
-                            </div>
-                          )}
-                          {structureTab === 'curvature' && (
-                            <div>
-                              标量曲率: {analysisResult.curvature?.toFixed(4)}
-                            </div>
-                          )}
-                          {structureTab === 'glass_matrix' && (
-                            <div>
-                              玻璃矩阵可视化激活
-                              <br />显示激活值的几何结构
-                            </div>
-                          )}
-                          {structureTab === 'flow_tubes' && (
-                            <div>
-                              信息流动轨迹可视化
-                              <br />追踪语义向量演化
-                            </div>
-                          )}
-                          {structureTab === 'global_topology' && (
-                            <div>
-                              全局拓扑结构分析
-                            </div>
-                          )}
-                          {structureTab === 'fibernet_v2' && (
-                            <div>
-                              FiberNet V2 纤维丛拓扑演示
-                            </div>
-                          )}
-                          {structureTab === 'holonomy' && (
-                            <div>
-                              全纯扫描分析
-                            </div>
-                          )}
-                          {structureTab === 'debias' && (
-                            <div>
-                              几何去偏分析
-                            </div>
-                          )}
-                          {structureTab === 'validity' && (
-                            <div>
-                              有效性检验完成
-                            </div>
-                          )}
-                          {structureTab === 'training' && (
-                            <div>
-                              训练动力学可视化
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {!analysisResult && !hoveredInfo && !displayInfo && (
-                        <div style={{ color: '#666', fontStyle: 'italic', fontSize: '12px' }}>
-                          悬停在可视化元素上查看详情。
-                        </div>
-                      )}
-                    </div>
-                  )
-                )}
-
-                {/* ==================== 数据对比视图 ==================== */}
-                {!isObservationMode ? (
-                  <div style={{
-                    marginTop: '12px',
-                    paddingTop: '12px',
-                    borderTop: '1px solid rgba(255,255,255,0.1)'
-                  }}>
-                    <DataComparisonView
-                      currentData={data}
-                      analysisResult={analysisResult}
-                      mode={structureTab}
-                    />
-                  </div>
-                ) : (
-                  <div style={{
-                    marginTop: '12px',
-                    padding: '10px',
-                    borderTop: '1px solid rgba(255,255,255,0.1)',
-                    color: '#888',
-                    fontSize: '11px'
-                  }}>
-                    当前为观测模式，优先查看 3D 画布中的实时变化。
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
-            </div>
+              </div>
+            ) : (
+              <div style={{ minHeight: '1px' }} />
+            )
           )}
         </SimplePanel>
       )}
@@ -3213,7 +3648,7 @@ export default function App() {
       {/* ==================== 右下: 操作面板 ==================== */}
       {panelVisibility.layersPanel && (
         <SimplePanel
-          title={`操作面板 · ${currentStructureUI.name}`}
+          title={operationPanelTitle}
           style={{
             position: 'absolute', bottom: 20, right: 20, zIndex: 10,
             width: '360px',
@@ -3234,7 +3669,87 @@ export default function App() {
           }
         >
           {!isLayersPanelMinimized && (
-            <>
+            hasOperationPanelContent ? (
+              isAppleMainView ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div style={{
+                    padding: '8px',
+                    borderRadius: '6px',
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    fontSize: '11px',
+                    color: '#bbb'
+                  }}>
+                    <div style={{ color: '#fff', fontWeight: '600', marginBottom: '2px' }}>
+                      {`当前算法: ${currentAlgorithmInfo.name}`}
+                    </div>
+                    <div>{currentAlgorithmInfo.focus}</div>
+                    <div style={{ color: '#8ea5c5', marginTop: '4px' }}>{`参数重点: ${currentPanelBlueprint.operationFocus}`}</div>
+                  </div>
+                  <div style={{
+                    padding: '8px',
+                    borderRadius: '6px',
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    fontSize: '11px',
+                    color: '#bbb'
+                  }}>
+                    <div style={{ color: '#fff', fontWeight: '600', marginBottom: '2px' }}>
+                      Main 过滤操作
+                    </div>
+                    <div>根据左侧输入名称（概念）勾选显示/隐藏对应神经元集合。</div>
+                  </div>
+                  <AppleNeuronCompareFilterPanel workspace={appleNeuronWorkspace} compact />
+                </div>
+              ) : isFiberNetFunctionType ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div style={{
+                    padding: '8px',
+                    borderRadius: '6px',
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    fontSize: '11px',
+                    color: '#bbb',
+                    lineHeight: '1.6'
+                  }}>
+                    <div style={{ color: '#fff', fontWeight: '600', marginBottom: '2px' }}>
+                      {`当前算法: ${currentAlgorithmInfo.name}`}
+                    </div>
+                    <div>{currentAlgorithmInfo.focus}</div>
+                    <div style={{ color: '#8ea5c5', marginTop: '4px' }}>{`参数重点: ${currentPanelBlueprint.operationFocus}`}</div>
+                  </div>
+                  <div style={{
+                    padding: '10px',
+                    background: 'rgba(0,0,0,0.2)',
+                    borderRadius: '6px',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    fontSize: '12px',
+                    color: '#bbb',
+                    lineHeight: '1.6'
+                  }}>
+                    <div style={{ color: '#fff', marginBottom: '4px', fontWeight: '600' }}>FiberNet 参数入口</div>
+                    <div>1. 在左侧 FiberNet 面板设置结构/注入/训练参数。</div>
+                    <div>2. 在主 3D 空间观察底流形与纤维变化。</div>
+                    <div>3. 在模型说明中对照核心公式与过程解释。</div>
+                  </div>
+                </div>
+              ) : (
+              <>
+              <div style={{
+                marginBottom: '10px',
+                padding: '8px',
+                borderRadius: '6px',
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                fontSize: '11px',
+                color: '#bbb'
+              }}>
+                <div style={{ color: '#fff', fontWeight: '600', marginBottom: '2px' }}>
+                  {`当前算法: ${currentAlgorithmInfo.name}`}
+                </div>
+                <div>{currentAlgorithmInfo.focus}</div>
+                <div style={{ color: '#8ea5c5', marginTop: '4px' }}>{`参数重点: ${currentPanelBlueprint.operationFocus}`}</div>
+              </div>
               <div style={{
                 marginBottom: '10px',
                 padding: '8px',
@@ -3249,46 +3764,6 @@ export default function App() {
                 </div>
                 <div>{currentStructureUI.focus}</div>
               </div>
-              {/* ==================== 数据展示模板 ==================== */}
-              {!isObservationMode ? (
-                <div style={{
-                  marginBottom: '12px',
-                  padding: '8px',
-                  background: 'rgba(0,0,0,0.2)',
-                  borderRadius: '6px',
-                  flex: 1,
-                  overflowY: 'auto'
-                }}>
-                  <AnalysisDataDisplay
-                    mode={structureTab}
-                    data={data}
-                    analysisResult={analysisResult}
-                    selectedLayer={selectedLayer}
-                    onLayerSelect={(layerIdx) => {
-                      setSelectedLayer(layerIdx);
-                      loadLayerDetails(layerIdx);
-                    }}
-                    hoveredInfo={hoveredInfo}
-                  />
-                </div>
-              ) : (
-                <div style={{
-                  marginBottom: '12px',
-                  padding: '10px',
-                  background: 'rgba(0,0,0,0.2)',
-                  borderRadius: '6px',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  fontSize: '12px',
-                  color: '#bbb'
-                }}>
-                  <div style={{ color: '#fff', marginBottom: '6px', fontWeight: '600' }}>观测模式面板</div>
-                  <div>实时层: {activeLayer !== null ? `L${activeLayer}` : '-'}</div>
-                  <div>悬停词元: {(hoveredInfo || displayInfo)?.label || '-'}</div>
-                  <div>置信度: {(hoveredInfo || displayInfo)?.probability ? `${((hoveredInfo || displayInfo).probability * 100).toFixed(1)}%` : '-'}</div>
-                </div>
-              )}
-
-              {/* ==================== 快速指标栏 ==================== */}
               <div style={{
                 display: 'flex',
                 gap: '6px',
@@ -3302,33 +3777,165 @@ export default function App() {
                 ))}
               </div>
 
-              {/* ==================== 操作历史 ==================== */}
               <div style={{
-                padding: '8px',
+                marginBottom: '10px',
+                padding: '10px',
                 background: 'rgba(0,0,0,0.2)',
                 borderRadius: '6px',
-                maxHeight: '150px',
-                overflowY: 'auto'
+                border: '1px solid rgba(255,255,255,0.08)',
+                fontSize: '12px',
+                color: '#bbb',
+                lineHeight: '1.6'
               }}>
-                <OperationHistoryPanel
-                  history={history}
-                  onRestore={(item) => {
-                    if (item.details?.mode) {
-                      setStructureTab(item.details.mode);
-                    }
-                  }}
-                  onClear={clearHistory}
-                  onRemove={(id) => {
-                    // 简单过滤掉指定id
-                    const idx = history.findIndex(h => h.id === id);
-                    if (idx !== -1) {
-                      history.splice(idx, 1);
-                    }
-                  }}
-                  maxVisible={3}
-                />
+                <div style={{ color: '#fff', marginBottom: '4px', fontWeight: '600' }}>编码状态快照</div>
+                <div>观测层: {selectedLayer !== null ? `L${selectedLayer}` : '-'}</div>
+                <div>活跃层: {activeLayer !== null ? `L${activeLayer}` : '-'}</div>
+                <div>悬停对象: {(hoveredInfo || displayInfo)?.label || (hoveredInfo || displayInfo)?.featureId || '-'}</div>
+                <div>结果状态: {analysisResult ? '已生成' : '未生成'}</div>
               </div>
-            </>
+
+              <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
+                <button
+                  onClick={() => setShowOperationData(v => !v)}
+                  style={{
+                    flex: 1,
+                    border: '1px solid rgba(255,255,255,0.14)',
+                    borderRadius: '6px',
+                    background: showOperationData ? 'rgba(0,210,255,0.18)' : 'rgba(255,255,255,0.02)',
+                    color: showOperationData ? '#e9f9ff' : '#9aa4b4',
+                    fontSize: '11px',
+                    padding: '6px 8px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  数据模板
+                </button>
+                <button
+                  onClick={() => setShowOperationCompare(v => !v)}
+                  style={{
+                    flex: 1,
+                    border: '1px solid rgba(255,255,255,0.14)',
+                    borderRadius: '6px',
+                    background: showOperationCompare ? 'rgba(0,210,255,0.18)' : 'rgba(255,255,255,0.02)',
+                    color: showOperationCompare ? '#e9f9ff' : '#9aa4b4',
+                    fontSize: '11px',
+                    padding: '6px 8px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  结果对比
+                </button>
+                <button
+                  onClick={() => setShowOperationHistory(v => !v)}
+                  style={{
+                    flex: 1,
+                    border: '1px solid rgba(255,255,255,0.14)',
+                    borderRadius: '6px',
+                    background: showOperationHistory ? 'rgba(0,210,255,0.18)' : 'rgba(255,255,255,0.02)',
+                    color: showOperationHistory ? '#e9f9ff' : '#9aa4b4',
+                    fontSize: '11px',
+                    padding: '6px 8px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  操作历史
+                </button>
+              </div>
+
+              {showOperationData && (
+                !isObservationMode ? (
+                  <div style={{
+                    marginBottom: '10px',
+                    padding: '8px',
+                    background: 'rgba(0,0,0,0.2)',
+                    borderRadius: '6px',
+                    maxHeight: '220px',
+                    overflowY: 'auto'
+                  }}>
+                    <AnalysisDataDisplay
+                      mode={structureTab}
+                      data={data}
+                      analysisResult={analysisResult}
+                      selectedLayer={selectedLayer}
+                      onLayerSelect={(layerIdx) => {
+                        setSelectedLayer(layerIdx);
+                        loadLayerDetails(layerIdx);
+                      }}
+                      hoveredInfo={hoveredInfo}
+                    />
+                  </div>
+                ) : (
+                  <div style={{
+                    marginBottom: '10px',
+                    padding: '10px',
+                    background: 'rgba(0,0,0,0.2)',
+                    borderRadius: '6px',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    fontSize: '12px',
+                    color: '#bbb'
+                  }}>
+                    <div style={{ color: '#fff', marginBottom: '6px', fontWeight: '600' }}>观测模式面板</div>
+                    <div>实时层: {activeLayer !== null ? `L${activeLayer}` : '-'}</div>
+                    <div>悬停词元: {(hoveredInfo || displayInfo)?.label || '-'}</div>
+                    <div>置信度: {(hoveredInfo || displayInfo)?.probability ? `${((hoveredInfo || displayInfo).probability * 100).toFixed(1)}%` : '-'}</div>
+                  </div>
+                )
+              )}
+
+              {showOperationCompare && !isObservationMode && (
+                <div style={{
+                  marginBottom: '10px',
+                  padding: '8px',
+                  background: 'rgba(0,0,0,0.2)',
+                  borderRadius: '6px',
+                  maxHeight: '230px',
+                  overflowY: 'auto'
+                }}>
+                  <DataComparisonView
+                    currentData={data}
+                    analysisResult={analysisResult}
+                    mode={structureTab}
+                  />
+                </div>
+              )}
+
+              {showOperationHistory && (
+                <div style={{
+                  padding: '8px',
+                  background: 'rgba(0,0,0,0.2)',
+                  borderRadius: '6px',
+                  maxHeight: '180px',
+                  overflowY: 'auto'
+                }}>
+                  <OperationHistoryPanel
+                    history={history}
+                    onRestore={(item) => {
+                      if (item.details?.mode) {
+                        setStructureTab(item.details.mode);
+                      }
+                    }}
+                    onClear={clearHistory}
+                    onRemove={(id) => {
+                      const idx = history.findIndex(h => h.id === id);
+                      if (idx !== -1) {
+                        history.splice(idx, 1);
+                      }
+                    }}
+                    maxVisible={3}
+                  />
+                </div>
+              )}
+
+              {!showOperationData && !showOperationCompare && !showOperationHistory && (
+                <div style={{ color: '#777', fontSize: '11px', fontStyle: 'italic', padding: '4px 2px' }}>
+                  已折叠高级区。可按上方按钮展开“数据模板 / 结果对比 / 操作历史”。
+                </div>
+              )}
+              </>
+              )
+            ) : (
+              <div style={{ minHeight: '1px' }} />
+            )
           )}
         </SimplePanel>
       )}
@@ -3374,6 +3981,9 @@ export default function App() {
               onSelect={appleNeuronWorkspace.setSelected}
               prediction={appleNeuronWorkspace.prediction}
               mode={appleNeuronWorkspace.analysisMode}
+              dimensionLayerProfile={appleNeuronWorkspace.multidimLayerProfile}
+              activeDimension={appleNeuronWorkspace.multidimActiveDimension}
+              dimensionCausal={appleNeuronWorkspace.multidimCausalData}
             />
           ) : (
             <>
@@ -3386,10 +3996,12 @@ export default function App() {
               <Visualization data={data} hoveredInfo={hoveredInfo} setHoveredInfo={setHoveredInfo} activeLayer={activeLayer} />
 
               {/* PGRF: Pan-Geometric Resonance Field - 全局大一统背景 */}
-              <ResonanceField3D
-                topologyResults={topologyResults}
-                activeTab={structureTab}
-              />
+              {showGlobalResonanceField && (
+                <ResonanceField3D
+                  topologyResults={topologyResults}
+                  activeTab={structureTab}
+                />
+              )}
             </>
           )}
 
@@ -3424,14 +4036,9 @@ export default function App() {
                     <torusGeometry args={[4, 0.05, 16, 100]} />
                     <meshStandardMaterial color="#bb88ff" emissive="#bb88ff" emissiveIntensity={2} />
                   </mesh>
-                  <mesh position={[0, 0, 0]}>
-                    <sphereGeometry args={[3.8, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
-                    <meshStandardMaterial color="#bb88ff" transparent opacity={0.1} side={THREE.DoubleSide} />
-                  </mesh>
                 </group>
               )}
               {structureTab === 'agi' && analysisResult && <FiberBundleVisualization3D result={analysisResult} t={t} />}
-              {structureTab === 'fiber' && <FiberBundleVisualization3D result={analysisResult} t={t} />}
               {structureTab === 'validity' && <ValidityVisualization3D result={analysisResult} t={t} />}
             </group>
           )}

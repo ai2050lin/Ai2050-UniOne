@@ -176,6 +176,125 @@ run_service = RunService(
 )
 app.include_router(create_runs_router(run_service))
 
+
+def _resolve_workspace_relative_path(path_str: str) -> Path:
+    """Resolve a repo-relative path and block traversal outside workspace."""
+    raw = (path_str or "").strip().replace("\\", "/")
+    if not raw:
+        raise HTTPException(status_code=400, detail="Empty path")
+    rel = Path(raw)
+    if rel.is_absolute():
+        raise HTTPException(status_code=400, detail="Path must be workspace-relative")
+    root = Path(root_dir).resolve()
+    target = (root / rel).resolve()
+    if not str(target).startswith(str(root)):
+        raise HTTPException(status_code=400, detail="Invalid path traversal")
+    return target
+
+
+def _looks_like_main_scan_json_file(p: Path) -> bool:
+    """Heuristic detector for importable main scan json files."""
+    name = p.name.lower()
+    path_lower = str(p).lower().replace("\\", "/")
+    if (
+        name == "mass_noun_encoding_scan.json"
+        or "noun_scan" in path_lower
+        or "mass_noun" in path_lower
+        or "encoding_scan" in path_lower
+        or "multidim_encoding_probe" in path_lower
+        or "multidim_causal_ablation" in path_lower
+        or "multidim_multiseed_stability" in path_lower
+    ):
+        return True
+
+    # Content-level fallback: support renamed files that still contain scan payload keys.
+    try:
+        if p.stat().st_size > 30 * 1024 * 1024:
+            return False
+        with open(p, "r", encoding="utf-8", errors="ignore") as f:
+            snippet = f.read(400000)
+        has_noun_records = '"noun_records"' in snippet
+        has_signatures = '"signature_top_indices"' in snippet
+        has_reused = '"top_reused_neurons"' in snippet
+        has_core_config = '"config"' in snippet and '"d_ff"' in snippet
+        has_multidim_probe = '"dimensions"' in snippet and '"cross_dimension"' in snippet and '"specificity"' in snippet
+        has_multidim_causal = '"suppression_matrix_mean"' in snippet and '"diagonal_advantage"' in snippet
+        has_multidim_stability = '"aggregate"' in snippet and '"diag_adv_style"' in snippet and '"specificity_margin_style"' in snippet
+        return (
+            (has_core_config and has_noun_records and (has_signatures or has_reused))
+            or has_multidim_probe
+            or has_multidim_causal
+            or has_multidim_stability
+        )
+    except Exception:
+        return False
+
+
+@app.get("/api/main/scan_files")
+async def list_main_scan_files(limit: int = 120):
+    try:
+        root = Path(root_dir).resolve()
+        search_roots = [
+            root / "tempdata",
+            root / "tests" / "codex",
+            root / "tests" / "codex_temp",
+        ]
+        files: List[Dict[str, Any]] = []
+        seen = set()
+
+        for base in search_roots:
+            if not base.exists():
+                continue
+            for p in base.rglob("*.json"):
+                if not _looks_like_main_scan_json_file(p):
+                    continue
+                try:
+                    rel = p.resolve().relative_to(root).as_posix()
+                except Exception:
+                    continue
+                if rel in seen:
+                    continue
+                seen.add(rel)
+                stat = p.stat()
+                files.append(
+                    {
+                        "path": rel,
+                        "name": p.name,
+                        "size_bytes": int(stat.st_size),
+                        "mtime": float(stat.st_mtime),
+                        "mtime_iso": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(stat.st_mtime)),
+                    }
+                )
+
+        files.sort(key=lambda x: x["mtime"], reverse=True)
+        limited = files[: max(1, min(int(limit), 500))]
+        return {"ok": True, "count": len(limited), "total_found": len(files), "files": limited}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to list scan files: {e}")
+
+
+@app.get("/api/main/scan_file")
+async def load_main_scan_file(path: str):
+    try:
+        target = _resolve_workspace_relative_path(path)
+        if not target.exists():
+            raise HTTPException(status_code=404, detail=f"File not found: {path}")
+        if target.suffix.lower() != ".json":
+            raise HTTPException(status_code=400, detail="Only .json files are supported")
+        with open(target, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        root = Path(root_dir).resolve()
+        rel = target.resolve().relative_to(root).as_posix()
+        return {"ok": True, "path": rel, "data": data}
+    except HTTPException:
+        raise
+    except json.JSONDecodeError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid JSON: {e}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to load scan file: {e}")
+
 # --- AGI Chat Engine API ---
 
 class AGIChatRequest(BaseModel):
@@ -889,7 +1008,7 @@ async def inject_human_feedback(rating: int):
         "message": "Human value resonance established" if rating > 0 else "Correction energy applied"
     }
 
-@app.get("/steer_concept")
+@app.post("/steer_concept")
 async def steer_concept_api(request: Dict[str, Any]):
     """Concept steering endpoint"""
     if model is None: raise HTTPException(status_code=503, detail="Model not loaded yet")

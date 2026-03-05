@@ -242,7 +242,7 @@ const generateAppleNetwork = () => {
     return { neurons, connections };
 };
 
-const AppleNeuronVis3D = () => {
+const AppleNeuronCore3D = () => {
     const { neurons, connections } = useMemo(() => generateAppleNetwork(), []);
 
     return (
@@ -289,4 +289,4 @@ const AppleNeuronVis3D = () => {
     );
 };
 
-export default AppleNeuronVis3D;
+export default AppleNeuronCore3D;

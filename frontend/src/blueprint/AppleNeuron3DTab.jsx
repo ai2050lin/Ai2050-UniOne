@@ -1,167 +1,59 @@
 ﻿import { Html, Line, OrbitControls, PerspectiveCamera, Text } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
+import { Activity, ArrowRightLeft, BarChart2, CheckCircle, GitBranch, Network, Scale, Search, Sparkles, Target } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 const LAYER_COUNT = 28;
 const DFF = 18944;
 const QUERY_NODE_COUNT = 12;
+const IMPORTED_QUERY_NODE_MAX = 18;
+const MAIN_API_BASE = (import.meta.env.VITE_API_BASE || 'http://localhost:5001').replace(/\/$/, '');
 
-const APPLE_CORE_NEURONS = [
-  {
-    id: 'apple-micro-l8n7574',
-    label: 'Apple Micro A',
-    role: 'micro',
-    layer: 8,
-    neuron: 7574,
-    strength: 0.0008401030507210194,
-    metric: 'drop_target',
-    value: 0.0008401358791161329,
-    source: 'triscale_20260302_115048',
-  },
-  {
-    id: 'apple-micro-l9n14608',
-    label: 'Apple Micro B',
-    role: 'micro',
-    layer: 9,
-    neuron: 14608,
-    strength: 0.00014841170145061256,
-    metric: 'drop_target',
-    value: 0.00015364339924417436,
-    source: 'triscale_20260302_115048',
-  },
-  {
-    id: 'apple-macro-l23n16819',
-    label: 'Apple Macro',
-    role: 'macro',
-    layer: 23,
-    neuron: 16819,
-    strength: 0.00003632260127393039,
-    metric: 'drop_target',
-    value: 0.00006799021775805159,
-    source: 'triscale_20260302_115048',
-  },
-  {
-    id: 'route-shared-l24n8124',
-    label: 'Route Shared A',
-    role: 'route',
-    layer: 24,
-    neuron: 8124,
-    strength: 0.0006424156169391173,
-    metric: 'drop_h3',
-    value: 0.0006720473178789058,
-    source: 'multihop_large_20260302_145153',
-  },
-  {
-    id: 'route-shared-l27n16649',
-    label: 'Route Shared B',
-    role: 'route',
-    layer: 27,
-    neuron: 16649,
-    strength: 0.0006115013281636399,
-    metric: 'drop_h3',
-    value: 0.0006115264830245798,
-    source: 'multihop_large_20260302_145153',
-  },
-  {
-    id: 'route-shared-l27n16936',
-    label: 'Route Shared C',
-    role: 'route',
-    layer: 27,
-    neuron: 16936,
-    strength: 0.0011910316618790559,
-    metric: 'drop_h3',
-    value: 0.0011917482582827904,
-    source: 'multihop_large_20260302_145153',
-  },
-];
+const APPLE_CORE_NEURONS = [];
 
-const FRUIT_GENERAL_NEURONS = [
-  { layer: 3, neuron: 11990, score: 2.9764 },
-  { layer: 3, neuron: 11542, score: 2.7930 },
-  { layer: 5, neuron: 0, score: 2.7226 },
-  { layer: 3, neuron: 7001, score: 2.6621 },
-  { layer: 6, neuron: 13742, score: 2.6597 },
-  { layer: 4, neuron: 11956, score: 2.6546 },
-  { layer: 4, neuron: 2250, score: 2.6116 },
-  { layer: 1, neuron: 18127, score: 2.5913 },
-];
+const FRUIT_GENERAL_NEURONS = [];
 
-const FRUIT_SPECIFIC_NEURONS = {
-  apple: [
-    { layer: 3, neuron: 13834, score: 1.86 },
-    { layer: 0, neuron: 3167, score: 1.84 },
-    { layer: 0, neuron: 6511, score: 1.78 },
-    { layer: 3, neuron: 10117, score: 1.76 },
-    { layer: 3, neuron: 18787, score: 1.75 },
-  ],
-  banana: [
-    { layer: 0, neuron: 17808, score: 1.7 },
-    { layer: 0, neuron: 7250, score: 1.68 },
-    { layer: 0, neuron: 9767, score: 1.63 },
-    { layer: 3, neuron: 11960, score: 1.61 },
-    { layer: 0, neuron: 15284, score: 1.6 },
-  ],
-  orange: [
-    { layer: 3, neuron: 7491, score: 3.19 },
-    { layer: 0, neuron: 3600, score: 2.93 },
-    { layer: 13, neuron: 8936, score: 2.78 },
-    { layer: 0, neuron: 12643, score: 2.74 },
-    { layer: 0, neuron: 17566, score: 2.74 },
-  ],
-  grape: [
-    { layer: 0, neuron: 15727, score: 1.87 },
-    { layer: 0, neuron: 16560, score: 1.73 },
-    { layer: 0, neuron: 4714, score: 1.65 },
-    { layer: 5, neuron: 10366, score: 1.65 },
-    { layer: 0, neuron: 17870, score: 1.64 },
-  ],
-};
+const FRUIT_SPECIFIC_NEURONS = {};
 
-const FRUIT_COLORS = {
-  apple: '#ff6b6b',
-  banana: '#ffd166',
-  orange: '#ff9f40',
-  grape: '#b286ff',
-};
+const FRUIT_COLORS = {};
 
 const ROLE_COLORS = {
   micro: '#ff8d3b',
   macro: '#f6d365',
   route: '#39d0ff',
   fruitGeneral: '#6cf7d4',
+  style: '#7dd3fc',
+  logic: '#fca5a5',
+  syntax: '#a7f3d0',
   background: '#ffffff',
 };
 
-const DEFAULT_PREDICT_PROMPT = '苹果 是 一种';
+const DIMENSION_LABELS = {
+  style: '风格维度',
+  logic: '逻辑维度',
+  syntax: '句法维度',
+};
+
+const DEFAULT_PREDICT_PROMPT = '';
 const PREDICT_CHAIN_LENGTH = 10;
 
 const TOKEN_TRANSITIONS = {
-  苹果: ['是', '通常', '属于', '味道', '颜色'],
-  apple: ['is', 'a', 'fruit', 'usually', 'sweet'],
-  香蕉: ['是', '一种', '水果', '偏', '软'],
-  banana: ['is', 'a', 'fruit', 'that', 'is'],
-  水果: ['通常', '富含', '维生素', '可以', '食用'],
-  fruit: ['is', 'rich', 'in', 'vitamins', 'and'],
-  猫: ['是', '一种', '动物', '常见', '宠物'],
-  dog: ['is', 'a', 'pet', 'animal', 'with'],
-  是: ['一种', '一个', '在', '并且', '可'],
-  is: ['a', 'an', 'often', 'related', 'to'],
-  一种: ['水果', '动物', '概念', '实体', '结构'],
-  a: ['fruit', 'concept', 'model', 'pet', 'node'],
+  概念: ['是', '一种', '结构', '系统', '表达'],
+  模型: ['通过', '层级', '编码', '形成', '预测'],
+  concept: ['is', 'a', 'structured', 'representation', 'in'],
+  model: ['builds', 'multi-layer', 'features', 'for', 'prediction'],
+  is: ['a', 'structured', 'mapping', 'inside', 'the'],
+  a: ['concept', 'model', 'token', 'signal', 'pattern'],
 };
 
 const TOPIC_FALLBACKS = [
   {
-    keywords: ['苹果', 'apple'],
-    tokens: ['是', '一种', '水果', '通常', '偏甜', '富含', '纤维'],
+    keywords: ['概念', 'concept'],
+    tokens: ['是', '一种', '结构', '可以', '在', '层级', '传播'],
   },
   {
-    keywords: ['香蕉', 'banana'],
-    tokens: ['是', '一种', '水果', '口感', '较软', '富含', '钾'],
-  },
-  {
-    keywords: ['猫', 'cat'],
-    tokens: ['是', '一种', '动物', '常见', '宠物', '动作', '灵活'],
+    keywords: ['模型', 'model'],
+    tokens: ['通过', '多层', '机制', '进行', '编码', '并', '预测'],
   },
 ];
 
@@ -180,6 +72,46 @@ const ANALYSIS_MODE_OPTIONS = [
   { id: 'minimal_circuit', label: '最小子回路', desc: '最小因果子集' },
 ];
 
+
+const ANALYSIS_MODE_ICONS = {
+  static: Search,
+  dynamic_prediction: Sparkles,
+  causal_intervention: Target,
+  subspace_geometry: Scale,
+  feature_decomposition: BarChart2,
+  cross_layer_transport: ArrowRightLeft,
+  compositionality: Activity,
+  counterfactual: GitBranch,
+  robustness: CheckCircle,
+  minimal_circuit: Network,
+};
+
+const ANALYSIS_MODE_STAGE_GROUPS = [
+  {
+    id: 'observation',
+    label: '观测',
+    icon: Search,
+    items: ['static', 'dynamic_prediction', 'cross_layer_transport'],
+  },
+  {
+    id: 'extraction',
+    label: '提取',
+    icon: Sparkles,
+    items: ['subspace_geometry', 'feature_decomposition', 'compositionality'],
+  },
+  {
+    id: 'validation',
+    label: '验证',
+    icon: CheckCircle,
+    items: ['causal_intervention', 'counterfactual', 'robustness'],
+  },
+  {
+    id: 'system',
+    label: '系统',
+    icon: Network,
+    items: ['minimal_circuit'],
+  },
+];
 const FEATURE_AXES = ['color', 'taste', 'shape', 'category'];
 
 const MODE_VISUALS = {
@@ -242,10 +174,11 @@ function generatePredictChain(prompt) {
   return chain;
 }
 
-function buildConceptNeuronSet(name, idx = 0) {
+function buildConceptNeuronSet(name, category = '未分类', idx = 0) {
   const normalized = name.trim().toLowerCase();
-  const baseHash = hashString(`${normalized}-${idx}`);
-  const setId = `query-${normalized.replace(/[^a-z0-9\u4e00-\u9fa5]+/gi, '-')}-${baseHash}`;
+  const normalizedCategory = category.trim().toLowerCase() || '未分类';
+  const baseHash = hashString(`${normalized}-${normalizedCategory}-${idx}`);
+  const setId = `query-${normalized.replace(/[^a-z0-9\u4e00-\u9fa5]+/gi, '-')}-${normalizedCategory.replace(/[^a-z0-9\u4e00-\u9fa5]+/gi, '-')}-${baseHash}`;
   const color = `hsl(${baseHash % 360}, 82%, 62%)`;
 
   const nodes = Array.from({ length: QUERY_NODE_COUNT }, (_, i) => {
@@ -260,6 +193,7 @@ function buildConceptNeuronSet(name, idx = 0) {
       label: `${name} Query ${i + 1}`,
       role: 'query',
       concept: name,
+      category,
       layer,
       neuron,
       metric: 'query_score',
@@ -276,10 +210,151 @@ function buildConceptNeuronSet(name, idx = 0) {
   return {
     id: setId,
     name,
+    category,
     normalized,
+    normalizedCategory,
     color,
     nodes,
   };
+}
+
+function toSafeNumber(value, fallback = 0) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function normalizeConceptKey(value) {
+  return String(value || '').trim().toLowerCase();
+}
+
+function buildConceptNeuronSetFromSignature(name, category = '未分类', signatureIndices = [], idx = 0, dff = DFF, maxNodes = IMPORTED_QUERY_NODE_MAX) {
+  const normalized = name.trim().toLowerCase();
+  const normalizedCategory = category.trim().toLowerCase() || '未分类';
+  const baseHash = hashString(`import-${normalized}-${normalizedCategory}-${idx}`);
+  const setId = `import-${normalized.replace(/[^a-z0-9\u4e00-\u9fa5]+/gi, '-')}-${normalizedCategory.replace(/[^a-z0-9\u4e00-\u9fa5]+/gi, '-')}-${baseHash}`;
+  const color = `hsl(${baseHash % 360}, 84%, 66%)`;
+
+  const indices = signatureIndices
+    .map((v) => toSafeNumber(v, -1))
+    .filter((v) => Number.isFinite(v) && v >= 0)
+    .slice(0, maxNodes);
+
+  const nodes = indices.map((flatIdx, i) => {
+    const layer = Math.floor(flatIdx / dff);
+    const neuron = flatIdx % dff;
+    const layerClamped = Math.max(0, Math.min(LAYER_COUNT - 1, layer));
+    const neuronClamped = Math.max(0, neuron);
+    const rank = i + 1;
+    const score = Math.max(0.08, 1 - i / Math.max(4, indices.length));
+    return {
+      id: `${setId}-${i}`,
+      label: `${name} Sig ${rank}`,
+      role: 'query',
+      concept: name,
+      category,
+      layer: layerClamped,
+      neuron: neuronClamped,
+      metric: 'signature_rank_score',
+      value: score,
+      strength: score,
+      source: 'mass_noun_encoding_scan_import',
+      color,
+      position: neuronToPosition(layerClamped, neuronClamped, 0.2 + i * 0.024),
+      size: 0.12 + score * 0.16,
+      phase: i * 0.28,
+    };
+  });
+
+  return {
+    id: setId,
+    name,
+    category,
+    normalized,
+    normalizedCategory,
+    color,
+    nodes,
+  };
+}
+
+function buildSharedReuseSet(reusedRecords = [], dff = DFF, maxNodes = IMPORTED_QUERY_NODE_MAX, idx = 0) {
+  const list = reusedRecords.slice(0, maxNodes);
+  const baseHash = hashString(`shared-reuse-${idx}`);
+  const setId = `import-shared-reused-${baseHash}`;
+  const color = '#ffd166';
+  const nodes = list.map((rec, i) => {
+    const layer = Number.isFinite(rec?.layer) ? rec.layer : Math.floor(toSafeNumber(rec?.flat_index, 0) / dff);
+    const neuron = Number.isFinite(rec?.neuron) ? rec.neuron : toSafeNumber(rec?.flat_index, 0) % dff;
+    const layerClamped = Math.max(0, Math.min(LAYER_COUNT - 1, layer));
+    const neuronClamped = Math.max(0, neuron);
+    const count = toSafeNumber(rec?.count, 1);
+    const score = Math.max(0.1, Math.min(1, count / 12));
+    return {
+      id: `${setId}-${i}`,
+      label: `Shared Reuse ${i + 1}`,
+      role: 'query',
+      concept: '共享复用神经元',
+      category: '共享',
+      layer: layerClamped,
+      neuron: neuronClamped,
+      metric: 'reuse_count_score',
+      value: count,
+      strength: score,
+      source: 'mass_noun_encoding_scan_import',
+      color,
+      position: neuronToPosition(layerClamped, neuronClamped, 0.24 + i * 0.02),
+      size: 0.12 + score * 0.18,
+      phase: 0.18 * i,
+    };
+  });
+  return {
+    id: setId,
+    name: '共享复用神经元',
+    category: '共享',
+    normalized: '共享复用神经元',
+    normalizedCategory: '共享',
+    color,
+    nodes,
+  };
+}
+
+function buildMultidimNodesFromProbe(probeData, visibleDims = { style: true, logic: true, syntax: true }, topN = 64) {
+  if (!probeData || !probeData.dimensions) {
+    return [];
+  }
+  const dims = ['style', 'logic', 'syntax'];
+  const maxNodes = Math.max(8, Math.min(256, toSafeNumber(topN, 64)));
+  const nodes = [];
+  dims.forEach((dim, dimIdx) => {
+    if (visibleDims[dim] === false) {
+      return;
+    }
+    const rows = probeData?.dimensions?.[dim]?.specific_top_neurons || probeData?.dimensions?.[dim]?.top_neurons || [];
+    const color = ROLE_COLORS[dim] || '#84f1ff';
+    rows.slice(0, maxNodes).forEach((row, i) => {
+      const layer = Math.max(0, Math.min(LAYER_COUNT - 1, toSafeNumber(row?.layer, 0)));
+      const neuron = Math.max(0, toSafeNumber(row?.neuron, 0));
+      const score = Math.max(0.05, toSafeNumber(row?.specific_score, toSafeNumber(row?.mean_abs_delta, 0.1)));
+      nodes.push({
+        id: `multidim-${dim}-${i}-l${layer}-n${neuron}`,
+        label: `${DIMENSION_LABELS[dim] || dim} ${i + 1}`,
+        role: dim,
+        dimension: dim,
+        concept: DIMENSION_LABELS[dim] || dim,
+        category: '多维编码',
+        layer,
+        neuron,
+        metric: 'dimension_specific_score',
+        value: score,
+        strength: score,
+        source: 'multidim_encoding_probe',
+        color,
+        position: neuronToPosition(layer, neuron, 0.18 + i * 0.018 + dimIdx * 0.06),
+        size: 0.11 + Math.min(0.28, Math.abs(score) * 0.08),
+        phase: dimIdx * 0.7 + i * 0.22,
+      });
+    });
+  });
+  return nodes;
 }
 
 function neuronToPosition(layer, neuron, radialJitter = 0) {
@@ -291,7 +366,14 @@ function neuronToPosition(layer, neuron, radialJitter = 0) {
   return [x, y, z];
 }
 
-function PulsingNeuron({ node, selected, onSelect, predictionStrength = 0, mode = 'static' }) {
+function PulsingNeuron({
+  node,
+  selected,
+  onSelect,
+  predictionStrength = 0,
+  mode = 'static',
+  isEffectiveNode = false,
+}) {
   const ref = useRef(null);
   const modeStyle = MODE_VISUALS[mode] || MODE_VISUALS.static;
 
@@ -304,7 +386,8 @@ function PulsingNeuron({ node, selected, onSelect, predictionStrength = 0, mode 
     const base = node.size;
     const predictionBoost = predictionStrength * (node.role === 'background' ? 0.18 : 0.5);
     const modeWave = mode === 'counterfactual' ? Math.sin(state.clock.elapsedTime * speed * 0.7 + node.phase * 1.3) * 0.06 : 0;
-    const scale = base * (1 + Math.sin(state.clock.elapsedTime * speed + node.phase) * pulse + predictionBoost + modeWave);
+    const effectiveBoost = isEffectiveNode ? 0.22 : 0;
+    const scale = base * (1 + Math.sin(state.clock.elapsedTime * speed + node.phase) * pulse + predictionBoost + modeWave + effectiveBoost);
     ref.current.scale.set(scale, scale, scale);
   });
 
@@ -319,19 +402,66 @@ function PulsingNeuron({ node, selected, onSelect, predictionStrength = 0, mode 
     >
       <sphereGeometry args={[1, 20, 20]} />
       <meshStandardMaterial
-        color={predictionStrength > 0.66 && mode !== 'static' ? modeStyle.accent : node.color}
-        emissive={predictionStrength > 0.5 && mode !== 'static' ? modeStyle.accent : node.color}
+        color={isEffectiveNode ? '#ffffff' : predictionStrength > 0.66 && mode !== 'static' ? modeStyle.accent : node.color}
+        emissive={isEffectiveNode ? '#ffffff' : predictionStrength > 0.5 && mode !== 'static' ? modeStyle.accent : node.color}
         emissiveIntensity={
           (selected ? 1.8 : node.role === 'background' ? 0.08 : 0.55)
           + predictionStrength * (node.role === 'background' ? 0.2 : 1.6)
+          + (isEffectiveNode ? 0.95 : 0)
           + (mode !== 'static' ? 0.12 : 0)
         }
         roughness={0.2}
         metalness={0.15}
         transparent
-        opacity={node.role === 'background' ? 0.24 + predictionStrength * 0.08 : 0.92}
+        opacity={isEffectiveNode ? 0.98 : node.role === 'background' ? 0.24 + predictionStrength * 0.08 : 0.92}
       />
     </mesh>
+  );
+}
+
+function LayerEffectiveNeuronOverlay({ prediction = null, mode = 'static' }) {
+  if (mode !== 'feature_decomposition') {
+    return null;
+  }
+  const layer = Number.isFinite(prediction?.effectiveLayer)
+    ? Math.max(0, Math.min(LAYER_COUNT - 1, Math.round(prediction.effectiveLayer)))
+    : null;
+  if (!Number.isFinite(layer)) {
+    return null;
+  }
+  const rows = Array.isArray(prediction?.effectiveNeurons) ? prediction.effectiveNeurons.slice(0, 6) : [];
+  const z = (layer - (LAYER_COUNT - 1) / 2) * 0.92;
+  return (
+    <group position={[0, 0, z]}>
+      <Line points={[[3.8, 0.2, 0], [7.05, 1.95, 0]]} color="#ffffff" transparent opacity={0.82} lineWidth={1.4} />
+      <Html position={[7.25, 2.12, 0]} center={false}>
+        <div
+          style={{
+            width: 226,
+            borderRadius: 10,
+            border: '1px solid rgba(255,255,255,0.58)',
+            background: 'rgba(8, 12, 24, 0.86)',
+            color: '#e8f2ff',
+            padding: '8px 10px',
+            fontSize: 11,
+            lineHeight: 1.55,
+            boxShadow: '0 10px 24px rgba(0,0,0,0.35)',
+            pointerEvents: 'none',
+          }}
+        >
+          <div style={{ fontWeight: 700, color: '#ffffff' }}>{`L${layer} 有效神经元 Top-${rows.length}`}</div>
+          {rows.length === 0 ? (
+            <div style={{ color: '#9bb3de' }}>当前层暂无可显示节点</div>
+          ) : (
+            rows.map((item, idx) => (
+              <div key={`eff-n-${item.id}-${idx}`} style={{ color: '#d4e5ff' }}>
+                {`${idx + 1}. N${item.neuron} | ${item.role} | ${(Number(item.score || 0) * 100).toFixed(1)}%`}
+              </div>
+            ))
+          )}
+        </div>
+      </Html>
+    </group>
   );
 }
 
@@ -413,6 +543,46 @@ function LayerGuides({ activeLayer = null }) {
       <Text position={[0, 0.95, 13.2]} color="#cde4ff" fontSize={0.28} anchorX="center" anchorY="middle" outlineWidth={0.015} outlineColor="#0a1022">
         Layer 27
       </Text>
+    </group>
+  );
+}
+
+function DimensionLayerImpactGraph({ profile = [], dimension = 'style', suppression = null }) {
+  if (!Array.isArray(profile) || profile.length === 0) {
+    return null;
+  }
+  const color = ROLE_COLORS[dimension] || '#84f1ff';
+  const points = profile.map((v, layer) => {
+    const z = (layer - (LAYER_COUNT - 1) / 2) * 0.92;
+    const x = 8.2 + Math.max(0, toSafeNumber(v, 0)) * 4.8;
+    const y = -6.45;
+    return [x, y, z];
+  });
+  const diagAdv = suppression?.diagonal_advantage?.[dimension];
+  const row = suppression?.suppression_matrix_mean?.[dimension];
+  return (
+    <group>
+      <Line points={[[8.2, -6.45, -13.1], [8.2, -6.45, 13.1]]} color="#7f95bb" transparent opacity={0.28} lineWidth={1} />
+      <Line points={points} color={color} transparent opacity={0.95} lineWidth={2.6} />
+      {points.map((p, idx) => (
+        <mesh key={`impact-${dimension}-${idx}`} position={p}>
+          <sphereGeometry args={[0.045, 12, 12]} />
+          <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.9} />
+        </mesh>
+      ))}
+      <Text position={[9.7, -5.8, 13.3]} color={color} fontSize={0.23} anchorX="right" anchorY="middle" outlineWidth={0.015} outlineColor="#0a1022">
+        {`${DIMENSION_LABELS[dimension] || dimension} 层影响谱`}
+      </Text>
+      {Number.isFinite(diagAdv) && (
+        <Text position={[9.7, -6.2, 13.3]} color="#cde4ff" fontSize={0.2} anchorX="right" anchorY="middle" outlineWidth={0.012} outlineColor="#0a1022">
+          {`对角优势: ${diagAdv.toFixed(4)}`}
+        </Text>
+      )}
+      {row ? (
+        <Text position={[9.7, -6.55, 13.3]} color="#9eb4dd" fontSize={0.18} anchorX="right" anchorY="middle" outlineWidth={0.01} outlineColor="#0a1022">
+          {`S/L/Y: ${toSafeNumber(row.style, 0).toFixed(3)} / ${toSafeNumber(row.logic, 0).toFixed(3)} / ${toSafeNumber(row.syntax, 0).toFixed(3)}`}
+        </Text>
+      ) : null}
     </group>
   );
 }
@@ -608,8 +778,20 @@ function ModeVisualOverlay({ mode = 'static', prediction = null }) {
   );
 }
 
-export function AppleNeuronSceneContent({ nodes, links, selected, onSelect, prediction = null, mode = 'static' }) {
+export function AppleNeuronSceneContent({
+  nodes,
+  links,
+  selected,
+  onSelect,
+  prediction = null,
+  mode = 'static',
+  dimensionLayerProfile = [],
+  activeDimension = 'style',
+  dimensionCausal = null,
+}) {
   const activationMap = prediction?.activationMap || {};
+  const focusNodeIds = prediction?.focusNodeIds || [];
+  const focusNodeSet = useMemo(() => new Set(focusNodeIds), [focusNodeIds]);
   const modeStyle = MODE_VISUALS[mode] || MODE_VISUALS.static;
   const activeLayer = Number.isFinite(prediction?.layerProgress)
     ? prediction.layerProgress * (LAYER_COUNT - 1)
@@ -638,11 +820,14 @@ export function AppleNeuronSceneContent({ nodes, links, selected, onSelect, pred
           onSelect={onSelect}
           predictionStrength={activationMap[node.id] || 0}
           mode={mode}
+          isEffectiveNode={focusNodeSet.has(node.id)}
         />
       ))}
 
       <ModeVisualOverlay mode={mode} prediction={prediction} />
       <TokenPredictionCarrier prediction={prediction} mode={mode} />
+      <LayerEffectiveNeuronOverlay prediction={prediction} mode={mode} />
+      <DimensionLayerImpactGraph profile={dimensionLayerProfile} dimension={activeDimension} suppression={dimensionCausal} />
 
       {selected && selected.role !== 'background' && (
         <Html position={[selected.position[0], selected.position[1] + 1.25, selected.position[2]]} center>
@@ -666,7 +851,17 @@ export function AppleNeuronSceneContent({ nodes, links, selected, onSelect, pred
   );
 }
 
-function AppleNeuronScene({ nodes, links, selected, onSelect, prediction, mode = 'static' }) {
+function AppleNeuronScene({
+  nodes,
+  links,
+  selected,
+  onSelect,
+  prediction,
+  mode = 'static',
+  dimensionLayerProfile = [],
+  activeDimension = 'style',
+  dimensionCausal = null,
+}) {
   return (
     <Canvas shadows dpr={[1, 1.5]}>
       <color attach="background" args={['#090b15']} />
@@ -679,7 +874,17 @@ function AppleNeuronScene({ nodes, links, selected, onSelect, prediction, mode =
       <PerspectiveCamera makeDefault position={[16, 12, 26]} fov={42} />
       <OrbitControls enablePan enableZoom minDistance={10} maxDistance={44} />
 
-      <AppleNeuronSceneContent nodes={nodes} links={links} selected={selected} onSelect={onSelect} prediction={prediction} mode={mode} />
+      <AppleNeuronSceneContent
+        nodes={nodes}
+        links={links}
+        selected={selected}
+        onSelect={onSelect}
+        prediction={prediction}
+        mode={mode}
+        dimensionLayerProfile={dimensionLayerProfile}
+        activeDimension={activeDimension}
+        dimensionCausal={dimensionCausal}
+      />
     </Canvas>
   );
 }
@@ -741,42 +946,27 @@ function buildAppleCoreNodes() {
 }
 
 function buildBackgroundNodes() {
-  const background = [];
-  for (let layer = 0; layer < LAYER_COUNT; layer += 1) {
-    for (let i = 0; i < 11; i += 1) {
-      const seed = layer * 97 + i * 29 + 13;
-      const neuron = Math.floor(pseudoRandom(seed) * DFF);
-      background.push({
-        id: `bg-${layer}-${i}`,
-        label: `Background L${layer}`,
-        role: 'background',
-        layer,
-        neuron,
-        metric: 'activation',
-        value: pseudoRandom(seed + 7) * 0.1,
-        strength: pseudoRandom(seed + 11) * 0.1,
-        source: 'synthetic-grid',
-        color: ROLE_COLORS.background,
-        position: neuronToPosition(layer, neuron, pseudoRandom(seed + 5) * 0.6),
-        size: 0.07 + pseudoRandom(seed + 19) * 0.08,
-        phase: pseudoRandom(seed + 23) * Math.PI * 2,
-      });
-    }
-  }
-  return background;
+  return [];
 }
 
 export function useAppleNeuronWorkspace() {
   const [analysisMode, setAnalysisMode] = useState('dynamic_prediction');
   const [showFruitGeneral, setShowFruitGeneral] = useState(true);
-  const [showFruit, setShowFruit] = useState({
-    apple: true,
-    banana: true,
-    orange: true,
-    grape: true,
-  });
+  const [showFruit, setShowFruit] = useState(() => Object.fromEntries(Object.keys(FRUIT_COLORS).map((k) => [k, true])));
   const [queryInput, setQueryInput] = useState('');
+  const [queryCategoryInput, setQueryCategoryInput] = useState('');
   const [querySets, setQuerySets] = useState([]);
+  const [queryVisibility, setQueryVisibility] = useState({});
+  const [queryFeedback, setQueryFeedback] = useState('');
+  const [scanImportLimit, setScanImportLimit] = useState(20);
+  const [scanImportTopK, setScanImportTopK] = useState(IMPORTED_QUERY_NODE_MAX);
+  const [scanImportSummary, setScanImportSummary] = useState(null);
+  const [scanMechanismData, setScanMechanismData] = useState(null);
+  const [multidimProbeData, setMultidimProbeData] = useState(null);
+  const [multidimCausalData, setMultidimCausalData] = useState(null);
+  const [multidimTopN, setMultidimTopN] = useState(96);
+  const [multidimVisible, setMultidimVisible] = useState({ style: true, logic: true, syntax: true });
+  const [multidimActiveDimension, setMultidimActiveDimension] = useState('style');
   const [predictPrompt, setPredictPrompt] = useState(DEFAULT_PREDICT_PROMPT);
   const [predictStep, setPredictStep] = useState(0);
   const [predictLayerProgress, setPredictLayerProgress] = useState(0);
@@ -792,7 +982,7 @@ export function useAppleNeuronWorkspace() {
     sweetness: 0.33,
     color: 0.33,
   });
-  const [counterfactualPrompt, setCounterfactualPrompt] = useState('苹果 不是 一种 水果');
+  const [counterfactualPrompt, setCounterfactualPrompt] = useState('');
   const [robustnessTrials, setRobustnessTrials] = useState(6);
   const [minimalSubsetSize, setMinimalSubsetSize] = useState(12);
 
@@ -800,7 +990,16 @@ export function useAppleNeuronWorkspace() {
   const appleCoreNodes = useMemo(() => buildAppleCoreNodes(), []);
   const fruitGeneralNodes = useMemo(() => buildFruitGeneralNodes(), []);
   const fruitSpecificNodes = useMemo(() => buildFruitSpecificNodes(), []);
-  const queryNodes = useMemo(() => querySets.flatMap((set) => set.nodes), [querySets]);
+  const queryNodes = useMemo(
+    () => querySets
+      .filter((set) => queryVisibility[set.id] !== false)
+      .flatMap((set) => set.nodes),
+    [querySets, queryVisibility]
+  );
+  const multidimNodes = useMemo(
+    () => buildMultidimNodesFromProbe(multidimProbeData, multidimVisible, multidimTopN),
+    [multidimProbeData, multidimVisible, multidimTopN]
+  );
   const predictChain = useMemo(() => generatePredictChain(predictPrompt), [predictPrompt]);
   const dynamicEnabled = analysisMode === 'dynamic_prediction';
   const mechanismEnabled = !['static', 'dynamic_prediction'].includes(analysisMode);
@@ -808,8 +1007,8 @@ export function useAppleNeuronWorkspace() {
   const nodes = useMemo(() => {
     const visibleFruitSpecific = fruitSpecificNodes.filter((n) => showFruit[n.fruit]);
     const visibleFruitGeneral = showFruitGeneral ? fruitGeneralNodes : [];
-    return [...backgroundNodes, ...appleCoreNodes, ...visibleFruitGeneral, ...visibleFruitSpecific, ...queryNodes];
-  }, [appleCoreNodes, backgroundNodes, fruitGeneralNodes, fruitSpecificNodes, queryNodes, showFruit, showFruitGeneral]);
+    return [...backgroundNodes, ...appleCoreNodes, ...visibleFruitGeneral, ...visibleFruitSpecific, ...queryNodes, ...multidimNodes];
+  }, [appleCoreNodes, backgroundNodes, fruitGeneralNodes, fruitSpecificNodes, multidimNodes, queryNodes, showFruit, showFruitGeneral]);
 
   const keyNodes = useMemo(() => nodes.filter((n) => n.role !== 'background'), [nodes]);
   const [selected, setSelected] = useState(appleCoreNodes[0] || null);
@@ -859,37 +1058,219 @@ export function useAppleNeuronWorkspace() {
     return () => clearInterval(interval);
   }, [mechanismEnabled, mechanismPlaying, mechanismSpeed]);
 
+  useEffect(() => {
+    setQueryVisibility((prev) => {
+      const next = {};
+      querySets.forEach((set) => {
+        next[set.id] = prev[set.id] !== false;
+      });
+      return next;
+    });
+  }, [querySets]);
+
   const handleGenerateQuery = () => {
     const concept = queryInput.trim();
+    const category = queryCategoryInput.trim() || '未分类';
     if (!concept) {
+      setQueryFeedback('请输入名称后再生成。');
       return;
     }
     setQuerySets((prev) => {
-      if (prev.some((set) => set.normalized === concept.toLowerCase())) {
+      const existing = prev.find((set) => set.normalized === concept.toLowerCase() && set.normalizedCategory === category.toLowerCase());
+      if (existing) {
+        setQueryVisibility((visibilityPrev) => ({ ...visibilityPrev, [existing.id]: true }));
+        if (existing.nodes[0]) {
+          setSelected(existing.nodes[0]);
+        }
+        setQueryFeedback(`已存在「${existing.name} [${existing.category}]」，已定位并显示。`);
         return prev;
       }
-      const nextSet = buildConceptNeuronSet(concept, prev.length);
+      const nextSet = buildConceptNeuronSet(concept, category, prev.length);
       if (nextSet.nodes[0]) {
         setSelected(nextSet.nodes[0]);
       }
+      setQueryVisibility((visibilityPrev) => ({ ...visibilityPrev, [nextSet.id]: true }));
+      setQueryFeedback(`已生成「${nextSet.name} [${nextSet.category}]」神经元集合。`);
       return [...prev, nextSet];
     });
     setQueryInput('');
   };
 
+  const handleImportScanJsonText = (jsonText, sourceName = 'mass_noun_encoding_scan.json') => {
+    let parsed;
+    try {
+      parsed = JSON.parse(jsonText);
+    } catch (_err) {
+      setQueryFeedback('JSON 解析失败，请确认文件格式正确。');
+      return;
+    }
+
+    const hasMultidimProbe = Boolean(
+      parsed?.dimensions?.style
+      && parsed?.dimensions?.logic
+      && parsed?.dimensions?.syntax
+      && parsed?.cross_dimension
+    );
+    const hasMultidimCausal = Boolean(parsed?.suppression_matrix_mean && parsed?.diagonal_advantage);
+    const hasMultidimStability = Boolean(parsed?.aggregate?.diag_adv_style && parsed?.aggregate?.specificity_margin_style);
+    if (hasMultidimProbe) {
+      setMultidimProbeData(parsed);
+      const probeSummary = parsed?.runtime_config || {};
+      setQueryFeedback(
+        `已导入三维编码探针：source=${sourceName}，每维样本=${probeSummary.max_pairs_per_dim || '-'}，top_k=${probeSummary.top_k || '-'}。`
+      );
+      return;
+    }
+    if (hasMultidimCausal) {
+      setMultidimCausalData(parsed);
+      setQueryFeedback(`已导入三维因果消融：source=${sourceName}，top_n=${parsed?.top_n || '-'}。`);
+      return;
+    }
+    if (hasMultidimStability) {
+      const runs = toSafeNumber(parsed?.n_runs, 0);
+      const style = toSafeNumber(parsed?.aggregate?.specificity_margin_style?.mean, 0);
+      const logic = toSafeNumber(parsed?.aggregate?.specificity_margin_logic?.mean, 0);
+      const syntax = toSafeNumber(parsed?.aggregate?.specificity_margin_syntax?.mean, 0);
+      setQueryFeedback(`已导入三维多seed稳定性汇总：runs=${runs}，specificity(style/logic/syntax)=(${style.toFixed(3)}/${logic.toFixed(3)}/${syntax.toFixed(3)})。`);
+      return;
+    }
+
+    const nounRecords = Array.isArray(parsed?.noun_records) ? parsed.noun_records : [];
+    if (nounRecords.length === 0) {
+      setQueryFeedback('未检测到 noun_records，无法导入。');
+      return;
+    }
+
+    const dff = Math.max(1, toSafeNumber(parsed?.config?.d_ff, DFF));
+    const limit = Math.max(1, Math.min(120, toSafeNumber(scanImportLimit, 20)));
+    const perConceptTopK = Math.max(4, Math.min(64, toSafeNumber(scanImportTopK, IMPORTED_QUERY_NODE_MAX)));
+
+    const validRecords = nounRecords.filter((rec) => Array.isArray(rec?.signature_top_indices) && rec.signature_top_indices.length > 0);
+    if (validRecords.length === 0) {
+      setQueryFeedback('该扫描结果没有 signature_top_indices，请先用新版脚本重新导出。');
+      return;
+    }
+
+    const picked = validRecords.slice(0, limit);
+    const importedSets = picked.map((rec, idx) => buildConceptNeuronSetFromSignature(
+      String(rec?.noun || `concept_${idx + 1}`),
+      String(rec?.category || '未分类'),
+      rec?.signature_top_indices || [],
+      idx,
+      dff,
+      perConceptTopK
+    ));
+
+    const reused = Array.isArray(parsed?.top_reused_neurons) ? parsed.top_reused_neurons : [];
+    if (reused.length > 0) {
+      importedSets.push(buildSharedReuseSet(reused, dff, perConceptTopK, picked.length));
+    }
+
+    const minimalRecords = Array.isArray(parsed?.causal_ablation?.minimal_circuit?.records)
+      ? parsed.causal_ablation.minimal_circuit.records
+      : [];
+    const counterfactualRecords = Array.isArray(parsed?.causal_ablation?.counterfactual_validation?.records)
+      ? parsed.causal_ablation.counterfactual_validation.records
+      : [];
+    const minimalByNoun = {};
+    minimalRecords.forEach((rec) => {
+      const key = normalizeConceptKey(rec?.noun);
+      if (!key) {
+        return;
+      }
+      minimalByNoun[key] = rec;
+    });
+    const counterfactualByNoun = {};
+    counterfactualRecords.forEach((rec) => {
+      const key = normalizeConceptKey(rec?.noun);
+      if (!key) {
+        return;
+      }
+      if (!counterfactualByNoun[key]) {
+        counterfactualByNoun[key] = [];
+      }
+      counterfactualByNoun[key].push(rec);
+    });
+    setScanMechanismData({
+      dff,
+      minimalByNoun,
+      counterfactualByNoun,
+    });
+    const firstCounterfactual = counterfactualRecords[0];
+    if (firstCounterfactual?.counterfactual_noun) {
+      setCounterfactualPrompt(String(firstCounterfactual.counterfactual_noun));
+    }
+
+    let added = 0;
+    let updated = 0;
+    setQuerySets((prev) => {
+      const next = [...prev];
+      importedSets.forEach((set) => {
+        const existingIdx = next.findIndex(
+          (item) => item.normalized === set.normalized && item.normalizedCategory === set.normalizedCategory
+        );
+        if (existingIdx >= 0) {
+          next[existingIdx] = set;
+          updated += 1;
+        } else {
+          next.push(set);
+          added += 1;
+        }
+      });
+      return next;
+    });
+
+    setQueryVisibility((prev) => {
+      const next = { ...prev };
+      importedSets.forEach((set) => {
+        next[set.id] = true;
+      });
+      return next;
+    });
+
+    if (importedSets[0]?.nodes?.[0]) {
+      setSelected(importedSets[0].nodes[0]);
+    }
+
+    const importedCategoryCount = new Set(importedSets.map((set) => set.category)).size;
+    setScanImportSummary({
+      source: sourceName,
+      importedConcepts: importedSets.length,
+      importedCategories: importedCategoryCount,
+      totalNouns: nounRecords.length,
+      minimalCircuitNouns: minimalRecords.length,
+      counterfactualPairs: counterfactualRecords.length,
+    });
+    setQueryFeedback(`已导入扫描结果：新增 ${added}，更新 ${updated}，来源 ${sourceName}。`);
+  };
+
   const removeQuerySet = (setId) => {
     setQuerySets((prev) => prev.filter((set) => set.id !== setId));
+    setQueryVisibility((prev) => {
+      const next = { ...prev };
+      delete next[setId];
+      return next;
+    });
+    setQueryFeedback('已移除该概念集合。');
+  };
+
+  const setQuerySetVisible = (setId, visible) => {
+    setQueryVisibility((prev) => ({ ...prev, [setId]: visible }));
+  };
+
+  const setAllQuerySetVisible = (visible) => {
+    setQueryVisibility((prev) => {
+      const next = { ...prev };
+      querySets.forEach((set) => {
+        next[set.id] = visible;
+      });
+      return next;
+    });
   };
 
   const links = useMemo(() => {
     const byId = Object.fromEntries(keyNodes.map((n) => [n.id, n]));
-    const linkSpecs = [
-      ['apple-micro-l8n7574', 'apple-micro-l9n14608', '#ffad66'],
-      ['apple-micro-l9n14608', 'apple-macro-l23n16819', '#ffd48a'],
-      ['apple-macro-l23n16819', 'route-shared-l24n8124', '#a3ddff'],
-      ['route-shared-l24n8124', 'route-shared-l27n16649', '#7fd9ff'],
-      ['route-shared-l24n8124', 'route-shared-l27n16936', '#7fd9ff'],
-    ];
+    const linkSpecs = [];
 
     const fruitLinks = Object.keys(FRUIT_COLORS)
       .flatMap((fruit) => {
@@ -910,14 +1291,29 @@ export function useAppleNeuronWorkspace() {
       return set.nodes.slice(1).map((node) => [set.nodes[0].id, node.id, set.color]);
     });
 
-    return [...linkSpecs, ...fruitLinks, ...queryLinks]
+    const multidimLinks = ['style', 'logic', 'syntax'].flatMap((dim) => {
+      if (multidimVisible[dim] === false) {
+        return [];
+      }
+      const color = ROLE_COLORS[dim] || '#84f1ff';
+      const group = keyNodes
+        .filter((n) => n.role === dim)
+        .sort((a, b) => Number(b.value || 0) - Number(a.value || 0))
+        .slice(0, 16);
+      if (group.length < 2) {
+        return [];
+      }
+      return group.slice(1).map((node) => [group[0].id, node.id, color]);
+    });
+
+    return [...linkSpecs, ...fruitLinks, ...queryLinks, ...multidimLinks]
       .filter(([from, to]) => byId[from] && byId[to])
       .map(([from, to, color]) => ({
         id: `${from}->${to}`,
         color,
         points: [byId[from].position, byId[to].position],
       }));
-  }, [keyNodes, querySets, showFruit]);
+  }, [keyNodes, multidimVisible, querySets, showFruit]);
 
   const currentPredictToken = dynamicEnabled && predictChain.length ? predictChain[predictStep % predictChain.length] : null;
   const predictLayer = predictLayerProgress * (LAYER_COUNT - 1);
@@ -944,20 +1340,26 @@ export function useAppleNeuronWorkspace() {
       currentToken: { token: '静态分析', prob: 0 },
       layerProgress: 0,
       focusNodeIds: [],
+      effectiveLayer: null,
+      effectiveNeurons: [],
       metrics: [],
       statusText: '',
     };
 
     if (!keyNodes.length) {
-      return overlay;
+      overlay.metrics = [{ label: '节点', value: '0（请先生成或导入概念）' }];
     }
+    const selectedConceptKey = normalizeConceptKey(selected?.concept);
+    const importedDff = Math.max(1, toSafeNumber(scanMechanismData?.dff, DFF));
+    const importedMinimal = selectedConceptKey ? scanMechanismData?.minimalByNoun?.[selectedConceptKey] : null;
+    const importedCounterfactualList = selectedConceptKey ? (scanMechanismData?.counterfactualByNoun?.[selectedConceptKey] || []) : [];
 
     if (analysisMode === 'static') {
       keyNodes.forEach((node) => {
         overlay.activationMap[node.id] = Math.min(0.25, 0.06 + Math.sqrt(Math.max(node.strength, 1e-6)) * 0.5);
       });
       overlay.statusText = '结构分布快照';
-      overlay.metrics = [{ label: 'Mode', value: 'Static' }];
+      overlay.metrics = [{ label: '模式', value: '静态分析' }];
       return overlay;
     }
 
@@ -1020,17 +1422,37 @@ export function useAppleNeuronWorkspace() {
 
     if (analysisMode === 'feature_decomposition') {
       const axisName = FEATURE_AXES[featureAxis] || FEATURE_AXES[0];
+      const currentLayer = Math.max(0, Math.min(LAYER_COUNT - 1, Math.round(mechanismPhase * (LAYER_COUNT - 1))));
+      const layerEffective = [];
       keyNodes.forEach((node) => {
         const axis = hashString(`feature-axis|${node.id}`) % FEATURE_AXES.length;
         const local = pseudoRandom(hashString(`feature-val|${axisName}|${node.id}`));
-        overlay.activationMap[node.id] = axis === featureAxis ? 0.58 + local * 0.4 : 0.08 + local * 0.2;
+        const score = axis === featureAxis ? 0.58 + local * 0.4 : 0.08 + local * 0.2;
+        overlay.activationMap[node.id] = score;
+        if (node.layer === currentLayer && node.role !== 'background') {
+          layerEffective.push({ ...node, score: score * (axis === featureAxis ? 1.15 : 0.72) });
+        }
       });
+      layerEffective.sort((a, b) => b.score - a.score);
+      const topLayerNodes = layerEffective.slice(0, 8);
+      overlay.focusNodeIds = topLayerNodes.map((n) => n.id);
+      overlay.effectiveLayer = currentLayer;
+      overlay.effectiveNeurons = topLayerNodes.map((n) => ({
+        id: n.id,
+        label: n.label,
+        role: n.role,
+        layer: n.layer,
+        neuron: n.neuron,
+        score: n.score,
+      }));
       overlay.currentToken = { token: `axis:${axisName}`, prob: 0.78 };
       overlay.layerProgress = mechanismPhase;
-      overlay.statusText = 'SAE-like feature slots';
+      overlay.statusText = `特征分解：定位 L${currentLayer} 有效神经元`;
       overlay.metrics = [
         { label: 'Axis', value: axisName },
         { label: 'Slots', value: `${FEATURE_AXES.length}` },
+        { label: '当前层', value: `L${currentLayer}` },
+        { label: '有效神经元', value: `${topLayerNodes.length}` },
       ];
       return overlay;
     }
@@ -1075,6 +1497,35 @@ export function useAppleNeuronWorkspace() {
     }
 
     if (analysisMode === 'counterfactual') {
+      if (importedCounterfactualList.length > 0) {
+        const preferred = importedCounterfactualList.find((r) => r?.relation === 'same_category') || importedCounterfactualList[0];
+        const cfConcept = normalizeConceptKey(preferred?.counterfactual_noun);
+        const focus = [];
+        keyNodes.forEach((node) => {
+          const nk = normalizeConceptKey(node.concept);
+          if (nk === selectedConceptKey) {
+            overlay.activationMap[node.id] = 0.88;
+            focus.push(node.id);
+            return;
+          }
+          if (cfConcept && nk === cfConcept) {
+            overlay.activationMap[node.id] = 0.5;
+            focus.push(node.id);
+            return;
+          }
+          overlay.activationMap[node.id] = 0.02 + pseudoRandom(hashString(`cf-import-bg|${node.id}`)) * 0.08;
+        });
+        overlay.focusNodeIds = focus;
+        overlay.currentToken = { token: `CF: ${preferred?.noun || '-'} -> ${preferred?.counterfactual_noun || '-'}`, prob: 0.76 };
+        overlay.layerProgress = mechanismPhase;
+        overlay.statusText = '反事实特异性（导入）';
+        overlay.metrics = [
+          { label: '关系', value: preferred?.relation === 'same_category' ? '同类反事实' : '跨类反事实' },
+          { label: '特异性边际', value: `${toSafeNumber(preferred?.specificity_margin_seq_logprob, 0).toFixed(6)}` },
+          { label: '子集大小', value: `${toSafeNumber(preferred?.subset_size, 0)}` },
+        ];
+        return overlay;
+      }
       keyNodes.forEach((node) => {
         const base = pseudoRandom(hashString(`base|${predictPrompt}|${node.id}`));
         const cf = pseudoRandom(hashString(`cf|${counterfactualPrompt}|${node.id}`));
@@ -1111,6 +1562,30 @@ export function useAppleNeuronWorkspace() {
     }
 
     if (analysisMode === 'minimal_circuit') {
+      if (importedMinimal && Array.isArray(importedMinimal?.subset_flat_indices)) {
+        const subset = new Set(importedMinimal.subset_flat_indices.map((v) => toSafeNumber(v, -1)).filter((v) => v >= 0));
+        const focus = [];
+        keyNodes.forEach((node) => {
+          const flat = node.layer * importedDff + node.neuron;
+          if (subset.has(flat)) {
+            overlay.activationMap[node.id] = 0.92;
+            focus.push(node.id);
+          } else {
+            overlay.activationMap[node.id] = 0.015;
+          }
+        });
+        overlay.focusNodeIds = focus;
+        const subsetSize = toSafeNumber(importedMinimal?.subset_size, subset.size);
+        overlay.currentToken = { token: `MCS(import k=${subsetSize})`, prob: Math.min(0.99, toSafeNumber(importedMinimal?.recovery_ratio, 0)) };
+        overlay.layerProgress = mechanismPhase;
+        overlay.statusText = '最小因果子回路（导入）';
+        overlay.metrics = [
+          { label: '子集大小', value: `${subsetSize}` },
+          { label: '恢复率', value: `${toSafeNumber(importedMinimal?.recovery_ratio, 0).toFixed(3)}` },
+          { label: 'Seq Drop', value: `${toSafeNumber(importedMinimal?.subset_drop_seq_logprob, 0).toFixed(6)}` },
+        ];
+        return overlay;
+      }
       const k = Math.max(3, Math.min(minimalSubsetSize, keyNodes.length));
       const scores = keyNodes
         .map((node) => ({ id: node.id, score: pseudoRandom(hashString(`mcs|${predictPrompt}|${node.id}`)) }))
@@ -1148,6 +1623,8 @@ export function useAppleNeuronWorkspace() {
     predictPrompt,
     predictStep,
     robustnessTrials,
+    scanMechanismData,
+    selected,
   ]);
 
   useEffect(() => {
@@ -1191,10 +1668,24 @@ export function useAppleNeuronWorkspace() {
     setMechanismTick((t) => t + 18);
   };
 
+  const multidimLayerProfile = useMemo(() => {
+    const arr = multidimProbeData?.dimensions?.[multidimActiveDimension]?.layer_profile_abs_delta_norm;
+    return Array.isArray(arr) ? arr : [];
+  }, [multidimActiveDimension, multidimProbeData]);
+
   const summary = useMemo(() => {
     const fruitSpecific = keyNodes.filter((n) => n.role === 'fruitSpecific');
     const perFruit = Object.keys(FRUIT_COLORS).reduce((acc, fruit) => {
       acc[fruit] = fruitSpecific.filter((n) => n.fruit === fruit).length;
+      return acc;
+    }, {});
+    const categoryStats = querySets.reduce((acc, set) => {
+      const key = set.category || '未分类';
+      if (!acc[key]) {
+        acc[key] = { concepts: 0, neurons: 0 };
+      }
+      acc[key].concepts += 1;
+      acc[key].neurons += set.nodes.length;
       return acc;
     }, {});
 
@@ -1207,12 +1698,17 @@ export function useAppleNeuronWorkspace() {
       query: keyNodes.filter((n) => n.role === 'query').length,
       total: keyNodes.length,
       perFruit,
+      categoryStats,
+      visibleQuerySets: querySets.filter((set) => queryVisibility[set.id] !== false).length,
+      hiddenQuerySets: querySets.filter((set) => queryVisibility[set.id] === false).length,
+      multidimNodes: keyNodes.filter((n) => n.role === 'style' || n.role === 'logic' || n.role === 'syntax').length,
+      multidimActiveDimension,
       currentToken: modeOverlay.currentToken?.token || '-',
       currentTokenProb: modeOverlay.currentToken?.prob || 0,
       analysisMode,
       statusText: modeOverlay.statusText || '',
     };
-  }, [analysisMode, keyNodes, modeOverlay.currentToken, modeOverlay.statusText]);
+  }, [analysisMode, keyNodes, modeOverlay.currentToken, modeOverlay.statusText, multidimActiveDimension, querySets, queryVisibility]);
 
   return {
     analysisMode,
@@ -1224,9 +1720,30 @@ export function useAppleNeuronWorkspace() {
     setShowFruit,
     queryInput,
     setQueryInput,
+    queryCategoryInput,
+    setQueryCategoryInput,
     querySets,
+    queryVisibility,
+    queryFeedback,
+    scanImportLimit,
+    setScanImportLimit,
+    scanImportTopK,
+    setScanImportTopK,
+    scanImportSummary,
+    multidimProbeData,
+    multidimCausalData,
+    multidimTopN,
+    setMultidimTopN,
+    multidimVisible,
+    setMultidimVisible,
+    multidimActiveDimension,
+    setMultidimActiveDimension,
+    multidimLayerProfile,
     handleGenerateQuery,
+    handleImportScanJsonText,
     removeQuerySet,
+    setQuerySetVisible,
+    setAllQuerySetVisible,
     nodes,
     links,
     selected,
@@ -1275,6 +1792,9 @@ export function useAppleNeuronWorkspace() {
           mode: analysisMode,
           metrics: modeOverlay.metrics,
           statusText: modeOverlay.statusText,
+          focusNodeIds: modeOverlay.focusNodeIds,
+          effectiveLayer: modeOverlay.effectiveLayer,
+          effectiveNeurons: modeOverlay.effectiveNeurons,
         },
   };
 }
@@ -1298,6 +1818,9 @@ export function AppleNeuronMainScene({ workspace, sceneHeight = '74vh' }) {
         onSelect={workspace.setSelected}
         prediction={workspace.prediction}
         mode={workspace.analysisMode}
+        dimensionLayerProfile={workspace.multidimLayerProfile}
+        activeDimension={workspace.multidimActiveDimension}
+        dimensionCausal={workspace.multidimCausalData}
       />
     </div>
   );
@@ -1311,6 +1834,10 @@ const smallActionButtonStyle = {
   fontSize: 12,
   padding: '7px 10px',
   cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 6,
 };
 
 const panelCardStyle = {
@@ -1341,6 +1868,213 @@ const textAreaStyle = {
   resize: 'vertical',
 };
 
+const fixedFileControlWidth = 240;
+const formatScanOptionLabel = (fileMeta) => {
+  const rawName = String(fileMeta?.name || 'scan.json');
+  const shortName = rawName.length > 24 ? `${rawName.slice(0, 12)}...${rawName.slice(-9)}` : rawName;
+  const mtime = String(fileMeta?.mtime_iso || '').slice(0, 19).replace('T', ' ');
+  return mtime ? `${shortName} | ${mtime}` : shortName;
+};
+
+export function AppleNeuronEncodingInfoPanels({ workspace, compact = false }) {
+  const nodes = workspace?.nodes || [];
+  const summary = workspace?.summary || {};
+  const metrics = workspace?.modeMetrics || [];
+  const multidimProbe = workspace?.multidimProbeData || null;
+  const multidimCausal = workspace?.multidimCausalData || null;
+  const activeDim = workspace?.multidimActiveDimension || 'style';
+
+  const layerRows = useMemo(() => {
+    const map = new Map();
+    nodes.forEach((node) => {
+      const key = Number.isFinite(node.layer) ? node.layer : 0;
+      const row = map.get(key) || { layer: key, count: 0, strength: 0 };
+      row.count += 1;
+      row.strength += Number(node.strength || 0);
+      map.set(key, row);
+    });
+    return Array.from(map.values())
+      .sort((a, b) => a.layer - b.layer)
+      .map((row) => ({
+        ...row,
+        strength: row.count ? row.strength / row.count : 0,
+      }));
+  }, [nodes]);
+
+  const maxCount = useMemo(() => Math.max(1, ...layerRows.map((row) => row.count)), [layerRows]);
+  const cardStyle = compact ? { ...panelCardStyle, padding: 10 } : panelCardStyle;
+
+  return (
+    <div style={{ display: 'grid', gap: 10 }}>
+      <div style={cardStyle}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>层级编码签名</div>
+        <div style={{ display: 'grid', gap: 6, maxHeight: compact ? 130 : 170, overflowY: 'auto' }}>
+          {layerRows.map((row) => (
+            <div key={`layer-sign-${row.layer}`} style={{ display: 'grid', gridTemplateColumns: '44px 1fr', gap: 8, alignItems: 'center' }}>
+              <div style={{ fontSize: 11, color: '#9bb3de' }}>{`L${row.layer}`}</div>
+              <div style={{ display: 'grid', gap: 3 }}>
+                <div style={{ height: 5, background: 'rgba(255,255,255,0.08)', borderRadius: 8, overflow: 'hidden' }}>
+                  <div style={{ width: `${(row.count / maxCount) * 100}%`, height: '100%', background: '#67dfff' }} />
+                </div>
+                <div style={{ height: 4, background: 'rgba(255,255,255,0.08)', borderRadius: 8, overflow: 'hidden' }}>
+                  <div style={{ width: `${Math.min(100, row.strength * 1000000)}%`, height: '100%', background: '#f59e0b' }} />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={cardStyle}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>编码机制指标</div>
+        <div style={{ fontSize: 11, color: '#9bb3de', lineHeight: 1.7 }}>
+          <div>{`核心神经元: ${(summary.micro || 0) + (summary.macro || 0) + (summary.route || 0)}`}</div>
+          <div>{`当前词元: ${summary.currentToken || '-'} (${((summary.currentTokenProb || 0) * 100).toFixed(1)}%)`}</div>
+        </div>
+        {metrics.length > 0 ? (
+          <div style={{ marginTop: 8, display: 'grid', gap: 4 }}>
+            {metrics.map((metric, idx) => (
+              <div key={`m-${metric.label}-${idx}`} style={{ fontSize: 11, color: '#9bb3de' }}>{`${metric.label}: ${metric.value}`}</div>
+            ))}
+          </div>
+        ) : null}
+        {multidimProbe ? (
+          <div style={{ marginTop: 8, fontSize: 11, color: '#9bb3de', lineHeight: 1.6 }}>
+            <div>{`多维探针: 已导入`}</div>
+            <div>{`当前维度: ${DIMENSION_LABELS[activeDim] || activeDim}`}</div>
+            {Number.isFinite(multidimCausal?.diagonal_advantage?.[activeDim]) ? (
+              <div>{`对角优势: ${toSafeNumber(multidimCausal?.diagonal_advantage?.[activeDim], 0).toFixed(4)}`}</div>
+            ) : (
+              <div style={{ color: '#7f95bb' }}>未导入三维因果消融结果</div>
+            )}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+export function AppleNeuronSelectedLegendPanels({ workspace, compact = false }) {
+  const selected = workspace?.selected || null;
+  const summary = workspace?.summary || {};
+  const cardStyle = compact ? { ...panelCardStyle, padding: 10 } : panelCardStyle;
+
+  return (
+    <div style={{ display: 'grid', gap: 10 }}>
+      <div style={{ ...cardStyle, minHeight: 160 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>选中神经元</div>
+        {selected ? (
+          <div style={{ fontSize: 12, color: '#9eb4dd', display: 'grid', gap: 6 }}>
+            <div style={{ color: '#e5eeff', fontWeight: 700 }}>{selected.label}</div>
+            <div>{`角色: ${selected.role}`}</div>
+            {'fruit' in selected ? <div>{`水果: ${selected.fruit}`}</div> : null}
+            {'concept' in selected ? <div>{`概念: ${selected.concept}`}</div> : null}
+            {'category' in selected ? <div>{`类别: ${selected.category}`}</div> : null}
+            <div>{`层 / 神经元: L${selected.layer} / N${selected.neuron}`}</div>
+            <div>{`强度: ${selected.strength.toExponential(3)}`}</div>
+            <div>{`${selected.metric}: ${selected.value.toExponential(3)}`}</div>
+            <div style={{ color: '#6f84ad' }}>{`来源: ${selected.source}`}</div>
+          </div>
+        ) : (
+          <div style={{ fontSize: 12, color: '#7d93bd' }}>请在 3D 场景中点击高亮神经元。</div>
+        )}
+      </div>
+
+      <div style={{ ...cardStyle, fontSize: 12, color: '#9eb4dd', lineHeight: 1.7 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>图例</div>
+        <div><span style={{ color: ROLE_COLORS.micro }}>●</span> 微观神经元</div>
+        <div><span style={{ color: ROLE_COLORS.macro }}>●</span> 中观神经元</div>
+        <div><span style={{ color: ROLE_COLORS.route }}>●</span> 共享路径神经元</div>
+        <div><span style={{ color: ROLE_COLORS.fruitGeneral }}>●</span> 类别通用神经元</div>
+        <div><span style={{ color: ROLE_COLORS.style }}>●</span> 风格维度神经元</div>
+        <div><span style={{ color: ROLE_COLORS.logic }}>●</span> 逻辑维度神经元</div>
+        <div><span style={{ color: ROLE_COLORS.syntax }}>●</span> 句法维度神经元</div>
+        <div><span style={{ color: '#84f1ff' }}>●</span> 输入概念神经元</div>
+        <div><span style={{ color: ROLE_COLORS.background }}>●</span> 背景网络采样</div>
+        <div style={{ color: '#6f84ad', marginTop: 8 }}>{`核心集合: ${(summary.micro || 0) + (summary.macro || 0) + (summary.route || 0)} | 多维集合: ${summary.multidimNodes || 0}`}</div>
+      </div>
+    </div>
+  );
+}
+
+export function AppleNeuronCategoryComparePanel({ workspace, compact = false }) {
+  const summary = workspace?.summary || {};
+  const querySets = workspace?.querySets || [];
+  const categoryStats = summary?.categoryStats || {};
+  const categoryRows = Object.entries(categoryStats)
+    .map(([name, stat]) => ({ name, ...stat }))
+    .sort((a, b) => b.neurons - a.neurons);
+  const cardStyle = compact ? { ...panelCardStyle, padding: 10 } : panelCardStyle;
+
+  return (
+    <div style={cardStyle}>
+      <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>类别神经元比较</div>
+      <div style={{ fontSize: 12, color: '#92a6cc', lineHeight: 1.6 }}>
+        {`总神经元 ${summary.total || 0} | 查询神经元 ${summary.query || 0} | 类别数 ${categoryRows.length}`}
+      </div>
+      <div style={{ fontSize: 11, color: '#7ea2c9', marginTop: 4 }}>
+        {`当前词元: ${summary.currentToken || '-'} (${((summary.currentTokenProb || 0) * 100).toFixed(1)}%) | 多维节点: ${summary.multidimNodes || 0}`}
+      </div>
+      <div style={{ marginTop: 8, display: 'grid', gap: 6 }}>
+        {categoryRows.length === 0 ? (
+          <div style={{ fontSize: 11, color: '#6f84ad' }}>暂无类别数据，请在左侧输入概念和类别后生成。</div>
+        ) : (
+          categoryRows.map((row) => (
+            <div key={`cat-${row.name}`} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: '#9eb4dd' }}>
+              <span>{row.name}</span>
+              <span>{`${row.concepts} 概念 / ${row.neurons} 神经元`}</span>
+            </div>
+          ))
+        )}
+      </div>
+      <div style={{ marginTop: 8, fontSize: 11, color: '#6f84ad' }}>{`已生成概念集: ${querySets.length}`}</div>
+    </div>
+  );
+}
+
+export function AppleNeuronCompareFilterPanel({ workspace, compact = false }) {
+  const querySets = workspace?.querySets || [];
+  const queryVisibility = workspace?.queryVisibility || {};
+  const setQuerySetVisible = workspace?.setQuerySetVisible;
+  const setAllQuerySetVisible = workspace?.setAllQuerySetVisible;
+  const summary = workspace?.summary || {};
+  const visibleCount = querySets.filter((set) => queryVisibility[set.id] !== false).length;
+  const cardStyle = compact ? { ...panelCardStyle, padding: 10 } : panelCardStyle;
+
+  return (
+    <div style={cardStyle}>
+      <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>Compare Filter</div>
+      <div style={{ fontSize: 12, color: '#92a6cc', lineHeight: 1.6 }}>
+        {`按输入名称筛选：已显示 ${visibleCount}/${querySets.length}`}
+      </div>
+      <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
+        <button type="button" onClick={() => setAllQuerySetVisible?.(true)} style={smallActionButtonStyle}>全选</button>
+        <button type="button" onClick={() => setAllQuerySetVisible?.(false)} style={smallActionButtonStyle}>全不选</button>
+      </div>
+      <div style={{ marginTop: 10, display: 'grid', gap: 8, maxHeight: compact ? 180 : 220, overflowY: 'auto' }}>
+        {querySets.length === 0 ? (
+          <div style={{ fontSize: 11, color: '#6f84ad' }}>暂无输入名称。请先在左侧生成概念神经元。</div>
+        ) : (
+          querySets.map((set) => (
+            <label key={`qf-${set.id}`} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#9eb4dd' }}>
+              <input
+                type="checkbox"
+                checked={queryVisibility[set.id] !== false}
+                onChange={(e) => setQuerySetVisible?.(set.id, e.target.checked)}
+              />
+              <span style={{ color: set.color }}>●</span>
+              <span>{`${set.name} [${set.category}] (${set.nodes.length})`}</span>
+            </label>
+          ))
+        )}
+      </div>
+      <div style={{ marginTop: 8, fontSize: 11, color: '#6f84ad' }}>
+        {`当前词元: ${summary.currentToken || '-'} (${((summary.currentTokenProb || 0) * 100).toFixed(1)}%)`}
+      </div>
+    </div>
+  );
+}
+
 export function AppleNeuronControlPanels({ workspace }) {
   const {
     analysisMode,
@@ -1349,14 +2083,27 @@ export function AppleNeuronControlPanels({ workspace }) {
     summary,
     queryInput,
     setQueryInput,
+    queryCategoryInput,
+    setQueryCategoryInput,
     handleGenerateQuery,
     querySets,
+    queryFeedback,
+    scanImportLimit,
+    setScanImportLimit,
+    scanImportTopK,
+    setScanImportTopK,
+    scanImportSummary,
+    multidimProbeData,
+    multidimCausalData,
+    multidimTopN,
+    setMultidimTopN,
+    multidimVisible,
+    setMultidimVisible,
+    multidimActiveDimension,
+    setMultidimActiveDimension,
+    multidimLayerProfile,
+    handleImportScanJsonText,
     removeQuerySet,
-    showFruitGeneral,
-    setShowFruitGeneral,
-    showFruit,
-    setShowFruit,
-    selected,
     predictPrompt,
     setPredictPrompt,
     predictChain,
@@ -1389,37 +2136,208 @@ export function AppleNeuronControlPanels({ workspace }) {
     setMinimalSubsetSize,
     modeMetrics,
   } = workspace;
+  const [scanFileOptions, setScanFileOptions] = useState([]);
+  const [selectedScanPath, setSelectedScanPath] = useState('');
+  const [scanFileLoading, setScanFileLoading] = useState(false);
+  const [scanFileImporting, setScanFileImporting] = useState(false);
+  const [scanFileError, setScanFileError] = useState('');
+  const [scanFileFilter, setScanFileFilter] = useState('multidim');
+  const modeMetaById = Object.fromEntries(analysisModes.map((mode) => [mode.id, mode]));
+  const scanFileFilterLabelMap = {
+    multidim: '多维编码',
+    mass_noun: '名词扫描',
+    all: '全部',
+  };
+
+  const filteredScanFileOptions = useMemo(() => {
+    const rows = Array.isArray(scanFileOptions) ? scanFileOptions : [];
+    if (scanFileFilter === 'all') {
+      return rows;
+    }
+    if (scanFileFilter === 'multidim') {
+      return rows.filter((f) => {
+        const p = String(f?.path || '').toLowerCase();
+        return p.includes('multidim_encoding_probe')
+          || p.includes('multidim_causal_ablation')
+          || p.includes('multidim_multiseed_stability');
+      });
+    }
+    if (scanFileFilter === 'mass_noun') {
+      return rows.filter((f) => {
+        const p = String(f?.path || '').toLowerCase();
+        return p.includes('mass_noun') || p.includes('noun_scan') || p.includes('encoding_scan');
+      });
+    }
+    return rows;
+  }, [scanFileFilter, scanFileOptions]);
+
+  const refreshScanFileOptions = async () => {
+    setScanFileLoading(true);
+    setScanFileError('');
+    try {
+      const res = await fetch(`${MAIN_API_BASE}/api/main/scan_files?limit=200`);
+      const payload = await res.json();
+      if (!res.ok) {
+        throw new Error(payload?.detail || '读取扫描文件列表失败');
+      }
+      const files = Array.isArray(payload?.files) ? payload.files : [];
+      setScanFileOptions(files);
+      setSelectedScanPath((prev) => {
+        if (prev && files.some((f) => f.path === prev)) {
+          return prev;
+        }
+        return files[0]?.path || '';
+      });
+      if (files.length === 0) {
+        setScanFileError('未发现可导入文件：请先生成 `mass_noun_encoding_scan.json`（或包含 noun_records/signature_top_indices 的扫描 JSON）。');
+      }
+    } catch (err) {
+      setScanFileOptions([]);
+      setSelectedScanPath('');
+      setScanFileError(`扫描文件列表加载失败: ${err?.message || err}`);
+    } finally {
+      setScanFileLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshScanFileOptions();
+  }, []);
+
+  useEffect(() => {
+    setSelectedScanPath((prev) => {
+      if (prev && filteredScanFileOptions.some((f) => f.path === prev)) {
+        return prev;
+      }
+      return filteredScanFileOptions[0]?.path || '';
+    });
+  }, [filteredScanFileOptions]);
+
+  const handleImportSelectedScanFile = async () => {
+    if (!selectedScanPath) {
+      setScanFileError('请先在下拉框选择一个扫描 JSON 文件。');
+      return;
+    }
+    setScanFileImporting(true);
+    setScanFileError('');
+    try {
+      const res = await fetch(`${MAIN_API_BASE}/api/main/scan_file?path=${encodeURIComponent(selectedScanPath)}`);
+      const payload = await res.json();
+      if (!res.ok) {
+        throw new Error(payload?.detail || '读取扫描文件失败');
+      }
+      if (!payload?.data) {
+        throw new Error('返回数据为空');
+      }
+      const data = payload.data;
+      const sourcePath = payload.path || selectedScanPath;
+
+      // 若导入的是多seed稳定性汇总，则自动加载其中一个 probe + ablation，避免“导入后看不到变化”。
+      const looksLikeStability = Boolean(data?.runs && data?.aggregate && data?.aggregate?.specificity_margin_style);
+      if (looksLikeStability) {
+        const runs = Array.isArray(data?.runs) ? data.runs : [];
+        const preferredRun = runs.find((r) => r?.seed === 505) || runs[runs.length - 1] || runs[0];
+        const probePath = preferredRun?.probe_json;
+        const ablationPath = preferredRun?.ablation_json;
+
+        handleImportScanJsonText(JSON.stringify(data), sourcePath);
+
+        if (probePath) {
+          try {
+            const probeRes = await fetch(`${MAIN_API_BASE}/api/main/scan_file?path=${encodeURIComponent(probePath)}`);
+            const probePayload = await probeRes.json();
+            if (probeRes.ok && probePayload?.data) {
+              handleImportScanJsonText(JSON.stringify(probePayload.data), probePayload.path || probePath);
+            }
+          } catch (_e) {
+            // ignore, keep stability summary import result
+          }
+        }
+        if (ablationPath) {
+          try {
+            const abRes = await fetch(`${MAIN_API_BASE}/api/main/scan_file?path=${encodeURIComponent(ablationPath)}`);
+            const abPayload = await abRes.json();
+            if (abRes.ok && abPayload?.data) {
+              handleImportScanJsonText(JSON.stringify(abPayload.data), abPayload.path || ablationPath);
+            }
+          } catch (_e) {
+            // ignore, keep existing imported states
+          }
+        }
+      } else {
+        handleImportScanJsonText(JSON.stringify(data), sourcePath);
+      }
+    } catch (err) {
+      setScanFileError(`导入失败: ${err?.message || err}`);
+    } finally {
+      setScanFileImporting(false);
+    }
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       <div style={panelCardStyle}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>分析类型</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-          {analysisModes.map((mode) => {
-            const active = analysisMode === mode.id;
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>分析类型（四阶段）</div>
+        <div style={{ padding: 12, border: '1px solid rgba(255,255,255,0.05)', borderRadius: 8 }}>
+          {ANALYSIS_MODE_STAGE_GROUPS.map((group) => {
+            const GroupIcon = group.icon || Activity;
+            const stageModes = group.items
+              .map((id) => modeMetaById[id])
+              .filter(Boolean);
+            if (stageModes.length === 0) {
+              return null;
+            }
             return (
-              <button
-                key={mode.id}
-                type="button"
-                onClick={() => setAnalysisMode(mode.id)}
-                style={{
-                  borderRadius: 8,
-                  border: `1px solid ${active ? 'rgba(126, 224, 255, 0.72)' : 'rgba(122, 162, 255, 0.35)'}`,
-                  background: active ? 'rgba(24, 101, 134, 0.42)' : 'rgba(11, 18, 35, 0.86)',
-                  color: active ? '#dff6ff' : '#bcd1f5',
-                  fontSize: 12,
-                  padding: '8px 10px',
-                  cursor: 'pointer',
-                }}
-                title={mode.desc}
-              >
-                {mode.label}
-              </button>
+              <div key={group.id} style={{ marginBottom: 8 }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  marginBottom: 6,
+                  padding: '4px 8px',
+                  background: 'rgba(255,255,255,0.03)',
+                  borderRadius: 4,
+                }}>
+                  <GroupIcon size={14} color="#888" />
+                  <span style={{ fontSize: 11, fontWeight: 600, color: '#888' }}>{group.label}</span>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 4 }}>
+                  {stageModes.map((mode) => {
+                    const active = analysisMode === mode.id;
+                    const ModeIcon = ANALYSIS_MODE_ICONS[mode.id] || Activity;
+                    return (
+                      <button
+                        key={mode.id}
+                        type="button"
+                        onClick={() => setAnalysisMode(mode.id)}
+                        title={mode.desc}
+                        style={{
+                          padding: '8px 4px',
+                          backgroundColor: active ? 'rgba(68, 136, 255, 0.2)' : 'transparent',
+                          color: active ? '#4488ff' : '#666',
+                          border: active ? '1px solid rgba(68, 136, 255, 0.4)' : '1px solid transparent',
+                          borderRadius: 6,
+                          cursor: 'pointer',
+                          fontSize: 11,
+                          fontWeight: 500,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          gap: 4,
+                        }}
+                      >
+                        <ModeIcon size={14} />
+                        <span>{mode.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             );
           })}
         </div>
         <div style={{ fontSize: 11, color: '#7f95bb', marginTop: 8, lineHeight: 1.6 }}>
-          {analysisModes.find((m) => m.id === analysisMode)?.desc || ''}
+          {modeMetaById[analysisMode]?.desc || ''}
         </div>
         {summary.statusText ? (
           <div style={{ fontSize: 11, color: '#9bb3de', marginTop: 6 }}>{summary.statusText}</div>
@@ -1442,7 +2360,7 @@ export function AppleNeuronControlPanels({ workspace }) {
             value={predictPrompt}
             onChange={(e) => setPredictPrompt(e.target.value)}
             rows={2}
-            placeholder="输入上下文，例如：苹果 是 一种"
+            placeholder="输入上下文，例如：概念 是 一种 结构"
             style={textAreaStyle}
           />
           <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
@@ -1550,40 +2468,254 @@ export function AppleNeuronControlPanels({ workspace }) {
       )}
 
       <div style={panelCardStyle}>
-        <div style={{ fontSize: 15, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>Apple + Fruit Neuron Compare</div>
-        <div style={{ fontSize: 12, color: '#92a6cc', lineHeight: 1.6 }}>
-          {`Layers: L0-L27 (all visible) | Total ${summary.total} | Fruit-General ${summary.fruitGeneral} | Fruit-Specific ${summary.fruitSpecific} | Query ${summary.query}`}
-        </div>
-        <div style={{ fontSize: 11, color: '#7ea2c9', marginTop: 4 }}>
-          {`Current token: ${summary.currentToken} (${(summary.currentTokenProb * 100).toFixed(1)}%)`}
-        </div>
-      </div>
-
-      <div style={panelCardStyle}>
         <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>Quick Concept Generator</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 8 }}>
-          <input
-            value={queryInput}
-            onChange={(e) => setQueryInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleGenerateQuery();
-              }
-            }}
-            placeholder="输入名称，例如：猫 / 太阳 / 量子"
-            style={inputStyle}
-          />
-          <button type="button" onClick={handleGenerateQuery} style={smallActionButtonStyle}>
-            Generate
-          </button>
+        <div style={{ display: 'grid', gap: 8 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
+            <div style={{ fontSize: 12, color: '#9eb4dd' }}>名称</div>
+            <input
+              value={queryInput}
+              onChange={(e) => setQueryInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleGenerateQuery();
+                }
+              }}
+              placeholder="输入名称，例如：猫 / 太阳 / 量子"
+              style={inputStyle}
+            />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
+            <div style={{ fontSize: 12, color: '#9eb4dd' }}>类别</div>
+            <input
+              value={queryCategoryInput}
+              onChange={(e) => setQueryCategoryInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleGenerateQuery();
+                }
+              }}
+              placeholder="输入类别，例如：动物 / 天体 / 抽象概念"
+              style={inputStyle}
+            />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <button type="button" onClick={handleGenerateQuery} style={smallActionButtonStyle}>
+              Generate
+            </button>
+          </div>
         </div>
+        <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid rgba(122, 162, 255, 0.2)', display: 'grid', gap: 8 }}>
+          <div style={{ fontSize: 12, color: '#9eb4dd' }}>批量导入扫描结果</div>
+          <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
+            <div style={{ fontSize: 12, color: '#9eb4dd' }}>导入数</div>
+            <input
+              type="number"
+              min={1}
+              max={120}
+              value={scanImportLimit}
+              onChange={(e) => setScanImportLimit(Number(e.target.value))}
+              style={inputStyle}
+            />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
+            <div style={{ fontSize: 12, color: '#9eb4dd' }}>每概念</div>
+            <input
+              type="number"
+              min={4}
+              max={64}
+              value={scanImportTopK}
+              onChange={(e) => setScanImportTopK(Number(e.target.value))}
+              style={inputStyle}
+            />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: `56px ${fixedFileControlWidth}px`, gap: 8, alignItems: 'center' }}>
+            <div style={{ fontSize: 12, color: '#9eb4dd' }}>文件</div>
+            <select
+              value={selectedScanPath}
+              onChange={(e) => setSelectedScanPath(e.target.value)}
+              style={{
+                ...inputStyle,
+                width: fixedFileControlWidth,
+                minWidth: fixedFileControlWidth,
+                maxWidth: fixedFileControlWidth,
+                boxSizing: 'border-box',
+                display: 'block',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+              }}
+              disabled={scanFileLoading || filteredScanFileOptions.length === 0}
+            >
+              {filteredScanFileOptions.length === 0 ? (
+                <option value="">{scanFileLoading ? '扫描中...' : '未发现可导入文件'}</option>
+              ) : (
+                filteredScanFileOptions.map((f) => (
+                  <option key={f.path} value={f.path}>
+                    {formatScanOptionLabel(f)}
+                  </option>
+                ))
+              )}
+            </select>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: `56px ${fixedFileControlWidth}px`, gap: 8, alignItems: 'center' }}>
+            <div style={{ fontSize: 12, color: '#9eb4dd' }}>筛选</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+              {[
+                { id: 'multidim', label: '多维编码' },
+                { id: 'mass_noun', label: '名词扫描' },
+                { id: 'all', label: '全部' },
+              ].map((opt) => (
+                <button
+                  key={`scan-filter-${opt.id}`}
+                  type="button"
+                  onClick={() => setScanFileFilter(opt.id)}
+                  style={{
+                    borderRadius: 8,
+                    border: `1px solid ${scanFileFilter === opt.id ? 'rgba(126, 224, 255, 0.75)' : 'rgba(122, 162, 255, 0.35)'}`,
+                    background: scanFileFilter === opt.id ? 'rgba(24, 101, 134, 0.38)' : 'rgba(7, 12, 25, 0.82)',
+                    color: '#dbe9ff',
+                    fontSize: 11,
+                    padding: '6px 8px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{ fontSize: 11, color: '#7ea2c9' }}>
+            {`候选文件: ${filteredScanFileOptions.length}/${scanFileOptions.length}（当前筛选: ${scanFileFilterLabelMap[scanFileFilter] || scanFileFilter}）`}
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              width: fixedFileControlWidth + 56 + 8,
+              maxWidth: fixedFileControlWidth + 56 + 8,
+              minWidth: fixedFileControlWidth + 56 + 8,
+              gap: 8,
+              flexWrap: 'wrap',
+            }}
+          >
+            <button
+              type="button"
+              onClick={refreshScanFileOptions}
+              style={{ ...smallActionButtonStyle, flex: '1 1 120px', minWidth: 120 }}
+              disabled={scanFileLoading}
+            >
+              {scanFileLoading ? '刷新中...' : '刷新列表'}
+            </button>
+            <button
+              type="button"
+              onClick={handleImportSelectedScanFile}
+              style={{ ...smallActionButtonStyle, flex: '1 1 120px', minWidth: 120 }}
+              disabled={scanFileImporting || !selectedScanPath}
+            >
+              {scanFileImporting ? '导入中...' : '导入选中文件'}
+            </button>
+          </div>
+          {selectedScanPath ? (
+            <div
+              style={{
+                width: fixedFileControlWidth + 56 + 8,
+                maxWidth: fixedFileControlWidth + 56 + 8,
+                minWidth: fixedFileControlWidth + 56 + 8,
+                fontSize: 11,
+                color: '#7ea2c9',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+              title={selectedScanPath}
+            >
+              {(() => {
+                const meta = scanFileOptions.find((f) => f.path === selectedScanPath);
+                if (!meta) {
+                  const fallbackName = String(selectedScanPath).replace(/\\/g, '/').split('/').pop();
+                  return `已选: ${fallbackName || 'scan.json'}`;
+                }
+                const kb = (Number(meta.size_bytes || 0) / 1024).toFixed(1);
+                return `已选: ${meta.name} | ${kb} KB | ${meta.mtime_iso || ''}`;
+              })()}
+            </div>
+          ) : null}
+          {scanFileError ? (
+            <div style={{ fontSize: 11, color: '#ff9fb0' }}>{scanFileError}</div>
+          ) : null}
+          {scanImportSummary ? (
+            <div style={{ fontSize: 11, color: '#7eb8ff', lineHeight: 1.6 }}>
+              {`来源: ${scanImportSummary.source} | 导入概念集: ${scanImportSummary.importedConcepts} | 类别: ${scanImportSummary.importedCategories} | 扫描名词总数: ${scanImportSummary.totalNouns} | 最小回路名词: ${scanImportSummary.minimalCircuitNouns || 0} | 反事实对: ${scanImportSummary.counterfactualPairs || 0}`}
+            </div>
+          ) : null}
+
+          <div style={{ marginTop: 6, paddingTop: 8, borderTop: '1px solid rgba(122, 162, 255, 0.2)', display: 'grid', gap: 8 }}>
+            <div style={{ fontSize: 12, color: '#9eb4dd' }}>三维编码（Style / Logic / Syntax）</div>
+            <div style={{ fontSize: 11, color: '#7ea2c9' }}>
+              {multidimProbeData
+                ? `已导入探针，当前显示维度: ${DIMENSION_LABELS[multidimActiveDimension] || multidimActiveDimension}，层谱点数: ${multidimLayerProfile?.length || 0}`
+                : '未导入三维探针 JSON（multidim_encoding_probe.json）'}
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
+              <div style={{ fontSize: 12, color: '#9eb4dd' }}>TopN</div>
+              <input
+                type="number"
+                min={16}
+                max={256}
+                value={multidimTopN}
+                onChange={(e) => setMultidimTopN(Number(e.target.value))}
+                style={inputStyle}
+              />
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+              {['style', 'logic', 'syntax'].map((dim) => (
+                <button
+                  key={`dim-active-${dim}`}
+                  type="button"
+                  onClick={() => setMultidimActiveDimension(dim)}
+                  style={{
+                    borderRadius: 8,
+                    border: `1px solid ${multidimActiveDimension === dim ? ROLE_COLORS[dim] : 'rgba(122,162,255,0.35)'}`,
+                    background: multidimActiveDimension === dim ? 'rgba(42,71,132,0.82)' : 'rgba(7, 12, 25, 0.82)',
+                    color: '#dbe9ff',
+                    fontSize: 11,
+                    padding: '6px 8px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {DIMENSION_LABELS[dim]}
+                </button>
+              ))}
+            </div>
+            <div style={{ display: 'grid', gap: 6 }}>
+              {['style', 'logic', 'syntax'].map((dim) => (
+                <label key={`dim-vis-${dim}`} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#9eb4dd' }}>
+                  <input
+                    type="checkbox"
+                    checked={multidimVisible[dim] !== false}
+                    onChange={(e) => setMultidimVisible((prev) => ({ ...prev, [dim]: e.target.checked }))}
+                  />
+                  <span style={{ color: ROLE_COLORS[dim] }}>●</span>
+                  <span>{`${DIMENSION_LABELS[dim]}神经元`}</span>
+                </label>
+              ))}
+            </div>
+            <div style={{ fontSize: 11, color: '#7ea2c9', lineHeight: 1.6 }}>
+              {multidimCausalData
+                ? `对角优势 style=${toSafeNumber(multidimCausalData?.diagonal_advantage?.style, 0).toFixed(4)} / logic=${toSafeNumber(multidimCausalData?.diagonal_advantage?.logic, 0).toFixed(4)} / syntax=${toSafeNumber(multidimCausalData?.diagonal_advantage?.syntax, 0).toFixed(4)}`
+                : '未导入三维因果消融 JSON（multidim_causal_ablation.json）'}
+            </div>
+          </div>
+        </div>
+        {queryFeedback ? (
+          <div style={{ marginTop: 8, fontSize: 11, color: '#8fd4ff' }}>{queryFeedback}</div>
+        ) : null}
         <div style={{ marginTop: 10, display: 'grid', gap: 6 }}>
           {querySets.length === 0 ? (
             <div style={{ fontSize: 11, color: '#6f84ad' }}>尚未生成概念神经元。</div>
           ) : (
             querySets.map((set) => (
               <div key={set.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12, color: '#9eb4dd' }}>
-                <span><span style={{ color: set.color }}>●</span>{` ${set.name} (${set.nodes.length})`}</span>
+                <span><span style={{ color: set.color }}>●</span>{` ${set.name} [${set.category}] (${set.nodes.length})`}</span>
                 <button type="button" onClick={() => removeQuerySet(set.id)} style={{ ...smallActionButtonStyle, padding: '2px 8px', fontSize: 11 }}>Remove</button>
               </div>
             ))
@@ -1591,53 +2723,6 @@ export function AppleNeuronControlPanels({ workspace }) {
         </div>
       </div>
 
-      <div style={panelCardStyle}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>Compare Filter</div>
-        <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#9eb4dd', marginBottom: 10 }}>
-          <input type="checkbox" checked={showFruitGeneral} onChange={(e) => setShowFruitGeneral(e.target.checked)} />
-          Show fruit-general neurons ({summary.fruitGeneral})
-        </label>
-        {Object.keys(FRUIT_COLORS).map((fruit) => (
-          <label key={fruit} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#9eb4dd', marginBottom: 8 }}>
-            <input type="checkbox" checked={showFruit[fruit]} onChange={(e) => setShowFruit((prev) => ({ ...prev, [fruit]: e.target.checked }))} />
-            <span style={{ color: FRUIT_COLORS[fruit] }}>●</span>
-            {`${fruit} specific (${summary.perFruit[fruit] || 0})`}
-          </label>
-        ))}
-      </div>
-
-      <div style={{ ...panelCardStyle, minHeight: 160 }}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>Selected Neuron</div>
-        {selected ? (
-          <div style={{ fontSize: 12, color: '#9eb4dd', display: 'grid', gap: 6 }}>
-            <div style={{ color: '#e5eeff', fontWeight: 700 }}>{selected.label}</div>
-            <div>{`Role: ${selected.role}`}</div>
-            {'fruit' in selected ? <div>{`Fruit: ${selected.fruit}`}</div> : null}
-            {'concept' in selected ? <div>{`Concept: ${selected.concept}`}</div> : null}
-            <div>{`Layer / Neuron: L${selected.layer} / N${selected.neuron}`}</div>
-            <div>{`Strength: ${selected.strength.toExponential(3)}`}</div>
-            <div>{`${selected.metric}: ${selected.value.toExponential(3)}`}</div>
-            <div style={{ color: '#6f84ad' }}>{`Source: ${selected.source}`}</div>
-          </div>
-        ) : (
-          <div style={{ fontSize: 12, color: '#7d93bd' }}>Click a highlighted neuron in the 3D scene.</div>
-        )}
-      </div>
-
-      <div style={{ ...panelCardStyle, fontSize: 12, color: '#9eb4dd', lineHeight: 1.7 }}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>Legend</div>
-        <div><span style={{ color: ROLE_COLORS.micro }}>●</span> Apple micro</div>
-        <div><span style={{ color: ROLE_COLORS.macro }}>●</span> Apple macro</div>
-        <div><span style={{ color: ROLE_COLORS.route }}>●</span> Route shared</div>
-        <div><span style={{ color: ROLE_COLORS.fruitGeneral }}>●</span> Fruit-general</div>
-        <div><span style={{ color: FRUIT_COLORS.apple }}>●</span> Apple specific</div>
-        <div><span style={{ color: FRUIT_COLORS.banana }}>●</span> Banana specific</div>
-        <div><span style={{ color: FRUIT_COLORS.orange }}>●</span> Orange specific</div>
-        <div><span style={{ color: FRUIT_COLORS.grape }}>●</span> Grape specific</div>
-        <div><span style={{ color: '#84f1ff' }}>●</span> Query concept neurons</div>
-        <div><span style={{ color: ROLE_COLORS.background }}>●</span> Background network sample</div>
-        <div style={{ color: '#6f84ad', marginTop: 8 }}>{`Apple core: ${summary.micro + summary.macro + summary.route}`}</div>
-      </div>
     </div>
   );
 }

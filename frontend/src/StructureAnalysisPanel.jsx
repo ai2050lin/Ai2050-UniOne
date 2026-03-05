@@ -12,7 +12,6 @@ import * as THREE from 'three';
 import BrainVis3D from './BrainVis3D';
 import HolonomyLoopVisualizer from './HolonomyLoopVisualizer';
 import TrainingDynamics3D from './TrainingDynamics3D';
-import AppleNeuronVis3D from './components/AppleNeuronVis3D';
 import GammaSynchronyGraph from './blueprint/GammaSynchronyGraph';
 import HippocampalReplayGraph from './blueprint/HippocampalReplayGraph';
 import PredictiveCodingGraph from './blueprint/PredictiveCodingGraph';
@@ -1890,8 +1889,7 @@ export function StructureAnalysisControls({
                     }}>
                         {[
                             { id: 'snn', icon: Brain, label: 'SNN 仿真' },
-                            { id: 'validity', icon: Activity, label: '有效性 (Valid)' },
-                            { id: 'apple', icon: Brain, label: '提取苹果概念' }
+                            { id: 'validity', icon: Activity, label: '有效性 (Valid)' }
                         ].map(tab => (
                             <button
                                 key={tab.id}
@@ -2388,20 +2386,6 @@ export function StructureAnalysisControls({
                         </div>
                     )}
 
-                    {activeTab === 'apple' && (
-                        <div className="animate-fade-in">
-                            <ControlGroup label="概念提取 (Concept Extraction)">
-                                <div style={{ color: '#aaa', fontSize: '13px', lineHeight: '1.5', padding: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '12px' }}>
-                                    <p style={{ marginTop: 0 }}><strong>苹果概念神经元3D图谱</strong></p>
-                                    <p>展示从底层特征(红色/圆形)到高层语义(水果/甜味)最终收敛为"APPLE"概念的稀疏激活路径。</p>
-                                </div>
-                            </ControlGroup>
-                            <ActionButton onClick={() => { }} loading={loading} icon={Brain}>
-                                模拟后端特征提取
-                            </ActionButton>
-                        </div>
-                    )}
-
                     {activeTab === 'validity' && (
                         <div className="animate-fade-in">
                             <ControlGroup label={t('validity.prompt', 'Analysis Text')}>
@@ -2594,12 +2578,6 @@ export default function StructureAnalysisPanel({
 
                             <ValidityVisualization3D result={analysisResult} t={tSafe} />
                         </Canvas>
-                    )}
-
-                    {activeTab === 'apple' && (
-                        <div style={{ width: '100%', height: '100%', padding: '20px', boxSizing: 'border-box' }}>
-                            <AppleNeuronVis3D />
-                        </div>
                     )}
 
                     {/* DNN Views */}
