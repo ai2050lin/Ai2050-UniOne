@@ -5,7 +5,7 @@ import {
     Activity, ArrowRightLeft, BarChart, BarChart2, Brain, CheckCircle,
     Eye, FlaskConical, GitBranch, Globe, Globe2, Grid3x3, Hexagon,
     Layers, Network, RefreshCw, RotateCcw, Scale, Settings, Share2,
-    Sparkles, Target, TrendingUp, Zap
+    Sparkles, Target, TrendingUp, Zap, Waves, Moon
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
@@ -13,6 +13,9 @@ import BrainVis3D from './BrainVis3D';
 import HolonomyLoopVisualizer from './HolonomyLoopVisualizer';
 import TrainingDynamics3D from './TrainingDynamics3D';
 import AppleNeuronVis3D from './components/AppleNeuronVis3D';
+import GammaSynchronyGraph from './blueprint/GammaSynchronyGraph';
+import HippocampalReplayGraph from './blueprint/HippocampalReplayGraph';
+import PredictiveCodingGraph from './blueprint/PredictiveCodingGraph';
 import { STRUCTURE_TABS_V2, COLORS } from './config/panels';
 import { pollRuntimeWithFallback } from './utils/runtimeClient';
 
@@ -21,7 +24,7 @@ const ICON_MAP = {
     Eye, BarChart2, Grid3x3, GitBranch,
     Zap, Share2, Sparkles, Target, Globe2, Layers,
     Hexagon, Network, ArrowRightLeft, TrendingUp, BarChart, Globe, RefreshCw,
-    FlaskConical, Brain, Scale, CheckCircle, Activity
+    FlaskConical, Brain, Scale, CheckCircle, Activity, Waves, Moon
 };
 
 
@@ -2645,6 +2648,25 @@ export default function StructureAnalysisPanel({
                                     layer={holonomyForm?.layer_idx || 0}
                                     deviation={[0, 6, 11].includes(holonomyForm?.layer_idx) ? 0.0 : 0.000001 * Math.random()}
                                 />
+                            )}
+
+                            {/* AGI 终极拼图大屏 */}
+                            {activeTab === 'gamma_sync' && (
+                                <div style={{ width: '100%', height: '100%', padding: '20px', overflowY: 'auto', boxSizing: 'border-box' }}>
+                                    <GammaSynchronyGraph />
+                                </div>
+                            )}
+
+                            {activeTab === 'hippo_replay' && (
+                                <div style={{ width: '100%', height: '100%', padding: '20px', overflowY: 'auto', boxSizing: 'border-box' }}>
+                                    <HippocampalReplayGraph />
+                                </div>
+                            )}
+
+                            {activeTab === 'predictive_coding' && (
+                                <div style={{ width: '100%', height: '100%', padding: '20px', overflowY: 'auto', boxSizing: 'border-box' }}>
+                                    <PredictiveCodingGraph />
+                                </div>
                             )}
                         </>
                     )}

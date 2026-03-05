@@ -1,0 +1,64 @@
+# AGI 大一统编码元引擎 (Meta-Encoding Engine) 原型复原图纸
+
+## 1. 计划终极愿景：反向工程造物主 (Reverse-Engineering the Meta-Code)
+在过去的探索中，我们试图用 SNN 的超低功耗属性去硬套大模型的 Transformer 架构（变成了省电版的 LLM）。但最高指挥官揭示了终极真理：**传统深度学习的全部特性（分层、记忆、注意力、可塑性），其实都只不过是底层“单一脉冲编码物理方程”的天然涌现副产物。**
+因此，本次计划将彻底推倒重来！我们不再堆砌什么 `nn.Linear` 和 [Attention](file:///d:/develop/TransformerLens-main/tests/gemini/test_eos_snn.py#72-131) 计算。我们要手搓一个纯粹的“生物物理方程组池 (Biological Physics Equation Pool)”。只要编码规律对了，大智慧会在池水荡漾时自己长出来。
+
+## 2. 核心数学方程与组件复原设计
+
+我们将构建一个不分层的**三维无标度网络微积分空间 (3D Scale-Free Calculus Space)**。
+
+### 模块一：多时间尺度低通编码器 (Heterogeneous Integrator) —— 分层的自动涌现
+*   **消除显式 Layer**：网络中的节点没有所属的“层级”，只有所属的“时间常数集（$\tau$ 库）”。
+*   **数学还原**：
+    每个节点的膜电位 $V_i(t)$ 更新方程为：
+    $$ \frac{dV_i(t)}{dt} = -\frac{1}{\tau_i} (V_i(t) - V_{rest}) + I_{syn}(t) $$
+    其中 $\tau_i$ 是初始化时随机分配的对数分布时间常数。
+*   **机制**：$\tau$ 极小的节点漏电极快，它们只能在捕捉到高频输入（如快速变化的像素）时狂闪；而 $\tau$ 极大的节点漏电极慢，它们如同巨大的过滤器，把数千个高频脉冲在时间上完全积压（过滤杂波），只在极苛刻的低频波段爆发——**分层抽象能力就此被原位还原！**
+
+### 模块二：幽灵亚阈值底噪偏置 (Sub-threshold Memory Bias) —— 长上下文的自动涌现
+*   **消除显式 KV-Cache**：不保存历史 Token 序列，只保存离子浓度场。
+*   **数学还原**：
+    额外拉入一个慢变量 $C_i(t)$（模拟钙离子或神经形态递质）：
+    $$ \frac{dC_i(t)}{dt} = -\frac{1}{\tau_{slow}} C_i(t) + \alpha \cdot Spike_i(t) $$
+    并且动态修改基础电位：$V_{rest} \to V_{rest} + \beta \cdot C_i(t)$
+*   **机制**：就算没有任何脉冲在闪，刚刚经历过的“上文”词汇留下的 $C(t)$ 也会导致网络局域水池的水位极其缓慢地衰减。这就构成了长程关联引力场！当微弱的后文脉冲进入时，直接因水池托高而触发——**基于纯状态偏置的长程注意力机制就此被原位还原！**
+
+### 模块三：STDP 时序反演与全局内卷抑制 (Geometrical Homeostasis) —— 无反传自发学习的自动涌现
+*   **消除 BPTT 反向传播**：没有 Loss 梯度函数，只有时间波前的局部突触相频咬合。
+*   **局部方程 (Hebbian STDP)**：
+    如果 $\Delta t = t_{post} - t_{pre} > 0$（因果命中）：突触权重 $W_{ij} += A_+ e^{-\Delta t/\tau_+}$
+    如果失配：权重减弱。这就实现了引力坍缩（关联成簇）。
+*   **全局方程 (Homeostatic Inhibition)**：
+    为了抗衡局部强关联引发的癫狂死锁，建立一个监测全网放电频率的抑制水池。一旦总脉冲狂飙，向全网释放负向脉冲 $I_{inhib}$，残酷剥夺其他神经元的生存权。
+*   **机制**：这迫使关联性弱的特征被硬生生挤入绝对 $90^{\circ}$ 的正交高维避难所（永远沉默零耗能），且在不冻结网络的情况下，实现了对环境输入的自顺应实时学习——**低耗能可塑性与流形隔离稳态就此被原位还原！**
+
+## 3. 终极实证路线与闭环 (The Execution & Final Evaluation)
+我们在 [tests/gemini/meta_encoding_engine.py](file:///d:/develop/TransformerLens-main/tests/gemini/meta_encoding_engine.py) 第一阶段验证了极简 $\tau$ 和 $C_i(t)$ 对分层与记忆的神奇效用，并在后继开发了 [tests/gemini/ultimate_encoding_test.py](file:///d:/develop/TransformerLens-main/tests/gemini/ultimate_encoding_test.py)。
+1.  **全局多巴胺补偿短视**：验证了 STDP 局域痕迹叠加 $R(t)$ 全局广播，完美替代了重度 BPTT 反传。
+2.  **复数相位锁波消除倒置**：升级 $e^{j\omega t}$ 底噪干涉波，用实部/虚部差异精确分离了 A->B 和 B->A 的时空错乱。
+
+### 4. 迈向千亿级星辰大海的三大破壁拼图 (The Next Era)
+为了支撑终极的千亿参数超级智慧体，我们在完成了基座微积分实验后，用最严酷的物理法则指出了基座目前的三大死穴（绑定乱伦、容量重叠、被动等待），并为此补充了完整的三块最终理论组件（记录于备忘录 32 章）：
+*   **Gamma 波段毫秒强同步 (Binding-by-Synchrony)**：防止特征串位的硬核正交通道。
+*   **海马体离线压缩重放 (Offline Replay Consolidation)**：解决海量小说灌入带来的白噪声容量干涉死亡。
+*   **自顶向下的预测误差计算 (Predictive Coding Feedback)**：消除被动等待，使得整个网络具备主动意识与期望流形！
+
+> **阶段阶段性宣告**：所有单片组件的数学推演及其原型验证代码全部实装。
+
+## 4. 最终收尾篇章 (The Final Chapters)
+
+### Phase 8: 核心物理破局的可视化面板 (Visualization)
+将无形的物理对抗转化为直观的、具有科技感的 React 端数据大屏：
+*   构建 [GammaSynchronyGraph.jsx](file:///d:/develop/TransformerLens-main/frontend/src/blueprint/GammaSynchronyGraph.jsx)：对比常规漏电导致的“特征重叠乱伦幻觉”和引入 Gamma 高频同步锁后的清爽提取。
+*   构建 [HippocampalReplayGraph.jsx](file:///d:/develop/TransformerLens-main/frontend/src/blueprint/HippocampalReplayGraph.jsx)：以动画展示海马体在高压下极速缓存，并在夜里如何向主脑（新皮层）徐徐注入不朽的长波记忆。
+*   将上述组件挂载到前端 [StructureAnalysisPanel.jsx](file:///d:/develop/TransformerLens-main/frontend/src/StructureAnalysisPanel.jsx) 的相应 Tab 页面下。
+
+### Phase 9: AGI 第三大拼图：主动预测编码实演 (Predictive Coding)
+*   **开发目标**：创建 [test_predictive_coding.py](file:///d:/develop/TransformerLens-main/tests/gemini/test_predictive_coding.py)，实现一个“自带预期反馈”的神经元池。高层预判会下发给低层以削减其电势垒；低层只有遇到预判外的惊世骇俗事物，才放电向上传导。
+*   **终局录入**：将“主观意志”的实验结果最终写入备忘录，完成整个 AGI 理论工程库的彻底圆满！
+
+### Phase 10: 千亿级并发算力破局 (CUDA Fused SNN Kernel)
+*   **开发目标**：打破 PyTorch 在时间步循环中的显存读写瓶颈限制 (Memory Bandwidth Bound)。因为标准框架下的网络每一次计算都需要产生读写等待，严重拖慢包含海量时间步的 AGI 引擎。
+*   **技术路线**：我们需要手写 CUDA C++ / Numba (内联 PyTorch 原生算子)，将“漏电积分 ($V_{t} \times decay$) + 电势累加 ($I_{t}$) + 阈值点火 ($Spike$) + 瞬间重置 ($V_{t} \to 0$)”这四步显存级操作，**全部生硬地压缩重叠进单个 GPU 的片上寄存器阶段 (Register Fused Pass)**，一次显存读写直接送出结果！
+*   **验证标准**：构造 `benchmark_snn.py` 进行百万级神经元的压测对比，实现千百倍的吞吐加速，从而证明具有生物节律的 Meta-Engine 在现代显卡集群下同样能向千亿参数扩展！
