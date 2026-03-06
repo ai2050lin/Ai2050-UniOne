@@ -546,13 +546,48 @@ export const GeminiTab = () => {
                     </div>
                 </div>
 
-                {/* 5. 接下来的工作 */}
+                {/* 5. AGI 进展白话版深度解析 (新增科普面板) */}
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#60a5fa', marginBottom: '12px', borderBottom: '1px solid rgba(96,165,250,0.3)', paddingBottom: '8px' }}>五、深度解析：给普通人看的 AGI 研究现状大透视</div>
+                    <div style={{ padding: '20px', background: 'rgba(96,165,250,0.05)', borderRadius: '12px', borderLeft: '4px solid #60a5fa' }}>
+                        <h4 style={{ color: '#93c5fd', margin: '0 0 10px 0', fontSize: '14px' }}>🎯 我们的终点在哪？</h4>
+                        <p style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', margin: '0 0 16px 0' }}>
+                            我们追求的不是像现在的大语言模型那样“背概率统计题”，而是创造一个能像人类一样举一反三、瞬间顿悟并且功耗极低的智能核心（Mother Engine）。
+                            这就是为什么我们试图抛弃传统的黑盒（BP反向传播），去寻找大脑里那一套不需要外围监督的物理神经计算底座。
+                        </p>
+
+                        <h4 style={{ color: '#93c5fd', margin: '0 0 10px 0', fontSize: '14px' }}>🏆 咱们最值得骄傲的成就</h4>
+                        <ul style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', margin: '0 0 16px 0', paddingLeft: '20px' }}>
+                            <li><strong style={{ color: '#cbd5e1' }}>找出了 AI 的“记事本”和“CPU”：</strong> 我们证实了参数里占75%的是塞满记忆的地方。而那些处理“因果关系”的功能，其实仅占一小部分极低的数字维度，算力成本很低。我们明确了存算分离的前景。</li>
+                            <li><strong style={{ color: '#cbd5e1' }}>单方面发现了极致专注的方法：</strong> 类似你看到老虎害怕后留下深刻印记，我们利用情绪奖惩信号成功让网络的关键学习速度快了 <span style={{ color: '#fca5a5' }}>200倍</span>！只让重要的信号通过，挡掉近 <span style={{ color: '#fca5a5' }}>91万倍</span> 的背景白噪音。</li>
+                        </ul>
+
+                        <h4 style={{ color: '#fb923c', margin: '0 0 10px 0', fontSize: '14px' }}>⚠️ 极其痛苦的碰壁：最严重的两大硬伤</h4>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                            <div style={{ background: 'rgba(251,146,60,0.08)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(251,146,60,0.2)' }}>
+                                <div style={{ color: '#fb923c', fontSize: '13px', fontWeight: 'bold', marginBottom: '8px' }}>1. “瞎子摸象” 综合症（信用分配危机）</div>
+                                <div style={{ color: '#e5e7eb', fontSize: '12px', lineHeight: '1.6' }}>
+                                    没有了全局算法“上帝”的监督，底层的像素细胞自己互相竞争成长，虽然长得挺健康（高度稀疏），但它们没法把复杂世界的规律拼接在一起。在识字测试里正确率直接卡死在了 <strong style={{ color: '#ef4444' }}>21%</strong>，系统变成了只能看懂色块却认不出图形的文盲。
+                                </div>
+                            </div>
+                            <div style={{ background: 'rgba(251,146,60,0.08)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(251,146,60,0.2)' }}>
+                                <div style={{ color: '#fb923c', fontSize: '13px', fontWeight: 'bold', marginBottom: '8px' }}>2. 灾难性的“概念混合黏糊”（连体婴现象）</div>
+                                <div style={{ color: '#e5e7eb', fontSize: '12px', lineHeight: '1.6' }}>
+                                    为了不犯错，我们在系统里引入了“用预测去抵消误差”的好法子，结果能耗降低到了 <strong style={{ color: '#34d399' }}>38%</strong>。正当我们高兴时，却被最残酷的测试打脸了：系统为了不出错，完全失去了把复合事物（比如带颜色的苹果）拆分开来的能力！解绑成功率为 <strong style={{ color: '#ef4444' }}>0.00%</strong>。它失去了抽象思考的底线。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 6. 接下来的工作 */}
                 <div>
-                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981', marginBottom: '12px', borderBottom: '1px solid rgba(16,185,129,0.3)', paddingBottom: '8px' }}>五、接下来的核心工作 (Next Steps)</div>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981', marginBottom: '12px', borderBottom: '1px solid rgba(16,185,129,0.3)', paddingBottom: '8px' }}>六、接下来的核心工作 (Next Steps)</div>
                     <div style={{ padding: '16px', borderRadius: '12px', background: 'linear-gradient(90deg, rgba(16,185,129,0.1) 0%, rgba(0,0,0,0) 100%)', borderLeft: '4px solid #10b981' }}>
-                        <div style={{ color: '#fff', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>P0最高优: 完整分层预测编码 (Predictive Coding) 体系</div>
+                        <div style={{ color: '#fff', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>P0最高优: 引入更宏大的双规模型架构与张量解绑约束</div>
                         <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7' }}>
-                            假说全面升级为 <strong>"竞争稀疏 + 预测编码" </strong> 的双层耦合架构。浅层竞争产生“高维稀疏特征聚类”，高层必须引入基于 Rao & Ballard 大一统框架的<b>完整版独立分层预测与误差逐层回传机制</b>充当教师，突破 85% MNIST 准确率指标。这是取代传统 BP 的关键战役。
+                            我们必须让高维的“抽象概念层”能向下发起纠正压力，而不是任由底层胡作非为。
+                            同时要开发强行切割概念的数学工具，防止它们粘成一团。接下来的 <strong>Mother Engine V2</strong> 平台，目标是用纯代数强行击破“局部盲目”和“特征坍塌”，将 MNIST 解码能力重回乃至超越 85%（但坚决不用任何 BP 反向传播）。
                         </div>
                     </div>
                 </div>
