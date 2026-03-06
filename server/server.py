@@ -204,6 +204,11 @@ def _looks_like_main_scan_json_file(p: Path) -> bool:
         or "multidim_encoding_probe" in path_lower
         or "multidim_causal_ablation" in path_lower
         or "multidim_multiseed_stability" in path_lower
+        or "dynamic_binding_stress_test" in path_lower
+        or "long_horizon_causal_trace_test" in path_lower
+        or "local_credit_assignment_proxy_test" in path_lower
+        or "unified_math_structure_decode" in path_lower
+        or "agi_research_stage_bundle_manifest" in path_lower
     ):
         return True
 
@@ -220,11 +225,22 @@ def _looks_like_main_scan_json_file(p: Path) -> bool:
         has_multidim_probe = '"dimensions"' in snippet and '"cross_dimension"' in snippet and '"specificity"' in snippet
         has_multidim_causal = '"suppression_matrix_mean"' in snippet and '"diagonal_advantage"' in snippet
         has_multidim_stability = '"aggregate"' in snippet and '"diag_adv_style"' in snippet and '"specificity_margin_style"' in snippet
+        has_v1_hard_problem = (
+            '"schema_version"' in snippet
+            and '"agi_research_result.v1"' in snippet
+            and '"experiment_id"' in snippet
+            and '"metrics"' in snippet
+        )
+        has_unified_decode = '"axis_stability"' in snippet and '"causal_separation"' in snippet and '"concept_hierarchy"' in snippet
+        has_stage_bundle_manifest = '"bundle_id"' in snippet and '"agi_research_stage_bundle_v1"' in snippet
         return (
             (has_core_config and has_noun_records and (has_signatures or has_reused))
             or has_multidim_probe
             or has_multidim_causal
             or has_multidim_stability
+            or has_v1_hard_problem
+            or has_unified_decode
+            or has_stage_bundle_manifest
         )
     except Exception:
         return False
@@ -283,8 +299,17 @@ async def load_main_scan_file(path: str):
             raise HTTPException(status_code=404, detail=f"File not found: {path}")
         if target.suffix.lower() != ".json":
             raise HTTPException(status_code=400, detail="Only .json files are supported")
-        with open(target, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        raw = None
+        for enc in ("utf-8-sig", "utf-8"):
+            try:
+                with open(target, "r", encoding=enc) as f:
+                    raw = f.read()
+                break
+            except UnicodeDecodeError:
+                raw = None
+        if raw is None:
+            raise HTTPException(status_code=400, detail="Invalid JSON encoding (expected UTF-8/UTF-8-BOM)")
+        data = json.loads(raw)
         root = Path(root_dir).resolve()
         rel = target.resolve().relative_to(root).as_posix()
         return {"ok": True, "path": rel, "data": data}

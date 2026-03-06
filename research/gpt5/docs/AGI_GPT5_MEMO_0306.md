@@ -3137,3 +3137,152 @@ oun_records[*].signature_top_indices。
 
 ### 说明
 - 本步骤属于代码同步，不改变理论结论；研究主线仍为“统一编码机制：静态坐标 + 动态路由 + 因果子回路”。
+
+
+## [2026-03-06] ?????????? / ???? / ??? / Main???
+
+### ??????
+1. `python -m py_compile tests/codex/agi_research_result_schema.py tests/codex/deepseek7b_dynamic_binding_stress_test.py tests/codex/deepseek7b_long_horizon_causal_trace_test.py tests/codex/deepseek7b_local_credit_assignment_proxy_test.py tests/codex/run_agi_research_stage_bundle.py`
+2. `python tests/codex/run_agi_research_stage_bundle.py --mass-json tempdata/deepseek7b_mass_noun_scan_n120_mech_v4fix_seed101/mass_noun_encoding_scan.json --seed 101`
+3. `npm --prefix frontend run build`
+
+### ??????
+- ?????? schema?`tests/codex/agi_research_result_schema.py`
+- ?????????
+  - `tests/codex/deepseek7b_dynamic_binding_stress_test.py`
+  - `tests/codex/deepseek7b_long_horizon_causal_trace_test.py`
+  - `tests/codex/deepseek7b_local_credit_assignment_proxy_test.py`
+- ???????`tests/codex/run_agi_research_stage_bundle.py`
+- ?????????`server/server.py`
+  - ???????? JSON????? JSON?bundle manifest JSON
+- Main ?????????`frontend/src/blueprint/AppleNeuron3DTab.jsx`
+  - ????????? / ?????? / bundle ??
+  - ?????`????`?`????`
+  - ?????????????????????
+
+### ???
+- `tempdata/agi_research_stage_bundle_20260306_014354/agi_research_stage_bundle_manifest.json`
+- `tempdata/agi_research_stage_bundle_20260306_014354/hard_problem_dynamic_binding/dynamic_binding_stress_test.json`
+- `tempdata/agi_research_stage_bundle_20260306_014354/hard_problem_long_horizon/long_horizon_causal_trace_test.json`
+- `tempdata/agi_research_stage_bundle_20260306_014354/hard_problem_local_credit/local_credit_assignment_proxy_test.json`
+
+### ????????seed=101, mass_noun n=120?
+- ?????hard_problem_dynamic_binding_v1?
+  - `binding_stability_index = 0.0083`
+  - `role_swap_error_rate = 0.0208`
+  - ?????????????????????????????
+- ???????hard_problem_long_horizon_trace_v1?
+  - `long_horizon_decay = 0.0003`
+  - `layer_transport_stability_mean = 0.7347`
+  - ?????????????????????????????????????
+- ???????hard_problem_local_credit_assignment_v1?
+  - `local_sufficiency_mean = 0.0072`
+  - `local_selectivity_mean = 0.0072`
+  - `local_global_consistency_mean = 0.6217`
+  - ?????????????????????????????????
+
+### ???
+1. ???????????????????+????????????????????
+2. ?????????`unified_math_structure_decode.json`????? bundle ?????? Main ???? pass ratio ??????
+3. ???????? seed ???>=5??????/?????? seed ???
+
+## [2026-03-06] Main 导入 BOM 编码故障修复
+
+### 问题
+- 在 Main 中导入 `agi_research_stage_bundle_manifest.json` 报错：
+  - `Invalid JSON: Unexpected UTF-8 BOM (decode using utf-8-sig)`
+
+### 修复
+- 文件：`server/server.py`
+- 接口：`/api/main/scan_file`
+- 变更：JSON 读取由固定 `utf-8` 改为优先 `utf-8-sig`，回退 `utf-8`，并统一 `json.loads(raw)` 解析。
+
+### 执行命令
+1. `python -m py_compile server/server.py`
+
+### 结果
+- 后端已支持 UTF-8 BOM 的 JSON 文件导入。
+- Main 导入 `agi_research_stage_bundle_manifest.json` 不应再因 BOM 失败。
+
+### 备注
+- 该修复不改变实验数学结论，仅修复数据回流链路的编码兼容性。
+
+## [2026-03-06] Main 可视化修复：硬伤实验/统一解码导入后 3D 无节点
+
+### 问题定位
+- 导入成功后只更新了说明面板状态，未把 `hard_problem` / `unified_decode` 数据映射为 3D `nodes`。
+- 导致主 3D 空间“无任何新增可视化对象”。
+
+### 修复文件
+- `frontend/src/blueprint/AppleNeuron3DTab.jsx`
+
+### 修复内容
+1. 新增导入结果到 3D 节点的映射函数：
+   - `buildHardProblemNodes(hardProblemResults)`
+   - `buildUnifiedDecodeNodes(unifiedDecodeResult)`
+2. 将两类节点接入主节点集合：
+   - `nodes = [..., ...hardProblemNodes, ...unifiedDecodeNodes]`
+3. 扩展图例与汇总统计：
+   - 新增角色颜色：`hardBinding/hardLong/hardLocal/unifiedDecode`
+   - 图例增加硬伤实验与统一解码条目
+4. 保持主 3D 空间显示，不新增独立图层。
+
+### 验证命令
+- `npm --prefix frontend run build`
+
+### 结果
+- 构建通过。
+- 导入硬伤实验或统一解码 JSON 后，主 3D 空间会出现可点击节点，并可在“选中神经元/模型说明”看到对应信息。
+
+## [2026-03-06] 说明补充：硬伤实验与统一解码的原理、可视化语义
+
+### 本轮命令
+1. `rg -n "buildHardProblemNodes|buildUnifiedDecodeNodes|HARD_PROBLEM_EXPERIMENT_LABELS|isUnifiedDecodePayload|isHardProblemResultPayload" frontend/src/blueprint/AppleNeuron3DTab.jsx`
+2. `rg -n "hard_problem|unified_math_structure_decode|bundle_id|axis_stability|causal_separation|concept_hierarchy" server/server.py`
+3. `Get-Content tempdata/agi_research_stage_bundle_20260306_014354/agi_research_stage_bundle_manifest.json -TotalCount 220`
+
+### 原理摘要
+- 硬伤实验（hard problems）是对三个关键机制瓶颈的结构压力测试：
+  1) 动态绑定：角色是否可分离（subject/object 不混淆）
+  2) 长程链路：多跳信息是否衰减、层间传输是否稳定
+  3) 局部信用：局部子集是否能承载足够的全局判别信息
+- 统一解码（unified decode）是跨结果融合器：
+  - 轴稳定性（axis_stability）
+  - 因果可分离性（causal_separation）
+  - 概念层级共享-特异结构（concept_hierarchy）
+  - 最终假设通过率（hypothesis_test.pass_ratio）
+
+### 可视化语义（Main 3D）
+- 硬伤实验被映射为实验节点簇：
+  - 动态绑定 = `hardBinding`
+  - 长程链路 = `hardLong`
+  - 局部信用 = `hardLocal`
+- 统一解码被映射为 `unifiedDecode` 节点：按 style/logic/syntax 的主导层分布投影到 layer 位置。
+- 节点大小/亮度由对应指标强弱控制（例如稳定性高更亮；误差类指标会反向映射）。
+
+### 当前 manifest 的关键状态
+- `run_unified_decoder=false`
+- `artifacts.unified_decode_json=""`
+- 这意味着本次 bundle 导入时不会出现 unifiedDecode 节点（因为没有对应 JSON 产物）。
+
+### 后续建议
+- 运行 bundle 时开启 `--run-unified-decoder`，确保 manifest 内含 `unified_decode_json`，再导入即可看到统一解码节点。
+
+## [2026-03-06] 继续执行：生成包含统一解码的完整 bundle
+
+### 本轮命令
+1. `python tests/codex/run_agi_research_stage_bundle.py --mass-json tempdata/deepseek7b_mass_noun_scan_n120_mech_v4fix_seed101/mass_noun_encoding_scan.json --seed 101 --run-unified-decoder`
+2. 校验 manifest：读取 `tempdata/agi_research_stage_bundle_20260306_132619/agi_research_stage_bundle_manifest.json`
+
+### 结果
+- 成功生成新 bundle：`tempdata/agi_research_stage_bundle_20260306_132619/`
+- 关键状态：
+  - `run_unified_decoder = true`
+  - `artifacts.unified_decode_json` 已写入
+  - `metrics_snapshot.unified_decode.pass_ratio = 0.75`
+
+### 理论进度
+- 统一解码模块已进入同一回流链路，可与三硬伤结果同屏验证。
+- 当前组合结果支持“部分可分离 + 部分稳定 + 局部信用不足”的阶段判断：
+  - 维度轴与因果分离存在可用结构（pass_ratio 0.75）
+  - 动态绑定与局部信用仍是主要瓶颈。
