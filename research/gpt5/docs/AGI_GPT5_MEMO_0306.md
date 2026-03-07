@@ -2234,7 +2234,7 @@ oun_records[*].signature_top_indices。
 ### 本轮命令记录
 - `Get-Content tempdata/deepseek7b_mass_noun_scan_n120_mech_v4_single/MASS_NOUN_ENCODING_SCAN_REPORT.md -TotalCount 220`
 - `Get-Content tempdata/deepseek7b_mass_noun_scan_n120_multiseed_v3fix_summary.md -TotalCount 200`
-- `Get-Content reseach/gtp5/doc/AGI_GPT5_MEMO.md -Tail 220`
+- `Get-Content research/gpt5/docs/AGI_GPT5_MEMO.md -Tail 220`
 
 ### 阶段性结论（面向“人类水平智能系统”目标）
 1. 已有实质进展：
@@ -2274,7 +2274,7 @@ oun_records[*].signature_top_indices。
    - `git remote -v`
    - `git branch -vv`
 2. 保护本地改动：
-   - `git stash push -u -m "codex-pre-pull-20260305-145550" -- frontend server tests reseach research`
+   - `git stash push -u -m "codex-pre-pull-20260305-145550" -- frontend server tests research`
 3. 拉取远端：
    - `git fetch origin`
    - `git pull --no-rebase origin main`
@@ -2303,7 +2303,7 @@ oun_records[*].signature_top_indices。
 - `python -c "... read_text(utf-8) ..."`（用于确认文档编码与可读内容）
 - `Get-Content tempdata/deepseek7b_mass_noun_scan_n120_mech_v4_single/MASS_NOUN_ENCODING_SCAN_REPORT.md -TotalCount 240`
 - `Get-Content tests/codex/deepseek7b_mass_noun_encoding_scan.py -TotalCount 260`
-- `Get-Content reseach/gtp5/doc/AGI_GPT5_MEMO.md -Tail 220`
+- `Get-Content research/gpt5/docs/AGI_GPT5_MEMO.md -Tail 220`
 
 ### 对齐结论（终极版思路 vs 本地进展）
 1. 终极版提出“六大特性统一于连接可塑性+脉冲”的总假说，逻辑完整，且带有自我批判条款（第六章硬伤审视），方向正确。
@@ -3078,7 +3078,7 @@ oun_records[*].signature_top_indices。
 5. 统一指标：建立“几何一致性 + 因果恢复率 + 组合保真度”三联指标，作为编码原理证据链。
 
 ### 命令记录
-- 文档追加：`Add-Content reseach/gtp5/doc/AGI_GPT5_MEMO.md`
+- 文档追加：`Add-Content research/gpt5/docs/AGI_GPT5_MEMO.md`
 ## [2026-03-06] 继续破解：统一编码结构离线解码（多实验融合）
 
 ### 新增脚本
@@ -3286,3 +3286,4 @@ oun_records[*].signature_top_indices。
 - 当前组合结果支持“部分可分离 + 部分稳定 + 局部信用不足”的阶段判断：
   - 维度轴与因果分离存在可用结构（pass_ratio 0.75）
   - 动态绑定与局部信用仍是主要瓶颈。
+

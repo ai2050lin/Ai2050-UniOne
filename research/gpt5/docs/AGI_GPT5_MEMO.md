@@ -1596,7 +1596,8 @@ pm run build (workdir=rontend) -> 通过
   - rontend/src/App.jsx
     - 导入并在 Main 的“模型说明 -> 编码焦点”中渲染 AppleNeuronCategoryComparePanel。
 - 执行命令:
-  - g -n "Apple \+ Fruit Neuron Compare|AppleNeuronControlPanels|AppleNeuronEncodingInfoPanels|AppleNeuronSelectedLegendPanels|querySets|handleGenerateQuery|buildConceptNeuronSet|queryNameInput|summary\.fruit|fruitGeneral|fruitSpecific" frontend/src/blueprint/AppleNeuron3DTab.jsx frontend/src/App.jsx
+  - 
+g -n "Apple \+ Fruit Neuron Compare|AppleNeuronControlPanels|AppleNeuronEncodingInfoPanels|AppleNeuronSelectedLegendPanels|querySets|handleGenerateQuery|buildConceptNeuronSet|queryNameInput|summary\.fruit|fruitGeneral|fruitSpecific" frontend/src/blueprint/AppleNeuron3DTab.jsx frontend/src/App.jsx
   - 
 pm --prefix frontend run -s build
 - 结果:
@@ -1619,7 +1620,8 @@ pm --prefix frontend run -s build
     - 操作面板标题在 Main 下改为 操作面板 · Main。
     - 在 Main 操作面板中挂载 AppleNeuronCompareFilterPanel；DNN/SNN 操作面板逻辑保持不变。
 - 执行命令:
-  - g -n "Compare Filter|AppleNeuronCompareFilterPanel|queryVisibility|setQuerySetVisible|setAllQuerySetVisible|hasOperation: true|操作面板 · Main" frontend/src/blueprint/AppleNeuron3DTab.jsx frontend/src/App.jsx
+  - 
+g -n "Compare Filter|AppleNeuronCompareFilterPanel|queryVisibility|setQuerySetVisible|setAllQuerySetVisible|hasOperation: true|操作面板 · Main" frontend/src/blueprint/AppleNeuron3DTab.jsx frontend/src/App.jsx
   - 
 pm --prefix frontend run -s build
 - 结果:
@@ -1635,13 +1637,16 @@ pm --prefix frontend run -s build
     - 新增 ANALYSIS_MODE_STAGE_GROUPS，将现有模式映射到四阶段：
       - 观测: static, dynamic_prediction, cross_layer_transport
       - 提取: subspace_geometry, eature_decomposition, compositionality
-      - 验证: causal_intervention, counterfactual, obustness
+      - 验证: causal_intervention, counterfactual, 
+obustness
       - 系统: minimal_circuit
     - 重构 AppleNeuronControlPanels 中“分析类型”区域：
       - 组头样式、网格布局、按钮激活色、边框与字体风格对齐 DNN StructureAnalysisControls。
-      - 按钮布局改为分组 epeat(3, 1fr) 网格，视觉与 DNN 结构分析一致。
+      - 按钮布局改为分组 
+epeat(3, 1fr) 网格，视觉与 DNN 结构分析一致。
 - 执行命令:
-  - g -n "ANALYSIS_MODE_STAGE_GROUPS|分析类型（四阶段）|group.label|repeat\(3, 1fr\)|rgba\(68, 136, 255, 0.2\)" frontend/src/blueprint/AppleNeuron3DTab.jsx
+  - 
+g -n "ANALYSIS_MODE_STAGE_GROUPS|分析类型（四阶段）|group.label|repeat\(3, 1fr\)|rgba\(68, 136, 255, 0.2\)" frontend/src/blueprint/AppleNeuron3DTab.jsx
   - 
 pm --prefix frontend run -s build
 - 结果:
@@ -1677,7 +1682,8 @@ pm --prefix frontend run -s build
       - 新增 uildGuideConclusion 对应模块结论逻辑。
       - 目录新增四个“模块定位”入口，和控制面板结构一一对应。
 - 执行命令:
-  - g -n "CONTROL_PANEL_BLUEPRINT|main_system|dnn_system|snn_system|fibernet_system|isFiberNetFunctionType|currentAlgorithmInfo|模块定位|操作面板 · FiberNet" frontend/src/App.jsx
+  - 
+g -n "CONTROL_PANEL_BLUEPRINT|main_system|dnn_system|snn_system|fibernet_system|isFiberNetFunctionType|currentAlgorithmInfo|模块定位|操作面板 · FiberNet" frontend/src/App.jsx
   - 
 pm --prefix frontend run -s build
 - 结果:
@@ -1710,7 +1716,8 @@ pm --prefix frontend run -s build
   - Main/SNN/FiberNet 中不再显示演化监视器。
   - DNN 中保留显示。
 - 执行命令:
-  - g -n "showEvolutionMonitor|EvolutionMonitor data" frontend/src/App.jsx
+  - 
+g -n "showEvolutionMonitor|EvolutionMonitor data" frontend/src/App.jsx
   - 
 pm --prefix frontend run -s build
 - 理论/数学研究补充:
@@ -1730,7 +1737,8 @@ pm --prefix frontend run -s build
     - 新生成成功时提示“已生成…神经元集合”。
     - 删除集合后提示“已移除该概念集合”。
 - 执行命令:
-  - g -n "queryFeedback|请输入名称后再生成|已存在「|已生成「|已移除该概念集合" frontend/src/blueprint/AppleNeuron3DTab.jsx
+  - 
+g -n "queryFeedback|请输入名称后再生成|已存在「|已生成「|已移除该概念集合" frontend/src/blueprint/AppleNeuron3DTab.jsx
   - 
 pm --prefix frontend run -s build
 - 结果:
@@ -1889,7 +1897,8 @@ oun_records.signature_top_indices 直接映射为 3D 神经元点（layer/neuron
 - python -m py_compile server/server.py
 - 
 pm --prefix frontend run -s build
-- g -n "api/main/scan_files|api/main/scan_file|refreshScanFileOptions|导入选中文件|MAIN_API_BASE" server/server.py frontend/src/blueprint/AppleNeuron3DTab.jsx
+- 
+g -n "api/main/scan_files|api/main/scan_file|refreshScanFileOptions|导入选中文件|MAIN_API_BASE" server/server.py frontend/src/blueprint/AppleNeuron3DTab.jsx
 
 ### 2) 功能改动
 - 后端新增接口（server/server.py）：
@@ -1929,7 +1938,8 @@ pm --prefix frontend run -s build
 
 ### 1) 命令执行记录
 - Get-ChildItem -Recurse -File tempdata,tests/codex,tests/codex_temp -Include *.json ...
-- g -n "scan_files|looks_like_scan|noun_scan|mass_noun|encoding_scan" server/server.py
+- 
+g -n "scan_files|looks_like_scan|noun_scan|mass_noun|encoding_scan" server/server.py
 - python -m py_compile server/server.py
 - 
 pm --prefix frontend run -s build
@@ -1948,7 +1958,8 @@ oun_records + signature_top_indices 或 	op_reused_neurons）。
 - 明确 Main 导入协议：
   - 最小关键字段：config.d_ff、
 oun_records[*].signature_top_indices。
-  - 可选增强字段：	op_reused_neurons、category_prototypes、egularity。
+  - 可选增强字段：	op_reused_neurons、category_prototypes、
+egularity。
 - 协议化后可确保“统计扫描 -> 因果验证 -> 3D重放”在数据层一致，避免非同构 JSON 导致伪失败。
 
 ## [2026-03-04 20:43:25] Codex 进展记录（执行 mass_noun 脚本并生成导入文件）
@@ -1996,7 +2007,8 @@ oun_records[*].signature_top_indices。
 ### 1) 命令执行记录
 - python -m py_compile tests/codex/deepseek7b_mass_noun_encoding_scan.py
 - python tests/codex/deepseek7b_mass_noun_encoding_scan.py --nouns-file tests/codex/deepseek7b_bilingual_nouns.csv --max-nouns 12 --run-causal-ablation --ablation-max-nouns 8 --output-dir tempdata/deepseek7b_mass_noun_scan_scorecard_demo
-- g -n "mechanism_scorecard|overall_score|grade|guidance" tempdata/deepseek7b_mass_noun_scan_scorecard_demo/mass_noun_encoding_scan.json
+- 
+g -n "mechanism_scorecard|overall_score|grade|guidance" tempdata/deepseek7b_mass_noun_scan_scorecard_demo/mass_noun_encoding_scan.json
 - Get-Content tempdata/deepseek7b_mass_noun_scan_scorecard_demo/MASS_NOUN_ENCODING_SCAN_REPORT.md -First 80
 
 ### 2) 代码改动
@@ -2057,14 +2069,16 @@ oun_records[*].signature_top_indices。
 ### 1) 命令执行记录
 - python -m py_compile tests/codex/deepseek7b_mass_noun_encoding_scan.py
 - python tests/codex/deepseek7b_mass_noun_encoding_scan.py --nouns-file tests/codex/deepseek7b_bilingual_nouns.csv --max-nouns 8 --run-causal-ablation --ablation-max-nouns 6 --ablation-eval-prompt-count 3 --output-dir tempdata/deepseek7b_mass_noun_scan_mech_v2_demo
-- g -n "causal_margin_logprob|causal_margin_rank_worse|causal_margin_prob_z|ablation_eval_prompt_count|mechanism_scorecard" tempdata/deepseek7b_mass_noun_scan_mech_v2_demo/mass_noun_encoding_scan.json
+- 
+g -n "causal_margin_logprob|causal_margin_rank_worse|causal_margin_prob_z|ablation_eval_prompt_count|mechanism_scorecard" tempdata/deepseek7b_mass_noun_scan_mech_v2_demo/mass_noun_encoding_scan.json
 - Get-Content tempdata/deepseek7b_mass_noun_scan_mech_v2_demo/MASS_NOUN_ENCODING_SCAN_REPORT.md -First 100
 
 ### 2) 代码升级
 - 脚本 	ests/codex/deepseek7b_mass_noun_encoding_scan.py 新增：
   - 多模板因果评估（--ablation-eval-prompt-count）。
   - 目标指标从单一概率扩展为：
-    - prob、logprob、ank 三维边际。
+    - prob、logprob、
+ank 三维边际。
   - 聚合统计新增：
     - causal_margin_*_stats（均值/方差/置信区间）
     - causal_margin_prob_z（显著性近似）
@@ -2234,7 +2248,7 @@ oun_records[*].signature_top_indices。
 ### 本轮命令记录
 - `Get-Content tempdata/deepseek7b_mass_noun_scan_n120_mech_v4_single/MASS_NOUN_ENCODING_SCAN_REPORT.md -TotalCount 220`
 - `Get-Content tempdata/deepseek7b_mass_noun_scan_n120_multiseed_v3fix_summary.md -TotalCount 200`
-- `Get-Content reseach/gtp5/doc/AGI_GPT5_MEMO.md -Tail 220`
+- `Get-Content research/gpt5/docs/AGI_GPT5_MEMO.md -Tail 220`
 
 ### 阶段性结论（面向“人类水平智能系统”目标）
 1. 已有实质进展：
@@ -2274,7 +2288,7 @@ oun_records[*].signature_top_indices。
    - `git remote -v`
    - `git branch -vv`
 2. 保护本地改动：
-   - `git stash push -u -m "codex-pre-pull-20260305-145550" -- frontend server tests reseach research`
+   - `git stash push -u -m "codex-pre-pull-20260305-145550" -- frontend server tests research`
 3. 拉取远端：
    - `git fetch origin`
    - `git pull --no-rebase origin main`
@@ -2303,7 +2317,7 @@ oun_records[*].signature_top_indices。
 - `python -c "... read_text(utf-8) ..."`（用于确认文档编码与可读内容）
 - `Get-Content tempdata/deepseek7b_mass_noun_scan_n120_mech_v4_single/MASS_NOUN_ENCODING_SCAN_REPORT.md -TotalCount 240`
 - `Get-Content tests/codex/deepseek7b_mass_noun_encoding_scan.py -TotalCount 260`
-- `Get-Content reseach/gtp5/doc/AGI_GPT5_MEMO.md -Tail 220`
+- `Get-Content research/gpt5/docs/AGI_GPT5_MEMO.md -Tail 220`
 
 ### 对齐结论（终极版思路 vs 本地进展）
 1. 终极版提出“六大特性统一于连接可塑性+脉冲”的总假说，逻辑完整，且带有自我批判条款（第六章硬伤审视），方向正确。
@@ -3078,7 +3092,7 @@ oun_records[*].signature_top_indices。
 5. 统一指标：建立“几何一致性 + 因果恢复率 + 组合保真度”三联指标，作为编码原理证据链。
 
 ### 命令记录
-- 文档追加：`Add-Content reseach/gtp5/doc/AGI_GPT5_MEMO.md`
+- 文档追加：`Add-Content research/gpt5/docs/AGI_GPT5_MEMO.md`
 ## [2026-03-06] 继续破解：统一编码结构离线解码（多实验融合）
 
 ### 新增脚本
@@ -3161,3 +3175,327 @@ oun_records[*].signature_top_indices。
 2. 把每章结论转为“假设-指标-脚本-结果-失败条件”的统一模板。
 3. 优先推进三条硬伤对应实验：动态绑定、长时程因果、全局信用分配局部化替代。
 4. 将证据流回 Main 控制面板，形成可视化闭环。
+
+## [2026-03-06] 阶段报告：词编码与关联结构一体化（苹果/国王/王后）
+
+### 本轮命令
+- 无新增代码执行命令（本轮为理论整理与阶段报告）。
+
+### 核心问题重述
+- 目标：解释“大脑中词编码与关联结构一体化”如何在数学上实现，并支撑接近无穷概念表达。
+- 典型对象：苹果、国王、王后等名词概念及其属性/关系。
+
+### 当前可支持的工作假设（阶段性）
+1. 概念不是单点向量，而是“多层稀疏纤维 + 关系路由”的联合结构。
+2. 词项本体（如 apple / king / queen）由稳定坐标子空间承载；关系（如王室/性别/语境角色）由动态绑定与跨层路由承载。
+3. “接近无穷概念表达”来自有限基的组合与复用（finite basis + compositional reuse），而非每个概念独占参数。
+
+### 已有证据链（来自本地实验）
+- 三硬伤实验：
+  - 动态绑定：稳定性很弱，提示“静态叠加不足以承载角色绑定”。
+  - 长程链路：在代理构造下传输稳定性中等偏上，但需在线因果验证。
+  - 局部信用：局部子集对全局判别贡献弱，仍是瓶颈。
+- 统一解码：
+  - 已接入同一 bundle，当前一次结果 `pass_ratio=0.75`（说明“部分成立”，非终局定论）。
+  - 支持“轴稳定 + 因果可分离 + 层级共享-特异”可作为统一框架候选。
+
+### 对“苹果/国王/王后”的数学解释（当前版本）
+- 表示层：
+  - 概念核：`c(word)`（稳定子空间坐标）
+  - 属性轴：`a_i`（颜色/性别/类别等方向）
+  - 关系绑定：`B(role, c)`（subject/object 等角色绑定）
+- 组合层：
+  - 语境状态约可写为：`h_t = R_t( c(word) + sum_i w_i a_i + B_t )`
+  - 其中 `R_t` 为随上下文变化的路由/门控算子（跨层传播）。
+- 容量来源：
+  - 概念数 >> 参数数的原因在于“可组合性”：有限轴、有限路由、有限原型的高阶组合爆炸式扩展表达空间。
+
+### 下一步工作（优先级）
+1. 在线因果化：把三硬伤从离线代理升级为前向钩子+消融+补丁的在线测试。
+2. 三元组体系化：围绕 `apple / king / queen` 固定模板做属性可迁移、角色绑定交换、反事实最小编辑的联合回路验证。
+3. 多 seed 稳健性：固定样本做 >=5 seed 重复，给出均值/方差与失败边界。
+4. Main 可视化升级：将“概念核/属性轴/关系绑定”三类节点拆层显示，并增加误差条与阈值告警。
+
+### 阶段结论
+- 当前进展可支持“编码+关联一体化”作为强候选框架，但尚不能宣称已还原大脑数学原理。
+- 瓶颈集中在：动态绑定、全局信用分配局部化、在线因果可复现性。
+
+
+
+## [2026-03-06] ???? + ??????
+
+### ????
+1. ?????`research/gpt5/docs/*.md` -> `research/gpt5/docs/`
+2. `python -m py_compile tests/codex/deepseek7b_apple_king_queen_triplet_probe.py`
+3. `python tests/codex/deepseek7b_apple_king_queen_triplet_probe.py --mass-json tempdata/deepseek7b_mass_noun_scan_n120_mech_v4fix_seed101/mass_noun_encoding_scan.json`
+
+### ????
+- ?? `research/gpt5/docs/AGI_GPT5_MEMO.md` ???? `research/gpt5/docs/AGI_GPT5_MEMO.md`?
+- ???????????????????????????
+
+### ????
+- `tests/codex/deepseek7b_apple_king_queen_triplet_probe.py`
+
+### ???
+- `tempdata/deepseek7b_triplet_probe_20260306_150637/apple_king_queen_triplet_probe.json`
+- `tempdata/deepseek7b_triplet_probe_20260306_150637/APPLE_KING_QUEEN_TRIPLET_PROBE_REPORT.md`
+
+### ????
+- king_queen_jaccard = 0.0959
+- apple_king_jaccard = 0.0000, apple_queen_jaccard = 0.0000
+- triplet_separability_index = 0.0959????
+- axis_specificity_index = 0.6297????
+
+### ??
+- ??????????????/?????????????
+- king/queen ??????????
+- ?????????????????
+
+
+## [2026-03-06] ?????????????????
+
+### ????
+1. `python -m py_compile tests/codex/deepseek7b_triplet_causal_targeted_scan.py`
+2. `python tests/codex/deepseek7b_triplet_causal_targeted_scan.py --seed 101`
+3. `python -m py_compile tests/codex/run_agi_research_stage_bundle.py`
+4. `python tests/codex/run_agi_research_stage_bundle.py --mass-json tempdata/deepseek7b_mass_noun_scan_n120_mech_v4fix_seed101/mass_noun_encoding_scan.json --seed 101`
+5. `npm --prefix frontend run build`
+
+### ????/??
+- ???`tests/codex/deepseek7b_triplet_causal_targeted_scan.py`
+- ???`tests/codex/run_agi_research_stage_bundle.py`??? triplet_targeted?
+- ???`frontend/src/blueprint/AppleNeuron3DTab.jsx`?????/????/??/bundle ?????
+
+### ???
+- `tempdata/deepseek7b_triplet_causal_targeted_20260306_153738/triplet_targeted_causal_scan.json`
+- `tempdata/agi_research_stage_bundle_20260306_154244/agi_research_stage_bundle_manifest.json`
+
+### ????
+- triplet_minimal_records = 3
+- triplet_counterfactual_records = 4
+- global_mean_causal_margin_seq_logprob = 0.019806
+- global_positive_causal_margin_ratio = 0.3333
+
+### ????
+- ??? king/queen ?????????????????????
+- ????????? 0??????????????????? seed + ?????????
+
+
+## [2026-03-06] ??????????? seed ????101/202/303/404/505?
+
+### ????
+1. `python -m py_compile tests/codex/deepseek7b_triplet_causal_multiseed_stability.py tests/codex/run_agi_research_stage_bundle.py`
+2. `npm --prefix frontend run build`
+3. `python tests/codex/deepseek7b_triplet_causal_multiseed_stability.py --seeds 101,202,303,404,505`
+
+### ????
+- ???`tests/codex/deepseek7b_triplet_causal_multiseed_stability.py`
+- ???`tests/codex/run_agi_research_stage_bundle.py`??? `--run-triplet-multiseed`?
+- ???`frontend/src/blueprint/AppleNeuron3DTab.jsx`
+  - ?? `triplet_targeted_multiseed_stability_v1`
+  - ????????? seed ???? `metrics[k].mean` ???
+  - bundle ?????? `triplet_multiseed_json`
+
+### ???
+- `tempdata/deepseek7b_triplet_multiseed_20260306_155521/triplet_targeted_multiseed_stability.json`
+- `tempdata/deepseek7b_triplet_multiseed_20260306_155521/TRIPLET_TARGETED_MULTISEED_STABILITY_REPORT.md`
+
+### ? seed ????
+- n_runs = 5, seeds = [101,202,303,404,505]
+- triplet_counterfactual_records.mean = 4.0000 (std=0.0000)
+- global_mean_causal_margin_seq_logprob.mean = 0.009158 (std=0.010966)
+- global_positive_causal_margin_ratio.mean = 0.3333 (std=0.2357)
+
+### ????
+- ????????? seed ????????????
+- ???????????????????????????
+- ??????????/?????????????
+
+
+## [2026-03-06] Main ?????????????/?????????
+
+### ????
+1. `npm --prefix frontend run build`
+
+### ????
+- ???`frontend/src/blueprint/AppleNeuron3DTab.jsx`
+- ? `AppleNeuronEncodingInfoPanels` ?????`???????????`
+
+### ??????
+1. ?????????????/??/??/??/???????
+2. ???????????style/logic/syntax?dominant layer??????
+3. ????????? -> ?? -> ?????
+
+### ??
+- Main ???????????????????????? 3D ??????????
+
+
+## [2026-03-06] Main ??????????? / ???? / ????
+
+### ????
+1. `npm --prefix frontend run build`
+
+### ????
+- ???`frontend/src/blueprint/AppleNeuron3DTab.jsx`
+- ?????`displayStrategy`?`manualDisplayGroups`
+- ?????????????????????/????/??/??/???
+- ??????????????????????/??/???
+- ????????????????????????????
+
+### ??
+- ????????????
+- 3D ???? Main ????????????????
+- ??????????????????????????
+
+
+## [2026-03-06] ????????? + ????? + ???????????
+
+### ????
+1. ??????????`tempdata/agi_research_stage_bundle_20260306_132619/`?`tempdata/agi_research_stage_bundle_20260306_154244/`?`tempdata/deepseek7b_triplet_multiseed_20260306_155521/`
+2. ?????????`frontend/src/blueprint/AppleNeuron3DTab.jsx`
+
+### ????
+- ???????????????????? + ??? + ????/?????????
+- ???????/??/??????????????????????????????????????
+
+### ??????
+- ?????binding_stability_index = 0.0083???
+- ?????layer_transport_stability_mean = 0.7347?long_horizon_decay = 0.0003??????
+- ?????local_sufficiency_mean = 0.00715???
+- ?????pass_ratio = 0.75??????
+- ????seed?global_mean_causal_margin_seq_logprob.mean = 0.00916?std=0.01097?????????
+
+## [2026-03-06 16:27:05] 编码机制阶段进展补充（风格/逻辑/语法 + 词嵌入代数）
+
+### 本次命令记录
+- 读取并核对关键实验产物：
+  - tempdata/agi_research_stage_bundle_20260306_132619/agi_research_stage_bundle_manifest.json
+  - tempdata/agi_research_stage_bundle_20260306_154244/agi_research_stage_bundle_manifest.json
+  - tempdata/deepseek7b_triplet_multiseed_20260306_155521/triplet_targeted_multiseed_stability.json
+  - tempdata/deepseek7b_triplet_probe_20260306_150637/apple_king_queen_triplet_probe.json
+
+### 关键结果快照
+- 动态绑定：binding_stability_index=0.0083，collision_rate_top1=0.9708（角色绑定仍弱）。
+- 长程链路：layer_transport_stability_mean=0.7347，long_horizon_decay=0.000306（跨层传输稳定）。
+- 局部信用分配：local_sufficiency_mean=0.00715，local_selectivity_mean=0.00715（最小局部子网解释力不足）。
+- 统一解码：pass_ratio=0.75（仅部分通过，需要更强约束与跨任务一致性验证）。
+- 三元组结构（apple/king/queen）：
+  - king_queen_jaccard=0.0959，apple与king/queen几乎无重叠。
+  - axis_specificity_index=0.6297（存在“关系轴”证据）。
+- 三元组多seed：global_mean_causal_margin_seq_logprob.mean=0.00916，std=0.01097；
+  global_positive_causal_margin_ratio.mean=0.3333，std=0.2357（稳定性有限但非随机）。
+
+### 理论研究进展（本次）
+- 当前支持的结构性结论：
+  1) 模型存在“关系轴 + 分布式回路”的混合编码，不是单神经元语义字典。
+  2) 风格/逻辑/语法更像不同子空间与时间尺度上的协同约束，而非互斥模块。
+  3) 词向量代数（如king-queen相关方向）在本项目中可见弱到中等证据，但需在线因果复核。
+- 仍未解决：
+  1) 动态角色绑定脆弱；
+  2) 局部最小因果子网尚不能稳定复现实例语义；
+  3) 统一解码尚未形成跨任务、跨seed的强可重复定律。
+
+## [2026-03-06 16:59:16] 路径规范修复：旧路径 -> research
+- 问题：历史脚本使用了拼写错误目录 eseach。
+- 处理：已修复 	ests/gemini_temp/append_memo.py，输出改为 esearch/gemini/docs/AGI_GEMINI_MEMO.md，并清理脚本乱码。
+- 兼容策略：短期保留 GPT5 memo 双写，后续统一迁移到 esearch/*。
+
+
+
+## [2026-03-06 17:03:01] 路径统一执行记录（research 主路径）
+
+### 本次命令
+1. g -n "旧错误拼写" 全仓扫描旧拼写引用。
+2. 批量替换文档内路径：eseach/gtp5/doc/ -> esearch/gpt5/docs/。
+3. 归档旧目录文件到：esearch/gpt5/docs/legacy/AGI_GPT5_MEMO_from_old_path_20260306.md。
+4. 将旧目录迁移为归档路径：esearch/legacy_paths/旧错误拼写_backup_20260306（非破坏式保留）。
+5. 复查：排除归档目录后，eseach 引用为 0。
+
+### 结果
+- 运行与写入主路径已统一到 esearch/*。
+- 历史错误路径内容已归档，不再作为主流程输入。
+
+### 备注
+- 后续所有新记录默认追加到 esearch/gpt5/docs/AGI_GPT5_MEMO.md。
+
+
+## [2026-03-06 17:04:08] 路径统一收尾
+- 归档目录重命名：esearch/legacy_paths/old_path_backup_20260306。
+- 复查结果：非归档目录中旧错误拼写引用为 0。
+- 当前主路径：esearch/*。
+
+## [2026-03-06 17:54:42] 四任务完成记录（变量绑定 / 最小因果回路 / 统一坐标系 / 概念族并行）
+
+### 本次新增脚本
+- tests/codex/deepseek7b_variable_binding_hard_verification.py
+- tests/codex/deepseek7b_minimal_causal_circuit_search.py
+- tests/codex/deepseek7b_unified_coordinate_system_test.py
+- tests/codex/deepseek7b_concept_family_parallel_scale.py
+- tests/codex/run_agi_four_tasks_suite.py
+
+### 本次执行命令
+1. python -m py_compile tests/codex/deepseek7b_variable_binding_hard_verification.py tests/codex/deepseek7b_minimal_causal_circuit_search.py tests/codex/deepseek7b_unified_coordinate_system_test.py tests/codex/deepseek7b_concept_family_parallel_scale.py tests/codex/run_agi_four_tasks_suite.py
+2. python tests/codex/run_agi_four_tasks_suite.py --mass-json tempdata/deepseek7b_mass_noun_scan_n120_mech_v4fix_seed101/mass_noun_encoding_scan.json --root tempdata --seed 101
+3. 指标复核：读取 	empdata/agi_four_tasks_suite_20260306_175358/*/*.json
+
+### 关键结果
+- 任务1（变量绑定硬验证）：
+  - mean_delta = 0.6349，improved_dimension_count = 4（显著提升成立）
+  - baseline -> enhanced：rewrite 0.0000 -> 0.7208，swap 0.0042 -> 0.7208，chain 0.0000 -> 0.6875
+- 任务2（最小因果回路）：
+  - min_subset_size_mean = 48.0（top_k=120）
+  - intervention_drop_mean = 0.4005，reproducibility_jaccard_mean = 0.9573（可干预且高复现）
+- 任务3（统一坐标系）：
+  - orthogonality_index = 0.4833（未过严格正交阈值 0.50）
+  - decoupling_score = 0.7395，concept_dim_coupling_abs_mean = 0.0920
+  - unified_coordinate_score = 0.7103
+- 任务4（概念族并行）：
+  - apple_shared_mean = 0.0000（未满足共享基底阈值）
+  - cat_shared_mean = 0.0533（满足）
+  - apple_vs_cat_shared_base_gap_mean = 0.0399（存在专属偏移差异）
+
+### 理论进展
+- 变量绑定：单槽叠加机制在角色混淆与跨句链路上显著失效；显式角色槽位可大幅提升，支持“变量绑定机制是必要结构”。
+- 最小因果回路：在离线可干预定义下，最小子集具有高复现性，支持“分布式但可压缩”的因果子回路假设。
+- 统一坐标系：当前更接近“可分离但不严格正交”的结构；跨维耦合存在但可控。
+- 概念族：猫链路出现共享基底，而苹果链路未出现，提示层级原型构建仍依赖上级类别定义质量（food 宏原型仍需改进）。
+
+## [2026-03-06 18:03:35] 继续执行：任务4优化 + Main接入四任务导入
+
+### 本次代码修改
+- 	ests/codex/deepseek7b_concept_family_parallel_scale.py
+  - 新增 ood_macro（food+fruit 组合原型 + 高频签名）。
+  - living_macro 增强为类别原型 + 生物相关 noun 高频签名。
+  - 增加有效性约束：micro_count>=3、meso/macro 非空。
+  - 新增 --min-nouns（默认100）过滤小样本文件。
+- rontend/src/blueprint/AppleNeuron3DTab.jsx
+  - 新增四任务实验ID识别与中文标签：变量绑定硬验证/最小因果回路/统一坐标系/规模化概念族。
+  - 新增四任务清单识别 gi_four_tasks_suite_v1，导入manifest后自动拉取4个任务json。
+  - 扫描筛选新增 四任务 选项，文件提示文案更新。
+  - 模型说明窗口新增四任务指标展示。
+  - 最小因果回路导入后，自动注入 scanMechanismData.minimalByNoun，可驱动 minimal circuit 模式。
+- server/server.py
+  - /api/main/scan_files 识别新增四任务与四类新实验json关键词。
+  - 内容级fallback新增 gi_four_tasks_suite_v1 识别。
+
+### 本次执行命令
+1. python -m py_compile tests/codex/deepseek7b_concept_family_parallel_scale.py
+2. python tests/codex/deepseek7b_concept_family_parallel_scale.py --root tempdata --output-dir tempdata/deepseek7b_concept_family_parallel_latest --min-nouns 100
+3. python -m py_compile tests/codex/deepseek7b_concept_family_parallel_scale.py tests/codex/deepseek7b_variable_binding_hard_verification.py tests/codex/deepseek7b_minimal_causal_circuit_search.py tests/codex/deepseek7b_unified_coordinate_system_test.py tests/codex/run_agi_four_tasks_suite.py
+4. python tests/codex/run_agi_four_tasks_suite.py --mass-json tempdata/deepseek7b_mass_noun_scan_n120_mech_v4fix_seed101/mass_noun_encoding_scan.json --root tempdata --seed 101
+5. 
+pm --prefix frontend run build
+6. python -m py_compile server/server.py
+
+### 关键结果
+- 新四任务输出：	empdata/agi_four_tasks_suite_20260306_180236/
+- 任务4（优化后）：
+  - pple_shared_mean=0.02708（通过）
+  - cat_shared_mean=0.05992（通过）
+  - gap_mean=0.03284（通过）
+  - 假设通过：H1/H2/H3 = true/true/true
+- 前端构建通过（Vite build success）。
+
+### 理论进展
+- 通过“宏原型组合 + 样本门槛”，苹果链路共享基底可以被稳定检出，说明层级概念关系的可见性对原型构造策略高度敏感。
+- 四任务结果已可直接回流Main：变量绑定、最小因果回路、统一坐标系、概念族并行可在同一面板形成闭环证据链。

@@ -207,8 +207,13 @@ def _looks_like_main_scan_json_file(p: Path) -> bool:
         or "dynamic_binding_stress_test" in path_lower
         or "long_horizon_causal_trace_test" in path_lower
         or "local_credit_assignment_proxy_test" in path_lower
+        or "variable_binding_hard_verification" in path_lower
+        or "minimal_causal_circuit_search" in path_lower
+        or "unified_coordinate_system_test" in path_lower
+        or "concept_family_parallel_scale" in path_lower
         or "unified_math_structure_decode" in path_lower
         or "agi_research_stage_bundle_manifest" in path_lower
+        or "agi_four_tasks_suite_manifest" in path_lower
     ):
         return True
 
@@ -233,6 +238,7 @@ def _looks_like_main_scan_json_file(p: Path) -> bool:
         )
         has_unified_decode = '"axis_stability"' in snippet and '"causal_separation"' in snippet and '"concept_hierarchy"' in snippet
         has_stage_bundle_manifest = '"bundle_id"' in snippet and '"agi_research_stage_bundle_v1"' in snippet
+        has_four_tasks_manifest = '"suite_id"' in snippet and '"agi_four_tasks_suite_v1"' in snippet
         return (
             (has_core_config and has_noun_records and (has_signatures or has_reused))
             or has_multidim_probe
@@ -241,6 +247,7 @@ def _looks_like_main_scan_json_file(p: Path) -> bool:
             or has_v1_hard_problem
             or has_unified_decode
             or has_stage_bundle_manifest
+            or has_four_tasks_manifest
         )
     except Exception:
         return False

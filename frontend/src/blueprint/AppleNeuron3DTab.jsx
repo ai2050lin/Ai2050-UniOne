@@ -28,6 +28,7 @@ const ROLE_COLORS = {
   hardBinding: '#fb7185',
   hardLong: '#38bdf8',
   hardLocal: '#f59e0b',
+  hardTriplet: '#a78bfa',
   unifiedDecode: '#22c55e',
   background: '#ffffff',
 };
@@ -122,6 +123,12 @@ const HARD_PROBLEM_EXPERIMENT_LABELS = {
   hard_problem_dynamic_binding_v1: '动态绑定',
   hard_problem_long_horizon_trace_v1: '长程因果链路',
   hard_problem_local_credit_assignment_v1: '局部信用分配',
+  triplet_targeted_causal_scan_v1: '三元组定向因果',
+  triplet_targeted_multiseed_stability_v1: '三元组多seed稳定性',
+  hard_problem_variable_binding_verification_v1: '变量绑定硬验证',
+  minimal_causal_circuit_search_v1: '最小因果回路搜索',
+  unified_coordinate_system_test_v1: '统一坐标系',
+  concept_family_parallel_scale_v1: '规模化概念族',
 };
 
 function isHardProblemResultPayload(data) {
@@ -145,6 +152,10 @@ function isUnifiedDecodePayload(data) {
 
 function isBundleManifestPayload(data) {
   return Boolean(data && data.bundle_id === 'agi_research_stage_bundle_v1');
+}
+
+function isFourTasksManifestPayload(data) {
+  return Boolean(data && data.suite_id === 'agi_four_tasks_suite_v1');
 }
 
 const MODE_VISUALS = {
@@ -405,6 +416,28 @@ function metricNodeStrength(metricKey, value) {
   return clamp01(v);
 }
 
+function extractMetricScalar(value) {
+  if (typeof value === 'number') {
+    return value;
+  }
+  if (value && typeof value === 'object' && typeof value.mean === 'number') {
+    return Number(value.mean);
+  }
+  return NaN;
+}
+
+function getMetricByPath(metrics, path) {
+  if (!metrics || !path) {
+    return undefined;
+  }
+  if (!String(path).includes('.')) {
+    return metrics[path];
+  }
+  return String(path)
+    .split('.')
+    .reduce((acc, key) => (acc && typeof acc === 'object' ? acc[key] : undefined), metrics);
+}
+
 function buildHardProblemNodes(hardProblemResults = {}) {
   const expEntries = Object.entries(hardProblemResults || {});
   if (expEntries.length === 0) {
@@ -414,11 +447,55 @@ function buildHardProblemNodes(hardProblemResults = {}) {
     hard_problem_dynamic_binding_v1: 'hardBinding',
     hard_problem_long_horizon_trace_v1: 'hardLong',
     hard_problem_local_credit_assignment_v1: 'hardLocal',
+    triplet_targeted_causal_scan_v1: 'hardTriplet',
+    triplet_targeted_multiseed_stability_v1: 'hardTriplet',
+    hard_problem_variable_binding_verification_v1: 'hardBinding',
+    minimal_causal_circuit_search_v1: 'hardLocal',
+    unified_coordinate_system_test_v1: 'unifiedDecode',
+    concept_family_parallel_scale_v1: 'hardTriplet',
   };
   const metricPriority = {
     hard_problem_dynamic_binding_v1: ['binding_stability_index', 'role_swap_error_rate', 'collision_rate_top1', 'subject_decode_accuracy'],
     hard_problem_long_horizon_trace_v1: ['layer_transport_stability_mean', 'long_horizon_decay', 'hop_recovery_mean'],
     hard_problem_local_credit_assignment_v1: ['local_global_consistency_mean', 'local_sufficiency_mean', 'local_selectivity_mean'],
+    hard_problem_variable_binding_verification_v1: [
+      'mean_delta',
+      'improved_dimension_count',
+      'enhanced.rewrite_accuracy',
+      'enhanced.role_swap_accuracy',
+      'enhanced.cross_sentence_chain_accuracy',
+    ],
+    minimal_causal_circuit_search_v1: [
+      'global.intervention_drop_mean',
+      'global.reproducibility_jaccard_mean',
+      'global.fidelity_mean',
+      'global.min_subset_size_mean',
+    ],
+    unified_coordinate_system_test_v1: [
+      'unified_coordinate_score',
+      'probe_orthogonality.orthogonality_index',
+      'ablation_coupling.decoupling_score',
+      'concept_dim_alignment.concept_dim_coupling_abs_mean',
+    ],
+    concept_family_parallel_scale_v1: [
+      'apple_chain_summary.shared_base_ratio_vs_micro_union.mean',
+      'cat_chain_summary.shared_base_ratio_vs_micro_union.mean',
+      'apple_vs_cat_shared_base_gap_mean',
+    ],
+    triplet_targeted_causal_scan_v1: [
+      'triplet_minimal_records',
+      'triplet_counterfactual_records',
+      'axis_specificity_index',
+      'triplet_separability_index',
+      'global_mean_causal_margin_seq_logprob',
+    ],
+    triplet_targeted_multiseed_stability_v1: [
+      'triplet_counterfactual_records',
+      'global_mean_causal_margin_seq_logprob',
+      'global_positive_causal_margin_ratio',
+      'queen_recovery_ratio_mean',
+      'king_recovery_ratio_mean',
+    ],
   };
 
   const nodes = [];
@@ -429,8 +506,10 @@ function buildHardProblemNodes(hardProblemResults = {}) {
     const metrics = payload?.metrics || {};
     const preferredKeys = metricPriority[expId] || Object.keys(metrics);
     const keys = preferredKeys.filter((k) => k in metrics).slice(0, 6);
-    keys.forEach((k, i) => {
-      const val = Number(metrics[k]);
+    const resolvedKeys = (keys.length > 0 ? keys : preferredKeys).slice(0, 6);
+    resolvedKeys.forEach((k, i) => {
+      const rawMetric = getMetricByPath(metrics, k);
+      const val = extractMetricScalar(rawMetric);
       const strength = metricNodeStrength(k, val);
       const seed = hashString(`hard|${expId}|${k}|${i}|${expIdx}`);
       const layer = Math.max(0, Math.min(LAYER_COUNT - 1, Math.floor(pseudoRandom(seed + 7) * LAYER_COUNT)));
@@ -511,6 +590,41 @@ function buildUnifiedDecodeNodes(unifiedDecodeResult) {
   return nodes;
 }
 
+function nodeDisplayGroup(role) {
+  if (role === 'background') {
+    return 'background';
+  }
+  if (role === 'query') {
+    return 'query';
+  }
+  if (role === 'style' || role === 'logic' || role === 'syntax') {
+    return 'multidim';
+  }
+  if (role === 'unifiedDecode') {
+    return 'unified';
+  }
+  if (role === 'hardBinding' || role === 'hardLong' || role === 'hardLocal' || role === 'hardTriplet') {
+    return 'hard';
+  }
+  return 'core';
+}
+
+function buildAutoDisplayProfile(analysisMode) {
+  if (['causal_intervention', 'counterfactual', 'robustness', 'minimal_circuit'].includes(analysisMode)) {
+    return { core: 0.45, query: 0.65, multidim: 0.5, hard: 1, unified: 0.45, background: 0.08 };
+  }
+  if (['subspace_geometry', 'feature_decomposition', 'cross_layer_transport', 'compositionality'].includes(analysisMode)) {
+    return { core: 0.5, query: 0.7, multidim: 0.95, hard: 0.45, unified: 1, background: 0.08 };
+  }
+  if (analysisMode === 'dynamic_prediction') {
+    return { core: 0.9, query: 1, multidim: 0.85, hard: 0.8, unified: 0.8, background: 0.12 };
+  }
+  if (analysisMode === 'static') {
+    return { core: 0.85, query: 0.85, multidim: 0.85, hard: 0.85, unified: 0.85, background: 0.12 };
+  }
+  return { core: 0.8, query: 0.8, multidim: 0.8, hard: 0.8, unified: 0.8, background: 0.1 };
+}
+
 function neuronToPosition(layer, neuron, radialJitter = 0) {
   const angle = ((neuron % 4096) / 4096) * Math.PI * 2;
   const radius = 2.7 + ((neuron % 2048) / 2048) * 3.3 + radialJitter;
@@ -527,6 +641,7 @@ function PulsingNeuron({
   predictionStrength = 0,
   mode = 'static',
   isEffectiveNode = false,
+  visibilityEmphasis = 1,
 }) {
   const ref = useRef(null);
   const modeStyle = MODE_VISUALS[mode] || MODE_VISUALS.static;
@@ -538,7 +653,7 @@ function PulsingNeuron({
     const pulse = (node.role === 'background' ? 0.04 : 0.14) * modeStyle.nodePulse;
     const speed = (node.role === 'background' ? 1.2 : 2.1) * modeStyle.nodeSpeed;
     const base = node.size;
-    const predictionBoost = predictionStrength * (node.role === 'background' ? 0.18 : 0.5);
+    const predictionBoost = predictionStrength * (node.role === 'background' ? 0.18 : 0.5) * (0.6 + 0.4 * visibilityEmphasis);
     const modeWave = mode === 'counterfactual' ? Math.sin(state.clock.elapsedTime * speed * 0.7 + node.phase * 1.3) * 0.06 : 0;
     const effectiveBoost = isEffectiveNode ? 0.22 : 0;
     const scale = base * (1 + Math.sin(state.clock.elapsedTime * speed + node.phase) * pulse + predictionBoost + modeWave + effectiveBoost);
@@ -567,7 +682,7 @@ function PulsingNeuron({
         roughness={0.2}
         metalness={0.15}
         transparent
-        opacity={isEffectiveNode ? 0.98 : node.role === 'background' ? 0.24 + predictionStrength * 0.08 : 0.92}
+        opacity={(isEffectiveNode ? 0.98 : node.role === 'background' ? 0.24 + predictionStrength * 0.08 : 0.92) * visibilityEmphasis}
       />
     </mesh>
   );
@@ -942,6 +1057,7 @@ export function AppleNeuronSceneContent({
   dimensionLayerProfile = [],
   activeDimension = 'style',
   dimensionCausal = null,
+  nodeDisplayEmphasis = {},
 }) {
   const activationMap = prediction?.activationMap || {};
   const focusNodeIds = prediction?.focusNodeIds || [];
@@ -951,11 +1067,21 @@ export function AppleNeuronSceneContent({
     ? prediction.layerProgress * (LAYER_COUNT - 1)
     : null;
 
+  const visibleNodes = useMemo(
+    () => nodes.filter((node) => toSafeNumber(nodeDisplayEmphasis?.[node.id], 1) > 0.025),
+    [nodeDisplayEmphasis, nodes]
+  );
+  const visibleNodeIdSet = useMemo(() => new Set(visibleNodes.map((n) => n.id)), [visibleNodes]);
+  const visibleLinks = useMemo(
+    () => links.filter((link) => visibleNodeIdSet.has(link?.from) && visibleNodeIdSet.has(link?.to)),
+    [links, visibleNodeIdSet]
+  );
+
   return (
     <>
       <LayerGuides activeLayer={activeLayer} />
 
-      {links.map((link) => (
+      {visibleLinks.map((link) => (
         <Line
           key={link.id}
           points={link.points}
@@ -966,7 +1092,7 @@ export function AppleNeuronSceneContent({
         />
       ))}
 
-      {nodes.map((node) => (
+      {visibleNodes.map((node) => (
         <PulsingNeuron
           key={node.id}
           node={node}
@@ -975,6 +1101,7 @@ export function AppleNeuronSceneContent({
           predictionStrength={activationMap[node.id] || 0}
           mode={mode}
           isEffectiveNode={focusNodeSet.has(node.id)}
+          visibilityEmphasis={toSafeNumber(nodeDisplayEmphasis?.[node.id], 1)}
         />
       ))}
 
@@ -1015,6 +1142,7 @@ function AppleNeuronScene({
   dimensionLayerProfile = [],
   activeDimension = 'style',
   dimensionCausal = null,
+  nodeDisplayEmphasis = {},
 }) {
   return (
     <Canvas shadows dpr={[1, 1.5]}>
@@ -1038,6 +1166,7 @@ function AppleNeuronScene({
         dimensionLayerProfile={dimensionLayerProfile}
         activeDimension={activeDimension}
         dimensionCausal={dimensionCausal}
+        nodeDisplayEmphasis={nodeDisplayEmphasis}
       />
     </Canvas>
   );
@@ -1121,6 +1250,7 @@ export function useAppleNeuronWorkspace() {
   const [hardProblemResults, setHardProblemResults] = useState({});
   const [unifiedDecodeResult, setUnifiedDecodeResult] = useState(null);
   const [bundleManifest, setBundleManifest] = useState(null);
+  const [fourTasksManifest, setFourTasksManifest] = useState(null);
   const [multidimTopN, setMultidimTopN] = useState(96);
   const [multidimVisible, setMultidimVisible] = useState({ style: true, logic: true, syntax: true });
   const [multidimActiveDimension, setMultidimActiveDimension] = useState('style');
@@ -1142,6 +1272,15 @@ export function useAppleNeuronWorkspace() {
   const [counterfactualPrompt, setCounterfactualPrompt] = useState('');
   const [robustnessTrials, setRobustnessTrials] = useState(6);
   const [minimalSubsetSize, setMinimalSubsetSize] = useState(12);
+  const [displayStrategy, setDisplayStrategy] = useState('auto');
+  const [manualDisplayGroups, setManualDisplayGroups] = useState({
+    core: true,
+    query: true,
+    multidim: true,
+    hard: true,
+    unified: true,
+    background: false,
+  });
 
   const backgroundNodes = useMemo(() => buildBackgroundNodes(), []);
   const appleCoreNodes = useMemo(() => buildAppleCoreNodes(), []);
@@ -1191,6 +1330,26 @@ export function useAppleNeuronWorkspace() {
 
   const keyNodes = useMemo(() => nodes.filter((n) => n.role !== 'background'), [nodes]);
   const [selected, setSelected] = useState(appleCoreNodes[0] || null);
+  const nodeDisplayEmphasis = useMemo(() => {
+    const map = {};
+    const autoProfile = buildAutoDisplayProfile(analysisMode);
+    nodes.forEach((node) => {
+      const group = nodeDisplayGroup(node.role);
+      let emphasis = 1;
+      if (displayStrategy === 'all') {
+        emphasis = 1;
+      } else if (displayStrategy === 'manual') {
+        emphasis = manualDisplayGroups[group] === false ? 0.03 : 1;
+      } else {
+        emphasis = toSafeNumber(autoProfile[group], 0.8);
+      }
+      if (selected?.id === node.id) {
+        emphasis = Math.max(emphasis, 0.95);
+      }
+      map[node.id] = Math.max(0, Math.min(1, emphasis));
+    });
+    return map;
+  }, [analysisMode, displayStrategy, manualDisplayGroups, nodes, selected?.id]);
 
   useEffect(() => {
     if (analysisMode !== 'dynamic_prediction') {
@@ -1288,8 +1447,50 @@ export function useAppleNeuronWorkspace() {
       const expId = parsed.experiment_id;
       const expLabel = HARD_PROBLEM_EXPERIMENT_LABELS[expId] || expId;
       setHardProblemResults((prev) => ({ ...prev, [expId]: parsed }));
+      if (expId === 'minimal_causal_circuit_search_v1') {
+        const targets = parsed?.metrics?.targets || {};
+        const minimalByNoun = {};
+        Object.entries(targets).forEach(([noun, row]) => {
+          const runs = Array.isArray(row?.runs) ? row.runs : [];
+          if (runs.length === 0) {
+            return;
+          }
+          const pick = runs
+            .slice()
+            .sort((a, b) => toSafeNumber(b?.fidelity_ratio, 0) - toSafeNumber(a?.fidelity_ratio, 0))[0];
+          const subset = Array.isArray(pick?.minimal_subset) ? pick.minimal_subset : [];
+          if (subset.length === 0) {
+            return;
+          }
+          const key = normalizeConceptKey(noun);
+          if (!key) {
+            return;
+          }
+          minimalByNoun[key] = {
+            noun: key,
+            subset_flat_indices: subset,
+            subset_size: toSafeNumber(pick?.minimal_size, subset.length),
+            recovery_ratio: toSafeNumber(pick?.fidelity_ratio, 0),
+            subset_drop_seq_logprob: toSafeNumber(pick?.intervention_drop_after_remove_subset, 0),
+          };
+        });
+        if (Object.keys(minimalByNoun).length > 0) {
+          setScanMechanismData((prev) => ({
+            dff: Math.max(1, toSafeNumber(prev?.dff, DFF)),
+            minimalByNoun: { ...(prev?.minimalByNoun || {}), ...minimalByNoun },
+            counterfactualByNoun: { ...(prev?.counterfactualByNoun || {}) },
+          }));
+        }
+      }
       const metricKeys = Object.keys(parsed?.metrics || {});
       setQueryFeedback(`已导入硬伤实验：${expLabel}（${sourceName}），指标数=${metricKeys.length}。`);
+      return;
+    }
+
+    if (isFourTasksManifestPayload(parsed)) {
+      setFourTasksManifest(parsed);
+      const allSuccess = Boolean(parsed?.all_success);
+      setQueryFeedback(`已导入四任务清单：${allSuccess ? '全部成功' : '存在失败'}，任务数=${Object.keys(parsed?.return_codes || {}).length}。`);
       return;
     }
 
@@ -1515,6 +1716,8 @@ export function useAppleNeuronWorkspace() {
       .filter(([from, to]) => byId[from] && byId[to])
       .map(([from, to, color]) => ({
         id: `${from}->${to}`,
+        from,
+        to,
         color,
         points: [byId[from].position, byId[to].position],
       }));
@@ -1901,7 +2104,9 @@ export function useAppleNeuronWorkspace() {
       fruitGeneral: keyNodes.filter((n) => n.role === 'fruitGeneral').length,
       fruitSpecific: fruitSpecific.length,
       query: keyNodes.filter((n) => n.role === 'query').length,
-      hardProblemNodes: keyNodes.filter((n) => n.role === 'hardBinding' || n.role === 'hardLong' || n.role === 'hardLocal').length,
+      hardProblemNodes: keyNodes.filter(
+        (n) => n.role === 'hardBinding' || n.role === 'hardLong' || n.role === 'hardLocal' || n.role === 'hardTriplet'
+      ).length,
       unifiedDecodeNodes: keyNodes.filter((n) => n.role === 'unifiedDecode').length,
       total: keyNodes.length,
       perFruit,
@@ -1913,14 +2118,18 @@ export function useAppleNeuronWorkspace() {
       hardProblemCount: Object.keys(hardProblemResults || {}).length,
       unifiedDecodeLoaded: Boolean(unifiedDecodeResult),
       bundleLoaded: Boolean(bundleManifest),
+      fourTasksLoaded: Boolean(fourTasksManifest),
       currentToken: modeOverlay.currentToken?.token || '-',
       currentTokenProb: modeOverlay.currentToken?.prob || 0,
       analysisMode,
+      displayStrategy,
       statusText: modeOverlay.statusText || '',
     };
   }, [
     analysisMode,
     bundleManifest,
+    displayStrategy,
+    fourTasksManifest,
     hardProblemResults,
     keyNodes,
     modeOverlay.currentToken,
@@ -1956,6 +2165,7 @@ export function useAppleNeuronWorkspace() {
     hardProblemResults,
     unifiedDecodeResult,
     bundleManifest,
+    fourTasksManifest,
     multidimTopN,
     setMultidimTopN,
     multidimVisible,
@@ -1969,6 +2179,7 @@ export function useAppleNeuronWorkspace() {
     setQuerySetVisible,
     setAllQuerySetVisible,
     nodes,
+    nodeDisplayEmphasis,
     links,
     selected,
     setSelected,
@@ -2003,6 +2214,10 @@ export function useAppleNeuronWorkspace() {
     setRobustnessTrials,
     minimalSubsetSize,
     setMinimalSubsetSize,
+    displayStrategy,
+    setDisplayStrategy,
+    manualDisplayGroups,
+    setManualDisplayGroups,
     modeMetrics: modeOverlay.metrics,
     prediction: analysisMode === 'static'
       ? null
@@ -2045,6 +2260,7 @@ export function AppleNeuronMainScene({ workspace, sceneHeight = '74vh' }) {
         dimensionLayerProfile={workspace.multidimLayerProfile}
         activeDimension={workspace.multidimActiveDimension}
         dimensionCausal={workspace.multidimCausalData}
+        nodeDisplayEmphasis={workspace.nodeDisplayEmphasis}
       />
     </div>
   );
@@ -2109,6 +2325,7 @@ export function AppleNeuronEncodingInfoPanels({ workspace, compact = false }) {
   const hardProblemResults = workspace?.hardProblemResults || {};
   const unifiedDecodeResult = workspace?.unifiedDecodeResult || null;
   const bundleManifest = workspace?.bundleManifest || null;
+  const fourTasksManifest = workspace?.fourTasksManifest || null;
   const activeDim = workspace?.multidimActiveDimension || 'style';
 
   const layerRows = useMemo(() => {
@@ -2158,6 +2375,7 @@ export function AppleNeuronEncodingInfoPanels({ workspace, compact = false }) {
         <div style={{ fontSize: 11, color: '#9bb3de', lineHeight: 1.7 }}>
           <div>{`核心神经元: ${(summary.micro || 0) + (summary.macro || 0) + (summary.route || 0)}`}</div>
           <div>{`当前词元: ${summary.currentToken || '-'} (${((summary.currentTokenProb || 0) * 100).toFixed(1)}%)`}</div>
+          <div>{`显示策略: ${summary.displayStrategy === 'auto' ? '自动聚焦' : summary.displayStrategy === 'all' ? '全部显示' : '手动筛选'}`}</div>
         </div>
         {metrics.length > 0 ? (
           <div style={{ marginTop: 8, display: 'grid', gap: 4 }}>
@@ -2204,6 +2422,58 @@ export function AppleNeuronEncodingInfoPanels({ workspace, compact = false }) {
                   </div>
                 );
               }
+              if (expId === 'triplet_targeted_causal_scan_v1') {
+                return (
+                  <div key={`hp-${expId}`}>
+                    {`${title}: 三联分离=${toSafeNumber(mm.triplet_separability_index, 0).toFixed(3)} | 轴特异=${toSafeNumber(mm.axis_specificity_index, 0).toFixed(3)}`}
+                  </div>
+                );
+              }
+              if (expId === 'triplet_targeted_multiseed_stability_v1') {
+                const seqMargin = toSafeNumber(mm?.global_mean_causal_margin_seq_logprob?.mean, 0);
+                const posRatio = toSafeNumber(mm?.global_positive_causal_margin_ratio?.mean, 0);
+                return (
+                  <div key={`hp-${expId}`}>
+                    {`${title}: seq边际均值=${seqMargin.toFixed(4)} | 正边际比例=${(posRatio * 100).toFixed(1)}%`}
+                  </div>
+                );
+              }
+              if (expId === 'hard_problem_variable_binding_verification_v1') {
+                const meanDelta = toSafeNumber(mm?.mean_delta, 0);
+                const improvedDims = toSafeNumber(mm?.improved_dimension_count, 0);
+                return (
+                  <div key={`hp-${expId}`}>
+                    {`${title}: 平均提升=${meanDelta.toFixed(4)} | 提升维度=${improvedDims}`}
+                  </div>
+                );
+              }
+              if (expId === 'minimal_causal_circuit_search_v1') {
+                const drop = toSafeNumber(mm?.global?.intervention_drop_mean, 0);
+                const repr = toSafeNumber(mm?.global?.reproducibility_jaccard_mean, 0);
+                return (
+                  <div key={`hp-${expId}`}>
+                    {`${title}: 干预下降=${drop.toFixed(4)} | 复现Jaccard=${repr.toFixed(4)}`}
+                  </div>
+                );
+              }
+              if (expId === 'unified_coordinate_system_test_v1') {
+                const us = toSafeNumber(mm?.unified_coordinate_score, 0);
+                const orth = toSafeNumber(mm?.probe_orthogonality?.orthogonality_index, 0);
+                return (
+                  <div key={`hp-${expId}`}>
+                    {`${title}: 统一分数=${us.toFixed(4)} | 正交性=${orth.toFixed(4)}`}
+                  </div>
+                );
+              }
+              if (expId === 'concept_family_parallel_scale_v1') {
+                const appleShared = toSafeNumber(mm?.apple_chain_summary?.shared_base_ratio_vs_micro_union?.mean, 0);
+                const catShared = toSafeNumber(mm?.cat_chain_summary?.shared_base_ratio_vs_micro_union?.mean, 0);
+                return (
+                  <div key={`hp-${expId}`}>
+                    {`${title}: 苹果共享=${appleShared.toFixed(4)} | 猫共享=${catShared.toFixed(4)}`}
+                  </div>
+                );
+              }
               return <div key={`hp-${expId}`}>{`${title}: 已导入`}</div>;
             })}
           </div>
@@ -2221,6 +2491,32 @@ export function AppleNeuronEncodingInfoPanels({ workspace, compact = false }) {
             <div>{`seed=${toSafeNumber(bundleManifest?.config?.seed, 0)} | 统一解码=${bundleManifest?.config?.run_unified_decoder ? '开启' : '关闭'}`}</div>
           </div>
         ) : null}
+        {fourTasksManifest ? (
+          <div style={{ marginTop: 8, fontSize: 11, color: '#9bb3de', lineHeight: 1.6 }}>
+            <div>{`四任务清单: 已导入`}</div>
+            <div>{`all_success=${fourTasksManifest?.all_success ? 'true' : 'false'} | 任务数=${Object.keys(fourTasksManifest?.return_codes || {}).length}`}</div>
+          </div>
+        ) : null}
+      </div>
+
+      <div style={cardStyle}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>硬伤实验与统一编码说明</div>
+        <div style={{ fontSize: 11, color: '#9bb3de', lineHeight: 1.7, display: 'grid', gap: 6, maxHeight: compact ? 220 : 300, overflowY: 'auto' }}>
+          <div style={{ color: '#cfe2ff', fontWeight: 700 }}>硬伤实验节点（红/蓝/橙/紫）</div>
+          <div>1. 来源：导入 `agi_research_result.v1` 的实验指标。</div>
+          <div>2. 映射：每个关键指标生成一个节点，颜色代表实验类型。</div>
+          <div>3. 位置：层号与神经元号由指标哈希映射到主 3D 空间（用于对比，不代表真实单一神经元定位）。</div>
+          <div>4. 大小与亮度：由指标强度决定；误差类指标（error/collision/decay）按“越小越好”反向映射。</div>
+          <div style={{ color: '#cfe2ff', fontWeight: 700, marginTop: 4 }}>统一编码节点（绿色）</div>
+          <div>1. 来源：`unified_math_structure_decode.json` 的融合结果。</div>
+          <div>2. 映射：按 style / logic / syntax 三个维度生成节点簇。</div>
+          <div>3. 层位：优先使用 dominant layer pattern，把节点放到对应层；无模式时使用回退层。</div>
+          <div>4. 强度：综合 `profile_cosine_mean` 与 `diagonal_advantage`，用于显示“轴稳定 + 因果可分离”程度。</div>
+          <div style={{ color: '#cfe2ff', fontWeight: 700, marginTop: 4 }}>读图顺序（建议）</div>
+          <div>1. 先看图例颜色区分实验类型。</div>
+          <div>2. 再看模型说明中的指标数值（均值/通过率）。</div>
+          <div>3. 最后点选节点查看 `metric/value/source`，判断该可视化是“证据节点”还是“结构节点”。</div>
+        </div>
       </div>
     </div>
   );
@@ -2264,6 +2560,7 @@ export function AppleNeuronSelectedLegendPanels({ workspace, compact = false }) 
         <div><span style={{ color: ROLE_COLORS.hardBinding }}>●</span> 硬伤实验-动态绑定</div>
         <div><span style={{ color: ROLE_COLORS.hardLong }}>●</span> 硬伤实验-长程链路</div>
         <div><span style={{ color: ROLE_COLORS.hardLocal }}>●</span> 硬伤实验-局部信用</div>
+        <div><span style={{ color: ROLE_COLORS.hardTriplet }}>●</span> 硬伤实验-三元组定向因果</div>
         <div><span style={{ color: ROLE_COLORS.unifiedDecode }}>●</span> 统一解码节点</div>
         <div><span style={{ color: '#84f1ff' }}>●</span> 输入概念神经元</div>
         <div><span style={{ color: ROLE_COLORS.background }}>●</span> 背景网络采样</div>
@@ -2412,6 +2709,10 @@ export function AppleNeuronControlPanels({ workspace }) {
     setRobustnessTrials,
     minimalSubsetSize,
     setMinimalSubsetSize,
+    displayStrategy,
+    setDisplayStrategy,
+    manualDisplayGroups,
+    setManualDisplayGroups,
     modeMetrics,
   } = workspace;
   const [scanFileOptions, setScanFileOptions] = useState([]);
@@ -2425,6 +2726,7 @@ export function AppleNeuronControlPanels({ workspace }) {
     multidim: '多维编码',
     mass_noun: '名词扫描',
     hard_problem: '硬伤实验',
+    four_tasks: '四任务套件',
     unified_decode: '统一解码',
     all: '全部',
   };
@@ -2454,7 +2756,23 @@ export function AppleNeuronControlPanels({ workspace }) {
         return p.includes('dynamic_binding_stress_test')
           || p.includes('long_horizon_causal_trace_test')
           || p.includes('local_credit_assignment_proxy_test')
+          || p.includes('triplet_targeted_causal_scan')
+          || p.includes('triplet_targeted_multiseed_stability')
+          || p.includes('variable_binding_hard_verification')
+          || p.includes('minimal_causal_circuit_search')
+          || p.includes('unified_coordinate_system_test')
+          || p.includes('concept_family_parallel_scale')
           || p.includes('agi_research_stage_bundle_manifest');
+      });
+    }
+    if (scanFileFilter === 'four_tasks') {
+      return rows.filter((f) => {
+        const p = String(f?.path || '').toLowerCase();
+        return p.includes('agi_four_tasks_suite_manifest')
+          || p.includes('variable_binding_hard_verification')
+          || p.includes('minimal_causal_circuit_search')
+          || p.includes('unified_coordinate_system_test')
+          || p.includes('concept_family_parallel_scale');
       });
     }
     if (scanFileFilter === 'unified_decode') {
@@ -2484,7 +2802,7 @@ export function AppleNeuronControlPanels({ workspace }) {
         return files[0]?.path || '';
       });
       if (files.length === 0) {
-        setScanFileError('未发现可导入文件：请先生成名词扫描、多维编码、硬伤实验或统一解码 JSON。');
+        setScanFileError('未发现可导入文件：请先生成名词扫描、多维编码、硬伤实验、四任务套件或统一解码 JSON。');
       }
     } catch (err) {
       setScanFileOptions([]);
@@ -2534,6 +2852,8 @@ export function AppleNeuronControlPanels({ workspace }) {
           data?.artifacts?.dynamic_binding_json,
           data?.artifacts?.long_horizon_json,
           data?.artifacts?.local_credit_json,
+          data?.artifacts?.triplet_targeted_json,
+          data?.artifacts?.triplet_multiseed_json,
           data?.artifacts?.unified_decode_json,
         ].filter(Boolean);
         for (const apath of artifactPaths) {
@@ -2545,6 +2865,36 @@ export function AppleNeuronControlPanels({ workspace }) {
             }
           } catch (_err) {
             // Ignore missing optional artifact files.
+          }
+        }
+        return;
+      }
+
+      const looksLikeFourTasks = Boolean(data?.suite_id === 'agi_four_tasks_suite_v1');
+      if (looksLikeFourTasks) {
+        handleImportScanJsonText(JSON.stringify(data), sourcePath);
+        const joinPath = (dirPath, fileName) => {
+          const base = String(dirPath || '').replace(/[\\/]+$/, '');
+          if (!base) {
+            return '';
+          }
+          return `${base}/${fileName}`;
+        };
+        const taskFiles = [
+          joinPath(data?.artifacts?.task1, 'variable_binding_hard_verification.json'),
+          joinPath(data?.artifacts?.task2, 'minimal_causal_circuit_search.json'),
+          joinPath(data?.artifacts?.task3, 'unified_coordinate_system_test.json'),
+          joinPath(data?.artifacts?.task4, 'concept_family_parallel_scale.json'),
+        ].filter(Boolean);
+        for (const p of taskFiles) {
+          try {
+            const r = await fetch(`${MAIN_API_BASE}/api/main/scan_file?path=${encodeURIComponent(p)}`);
+            const j = await r.json();
+            if (r.ok && j?.data) {
+              handleImportScanJsonText(JSON.stringify(j.data), j.path || p);
+            }
+          } catch (_err) {
+            // Ignore missing optional task file.
           }
         }
         return;
@@ -2786,6 +3136,63 @@ export function AppleNeuronControlPanels({ workspace }) {
       )}
 
       <div style={panelCardStyle}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>显示策略</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+          {[
+            { id: 'auto', label: '自动聚焦', desc: '随分析类型切换重点' },
+            { id: 'all', label: '全部显示', desc: '不过滤任何节点' },
+            { id: 'manual', label: '手动筛选', desc: '按类别开关显示' },
+          ].map((opt) => (
+            <button
+              key={`display-${opt.id}`}
+              type="button"
+              onClick={() => setDisplayStrategy(opt.id)}
+              title={opt.desc}
+              style={{
+                borderRadius: 8,
+                border: `1px solid ${displayStrategy === opt.id ? 'rgba(126, 224, 255, 0.75)' : 'rgba(122, 162, 255, 0.35)'}`,
+                background: displayStrategy === opt.id ? 'rgba(24, 101, 134, 0.38)' : 'rgba(7, 12, 25, 0.82)',
+                color: '#dbe9ff',
+                fontSize: 11,
+                padding: '7px 8px',
+                cursor: 'pointer',
+              }}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+        {displayStrategy === 'manual' ? (
+          <div style={{ marginTop: 8, display: 'grid', gap: 6 }}>
+            {[
+              { id: 'core', label: '核心/基础节点' },
+              { id: 'query', label: '输入概念节点' },
+              { id: 'multidim', label: '多维编码节点' },
+              { id: 'hard', label: '硬伤实验节点' },
+              { id: 'unified', label: '统一解码节点' },
+              { id: 'background', label: '背景网络节点' },
+            ].map((item) => (
+              <label key={`manual-group-${item.id}`} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#9eb4dd' }}>
+                <input
+                  type="checkbox"
+                  checked={manualDisplayGroups[item.id] !== false}
+                  onChange={(e) => setManualDisplayGroups((prev) => ({ ...prev, [item.id]: e.target.checked }))}
+                />
+                <span>{item.label}</span>
+              </label>
+            ))}
+          </div>
+        ) : null}
+        <div style={{ marginTop: 8, fontSize: 11, color: '#7ea2c9' }}>
+          {displayStrategy === 'auto'
+            ? '自动模式：因果类分析突出硬伤实验，结构类分析突出统一编码与多维节点。'
+            : displayStrategy === 'all'
+              ? '全部模式：所有节点同等显示，不做降噪。'
+              : '手动模式：按勾选结果控制各类节点显示。'}
+        </div>
+      </div>
+
+      <div style={panelCardStyle}>
         <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>Quick Concept Generator</div>
         <div style={{ display: 'grid', gap: 8 }}>
           <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
@@ -2882,6 +3289,7 @@ export function AppleNeuronControlPanels({ workspace }) {
                 { id: 'multidim', label: '多维编码' },
                 { id: 'mass_noun', label: '名词扫描' },
                 { id: 'hard_problem', label: '硬伤实验' },
+                { id: 'four_tasks', label: '四任务' },
                 { id: 'unified_decode', label: '统一解码' },
                 { id: 'all', label: '全部' },
               ].map((opt) => (

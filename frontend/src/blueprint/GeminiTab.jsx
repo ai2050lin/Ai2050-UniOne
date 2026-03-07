@@ -4,7 +4,6 @@ import { FeatureEmergenceAnimation } from './FeatureEmergenceAnimation';
 import QwenAblationReport from './QwenAblationReport';
 import ManifoldStructureGraph from './ManifoldStructureGraph';
 import CategorySubspaceGraph from './CategorySubspaceGraph';
-import UniversalManifoldGraph from './UniversalManifoldGraph';
 import DeepManifoldEvolutionGraph from './DeepManifoldEvolutionGraph';
 import TrajectoryCodebookGraph from './TrajectoryCodebookGraph';
 import ConceptSimilarityGraph from './ConceptSimilarityGraph';
@@ -16,6 +15,8 @@ import HyperSpaceBindingGraph from './HyperSpaceBindingGraph';
 import AGIUnifiedTheoryEngine from './AGIUnifiedTheoryEngine';
 import SNNBrainMappingGraph from './SNNBrainMappingGraph';
 import EPS_SNN_Dashboard from './EPS_SNN_Dashboard';
+import HRRPhaseRigorousDashboard from './HRRPhaseRigorousDashboard';
+import AppleOrthogonalityDashboard from './AppleOrthogonalityDashboard';
 
 export const GeminiTab = () => {
     const [expandedSteps, setExpandedSteps] = useState({});
@@ -264,7 +265,6 @@ export const GeminiTab = () => {
                     <QwenAblationReport />
                     <ManifoldStructureGraph />
                     <CategorySubspaceGraph />
-                    <UniversalManifoldGraph />
                     <DeepManifoldEvolutionGraph />
                     <TrajectoryCodebookGraph />
                 </div>
@@ -631,6 +631,26 @@ export const GeminiTab = () => {
                     </div>
                 </div>
 
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#c4b5fd', marginBottom: '12px', borderBottom: '1px solid rgba(196,181,253,0.35)', paddingBottom: '8px' }}>
+                        五点五、严格数学实测可视化看板
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        这个看板把“理论推导-数值实验-误差边界”放在同一视图：上面看容量相图，中间看理论与实测误差趋势，下面看相位门控积分的一致性。
+                    </div>
+                    <HRRPhaseRigorousDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#7dd3fc', marginBottom: '12px', borderBottom: '1px solid rgba(56,189,248,0.35)', paddingBottom: '8px' }}>
+                        五点六、苹果四轴正交探针看板
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        展示颜色/大小/文字/声音四轴的两两正交度、签名重叠、子空间正交性与假设判定。
+                    </div>
+                    <AppleOrthogonalityDashboard />
+                </div>
+
                 {/* 6. 接下来的工作 */}
                 <div>
                     <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981', marginBottom: '12px', borderBottom: '1px solid rgba(16,185,129,0.3)', paddingBottom: '8px' }}>六、接下来的核心工作 (Next Steps)</div>
@@ -666,10 +686,7 @@ export const GeminiTab = () => {
                 </div>
             </div>
         </div>
-            </div >
-        </div >
     );
 };
 
-export default GeminiTab;
 export default GeminiTab;

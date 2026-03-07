@@ -1,77 +1,12 @@
-import { useState } from 'react';
-import { AppleNeuron3DTab } from './AppleNeuron3DTab';
-
 export const ProjectRoadmapTab = ({
   roadmapData,
   mathRouteSystemPlan,
-  onOpenAppleNeuron3D,
 }) => {
-  const [showAppleNeuron3D, setShowAppleNeuron3D] = useState(false);
-
   return (
     <div style={{ animation: 'roadmapFade 0.6s ease-out', maxWidth: '1180px', margin: '0 auto' }}>
       <div style={{ marginBottom: '24px' }}>
         <h2 style={{ fontSize: '30px', fontWeight: '900', color: '#ffaa00', marginBottom: '10px' }}>战略层级路线图</h2>
         <div style={{ color: '#9ca3af', fontSize: '14px' }}>{roadmapData?.definition?.summary || '聚焦结构智能路线。'}</div>
-      </div>
-
-      <div
-        style={{
-          padding: '18px',
-          background: 'linear-gradient(135deg, rgba(57,208,255,0.16) 0%, rgba(57,208,255,0.04) 100%)',
-          border: '1px solid rgba(57,208,255,0.28)',
-          borderRadius: '16px',
-          marginBottom: '20px',
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <div>
-            <div style={{ color: '#cceeff', fontWeight: 'bold', fontSize: '16px', marginBottom: '6px' }}>苹果神经元3D</div>
-            <div style={{ color: '#96b1cc', fontSize: '12px' }}>
-              在路线图页面直接查看苹果核心神经元、水果相关神经元、Layer 全景对比与快速概念生成。
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            <button
-              type="button"
-              onClick={() => setShowAppleNeuron3D((prev) => !prev)}
-              style={{
-                border: '1px solid rgba(57,208,255,0.45)',
-                background: showAppleNeuron3D ? 'rgba(57,208,255,0.22)' : 'rgba(57,208,255,0.12)',
-                color: '#d9f3ff',
-                borderRadius: '10px',
-                padding: '8px 12px',
-                fontSize: '12px',
-                cursor: 'pointer',
-              }}
-            >
-              {showAppleNeuron3D ? '收起界面' : '显示界面'}
-            </button>
-            {typeof onOpenAppleNeuron3D === 'function' && (
-              <button
-                type="button"
-                onClick={onOpenAppleNeuron3D}
-                style={{
-                  border: '1px solid rgba(120,170,255,0.45)',
-                  background: 'rgba(30,46,85,0.6)',
-                  color: '#d9e4ff',
-                  borderRadius: '10px',
-                  padding: '8px 12px',
-                  fontSize: '12px',
-                  cursor: 'pointer',
-                }}
-              >
-                在独立3D页打开
-              </button>
-            )}
-          </div>
-        </div>
-
-        {showAppleNeuron3D && (
-          <div style={{ marginTop: '14px' }}>
-            <AppleNeuron3DTab panelPosition="left" sceneHeight="68vh" />
-          </div>
-        )}
       </div>
 
       <div

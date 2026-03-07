@@ -5,7 +5,6 @@ import { ProjectRoadmapTab } from './blueprint/ProjectRoadmapTab';
 import { DeepAnalysisTab } from './blueprint/DeepAnalysisTab';
 import { ResearchProgressTab } from './blueprint/ResearchProgressTab';
 import { SystemStatusTab } from './blueprint/SystemStatusTab';
-import { AppleNeuron3DTab } from './blueprint/AppleNeuron3DTab';
 import {
   PHASES,
   IMPROVEMENTS,
@@ -15,6 +14,8 @@ import {
   MATH_ROUTE_SYSTEM_PLAN,
 } from './blueprint/blueprintConfig';
 import { API_BASE, mapLegacyConsciousField, mapRuntimeConsciousField } from './blueprint/blueprintRuntimeUtils';
+
+const BLUEPRINT_TABS = new Set(['roadmap', 'analysis', 'progress', 'system']);
 
 export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
   const [activeTab, setActiveTab] = useState(initialTab); // roadmap, progress, system
@@ -32,7 +33,7 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
   const runtimeStepRef = useRef(0);
 
   useEffect(() => {
-    setActiveTab(initialTab || 'roadmap');
+    setActiveTab(BLUEPRINT_TABS.has(initialTab) ? initialTab : 'roadmap');
   }, [initialTab]);
 
   // Real-time Consciousness Polling
@@ -1074,7 +1075,6 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
               setExpandedImprovementPhase={setExpandedImprovementPhase}
               expandedImprovementTest={expandedImprovementTest}
               setExpandedImprovementTest={setExpandedImprovementTest}
-              onOpenAppleNeuron3D={() => setActiveTab('apple_neuron_3d')}
             />
           )}
 
@@ -1127,9 +1127,6 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
             />
           )}
 
-          {activeTab === 'apple_neuron_3d' && (
-            <AppleNeuron3DTab />
-          )}
         </div>
       </div>
     </div>
