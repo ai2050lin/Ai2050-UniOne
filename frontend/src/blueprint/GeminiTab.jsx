@@ -19,6 +19,7 @@ import HRRPhaseRigorousDashboard from './HRRPhaseRigorousDashboard';
 import AppleOrthogonalityDashboard from './AppleOrthogonalityDashboard';
 import RealModelChannelEditDashboard from './RealModelChannelEditDashboard';
 import AttentionAbstractionRouterDashboard from './AttentionAbstractionRouterDashboard';
+import RelationCouplingTraceDashboard from './RelationCouplingTraceDashboard';
 
 export const GeminiTab = () => {
     const [expandedSteps, setExpandedSteps] = useState({});
@@ -671,6 +672,16 @@ export const GeminiTab = () => {
                         展示头级职责散点图、Layer x Head 偏好热图，以及跨模板稳定性结果，支持导入 attention_abstraction_router JSON 与 stability JSON。
                     </div>
                     <AttentionAbstractionRouterDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#67e8f9', marginBottom: '12px', borderBottom: '1px solid rgba(103,232,249,0.35)', paddingBottom: '8px' }}>
+                        五点九、关系耦合路径看板
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        展示 `gender / hypernym / antonym / synonym / meronym / cause_effect` 六类关系在逐层处理中，如何把概念基底与拓扑关系场耦合起来，支持导入 relation_coupling_trace JSON。
+                    </div>
+                    <RelationCouplingTraceDashboard />
                 </div>
 
                 {/* 6. 接下来的工作 */}

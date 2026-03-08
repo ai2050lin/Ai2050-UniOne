@@ -1643,3 +1643,435 @@
   - 这说明：
     - 智能计算不只是“表征 + 路由”
     - 更像“门控先行、关系后整合、最后收束”的分层过程
+
+## 2026-03-08 18:35:00 继续推进：apple / cat / truth 的单概念路径签名
+- 用户请求：继续。
+- 本次执行命令（关键）：
+  - `apply_patch`（新增 `tests/codex/test_gpt2_qwen3_concept_path_signature.py`）
+  - `python -m py_compile tests/codex/test_gpt2_qwen3_concept_path_signature.py`
+  - `python tests/codex/test_gpt2_qwen3_concept_path_signature.py`
+  - `python -c "import json, pathlib, pprint; ..."`（读取 `apple / cat / truth` 的层级签名摘要）
+  - `apply_patch`（将“编码规律深化（二十五）”写入 `research/gemini/docs/AGI_GEMINI_MEMO.md`）
+- 本轮新增文件：
+  - 脚本：`tests/codex/test_gpt2_qwen3_concept_path_signature.py`
+  - 结果：`tests/codex_temp/gpt2_qwen3_concept_path_signature_20260308.json`
+- 本轮测试目标：
+  - 从家族平均推进到单概念层级路径
+  - 为 `apple / cat / truth` 分别构造逐层路径签名：
+    - `B_repr`
+    - `D_repr`
+    - `R_repr`
+    - `G_repr`
+    - `B_topo`
+    - `D_topo`
+    - `R_topo`
+    - `G_topo`
+- 本轮方法：
+  - 先用同家族概念构建逐层 `repr/topo` 家族基底
+  - 再对单概念逐层计算：
+    - 接近基底程度
+    - 偏移集中度
+    - 关系敏感度
+    - 门控敏感度
+  - 最后提取每个概念的层级签名摘要
+- GPT-2 关键结果：
+  - `apple`
+    - `repr_basis_layers = [11, 9, 8, 10, 7]`
+    - `topo_basis_layers = [0, 1, 3, 10, 6]`
+    - `repr_relation_layers = [11, 0, 1, 2, 3]`
+    - `repr_gating_layers = [6, 7, 8, 9, 5]`
+    - `topo_relation_layers = [10, 9, 11, 7, 8]`
+    - `topo_gating_layers = [0, 4, 1, 3, 5]`
+  - `cat`
+    - 与 `apple` 总体相似：
+      - 早层拓扑门控
+      - 中后层表征门控
+      - 晚层拓扑关系整合
+      - 末层表征收束
+  - `truth`
+    - `repr_relation_layers = [2, 5, 4, 3, 6]`
+    - 明显早于具体概念
+    - 说明抽象概念在 GPT-2 中更早进入关系表征
+- Qwen3-4B 关键结果：
+  - `apple`
+    - `repr_basis_layers = [3, 4, 5, 6, 7]`
+    - `repr_relation_layers = [29, 32, 30, 33, 31]`
+    - `repr_gating_layers = [0, 1, 8, 5, 4]`
+    - `topo_relation_layers = [26, 29, 18, 27, 33]`
+    - `topo_gating_layers = [0, 1, 6, 4, 5]`
+  - `cat`
+    - 也呈现：
+      - 早层门控
+      - 深层关系
+  - `truth`
+    - `repr_relation_layers = [0, 1, 2, 3, 5]`
+    - `repr_gating_layers = [15, 14, 16, 17, 18]`
+    - 说明 `truth` 在 Qwen3 中关系项极早进入表征空间，而门控反而更晚
+- 当前最重要的实验结论：
+  - 概念编码不能只看家族平均，必须看单概念的层级路径
+  - `apple / cat` 这类具体概念更接近：
+    - 早层门控
+    - 早中层形成对象骨架
+    - 深层整合关系
+  - `truth` 这类抽象概念不同：
+    - 很早就带有强关系结构
+    - 不需要等到深层才“附加关系”
+- 当前理论推进：
+  - 概念不该只写成点或双空间对象
+  - 更完整的写法应是：
+    - `P(c) = {S_c^(l)}_{l=1}^L`
+  - 也就是说：
+    - 概念真正的编码是它在整个层级系统中的生成路径
+
+## 2026-03-08 19:00:00 继续推进：king / queen / man / woman 的类比路径结构
+- 用户请求：继续。
+- 本次执行命令（关键）：
+  - `apply_patch`（新增 `tests/codex/test_gpt2_qwen3_analogy_path_structure.py`）
+  - `python -m py_compile tests/codex/test_gpt2_qwen3_analogy_path_structure.py`
+  - `python tests/codex/test_gpt2_qwen3_analogy_path_structure.py`
+  - `python -c "import json, pathlib, pprint; ..."`（读取逐层类比误差、`queen` 排名与最佳层）
+  - `apply_patch`（将“编码规律深化（二十六）”写入 `research/gemini/docs/AGI_GEMINI_MEMO.md`）
+- 本轮新增文件：
+  - 脚本：`tests/codex/test_gpt2_qwen3_analogy_path_structure.py`
+  - 结果：`tests/codex_temp/gpt2_qwen3_analogy_path_structure_20260308.json`
+- 本轮测试目标：
+  - 检验 `king - man + woman -> queen` 是否应被理解为逐层路径结构，而不是单层静态向量结构
+- 本轮方法：
+  - 对每层定义：
+    - 表征类比残差 `E_repr^(l)`
+    - 拓扑类比残差 `E_topo^(l)`
+  - 并构造逐层预测：
+    - `q_hat^(l) = king - man + woman`
+  - 在候选集合 `{king, queen, man, woman}` 中检查 `queen` 的排名
+- GPT-2 关键结果：
+  - `best_repr_analogy_layers = [5, 6, 7, 8, 3]`
+  - `repr_rank1_layers = [7]`
+  - `best_topo_analogy_layers = [11, 9, 6, 0, 10]`
+  - `topo_rank1_layers = [0]`
+  - 解释：
+    - 类比结构在 GPT-2 中只在部分层局部更明显
+    - 表征空间和拓扑空间的最佳层并不一致
+- Qwen3-4B 关键结果：
+  - `best_repr_analogy_layers = [0, 23, 24, 10, 8]`
+  - `repr_rank1_layers = []`
+  - `best_topo_analogy_layers = [30, 1, 27, 28, 35]`
+  - `topo_rank1_layers = [27]`
+  - 解释：
+    - 这个四词组在 Qwen3 的表征空间里没有出现稳定的逐层线性类比
+    - 但在少数拓扑层里仍能局部把 `queen` 排到第一
+- 当前最重要的实验结论：
+  - 不能把概念路径理论简单等同于“所有类比都应在每层呈现漂亮线性结构”
+  - 更准确地说：
+    - 类比结构是局部层级现象
+    - 并且可能在不同模型中落在不同空间
+      - `GPT-2` 更偏中层表征与若干拓扑层
+      - `Qwen3` 更偏少数拓扑层
+- 当前理论推进：
+  - 类比关系不该只写成固定向量差
+  - 更完整的写法应是关系路径对象：
+    - `R_{a:b} = {(H_a^(l)-H_b^(l), T_a^(l)-T_b^(l))}_{l=1}^L`
+  - 类比成立意味着两条关系路径在若干层局部对齐
+
+## 2026-03-08 19:25:00 继续推进：不同关系族在表征空间与拓扑空间中的分工
+- 用户请求：继续。
+- 本次执行命令（关键）：
+  - `apply_patch`（新增 `tests/codex/test_gpt2_qwen3_relation_path_families.py`）
+  - `python -m py_compile tests/codex/test_gpt2_qwen3_relation_path_families.py`
+  - `python tests/codex/test_gpt2_qwen3_relation_path_families.py`
+  - `python -c "import json, pathlib, pprint; ..."`（读取 `gender / hypernym / antonym` 三类关系的空间比较结果）
+  - `apply_patch`（将“编码规律深化（二十七）”写入 `research/gemini/docs/AGI_GEMINI_MEMO.md`）
+- 本轮新增文件：
+  - 脚本：`tests/codex/test_gpt2_qwen3_relation_path_families.py`
+  - 结果：`tests/codex_temp/gpt2_qwen3_relation_path_families_20260308.json`
+- 本轮测试目标：
+  - 不再只看一个类比族
+  - 直接比较三类关系路径：
+    - `gender`
+    - `hypernym`
+    - `antonym`
+  - 看它们更偏：
+    - 表征空间
+    - 还是拓扑空间
+- GPT-2 关键结果：
+  - `gender`
+    - `min_repr_error = 0.9977`
+    - `min_topo_error = 1.0300`
+    - 更偏表征空间
+  - `hypernym`
+    - `min_repr_error = 1.3326`
+    - `min_topo_error = 0.9271`
+    - 明显更偏拓扑空间
+  - `antonym`
+    - `min_repr_error = 0.8206`
+    - `min_topo_error = 0.7333`
+    - 两空间都存在，但拓扑略更强
+- Qwen3-4B 关键结果：
+  - `gender`
+    - `min_repr_error = 1.1441`
+    - `min_topo_error = 1.0257`
+    - 更偏拓扑空间
+  - `hypernym`
+    - `min_repr_error = 1.3162`
+    - `min_topo_error = 0.8544`
+    - 明显更偏拓扑空间
+  - `antonym`
+    - `min_repr_error = 1.1989`
+    - `min_topo_error = 0.8392`
+    - 非常明显更偏拓扑空间
+- 当前最重要的实验结论：
+  - 关系不是单一类型
+  - 不同关系族会优先落在不同空间
+  - 当前实测上：
+    - `gender`：GPT-2 更偏表征，Qwen3 更偏拓扑
+    - `hypernym`：两模型都明显偏拓扑
+    - `antonym`：两模型都偏拓扑，Qwen3 更明显
+- 当前理论推进：
+  - “关系项 `R`”不能再被当成单一对象
+  - 更准确地说：
+    - `R_c = Σ_τ R_{c,τ}`
+  - 每个关系类型 `τ` 都有自己更偏好的承载空间和层级链
+  - 因此统一公式要修正为：
+    - `H_c = B_F + D_F α_c + Σ_τ R_repr(c,τ) + G_c + ε_c`
+    - `T_c = B_topo + D_topo β_c + Σ_τ R_topo(c,τ) + G_topo_c + η_c`
+
+## 2026-03-08 19:45:00 继续推进：扩展关系族验证“关系族分工”的一般性
+- 用户请求：继续。
+- 本次执行命令（关键）：
+  - `apply_patch`（新增 `tests/codex/test_gpt2_qwen3_extended_relation_families.py`）
+  - `python -m py_compile tests/codex/test_gpt2_qwen3_extended_relation_families.py; python tests/codex/test_gpt2_qwen3_extended_relation_families.py`
+  - `python -c "import json, pathlib, pprint; ..."`（读取六类关系族的 `H/T` 空间比较结果）
+  - `apply_patch`（将“编码规律深化（二十八）”写入 `research/gemini/docs/AGI_GEMINI_MEMO.md`）
+- 本轮新增文件：
+  - 脚本：`tests/codex/test_gpt2_qwen3_extended_relation_families.py`
+  - 结果：`tests/codex_temp/gpt2_qwen3_extended_relation_families_20260308.json`
+- 本轮新增关系族：
+  - `synonym`
+    - `big -> large`
+    - `small -> tiny`
+  - `meronym`
+    - `wheel -> car`
+    - `leaf -> tree`
+  - `cause-effect`
+    - `fire -> smoke`
+    - `virus -> disease`
+- GPT-2 关键结果：
+  - `synonym`
+    - `min_repr_error = 1.4985`
+    - `min_topo_error = 0.7540`
+    - 明显偏拓扑
+  - `meronym`
+    - `min_repr_error = 0.9382`
+    - `min_topo_error = 0.7793`
+    - 偏拓扑
+  - `cause-effect`
+    - `min_repr_error = 1.4096`
+    - `min_topo_error = 0.9706`
+    - 偏拓扑
+- Qwen3-4B 关键结果：
+  - `synonym`
+    - `min_repr_error = 1.5134`
+    - `min_topo_error = 1.1175`
+    - 偏拓扑
+  - `meronym`
+    - `min_repr_error = 1.3154`
+    - `min_topo_error = 0.8679`
+    - 强烈偏拓扑
+  - `cause-effect`
+    - `min_repr_error = 1.3682`
+    - `min_topo_error = 1.1227`
+    - 偏拓扑
+- 当前最重要的实验结论：
+  - 前一轮的判断并不是偶然：
+    - 大多数关系族都更偏拓扑空间，而不是纯表征空间
+  - 当前六类关系中，只有 `gender` 更像边界型关系：
+    - GPT-2 中偏表征
+    - Qwen3 中偏拓扑
+  - 其余关系族：
+    - `hypernym`
+    - `antonym`
+    - `synonym`
+    - `meronym`
+    - `cause-effect`
+    基本都偏拓扑
+- 当前理论推进：
+  - 这意味着“关系项”的主成分不是静态属性标签，而更像拓扑约束场
+  - 因此可以进一步写成：
+    - `H_c = B_F + D_F α_c + R_local(c) + G_c + ε_c`
+    - `T_c = B_topo + D_topo β_c + R_struct(c) + G_topo(c) + η_c`
+  - 当前实测上：
+    - `R_struct` 才是关系项的主成分
+    - 它主要落在拓扑空间
+
+## 2026-03-08 16:50:00 继续推进：关系族逐层耦合路径与前端看板
+- 用户请求：继续。
+- 本次执行命令（关键）：
+  - `apply_patch`（新增 `tests/codex/test_gpt2_qwen3_relation_coupling_trace.py`）
+  - `python -m py_compile tests/codex/test_gpt2_qwen3_relation_coupling_trace.py; python tests/codex/test_gpt2_qwen3_relation_coupling_trace.py`
+  - `Copy-Item tests/codex_temp/gpt2_qwen3_relation_coupling_trace_20260308.json frontend/src/blueprint/data/relation_coupling_trace_sample.json -Force`
+  - `apply_patch`（新增 `frontend/src/blueprint/RelationCouplingTraceDashboard.jsx`）
+  - `apply_patch`（将新看板接入 `frontend/src/blueprint/GeminiTab.jsx`）
+  - `cmd /c npm run build`（`frontend`，构建通过）
+- 本轮新增文件：
+  - 脚本：`tests/codex/test_gpt2_qwen3_relation_coupling_trace.py`
+  - 结果：`tests/codex_temp/gpt2_qwen3_relation_coupling_trace_20260308.json`
+  - 前端样例：`frontend/src/blueprint/data/relation_coupling_trace_sample.json`
+  - 前端组件：`frontend/src/blueprint/RelationCouplingTraceDashboard.jsx`
+- 本轮测试目标：
+  - 不再只问“关系更偏表征还是拓扑”
+  - 进一步问：
+    - 关系族在哪些层开始把概念基底和拓扑关系场耦合起来
+  - 定义三类桥接量：
+    - `C^HT`
+    - `C^HH`
+    - `C^TT`
+- 数学定义（核心）：
+  - 端点概念的基底稳定度：
+    - `S_w^H(l) = 1 - Res(H_w^(l), B_F^H(l))`
+    - `S_w^T(l) = 1 - Res(T_w^(l), B_F^T(l))`
+  - 关系对齐分数：
+    - `A_tau^H(l) = max(0, cos) / (1 + Err)`
+    - `A_tau^T(l) = max(0, cos) / (1 + Err)`
+  - 三类桥接：
+    - `C_tau^HT(l) = mean(S_tau^H(l)) * A_tau^T(l)`
+    - `C_tau^HH(l) = mean(S_tau^H(l)) * A_tau^H(l)`
+    - `C_tau^TT(l) = mean(S_tau^T(l)) * A_tau^T(l)`
+- GPT-2 关键结果：
+  - `synonym`
+    - `best_bridge_ht_layers = [11, 8, 10, 7, 3]`
+    - `max_bridge_ht = 0.1918`
+    - `max_bridge_hh = 0.0000`
+    - `max_bridge_tt = 0.2401`
+    - 结论：同义关系几乎完全不是 `H-H` 属性对齐，更像后层拓扑桥接
+  - `meronym`
+    - `best_bridge_ht_layers = [8, 5, 7, 2, 1]`
+    - `max_bridge_ht = 0.2018`
+    - `max_bridge_hh = 0.1714`
+    - `max_bridge_tt = 0.3372`
+    - `topo_dominant_ratio = 0.7500`
+    - 结论：部分-整体关系同时牵涉骨架与拓扑，但主导项仍偏拓扑
+  - `cause_effect`
+    - `best_bridge_ht_layers = [8, 11, 4, 1, 5]`
+    - `max_bridge_ht = 0.1204`
+    - `max_bridge_hh = 0.0017`
+    - `max_bridge_tt = 0.1498`
+    - 结论：因果关系几乎不以纯表征属性方式存在
+- Qwen3-4B 关键结果：
+  - `synonym`
+    - `best_bridge_ht_layers = [14, 16, 25, 15, 21]`
+    - `max_bridge_ht = 0.0723`
+    - `max_bridge_hh = 0.0000`
+    - `max_bridge_tt = 0.0925`
+    - 结论：同义关系在中后层以拓扑桥接为主
+  - `meronym`
+    - `best_bridge_ht_layers = [24, 26, 25, 30, 7]`
+    - `max_bridge_ht = 0.2326`
+    - `max_bridge_hh = 0.0269`
+    - `max_bridge_tt = 0.2399`
+    - `topo_dominant_ratio = 0.6389`
+    - 结论：部分-整体关系在 Qwen3 中更强烈地表现为后层拓扑桥接
+  - `cause_effect`
+    - `best_bridge_ht_layers = [34, 3, 1, 4, 33]`
+    - `max_bridge_ht = 0.0788`
+    - `max_bridge_hh = 0.0154`
+    - `max_bridge_tt = 0.0906`
+    - 结论：因果关系表现出“早层预激活 + 末层收束”的双峰结构
+- 当前最重要的实验结论：
+  - 关系项不仅“偏拓扑”，而且是：
+    - 先要求概念骨架稳定
+    - 再在关键层通过 `H-T` 或 `T-T` 桥接进入关系场
+  - 因此关系并不是概念中的一个静态属性位，而是建立在概念骨架之上的分层耦合过程
+- 当前理论推进：
+  - 可以把关系族在每层的状态写成：
+    - `C_tau^(l) = (S^H, S^T, A^H, A^T, C^HT, C^HH, C^TT)`
+  - 这说明真正需要破解的，不只是概念编码，也包括：
+    - 概念骨架何时稳定
+    - 关系路由何时接管
+    - 哪些层负责完成桥接
+
+## 2026-03-08 17:05:00 继续推进：六类关系族统一 atlas 与看板升级
+- 用户请求：继续。
+- 本次执行命令（关键）：
+  - `apply_patch`（新增 `tests/codex/test_gpt2_qwen3_relation_coupling_atlas.py`）
+  - `python -m py_compile tests/codex/test_gpt2_qwen3_relation_coupling_atlas.py; python tests/codex/test_gpt2_qwen3_relation_coupling_atlas.py`
+  - `Copy-Item tests/codex_temp/gpt2_qwen3_relation_coupling_atlas_20260308.json frontend/src/blueprint/data/relation_coupling_trace_sample.json -Force`
+  - `apply_patch`（重写 `frontend/src/blueprint/RelationCouplingTraceDashboard.jsx`，修复乱码并升级为 6 类关系 atlas 看板）
+  - `apply_patch`（更新 `frontend/src/blueprint/GeminiTab.jsx` 的看板说明）
+  - `cmd /c npm run build`（`frontend`，构建通过）
+- 本轮新增文件：
+  - 脚本：`tests/codex/test_gpt2_qwen3_relation_coupling_atlas.py`
+  - 结果：`tests/codex_temp/gpt2_qwen3_relation_coupling_atlas_20260308.json`
+- 本轮测试目标：
+  - 将关系耦合分析从 3 类扩到 6 类
+  - 检验：
+    - `gender`
+    - `hypernym`
+    - `antonym`
+    - `synonym`
+    - `meronym`
+    - `cause_effect`
+    是否共享同一种全局耦合协议
+- 新增数学判定：
+  - 对关系族 `tau` 定义三种桥接峰值：
+    - `M_tau^HT = max_l C_tau^HT(l)`
+    - `M_tau^HH = max_l C_tau^HH(l)`
+    - `M_tau^TT = max_l C_tau^TT(l)`
+  - 再定义协议：
+    - `Pi_tau = argmax { M_tau^HT, M_tau^HH, M_tau^TT }`
+  - 其含义是：
+    - `HT`: 概念骨架主要在 `H`，关系结构主要在 `T`
+    - `HH`: 概念与关系都主要在 `H`
+    - `TT`: 概念端点与关系最终都收敛到拓扑协议
+- GPT-2 全局结果：
+  - `relation_count = 6`
+  - `protocol_counts = {'tt': 6}`
+  - `mean_topo_dominant_ratio = 0.4722`
+  - `mean_max_bridge_ht = 0.1622`
+  - `mean_max_bridge_hh = 0.0904`
+  - `mean_max_bridge_tt = 0.2273`
+  - 六类关系全部判为 `tt`
+- GPT-2 代表性结果：
+  - `gender`
+    - `ht = 0.1324`
+    - `hh = 0.1250`
+    - `tt = 0.2015`
+  - `hypernym`
+    - `ht = 0.1480`
+    - `hh = 0.0219`
+    - `tt = 0.2209`
+  - `meronym`
+    - `ht = 0.2018`
+    - `hh = 0.1714`
+    - `tt = 0.3372`
+- Qwen3-4B 全局结果：
+  - `relation_count = 6`
+  - `protocol_counts = {'tt': 6}`
+  - `mean_topo_dominant_ratio = 0.4398`
+  - `mean_max_bridge_ht = 0.1428`
+  - `mean_max_bridge_hh = 0.0306`
+  - `mean_max_bridge_tt = 0.1850`
+  - 六类关系全部判为 `tt`
+- Qwen3-4B 代表性结果：
+  - `gender`
+    - `ht = 0.1404`
+    - `hh = 0.0699`
+    - `tt = 0.1769`
+  - `hypernym`
+    - `ht = 0.1641`
+    - `hh = 0.0204`
+    - `tt = 0.2018`
+  - `antonym`
+    - `ht = 0.1647`
+    - `hh = 0.0512`
+    - `tt = 0.3095`
+- 当前最重要的实验结论：
+  - 不是只有少数关系族偏拓扑
+  - 而是六类关系族在两个模型里全部收敛到同一种全局协议：`TT`
+  - 这说明关系项的主形态，不只是“更偏拓扑”，而是已经形成统一的拓扑协议层
+- 当前理论推进：
+  - 关系项的主成分可写为：
+    - `R_struct`，且其主协议满足 `Pi_R ≈ TT`
+  - 这意味着：
+    - 概念在 `H` 中给出入口锚点
+    - 真正的关系组织在 `T` 中完成统一调度
+  - 更准确的说法是：
+    - 语言智能中的关系，不是概念上的注释标签，而是一个统一的拓扑协议层
