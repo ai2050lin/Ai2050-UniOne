@@ -2075,3 +2075,245 @@
     - 真正的关系组织在 `T` 中完成统一调度
   - 更准确的说法是：
     - 语言智能中的关系，不是概念上的注释标签，而是一个统一的拓扑协议层
+
+## 2026-03-08 17:18:00 继续推进：关系协议的头级 atlas 与“统一协议、专职头群”结论
+- 用户请求：继续。
+- 本次执行命令（关键）：
+  - `apply_patch`（新增 `tests/codex/test_gpt2_qwen3_relation_protocol_head_atlas.py`）
+  - `python -m py_compile tests/codex/test_gpt2_qwen3_relation_protocol_head_atlas.py; python tests/codex/test_gpt2_qwen3_relation_protocol_head_atlas.py`
+  - `Copy-Item tests/codex_temp/gpt2_qwen3_relation_protocol_head_atlas_20260308.json frontend/src/blueprint/data/relation_protocol_head_atlas_sample.json -Force`
+  - `apply_patch`（新增 `frontend/src/blueprint/RelationProtocolHeadAtlasDashboard.jsx`）
+  - `apply_patch`（将新看板接入 `frontend/src/blueprint/GeminiTab.jsx`）
+  - `cmd /c npm run build`（`frontend`，构建通过）
+- 本轮新增文件：
+  - 脚本：`tests/codex/test_gpt2_qwen3_relation_protocol_head_atlas.py`
+  - 结果：`tests/codex_temp/gpt2_qwen3_relation_protocol_head_atlas_20260308.json`
+  - 前端样例：`frontend/src/blueprint/data/relation_protocol_head_atlas_sample.json`
+  - 前端组件：`frontend/src/blueprint/RelationProtocolHeadAtlasDashboard.jsx`
+- 本轮测试目标：
+  - 不再只问“关系协议是不是统一”
+  - 进一步问：
+    - 统一协议是由少数共享头实现
+    - 还是由很多专职头群实现
+- 数学定义（核心）：
+  - 对第 `l` 层第 `h` 个头定义头级拓扑向量 `t_w^(l,h)`
+  - 头级拓扑基底贴合度：
+    - `S_w^(T,l,h) = 1 - Res(t_w^(l,h), B_F^(l,h))`
+  - 头级关系对齐分数：
+    - `A_tau^(T,l,h) = max(0, cos) / (1 + Err)`
+  - 头级承载分数：
+    - `Q_tau^TT(l,h) = mean(S_tau^(T,l,h)) * A_tau^(T,l,h)`
+  - 若某头 `Q_tau^TT(l,h)` 高，则该头是关系族 `tau` 的候选协议承载头
+- GPT-2 全局结果：
+  - `top_k = 12`
+  - `unique_top_head_count = 60`
+  - `specialized_relation_count = 48`
+  - `reused_relation_count = 12`
+  - `most_shared_head = (L11,H5), frequency = 2`
+  - 说明：
+    - 72 个 top 槽位中，60 个是不同头
+    - 大多数头只服务一个关系族
+- GPT-2 代表性最佳头：
+  - `gender`: `L11 H5`, `max_bridge_tt = 0.9384`
+  - `hypernym`: `L1 H6`, `max_bridge_tt = 0.9208`
+  - `antonym`: `L6 H5`, `max_bridge_tt = 0.8981`
+  - `synonym`: `L2 H9`, `max_bridge_tt = 0.9002`
+  - `meronym`: `L4 H10`, `max_bridge_tt = 0.8336`
+  - `cause_effect`: `L6 H1`, `max_bridge_tt = 0.8547`
+  - 关系族之间的 top-head Jaccard：
+    - 大多数非对角仅 `0.000 ~ 0.091`
+- Qwen3-4B 全局结果：
+  - `top_k = 12`
+  - `unique_top_head_count = 70`
+  - `specialized_relation_count = 68`
+  - `reused_relation_count = 2`
+  - `most_shared_head = (L7,H5), frequency = 2`
+  - 说明：
+    - 72 个 top 槽位中，70 个是不同头
+    - 几乎完全专职化
+- Qwen3-4B 代表性最佳头：
+  - `gender`: `L24 H7`, `max_bridge_tt = 0.9774`
+  - `hypernym`: `L3 H17`, `max_bridge_tt = 0.9480`
+  - `antonym`: `L35 H22`, `max_bridge_tt = 0.9303`
+  - `synonym`: `L16 H3`, `max_bridge_tt = 0.9302`
+  - `meronym`: `L18 H23`, `max_bridge_tt = 0.9356`
+  - `cause_effect`: `L35 H1`, `max_bridge_tt = 0.9070`
+  - 关系族之间的 top-head Jaccard：
+    - 几乎所有非对角都为 `0.000`
+    - 只有极少数组合达到 `0.043`
+- 当前最重要的实验结论：
+  - “协议统一” 不等于 “存在单一共享万能头”
+  - 当前更接近事实的是：
+    - 统一的是 `TT` 协议
+    - 实现它的是很多专职头群
+  - GPT-2 已经偏专职化
+  - Qwen3 则更接近“几乎完全专职化”
+- 当前理论推进：
+  - 可以把关系协议层写成：
+    - `Pi_R = ⋃_tau H_tau`
+  - 其中 `H_tau` 是关系族 `tau` 的专职头集合
+  - 并且当前实测满足：
+    - `|H_tau1 ∩ H_tau2| << |H_taui|`
+  - 更准确的表述是：
+    - 语言智能中的关系层，像一个统一语法的拓扑协议社会，而不是一个单一万能关系模块
+
+## 2026-03-08 17:32:00 继续推进：单头因果验证与“冗余分布式实现”结论
+- 用户请求：继续。
+- 本次执行命令（关键）：
+  - `apply_patch`（新增 `tests/codex/test_gpt2_qwen3_relation_protocol_head_causal.py`）
+  - `python -m py_compile tests/codex/test_gpt2_qwen3_relation_protocol_head_causal.py; python tests/codex/test_gpt2_qwen3_relation_protocol_head_causal.py`
+  - `Copy-Item tests/codex_temp/gpt2_qwen3_relation_protocol_head_causal_20260308.json frontend/src/blueprint/data/relation_protocol_head_causal_sample.json -Force`
+  - `apply_patch`（新增 `frontend/src/blueprint/RelationProtocolHeadCausalDashboard.jsx`）
+  - `apply_patch`（将新看板接入 `frontend/src/blueprint/GeminiTab.jsx`）
+  - `cmd /c npm run build`（`frontend`，构建通过）
+- 本轮新增文件：
+  - 脚本：`tests/codex/test_gpt2_qwen3_relation_protocol_head_causal.py`
+  - 结果：`tests/codex_temp/gpt2_qwen3_relation_protocol_head_causal_20260308.json`
+  - 前端样例：`frontend/src/blueprint/data/relation_protocol_head_causal_sample.json`
+  - 前端组件：`frontend/src/blueprint/RelationProtocolHeadCausalDashboard.jsx`
+- 本轮测试目标：
+  - 验证头级 atlas 找到的 `top head` 是否真的是强因果承载头
+  - 方法：
+    - 对每个关系族选最佳头
+    - 选同层对照头
+    - 分别做单头消融
+    - 比较模型级 `TT` 峰值塌缩率
+- 数学定义（核心）：
+  - 设关系族 `tau` 的基线峰值为 `B_tau`
+  - 最佳头消融后的峰值为 `B_tau^top-ablate`
+  - 对照头消融后的峰值为 `B_tau^ctrl-ablate`
+  - 定义：
+    - `Collapse_tau^top = (B_tau - B_tau^top-ablate) / B_tau`
+    - `Collapse_tau^ctrl = (B_tau - B_tau^ctrl-ablate) / B_tau`
+    - `Delta_tau^causal = (B_tau^ctrl-ablate - B_tau^top-ablate) / B_tau`
+  - 若 `Delta_tau^causal > 0` 且较大，则说明最佳头更具因果性
+- GPT-2 全局结果：
+  - `mean_top_collapse_ratio = 0.0417`
+  - `mean_control_collapse_ratio = 0.0585`
+  - `mean_causal_margin = -0.0423`
+  - `stronger_than_control_count = 2 / 6`
+- GPT-2 代表性结果：
+  - `antonym`
+    - `baseline = 0.2314`
+    - `top = 0.1907`
+    - `control = 0.2164`
+    - `top_collapse = 0.1758`
+    - `control_collapse = 0.0647`
+    - `margin = +0.1111`
+    - 说明：反义关系在 GPT-2 中存在一定单头因果性
+  - 但其余多数关系并不支持单头强因果：
+    - `gender`: `0.0000 vs 0.0000`
+    - `hypernym`: `0.0002 vs 0.0137`
+    - `synonym`: `0.0293 vs 0.0279`
+    - `meronym`: `0.0000 vs 0.1267`
+    - `cause_effect`: `0.0450 vs 0.1183`
+- Qwen3-4B 全局结果：
+  - `mean_top_collapse_ratio = 0.0030`
+  - `mean_control_collapse_ratio = 0.0088`
+  - `mean_causal_margin = -0.0085`
+  - `stronger_than_control_count = 0 / 6`
+- Qwen3-4B 代表性结果：
+  - `gender`: `0.0008 vs 0.0159`
+  - `hypernym`: `0.0000 vs 0.0146`
+  - `antonym`: `0.0000 vs 0.0000`
+  - `meronym`: `0.0172 vs 0.0225`
+  - 说明：
+    - Qwen3 中单头消融几乎完全打不塌关系协议
+- 当前最重要的实验结论：
+  - 头级 atlas 找到的是“候选承载头”，但通常不是单点关键因果瓶颈
+  - 统一关系协议并不是由单个最佳头独占负责
+  - 当前更合理的理解是：
+    - 关系协议采用冗余分布式实现
+- 当前理论推进：
+  - 前一轮写：
+    - `Pi_R = ⋃_tau H_tau`
+  - 这一轮进一步修正为：
+    - `Pi_R(tau) = Phi_tau(H_tau)`
+  - 其中：
+    - `H_tau` 是关系族 `tau` 的专职头群
+    - `Phi_tau` 是它们的组合协议
+  - 当前实测表明：
+    - `Ablate(h)`, `h in H_tau` 并不充分导致 `Pi_R(tau)` 崩塌
+  - 更准确的表述是：
+    - 语言智能中的关系层，是“统一协议 + 专职头群 + 冗余分布式实现”的拓扑社会
+
+## 2026-03-08 18:02:00 继续推进：`top-3` 头群联合消融与“中观场”结论
+- 用户请求：继续。
+- 本次执行命令（关键）：
+  - `apply_patch`（新增 `tests/codex/test_gpt2_qwen3_relation_protocol_head_group_causal.py`）
+  - `python -m py_compile tests/codex/test_gpt2_qwen3_relation_protocol_head_group_causal.py; python tests/codex/test_gpt2_qwen3_relation_protocol_head_group_causal.py`
+  - `Copy-Item tests/codex_temp/gpt2_qwen3_relation_protocol_head_group_causal_20260308.json frontend/src/blueprint/data/relation_protocol_head_group_causal_sample.json -Force`
+  - `apply_patch`（新增 `frontend/src/blueprint/RelationProtocolHeadGroupCausalDashboard.jsx`）
+  - `apply_patch`（将新看板接入 `frontend/src/blueprint/GeminiTab.jsx`）
+  - `cmd /c npm run build`（`frontend`，构建通过）
+- 本轮新增文件：
+  - 脚本：`tests/codex/test_gpt2_qwen3_relation_protocol_head_group_causal.py`
+  - 结果：`tests/codex_temp/gpt2_qwen3_relation_protocol_head_group_causal_20260308.json`
+  - 前端样例：`frontend/src/blueprint/data/relation_protocol_head_group_causal_sample.json`
+  - 前端组件：`frontend/src/blueprint/RelationProtocolHeadGroupCausalDashboard.jsx`
+- 本轮测试目标：
+  - 在单头因果验证失败后，继续验证：
+    - `top-3` 头群是否会成为真正的小规模因果瓶颈
+  - 方法：
+    - 取每个关系族头级 atlas 的 `top-3`
+    - 构造同层分布匹配的对照群
+    - 做联合消融
+    - 比较模型级 `TT` 峰值塌缩率
+- 数学定义（核心）：
+  - 设关系族 `tau` 的基线峰值为 `B_tau`
+  - `top-3` 头群消融后的峰值为 `B_tau^group-ablate`
+  - 对照群消融后的峰值为 `B_tau^ctrl-group`
+  - 定义：
+    - `Collapse_tau^group = (B_tau - B_tau^group-ablate) / B_tau`
+    - `Collapse_tau^ctrl-group = (B_tau - B_tau^ctrl-group) / B_tau`
+    - `Delta_tau^group = (B_tau^ctrl-group - B_tau^group-ablate) / B_tau`
+  - 若 `Delta_tau^group > 0` 且明显，说明小头群开始成为因果瓶颈
+- GPT-2 全局结果：
+  - `mean_top_group_collapse_ratio = 0.0704`
+  - `mean_control_group_collapse_ratio = 0.1648`
+  - `mean_causal_margin = -0.1056`
+  - `stronger_than_control_count = 2 / 6`
+- GPT-2 代表性结果：
+  - `antonym`
+    - `group_collapse = 0.2931`
+    - `ctrl_collapse = 0.2461`
+    - `margin = +0.0470`
+  - `synonym`
+    - `group_collapse = 0.0442`
+    - `ctrl_collapse = 0.0132`
+    - `margin = +0.0310`
+  - 但关键反例更多：
+    - `hypernym`: `0.0404 vs 0.4342`
+    - `meronym`: `0.0000 vs 0.1773`
+    - `cause_effect`: `0.0450 vs 0.1183`
+  - 说明：
+    - 在不少关系族上，对照群反而更能破坏协议峰值
+- Qwen3-4B 全局结果：
+  - `mean_top_group_collapse_ratio = 0.0048`
+  - `mean_control_group_collapse_ratio = 0.0111`
+  - `mean_causal_margin = -0.0089`
+  - `stronger_than_control_count = 2 / 6`
+- Qwen3-4B 代表性结果：
+  - `meronym`
+    - `group_collapse = 0.0267`
+    - `ctrl_collapse = 0.0188`
+    - `margin = +0.0079`
+  - `antonym`
+    - `group_collapse = 0.0023`
+    - `ctrl_collapse = 0.0000`
+    - `margin = +0.0090`
+  - 但总体规模极小，且多数关系几乎没有塌缩
+- 当前最重要的实验结论：
+  - 不是只有单头不够
+  - 连 `top-3` 小头群通常也不足以稳定打塌关系协议
+  - 这说明关系协议并不是“小头群模块”
+- 当前理论推进：
+  - 前一轮写：
+    - `Pi_R(tau) = Phi_tau(H_tau)`
+  - 这一轮进一步修正为：
+    - `Pi_R(tau) = Phi_tau(M_tau)`
+  - 其中：
+    - `M_tau` 不再只是很小的头集合
+    - 而是一个中观规模的跨层头群-层群协同场
+  - 更准确的表述是：
+    - 关系协议层不是一个小模块，而是一个跨层、冗余、分布式的中观拓扑场

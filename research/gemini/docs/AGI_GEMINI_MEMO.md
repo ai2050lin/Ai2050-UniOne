@@ -5836,3 +5836,646 @@ $$
 所以现在更接近事实的说法是：
 
 **语言智能中的关系，不是附着在概念上的注释，而是一个统一的拓扑协议层。**
+
+### 编码规律深化（三十一）：统一关系协议为何由专职头群而不是单一共享头实现
+
+前一轮已经得到一个很强的结论：
+
+- 六类关系族
+- 在 GPT-2 与 Qwen3 中
+- 全部收敛到 `TT` 协议
+
+但这里还存在一个更细的结构问题：
+
+**既然协议统一，是否会出现一小批“万能关系头”来承载所有关系？**
+
+如果答案是否定的，那么就说明：
+
+**统一协议并不等于统一载体。**
+
+这一轮把分析推进到头级别，直接对每个注意力头计算其关系承载强度。
+
+#### 1) 头级 `TT` 承载分数
+
+对第 `l` 层第 `h` 个头，定义该头在概念 `w` 上的拓扑向量：
+
+$$
+t_{w}^{(l,h)} \in \mathbb{R}^{m}
+$$
+
+其中 `m` 是最后 token 的注意力行在 padding 后的长度。
+
+若该头在家族 `F` 上形成局部子基底 `B_{F}^{(l,h)}`，则端点拓扑基底贴合度定义为：
+
+$$
+S_{w}^{T,(l,h)} = 1 - \operatorname{Res}(t_w^{(l,h)}, B_F^{(l,h)})
+$$
+
+对于关系族 `\tau` 的两组样例对 `(a,b)` 与 `(c,d)`，定义头级关系向量：
+
+$$
+r_{\tau,1}^{(l,h)} = t_b^{(l,h)} - t_a^{(l,h)}, \quad
+r_{\tau,2}^{(l,h)} = t_d^{(l,h)} - t_c^{(l,h)}
+$$
+
+其头级拓扑关系对齐分数：
+
+$$
+A_{\tau}^{T,(l,h)} = \frac{\max(0,\cos(r_{\tau,1}^{(l,h)}, r_{\tau,2}^{(l,h)}))}{1+\operatorname{Err}(r_{\tau,1}^{(l,h)}, r_{\tau,2}^{(l,h)})}
+$$
+
+于是头级 `TT` 承载分数为：
+
+$$
+Q_{\tau}^{TT}(l,h)=\overline{S_{\tau}^{T,(l,h)}} \cdot A_{\tau}^{T,(l,h)}
+$$
+
+如果某个头在某个关系族上有较高 `Q_{\tau}^{TT}(l,h)`，就说明：
+
+**这个头是该关系族的候选协议承载头。**
+
+#### 2) GPT-2 结果
+
+全局统计：
+
+- `top_k = 12`
+- `unique_top_head_count = 60`
+- `specialized_relation_count = 48`
+- `reused_relation_count = 12`
+- `most_shared_head = (L11, H5), frequency = 2`
+
+代表性最佳头：
+
+1. `gender`
+   - `best = L11 H5`
+   - `max_bridge_tt = 0.9384`
+
+2. `hypernym`
+   - `best = L1 H6`
+   - `max_bridge_tt = 0.9208`
+
+3. `antonym`
+   - `best = L6 H5`
+   - `max_bridge_tt = 0.8981`
+
+4. `synonym`
+   - `best = L2 H9`
+   - `max_bridge_tt = 0.9002`
+
+5. `meronym`
+   - `best = L4 H10`
+   - `max_bridge_tt = 0.8336`
+
+6. `cause_effect`
+   - `best = L6 H1`
+   - `max_bridge_tt = 0.8547`
+
+重叠矩阵非常低：
+
+- 大多数非对角 `Jaccard` 只有 `0.000` 到 `0.091`
+
+说明：
+
+- 虽然 GPT-2 中关系协议统一为 `TT`
+- 但不同关系族的 top heads 只发生极弱重叠
+
+#### 3) Qwen3-4B 结果
+
+全局统计：
+
+- `top_k = 12`
+- `unique_top_head_count = 70`
+- `specialized_relation_count = 68`
+- `reused_relation_count = 2`
+- `most_shared_head = (L7, H5), frequency = 2`
+
+代表性最佳头：
+
+1. `gender`
+   - `best = L24 H7`
+   - `max_bridge_tt = 0.9774`
+
+2. `hypernym`
+   - `best = L3 H17`
+   - `max_bridge_tt = 0.9480`
+
+3. `antonym`
+   - `best = L35 H22`
+   - `max_bridge_tt = 0.9303`
+
+4. `synonym`
+   - `best = L16 H3`
+   - `max_bridge_tt = 0.9302`
+
+5. `meronym`
+   - `best = L18 H23`
+   - `max_bridge_tt = 0.9356`
+
+6. `cause_effect`
+   - `best = L35 H1`
+   - `max_bridge_tt = 0.9070`
+
+更关键的是重叠矩阵：
+
+- 几乎所有非对角 `Jaccard` 都是 `0.000`
+- 只有极少数组合达到 `0.043`
+
+说明：
+
+**Qwen3 比 GPT-2 更进一步，把统一关系协议拆解成了几乎完全专职化的头群。**
+
+#### 4) 这一轮最关键的理论推进
+
+这一步非常关键，因为它纠正了一个容易犯的误判：
+
+“协议统一” 并不意味着 “存在单一万能结构单元”。
+
+当前实验表明更接近事实的是：
+
+1. 关系协议层是统一的
+2. 但协议的实现，是由很多专职头群协同完成
+3. 这些头群在不同关系族之间只发生极弱重叠
+
+因此更准确的说法是：
+
+**统一的是协议，不是执行头。**
+
+#### 5) 数学上的再收敛
+
+前面我们写：
+
+$$
+\Pi_R \approx TT
+$$
+
+现在还要再补一个实现层结构：
+
+$$
+\Pi_R = \bigcup_{\tau} \mathcal{H}_{\tau}
+$$
+
+其中：
+
+- `\mathcal{H}_{\tau}` 是关系族 `\tau` 的专职头集合
+
+并且当前实测满足：
+
+$$
+\left|\mathcal{H}_{\tau_1} \cap \mathcal{H}_{\tau_2}\right| \ll \left|\mathcal{H}_{\tau_i}\right|
+$$
+
+也就是：
+
+**不同关系族共享的是拓扑协议形式，而不是同一组头。**
+
+#### 6) 对统一智能理论的意义
+
+这一轮让理论进一步变得清楚：
+
+1. `概念骨架`
+   - 提供进入关系场的入口锚点
+
+2. `关系协议`
+   - 统一收敛到 `TT`
+
+3. `头级实现`
+   - 不是一个统一“关系器官”
+   - 而是很多专职头群分工完成
+
+所以现在更精确的判断是：
+
+**语言智能中的关系层，像一个统一语法的拓扑协议社会，而不是一个单一万能关系模块。**
+
+### 编码规律深化（三十二）：单头因果验证失败说明关系协议是冗余分布式实现
+
+前一轮已经得到：
+
+- 六类关系族全部收敛到 `TT` 协议
+- 但头级载体高度专职化
+
+接下来最自然的问题就是：
+
+**这些 top heads 是否真的是强因果承载头？**
+
+如果是，那么只消融一个最佳头，理论上就应该让对应关系族的 `TT` 峰值明显塌缩。
+
+这一轮直接做了这个验证。
+
+#### 1) 因果验证的定义
+
+对每个关系族 `\tau`：
+
+1. 取头级 atlas 中 `Q_{\tau}^{TT}(l,h)` 最高的最佳头
+2. 选取同层但不在 top 集合中的一个对照头
+3. 分别进行单头消融
+4. 重新计算该关系族的模型级 `TT` 峰值
+
+设基线峰值为：
+
+$$
+B_{\tau} = \max_l C_{\tau}^{TT}(l)
+$$
+
+最佳头消融后的峰值为：
+
+$$
+B_{\tau}^{\text{top-ablate}}
+$$
+
+对照头消融后的峰值为：
+
+$$
+B_{\tau}^{\text{ctrl-ablate}}
+$$
+
+于是定义：
+
+$$
+\operatorname{Collapse}_{\tau}^{\text{top}}
+=
+\frac{B_{\tau} - B_{\tau}^{\text{top-ablate}}}{B_{\tau}}
+$$
+
+$$
+\operatorname{Collapse}_{\tau}^{\text{ctrl}}
+=
+\frac{B_{\tau} - B_{\tau}^{\text{ctrl-ablate}}}{B_{\tau}}
+$$
+
+以及因果边际：
+
+$$
+\Delta_{\tau}^{\text{causal}}
+=
+\frac{B_{\tau}^{\text{ctrl-ablate}} - B_{\tau}^{\text{top-ablate}}}{B_{\tau}}
+$$
+
+如果 `\Delta_{\tau}^{\text{causal}} > 0` 且明显大于 0，就说明：
+
+最佳头比同层随机对照头更像真正的因果承载头。
+
+#### 2) GPT-2 结果
+
+全局统计：
+
+- `mean_top_collapse_ratio = 0.0417`
+- `mean_control_collapse_ratio = 0.0585`
+- `mean_causal_margin = -0.0423`
+- `stronger_than_control_count = 2 / 6`
+
+代表性结果：
+
+1. `antonym`
+   - `baseline = 0.2314`
+   - `top = 0.1907`
+   - `control = 0.2164`
+   - `top_collapse = 0.1758`
+   - `control_collapse = 0.0647`
+   - `margin = +0.1111`
+
+说明：
+
+- 反义关系在 GPT-2 中，存在一定的单头因果性
+
+但其余大多数关系并不支持单头强因果：
+
+2. `gender`
+   - `top_collapse = 0.0000`
+   - `control_collapse = 0.0000`
+
+3. `hypernym`
+   - `top_collapse = 0.0002`
+   - `control_collapse = 0.0137`
+
+4. `synonym`
+   - `top_collapse = 0.0293`
+   - `control_collapse = 0.0279`
+
+5. `meronym`
+   - `top_collapse = 0.0000`
+   - `control_collapse = 0.1267`
+
+6. `cause_effect`
+   - `top_collapse = 0.0450`
+   - `control_collapse = 0.1183`
+
+说明：
+
+- 在 GPT-2 中，只有少数关系族表现出一定单头因果性
+- 整体上并不支持“最佳头 = 单点关键因果头”的强说法
+
+#### 3) Qwen3-4B 结果
+
+全局统计：
+
+- `mean_top_collapse_ratio = 0.0030`
+- `mean_control_collapse_ratio = 0.0088`
+- `mean_causal_margin = -0.0085`
+- `stronger_than_control_count = 0 / 6`
+
+代表性结果：
+
+1. `gender`
+   - `top_collapse = 0.0008`
+   - `control_collapse = 0.0159`
+
+2. `hypernym`
+   - `top_collapse = 0.0000`
+   - `control_collapse = 0.0146`
+
+3. `antonym`
+   - `top_collapse = 0.0000`
+   - `control_collapse = 0.0000`
+
+4. `meronym`
+   - `top_collapse = 0.0172`
+   - `control_collapse = 0.0225`
+
+说明：
+
+**Qwen3 中单头消融几乎完全打不塌关系协议。**
+
+这说明：
+
+- 即使头级 atlas 已经找到了很强的“相关承载头”
+- 这些头也并不是单独负责关系协议的唯一节点
+
+#### 4) 这一轮最关键的理论推进
+
+这一轮给出了一个非常重要的负结果：
+
+**统一关系协议不是由单个最佳头单点负责的。**
+
+这点非常关键，因为它修正了前一轮可能带来的误解：
+
+1. `top heads` 是候选承载头
+2. 但它们不是唯一因果瓶颈
+3. 单头消融不足以稳定打塌协议层
+
+所以更合理的理解是：
+
+**关系协议采用的是冗余分布式实现。**
+
+#### 5) 数学上的再修正
+
+前一轮写成：
+
+$$
+\Pi_R = \bigcup_{\tau} \mathcal{H}_{\tau}
+$$
+
+现在要进一步补上冗余性：
+
+$$
+\Pi_R(\tau) = \Phi_{\tau}(\mathcal{H}_{\tau})
+$$
+
+其中：
+
+- `\mathcal{H}_{\tau}` 不再被理解为一个单点集合
+- 而是一个冗余头群
+- `\Phi_{\tau}` 是这些头之间的组合协议
+
+而当前实验表明：
+
+$$
+\text{Ablate}(h), \; h \in \mathcal{H}_{\tau}
+\;\not\Rightarrow\;
+\text{Collapse}(\Pi_R(\tau))
+$$
+
+也就是说：
+
+**单头并不是关系协议的充分必要载体。**
+
+#### 6) 当前最稳的判断
+
+到这里，关系机制的层次已经更清楚：
+
+1. `协议层统一`
+   - 六类关系族都收敛到 `TT`
+
+2. `头级实现专职化`
+   - 不同关系族使用不同头群
+
+3. `实现方式冗余化`
+   - 单头消融通常不足以打塌协议
+
+所以现在更接近真实机制的表述是：
+
+**语言智能中的关系层，是一个“统一协议 + 专职头群 + 冗余分布式实现”的拓扑社会。**
+
+### 编码规律深化（三十三）：`top-3` 头群仍无法稳定打塌协议，说明关系层是更大尺度的中观场
+
+前一轮的单头因果验证已经显示：
+
+- 单头消融通常不足以打塌关系协议
+
+但这仍然留下一个空间：
+
+也许单头不够，但一个很小的专职头群，例如 `top-3`，就已经足以形成真正的因果瓶颈。
+
+这一轮直接验证这个猜想。
+
+#### 1) 头群因果验证的定义
+
+对每个关系族 `\tau`：
+
+1. 从头级 atlas 中取 `Q_{\tau}^{TT}(l,h)` 最高的 `top-3` 头
+2. 以相同层分布构造一个同层对照头群
+3. 分别进行联合消融
+4. 重新计算模型级 `TT` 峰值
+
+设：
+
+$$
+B_{\tau} = \max_l C_{\tau}^{TT}(l)
+$$
+
+`top-3` 头群消融后的峰值：
+
+$$
+B_{\tau}^{\text{group-ablate}}
+$$
+
+对照群消融后的峰值：
+
+$$
+B_{\tau}^{\text{ctrl-group}}
+$$
+
+于是定义：
+
+$$
+\operatorname{Collapse}_{\tau}^{\text{group}}
+=
+\frac{B_{\tau} - B_{\tau}^{\text{group-ablate}}}{B_{\tau}}
+$$
+
+$$
+\operatorname{Collapse}_{\tau}^{\text{ctrl-group}}
+=
+\frac{B_{\tau} - B_{\tau}^{\text{ctrl-group}}}{B_{\tau}}
+$$
+
+以及边际：
+
+$$
+\Delta_{\tau}^{\text{group}}
+=
+\frac{B_{\tau}^{\text{ctrl-group}} - B_{\tau}^{\text{group-ablate}}}{B_{\tau}}
+$$
+
+如果 `\Delta_{\tau}^{\text{group}} > 0` 且显著，就说明这个小头群已经开始成为因果瓶颈。
+
+#### 2) GPT-2 结果
+
+全局统计：
+
+- `mean_top_group_collapse_ratio = 0.0704`
+- `mean_control_group_collapse_ratio = 0.1648`
+- `mean_causal_margin = -0.1056`
+- `stronger_than_control_count = 2 / 6`
+
+代表性结果：
+
+1. `antonym`
+   - `baseline = 0.2314`
+   - `top-3 = 0.1636`
+   - `control = 0.1745`
+   - `group_collapse = 0.2931`
+   - `ctrl_collapse = 0.2461`
+   - `margin = +0.0470`
+
+2. `synonym`
+   - `baseline = 0.2230`
+   - `top-3 = 0.2132`
+   - `control = 0.2201`
+   - `group_collapse = 0.0442`
+   - `ctrl_collapse = 0.0132`
+   - `margin = +0.0310`
+
+说明：
+
+- 在 GPT-2 中，少数关系族开始出现“小头群因果性”
+- 但整体上仍然不稳定
+
+更关键的是反例：
+
+3. `hypernym`
+   - `group_collapse = 0.0404`
+   - `ctrl_collapse = 0.4342`
+
+4. `meronym`
+   - `group_collapse = 0.0000`
+   - `ctrl_collapse = 0.1773`
+
+5. `cause_effect`
+   - `group_collapse = 0.0450`
+   - `ctrl_collapse = 0.1183`
+
+说明：
+
+- 在不少关系族上，对照群反而比 `top-3` 头群更能破坏协议峰值
+
+#### 3) Qwen3-4B 结果
+
+全局统计：
+
+- `mean_top_group_collapse_ratio = 0.0048`
+- `mean_control_group_collapse_ratio = 0.0111`
+- `mean_causal_margin = -0.0089`
+- `stronger_than_control_count = 2 / 6`
+
+代表性结果：
+
+1. `meronym`
+   - `group_collapse = 0.0267`
+   - `ctrl_collapse = 0.0188`
+   - `margin = +0.0079`
+
+2. `antonym`
+   - `group_collapse = 0.0023`
+   - `ctrl_collapse = 0.0000`
+   - `margin = +0.0090`
+
+但整体规模极小。
+
+同时多数关系几乎没有塌缩：
+
+- `gender`
+  - `group_collapse = 0.0000`
+- `hypernym`
+  - `group_collapse = 0.0000`
+- `synonym`
+  - `group_collapse = 0.0000`
+- `cause_effect`
+  - `group_collapse = 0.0000`
+
+说明：
+
+**Qwen3 中即使扩大到 `top-3` 头群，也仍然难以对关系协议产生显著因果破坏。**
+
+#### 4) 这一轮最关键的理论推进
+
+这一轮给出的结论比上一轮更强：
+
+不仅单头不是因果瓶颈，
+
+**连 `top-3` 小头群通常也不是。**
+
+这意味着：
+
+1. 关系协议不是“单头模块”
+2. 也通常不是“极小头群模块”
+3. 更合理的解释是：
+   - 它已经扩展成一个更大尺度的中观协同场
+
+#### 5) 数学上的进一步修正
+
+前面我们写：
+
+$$
+\Pi_R(\tau) = \Phi_{\tau}(\mathcal{H}_{\tau})
+$$
+
+现在需要进一步强调其规模：
+
+$$
+\Pi_R(\tau) = \Phi_{\tau}(\mathcal{M}_{\tau})
+$$
+
+其中：
+
+- `\mathcal{M}_{\tau}` 不再只是很小的头集合
+- 而是一个中观规模的跨层头群-层群协同场
+
+当前实验表明：
+
+$$
+\text{Ablate}(\text{top-3 heads}) \;\not\Rightarrow\; \text{Collapse}(\Pi_R(\tau))
+$$
+
+也就是说：
+
+**关系协议的关键自由度，仍然分散在更广泛的中观网络中。**
+
+#### 6) 当前最稳的判断
+
+到这里，关系层的结构已经进一步清楚：
+
+1. `协议统一`
+   - 六类关系族统一收敛到 `TT`
+
+2. `头级专职化`
+   - 不同关系族有不同的优势头
+
+3. `单头非瓶颈`
+   - 单头消融通常不够
+
+4. `小群组也非稳定瓶颈`
+   - `top-3` 头群联合消融通常也不够
+
+因此更接近事实的说法是：
+
+**关系协议层不是一个小模块，而是一个跨层、冗余、分布式的中观拓扑场。**

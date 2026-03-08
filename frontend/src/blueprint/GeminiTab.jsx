@@ -20,6 +20,9 @@ import AppleOrthogonalityDashboard from './AppleOrthogonalityDashboard';
 import RealModelChannelEditDashboard from './RealModelChannelEditDashboard';
 import AttentionAbstractionRouterDashboard from './AttentionAbstractionRouterDashboard';
 import RelationCouplingTraceDashboard from './RelationCouplingTraceDashboard';
+import RelationProtocolHeadAtlasDashboard from './RelationProtocolHeadAtlasDashboard';
+import RelationProtocolHeadCausalDashboard from './RelationProtocolHeadCausalDashboard';
+import RelationProtocolHeadGroupCausalDashboard from './RelationProtocolHeadGroupCausalDashboard';
 
 export const GeminiTab = () => {
     const [expandedSteps, setExpandedSteps] = useState({});
@@ -682,6 +685,36 @@ export const GeminiTab = () => {
                         展示 `gender / hypernym / antonym / synonym / meronym / cause_effect` 六类关系在逐层处理中，如何把概念基底与拓扑关系场耦合起来，支持导入 relation_coupling_trace JSON。
                     </div>
                     <RelationCouplingTraceDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#86efac', marginBottom: '12px', borderBottom: '1px solid rgba(134,239,172,0.35)', paddingBottom: '8px' }}>
+                        五点十、关系协议头级 atlas
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        展示 6 类关系族在注意力头级别的承载分布、共享头频次和 top-k 头重叠矩阵，用来判断协议层是共享头还是专职头群。
+                    </div>
+                    <RelationProtocolHeadAtlasDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#fca5a5', marginBottom: '12px', borderBottom: '1px solid rgba(252,165,165,0.35)', paddingBottom: '8px' }}>
+                        五点十一、关系协议头因果验证
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        展示最佳头消融与同层对照头消融的 `TT` 峰值塌缩率差异，用来判断头级 atlas 找到的是强因果头还是相关候选头。
+                    </div>
+                    <RelationProtocolHeadCausalDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#fcd34d', marginBottom: '12px', borderBottom: '1px solid rgba(252,211,77,0.35)', paddingBottom: '8px' }}>
+                        五点十二、关系协议头群因果验证
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        展示 `top-3` 头群联合消融与同层对照群联合消融的 `TT` 峰值塌缩率差异，用来判断关系协议是否开始在小头群层面变得因果。
+                    </div>
+                    <RelationProtocolHeadGroupCausalDashboard />
                 </div>
 
                 {/* 6. 接下来的工作 */}
