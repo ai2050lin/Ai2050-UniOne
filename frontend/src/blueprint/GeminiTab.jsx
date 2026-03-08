@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Brain, ChevronDown, ChevronRight, Activity } from 'lucide-react';
 import { FeatureEmergenceAnimation } from './FeatureEmergenceAnimation';
 import QwenAblationReport from './QwenAblationReport';
@@ -17,6 +17,8 @@ import SNNBrainMappingGraph from './SNNBrainMappingGraph';
 import EPS_SNN_Dashboard from './EPS_SNN_Dashboard';
 import HRRPhaseRigorousDashboard from './HRRPhaseRigorousDashboard';
 import AppleOrthogonalityDashboard from './AppleOrthogonalityDashboard';
+import RealModelChannelEditDashboard from './RealModelChannelEditDashboard';
+import AttentionAbstractionRouterDashboard from './AttentionAbstractionRouterDashboard';
 
 export const GeminiTab = () => {
     const [expandedSteps, setExpandedSteps] = useState({});
@@ -649,6 +651,26 @@ export const GeminiTab = () => {
                         展示颜色/大小/文字/声音四轴的两两正交度、签名重叠、子空间正交性与假设判定。
                     </div>
                     <AppleOrthogonalityDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#86efac', marginBottom: '12px', borderBottom: '1px solid rgba(134,239,172,0.35)', paddingBottom: '8px' }}>
+                        五点七、真实模型知识改写边界看板
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        展示通道级干预中 k-规模、目标关系翻转率与锚点保真率的权衡，支持导入 real_model_apple_sweetness_channel_edit JSON。
+                    </div>
+                    <RealModelChannelEditDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#7dd3fc', marginBottom: '12px', borderBottom: '1px solid rgba(125,211,252,0.35)', paddingBottom: '8px' }}>
+                        五点八、抽象路由与稳定性看板
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        展示头级职责散点图、Layer x Head 偏好热图，以及跨模板稳定性结果，支持导入 attention_abstraction_router JSON 与 stability JSON。
+                    </div>
+                    <AttentionAbstractionRouterDashboard />
                 </div>
 
                 {/* 6. 接下来的工作 */}
