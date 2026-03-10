@@ -48,22 +48,10 @@ export default function LocalPulseRegionHeterogeneityDashboard() {
 
   const gainRows = useMemo(
     () => [
-      {
-        item: '异质性整合增益',
-        value: Number(payload?.gains?.heterogeneity_gain_vs_homogeneous || 0),
-      },
-      {
-        item: '回放整合增益',
-        value: Number(payload?.gains?.replay_gain_vs_heterogeneous || 0),
-      },
-      {
-        item: '回放恢复增益',
-        value: Number(payload?.gains?.replay_recovery_gain_vs_homogeneous || 0),
-      },
-      {
-        item: '异质性专职增益',
-        value: Number(payload?.gains?.specialization_gain_vs_homogeneous || 0),
-      },
+      { item: '异质性整合增益', value: Number(payload?.gains?.heterogeneity_gain_vs_homogeneous || 0) },
+      { item: '回放整合增益', value: Number(payload?.gains?.replay_gain_vs_heterogeneous || 0) },
+      { item: '回放恢复增益', value: Number(payload?.gains?.replay_recovery_gain_vs_homogeneous || 0) },
+      { item: '异质性专职增益', value: Number(payload?.gains?.specialization_gain_vs_homogeneous || 0) },
     ],
     [payload],
   );

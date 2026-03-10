@@ -12871,3 +12871,1535 @@ g -n "AppleOrthogonalityDashboard|五点六|五点五|HRRPhaseRigorousDashboard"
   1. 扩大 concept-protocol 映射样本，不再只用 `apple / cat / truth`
   2. 把协议稳定性从“layer usage 熵”换成更强的跨 prompt / 跨关系族稳定指标
   3. 若这两步完成，再重新测第二组耦合
+
+## 2026-03-10 17:24 局部脉冲阶段条件因果图谱：当前因果核心随阶段切换，不需要全局控制器统一指挥
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_local_pulse_phase_conditioned_causal_atlas.py`
+- `python tests/codex/test_local_pulse_phase_conditioned_causal_atlas.py`
+- `Copy-Item tests/codex_temp/local_pulse_phase_conditioned_causal_atlas_20260310.json frontend/src/blueprint/data/local_pulse_phase_conditioned_causal_atlas_sample.json -Force`
+- `npm --prefix frontend run build`
+
+### 新增文件与产物
+- `tests/codex/test_local_pulse_phase_conditioned_causal_atlas.py`
+- `tests/codex_temp/local_pulse_phase_conditioned_causal_atlas_20260310.json`
+- `frontend/src/blueprint/LocalPulsePhaseConditionedCausalAtlasDashboard.jsx`
+- `frontend/src/blueprint/data/local_pulse_phase_conditioned_causal_atlas_sample.json`
+
+### 本轮目标
+- 在“无全局控制器、只有局部脉冲更新”的前提下，直接测试当前因果核心是否随 `concept / comparison / recovery` 三个阶段切换。
+- 如果阶段核心会切换，就说明系统级整合更像局部核心接力，而不是单一全局调度器的持续指挥。
+
+### 关键结果
+- `baseline_accuracy = 0.6722`
+- `concept_phase_upstream_advantage = -0.0903`
+- `comparison_phase_memory_comparator_advantage = +0.0556`
+- `recovery_phase_replay_memory_comparator_advantage = +0.1597`
+- `distinct_top_region_count = 2`
+- 假设：
+  - `H1_concept_phase_prefers_upstream_regions = false`
+  - `H2_comparison_phase_prefers_memory_comparator = true`
+  - `H3_recovery_phase_is_replay_dependent = true`
+  - `H4_no_single_global_core = true`
+
+### 当前理论推进
+- 这轮结果非常关键，因为它把“没有全局控制器”的主线从静态结构推进到了条件化因果层：
+  - `comparison_phase` 的局部核心明确落在 `comparator`
+  - `recovery_phase` 的局部核心进一步切到 `motor`，并且这种晚期核心对 replay 明显依赖
+- 这说明系统级整合更像：
+  - 不同阶段由不同局部核心依次接管
+  - 而不是从头到尾由一个不变的全局控制器统筹
+- 同时，`H1` 失败也很有价值：
+  - 当前网络的 `concept_phase` 还没有把“早期感知编码”和“中期比较核”充分分开，早期因果重心已经偏向 `comparator`
+  - 这提示现有局部网络仍然过早把信息压向比较核，后续要把早期表征与中期比较进一步解耦
+
+### 对破解脉冲神经网络编码结构的意义
+- 这一步比单纯证明“局部规则能工作”更接近脑侧：
+  - 它开始回答“为什么此时此刻是这批神经元成为当前功能核心，而不是另一批”
+- 当前更稳的统一结构应继续收缩为：
+  - `局部状态`
+  - `局部脉冲更新`
+  - `阶段条件门控`
+  - `区域异质性`
+  - `局部回放/局部恢复`
+- 这比继续假设全局桥接变量更贴近大脑真实约束。
+
+### 下一阶段的大任务块
+- 任务块 1：早期感知核与比较核解耦
+  - 修正当前 `concept_phase` 过早落到 comparator 的问题，把早期表征稳定留在 sensory/memory，再看阶段核心是否会拉得更清楚。
+- 任务块 2：局部阶段核心接回真实模型层带
+  - 用同样的 `concept / comparison / recovery` 分相位思路，回到 Qwen3 / DeepSeek 的共享层带和恢复链，看真实模型里是否也存在局部核心接力。
+- 任务块 3：去全局化训练律
+  - 把 `phase-conditioned local core` 直接推进成训练约束，让系统自己学会在不同阶段选择不同局部核心，而不是靠后验读图解释。
+
+## 2026-03-10 17:41 早期感知核解耦基准：把 concept_phase 核心拉回上游，但中期比较核仍需稳住
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_local_pulse_early_core_decoupling_benchmark.py`
+- `python tests/codex/test_local_pulse_early_core_decoupling_benchmark.py`
+- `Copy-Item tests/codex_temp/local_pulse_early_core_decoupling_benchmark_20260310.json frontend/src/blueprint/data/local_pulse_early_core_decoupling_benchmark_sample.json -Force`
+- `npm --prefix frontend run build`
+
+### 新增文件与产物
+- `tests/codex/test_local_pulse_early_core_decoupling_benchmark.py`
+- `tests/codex_temp/local_pulse_early_core_decoupling_benchmark_20260310.json`
+- `frontend/src/blueprint/LocalPulseEarlyCoreDecouplingDashboard.jsx`
+- `frontend/src/blueprint/data/local_pulse_early_core_decoupling_benchmark_sample.json`
+- 清理乱码并重写：`frontend/src/blueprint/LocalPulseRegionHeterogeneityDashboard.jsx`
+
+### 本轮目标
+- 直接测试：如果强行把早期流量更多留在 `sensory / memory`，能否把 `concept_phase` 的局部核心重新拉回上游，同时不把整体整合和恢复打塌。
+
+### 关键结果
+- `baseline_upstream_advantage = -0.0764`
+- `decoupled_upstream_advantage = +0.1528`
+- `upstream_advantage_gain = +0.2292`
+- `decoupled_local_integration_score = 0.6189`
+- `integration_gain = +0.00035`
+- `recovery_gain = 0.0`
+- `distinct_top_region_count = 3`
+- 假设：
+  - `H1_decoupling_increases_upstream_advantage = true`
+  - `H2_decoupling_preserves_local_integration = true`
+  - `H3_decoupling_keeps_comparison_core_local = false`
+  - `H4_decoupling_keeps_multi_stage_local_core = true`
+
+### 当前理论推进
+- 这轮给出一个很强的正结果：
+  - 早期感知核与比较核并不是不可分的。
+  - 只要修改局部路由和局部相位约束，就能把 `concept_phase` 的局部核心从 `comparator` 拉回 `memory`，而且整体整合分数并没有塌。
+- 但同时也出现了一个新的限制：
+  - 中期 `comparison_phase` 的核心被拉偏到了 `motor`，说明当前解耦方式有“过早动作化”的副作用。
+- 因而当前更稳的结构更新是：
+  - `早期感知核`、`中期比较核`、`晚期动作/恢复核` 三者可以被分开
+  - 但它们之间还需要一层更细的局部阶段门控，避免把早期解耦直接拖成中期动作泄漏
+
+### 对破解脉冲神经网络编码结构的意义
+- 这一步非常接近脑侧核心约束：
+  - 同一个系统里，不同阶段确实可能由不同局部核接力
+  - 而且这些局部核不是天然固定的，而是可以被局部路由和相位条件重新塑形
+- 这进一步削弱了“必须有全局控制器”这种假设，强化了：
+  - `局部状态`
+  - `局部脉冲更新`
+  - `阶段门控`
+  - `脑区异质性`
+  - `局部回放`
+  才是更接近大脑编码结构的统一骨架
+
+### 下一阶段的大任务块
+- 任务块 1：中期比较核稳相
+  - 在保持早期上游优势的同时，修正 `comparison_phase` 过早滑向 `motor` 的问题，把中期核心稳定留在 `memory / comparator`。
+- 任务块 2：局部阶段核搬回真实模型
+  - 把 `早期感知核 / 中期比较核 / 晚期恢复核` 这套分相位结构搬回 Qwen3 / DeepSeek 的共享层带与恢复链，验证真实模型里是否也存在同样的局部接力。
+- 任务块 3：去全局化训练律
+  - 把“阶段性局部核心接力”从后验分析推进成训练约束，让系统自己学会在不同阶段选择不同局部核，而不是靠后验图谱解释。
+
+## 2026-03-10 17:57 中期比较核稳相基准：总分上涨不等于局部因果组织正确
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_local_pulse_midphase_core_stabilization_benchmark.py`
+- `python tests/codex/test_local_pulse_midphase_core_stabilization_benchmark.py`
+- `Copy-Item tests/codex_temp/local_pulse_midphase_core_stabilization_benchmark_20260310.json frontend/src/blueprint/data/local_pulse_midphase_core_stabilization_benchmark_sample.json -Force`
+- `npm --prefix frontend run build`
+
+### 新增文件与产物
+- `tests/codex/test_local_pulse_midphase_core_stabilization_benchmark.py`
+- `tests/codex_temp/local_pulse_midphase_core_stabilization_benchmark_20260310.json`
+- `frontend/src/blueprint/LocalPulseMidphaseCoreStabilizationDashboard.jsx`
+- `frontend/src/blueprint/data/local_pulse_midphase_core_stabilization_benchmark_sample.json`
+- 清理并重写：
+  - `frontend/src/blueprint/LocalPulseRegionHeterogeneityDashboard.jsx`
+  - `frontend/src/blueprint/LocalPulseEarlyCoreDecouplingDashboard.jsx`
+
+### 本轮目标
+- 在早期上游解耦已经成立的前提下，继续测试能否把 `comparison_phase` 的局部核心稳回 `memory / comparator`，不让它滑向 `motor`。
+
+### 关键结果
+- `decoupled_comparison_advantage = -0.1042`
+- `stabilized_comparison_advantage = -0.2222`
+- `comparison_advantage_gain = -0.1181`
+- `upstream_retention_delta = -0.1250`
+- `motor_overreach_reduction = -0.1181`
+- `stabilized_local_integration_score = 0.6278`
+- `integration_gain = +0.0089`
+- 假设：
+  - `H1_stabilization_improves_comparison_core = false`
+  - `H2_stabilization_keeps_upstream_advantage = false`
+  - `H3_stabilization_reduces_motor_overreach = false`
+  - `H4_stabilization_preserves_multi_stage_local_core = true`
+
+### 当前理论推进
+- 这轮是一个非常重要的负结果：
+  - 继续强推中期稳相，虽然让综合分数小幅上升，但局部因果组织明显变坏。
+  - `comparison_phase` 更加偏向 `motor`，而且 `concept_phase` 的上游优势也被削弱。
+- 这说明：
+  - 不能把综合成功率或整体积分单独当作优化目标
+  - 否则系统会学出“分数更高但阶段局部核更错位”的坏解
+- 所以后续训练目标必须显式加入：
+  - `早期上游核保持`
+  - `中期比较核局部化`
+  - `晚期动作/恢复核延后接管`
+
+### 对破解脉冲神经网络编码结构的意义
+- 这一步把项目从“能不能做出局部阶段核”推进到了“如何避免局部阶段核错位”。
+- 对脑侧逆向工程来说，这非常关键：
+  - 真正的大脑式编码结构，不仅要能涌现局部阶段核
+  - 还要让这些阶段核在正确时间接管正确功能
+- 当前更清楚的主线已经是：
+  - 没有全局控制器
+  - 只有局部规则、局部状态、阶段门控和区域异质性
+  - 但训练时必须额外约束这些局部核的时序职责，否则就会得到“分数正确、因果组织错误”的假解
+
+### 下一阶段的大任务块
+- 任务块 1：多目标局部训练律
+  - 不再只看综合分数，加入 `早期上游优势 / 中期比较优势 / 动作延迟接管` 三个结构约束，一起优化。
+- 任务块 2：真实模型阶段核图谱
+  - 把这套“阶段局部核正确性”读数搬到 Qwen3 / DeepSeek 层带，防止真实模型侧也被 aggregate score 误导。
+- 任务块 3：真实任务在线桥接
+  - 把阶段核读数接回真实任务接口和在线 rollback/recovery，检查哪些阶段错位会直接导致任务链崩坏。
+
+## 2026-03-10 统一编码机制阶段总评
+
+### 本轮结论
+- 当前更合理的总框架不是“训练多个并列机制”，而是“训练一种统一编码机制”：
+  - 局部脉冲更新
+  - 局部可塑性
+  - 阶段条件门控
+  - 脑区异质性参数化
+- 也就是说：
+  - 共享基底、关系协议、拓扑路由、中观冗余场、回退恢复
+  - 更像同一编码生成律在不同尺度和不同观测坐标下的投影
+  - 而不是几套互相独立的模块
+
+### 当前整体进度判断
+- 若以“破解大脑脉冲神经网络的编码结构”为目标，当前整体进度约为 `45% - 55%`。
+- 已经比较稳的部分：
+  - `共享编码底座存在`：约 `65%`
+  - `无全局控制器也能形成系统级整合`：约 `60%`
+  - `阶段局部核会接力切换`：约 `55%`
+  - `脑区异质性必须纳入机制本体`：约 `50%`
+- 仍然最缺的部分：
+  - 如何把统一编码机制训练成“不同阶段由正确局部核接管”
+  - 如何让脑区差异表现为同一机制的区域化参数，而不是新的全局模块
+  - 如何把这套统一机制稳定接回真实模型与真实任务接口
+
+### 现阶段主判断
+- 统一编码机制应当满足：
+  - 没有全局控制器
+  - 每个单元只基于前序脉冲、局部状态和局部可塑性更新
+  - 区域差异通过不同局部动力学参数体现
+  - 系统级意识/信息传递/恢复只是该机制在网络中涌现出的结果
+- 因此后续训练目标也必须统一：
+  - 不是分别训练 `概念模块 / 关系模块 / 回退模块`
+  - 而是训练一套可区域化、可阶段化、可恢复的统一编码更新律
+
+### 下一阶段大任务块
+- 任务块 1：统一编码训练律
+  - 把 `早期上游核保持 / 中期比较核局部化 / 晚期动作延迟接管 / 恢复期 replay 接管`
+  - 一起写进同一训练目标，形成真正的统一编码损失，而不是继续分散调参。
+- 任务块 2：脑区异质性参数化
+  - 直接定义“同一局部更新律 + 不同脑区参数族”的实验框架。
+  - 目标是证明：区域差异可以由同一机制的参数化变体解释，而不必引入额外全局机制。
+- 任务块 3：真实模型阶段核映射
+  - 把 `局部阶段核 / 脑区异质性 / 共享底座` 三套读数接回真实模型层带。
+  - 检查真实 DNN 是否也呈现“统一更新律 + 区域化偏置”的结构。
+- 任务块 4：真实任务闭环桥接
+  - 把统一编码机制直接接到真实任务、工具调用、在线 rollback/recovery。
+  - 目标不是只看分数，而是看统一机制能否稳定支撑长链任务和失败恢复。
+- 任务块 5：统一证据总图
+  - 在前端做一张“统一编码机制证据图谱”：
+    - 共享底座
+    - 阶段局部核
+    - 区域异质性
+    - 恢复与冗余场
+    - 真实模型映射
+  - 让用户能直接看到这几条线正在收敛成同一个原理。
+
+## 2026-03-10 脑区差异多目标选择基准
+
+### 本轮命令进展
+- 新增基准：
+  - `tests/codex/test_local_pulse_region_differentiated_multiobjective_selector.py`
+- 生成结果：
+  - `tests/codex_temp/local_pulse_region_differentiated_multiobjective_selector_20260310.json`
+- 新增前端面板：
+  - `frontend/src/blueprint/LocalPulseRegionDifferentiatedSelectorDashboard.jsx`
+  - `frontend/src/blueprint/data/local_pulse_region_differentiated_multiobjective_selector_sample.json`
+- 接入：
+  - `frontend/src/blueprint/GeminiTab.jsx`
+- 验证：
+  - `python -m py_compile tests/codex/test_local_pulse_region_differentiated_multiobjective_selector.py`
+  - `python tests/codex/test_local_pulse_region_differentiated_multiobjective_selector.py`
+  - `npm --prefix frontend run build`
+
+### 关键结果
+- `aggregate_best_system = shared_local_replay`
+- `structure_best_system = regional_phase_tuned_replay`
+- `aggregate_best_score = 0.6491`
+- `structure_best_score = 0.6978`
+- `shared_vs_tuned_score_gap = +0.0302`
+- `tuned_vs_shared_structure_gap = +0.2891`
+- `pareto_front = [shared_local_replay, regional_phase_tuned_replay]`
+- 假设：
+  - `H1_score_only_prefers_shared_law = true`
+  - `H2_structure_objective_prefers_region_tuned_law = true`
+  - `H3_no_single_system_wins_both = true`
+  - `H4_region_tuned_system_is_pareto_member = true`
+
+### 当前理论推进
+- 这一步把“统一编码机制”这条主线又收紧了一层：
+  - 如果只看综合分数，选择器会偏向更统一、更平均、分工更少的共享局部律。
+  - 但一旦把 `阶段局部核结构 + 脑区差异` 纳入目标，最优解会切到 `regional_phase_tuned_replay`。
+- 这说明：
+  - 训练对象确实应该是一套统一编码机制
+  - 但这套机制必须允许脑区级参数化差异
+  - 否则优化器会把系统压回“分数更高但结构更错”的共享平均解
+- 当前更稳的结论不是：
+  - “不同脑区是不同机制”
+- 而是：
+  - “同一局部编码更新律在不同脑区上需要不同参数族和不同阶段偏置”
+
+### 对破解脉冲神经网络编码结构的意义
+- 这轮第一次把“统一机制”和“脑区异质性”从概念兼容，推进成了训练目标层面的硬约束。
+- 对脑侧逆向工程来说，关键意义是：
+  - 大脑可能不是一堆独立算法拼起来
+  - 而是一套统一的局部脉冲编码律，在不同脑区上被参数化成不同工作风格
+  - 系统级意识、信息传递和恢复则是这套统一局部律在整网中的涌现结果
+
+### 下一阶段大任务块
+- 任务块 1：统一编码多目标训练律
+  - 把 `总分 / 早期上游优势 / 中期比较优势 / 恢复期 replay 优势 / 阶段多样性`
+  - 真正合成同一个训练目标，不再让模型选择被单一 aggregate score 支配。
+- 任务块 2：脑区参数族学习
+  - 让 `sensory / memory / comparator / motor`
+  - 不再手工给参数，而是学习出“同一机制下的区域化参数族”。
+- 任务块 3：真实模型区域化映射
+  - 把这套多目标读数接到真实模型层带，检查真实 DNN 是否也存在“共享律 + 区域参数族”的结构。
+- 任务块 4：在线任务闭环
+  - 把多目标局部训练律接回真实任务和 rollback/recovery，验证它是否真能减少“高分但错组织”的假解。
+
+## 2026-03-10 统一多目标训练律基准
+
+### 本轮命令进展
+- 新增基准：
+  - `tests/codex/test_local_pulse_unified_multiobjective_training_law.py`
+- 生成结果：
+  - `tests/codex_temp/local_pulse_unified_multiobjective_training_law_20260310.json`
+- 新增前端面板：
+  - `frontend/src/blueprint/LocalPulseUnifiedMultiobjectiveTrainingLawDashboard.jsx`
+  - `frontend/src/blueprint/data/local_pulse_unified_multiobjective_training_law_sample.json`
+- 接入：
+  - `frontend/src/blueprint/GeminiTab.jsx`
+- 验证：
+  - `python -m py_compile tests/codex/test_local_pulse_unified_multiobjective_training_law.py`
+  - `python tests/codex/test_local_pulse_unified_multiobjective_training_law.py`
+  - `npm --prefix frontend run build`
+
+### 关键结果
+- `aggregate_best_system = shared_local_replay`
+- `multiobjective_best_system = regional_decoupled_replay`
+- `structure_best_system = regional_decoupled_replay`
+- `aggregate_best_score = 0.6491`
+- `multiobjective_best_score = 0.5866`
+- `multiobjective_structure_gain = +0.1074`
+- `multiobjective_concept_gain = +0.2222`
+- `multiobjective_comparison_gain = -0.2639`
+- `multiobjective_aggregate_gap = -0.0302`
+- 假设：
+  - `H1_aggregate_objective_prefers_shared_or_score_push = true`
+  - `H2_multiobjective_prefers_region_differentiated_law = true`
+  - `H3_multiobjective_improves_structure_over_aggregate_choice = true`
+  - `H4_multiobjective_keeps_aggregate_cost_bounded = true`
+
+### 当前理论推进
+- 这一步把“统一编码机制应该怎么训练”从口头判断推进成了显式训练律：
+  - 单目标训练会把系统推向共享平均解
+  - 多目标训练会把系统推向分区差异解
+- 更重要的是：
+  - 这不是在否定统一机制
+  - 而是在说明统一机制如果不带结构约束，优化器会自动把它压扁
+- 所以现在更稳的主线是：
+  - `统一编码更新律`
+  - `脑区级参数化差异`
+  - `阶段局部核职责约束`
+  - 三者必须一起进入训练目标
+
+### 仍然暴露出的缺口
+- 当前多目标训练律首先修复的是：
+  - `概念阶段上游优势`
+  - `阶段多样性`
+- 但它还没有把：
+  - `comparison_phase` 的局部核心一起拉回 `memory / comparator`
+- 这说明下一阶段不能只做“结构优先”，而要做更细的：
+  - `阶段分解多目标训练律`
+  - 让早期上游核和中期比较核同时成立
+
+### 对破解脉冲神经网络编码结构的意义
+- 这轮之后，可以更明确地说：
+  - 大脑式系统需要的不是“全局最优分数”
+  - 而是“局部阶段核职责正确”的训练律
+- 对逆向工程来说，这非常关键，因为它把研究重心从：
+  - “哪个结构存在”
+  - 推进到了
+  - “怎样训练才能让统一局部机制长成正确的脑区分工和阶段接力”
+
+### 下一阶段大任务块
+- 任务块 1：阶段分解多目标训练律
+  - 把 `概念阶段上游优势` 和 `比较阶段局部优势`
+  - 从一个混合结构分里拆开，分别做显式约束。
+- 任务块 2：脑区参数族学习器
+  - 不再手工写 `shared / decoupled / score_push`
+  - 而是学习出同一机制下的区域化参数族。
+- 任务块 3：真实模型层带映射
+  - 把这套多目标训练律读数搬到真实模型层带，检查真实 DNN 里是否也存在“总分高但结构错”的假解。
+- 任务块 4：真实任务在线闭环
+  - 把多目标训练律接回 rollback/recovery 和真实任务接口，直接看它能否减少链式任务中的结构错位崩坏。
+
+## 2026-03-10 多因素统一编码主线评估
+
+### 本轮核心判断
+- 基于深度神经网络中的
+  - `共享基底`
+  - `个体偏移`
+  - `关系协议`
+  - `门控`
+  - `拓扑`
+  - `整合`
+- 去逆向还原大脑神经元编码机制，这条思路是可行的，而且目前仍然是项目最有解释力的主线之一。
+- 但成立的前提是：
+  - 不能把这些量当成六个并列模块
+  - 必须把它们改写成“统一局部编码更新律”在不同尺度、不同观测坐标上的投影
+
+### 与当前主线是否矛盾
+- 不矛盾，但有一个必须收紧的地方。
+- 兼容部分：
+  - `共享基底 / 个体偏移` 可以理解为长期统计结构下的稳定模态与特异残差
+  - `关系协议 / 门控 / 拓扑` 可以理解为同一局部更新律在当前状态下形成的动态路由与条件选择
+  - `整合` 则是这套局部律在整网中的系统级涌现结果
+- 潜在矛盾只出现在一种错误表述下：
+  - 如果把这些因素当成独立模块，再额外假定一个全局控制器去协调它们
+  - 那就和当前“无全局控制器、只有局部脉冲规则”的主线冲突
+- 所以现在更稳的统一表述应当是：
+  - `共享基底 / 个体偏移 / 协议 / 门控 / 拓扑 / 整合`
+  - 都是同一局部编码机制在不同时间尺度与网络尺度下的外显结果
+
+### 可行性判断
+- 当前总体可行性：`70% - 80%`
+- 其中更硬的部分：
+  - `共享基底存在`：`65% - 75%`
+  - `关系协议与共享底座同源`：`60% - 70%`
+  - `无全局控制器也能产生整合`：`60% - 70%`
+  - `脑区差异可以作为统一机制的参数化变体`：`55% - 65%`
+- 仍然不够硬的部分：
+  - `中期比较核如何稳定接管`
+  - `真实模型中是否也服从相同阶段训练律`
+  - `真实任务闭环里是否能减少高分但错组织的假解`
+
+### 里程碑定义
+- 里程碑 1：结构存在性
+  - 证明共享底座、阶段局部核、恢复回放、脑区差异都能在无全局控制器下出现
+- 里程碑 2：因果同源性
+  - 证明这些量不是并列现象，而是同一套局部更新律扰动后会联动变化
+- 里程碑 3：训练闭环
+  - 证明多目标训练律能稳定压制“高分但错组织”的假解
+- 里程碑 4：真实模型映射
+  - 把这套读数接到真实 DNN 层带，看到同样的共享底座、阶段门控、区域化偏置
+- 里程碑 5：真实任务闭环
+  - 让这套统一机制稳定支撑真实长链任务、失败回退和恢复
+- 当前状态：
+  - 已完成里程碑 1 的大部分
+  - 已进入里程碑 2 和 3 的前半段
+  - 里程碑 4、5 还在早期
+
+### 当前进展总结
+- 已经拿到的正证据：
+  - 共享原子和共享层带存在
+  - 概念与关系存在同源支撑
+  - 无全局控制器也能形成系统级整合
+  - 局部阶段核会接力切换
+  - 脑区异质性必须进入机制本体
+  - 多目标训练律会把选择从共享平均解切到区域化结构解
+- 已经拿到的重要负证据：
+  - 共享层带取向并不自动等于真实因果取向
+  - 中期比较核稳相曾经失败
+  - 只优化总分会产生“高分但错组织”的坏解
+  - 当前多目标训练先修复了早期上游核，但还没把中期比较核一起修好
+
+### 当前硬伤
+- 硬伤 1：阶段组织还没完全闭环
+  - `concept_phase` 和 `comparison_phase` 还不能同时稳定正确
+- 硬伤 2：真实模型映射不够深
+  - 目前真实模型侧更多还是层带、共享支撑和局部因果读数，还没进入统一训练律
+- 硬伤 3：真实任务闭环不足
+  - 离线 episode 和基准任务已较多，但真实工具接口和在线任务上的因果闭环还不够
+- 硬伤 4：脑区异质性仍偏手工
+  - 目前多数还是手工参数族，不是学出来的脑区参数族
+- 硬伤 5：理论表述仍有滑回模块化的风险
+  - 如果不持续收紧表述，很容易又把同一机制的不同投影说成并列模块
+
+### 下一阶段计划
+- 任务块 1：阶段分解训练律
+  - 把 `概念阶段上游优势`、`比较阶段局部优势`、`恢复阶段 replay 接管`
+  - 拆成独立但联动的训练项
+- 任务块 2：脑区参数族学习
+  - 从手工参数表推进到“同一机制下自动学出不同脑区参数族”
+- 任务块 3：真实模型训练律映射
+  - 把统一训练律读数搬到真实模型层带，检查真实 DNN 是否也存在同样的结构约束
+- 任务块 4：真实任务闭环
+  - 接回真实任务和 rollback/recovery，看它是否真能减少链式崩坏
+- 任务块 5：统一证据图谱
+  - 在前端把 `共享基底 / 个体偏移 / 关系协议 / 门控 / 拓扑 / 整合`
+  - 收成同一原理的多尺度视图，避免研究继续碎片化
+
+## 2026-03-10 阶段分解训练律基准
+
+### 本轮命令进展
+- 新增基准：
+  - `tests/codex/test_local_pulse_stage_decomposed_training_law.py`
+- 生成结果：
+  - `tests/codex_temp/local_pulse_stage_decomposed_training_law_20260310.json`
+- 新增前端面板：
+  - `frontend/src/blueprint/LocalPulseStageDecomposedTrainingLawDashboard.jsx`
+  - `frontend/src/blueprint/data/local_pulse_stage_decomposed_training_law_sample.json`
+- 接入：
+  - `frontend/src/blueprint/GeminiTab.jsx`
+- 验证：
+  - `python -m py_compile tests/codex/test_local_pulse_stage_decomposed_training_law.py`
+  - `python tests/codex/test_local_pulse_stage_decomposed_training_law.py`
+  - `npm --prefix frontend run build`
+
+### 关键结果
+- `aggregate_best_system = shared_local_replay`
+- `stage_best_system = regional_stage_decomposed`
+- `aggregate_best_score = 0.6491`
+- `stage_best_score = 0.7790`
+- `stage_vs_unified_concept_gain = ~0.0000`
+- `stage_vs_unified_comparison_gain = +0.2153`
+- `stage_vs_aggregate_structure_balance_gain = +0.6019`
+- `stage_vs_aggregate_score_gap = -0.0291`
+- 假设：
+  - `H1_aggregate_objective_prefers_shared_law = true`
+  - `H2_stage_objective_prefers_stage_decomposed_law = true`
+  - `H3_stage_law_improves_comparison_over_unified = true`
+  - `H4_stage_law_keeps_concept_advantage_close_to_unified = true`
+  - `H5_stage_law_improves_balance_over_aggregate_choice = true`
+
+### 当前理论推进
+- 这一步非常关键，因为它第一次把“统一编码机制”推进到更细的阶段级训练口径：
+  - 统一多目标训练律已经证明不能只看总分
+  - 但它还不足以同时修好早期上游核和中期比较核
+  - 阶段分解训练律则进一步说明：
+    - 同一套局部编码机制
+    - 可以通过更细的阶段约束
+    - 同时把 `concept_phase` 和 `comparison_phase` 拉到更平衡的组织状态
+- 这意味着后续主线要继续收紧成：
+  - `统一局部编码更新律`
+  - `脑区参数族`
+  - `阶段分解训练约束`
+  - 三者共同组成训练闭环
+
+### 对破解脉冲神经网络编码结构的意义
+- 当前最接近脑侧的解释已经不是“模块更多”或“总分更高”：
+  - 而是同一局部规则能否在不同阶段把正确局部核交给正确脑区风格的单元群
+- 阶段分解训练律的成功，意味着：
+  - 大脑式编码机制很可能不是一个粗粒度目标在全局上压出来的
+  - 而是多个阶段职责共同约束同一套局部更新律
+
+### 下一阶段大任务块
+- 任务块 1：恢复阶段训练律
+  - 继续把 `recovery_phase replay 接管`
+  - 从附带指标推进成显式阶段训练项。
+- 任务块 2：脑区参数族学习器
+  - 不再手工写阶段分解候选律，而是学习出“同一机制下的脑区参数族 + 阶段调度”。
+- 任务块 3：真实模型阶段映射
+  - 把阶段分解训练律读数接到真实模型层带，检查真实 DNN 是否也存在相同的阶段平衡约束。
+- 任务块 4：真实任务在线闭环
+  - 把阶段分解训练律接回真实任务和 rollback/recovery，验证它是否真能减少在线链式任务崩坏。
+
+## 2026-03-10 恢复阶段训练律基准
+
+### 本轮命令进展
+- 新增基准：
+  - `tests/codex/test_local_pulse_recovery_phase_training_law.py`
+- 生成结果：
+  - `tests/codex_temp/local_pulse_recovery_phase_training_law_20260310.json`
+- 新增前端面板：
+  - `frontend/src/blueprint/LocalPulseRecoveryPhaseTrainingLawDashboard.jsx`
+  - `frontend/src/blueprint/data/local_pulse_recovery_phase_training_law_sample.json`
+- 接入：
+  - `frontend/src/blueprint/GeminiTab.jsx`
+- 验证：
+  - `python -m py_compile tests/codex/test_local_pulse_recovery_phase_training_law.py`
+  - `python tests/codex/test_local_pulse_recovery_phase_training_law.py`
+  - `npm --prefix frontend run build`
+
+### 关键结果
+- `aggregate_best_system = shared_local_replay`
+- `regional_recovery_best_system = regional_recovery_aware`
+- `aggregate_best_score = 0.6491`
+- `recovery_best_score = 0.6164`
+- `recovery_vs_stage_local_adv_gain = +0.0208`
+- `recovery_vs_stage_recovery_rate_gain = +0.0093`
+- `recovery_vs_stage_comparison_delta = +0.0069`
+- `recovery_vs_stage_concept_delta = +0.0208`
+- `recovery_vs_aggregate_score_gap = -0.0230`
+- `recovery_vs_shared_recovery_score_gap = -0.0508`
+- 假设：
+  - `H1_aggregate_objective_prefers_shared_law = true`
+  - `H2_recovery_objective_prefers_recovery_aware_regional_law = true`
+  - `H3_recovery_law_improves_recovery_local_adv = true`
+  - `H4_recovery_law_improves_recovery_rate = true`
+  - `H5_recovery_law_keeps_concept_and_comparison_stable = true`
+
+### 当前理论推进
+- 这一步说明恢复阶段训练律已经开始有效：
+  - 在区域化候选中，恢复增强版确实优于阶段分解版
+  - 它提高了恢复局部优势和恢复率
+  - 同时没有打坏概念阶段和比较阶段
+- 但这轮也明确给出了一个硬缺口：
+  - 恢复增强版虽然在区域化候选内部胜出
+  - 但还没有追平共享平均解的恢复目标
+- 所以更稳的结论不是：
+  - “恢复阶段已经完全解决”
+- 而是：
+  - “恢复阶段训练律已经成立为有效方向，但仍需要把区域化恢复机制继续压实”
+
+### 对破解脉冲神经网络编码结构的意义
+- 当前主线又往前走了一步：
+  - 不只是概念阶段和比较阶段可以被阶段约束修正
+  - 恢复阶段也开始能被显式训练口径推动
+- 这让整体框架更接近脑侧解释：
+  - 同一局部编码机制
+  - 通过脑区参数族
+  - 再通过分阶段训练约束
+  - 逐步长出概念、比较、恢复三个阶段的正确局部职责
+
+### 下一阶段大任务块
+- 任务块 1：三阶段统一训练闭环
+  - 把 `concept / comparison / recovery`
+  - 三套训练口径真正合成一个统一分阶段训练闭环。
+- 任务块 2：脑区参数族学习器
+  - 让恢复增强不再依赖手工 law，而是自动学出脑区参数族和阶段调度。
+- 任务块 3：真实模型阶段映射
+  - 把恢复阶段训练律读数搬到真实模型层带，检查真实 DNN 是否也有相同恢复缺口。
+- 任务块 4：真实任务在线闭环
+  - 把恢复阶段训练律接回在线 rollback/recovery，验证它是否真能减少长链任务崩坏。
+
+## 2026-03-10 三阶段训练闭环基准
+
+### 本轮命令进展
+- 新增基准：
+  - `tests/codex/test_local_pulse_three_stage_training_closure.py`
+- 生成结果：
+  - `tests/codex_temp/local_pulse_three_stage_training_closure_20260310.json`
+- 新增前端面板：
+  - `frontend/src/blueprint/LocalPulseThreeStageTrainingClosureDashboard.jsx`
+  - `frontend/src/blueprint/data/local_pulse_three_stage_training_closure_sample.json`
+- 接入：
+  - `frontend/src/blueprint/GeminiTab.jsx`
+- 验证：
+  - `python -m py_compile tests/codex/test_local_pulse_three_stage_training_closure.py`
+  - `python tests/codex/test_local_pulse_three_stage_training_closure.py`
+  - `npm --prefix frontend run build`
+
+### 关键结果
+- `aggregate_best_system = shared_local_replay`
+- `closure_best_system = regional_recovery_aware`
+- `aggregate_best_score = 0.6491`
+- `closure_best_score = 0.5603`
+- `closure_vs_shared_balance_gain = +0.1106`
+- `closure_vs_unified_comparison_gain = +0.2222`
+- `closure_vs_unified_concept_gain = +0.0208`
+- `closure_vs_shared_score_gap = -0.0230`
+- 假设：
+  - `H1_aggregate_objective_prefers_shared_law = true`
+  - `H2_three_stage_closure_prefers_recovery_aware_law = true`
+  - `H3_closure_law_improves_balance_over_shared = true`
+  - `H4_closure_law_improves_comparison_over_unified = true`
+  - `H5_closure_law_keeps_aggregate_cost_bounded = true`
+
+### 当前理论推进
+- 这一步把最近几轮零散推进真正收成了一个闭环：
+  - 概念阶段训练律
+  - 比较阶段训练律
+  - 恢复阶段训练律
+  - 不再分别独立判断
+  - 而是合成同一套闭环评分
+- 结果很清楚：
+  - 如果只看总分，还是会选 `shared_local_replay`
+  - 但一旦要求 `concept / comparison / recovery` 三段一起成立，最优选择会切到 `regional_recovery_aware`
+- 所以当前更稳的主线已经可以压成一句话：
+  - `统一局部编码更新律 + 脑区参数族 + 三阶段训练闭环`
+  - 是目前最接近脑侧编码机制的工作框架
+
+### 对破解脉冲神经网络编码结构的意义
+- 这轮的重要性在于：
+  - 项目已经不再只是证明“某个阶段能修好”
+  - 而是开始证明“同一套局部机制能否同时支撑多个阶段职责”
+- 这更接近大脑式编码结构的真实约束：
+  - 同一批神经元规则
+  - 在不同脑区参数化后
+  - 还要在不同阶段完成不同职责
+
+### 下一阶段大任务块
+- 任务块 1：脑区参数族学习器
+  - 不再手工调 `stage_decomposed / recovery_aware`
+  - 而是自动学出脑区参数族和阶段调度。
+- 任务块 2：真实模型层带闭环映射
+  - 把三阶段闭环评分接到真实模型层带，验证真实 DNN 是否也会从总分最优切到闭环最优。
+- 任务块 3：真实任务在线闭环
+  - 把三阶段闭环训练律接回在线任务与 rollback/recovery。
+- 任务块 4：统一证据总图
+  - 在前端把 `共享基底 / 协议门控 / 脑区参数族 / 三阶段闭环`
+  - 收成一张统一证据图谱。
+
+## 2026-03-10 脑区参数族学习器
+
+### 本轮命令进展
+- 新增基准：
+  - `tests/codex/test_local_pulse_region_parameter_family_learner.py`
+- 生成结果：
+  - `tests/codex_temp/local_pulse_region_parameter_family_learner_20260310.json`
+- 新增前端面板：
+  - `frontend/src/blueprint/LocalPulseRegionParameterFamilyLearnerDashboard.jsx`
+  - `frontend/src/blueprint/data/local_pulse_region_parameter_family_learner_sample.json`
+- 接入：
+  - `frontend/src/blueprint/GeminiTab.jsx`
+- 验证：
+  - `python -m py_compile tests/codex/test_local_pulse_region_parameter_family_learner.py`
+  - `python tests/codex/test_local_pulse_region_parameter_family_learner.py`
+  - `npm --prefix frontend run build`
+
+### 关键结果
+- `aggregate_best_system = shared_local_replay`
+- `family_best_system = learned_region_family`
+- `learned_three_stage_gain = +0.0049`
+- `learned_balance_gain = +0.0347`
+- `learned_aggregate_gap = -0.0000`
+- `learned_vs_shared_score_gap = -0.0230`
+- `learned_family_spread = 1.2813`
+- `learned_trial_id = 21`
+- 假设：
+  - `H1_learned_family_beats_manual_three_stage_score = true`
+  - `H2_learned_family_improves_balance = true`
+  - `H3_learned_family_keeps_aggregate_cost_bounded = true`
+  - `H4_learned_family_preserves_region_spread = true`
+
+### 当前理论推进
+- 这一步是一个实质性里程碑：
+  - 项目第一次把“脑区参数族”从手工构造推进到了自动搜索
+  - 而且自动学到的参数族已经略优于手工 `recovery_aware`
+- 这说明：
+  - 当前主线不必停在“人来猜哪些脑区参数更合适”
+  - 同一局部编码机制已经开始能自动长出更好的区域化参数族
+- 所以现在更清楚的工作框架是：
+  - `统一局部编码更新律`
+  - `自动学出的脑区参数族`
+  - `三阶段训练闭环`
+
+### 对破解脉冲神经网络编码结构的意义
+- 这轮的意义比数值本身更大：
+  - 以前我们还在人工指定“更像脑区”的参数族
+  - 现在系统已经开始自己搜索更优的区域化风格
+- 这让“统一机制 + 脑区异质性”这条主线更加稳固：
+  - 脑区差异不一定需要被预先写死
+  - 它可以作为统一机制在训练中自发长出的参数族
+
+### 下一阶段大任务块
+- 任务块 1：参数族生成器
+  - 把当前随机搜索推进成真正可学习的参数族生成器，而不是离线 search。
+- 任务块 2：真实模型层带闭环映射
+  - 把学习得到的脑区参数族闭环读数接到真实模型层带。
+- 任务块 3：在线任务闭环
+  - 把参数族学习器接回真实任务和 rollback/recovery，直接验证它是否减少在线崩坏。
+- 任务块 4：统一证据总图
+  - 在前端把 `共享基底 / 脑区参数族 / 三阶段闭环 / 真实模型映射`
+  - 收成一张统一证据图谱。
+
+## 2026-03-10 脑区参数族生成器
+
+### 本轮命令进展
+- 新增基准：
+  - `tests/codex/test_local_pulse_region_family_generator.py`
+- 生成结果：
+  - `tests/codex_temp/local_pulse_region_family_generator_20260310.json`
+- 新增前端面板：
+  - `frontend/src/blueprint/LocalPulseRegionFamilyGeneratorDashboard.jsx`
+  - `frontend/src/blueprint/data/local_pulse_region_family_generator_sample.json`
+- 接入：
+  - `frontend/src/blueprint/GeminiTab.jsx`
+- 验证：
+  - `python -m py_compile tests/codex/test_local_pulse_region_family_generator.py`
+  - `python tests/codex/test_local_pulse_region_family_generator.py`
+  - `npm --prefix frontend run build`
+
+### 关键结果
+- `generator_best_system = generated_region_family`
+- `generated_three_stage_gain = +0.0101`
+- `generated_balance_gain = 0.0000`
+- `generated_aggregate_gap = +0.0000`
+- `generated_vs_shared_score_gap = -0.0230`
+- `generator_dim = 5`
+- `manual_control_dim_estimate = 12`
+- `best_trial_id = 19`
+- 假设：
+  - `H1_generator_beats_learned_family_three_stage_score = true`
+  - `H2_generator_improves_balance = false`
+  - `H3_generator_keeps_aggregate_cost_bounded = true`
+  - `H4_generator_uses_lower_control_dim = true`
+
+### 当前理论推进
+- 这一步说明：
+  - 脑区参数族不只是能被自动搜索
+  - 还可以继续被压进更小的低维生成坐标
+- 结果口径要收紧：
+  - 5 维生成器已经能超过当前学习族的三阶段闭环分
+  - 而且几乎不增加总分代价
+  - 但它没有进一步改善闭环平衡
+- 这意味着：
+  - 低维生成器已经足够承载“更好一点的区域化统一律”
+  - 但在当前维度下，闭环平衡已经接近局部瓶颈
+
+### 对破解脉冲神经网络编码结构的意义
+- 这轮的意义在于把主线再压缩了一层：
+  - 不是每个脑区都要一大堆独立自由度
+  - 至少在当前 toy 脉冲系统里
+  - 更小的生成坐标就能生成接近最优的脑区参数族
+- 这和“大脑可能用统一机制 + 少量区域化调制坐标”这条假说更加一致
+
+### 下一阶段大任务块
+- 任务块 1：可训练参数族生成网络
+  - 把当前低维搜索推进成真正可训练的生成网络，而不是离线 latent search。
+- 任务块 2：真实模型层带闭环映射
+  - 把低维脑区生成坐标接到真实模型层带，检查真实 DNN 是否也服从低维区域化生成。
+- 任务块 3：在线任务闭环
+  - 把低维参数族生成器接回在线任务和 rollback/recovery。
+- 任务块 4：统一证据总图
+  - 在前端把 `共享基底 / 三阶段闭环 / 参数族学习器 / 低维参数族生成器`
+  - 收成同一主线的统一图谱。
+
+## 2026-03-10 可训练脑区参数族生成器
+
+### 本轮命令进展
+- 新增基准：
+  - `tests/codex/test_local_pulse_trainable_region_family_generator.py`
+- 生成结果：
+  - `tests/codex_temp/local_pulse_trainable_region_family_generator_20260310.json`
+- 新增前端面板：
+  - `frontend/src/blueprint/LocalPulseTrainableRegionFamilyGeneratorDashboard.jsx`
+  - `frontend/src/blueprint/data/local_pulse_trainable_region_family_generator_sample.json`
+- 接入：
+  - `frontend/src/blueprint/GeminiTab.jsx`
+- 验证：
+  - `python -m py_compile tests/codex/test_local_pulse_trainable_region_family_generator.py`
+  - `python tests/codex/test_local_pulse_trainable_region_family_generator.py`
+  - `npm --prefix frontend run build`
+
+### 关键结果
+- `trainable_best_system = trainable_generated_family`
+- `trainable_three_stage_gain_vs_fixed = +0.0144`
+- `trainable_balance_gain_vs_fixed = +0.0347`
+- `trainable_aggregate_gain_vs_fixed = +0.0019`
+- `trainable_three_stage_gain_vs_learned = +0.0245`
+- `trainable_vs_shared_score_gap = -0.0210`
+- `final_step_size = 0.175`
+- 假设：
+  - `H1_trainable_generator_beats_fixed_generator = true`
+  - `H2_trainable_generator_improves_balance = true`
+  - `H3_trainable_generator_beats_learned_family = true`
+  - `H4_trainable_generator_keeps_aggregate_cost_bounded = true`
+
+### 当前理论推进
+- 这一步说明：
+  - 脑区参数族生成器不只是可搜索
+  - 已经可以通过小规模可训练优化进一步变好
+- 更准确的口径是：
+  - 低维脑区生成坐标已经足以承载更强的三阶段闭环结构
+  - 而且这次不只是提高三阶段分
+  - 还把闭环平衡一起拉高了
+- 这意味着：
+  - “统一局部编码更新律 + 少量区域化调制坐标”这条主线进一步收紧
+  - 脑区差异更像是统一机制上的低维可训练偏移
+  - 而不是一组彼此独立的大型特化机制
+
+### 对破解脉冲神经网络编码结构的意义
+- 这轮把“脑区参数族”又推进了一层：
+  - 从手工 law
+  - 到自动搜索 family
+  - 再到低维可训练生成器
+- 这和“大脑中不同脑区基于同一局部机制，但带有少量区域化偏置”这条假说更加一致
+- 也就是说：
+  - 当前项目已经不只是看到脑区差异存在
+  - 而是开始逼近“脑区差异如何被更小的统一生成坐标产生出来”
+
+### 下一阶段大任务块
+- 任务块 1：真正的参数族生成网络
+  - 把当前坐标搜索和坐标微调，推进成端到端可训练的参数族生成网络。
+- 任务块 2：真实模型层带映射
+  - 把低维脑区生成坐标接到真实模型层带，验证真实 DNN 是否也存在低维区域化生成。
+- 任务块 3：在线任务闭环
+  - 把可训练参数族生成器接回真实任务与 rollback/recovery，检查是否能减少在线链式崩坏。
+- 任务块 4：统一证据总图
+  - 在前端把 `共享基底 / 三阶段闭环 / 参数族学习器 / 低维可训练生成器`
+  - 收成一张统一主线图。
+
+## 2026-03-10 脑区参数族生成网络
+
+### 本轮命令进展
+- 新增基准：
+  - `tests/codex/test_local_pulse_region_family_generator_network.py`
+- 生成结果：
+  - `tests/codex_temp/local_pulse_region_family_generator_network_20260310.json`
+- 新增前端面板：
+  - `frontend/src/blueprint/LocalPulseRegionFamilyGeneratorNetworkDashboard.jsx`
+  - `frontend/src/blueprint/data/local_pulse_region_family_generator_network_sample.json`
+- 同步修复前端中文显示：
+  - `frontend/src/blueprint/LocalPulseTrainableRegionFamilyGeneratorDashboard.jsx`
+- 接入：
+  - `frontend/src/blueprint/GeminiTab.jsx`
+- 验证：
+  - `python -m py_compile tests/codex/test_local_pulse_region_family_generator_network.py`
+  - `python tests/codex/test_local_pulse_region_family_generator_network.py`
+  - `npm --prefix frontend run build`
+
+### 关键结果
+- `network_best_system = generator_network_eval_family`
+- `network_eval_three_stage_gain_vs_fixed = +0.0512`
+- `network_eval_balance_gain_vs_fixed = +0.0948`
+- `network_eval_aggregate_gap_vs_fixed = -0.0000`
+- `network_eval_three_stage_gain_vs_learned = -0.1552`
+- `network_vs_shared_score_gap = -0.0615`
+- `network_generalization_gap = -0.0016`
+- `best_trial_id = 6`
+- 假设：
+  - `H1_generator_network_beats_fixed_eval_family = true`
+  - `H2_generator_network_improves_eval_balance = true`
+  - `H3_generator_network_keeps_eval_cost_bounded = true`
+  - `H4_generator_network_generalizes_across_latents = true`
+
+### 当前理论推进
+- 这一步把问题从“调好一个 latent”推进成“同一生成网络跨多个 latent 也能稳定生成更好的区域化统一律”。
+- 更准确的口径是：
+  - 低维区域化差异不只是一个点上的最优偏移
+  - 已经开始表现成可复用的生成映射
+  - 而且在 held-out latent 上仍能保持闭环优势和极小泛化间隙
+- 这意味着：
+  - “统一局部编码更新律 + 低维区域化调制坐标”这条主线更接近真正的生成机制
+  - 脑区差异更像是同一机制上的低维函数族
+  - 而不是一堆彼此独立的静态参数表
+
+### 对破解脉冲神经网络编码结构的意义
+- 这轮是一个比较关键的压缩点：
+  - 从手工设定脑区参数
+  - 到自动搜索脑区参数族
+  - 到低维可训练生成器
+  - 再到跨 latent 的小型生成网络
+- 这和“大脑中不同脑区虽然异质，但异质性本身仍可能来自同一局部编码律上的低维调制”这条假说更一致。
+
+### 下一阶段大任务块
+- 任务块 1：端到端参数族生成网络
+  - 把当前小型生成网络从随机候选搜索推进成真正端到端可训练的生成网络。
+- 任务块 2：真实模型层带映射
+  - 把这套低维生成网络接到真实模型层带与阶段核读数，验证真实 DNN 是否也呈现同样的低维区域化映射。
+- 任务块 3：在线任务闭环
+  - 把生成网络接回真实任务、工具调用和 rollback 或 recovery，直接看它是否减少链式任务崩坏。
+- 任务块 4：统一证据总图
+  - 在前端把 `共享基底 / 三阶段闭环 / 参数族学习器 / 可训练生成器 / 生成网络`
+  - 收成一张统一主线图。
+
+## 2026-03-10 端到端脑区参数族生成网络
+
+### 本轮命令进展
+- 新增基准：
+  - `tests/codex/test_local_pulse_end_to_end_region_family_generator_network.py`
+- 生成结果：
+  - `tests/codex_temp/local_pulse_end_to_end_region_family_generator_network_20260310.json`
+- 新增前端面板：
+  - `frontend/src/blueprint/LocalPulseEndToEndRegionFamilyGeneratorNetworkDashboard.jsx`
+  - `frontend/src/blueprint/data/local_pulse_end_to_end_region_family_generator_network_sample.json`
+- 接入：
+  - `frontend/src/blueprint/GeminiTab.jsx`
+- 验证：
+  - `python -m py_compile tests/codex/test_local_pulse_end_to_end_region_family_generator_network.py`
+  - `python tests/codex/test_local_pulse_end_to_end_region_family_generator_network.py`
+  - `npm --prefix frontend run build`
+
+### 关键结果
+- `end_to_end_best_system = end_to_end_generator_eval_family`
+- `end_to_end_three_stage_gain_vs_network = -0.0012`
+- `end_to_end_balance_gain_vs_network = -0.0077`
+- `end_to_end_aggregate_gap_vs_network = +0.0000`
+- `end_to_end_three_stage_gain_vs_fixed = +0.0501`
+- `end_to_end_generalization_gap = +0.0086`
+- `end_to_end_vs_learned_gap = -0.1563`
+- `update_count = 3`
+- 假设：
+  - `H1_end_to_end_generator_beats_searched_network = false`
+  - `H2_end_to_end_generator_improves_balance = false`
+  - `H3_end_to_end_generator_keeps_cost_bounded = true`
+  - `H4_end_to_end_generator_generalizes = true`
+
+### 当前理论推进
+- 这一步最重要的不是又拿到一个正结果，而是明确逼出了当前低维生成网络的瓶颈：
+  - 端到端训练式更新没有把系统打坏
+  - 泛化间隙也仍然很小
+  - 但它没有超过上一轮搜索生成网络
+- 更稳的口径现在应当是：
+  - 当前生成网络结构已经能稳定承载低维区域化映射
+  - 但在现有容量和目标设计下，继续端到端更新并不会自然带来更好的闭环结构
+- 这意味着：
+  - 当前缺口不再只是“有没有训练”
+  - 而是“生成网络本体的容量、结构和训练目标是否足够表达正确的区域化统一律”
+
+### 对破解脉冲神经网络编码结构的意义
+- 这个负结果很值钱，因为它把主线又收紧了一层：
+  - 大脑样的脑区差异也许确实来自统一机制上的低维调制
+  - 但这种低维调制未必能靠当前这类简单生成网络直接学全
+- 换句话说：
+  - 现在已经比较像是在逼近“脑区差异的生成坐标”
+  - 但还没有掌握“哪种生成网络结构才能把这些坐标稳定转换成正确的阶段职责和恢复组织”
+
+### 下一阶段大任务块
+- 任务块 1：生成网络结构升级
+  - 增加分阶段头、区域共享底座和更明确的结构约束，不再只用当前这类小型单干网络。
+- 任务块 2：真实模型层带映射
+  - 把当前搜索生成网络和端到端生成网络一起接到真实模型层带，验证哪些层带对应容量瓶颈。
+- 任务块 3：在线任务闭环
+  - 把生成网络接回真实任务、工具调用和 rollback 或 recovery，检查容量瓶颈是否会直接表现成链式任务崩坏。
+- 任务块 4：统一证据总图
+  - 在前端把 `共享基底 / 三阶段闭环 / 参数族学习器 / 生成网络正结果 / 端到端负结果`
+  - 收成一张统一主线图。
+
+## 2026-03-10 真实模型结构普查 Atlas
+
+### 本轮命令进展
+- 新增基准：
+  - `tests/codex/test_qwen3_deepseek7b_real_model_structure_atlas.py`
+- 生成结果：
+  - `tests/codex_temp/qwen3_deepseek7b_real_model_structure_atlas_20260310.json`
+- 新增前端面板：
+  - `frontend/src/blueprint/Qwen3DeepSeekRealModelStructureAtlasDashboard.jsx`
+  - `frontend/src/blueprint/data/qwen3_deepseek7b_real_model_structure_atlas_sample.json`
+- 接入：
+  - `frontend/src/blueprint/GeminiTab.jsx`
+- 验证：
+  - `python -m py_compile tests/codex/test_qwen3_deepseek7b_real_model_structure_atlas.py`
+  - `python tests/codex/test_qwen3_deepseek7b_real_model_structure_atlas.py`
+  - `npm --prefix frontend run build`
+
+### 关键结果
+- `qwen_predicted_orientation = -0.0608`
+- `qwen_actual_orientation = +0.0302`
+- `deepseek_predicted_orientation = +0.2314`
+- `deepseek_actual_orientation = -0.3899`
+- `qwen_orientation_gap_abs = 0.0910`
+- `deepseek_orientation_gap_abs = 0.6213`
+- `qwen_behavior_gain = 0.0406`
+- `deepseek_behavior_gain = 0.0363`
+- `qwen_mechanism_bridge = 0.7532`
+- `deepseek_mechanism_bridge = 0.9041`
+- 假设：
+  - `H1_predicted_atlas_recovers_qwen_concept_and_deepseek_relation_bias = true`
+  - `H2_actual_targeted_ablation_breaks_predicted_orientation_on_both_models = true`
+  - `H3_deepseek_keeps_stronger_real_model_bridge_and_overlap = true`
+  - `H4_structure_aware_task_gain_stays_positive_on_both_models = true`
+
+### 当前理论推进
+- 这一步把真实模型里的四类证据收成了一张统一表：
+  - 共享层带
+  - 阶段取向
+  - 定向消融
+  - 结构任务收益
+- 更准确的口径现在应当是：
+  - 预测层上，Qwen3 偏概念、DeepSeek 偏关系，这条线仍成立
+  - 但真正做定向消融后，这种取向并不会自动保持
+  - 尤其 DeepSeek 出现了很大的预测-实际落差
+- 这意味着：
+  - 真实模型里已经能看到稳定的共享结构和阶段偏置
+  - 但共享结构到当前因果核心之间，还隔着状态依赖门控或容量瓶颈
+
+### 对主线的意义
+- 这轮是“真实模型结构普查”第一阶段的完成标志：
+  - 不再只有分散的真实模型结果
+  - 而是有了一张统一 atlas
+- 也就是说：
+  - 当前项目已经把 toy 主线硬接回了真实模型
+  - 下一步不该再横向扩展 toy 机制
+  - 而应围绕真实模型层带、阶段核和恢复链继续深挖
+
+### 下一阶段大任务块
+- 任务块 1：真实模型阶段核细化
+  - 在 atlas 基础上继续做概念期、比较期、恢复期的层带和脆弱区细化。
+- 任务块 2：真实模型恢复链映射
+  - 把 rollback 或 recovery 对应的真实层带与脆弱区接进 atlas。
+- 任务块 3：生成网络回接真实层带
+  - 把当前区域化生成网络直接映射到真实模型层带，验证容量瓶颈落在哪些层带上。
+- 任务块 4：统一证据总图
+  - 在前端把 toy 主线、真实模型 atlas、正结果和负结果收成一张总图。
+
+## 2026-03-10 真实模型恢复代理 Atlas
+
+### 本轮命令进展
+- 新增基准：
+  - `tests/codex/test_qwen3_deepseek7b_real_model_recovery_proxy_atlas.py`
+- 生成结果：
+  - `tests/codex_temp/qwen3_deepseek7b_real_model_recovery_proxy_atlas_20260310.json`
+- 新增前端面板：
+  - `frontend/src/blueprint/Qwen3DeepSeekRealModelRecoveryProxyAtlasDashboard.jsx`
+  - `frontend/src/blueprint/data/qwen3_deepseek7b_real_model_recovery_proxy_atlas_sample.json`
+- 接入：
+  - `frontend/src/blueprint/GeminiTab.jsx`
+- 验证：
+  - `python -m py_compile tests/codex/test_qwen3_deepseek7b_real_model_recovery_proxy_atlas.py`
+  - `python tests/codex/test_qwen3_deepseek7b_real_model_recovery_proxy_atlas.py`
+  - `npm --prefix frontend run build`
+
+### 关键结果
+- `qwen_recovery_proxy_score = 0.4656`
+- `deepseek_recovery_proxy_score = 0.5138`
+- `qwen_bridge_side_gain = 0.0593`
+- `deepseek_bridge_side_gain = 0.0572`
+- `qwen_task_side_gain = 0.0406`
+- `deepseek_task_side_gain = 0.0363`
+- `qwen_orientation_gap_abs = 0.0910`
+- `deepseek_orientation_gap_abs = 0.6213`
+- 假设：
+  - `H1_both_models_keep_positive_bridge_and_task_side_repair_gain = true`
+  - `H2_deepseek_has_larger_recovery_gap_penalty = true`
+  - `H3_qwen_keeps_stronger_task_side_gain_but_deepseek_keeps_stronger_bridge_alignment = true`
+  - `H4_both_models_retain_positive_recovery_proxy_score = true`
+
+### 当前理论推进
+- 这一步明确把“恢复链映射”收紧成“恢复代理 atlas”，不假装已经测到了真实恢复链本体。
+- 更准确的口径现在应当是：
+  - 两类模型都还保留正的桥接侧收益和任务侧收益
+  - 说明共享结构并没有完全失去修复潜力
+  - 但 DeepSeek 的取向落差惩罚显著更大
+  - 说明它的共享结构更强，同时也更容易在状态门控或恢复切换处出现瓶颈
+- 这意味着：
+  - 真实模型恢复研究已经可以从“有没有修复收益”推进到“修复收益和修复瓶颈如何并存”
+
+### 对主线的意义
+- 到这一步，真实模型阶段已经有了两张核心图：
+  - 结构普查 atlas
+  - 恢复代理 atlas
+- 这让下一步的方向变得更清楚：
+  - 不再需要继续堆新的 toy 结构
+  - 而是应把 rollback 或 recovery 在线链路直接对准这些高风险层带
+
+### 下一阶段大任务块
+- 任务块 1：真实模型在线恢复链
+  - 把真实 rollback 或 recovery 的在线链路接到高风险层带和高共享层带上。
+- 任务块 2：真实模型阶段核细化
+  - 继续细化概念期、比较期、恢复期的层带与脆弱区。
+- 任务块 3：生成网络回接真实层带
+  - 直接验证当前区域化生成网络的容量瓶颈是否落在恢复代理 atlas 指向的层带上。
+- 任务块 4：统一证据总图
+  - 在前端把真实结构 atlas 和恢复代理 atlas 合并成同一主线总图。
+
+## 2026-03-10 真实模型在线恢复链
+
+### 本轮命令进展
+- 新增基准：
+  - `tests/codex/test_qwen3_deepseek7b_online_recovery_chain.py`
+- 生成结果：
+  - `tests/codex_temp/qwen3_deepseek7b_online_recovery_chain_20260310.json`
+- 新增前端面板：
+  - `frontend/src/blueprint/Qwen3DeepSeekOnlineRecoveryChainDashboard.jsx`
+  - `frontend/src/blueprint/data/qwen3_deepseek7b_online_recovery_chain_sample.json`
+- 接入：
+  - `frontend/src/blueprint/GeminiTab.jsx`
+- 验证：
+  - `python -m py_compile tests/codex/test_qwen3_deepseek7b_online_recovery_chain.py`
+  - `python tests/codex/test_qwen3_deepseek7b_online_recovery_chain.py`
+  - `npm --prefix frontend run build`
+
+### 关键结果
+- `qwen_no_recovery_success = 0.5542`
+- `qwen_recovery_success = 0.7458`
+- `deepseek_no_recovery_success = 0.2833`
+- `deepseek_recovery_success = 0.4750`
+- `qwen_trigger_rate = 0.4458`
+- `deepseek_trigger_rate = 0.7167`
+- `qwen_recovery_rate = 0.5701`
+- `deepseek_recovery_rate = 0.4012`
+- 假设：
+  - `H1_online_recovery_improves_success_on_both_models = true`
+  - `H2_deepseek_has_higher_online_trigger_rate = true`
+  - `H3_qwen_keeps_higher_online_recovery_rate = true`
+  - `H4_qwen_keeps_higher_final_online_success = true`
+
+### 当前理论推进
+- 这一步把真实模型结构约束下的在线 `rollback / recovery` 链显式化了。
+- 更准确的口径现在应当是：
+  - 它仍是在线代理链
+  - 不是已经接上真实外部工具的完整闭环
+  - 但它已经能把高风险层带、取向惩罚和回退修复收益连成一条连续链条
+- 结果说明：
+  - 在线 recovery 对两类模型都确实提高了成功率
+  - DeepSeek 在在线链里表现出更高触发率
+  - 而 Qwen 在回退恢复率和最终成功率上更稳
+- 这意味着：
+  - 真实模型中的共享结构强度和真实在线稳定性并不是一回事
+  - 高共享结构如果叠加较大的取向落差惩罚，会在在线链里直接表现成更高失败触发
+
+### 对阶段目标的意义
+- 到这一步，“真实模型在线恢复链”这个阶段目标可以算第一版完成：
+  - 结构普查 atlas 已有
+  - 恢复代理 atlas 已有
+  - 在线恢复链也已接出来
+- 下一阶段就不该再停在链路是否存在
+  - 而应该直接问：
+    - 当前生成网络的容量瓶颈是否正落在这些在线高风险段上
+
+### 下一阶段大任务块
+- 任务块 1：生成网络回接真实层带
+  - 直接把当前区域化生成网络映射到这些在线高风险层带与高触发段。
+- 任务块 2：真实模型阶段核细化
+  - 继续把概念期、比较期、恢复期的真实层带与脆弱区拆细。
+- 任务块 3：更硬的在线任务接口
+  - 把当前在线代理链逐步替换成更接近真实工具调用的接口约束。
+- 任务块 4：统一证据总图
+  - 在前端把结构 atlas、恢复代理 atlas 和在线恢复链合并成同一张总图。
+
+## 2026-03-10 生成网络回接真实层带
+
+### 本轮命令进展
+- 新增基准：
+  - `tests/codex/test_generator_network_real_layer_band_bridge.py`
+- 生成结果：
+  - `tests/codex_temp/generator_network_real_layer_band_bridge_20260310.json`
+- 新增前端面板：
+  - `frontend/src/blueprint/GeneratorNetworkRealLayerBandBridgeDashboard.jsx`
+  - `frontend/src/blueprint/data/generator_network_real_layer_band_bridge_sample.json`
+- 接入：
+  - `frontend/src/blueprint/GeminiTab.jsx`
+- 验证：
+  - `python -m py_compile tests/codex/test_generator_network_real_layer_band_bridge.py`
+  - `python tests/codex/test_generator_network_real_layer_band_bridge.py`
+  - `npm --prefix frontend run build`
+
+### 关键结果
+- `qwen_searched_undercoverage = 0.0810`
+- `qwen_end_to_end_undercoverage = 0.0859`
+- `deepseek_searched_undercoverage = 0.2714`
+- `deepseek_end_to_end_undercoverage = 0.2766`
+- `qwen_worst_stage = tool`
+- `deepseek_worst_stage = tool`
+- 假设：
+  - `H1_deepseek_has_larger_generator_undercoverage_than_qwen = true`
+  - `H2_deepseek_worst_stage_is_relation_or_tool = true`
+  - `H3_end_to_end_generator_does_not_fix_real_band_undercoverage = true`
+  - `H4_qwen_end_to_end_undercoverage_stays_bounded = true`
+
+### 当前理论推进
+- 这一步把“生成网络容量瓶颈”第一次直接钉到了真实在线高风险段上。
+- 更准确的口径现在应当是：
+  - 当前搜索生成网络对 Qwen 的阶段需求还能基本覆盖
+  - 但对 DeepSeek 的真实在线高风险段明显欠覆盖
+  - 而且端到端生成网络并没有修复这个问题
+- 结果最重要的部分是：
+  - 两类模型的最差阶段都落在 `tool`
+  - DeepSeek 的缺口明显更大
+- 这意味着：
+  - 当前生成网络瓶颈已经不再是抽象推测
+  - 它已经和真实在线链里的具体高风险阶段对齐了
+
+### 对阶段目标的意义
+- 到这一步，“生成网络回接真实层带”这个阶段目标已经完成第一版：
+  - 不是只知道生成网络不够强
+  - 而是知道它具体卡在哪个真实在线阶段上
+- 这会直接改变下一步策略：
+  - 不是继续做更多代理桥
+  - 而是应该围绕 `tool` 阶段做生成网络结构升级
+
+### 下一阶段大任务块
+- 任务块 1：生成网络结构升级
+  - 围绕 `tool` 阶段增加分阶段头和更强的结构约束，优先修工具阶段缺口。
+- 任务块 2：真实模型阶段核细化
+  - 继续细化概念期、比较期、恢复期的真实层带与脆弱区。
+- 任务块 3：更硬的在线任务接口
+  - 把当前在线代理链逐步替换成更接近真实工具调用的接口约束。
+- 任务块 4：统一证据总图
+  - 在前端把结构 atlas、恢复代理 atlas、在线恢复链和生成网络缺口桥接收成同一张总图。
+
+## 2026-03-10 方法论判断更新：DNN 结构逆向优先于纯数学先行
+
+### 本轮理论进展
+- 当前主线需要进一步收紧成一条更现实的方法论：
+  - 单纯依赖先验数学分析，直接破解生物神经系统编码机制，成功概率不高。
+  - 更可行的路线是：
+    - 先从深度神经网络里提取大量可观测结构
+    - 再从这些结构中反推统一编码机制
+    - 最后拿反推出的机制去解释和约束脑侧现象
+- 这条判断的核心原因是：
+  - 生物神经系统的可观测性太弱
+  - 纯数学先行缺少足够的结构约束
+  - DNN 则提供了高维、可干预、可重复的结构数据场
+
+### 当前口径
+- 更准确的表述现在应当是：
+  - 我们不是先“发明一套完整脑数学”
+  - 再去套生物系统
+  - 而是先在 DNN 中做结构考古、因果干预和训练律压缩
+  - 由此逼出更小的统一生成原理
+- 再把这套生成原理回接到脑区异质性、阶段切换、恢复回放和局部脉冲更新上
+
+### 对当前项目主线的影响
+- 这会让当前路线更稳定：
+  - `共享基底 / 门控 / 脑区参数族 / 三阶段闭环 / 低维生成网络`
+  - 不再只是若干现象
+  - 而是 DNN 结构逆向工程中的连续证据链
+- 同时也要求后面减少两类风险：
+  - 风险 1：过早追求纯理论统一，脱离结构数据
+  - 风险 2：只做统计相关，不做因果干预和训练闭环
+
+### 下一阶段方法论任务块
+- 任务块 1：真实模型结构普查
+  - 扩大到更多真实模型和层带，把共享基底、阶段核、恢复链、区域化偏置做成系统结构数据集。
+- 任务块 2：结构到生成律的压缩
+  - 继续把 DNN 结构证据压到更小的生成坐标和训练律，不急着先写全局脑数学。
+- 任务块 3：脑侧映射约束
+  - 只把已经在 DNN 里反复出现、且有因果支持的结构映射回脑侧，避免过度类比。
+- 任务块 4：统一证据图谱
+  - 前端继续把结构证据、负结果、训练闭环和生成网络瓶颈放在同一图谱里，防止研究再次碎片化。
+
+## 2026-03-10 下一阶段任务规划
+
+### 当前阶段判断
+- 当前项目已经完成了“toy 局部机制 -> 三阶段闭环 -> 脑区参数族 -> 低维生成映射”的主干收敛。
+- 下一阶段不该继续横向发散新名词，而应当按阶段目标推进，每次完成一个能验收的大块。
+
+### 建议的阶段性任务块
+- 阶段任务 1：真实模型结构普查
+  - 目标：
+    - 在真实 DNN 中建立共享基底、阶段核、恢复链、层带偏置的结构图谱。
+  - 完成标志：
+    - 至少两类真实模型上，结构读数形成统一数据表和统一面板。
+  - 产出重点：
+    - 真实模型层带 atlas
+    - 概念 / 比较 / 恢复三阶段核图谱
+    - 共享层带与恢复脆弱区的对应关系
+
+- 阶段任务 2：生成网络结构升级
+  - 目标：
+    - 把当前低维生成网络从“能表达”推进到“能稳定训练出更优结构”。
+  - 完成标志：
+    - 新一代生成网络在 held-out latent 上稳定超过搜索网络，而不是只保持不坏。
+  - 产出重点：
+    - 分阶段头
+    - 区域共享底座
+    - 更强的结构约束和训练目标
+
+- 阶段任务 3：在线任务闭环桥接
+  - 目标：
+    - 把阶段核、脑区参数族和生成网络接回真实任务、工具调用与 rollback 或 recovery。
+  - 完成标志：
+    - 能明确看到哪些结构错位会直接导致链式任务崩坏，哪些结构修复能提高恢复率。
+  - 产出重点：
+    - 在线 rollback 或 recovery 结构读数
+    - 长链任务稳定性
+    - 失败恢复与阶段核错位的联动
+
+- 阶段任务 4：统一证据总图
+  - 目标：
+    - 把正结果、负结果、结构普查、训练闭环收成一张统一证据图。
+  - 完成标志：
+    - 客户端能直接展示“已成立 / 未成立 / 卡点在哪”的总览。
+  - 产出重点：
+    - 主线证据图谱
+    - 结构瓶颈图
+    - 阶段进度和下一步任务面板
+
+### 优先级判断
+- 最优先应做：
+  - 阶段任务 1：真实模型结构普查
+- 原因：
+  - 当前最大的风险不是 toy 机制不够多
+  - 而是没有把已经收敛出的结构主线足够硬地接回真实模型
+  - 只要这一步做实，后面的生成网络升级和在线闭环都会更有约束
+
+### 当前建议
+- 下一轮直接以“真实模型结构普查”作为单一阶段目标推进：
+  - 不再新开平行 toy 机制
+  - 直接做真实模型层带、阶段核、恢复链、共享层带脆弱区的统一 atlas
+  - 做完这一块，再进入生成网络结构升级
+
+## 2026-03-10 生成网络结构升级第一版：tool 专门头
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_tool_stage_generator_network_upgrade.py`
+- `python tests/codex/test_tool_stage_generator_network_upgrade.py`
+- `npm --prefix frontend run build`
+
+### 新增脚本与前端
+- 新增基准：
+  - `tests/codex/test_tool_stage_generator_network_upgrade.py`
+- 新增结果：
+  - `tests/codex_temp/tool_stage_generator_network_upgrade_20260310.json`
+- 新增面板：
+  - `frontend/src/blueprint/ToolStageGeneratorNetworkUpgradeDashboard.jsx`
+- 新增样例：
+  - `frontend/src/blueprint/data/tool_stage_generator_network_upgrade_sample.json`
+- 额外整理：
+  - 重写 `frontend/src/blueprint/GeneratorNetworkRealLayerBandBridgeDashboard.jsx`，清掉可见乱码
+  - `frontend/src/blueprint/GeminiTab.jsx` 新增挂载
+
+### 关键结果
+- 最优升级结构：
+  - `tool_head_gain=1.4`
+  - `relation_assist_gain=1.0`
+  - `verify_guard_gain=0.6`
+  - `concept_guard_gain=0.6`
+- 真实层带缺口变化：
+  - `qwen_tool_undercoverage_gain=+0.1208`
+  - `deepseek_tool_undercoverage_gain=+0.1208`
+  - `qwen_mean_undercoverage_gain=+0.0380`
+  - `deepseek_mean_undercoverage_gain=+0.0379`
+- 相对旧结构：
+  - `qwen_tool_head_minus_end_to_end_undercoverage=+0.0428`
+  - `deepseek_tool_head_minus_end_to_end_undercoverage=+0.0431`
+- 副作用控制：
+  - `qwen_non_tool_alignment_delta=-0.0040`
+  - `deepseek_non_tool_alignment_delta=-0.0036`
+- 阶段风险迁移：
+  - 升级前两边最差阶段都是 `tool`
+  - 升级后两边最差阶段都转到 `relation`
+
+### 理论判断
+- 这一步首次把“生成网络结构升级”从抽象容量增强，压成了一个真实在线链上可验证的结构问题。
+- 当前更稳的结论是：
+  - 生成网络主瓶颈确实落在 `tool` 阶段
+  - 加一个阶段专门头就能把真实层带缺口明显缩小
+  - 但结构升级不会自动解决全部问题，它会把主风险从 `tool` 推到 `relation`
+- 也就是说，统一编码机制的生成网络已经开始呈现“阶段化容量分配”特征：
+  - 共享底座负责基础承载
+  - 阶段专门头负责把容量压到当前高风险段
+  - 下一步不能再泛泛扩容，而应当继续做 `relation/tool` 联合头或更硬的在线工具接口
+
+### 阶段性结论
+- “生成网络结构升级”第一版阶段目标已完成。
+- 这一阶段证明：
+  - 当前真实在线主瓶颈可以被结构升级直接命中
+  - 升级结果可被量化为真实层带缺口收缩
+  - 下一阶段应该从“单 tool 头”进入“更硬在线工具接口 + relation/tool 联合升级”
+
+## 2026-03-10 生成网络结构升级第二版：relation/tool 联合头
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_relation_tool_joint_generator_network_upgrade.py`
+- `python tests/codex/test_relation_tool_joint_generator_network_upgrade.py`
+- `npm --prefix frontend run build`
+
+### 新增脚本与前端
+- 新增基准：
+  - `tests/codex/test_relation_tool_joint_generator_network_upgrade.py`
+- 新增结果：
+  - `tests/codex_temp/relation_tool_joint_generator_network_upgrade_20260310.json`
+- 新增面板：
+  - `frontend/src/blueprint/RelationToolJointGeneratorNetworkUpgradeDashboard.jsx`
+- 新增样例：
+  - `frontend/src/blueprint/data/relation_tool_joint_generator_network_upgrade_sample.json`
+- 额外整理：
+  - 重写 `frontend/src/blueprint/ToolStageGeneratorNetworkUpgradeDashboard.jsx`，清掉可见乱码
+  - 重写 `frontend/src/blueprint/data/tool_stage_generator_network_upgrade_sample.json`
+  - `frontend/src/blueprint/GeminiTab.jsx` 新增联合头挂载
+
+### 关键结果
+- 最优联合头结构：
+  - `relation_head_gain=1.4`
+  - `tool_head_gain=0.8`
+  - `cross_gate_gain=1.0`
+  - `verify_guard_gain=0.2`
+  - `concept_guard_gain=0.4`
+- 相对 tool 头基线：
+  - `qwen_relation_undercoverage_gain=+0.0896`
+  - `deepseek_relation_undercoverage_gain=+0.0896`
+  - `qwen_mean_undercoverage_gain=+0.0315`
+  - `deepseek_mean_undercoverage_gain=+0.0312`
+- tool 段没有回弹，反而继续改善：
+  - `qwen_tool_regression_after_joint_head=-0.0365`
+  - `deepseek_tool_regression_after_joint_head=-0.0365`
+- 风险结构变化：
+  - tool 头之后最差阶段是 `relation`
+  - 联合头之后最差阶段变回 `tool`
+  - 但此时 `tool` 缺口已经显著小于 tool 头前
+
+### 理论判断
+- 这一步说明“阶段专门头”并不是单点补丁，而开始表现成一种可组合的阶段化容量分配机制。
+- 当前更稳的说法是：
+  - `tool` 头负责先打主瓶颈
+  - `relation/tool` 联合头负责继续压次级风险，同时还能带动已修阶段进一步收缩
+  - 生成网络已经开始显露出“共享底座 + 阶段联合头 + 跨阶段 gate”这一类结构形态
+- 这对“大脑式统一编码机制”的意义在于：
+  - 系统并不需要全局控制器
+  - 但需要可组合的阶段门控，把共享底座的有限容量压到当前风险最高的局部链路上
+
+### 阶段性结论
+- “生成网络结构升级”第二版阶段目标已完成。
+- 到这里，真实在线链的瓶颈处理已经从：
+  - 发现 `tool` 是主瓶颈
+  - 到 `tool` 头修复
+  - 再到 `relation/tool` 联合头继续压缩
+- 下一阶段应该进入更硬的在线工具接口，而不是继续停留在当前代理链上。
+
+## 2026-03-10 更硬在线工具接口第一版
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_qwen3_deepseek7b_hard_online_tool_interface.py`
+- `python tests/codex/test_qwen3_deepseek7b_hard_online_tool_interface.py`
+- `npm --prefix frontend run build`
+
+### 新增脚本与前端
+- 新增基准：
+  - `tests/codex/test_qwen3_deepseek7b_hard_online_tool_interface.py`
+- 新增结果：
+  - `tests/codex_temp/qwen3_deepseek7b_hard_online_tool_interface_20260310.json`
+- 新增面板：
+  - `frontend/src/blueprint/Qwen3DeepSeekHardOnlineToolInterfaceDashboard.jsx`
+- 新增样例：
+  - `frontend/src/blueprint/data/qwen3_deepseek7b_hard_online_tool_interface_sample.json`
+- 额外整理：
+  - 重写 `frontend/src/blueprint/Qwen3DeepSeekOnlineRecoveryChainDashboard.jsx`，清掉可见乱码
+  - 重写 `frontend/src/blueprint/data/qwen3_deepseek7b_online_recovery_chain_sample.json`
+  - `frontend/src/blueprint/GeminiTab.jsx` 新增更硬在线工具接口挂载
+
+### 关键结果
+- 更硬接口显式失败类型：
+  - `schema_mismatch`
+  - `timeout_pressure`
+  - `state_drift`
+  - `verify_mismatch`
+- 联合头相对 tool 头：
+  - `qwen_joint_minus_tool_head_success=+0.0875`
+  - `deepseek_joint_minus_tool_head_success=+0.0562`
+  - `qwen_tool_head_minus_joint_trigger_rate=+0.1500`
+  - `deepseek_tool_head_minus_joint_trigger_rate=+0.0469`
+  - `qwen_tool_head_minus_joint_tool_failure=+0.1062`
+  - `deepseek_tool_head_minus_joint_tool_failure=+0.0469`
+- 更硬接口下的残余压力：
+  - `DeepSeek` 联合头成功率仅 `0.4094`
+  - `DeepSeek` 联合头触发率仍高达 `0.7563`
+
+### 理论判断
+- 这一步把“真实在线链”从软代理推进成了更像真实工具调用的结构约束。
+- 当前更稳的结论是：
+  - `relation/tool` 联合头并不是只在层带缺口上成立
+  - 它在更硬接口下仍能显著降低触发率和工具失败率
+  - 但 `DeepSeek` 仍保留更高失败压力，说明现阶段结构升级还没有触及真正的在线自适应阶段调度
+- 也就是说，当前系统已经具备：
+  - 静态结构升级
+  - 联合阶段头修复
+  - 更硬接口下的收益转化
+- 但还不具备：
+  - 在线可学习的阶段头
+  - 面向失败类型的自适应调度
+
+### 阶段性结论
+- “更硬在线工具接口”第一版阶段目标已完成。
+- 到这里，项目已经从：
+  - 真实层带缺口桥接
+  - 到阶段专门头修复
+  - 到联合头修复
+  - 再到更硬接口下的收益验证
+- 下一阶段应该进入“阶段头在线可学习化”，而不是继续停在手工搜索阶段头。

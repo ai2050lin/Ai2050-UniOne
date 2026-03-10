@@ -1,0 +1,27 @@
+{
+  "timestamp": "2026-03-10T17:12:23.577590",
+  "experiment": "true_hard_spdm_e2e_rebuild",
+  "results": {
+    "baseline": {
+      "best_ppl": 1163.9560260185258,
+      "time": 2.5105834007263184
+    },
+    "true_spdm": {
+      "best_ppl": 37105.08015163574,
+      "time": 16.466912746429443
+    }
+  },
+  "properties": {
+    "layer_dominant_sequence": [
+      "meso",
+      "macro",
+      "micro",
+      "micro"
+    ],
+    "hierarchy_gradient": -1.5
+  },
+  "hypotheses": {
+    "H_ppl_gap_closed": "FAIL",
+    "H_spdm_preserved": "FAIL"
+  }
+}

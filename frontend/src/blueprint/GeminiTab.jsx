@@ -94,7 +94,27 @@ import Qwen3DeepSeekRelationTopologyBridgeDashboard from './Qwen3DeepSeekRelatio
 import Qwen3DeepSeekSharedSupportHeadBridgeDashboard from './Qwen3DeepSeekSharedSupportHeadBridgeDashboard';
 import Qwen3DeepSeekSharedLayerBandCausalOrientationDashboard from './Qwen3DeepSeekSharedLayerBandCausalOrientationDashboard';
 import Qwen3DeepSeekSharedLayerBandTargetedAblationDashboard from './Qwen3DeepSeekSharedLayerBandTargetedAblationDashboard';
+import Qwen3DeepSeekRealModelStructureAtlasDashboard from './Qwen3DeepSeekRealModelStructureAtlasDashboard';
+import Qwen3DeepSeekRealModelRecoveryProxyAtlasDashboard from './Qwen3DeepSeekRealModelRecoveryProxyAtlasDashboard';
+import Qwen3DeepSeekOnlineRecoveryChainDashboard from './Qwen3DeepSeekOnlineRecoveryChainDashboard';
+import GeneratorNetworkRealLayerBandBridgeDashboard from './GeneratorNetworkRealLayerBandBridgeDashboard';
+import ToolStageGeneratorNetworkUpgradeDashboard from './ToolStageGeneratorNetworkUpgradeDashboard';
+import RelationToolJointGeneratorNetworkUpgradeDashboard from './RelationToolJointGeneratorNetworkUpgradeDashboard';
+import Qwen3DeepSeekHardOnlineToolInterfaceDashboard from './Qwen3DeepSeekHardOnlineToolInterfaceDashboard';
 import LocalPulseRegionHeterogeneityDashboard from './LocalPulseRegionHeterogeneityDashboard';
+import LocalPulsePhaseConditionedCausalAtlasDashboard from './LocalPulsePhaseConditionedCausalAtlasDashboard';
+import LocalPulseEarlyCoreDecouplingDashboard from './LocalPulseEarlyCoreDecouplingDashboard';
+import LocalPulseMidphaseCoreStabilizationDashboard from './LocalPulseMidphaseCoreStabilizationDashboard';
+import LocalPulseRegionDifferentiatedSelectorDashboard from './LocalPulseRegionDifferentiatedSelectorDashboard';
+import LocalPulseUnifiedMultiobjectiveTrainingLawDashboard from './LocalPulseUnifiedMultiobjectiveTrainingLawDashboard';
+import LocalPulseStageDecomposedTrainingLawDashboard from './LocalPulseStageDecomposedTrainingLawDashboard';
+import LocalPulseRecoveryPhaseTrainingLawDashboard from './LocalPulseRecoveryPhaseTrainingLawDashboard';
+import LocalPulseThreeStageTrainingClosureDashboard from './LocalPulseThreeStageTrainingClosureDashboard';
+import LocalPulseRegionParameterFamilyLearnerDashboard from './LocalPulseRegionParameterFamilyLearnerDashboard';
+import LocalPulseRegionFamilyGeneratorDashboard from './LocalPulseRegionFamilyGeneratorDashboard';
+import LocalPulseTrainableRegionFamilyGeneratorDashboard from './LocalPulseTrainableRegionFamilyGeneratorDashboard';
+import LocalPulseRegionFamilyGeneratorNetworkDashboard from './LocalPulseRegionFamilyGeneratorNetworkDashboard';
+import LocalPulseEndToEndRegionFamilyGeneratorNetworkDashboard from './LocalPulseEndToEndRegionFamilyGeneratorNetworkDashboard';
 import DnnBrainPuzzleBridgeDashboard from './DnnBrainPuzzleBridgeDashboard';
 import DProblemAtlasDashboard from './DProblemAtlasDashboard';
 import AgiConceptS1ToS7Summary from './AgiConceptS1ToS7Summary';
@@ -1446,6 +1466,79 @@ export const GeminiTab = () => {
                 </div>
 
                 <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#0ea5e9', marginBottom: '12px', borderBottom: '1px solid rgba(14,165,233,0.35)', paddingBottom: '8px' }}>
+                        五点四十、Qwen3 / DeepSeek7B 真实模型结构普查 Atlas
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把共享层带、阶段取向、真实定向消融和结构任务收益收成同一张结构总表，直接看哪些是真正稳定的真实模型证据，哪些还停在预测层。
+                    </div>
+                    <Qwen3DeepSeekRealModelStructureAtlasDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#22c55e', marginBottom: '12px', borderBottom: '1px solid rgba(34,197,94,0.35)', paddingBottom: '8px' }}>
+                        五点四十续、Qwen3 / DeepSeek7B 真实模型恢复代理 Atlas
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在结构普查 atlas 之后，继续把桥接收益、结构收益、目标层带风险和取向惩罚压成恢复代理图谱。这里明确标注它是代理层，不把它误说成真实恢复链本体。
+                    </div>
+                    <Qwen3DeepSeekRealModelRecoveryProxyAtlasDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#3b82f6', marginBottom: '12px', borderBottom: '1px solid rgba(59,130,246,0.35)', paddingBottom: '8px' }}>
+                        五点四十再续、Qwen3 / DeepSeek7B 真实模型在线恢复链
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在恢复代理 atlas 之后，继续把高风险层带、触发率、rollback 和 recovery 接成一条在线链。这里仍然明确是结构约束下的在线代理链，不把它误说成已经接上真实外部工具。
+                    </div>
+                    <Qwen3DeepSeekOnlineRecoveryChainDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#a855f7', marginBottom: '12px', borderBottom: '1px solid rgba(168,85,247,0.35)', paddingBottom: '8px' }}>
+                        五点四十终、生成网络回接真实层带
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        直接比较“搜索生成网络”和“端到端生成网络”在真实在线高风险段上的阶段容量缺口，检查生成网络的瓶颈是不是已经落到真实在线链里的具体阶段。
+                    </div>
+                    <GeneratorNetworkRealLayerBandBridgeDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f97316', marginBottom: '12px', borderBottom: '1px solid rgba(249,115,22,0.35)', paddingBottom: '8px' }}>
+                        五点四十终续、tool 阶段生成网络升级
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在确认真实在线链的主瓶颈落在 `tool` 阶段之后，直接加一个 `tool` 专门头，比较升级前后在真实层带需求上的缺口收缩，
+                        同时检查非 `tool` 阶段有没有出现明显副作用。这一块现在可以作为“生成网络结构升级”的第一版阶段目标。
+                    </div>
+                    <ToolStageGeneratorNetworkUpgradeDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#22c55e', marginBottom: '12px', borderBottom: '1px solid rgba(34,197,94,0.35)', paddingBottom: '8px' }}>
+                        五点四十终续二、relation/tool 联合头升级
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在 `tool` 头已经把主瓶颈从 `tool` 推到 `relation` 之后，继续加一个 `relation/tool` 联合头。
+                        这一块现在直接看 relation 缺口能不能继续缩，同时 tool 段是否仍然受控。
+                    </div>
+                    <RelationToolJointGeneratorNetworkUpgradeDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#ef4444', marginBottom: '12px', borderBottom: '1px solid rgba(239,68,68,0.35)', paddingBottom: '8px' }}>
+                        五点四十终续三、更硬在线工具接口
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在 `relation/tool` 联合头已经压住真实层带缺口之后，继续把在线接口换成更硬版本，
+                        显式引入 `schema / timeout / state_drift / verify_mismatch` 四类失败，直接检验联合头是否还能降低触发率和工具失败率。
+                    </div>
+                    <Qwen3DeepSeekHardOnlineToolInterfaceDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
                     <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981', marginBottom: '12px', borderBottom: '1px solid rgba(16,185,129,0.35)', paddingBottom: '8px' }}>
                         五点三十九后、局部脉冲脑区异质性基准
                     </div>
@@ -1453,6 +1546,136 @@ export const GeminiTab = () => {
                         回到更接近脑侧的核心约束：不假定任何全局控制器，只允许神经元读取上一步的局部脉冲和局部状态，再比较同质脑区、异质脑区和局部回放三组系统，看系统级整合是否仍能涌现。
                     </div>
                     <LocalPulseRegionHeterogeneityDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#3b82f6', marginBottom: '12px', borderBottom: '1px solid rgba(59,130,246,0.35)', paddingBottom: '8px' }}>
+                        五点三十九再续、局部脉冲阶段条件因果图谱
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把局部脉冲系统继续拆成 `concept / comparison / recovery` 三个阶段，直接比较每一阶段哪片局部区域被打掉后掉分最大，用它来验证“局部核心接力”而不是“全局控制器统一指挥”。
+                    </div>
+                    <LocalPulsePhaseConditionedCausalAtlasDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '12px', borderBottom: '1px solid rgba(245,158,11,0.35)', paddingBottom: '8px' }}>
+                        五点三十九终续、早期感知核解耦基准
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        直接对比“原始耦合回放”和“上游解耦回放”，检验把早期流量留在 `sensory / memory` 之后，能否把 `concept_phase` 的局部核心重新拉回上游，同时不牺牲整体整合。
+                    </div>
+                    <LocalPulseEarlyCoreDecouplingDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#ef4444', marginBottom: '12px', borderBottom: '1px solid rgba(239,68,68,0.35)', paddingBottom: '8px' }}>
+                        五点三十九终续补、中期比较核稳相基准
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在上游解耦之后继续强推中期稳相，检查 `comparison_phase` 能否回到 `memory / comparator`。这块刻意外部化负结果，避免被总分小幅上涨误导。
+                    </div>
+                    <LocalPulseMidphaseCoreStabilizationDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#22c55e', marginBottom: '12px', borderBottom: '1px solid rgba(34,197,94,0.35)', paddingBottom: '8px' }}>
+                        五点四十一、脑区差异多目标选择基准
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把“统一局部律”和“分区阶段调谐局部律”放在同一张多目标图里比较，直接回答一个关键问题：如果训练目标既要系统分数，也要阶段局部核结构，那么模型选择会不会发生切换。
+                    </div>
+                    <LocalPulseRegionDifferentiatedSelectorDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '12px', borderBottom: '1px solid rgba(56,189,248,0.35)', paddingBottom: '8px' }}>
+                        五点四十二、统一多目标训练律基准
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在“脑区差异必须进入机制本体”之后，继续把训练律本身显式成型。这里直接比较单目标冲分和多目标守结构两种训练口径，看统一编码机制会被推向哪一类局部组织。
+                    </div>
+                    <LocalPulseUnifiedMultiobjectiveTrainingLawDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#eab308', marginBottom: '12px', borderBottom: '1px solid rgba(234,179,8,0.35)', paddingBottom: '8px' }}>
+                        五点四十三、阶段分解训练律基准
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在统一多目标之后继续把训练口径拆到阶段级，单独约束概念阶段和比较阶段。这里直接看阶段分解训练律能不能在不回到共享平均解的前提下，把两个关键阶段一起拉正。
+                    </div>
+                    <LocalPulseStageDecomposedTrainingLawDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f97316', marginBottom: '12px', borderBottom: '1px solid rgba(249,115,22,0.35)', paddingBottom: '8px' }}>
+                        五点四十四、恢复阶段训练律基准
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在阶段分解之后继续把恢复阶段推进成显式训练口径。这里关注的不是单纯提高恢复率，而是 replay 能否在不打坏前两阶段的前提下，形成更稳的恢复阶段局部接管。
+                    </div>
+                    <LocalPulseRecoveryPhaseTrainingLawDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#a855f7', marginBottom: '12px', borderBottom: '1px solid rgba(168,85,247,0.35)', paddingBottom: '8px' }}>
+                        五点四十五、三阶段训练闭环基准
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        这一步不再分别看概念、比较、恢复三段，而是把三段真正合成一个闭环评分，直接看当前最接近“统一局部律 + 脑区差异 + 三段同时成立”的候选是谁。
+                    </div>
+                    <LocalPulseThreeStageTrainingClosureDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981', marginBottom: '12px', borderBottom: '1px solid rgba(16,185,129,0.35)', paddingBottom: '8px' }}>
+                        五点四十六、脑区参数族学习器
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在三阶段闭环之后，继续把“脑区参数族”从手工指定推进成自动搜索。这里直接比较手工恢复族和学习得到的参数族，看系统能否自己学出更好的区域化统一律。
+                    </div>
+                    <LocalPulseRegionParameterFamilyLearnerDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#06b6d4', marginBottom: '12px', borderBottom: '1px solid rgba(6,182,212,0.35)', paddingBottom: '8px' }}>
+                        五点四十七、脑区参数族生成器
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在自动搜索脑区参数族之后，继续把它压缩到低维生成器。这里直接比较 5 维生成器和学习族，看更小的生成坐标能否复现甚至超过当前最优区域化候选。
+                    </div>
+                    <LocalPulseRegionFamilyGeneratorDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#22c55e', marginBottom: '12px', borderBottom: '1px solid rgba(34,197,94,0.35)', paddingBottom: '8px' }}>
+                        五点四十八、可训练脑区参数族生成器
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在 5 维生成器已经能复现学习族之后，继续把它推进成可训练更新。这里直接比较固定生成器和可训练生成器，看迭代更新能否把闭环分继续推高。
+                    </div>
+                    <LocalPulseTrainableRegionFamilyGeneratorDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#0ea5e9', marginBottom: '12px', borderBottom: '1px solid rgba(14,165,233,0.35)', paddingBottom: '8px' }}>
+                        五点四十九、脑区参数族生成网络
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在可训练 5 维生成器之后，继续把问题从“调好一个 latent”推进成“同一生成网络跨多个 latent 都能稳定生成更好的参数族”。这一步重点看 held-out latent 上的闭环分、平衡分和泛化间隙。
+                    </div>
+                    <LocalPulseRegionFamilyGeneratorNetworkDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f97316', marginBottom: '12px', borderBottom: '1px solid rgba(249,115,22,0.35)', paddingBottom: '8px' }}>
+                        五点五十、端到端脑区参数族生成网络
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在搜索生成网络之后，继续把同一套映射推进成端到端训练式更新。这一步重点不是看它有没有学习，而是看它是否真的超过搜索网络；如果没有，就说明当前结构容量或目标设计已经碰到瓶颈。
+                    </div>
+                    <LocalPulseEndToEndRegionFamilyGeneratorNetworkDashboard />
                 </div>
 
                 <div style={{ marginBottom: '28px' }}>
