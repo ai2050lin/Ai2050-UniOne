@@ -1,0 +1,168 @@
+{
+  "timestamp": "2026-03-10T17:02:49.189476",
+  "experiment": "lif_gate_ablation_step3",
+  "group_sigmoid": {
+    "training": {
+      "param_count": 15756800,
+      "train_losses": [
+        8.193172863551549,
+        5.293512650898525
+      ],
+      "val_losses": [
+        5.906062841415405,
+        5.049168348312378
+      ],
+      "best_val_ppl": 155.89276208158552,
+      "time": 10.525810480117798
+    },
+    "gate_sparsity": {
+      "layer0": {
+        "sparsity": 0.0,
+        "mean_activation": 0.4801046550273895,
+        "max_activation": 0.937828779220581
+      },
+      "layer1": {
+        "sparsity": 0.0,
+        "mean_activation": 0.505744993686676,
+        "max_activation": 0.9416400194168091
+      },
+      "layer2": {
+        "sparsity": 0.0,
+        "mean_activation": 0.53729647397995,
+        "max_activation": 0.9578372836112976
+      },
+      "layer3": {
+        "sparsity": 0.0,
+        "mean_activation": 0.5353409647941589,
+        "max_activation": 0.9556958079338074
+      }
+    },
+    "head_differentiation": {
+      "entropy_diff_mean": 0.2870815098285675,
+      "entropy_diff_max": 0.28764283657073975
+    }
+  },
+  "group_lif": {
+    "training": {
+      "param_count": 15758848,
+      "train_losses": [
+        8.226293064299083,
+        5.328967105774653
+      ],
+      "val_losses": [
+        5.930255889892578,
+        5.078076362609863
+      ],
+      "best_val_ppl": 160.4650822152296,
+      "time": 28.332204580307007
+    },
+    "gate_sparsity": {
+      "layer0": {
+        "sparsity": 0.60205078125,
+        "mean_activation": 0.2495291829109192,
+        "max_activation": 1.0
+      },
+      "layer1": {
+        "sparsity": 0.64697265625,
+        "mean_activation": 0.254269540309906,
+        "max_activation": 1.0
+      },
+      "layer2": {
+        "sparsity": 0.55615234375,
+        "mean_activation": 0.3509027361869812,
+        "max_activation": 1.0
+      },
+      "layer3": {
+        "sparsity": 0.5712890625,
+        "mean_activation": 0.3547421395778656,
+        "max_activation": 1.0
+      }
+    },
+    "head_differentiation": {
+      "entropy_diff_mean": 0.2887088358402252,
+      "entropy_diff_max": 0.2898033857345581
+    }
+  },
+  "group_hard_threshold": {
+    "training": {
+      "param_count": 15756800,
+      "train_losses": [
+        8.215814783459617,
+        5.324911321912493
+      ],
+      "val_losses": [
+        5.9242929220199585,
+        5.06608259677887
+      ],
+      "best_val_ppl": 158.55199707579743,
+      "time": 5.975860357284546
+    },
+    "gate_sparsity": {
+      "layer0": {
+        "sparsity": 0.47509765625,
+        "mean_activation": 0.27468937635421753,
+        "max_activation": 2.5423338413238525
+      },
+      "layer1": {
+        "sparsity": 0.50927734375,
+        "mean_activation": 0.3538578748703003,
+        "max_activation": 3.077497959136963
+      },
+      "layer2": {
+        "sparsity": 0.55517578125,
+        "mean_activation": 0.3561067283153534,
+        "max_activation": 3.696394920349121
+      },
+      "layer3": {
+        "sparsity": 0.595703125,
+        "mean_activation": 0.42145809531211853,
+        "max_activation": 3.8329477310180664
+      }
+    },
+    "head_differentiation": {
+      "entropy_diff_mean": 0.28725722432136536,
+      "entropy_diff_max": 0.28785479068756104
+    }
+  },
+  "group_baseline": {
+    "training": {
+      "param_count": 15006976,
+      "train_losses": [
+        36.09390313284738,
+        12.072085721152169
+      ],
+      "val_losses": [
+        14.347410917282104,
+        8.707769632339478
+      ],
+      "best_val_ppl": 6049.734297787961,
+      "time": 4.349459648132324
+    }
+  },
+  "comparison": {
+    "sigmoid": {
+      "ppl": 155.89276208158552,
+      "avg_gate_sparsity": 0.0,
+      "head_diff_mean": 0.2870815098285675
+    },
+    "lif": {
+      "ppl": 160.4650822152296,
+      "avg_gate_sparsity": 0.5941162109375,
+      "head_diff_mean": 0.2887088358402252
+    },
+    "hard_threshold": {
+      "ppl": 158.55199707579743,
+      "avg_gate_sparsity": 0.5338134765625,
+      "head_diff_mean": 0.28725722432136536
+    },
+    "baseline": {
+      "ppl": 6049.734297787961
+    },
+    "hypotheses": {
+      "H_lif_more_sparse": "PASS",
+      "H_lif_better_differentiation": "PASS",
+      "H_lif_ppl_within_2x": "PASS",
+      "H_hard_more_sparse": "PASS"
+    }
+  }
+}

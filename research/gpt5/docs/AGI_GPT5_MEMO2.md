@@ -10917,1957 +10917,648 @@ g -n "AppleOrthogonalityDashboard|五点六|五点五|HRRPhaseRigorousDashboard"
 
 - 任务块 3：`4D + 3D` 语义定型
   - 对 4 个骨架分量和 3 个修正分量做更稳定的语义命名和功能归因
-## 2026-03-10 脑侧候选约束系统扩展与混合扫描
 
-### 新增脚本
-- `tests/codex/test_semantic_4d_brain_constraint_expansion.py`
-- `tests/codex/test_semantic_4d_brain_constraint_expansion_sweep.py`
-
-### 新增前端
-- `frontend/src/blueprint/Semantic4DBrainConstraintExpansionDashboard.jsx`
-- `frontend/src/blueprint/Semantic4DBrainConstraintSweepDashboard.jsx`
-- 更新 `frontend/src/blueprint/GeminiTab.jsx`
-
-### 结果文件
-- `tests/codex_temp/semantic_4d_brain_constraint_expansion_20260310.json`
-- `tests/codex_temp/semantic_4d_brain_constraint_expansion_sweep_20260310.json`
-
-### 实际命令
-- `python -m py_compile tests/codex/test_semantic_4d_brain_constraint_expansion.py`
-- `python tests/codex/test_semantic_4d_brain_constraint_expansion.py`
-- `python -m py_compile tests/codex/test_semantic_4d_brain_constraint_expansion_sweep.py`
-- `python tests/codex/test_semantic_4d_brain_constraint_expansion_sweep.py`
-- `Copy-Item tests/codex_temp/semantic_4d_brain_constraint_expansion_20260310.json frontend/src/blueprint/data/semantic_4d_brain_constraint_expansion_sample.json -Force`
-- `Copy-Item tests/codex_temp/semantic_4d_brain_constraint_expansion_sweep_20260310.json frontend/src/blueprint/data/semantic_4d_brain_constraint_expansion_sweep_sample.json -Force`
-- `cd frontend && npm run build`
-
-### 核心结果
-- 全量结构化脑侧约束扩展是负例：
-  - `mean_held_out_gap = 0.002599`
-  - `brain_held_out_gap = 0.064880`
-  - 相对基线 `brain_gap_improvement = -0.007732`
-
-- 这说明：
-  - 脑侧候选约束不是越多越好
-  - 全量组件聚焦 + 聚合约束会形成过约束
-  - 当前主骨架并不会因为“约束面更厚”而自动更稳
-
-- 轻量混合扫描找到了有效区：
-  - 最优配置 `topk = 2`
-  - `include_aggregate = false`
-  - `alpha = 0.35`
-  - `mean_constraint_count = 3.95`
-  - `mean_held_out_gap = 0.000970`
-  - `brain_held_out_gap = 0.026210`
-  - `brain_gap_improvement = +0.030939`
-  - `corr_improvement = +0.002246`
-
-### 当前理论判断
-- 当前最稳的写法已经从：
-  - “脑侧样本过薄是主要问题”
-- 进一步收紧成：
-  - “脑侧约束也存在有效厚度窗口”
-
-- 也就是：
-  - 主骨架 `4D semantic skeleton + 3D vector correction` 仍然成立
-  - 但脑侧候选约束需要保持轻量、稀疏、针对性强
-  - 不是简单增加约束数量就会更接近真实统一律
-
-### 对整体路线的意义
-- 这一步很重要，因为它把脑侧问题从“样本太少”进一步推进到“约束调度与约束厚度”问题
-- 所以接下来更合理的方向不是无上限补脑侧约束，而是：
-  - 先扩脑侧候选覆盖面
-  - 但保持低过约束
-  - 优先保留高价值、低冗余的脑侧候选面
-
-### 接下来的大任务块
-- 任务块 1：脑侧候选覆盖面扩展
-  - 扩更多脑侧候选结构，但维持轻量混合区，不回到全量过约束
-
-- 任务块 2：`4D + 3D` 跨域稳泛化
-  - 把当前最优轻量脑侧约束配置扩到更多模态组合、更强扰动、更大任务域
-
-- 任务块 3：`4D + 3D` 语义定型
-  - 对 `4` 个骨架分量、`3` 个修正分量以及脑侧轻量约束接口做更稳定的语义命名和功能归因
-## 2026-03-10 脑侧候选覆盖面扩展
-
-### 新增脚本
-- `tests/codex/test_semantic_4d_brain_candidate_coverage_expansion.py`
-
-### 新增前端
-- `frontend/src/blueprint/Semantic4DBrainCandidateCoverageDashboard.jsx`
-- 更新 `frontend/src/blueprint/GeminiTab.jsx`
-
-### 结果文件
-- `tests/codex_temp/semantic_4d_brain_candidate_coverage_expansion_20260310.json`
-
-### 实际命令
-- `python -m py_compile tests/codex/test_semantic_4d_brain_candidate_coverage_expansion.py`
-- `python tests/codex/test_semantic_4d_brain_candidate_coverage_expansion.py`
-- `Copy-Item tests/codex_temp/semantic_4d_brain_candidate_coverage_expansion_20260310.json frontend/src/blueprint/data/semantic_4d_brain_candidate_coverage_expansion_sample.json -Force`
-- `cd frontend && npm run build`
-
-### 核心结果
-- 在上一轮轻量有效区之上，再加入极少量候选覆盖锚点后，最优配置是：
-  - `topk = 2`
-  - `alpha = 0.35`
-  - `coverage_mode = mean_anchor`
-  - `coverage_weight = 0.2`
-  - `coverage_topm = 2`
-
-- 对应结果：
-  - `brain_held_out_gap = 0.021236`
-  - `mean_held_out_gap = 0.001062`
-  - `held_out_score_correlation = 0.999549`
-
-- 相对基线 `4D + 3D`：
-  - `brain_gap_improvement_vs_baseline = +0.035912`
-  - `mean_gap_improvement_vs_baseline = +0.000668`
-
-- 相对上一轮轻量混合最优区：
-  - `brain_gap_improvement_vs_light_best = +0.004973`
-  - `mean_gap_improvement_vs_light_best = -0.000093`
-
-### 当前理论判断
-- 当前最稳的写法已经从：
-  - “脑侧约束存在有效厚度窗口”
-- 进一步收紧成：
-  - “脑侧候选覆盖面可以继续扩，但必须保持极小锚点 + 低权重”
-
-- 这意味着：
-  - 主骨架 `4D semantic skeleton + 3D vector correction` 继续成立
-  - 脑侧约束系统的有效推进方向，不是回到全量覆盖
-  - 而是沿着轻量混合区做低过约束的定向扩张
-
-### 对整体路线的意义
-- 这一轮把脑侧工作从“样本薄弱问题”推进成了“覆盖面调度问题”
-- 也就是：
-  - 不只要补脑侧候选
-  - 还要控制覆盖面进入统一律的方式和强度
-
-### 接下来的大任务块
-- 任务块 1：脑侧候选覆盖面系统扩张
-  - 继续增加脑侧候选类型，但保持 `mean_anchor` 这种极小、低权重覆盖方式
-
-- 任务块 2：`4D + 3D` 跨域稳泛化
-  - 把当前最优轻量覆盖扩展配置扩到更多模态组合、更强扰动、更大任务域
-
-- 任务块 3：`4D + 3D` 语义定型
-  - 对 4 个骨架分量、3 个修正分量、以及脑侧轻量覆盖锚点做稳定的语义命名和功能归因
-## 2026-03-10 当前最大问题与硬伤收敛
-
-### 实际命令
-- `本轮未新增测试脚本或构建命令`
-- `仅整理当前阶段的硬伤判断与下一步任务块`
-
-### 当前最大问题与硬伤
-- 开放世界接地仍未闭合
-  - 即使已有 `continuous grounding` 方向，也还没有证明系统能在真实连续环境中稳定形成概念
-
-- 训练机制仍未闭合
-  - 当前解释链越来越强，但还没有证明这套结构能被稳定训练出来
-  - 现在更多是“逆向提纯与压缩”，还不是“正向可训练生成律”
-
-- 跨模态统一仍缺强证据
-  - 目前主要证据仍集中在语言域、内部桥接指标和代理约束
-  - 还没有强证据证明视觉、听觉、动作都进入同一协议层或同一统一回路
-
-- 长期代理闭环缺失
-  - 还没有真实开放环境中的长期规划、自主纠错、长期记忆污染控制
-  - 当前长程结果主要仍停在结构化任务和受控基准上
-
-- 评价指标仍偏内部
-  - 当前大量结果仍然是：
-    - `gap`
-    - `correlation`
-    - `held-out error`
-    - `collapse ratio`
-  - 这些对理论压缩很重要，但不等于 AGI 成功
-
-- 最小因果规模仍未找到
-  - 单头不够
-  - `top-3` 通常也不够
-  - 真正的中观因果单元还没有被完全测清
-
-- 项目复杂度快速上升
-  - 脚本和看板数量暴增是双刃剑
-  - 一方面提升实验能力
-  - 另一方面也增加了“内部叙事越来越自洽，但外部效度不足”的风险
-
-### 当前最准确的阶段判断
-- 当前路线还不能写成“已经接近实现 AGI”
-- 更准确的说法是：
-  - 我们已经把一条候选统一机制路线压缩到了相当小的结构骨架
-  - 这条骨架当前最强候选是：
-    - `4D semantic skeleton + 3D vector correction`
-  - 但这仍然主要属于：
-    - 机制压缩进度
-    - 内部闭环验证进度
-  - 还不属于：
-    - 开放世界 AGI 实现进度
-
-### 现在最需要警惕的风险
-- 当前最大的风险不是“路线完全错了”
-- 而是：
-  - 内部理论压缩越来越漂亮
-  - 但外部效度、开放环境、长期代理、跨模态真实闭环还没有同步跟上
-
-- 所以接下来必须从：
-  - “更多内部解释”
-- 转向：
-  - “更强外部闭环验证”
-
-### 接下来的大任务块
-- 任务块 1：开放世界接地闭环
-  - 把当前 `continuous grounding` 从受控基准推进到真实连续环境
-  - 核心目标不是再压低内部误差，而是证明系统能稳定形成概念并维持概念
-
-- 任务块 2：训练机制正向闭环
-  - 不再只做逆向提纯
-  - 直接测试这套统一结构能否被稳定训练出来
-  - 核心目标是把“解释到的结构”推进成“可学习到的结构”
-
-- 任务块 3：跨模态统一强验证
-  - 把视觉、听觉、动作放进同一套协议层/统一回路候选中
-  - 目标不是相似性描述，而是强证据地证明共享核心是否真的存在
-
-- 任务块 4：长期代理闭环
-  - 把长期规划、自主纠错、长期记忆污染控制放进真实开放环境
-  - 目标是证明当前统一机制不是只会解释短程或静态结构
-
-- 任务块 5：评价体系外部化
-  - 当前要逐步把核心判断从：
-    - `gap / correlation / held-out error / collapse ratio`
-  - 扩展到：
-    - 真实任务成功率
-    - 跨模态迁移能力
-    - 开放环境稳定性
-    - 长期记忆污染控制能力
-
-### 当前优先级
-- `P0`：开放世界接地闭环
-- `P0`：训练机制正向闭环
-- `P1`：跨模态统一强验证
-- `P1`：长期代理闭环
-- `P1`：评价体系外部化
-## 2026-03-10 开放世界连续流接地闭环
-
-### 新增脚本
-- `tests/codex/test_open_world_continuous_grounding_stream.py`
-- `tests/codex/test_open_world_continuous_grounding_stream_scan.py`
-
-### 新增前端
-- `frontend/src/blueprint/OpenWorldContinuousGroundingDashboard.jsx`
-- 更新 `frontend/src/blueprint/GeminiTab.jsx`
-
-### 结果文件
-- `tests/codex_temp/open_world_continuous_grounding_stream_20260310.json`
-- `tests/codex_temp/open_world_continuous_grounding_stream_scan_20260310.json`
-
-### 实际命令
-- `python -m py_compile tests/codex/test_open_world_continuous_grounding_stream.py`
-- `python tests/codex/test_open_world_continuous_grounding_stream.py`
-- `python -m py_compile tests/codex/test_open_world_continuous_grounding_stream_scan.py`
-- `python tests/codex/test_open_world_continuous_grounding_stream_scan.py`
-- `Copy-Item tests/codex_temp/open_world_continuous_grounding_stream_20260310.json frontend/src/blueprint/data/open_world_continuous_grounding_stream_sample.json -Force`
-- `Copy-Item tests/codex_temp/open_world_continuous_grounding_stream_scan_20260310.json frontend/src/blueprint/data/open_world_continuous_grounding_stream_scan_sample.json -Force`
-- `cd frontend && npm run build`
-
-### 核心结果
-- 第一版开放世界连续流基准是关键负例：
-  - `stable_old_concept_gain = +0.009259`
-  - `novel_concept_gain = -0.026786`
-  - `drifted_concept_gain = +0.004244`
-  - `closure_score_gain = -0.005629`
-
-- 也就是：
-  - 旧概念稳定和漂移鲁棒性有增益
-  - 但新概念接入掉了
-  - 所以整体连续流闭环仍未成立
-
-- 更新律扫描后找到了有效区：
-  - `family_alpha = 0.05`
-  - `offset_alpha = 0.32`
-  - `closure_score = 0.578214`
-  - `closure_score_gain_vs_direct = +0.007492`
-  - `closure_score_gain_vs_base_shared = +0.013121`
-  - `novel_concept_gain_vs_direct = +0.044444`
-
-### 当前理论判断
-- 当前最稳的写法已经从：
-  - “continuous grounding 方向存在，但开放环境闭环还没有形成”
-- 进一步推进成：
-  - “开放世界连续流闭环不是纯结构失败，更像更新律区间问题”
-
-- 也就是：
-  - 第一版负闭环很重要
-  - 但扫描后可以翻正
-  - 当前的薄弱点主要在流式更新律，而不一定在共享基底 + 偏移这条主方向本身
-
-### 对整体路线的意义
-- 这一轮第一次把接地问题从静态/阶段原型推进到更像开放环境的连续流
-- 而且结果说明：
-  - 问题没有直接卡死
-  - 但也没有自动闭环
-  - 当前真正关键的是流式更新律和新旧概念平衡
-
-### 接下来的大任务块
-- 任务块 1：开放世界接地闭环增强
-  - 把当前连续流基准继续接上动作回路、长期状态和自主纠错
-
-- 任务块 2：训练机制正向闭环
-  - 把当前有效更新区从扫描结果推进成更可学习、可稳定训练的更新机制
-
-- 任务块 3：评价体系外部化
-  - 后续不再只看 `gap / correlation / held-out error`
-  - 要逐步引入更外部的连续环境成功率、旧概念污染控制和新概念稳定形成率
-## 2026-03-10 开放世界最小动作回路断点
-
-### 新增脚本
-- `tests/codex/test_open_world_grounding_action_loop.py`
-
-### 新增前端
-- `frontend/src/blueprint/OpenWorldGroundingActionLoopDashboard.jsx`
-- 更新 `frontend/src/blueprint/GeminiTab.jsx`
-
-### 结果文件
-- `tests/codex_temp/open_world_grounding_action_loop_20260310.json`
-
-### 实际命令
-- `python -m py_compile tests/codex/test_open_world_grounding_action_loop.py`
-- `python tests/codex/test_open_world_grounding_action_loop.py`
-- `Copy-Item tests/codex_temp/open_world_grounding_action_loop_20260310.json frontend/src/blueprint/data/open_world_grounding_action_loop_sample.json -Force`
-- `cd frontend && npm run build`
-
-### 核心结果
-- 最小动作回路当前仍是负边界：
-  - `base_loop_score_gain = -0.010723`
-  - `tuned_loop_score_gain = -0.013968`
-  - `base_corrected_action_gain = -0.012778`
-  - `tuned_corrected_action_gain = -0.012778`
-  - `tuned_old_concept_retention_gain = -0.016204`
-
-### 当前理论判断
-- 当前最稳的写法已经从：
-  - “开放世界连续流接地可以通过更新律扫描翻正”
-- 进一步推进成：
-  - “接地闭环的正增益还没有自动传到最小代理动作回路”
-
-- 也就是：
-  - 感知层正增益已经存在
-  - 但代理层闭环仍然断开
-  - 当前断点不在纯接地表征本身
-  - 更像在：
-    - 动作策略
-    - 自纠错策略
-    - 长期状态
-  - 尚未并入统一更新律
-
-### 对整体路线的意义
-- 这一轮非常重要，因为它防止我们把“接地开始闭环”误写成“代理也开始闭环”
-- 现在更准确的阶段判断是：
-  - 感知流闭环开始出现可用区
-  - 但 `感知 -> 动作 -> 修正` 的最小代理回路仍未打通
-
-### 接下来的大任务块
-- 任务块 1：动作策略并入统一更新律
-  - 不能再把接地更新律和动作策略分开处理
-
-- 任务块 2：长期状态并入开放世界闭环
-  - 当前代理断点很可能来自缺少长期状态和误差记忆
-
-- 任务块 3：开放环境评价体系继续外部化
-  - 后续优先看动作成功率、自纠错率、旧概念污染控制和长期目标维持
-## 2026-03-10 开放世界长期目标/保留状态闭环
-
-### 新增脚本
-- `tests/codex/test_open_world_grounding_action_loop_stateful_scan.py`
-- `tests/codex/test_open_world_grounding_action_loop_goal_state_scan.py`
-
-### 新增前端
-- `frontend/src/blueprint/OpenWorldGroundingGoalStateDashboard.jsx`
-- 更新 `frontend/src/blueprint/GeminiTab.jsx`
-
-### 结果文件
-- `tests/codex_temp/open_world_grounding_action_loop_stateful_scan_20260310.json`
-- `tests/codex_temp/open_world_grounding_action_loop_goal_state_scan_20260310.json`
-
-### 实际命令
-- `python -m py_compile tests/codex/test_open_world_grounding_action_loop_stateful_scan.py`
-- `python tests/codex/test_open_world_grounding_action_loop_stateful_scan.py`
-- `python -m py_compile tests/codex/test_open_world_grounding_action_loop_goal_state_scan.py`
-- `python tests/codex/test_open_world_grounding_action_loop_goal_state_scan.py`
-- `Copy-Item tests/codex_temp/open_world_grounding_action_loop_goal_state_scan_20260310.json frontend/src/blueprint/data/open_world_grounding_action_loop_goal_state_scan_sample.json -Force`
-- `cd frontend && npm run build`
-
-### 核心结果
-- 长期动作信任状态只能部分修复代理断点：
-  - `loop_score_gain_vs_direct = -0.009486`
-  - `loop_score_gain_vs_tuned = +0.004482`
-
-- 也就是：
-  - 它能优于无状态 tuned 版本
-  - 但仍然打不过 direct baseline
-  - 单靠动作信任状态还不够
-
-- 加入长期目标/保留状态后，闭环翻正：
-  - `reserve_target = 0.95`
-  - `replay_count = 3`
-  - `loop_score = 0.786010`
-  - `loop_score_gain_vs_direct = +0.016805`
-  - `loop_score_gain_vs_stateful = +0.026291`
-  - `retention_gain_vs_direct = +0.024074`
-  - `corrected_action_gain_vs_direct = +0.012556`
-
-### 当前理论判断
-- 当前最稳的写法已经从：
-  - “代理断点更像缺少长期状态”
-- 进一步推进成：
-  - “长期目标/保留状态是当前开放世界代理闭环的必要部件”
-
-- 也就是：
-  - 感知流闭环可用区已经存在
-  - 最小动作回路单独仍不闭合
-  - 但当旧概念保留目标和回放储备并入后
-  - 代理闭环已经可以相对 direct baseline 翻正
-
-### 对整体路线的意义
-- 这一轮非常关键，因为它第一次把：
-  - 接地流更新律
-  - 动作回路
-  - 长期保留状态
-- 三者接成了一个最小可用的开放世界代理闭环雏形
-
-- 这还不是 AGI
-- 但它已经把当前主战场从：
-  - “接地能否在连续环境中维持”
-- 推进到：
-  - “长期目标状态如何扩展到真正多步代理”
-
-### 接下来的大任务块
-- 任务块 1：长期多步目标状态
-  - 把当前旧概念保留目标推进到真正的多步目标维持与阶段切换
-
-- 任务块 2：训练机制正向闭环
-  - 把当前有效的流式更新律、动作策略和长期状态从扫描结果推进成可学习机制
-
-- 任务块 3：评价体系继续外部化
-  - 后续优先看长期目标成功率、自主纠错率、旧概念污染控制和开放环境稳定性
-
-## 2026-03-10 14:45 真实多步统一控制流形与回退恢复
-
-### 本轮执行命令
-- `python -m py_compile tests/codex/test_real_multistep_unified_control_manifold_benchmark.py`
-- `python tests/codex/test_real_multistep_unified_control_manifold_benchmark.py`
-- `npm --prefix frontend run build`
-
-### 本轮新增/更新文件
-- `tests/codex/test_real_multistep_unified_control_manifold_benchmark.py`
-- `tests/codex_temp/real_multistep_unified_control_manifold_benchmark_20260310.json`
-- `frontend/src/blueprint/RealMultistepUnifiedControlManifoldDashboard.jsx`
-- `frontend/src/blueprint/data/real_multistep_unified_control_manifold_benchmark_sample.json`
-- `frontend/src/blueprint/GeminiTab.jsx`
-
-### 关键实验结果
-- 真实多步统一控制流形当前最优系统：
-  - `unified_control_manifold_h12`
-
-- 在最大长度 `L=32` 上：
-  - `max_length_unified_score = 0.381882`
-  - `max_length_episode_success = 0.239198`
-  - `max_length_recovery_rate = 0.127764`
-  - `max_length_retention = 0.370370`
-
-- 相对基线增益：
-  - `unified_vs_single_at_max_length = +0.001249`
-  - `unified_vs_learnable_at_max_length = +0.032249`
-  - `unified_recovery_gain_vs_learnable = +0.127764`
-
-- 三个核心假设全部成立：
-  - `H1_unified_beats_single_at_max_length = true`
-  - `H2_unified_beats_learnable_at_max_length = true`
-  - `H3_unified_improves_recovery_vs_learnable = true`
-
-### 当前理论判断
-- 这一轮最关键的进展不是“多了一个更复杂的门控器”，而是：
-  - 把阶段状态
-  - 多时间尺度记忆门控
-  - 失败回退
-  - 恢复重放
-- 压进了同一个低维控制流形
-
-- 这说明在真实多步任务里，更小的一套统一结构已经开始浮出来：
-  - `shared substrate`
-  - `control manifold`
-  - `rollback / recovery protocol`
-
-- 可以把它进一步写成：
-  - `h_t = F(x_t, m_t)`
-  - `u_t = U(phase_t, segment_t, global_t, progress_t)`
-  - `g_t = G(h_t, u_t)`
-  - `a_t = Pi(h_t, g_t)`
-  - `r_t = R(failure_t, retention_t, confidence_t)`
-  - `theta_{t+1} = theta_t + eta * Phi(u_t, r_t)`
-- 这里：
-  - `u_t` 就是当前统一控制流形
-  - 它不再只负责门控
-  - 而是同时影响回退阈值、恢复强度和多头读出路线
-
-### 对整体路线的意义
-- 这一步把“开放世界变量规划链”的控制思想真正接回了“真实多步任务”。
-- 更重要的是，评价口径进一步从内部结构量转成外部任务量：
-  - 最大长度任务总分
-  - 最大长度 episode 成功率
-  - rollback recovery rate
-  - retention
-
-- 也就是说，当前项目主线已经不只是：
-  - 解释共享基底 / 个体偏移 / 门控 / 拓扑
-- 而是开始把这些拼图重新接回：
-  - 真实任务闭环
-  - 失败恢复
-  - 脑侧约束可对齐的控制变量
-
-### 下一阶段的大任务块
-- 任务块 1：继续压缩统一结构
-  - 把 `phase / segment / global / progress` 进一步压成更低维、可解释、可跨任务迁移的控制坐标
-
-- 任务块 2：接回真实工具接口
-  - 让 rollback / recovery 不只发生在离线 episode 上，而是进入真实工具调用、真实动作后果和在线反馈
-
-- 任务块 3：接回脑侧候选约束
-  - 比较统一控制流形中的各维度，哪些更像共享底座调制，哪些更像关系协议或门控场，从而把结构拼图进一步接回脑侧约束
-
-## 2026-03-10 14:18 可变长度规划链、失败回退与可学习闭环
-
-### 本轮执行命令
-- `python tests/codex/test_open_world_variable_planning_trainable_benchmark.py`
-- `python -m py_compile tests/codex/test_open_world_variable_planning_trainable_benchmark.py`
-- `npm --prefix frontend run build`
-
-### 本轮新增/更新文件
-- `tests/codex/test_open_world_variable_planning_trainable_benchmark.py`
-- `tests/codex_temp/open_world_variable_planning_trainable_benchmark_20260310.json`
-- `frontend/src/blueprint/OpenWorldVariablePlanningTrainableDashboard.jsx`
-- `frontend/src/blueprint/data/open_world_variable_planning_trainable_benchmark_sample.json`
-- `frontend/src/blueprint/OpenWorldGroundingActionLoopDashboard.jsx`
-- `frontend/src/blueprint/OpenWorldGroundingGoalStateDashboard.jsx`
-- `frontend/src/blueprint/OpenWorldLongHorizonGoalDashboard.jsx`
-- `frontend/src/blueprint/OpenWorldSubgoalPlanningDashboard.jsx`
-- `frontend/src/blueprint/GeminiTab.jsx`
-
-### 关键结果
-- 新闭环把固定子目标程序推进成：
-  - 可变长度规划链
-  - 失败回退 + 恢复探测
-  - 目标状态 / 动作偏置 / 混合回放一体化可学习控制
-
-- `trainable_planner` 当前核心指标：
-  - `episode_success_rate = 0.982143`
-  - `rollback_recovery_rate = 0.997642`
-  - `contamination_control = 0.953270`
-  - `open_environment_stability = 0.949632`
-  - `variable_planning_score = 0.959734`
-
-- 相对 `stateful_with_rollback` 的增益：
-  - `trainable_episode_gain_vs_static = +0.111607`
-  - `trainable_recovery_gain_vs_static = +0.039329`
-  - `trainable_variable_planning_gain_vs_static = +0.024845`
-
-- 可学习控制收敛到的代表性状态：
-  - `final_reserve_target ≈ 0.9093`
-  - `final_replay_scale ≈ 1.9969`
-  - `final_rollback_threshold ≈ 0.6270`
-  - `mean_goal_strength ≈ 0.6794`
-  - `mean_policy_bias ≈ 0.7008`
-
-### 当前理论判断
-- 现在最关键的结构不再是“一个更强 replay 参数”，而是：
-  - `planning_state`
-  - `rollback_protocol`
-  - `goal_bias`
-  - `policy_bias`
-  - `selective_replay`
-- 五者组成的最小规划控制面
-
-- 这说明现阶段可以把原先分散的：
-  - 共享基底
-  - 个体偏移
-  - 关系协议
-  - 门控
-  - 拓扑
-  - 整合
-- 继续压成更小的一套统一结构：
-  - `共享表征底座`
-  - `目标/关系调制场`
-  - `失败回退与重整协议`
-
-- 数学上可以把这一轮抽象成：
-  - `z_t = B(x_t) + O(c_t)`
-  - `g_t = G(goal_t, trust_t, relation_t)`
-  - `a_t = Pi(z_t, g_t)`
-  - `r_t = R(failure_t, pollution_t, stability_t)`
-  - `theta_{t+1} = theta_t + eta * Phi(a_t, r_t, replay_t, rollback_t)`
-- 含义是：
-  - 共享基底 `B` 承担稳定结构
-  - 偏移 `O` 承担概念个体化
-  - 调制场 `G` 吸收长期目标、关系协议和门控
-  - `Phi` 统一学习回退、回放和策略更新
-
-### 对 AGI 总体路线的意义
-- 这一步把开放世界原型从“固定程序 + 静态启发式”推进到了“变量规划链 + 学习型恢复控制”。
-- 更重要的是，评估口径已经继续外部化，不再只看内部信任或单点 retention，而是直接看：
-  - episode 是否完成
-  - 失败后能否恢复
-  - 旧概念是否被污染
-  - 开放环境里是否稳定
-
-### 下一阶段的大任务块
-- 任务块 1：统一结构继续压缩
-  - 把 `goal_bias / policy_bias / replay / rollback` 从并列控制量继续压成一个更统一的低维控制流形，减少手工协议壳
-
-- 任务块 2：把结构拼图接回真实任务
-  - 不再只在 family-level toy 环境里验证，开始接入更真实的任务接口、动作后果和更长地平线 episode
-
-- 任务块 3：把结构拼图接回脑侧约束
-  - 把当前可学习控制量和脑侧候选约束做对齐，重点看哪些控制维度像共享底座，哪些更像关系/门控场
-
-## 2026-03-10 13:55 阶段性子目标程序与更强开放世界代理闭环
-
-### 本轮执行命令
-- `python -m py_compile tests/codex/test_open_world_subgoal_planning_benchmark.py`
-- `python tests/codex/test_open_world_subgoal_planning_benchmark.py`
-- `Copy-Item tests/codex_temp/open_world_subgoal_planning_benchmark_20260310.json frontend/src/blueprint/data/open_world_subgoal_planning_benchmark_sample.json -Force`
-- `cd frontend; npm run build`
-
-### 本轮新增文件
-- `tests/codex/test_open_world_subgoal_planning_benchmark.py`
-- `tests/codex_temp/open_world_subgoal_planning_benchmark_20260310.json`
-- `frontend/src/blueprint/OpenWorldSubgoalPlanningDashboard.jsx`
-- `frontend/src/blueprint/data/open_world_subgoal_planning_benchmark_sample.json`
-- `frontend/src/blueprint/GeminiTab.jsx`
-
-### 关键实验结果
-- 最优配置：
-  - `subgoal_span = 10`
-  - `program_len = 3`
-  - `reserve_target = 0.95`
-  - `replay_count = 2`
-  - `replay_mode = hybrid`
-
-- 相对 `direct_action` 的增益：
-  - `planning_gain_vs_direct = +0.016900`
-  - `episode_success_gain_vs_direct = +0.081111`
-  - `transition_gain_vs_direct = +0.004855`
-
-- 最优规划闭环指标：
-  - `subgoal_action_accuracy = 0.991000`
-  - `corrected_subgoal_action_accuracy = 0.992000`
-  - `transition_accuracy = 0.982648`
-  - `episode_success_rate = 0.770000`
-  - `old_concept_retention = 0.350926`
-  - `target_capture_accuracy = 0.988119`
-  - `planning_loop_score = 0.858939`
-
-### 当前理论判断
-- 当系统从“长期单目标状态”推进到“阶段性子目标程序”时：
-  - 最优回放策略不再是纯 `weakest`
-  - 而是 `hybrid`
-
-- 这说明当前开放世界代理闭环已经进入一个更接近规划的问题：
-  - 既要维持当前子目标
-  - 又要防止最弱 family 长期衰减拖垮整个 episode
-
-- 当前最稳的写法已经从：
-  - “低强度 weakest-family replay 能把长期目标链翻正”
-- 进一步推进成：
-  - “一旦进入子目标程序，系统需要 target-oriented 与 weakest-oriented 的混合回放律”
-
-### 对整体路线的意义
-- 这一轮非常关键，因为它把开放世界外部化继续推进到：
-  - 长期目标链
-  - 阶段切换
-  - 子目标程序
-  - 整段 episode 成功率
-
-- 也就是：
-  - 接地流更新律
-  - 动作回路
-  - 长期保留状态
-  - 长期目标状态
-  - 子目标程序
-- 已经接成一个更强的最小开放世界代理闭环雏形
-
-### 下一阶段的大任务块
-- 任务块 1：可变长度规划链与失败回退
-  - 把固定 family 子目标程序推进成可变长度、带失败回退的规划链
-
-- 任务块 2：训练机制正向闭环
-  - 把当前有效的混合回放律、长期目标状态和动作策略推进成可学习机制
-
-- 任务块 3：评价体系继续外部化
-  - 后续优先看 episode 成功率、失败回退恢复率、旧概念污染控制和开放环境稳定性
-
-## 2026-03-10 13:50 长期多步目标状态与开放世界代理闭环推进
-
-### 本轮执行命令
-- `python -m py_compile tests/codex/test_open_world_long_horizon_goal_state_benchmark.py`
-- `python tests/codex/test_open_world_long_horizon_goal_state_benchmark.py`
-- `Copy-Item tests/codex_temp/open_world_long_horizon_goal_state_benchmark_20260310.json frontend/src/blueprint/data/open_world_long_horizon_goal_state_benchmark_sample.json -Force`
-- `cd frontend; npm run build`
-
-### 本轮新增文件
-- `tests/codex/test_open_world_long_horizon_goal_state_benchmark.py`
-- `tests/codex_temp/open_world_long_horizon_goal_state_benchmark_20260310.json`
-- `frontend/src/blueprint/OpenWorldLongHorizonGoalDashboard.jsx`
-- `frontend/src/blueprint/data/open_world_long_horizon_goal_state_benchmark_sample.json`
-- `frontend/src/blueprint/GeminiTab.jsx`
-
-### 关键实验结果
-- 长期多步目标 benchmark 当前最优配置：
-  - `phase_span = 30`
-  - `reserve_target = 0.97`
-  - `replay_count = 1`
-  - `replay_mode = weakest`
-
-- 对 `direct_action` 的相对增益：
-  - `loop_score_gain_vs_direct = +0.008565`
-  - `phase_switch_gain_vs_direct = +0.018058`
-  - `retention_gain_vs_direct = +0.019444`
-
-- 最优长期闭环指标：
-  - `goal_action_accuracy = 0.991333`
-  - `corrected_goal_action_accuracy = 0.991000`
-  - `phase_switch_accuracy = 0.986905`
-  - `old_concept_retention = 0.380556`
-  - `target_capture_accuracy = 0.988060`
-  - `long_horizon_loop_score = 0.871933`
-
-### 当前理论判断
-- 长期多步目标链已经不只是“旧概念保留目标”的弱延伸，而是形成了：
-  - repeated family switching
-  - target capture
-  - phase switch recovery
-  - long-horizon retention
-- 四者组成的最小长期代理闭环
-
-- 当前最稳的断言已经从：
-  - “长期目标/保留状态是必要部件”
-- 进一步推进成：
-  - “长期多步目标状态在低强度 `weakest-family replay` 下可以稳定超过 direct baseline”
-
-- 这说明当前开放世界代理断点更像：
-  - “最弱 family 的长期衰减会拖垮阶段切换”
-- 而不是：
-  - “当前目标 family 本身不够强”
-
-### 对整体路线的意义
-- 这一轮把开放世界外部化又往前推了一步：
-  - 接地流更新律
-  - 最小动作回路
-  - 长期保留状态
-  - 长期多步目标切换
-- 已经接成一个更接近真实代理的最小长期闭环雏形
-
-- 这依然不是 AGI
-- 但它把当前主战场进一步推进到：
-  - “阶段目标如何扩展成更长地平线的规划子目标”
-
-### 下一阶段的大任务块
-- 任务块 1：长期多步目标与阶段规划
-  - 把 repeated family switching 推进到更长时间地平线和真正的子目标序列
-
-- 任务块 2：训练机制正向闭环
-  - 把当前有效的更新律、回放策略和长期目标状态推进成可学习机制
-
-- 任务块 3：评价体系继续外部化
-  - 后续优先看长期目标成功率、自主纠错率、旧概念污染控制和开放环境稳定性
-
-## 2026-03-10 15:12 最小统一控制桥、回退时间线与脑侧约束外部化
-
-### 本轮执行命令
-- `python -m py_compile tests/codex/test_real_multistep_minimal_control_bridge_benchmark.py`
-- `python tests/codex/test_real_multistep_minimal_control_bridge_benchmark.py --num-seeds 2 --json-out tests/codex_temp/real_multistep_minimal_control_bridge_benchmark_smoke_20260310.json`
-- `python tests/codex/test_real_multistep_minimal_control_bridge_benchmark.py`
-- `python -m py_compile tests/codex/test_real_multistep_unified_control_manifold_benchmark.py tests/codex/test_real_multistep_minimal_control_bridge_benchmark.py`
-- `npm --prefix frontend run build`
-
-### 新增文件与产物
-- `tests/codex/test_real_multistep_minimal_control_bridge_benchmark.py`
-- `tests/codex_temp/real_multistep_minimal_control_bridge_benchmark_20260310.json`
-- `frontend/src/blueprint/RealMultistepMinimalControlBridgeDashboard.jsx`
-- `frontend/src/blueprint/data/real_multistep_minimal_control_bridge_benchmark_sample.json`
-
-### 前端可视化推进
-- 重写 `frontend/src/blueprint/RealMultistepUnifiedControlManifoldDashboard.jsx`，清除可见乱码，保持统一控制流形面板可直接读。
-- 在 `frontend/src/blueprint/GeminiTab.jsx` 里新增“五点三十三补、最小统一控制桥”，把最小桥接实验挂到客户端。
-- 新面板新增了：
-  - 压缩前后长度曲线
-  - 最大长度任务指标条形图
-  - 最大长度回退触发 / 恢复 / 置信度时间线
-
-### 关键实验结果
-- 最小控制桥当前最优系统：
-  - `minimal_control_bridge_h12`
-- 正式结果：
-  - `mean_bridge_score = 0.495772`
-  - `mean_recovery_rate = 0.123489`
-  - `mean_brain_alignment = 0.982180`
-  - `max_length_bridge_score = 0.493307`
-  - `max_length_recovery_rate = 0.134589`
-  - `max_length_retention = 0.377315`
-  - `max_length_brain_alignment = 0.983890`
-  - `max_length_control_compaction = 0.800000`
-- 相对 `unified_control_manifold_h12`：
-  - `minimal_vs_unified_at_max_length = +0.090780`
-  - `minimal_recovery_delta_vs_unified = +0.002228`
-  - `minimal_brain_gain_vs_unified = +0.165566`
-  - `minimal_compaction_gain_vs_unified = +0.400000`
-- 假设判断：
-  - `H1_minimal_beats_unified_on_bridge_score = true`
-  - `H2_minimal_improves_brain_alignment = true`
-  - `H3_minimal_keeps_recovery_near_unified = true`
-
-### 当前理论推进
-- 这一步不是简单降维，而是把原先 `phase / segment / global / progress` 四维并列控制，继续压成两个更接近机制角色的坐标：
-  - `shared_core_t`：更像共享基底 + 整合强度
-  - `protocol_gate_t`：更像关系协议 + 门控调制
-- 当前可写成：
-  - `u_t = [shared_core_t, protocol_gate_t]`
-  - `g_t = softmax(W_h h_t + W_p p_t + W_s s_t + W_u u_t + b)`
-- 其中 `u_t` 不再只是任务内技巧变量，而是同时约束：
-  - rollback trigger dynamics
-  - retention / recovery tradeoff
-  - brain-side smoothness and progress alignment
-- 结果说明：
-  - 统一结构还能继续缩
-  - 缩小后并没有把恢复机制打坏
-  - 更小结构反而更容易和脑侧候选约束做对齐外部化
-
-### 对 AGI 主线的意义
-- 这一步把“共享基底 / 个体偏移 / 关系协议 / 门控 / 拓扑 / 整合”继续往更小统一结构上压了一次。
-- 它同时把结构拼图往两头推进：
-  - 一头接真实多步任务与失败回退
-  - 一头接脑侧平滑性 / 进度对齐 / 共享核稳定性
-- 这比单纯再堆一个协议壳更重要，因为它在迫使控制结构变成真正可迁移、可比较、可解释的低维桥接对象。
-
-### 下一阶段建议的大任务块
-- 任务块 1：把最小控制桥接回真实工具接口
-  - 让回退触发和恢复不只发生在离线 episode，而是进入真实工具调用、真实动作后果和在线反馈闭环。
-- 任务块 2：继续分解 2 维桥里哪些是真共享底座，哪些仍是关系协议壳
-  - 目标是把 `shared_core_t` 再拆成更稳定的共享基底坐标，同时证明 `protocol_gate_t` 是否仍混入了任务特定偏移。
-- 任务块 3：把脑侧约束从后验评价推进成训练约束
-  - 让平滑性、阶段进度对齐、共享核稳定性直接进入学习目标，而不是只在结果端打分。
-
-## 2026-03-10 15:24 同一原理假设：共享基底/个体偏移 与 拓扑协议层/中观冗余场
-
-### 用户问题
-- 用户提出：`共享基底 + 个体偏移` 与 `拓扑协议层 + 中观冗余场` 很可能都是人脑脉冲神经网络编码机制、也就是神经元形成网络结构机制的同一原理产物，要求分析这一思路的可能性以及对现有进展的参考与调整。
-
-### 当前判断
-- 这个思路很可能是对的，但更准确的表述不是：
-  - “四者其实完全是同一个对象”
-- 而是：
-  - “四者很可能是同一个生成原理在不同尺度、不同观测坐标下的投影”。
-
-- 当前主观概率估计：
-  - `同一生成原理，不同尺度投影`：约 `0.75`
-  - `完全同一对象，只是观测方式不同`：约 `0.45`
-  - `彼此基本无关，只是巧合并列`：低于 `0.15`
-
-### 主要依据
-- `共享基底 + 个体偏移` 已在表征空间和动态拓扑空间都出现过，本地 memo 已记录：
-  - 表征空间存在 family shared basis + individual offset
-  - attention 动态拓扑空间也存在 family shared topology basis + individual topology offset
-- `关系协议层` 已经不是小模块，而更像：
-  - 统一协议
-  - 专职头群
-  - 冗余分布式实现
-  - 跨层中观拓扑场
-- 最近的 `minimal_control_bridge` 结果又把 `shared_core_t` 和 `protocol_gate_t` 压进 2 维控制桥后仍保持恢复率并显著提高 brain alignment，这说明：
-  - “共享骨架”和“协议门控”不是完全独立堆出来的壳
-  - 它们之间存在可压缩的共同底层变量
-
-### 更合理的统一写法
-- 同一生成原理可以先写成：
-  - 局部可塑性 `P`
-  - 相位/时延门控 `G`
-  - 重复统计结构 `S`
-  - 能量/稳态约束 `E`
-- 它们共同驱动网络收敛到：
-  - 稳定重入模态 `B`（共享基底）
-  - 特异残差 `Δ`（个体偏移）
-  - 有效路由核 `T`（拓扑协议层）
-  - 冗余容错场 `M`（中观冗余场）
-
-- 更像是：
-  - `B, Δ` 是“编码内容”侧的投影
-  - `T, M` 是“编码实现/传输”侧的投影
-- 不是两套原理，而是同一神经动力系统的两种读出。
-
-### 对现有主线的参考意义
-- 参考 1：过去把 `共享基底/偏移` 和 `关系协议/拓扑` 分成两条线推进，这在工程上方便，但在理论上已经开始显得偏人工切分。
-- 参考 2：现有证据更支持“内容骨架”和“路由协议”是耦合生成的：
-  - 早层更偏门控/拓扑
-  - 中后层更偏关系整合
-  - 但两者都能出现 family basis 与 offset
-- 参考 3：`minimal_control_bridge` 的增益说明，把它们压进同一个低维桥接变量是有回报的，不只是解释更漂亮，真实任务分数也更高。
-
-### 对当前路线的调整建议
-- 调整 1：把“共享基底 / 个体偏移 / 拓扑协议层 / 中观冗余场”从四个并列部件，改写成“两层结构”：
-  - 第一层：同一生成原理
-  - 第二层：四种观测投影
-- 调整 2：后续实验不再问“哪一个更本质”，而要问：
-  - 某个局部扰动先改变的是 `B`、`Δ`、`T`、还是 `M`
-  - 以及其他三个量是否会跟着预测性变化
-- 调整 3：把现有最小控制桥从解释变量，推进成真正的统一测量坐标，优先测试：
-  - `shared_core_t` 是否同时预测 basis stability 与 topology stability
-  - `protocol_gate_t` 是否同时预测 rollback trigger 与 mesofield redundancy
-
-### 下一步最值得做的三块实验
-- 实验块 1：同源性因果验证
-  - 同时测量概念表征基底残差、attention 拓扑签名、关系协议强度和冗余恢复率；对其中一个做定向扰动，看其余三者是否联动。
-- 实验块 2：SNN 同构生成实验
-  - 在局部 STDP + 相位门控 + homeostasis 的脉冲 toy 网络里，直接测试能否一起涌现：共享基底、个体偏移、协议路由、冗余恢复。
-- 实验块 3：统一潜变量压缩
-  - 不再分别给 basis/protocol/mesofield 各自定义外壳，而是拟合一组更小潜变量，直接预测真实任务成功率、恢复率、污染控制和脑侧对齐分数。
-
-### 对 AGI 总体路线的意义
-- 如果这条“同一原理”假设成立，项目主线会明显简化：
-  - 不再是拼很多机制积木
-  - 而是找到一种能同时生成内容骨架、关系协议和冗余容错的统一神经编码动力学
-- 这比继续堆新壳更重要，因为 AGI 真正缺的不是模块数量，而是能解释“为什么这些模块会一起出现”的生成律。
-
-## 2026-03-10 15:33 共享字典对照实验复核与结论收紧
-
-### 本轮核对命令
-- `rg -n "UnifiedDictSkeleton|共享字典|独立字典|cross_dim|proto|param效率|FamilyBasisPool|RelationProtocolLayer|W_unified" tests frontend research`
-- `git status --short`
-- `Get-Content tests/gemini/test_shared_dict_ablation.py -TotalCount 320`
-- `Get-Content tests/gemini_temp/shared_dict_ablation_20260310.json -TotalCount 260`
-
-### 复核到的关键结果
-- 脚本：`tests/gemini/test_shared_dict_ablation.py`
-- 结果：`tests/gemini_temp/shared_dict_ablation_20260310.json`
-- 三组核心指标：
-  - `A independent PPL = 81.5853`
-  - `B unified PPL = 81.8954`
-  - `C baseline PPL = 17.4950`
-  - `B_vs_A_ppl_ratio = 1.0038`
-  - `avg_cross_dim_corr = 0.9890`
-  - `avg_proto_cos_A = 0.0512`
-  - `avg_proto_cos_B = 0.9755`
-  - `param_efficiency_B_over_A = 1.00026`
-
-### 当前最严格的解释
-- `B ≈ A` 只能支持：
-  - 在当前骨架约束下，共享字典几乎不额外伤害性能。
-- 它还不能支持：
-  - 共享字典本身对语言建模更优。
-- 因为 `A` 和 `B` 都远差于 `C baseline`，说明当前真正的主瓶颈仍是整套 skeleton 约束，而不是“共享 vs 独立”这个选择本身。
-
-### 最有价值的发现
-- `cross_dim_corr ≈ 0.989` 非常重要。
-- 这更支持：
-  - 概念编码和关系协议在读取同一底层原子库的相近低维方向
-- 而不是：
-  - 它们已经学成了健康、正交、可解释的统一原型系统。
-
-### 最需要警惕的地方
-- `proto_cos_B ≈ 0.975` 说明共享模式下 family prototype 基本坍缩到同一方向。
-- 所以当前共享字典结果更像：
-  - “共享公共主模态 + 不同稀疏读出”
-- 还不像：
-  - “共享正交字典 + 稳定 family 原型分化”。
-- 因此，当前证据更支持“共享底层基材”而不是“共享正交原型空间”。
-
-### 对现有主线的参考与调整
-- 参考 1：共享字典统一假说仍然值得继续，但要降级表述。
-  - 从“共享字典已被验证”改成：
-  - “共享底层原子库 + 不同读出头”已获得强支持。
-- 参考 2：不要把 `H_proto` 失败看成坏消息。
-  - 它反而说明脑式编码可能本来就不是人工追求的全局正交 prototype，而更像共享基材上的竞争性读出。
-- 参考 3：参数效率假设本轮无效。
-  - 当前 B 比 A 还多参数，这一版不能再拿“效率”做结论。
-
-### 下一步最该做的实验
-- 实验 1：抗坍缩共享字典
-  - 给 `proto_proj` / dictionary usage 加显式去相关或负载均衡约束，检查 `cross_dim_corr` 能否保住，同时把 `proto_cos` 压回去。
-- 实验 2：共享原子因果消融
-  - 不再看相关性，直接对共享字典 atom 做因果删除，检查同一批 atom 是否同时影响概念预测和关系协议。
-- 实验 3：匹配参数量重做效率对照
-  - 让 A/B 参数量严格一致，再谈参数效率。
-- 实验 4：全局模态控制
-  - 先去掉 mean mode / rank-1 主模态，再算 cross-dim correlation，确认 0.989 不是被公共主方向虚高抬起来的。
-
-### 对 AGI 主线的意义
-- 这一轮最强结论不是“共享字典赢了”，而是：
-  - “共享底层编码基材”这个方向在概念空间和关系空间之间出现了极强耦合证据。
-- 这和当前项目里“共享基底 / 协议层 / 中观冗余场可能同源”的判断是同向的。
-- 但现在更合理的下一步不是继续追 PPL，而是做：
-  - 抗坍缩
-  - 因果消融
-  - 同源性验证
-
-## 2026-03-10 15:42 项目整体进度总览与下一阶段任务块
-
-### 当前整体进度判断
-- 项目已经从“零散机制发现”推进到“统一机制压缩 + 真实任务闭环 + 脑侧约束回接”的阶段。
-- 目前最稳的主线不再是继续发现新名词，而是把已有结果压成更小、更统一、可迁移的生成结构。
-
-### 已经相对站稳的部分
-- 在表征空间与拓扑空间里，都已观察到：
-  - 共享基底
-  - 个体偏移
-- 关系项已经从“局部标签”推进成：
-  - 统一拓扑协议层
-  - 专职头群
-  - 中观冗余分布式实现
-- 开放世界代理主线已从：
-  - 接地更新
-  - 动作回路
-  - 长期目标
-  - 子目标规划
-  - 失败回退
-- 推进到：
-  - 可变长度规划链
-  - 可学习闭环
-  - 真实多步统一控制流形
-  - 最小统一控制桥
-- 最近 `minimal_control_bridge` 结果说明：
-  - 统一结构还能继续压缩
-  - 压缩后恢复机制没有塌
-  - 脑侧对齐读数反而更好
-
-### 当前最重要的研究收敛
-- 当前最强的统一表述已经接近：
-  - 同一神经编码生成原理
-  - 在不同观测空间中投影为
-  - `共享基底 / 个体偏移 / 拓扑协议层 / 中观冗余场`
-- 共享字典对照实验进一步支持：
-  - 概念空间和关系空间确实在读取高度相关的底层原子库
-- 但也暴露：
-  - 原型坍缩严重
-  - skeleton 整体约束仍过强
-  - 相关性证据还没有进入因果级别
-
-### 当前主要短板
-- 还没有把“同源性”做成因果证据链。
-- 还没有把统一结构真正接回真实工具接口与在线环境反馈。
-- 脑侧约束大多还是后验评分，没有进入训练目标。
-- 一部分新实验还停留在 `tests/gemini` 路径，不符合当前 codex 主线归档规则。
-
-### 下一阶段建议的大任务块
-- 任务块 1：统一生成原理的因果验证
-  - 目标：证明 `共享基底 / 个体偏移 / 拓扑协议 / 冗余场` 不是并列现象，而是同一生成律的联动投影。
-  - 做法：对共享原子、协议头群、回退关键节点做联合因果消融，观察表征、拓扑、恢复率、冗余补偿是否同步变化。
-
-- 任务块 2：最小统一结构继续压缩
-  - 目标：把当前 `shared_core / protocol_gate` 两维桥进一步拆清，确认哪些是真共享底座，哪些只是协议壳或任务偏移。
-  - 做法：增加抗坍缩约束、共享原子负载均衡、去公共主模态分析，把“相关”压到“稳定可分解”的统一潜变量。
-
-- 任务块 3：接回真实任务接口
-  - 目标：让 rollback / recovery、协议调用、控制桥不再只在离线 episode 上成立，而是进入真实工具调用和环境反馈闭环。
-  - 做法：把最小控制桥接到真实 tool API、动作后果与在线观察更新，直接看长程成功率、恢复率、污染控制和稳定性。
-
-- 任务块 4：脑侧约束前置化
-  - 目标：把平滑性、阶段进度对齐、共享核稳定性、中观冗余恢复这些脑侧候选约束，从后验评价推进成训练约束。
-  - 做法：把 brain alignment 拆成可优化项，直接参与 loss 或 replay / rollback 策略更新。
-
-- 任务块 5：统一报告与工件整理
-  - 目标：把当前散落在表征、拓扑、开放世界代理、共享字典、脑侧约束几条线上的证据，统一成一套可审计总图。
-  - 做法：统一迁移脚本到 `tests/codex/`，统一结果到 `tests/codex_temp/`，在前端增加一张“统一生成原理证据图谱”。
-
-### 当前优先级建议
-- P0：统一生成原理因果验证
-- P1：最小统一结构抗坍缩与再压缩
-- P2：真实工具接口闭环
-- P3：脑侧约束训练化
-- P4：工件归档与总图整理
-
-## 2026-03-10 16:02 共享原子因果桥：从相关性推进到因果联动
-
-### 本轮执行命令
-- `python -m py_compile tests/codex/test_shared_atom_causal_unification_benchmark.py`
-- `python tests/codex/test_shared_atom_causal_unification_benchmark.py --epochs 12 --train-size 4000 --val-size 800 --json-out tests/codex_temp/shared_atom_causal_unification_benchmark_smoke_20260310.json`
-- `python tests/codex/test_shared_atom_causal_unification_benchmark.py`
-- `Copy-Item tests/codex_temp/shared_atom_causal_unification_benchmark_20260310.json frontend/src/blueprint/data/shared_atom_causal_unification_benchmark_sample.json`
-- `npm --prefix frontend run build`
-
-### 新增文件与产物
-- `tests/codex/test_shared_atom_causal_unification_benchmark.py`
-- `tests/codex_temp/shared_atom_causal_unification_benchmark_20260310.json`
-- `frontend/src/blueprint/SharedAtomCausalUnificationDashboard.jsx`
-- `frontend/src/blueprint/data/shared_atom_causal_unification_benchmark_sample.json`
-
-### 本轮目标
-- 把共享字典结果从：
-  - `cross_dim correlation`
-- 推进到：
-  - `same atoms causal coupling`
-- 也就是不再只问“概念空间和关系空间是否相关”，而是直接问：
-  - “同一批低层原子被打掉后，概念、关系、恢复三路是否一起下跌？”
-
-### 关键结果
-- 统一共享原子系统：
-  - `concept_accuracy = 0.908333`
-  - `relation_accuracy = 1.000000`
-  - `recovery_accuracy = 0.670833`
-  - `cross_dim_corr = 0.972962`
-- 共享原子消融（top shared atoms）造成：
-  - `shared_joint_drop = 0.275833`
-  - `shared_recovery_drop = 0.310833`
-- 相对对照：
-  - `shared_vs_random_joint_drop = +0.257778`
-  - `shared_vs_concept_only_joint_drop = +0.229444`
-  - `shared_vs_relation_only_joint_drop = +0.258056`
-  - `shared_vs_independent_paired_joint_drop = +0.266667`
-- 假设：
-  - `H1_shared_ablation_beats_random_joint_drop = true`
-  - `H2_shared_ablation_couples_concept_and_relation = true`
-  - `H3_shared_ablation_hits_recovery = true`
-  - `H4_unified_joint_drop_beats_independent_paired = true`
-
-### 当前理论推进
-- 这一步首次把“共享底层原子库”从相关性证据推进成因果证据：
-  - 同一批原子不仅被概念头和关系头共同使用
-  - 它们还共同支撑 noisy recovery
-- 因而当前更稳的表述已经从：
-  - “概念与关系读取高度相关的底层字典”
-- 推进成：
-  - “概念、关系与恢复至少部分依赖同一批共享原子”
-
-### 对主线的意义
-- 这直接支撑前面的统一假设：
-  - `共享基底 / 个体偏移 / 拓扑协议层 / 中观冗余场`
-- 很可能不是四个独立部件，而是同一生成原理在不同观测空间中的投影。
-- 其中：
-  - 共享原子更像底层基材
-  - 概念头和关系头更像不同读出头
-  - recovery 更像中观冗余场对同一基材的容错读出
-
-### 下一阶段的大任务块
-- 任务块 1：把共享原子因果桥接回真实模型
-  - 在真实 DNN 里定义共享原子候选，然后复刻同样的共享/随机/单侧消融协议。
-- 任务块 2：把 recovery 和 mesofield 连到同一因果读数
-  - 不再只看恢复准确率，还要看中观冗余场规模变化是否同步。
-- 任务块 3：把共享原子因果桥接回最小控制桥
-  - 直接测试 `shared_core_t` 是否能预测共享原子脆弱区与 rollback trigger 区。
-
-## 2026-03-10 16:18 真实模型共享支撑桥：从精确同头复用收敛到层级共享支撑
-
-### 本轮执行命令
-- `python -m py_compile tests/codex/test_qwen3_deepseek7b_shared_support_head_bridge.py`
-- `python tests/codex/test_qwen3_deepseek7b_shared_support_head_bridge.py`
-- `npm --prefix frontend run build`
-- `Copy-Item tests/codex_temp/qwen3_deepseek7b_shared_support_head_bridge_20260310.json frontend/src/blueprint/data/qwen3_deepseek7b_shared_support_head_bridge_sample.json -Force`
-
-### 新增文件与产物
-- `tests/codex/test_qwen3_deepseek7b_shared_support_head_bridge.py`
-- `tests/codex_temp/qwen3_deepseek7b_shared_support_head_bridge_20260310.json`
-- `frontend/src/blueprint/Qwen3DeepSeekSharedSupportHeadBridgeDashboard.jsx`
-- `frontend/src/blueprint/data/qwen3_deepseek7b_shared_support_head_bridge_sample.json`
-
-### 本轮目标
-- 把此前的 toy 共享原子因果桥，往真实模型证据上推进一步。
-- 不再只问：
-  - “概念头和关系头是否精确复用同一颗头？”
-- 而是同时问：
-  - “是否存在非平凡共享质量？”
-  - “是否存在层级软重合？”
-  - “这种层级共享是否跟机制桥接分一起抬升？”
-
-### 关键结果
-- 精确头重合：
-  - `qwen_exact_head_overlap = 0.0000`
-  - `deepseek_exact_head_overlap = 0.0000`
-- 软头重合：
-  - `qwen_soft_head_overlap = 0.0210`
-  - `deepseek_soft_head_overlap = 0.0309`
-- 层级重合：
-  - `qwen_layer_overlap = 0.3333`
-  - `deepseek_layer_overlap = 0.5000`
-- 层级软重合：
-  - `qwen_soft_layer_overlap = 0.3714`
-  - `deepseek_soft_layer_overlap = 0.5256`
-- 共享质量：
-  - `qwen_shared_mass = 0.0332`
-  - `deepseek_shared_mass = 0.0514`
-- 机制桥接增益：
-  - `deepseek_minus_qwen_mechanism_bridge = +0.1510`
-- 假设：
-  - `H1_real_models_have_nontrivial_shared_mass = true`
-  - `H2_deepseek_has_stronger_layer_overlap_than_qwen = true`
-  - `H3_compact_relations_carry_more_shared_support = true`
-  - `H4_layer_shared_support_tracks_mechanism_bridge = true`
-
-### 当前理论推进
-- 真实模型侧目前不支持“严格同头复用”这个强版本说法。
-- 但它支持一个更重要、也更贴近脑侧的版本：
-  - 概念调用与关系中观场并不一定复用同一颗头
-  - 却会在同一层带、同一中观区域上出现共享支撑
-- 因而当前更稳的统一表述是：
-  - `共享基底 / 关系协议 / 中观冗余场`
-- 在真实模型里更像“层级共享支撑 + 分布式局部读出”，而不是“单头级唯一模块”。
-
-### 对主线的意义
-- 这一步把主线从：
-  - `shared atom causal coupling`（toy）
-- 推进到：
-  - `shared support mesoscale bridge`（real model）
-- 也就是说，统一结构不再只在小模型里呈现为共享原子，到了真实模型里开始表现成层带级共享支撑。
-- 这与“拓扑协议层 + 中观冗余场”很一致，说明项目主线正在从微观单元统一，过渡到中观层级统一。
-
-### 下一阶段的大任务块
-- 任务块 1：真实模型层带因果消融
-  - 不再只看后验共享分数，而是直接对高共享层带做真实消融，观察概念、关系、恢复是否联动下跌。
-- 任务块 2：共享层带接回最小控制桥
-  - 测试 `shared_core / protocol_gate` 是否能预测这些高共享层带的脆弱区和 rollback trigger 区。
-- 任务块 3：脑侧约束前置化
-  - 把当前“层级软重合 / 共享质量 / 紧致关系共享增益”从后验评价推进成训练约束，逼统一结构继续缩而不塌。
-
-## 2026-03-10 16:26 真实模型共享层带因果取向：Qwen3 偏概念边界，DeepSeek 偏关系协议与任务增益
-
-### 本轮执行命令
-- `python -m py_compile tests/codex/test_qwen3_deepseek7b_shared_layer_band_causal_orientation.py`
-- `python tests/codex/test_qwen3_deepseek7b_shared_layer_band_causal_orientation.py`
-- `Copy-Item tests/codex_temp/qwen3_deepseek7b_shared_layer_band_causal_orientation_20260310.json frontend/src/blueprint/data/qwen3_deepseek7b_shared_layer_band_causal_orientation_sample.json -Force`
-- `npm --prefix frontend run build`
-
-### 新增文件与产物
-- `tests/codex/test_qwen3_deepseek7b_shared_layer_band_causal_orientation.py`
-- `tests/codex_temp/qwen3_deepseek7b_shared_layer_band_causal_orientation_20260310.json`
-- `frontend/src/blueprint/Qwen3DeepSeekSharedLayerBandCausalOrientationDashboard.jsx`
-- `frontend/src/blueprint/data/qwen3_deepseek7b_shared_layer_band_causal_orientation_sample.json`
-
-### 本轮目标
-- 把“共享支撑层带”继续从后验结构，推进到真实模型因果取向读数。
-- 直接回答三个问题：
-  - Qwen3 的共享层带更偏概念边界还是关系协议？
-  - DeepSeek 的共享层带更偏概念边界还是关系协议？
-  - 这种取向差异，是否已经接到结构化任务收益？
-
-### 关键结果
-- Qwen3：
-  - `mean_concept_shared_layer_hit = 0.1600`
-  - `mean_relation_shared_layer_hit = 0.0992`
-  - `orientation = -0.0608` -> `concept_led`
-  - `concept_hit_margin_corr = 0.4138`
-- DeepSeek-7B：
-  - `mean_concept_shared_layer_hit = 0.0379`
-  - `mean_relation_shared_layer_hit = 0.2694`
-  - `orientation = 0.2314` -> `relation_led`
-  - `relation_hit_behavior_gain_corr = 0.8190`
-- 跨模型增益：
-  - `deepseek_minus_qwen_orientation = +0.2922`
-  - `deepseek_minus_qwen_mechanism_bridge = +0.1510`
-- 假设：
-  - `H1_qwen_shared_layers_are_concept_led = true`
-  - `H2_deepseek_shared_layers_are_relation_led = true`
-  - `H3_qwen_shared_layers_track_concept_causal_margin = true`
-  - `H4_deepseek_relation_shared_layers_track_task_gain_and_bridge = true`
-
-### 当前理论推进
-- 这一步表明：
-  - “共享层带”并不是一个无差别公共底座。
-- 它在不同真实模型里已经出现明确取向：
-  - Qwen3 更像“概念边界牵引型共享层带”
-  - DeepSeek 更像“关系协议 / 结构化收益牵引型共享层带”
-- 因而当前统一结构应从：
-  - `共享基底 + 协议层`
-- 进一步改写成：
-  - `共享支撑底座 + 取向化协议门控`
-- 也就是共享部分仍共享，但它会在不同模型里被推向不同功能侧。
-
-### 对主线的意义
-- 这一步把真实模型主线继续向“更小统一结构”推进了一步：
-  - 微观侧：共享原子因果联动
-  - 中观侧：共享层带支撑
-  - 模型差异侧：共享层带取向化
-- 这说明以后不该只问“有没有共享结构”，而该问：
-  - “共享结构被哪种协议门控推向了哪个功能侧？”
-- 这对把 `共享基底 / 个体偏移 / 关系协议 / 门控 / 拓扑 / 整合` 再压成更小一套统一结构很关键。
-
-### 下一阶段的大任务块
-- 任务块 1：真实模型高共享层带因果消融
-  - 直接对 Qwen3 / DeepSeek 的高共享层带做 targeted ablation，验证取向读数是否转成真实因果差异。
-- 任务块 2：共享层带接回最小控制桥
-  - 测试 `shared_core / protocol_gate` 是否能预测哪些共享层带会先伤概念边界，哪些会先伤关系协议与行为增益。
-- 任务块 3：取向化协议门控训练约束
-  - 把“概念偏置 / 关系偏置 / 共享底座稳定度”从后验评价推进成训练项，逼统一结构继续缩而不塌。
-
-## 2026-03-10 16:34 真实共享层带定向消融：相关性取向尚未自动升级成因果取向
-
-### 本轮执行命令
-- `python -m py_compile tests/codex/test_qwen3_deepseek7b_shared_layer_band_targeted_ablation.py`
-- `python tests/codex/test_qwen3_deepseek7b_shared_layer_band_targeted_ablation.py`
-- `Copy-Item tests/codex_temp/qwen3_deepseek7b_shared_layer_band_targeted_ablation_20260310.json frontend/src/blueprint/data/qwen3_deepseek7b_shared_layer_band_targeted_ablation_sample.json -Force`
-- `npm --prefix frontend run build`
-
-### 新增文件与产物
-- `tests/codex/test_qwen3_deepseek7b_shared_layer_band_targeted_ablation.py`
-- `tests/codex_temp/qwen3_deepseek7b_shared_layer_band_targeted_ablation_20260310.json`
-- `frontend/src/blueprint/Qwen3DeepSeekSharedLayerBandTargetedAblationDashboard.jsx`
-- `frontend/src/blueprint/data/qwen3_deepseek7b_shared_layer_band_targeted_ablation_sample.json`
-
-### 本轮目标
-- 把“共享层带取向”从后验相关读数推进到真实干预验证。
-- 直接测试：
-  - 消融高共享层带后，Qwen3 是否先伤概念边界？
-  - 消融高共享层带后，DeepSeek 是否先伤关系协议？
-
-### 关键结果
-- Qwen3：
-  - `mean_concept_causal_margin = -0.1625`
-  - `mean_relation_causal_margin = -0.1323`
-  - `actual_targeted_orientation = 0.0302` -> `balanced`
-  - 预测是 `concept_led`，实际未稳定重现
-- DeepSeek-7B：
-  - `mean_concept_causal_margin = 0.0670`
-  - `mean_relation_causal_margin = -0.3228`
-  - `actual_targeted_orientation = -0.3899` -> `concept_led`
-  - 预测是 `relation_led`，实际方向相反
-- 假设：
-  - `H1_qwen_targeted_ablation_hits_concepts_more = false`
-  - `H2_deepseek_targeted_ablation_hits_relations_more = false`
-  - `H3_targeted_ablation_beats_control_on_both_models = false`
-  - `H4_actual_orientation_matches_prediction = false`
-
-### 当前理论推进
-- 这一步非常关键，因为它给出了负结果：
-  - “共享层带命中率 / 取向”这种相关性结构，当前还不能直接当成因果脆弱区代理。
-- 也就是说：
-  - 共享支撑层带确实存在
-  - 取向化读数也确实存在
-  - 但真实干预后，伤害方向并不按预测自动展开
-- 因而当前更稳的理论更新是：
-  - `共享结构` 与 `因果脆弱结构` 尚未完全重合
-  - 其间还隔着一个没有显式建模的 `门控选择 / 上下文条件 / 任务相位` 层
-
-### 对破解脉冲神经网络编码结构的意义
-- 这是一次非常有价值的收缩：
-  - 它阻止我们把“统计共享”误判成“因果核心”
-- 对脑侧逆向工程而言，这恰好逼近一个更真实的结论：
-  - 大脑里的共享编码底座很可能只是可用资源池
-  - 真正决定当前功能输出与脆弱区的，是相位门控、上下文路由和任务状态
-- 所以项目主线应从：
-  - `共享底座 -> 直接因果核心`
-- 改成：
-  - `共享底座 + 状态/相位门控 -> 当前因果核心`
-
-### 下一阶段的大任务块
-- 任务块 1：门控条件化因果消融
-  - 不再做静态共享层带消融，而要按 concept-phase / relation-phase / task-phase 分条件消融。
-- 任务块 2：共享层带接回最小控制桥的状态变量
-  - 用 `shared_core / protocol_gate / phase_state` 去预测哪些共享层带在何种状态下才会变成因果脆弱区。
-- 任务块 3：从共享结构转向条件因果结构
-  - 研究重点不再是“共享最多的是谁”，而是“在什么状态下，哪一片共享资源被门控成当前功能核心”。
-
-## 2026-03-10 16:58 局部脉冲脑区异质性基准：无全局控制器条件下的系统级整合与局部回放恢复
-
-### 本轮执行命令
-- `python -m py_compile tests/codex/test_local_pulse_region_heterogeneity_benchmark.py`
-- `python tests/codex/test_local_pulse_region_heterogeneity_benchmark.py`
-- `Copy-Item tests/codex_temp/local_pulse_region_heterogeneity_benchmark_20260310.json frontend/src/blueprint/data/local_pulse_region_heterogeneity_benchmark_sample.json -Force`
-- `npm --prefix frontend run build`
-
-### 新增文件与产物
-- `tests/codex/test_local_pulse_region_heterogeneity_benchmark.py`
-- `tests/codex_temp/local_pulse_region_heterogeneity_benchmark_20260310.json`
-- `frontend/src/blueprint/LocalPulseRegionHeterogeneityDashboard.jsx`
-- `frontend/src/blueprint/data/local_pulse_region_heterogeneity_benchmark_sample.json`
-
-### 本轮目标
-- 把研究重点收回到更接近脑侧的硬约束：
-  - 不假定任何显式全局控制器
-  - 每个神经元只能基于上一步局部脉冲和局部状态更新
-  - 脑区差异只来自局部动力学和连接异质性
-- 直接验证在这种条件下，系统级整合、编码分离和损伤恢复是否仍能涌现。
-
-### 关键结果
-- 最优系统：`heterogeneous_local_replay`
-- 指标：
-  - `same_family_success_rate = 0.6458`
-  - `lesion_recovery_rate = 0.6204`
-  - `encoding_separation = 0.7083`
-  - `transfer_stability = 0.9994`
-  - `local_integration_score = 0.6172`
-- 增益：
-  - `replay_gain_vs_heterogeneous = +0.0603`
-  - `replay_recovery_gain_vs_homogeneous = +0.0463`
-- 假设：
-  - `H2_local_replay_improves_recovery = true`
-  - `H3_no_global_controller_still_supports_system_level_integration = true`
-  - `H1_region_heterogeneity_improves_local_integration = false`
-  - `H4_region_heterogeneity_increases_specialization = false`
-
-### 当前理论推进
-- 这一步给出了一个很重要的收缩结论：
-  - 在没有任何显式全局控制器的条件下，纯局部脉冲更新已经足以支撑可观的系统级整合和损伤恢复。
-- 但它同时也给出一个限制：
-  - 脑区异质性并不会自动带来更强整合或更强专职分化。
-- 因而当前更稳的结构更新是：
-  - `局部脉冲规则` 是必要核心
-  - `局部回放/局部状态复现` 是当前最明确的恢复增益来源
-  - `脑区异质性` 还需要和条件门控、任务相位、局部路由一起建模，才会稳定转成优势
-
-### 对破解脉冲神经网络编码结构的意义
-- 这轮结果直接支撑了一个更贴近大脑的方向：
-  - 大脑不需要一个全局指挥器先存在，系统级整合可以从局部更新和局部状态传递中涌现。
-- 但同时也说明：
-  - 不能把“脑区异质性存在”直接等价成“功能优势已经形成”
-  - 真正决定当前功能核心的，仍然很可能是局部状态、相位条件和局部回放怎样把资源选出来
-- 所以后续主线应继续从：
-  - `共享结构 / 全局桥接坐标`
-- 压到：
-  - `局部状态 + 局部脉冲 + 条件门控 + 区域异质性`
-
-### 下一阶段的大任务块
-- 任务块 1：条件化局部因果消融
-  - 按 concept-phase / relation-phase / recovery-phase 对局部脉冲网络做条件消融，找出哪些局部状态会把同一片资源变成当前因果核心。
-- 任务块 2：局部回放与中观冗余场桥接
-  - 把 recovery、local replay 和 mesofield 冗余接到同一套读数里，确认恢复优势到底来自局部状态复现，还是来自更大尺度冗余接管。
-- 任务块 3：最小控制桥去全局化
-  - 把 `shared_core / protocol_gate` 进一步改写成 `local_state / regional_bias / neighborhood_gain` 一类局部量，不再默认存在全局低维控制器。
-
-
-## 2026-03-10 术语展开：拓扑协议层 与 中观冗余场
+## 2026-03-09 00:12:00 继续推进：从 AGI 与规模化角度评估该路线能否扩展到“类人脑千亿级网络”
 - 用户请求：
-  - 详细讲解：
+  - 评估当前这套“共享基底 + 拓扑协议层 + 中观冗余场”思路
+  - 如果验证成立，能否规模化到类似人脑千亿级别神经网络
+- 本轮工作类型：
+  - 理论与工程可扩展性分析
+  - 未新增实验脚本
+- 当前最核心的判断：
+  - “能不能做到千亿级” 不是首先由参数数量决定
+  - 而是由以下四个可扩展条件决定：
+    1. `表示复杂度` 是否随知识增长近似次线性扩张
+    2. `通信复杂度` 是否避免全局二次或更高代价
+    3. `学习更新` 是否能在局部/中观尺度完成，而不依赖全局同步
+    4. `稳态与可塑性` 是否能共存，不引发灾难性遗忘或全局扰动
+- 如果当前理论正确，则它的可扩展潜力来自三个点：
+  1. `共享基底`
+    - 共性知识被复用，不需要每个概念单独开整块参数
+    - 这意味着知识容量增长可以低于线性
+  2. `关系协议层`
+    - 关系不是单独存成海量表，而是进入统一拓扑协议
+    - 这意味着关系数量可以借助统一语法复用
+  3. `中观冗余场`
+    - 单头/小头群不是唯一瓶颈，说明实现天然具备容错和分流潜力
+    - 这更接近大规模生物网络的鲁棒性
+- 但要扩到“类人脑千亿级”仍有三大硬条件：
+  1. `计算复杂度必须降下来`
+    - 如果仍靠全局 dense attention 或近似全连接通信，规模会先死在带宽和能耗上
+    - 当前理论更支持：
+      - 局部稀疏
+      - 分层路由
+      - 中观场通信
+    - 若做不到这一点，就算数学结构正确，也难以工程落地
+  2. `学习规则必须局部化`
+    - 人脑千亿级网络不可能每次学习都做全局精确反向分配
+    - 当前实验已经暗示：
+      - 关键机制在中观场，不在单点
+    - 这要求未来的可训练方案必须支持：
+      - 局部更新
+      - 分区稳定
+      - 少量跨层协调
+  3. `记忆系统必须分层冻结`
+    - 若所有层都持续高塑性，规模上去后极易相互污染
+    - 当前理论更合理的工程化形式应是：
+      - 大基底慢更新
+      - 小基底中速更新
+      - 局部偏移快更新
+- 关于“是否能达到类人脑规模”的严格回答：
+  - `数学上有可能`
+    - 因为当前路线已经显示出：
+      - 协议复用
+      - 表示复用
+      - 冗余分布式实现
+    - 这三点都是大规模系统必须具备的
+  - `工程上现在还不能直接断言`
+    - 因为最关键的两件事还没有被验证：
+      1. 多大尺度的中观场才是最小因果单元
+      2. 这种中观场能否在局部学习下稳定形成
+- 当前最准确的结论：
+  - 如果这条路线最终成立，它不是靠“把一个大 Transformer 直接堆到千亿参数”实现 AGI
+  - 而更像：
+    - 用共享基底压缩表示
+    - 用统一拓扑协议组织关系
+    - 用中观冗余场承载推理与稳态
+  - 这种路线在原理上比纯 dense 扩张更有希望接近“类人脑千亿级网络”
+- 但当前仍存在三处硬伤：
+  1. `最小因果规模未知`
+    - 单头不够，top-3 也不够
+    - 真正需要多大中观场，尚未测清
+  2. `训练机制未知`
+    - 还没有证明这种中观协议层能通过局部学习稳定长成
+  3. `跨模态统一尚未闭合`
+    - 目前主要在语言模型内部验证
+    - 还没有证明视觉/听觉/动作都能落入同一协议层
+- 下一步最合理的研究顺序：
+  1. 先测 `top-8 / top-16 / layer-cluster` 联合消融
+    - 找到关系协议的最小中观因果规模
+  2. 再测这个中观场是否跨概念、跨关系族复用
+  3. 最后才讨论是否可以映射到超大规模训练架构
+
+## 2026-03-10 00:20:00 拉取远端并合并本地代码
+- 用户请求：
+  - 拉取 git 远端版本，同时合并本地代码
+- 本次执行命令（关键）：
+  - `git status --short --branch`
+  - `git remote -v`
+  - `git branch --show-current`
+  - `git stash push -m "codex-pre-pull-memo-20260310" -- research/gtp5/doc/AGI_GPT5_MEMO.md`
+  - `git pull --no-rebase origin main`
+  - `git stash pop`
+  - `rg -n "^(<<<<<<<|=======|>>>>>>>)" research/gtp5/doc/AGI_GPT5_MEMO.md`
+  - `apply_patch`（清理 `research/gtp5/doc/AGI_GPT5_MEMO.md` 冲突，保留远端内容并追加本地段落）
+  - `git add research/gtp5/doc/AGI_GPT5_MEMO.md`
+  - `git restore --staged research/gtp5/doc/AGI_GPT5_MEMO.md`
+  - `git stash drop 'stash@{0}'`
+- 操作结果：
+  - 当前分支：`main`
+  - 拉取方式：`fast-forward`
+  - 分支状态：已同步到 `origin/main`
+  - 本地改动：
+    - `research/gtp5/doc/AGI_GPT5_MEMO.md` 已手动完成冲突合并
+    - 当前保留为普通未暂存修改，未强制提交
+- 备注：
+  - 冲突只发生在 `AGI_GPT5_MEMO.md`
+  - 其余远端新增文件已正常合入
+
+## 2026-03-10 00:35:00 冷评估：当前项目实现通用人工智能的概率、问题与硬伤
+- 用户请求：
+  - 分析这个项目，实现通用人工智能的概率是多少，有哪些问题和硬伤
+- 本轮工作类型：
+  - 冷评估
+  - 未新增实验脚本
+- 评估口径：
+  - 这里评估的是：
+    - “当前项目路线最终导向真正 AGI”的概率
+  - 不是：
+    - “当前理论骨架压缩进度”
+    - “某组实验在局部数据上的拟合度”
+- 当前更严格的概率判断：
+  1. `项目直接产出真正 AGI`
+    - 我给 `1% ~ 5%`
+  2. `项目产出一个对 AGI 有价值的中间理论或关键机制`
+    - 我给 `20% ~ 40%`
+  3. `项目产出一批有解释价值、但不足以闭合 AGI 的局部规律`
+    - 我给 `60%+`
+- 为什么“直接实现 AGI”的概率不能给高：
+  - 当前项目的强项主要在：
+    - 机制压缩
+    - 编码结构猜想
+    - 头/层/关系协议分析
+    - 局部实验闭环
+  - 但 AGI 真正需要的闭环还缺几大块：
+    1. 开放世界接地
+    2. 跨模态统一
+    3. 持续学习
+    4. 长期稳定记忆
+    5. 真实环境代理闭环
+    6. 训练机制闭环
+- 当前项目最强的部分：
+  1. `提出了相对一致的统一语言`
+    - 共享基底
+    - 拓扑协议层
+    - 中观冗余场
+  2. `不是纯空想`
+    - 已经在 GPT-2 / Qwen3 上做了较多结构验证
+  3. `能够产生可证伪命题`
+    - 例如：
+      - 关系协议是否统一到 `TT`
+      - 单头是否为因果瓶颈
+      - top-3 是否为最小因果规模
+- 当前项目最致命的问题与硬伤：
+  1. `外推风险极高`
+    - 目前大量结论来自：
+      - 语言模型内部
+      - 特定 prompt
+      - 特定 probe 指标
+    - 从“模型内部规律”跳到“AGI 一般原理”，外推跨度过大
+  2. `解释性强于构造性`
+    - 现在更像是在解释现有模型
+    - 还没有证明这些规律足以构造一个真正可生长、可训练、可持续学习的系统
+  3. `训练闭环没有解决`
+    - 目前最大硬伤不是结构描述不够，而是：
+      - 这种中观拓扑场如何被稳定训练出来
+      - 如何在不依赖全局 BP 的情况下长成
+  4. `因果规模仍未确定`
+    - 单头不够
+    - `top-3` 也通常不够
+    - 真正最小因果中观场还不知道
+  5. `缺少跨模态强证据`
+    - 现在主要还是语言网络内部分析
+    - 真正 AGI 不能只靠语言域闭环
+  6. `缺少长期代理验证`
+    - 没有真实环境中的：
+      - 长期目标维持
+      - 动态探索
+      - 自主纠错
+      - 记忆污染控制
+  7. `评价指标仍偏内部`
+    - 目前很多指标是：
+      - 对齐度
+      - 塌缩率
+      - 相关性
+      - 留一法误差
+    - 这些很重要，但离“AGI 成功”还差一个现实任务闭环层
+- 当前最准确的总判断：
+  - 这个项目不是“快要做出 AGI”
+  - 但它有机会做出：
+    - 一个比现有纯经验主义更强的机制框架
+    - 若成功，可能成为 AGI 理论拼图中的重要一块
+- 因此更合理的项目定位应是：
+  - `高风险、高不确定性、但可能产出关键中间机制理论`
+  - 而不是：
+    - “已经接近 AGI 完成”
+- 如果要显著提升最终成功概率，最关键的三件事是：
+  1. 找到 `最小中观因果规模`
+    - 继续测 `top-8 / top-16 / layer-cluster`
+  2. 做 `跨模态统一验证`
+    - 文本 / 视觉 / 听觉是否进入同一协议层
+  3. 做 `训练与持续学习闭环`
+    - 证明该机制不是只能解释，是真能生长和维持
+
+## 2026-03-10 术语解释：共享基底/拓扑协议层/中观冗余场 与 4D semantic skeleton + 3D vector correction 的数学关系
+- 用户请求：
+  - 详细说明以下名词的原理和数学计算过程：
+    - `共享基底`
     - `拓扑协议层`
     - `中观冗余场`
+    - `4D semantic skeleton + 3D vector correction`
 - 本轮工作类型：
-  - 理论展开
+  - 理论澄清
+  - 代码定义追踪
   - 未新增实验脚本
-- 本轮命令：
-  - `Get-ChildItem research -Recurse -Filter AGI_GPT5_MEMO.md | Select-Object FullName`
-  - `Add-Content research/gpt5/docs/AGI_GPT5_MEMO.md`
-- 路径说明：
-  - 远端目录结构已使用：
-    - `research/gpt5/docs/AGI_GPT5_MEMO.md`
-  - 旧路径：
-    - `research/gtp5/doc/AGI_GPT5_MEMO.md`
-    - 当前主工作区中已不存在
-- `拓扑协议层` 的定义：
-  - 它不是某个单独模块名字
-  - 而是模型内部“关系如何被组织和传输”的统一动态连通规则
-  - 在 Transformer 里，最直接的对象是：
-    - `A_(l,h)(x) = softmax(Q_(l,h)(x) K_(l,h)(x)^T / sqrt(d))`
-  - 这里 `A_(l,h)(x)` 是第 `l` 层第 `h` 个头在输入 `x` 下生成的动态邻接矩阵
-- 为什么叫“拓扑”：
-  - 因为 `A_(l,h)(x)` 实际定义了：
-    - 哪些 token / 状态彼此连通
-    - 连通权重多大
-    - 信息沿什么路径流动
-  - 所以它本质上是一个上下文条件下的时变图
-- 为什么叫“协议”：
-  - 因为不同关系族并不是随机借用这些图
-  - 而是复用某种统一的组织规则
-  - 之前实验收敛到：
-    - 多数关系族最终都落到 `TT` 协议
-  - 即：
-    - 关系主要在拓扑空间里被组织、对齐、传播
-- `拓扑协议层` 的数学写法：
-  - 对输入 `x`，记整体拓扑状态为：
-    - `T(x) = vec({A_(l,h)(x)})`
-  - 若关系族为 `tau`，则其协议签名可以写成：
-    - `P_tau(x) = Pi_tau(T(x))`
-  - 其中 `Pi_tau` 表示：
-    - 从整体拓扑状态中抽取该关系族有效结构的投影
-- 这层到底在做什么：
-  1. `选路`
-    - 哪些状态需要彼此通信
-  2. `绑定`
-    - 哪些节点当前被解释成同一关系实例
-  3. `分型`
-    - 当前是上下位、反义、部分整体还是因果关系
-  4. `稳定化`
-    - 让关系结构在不同上下文里仍能保持可复用的组织形式
-- 所以“拓扑协议层”不是“关系内容本身”
-  - 而是：
-    - 关系内容被实现出来时所遵循的动态图语法
-- `中观冗余场` 的定义：
-  - 它指的不是单个头、单层或单神经元
-  - 而是：
-    - 一片跨层、跨头、带冗余的功能子场
-  - 这片子场共同承载某类关系协议或功能过程
-- 为什么需要这个概念：
-  - 之前实验已经看到：
-    - 单头消融通常打不塌关系协议
-    - `top-3` 小头群也通常打不塌
-  - 这说明最小因果单元不是点，而更像“片”
-- `中观冗余场` 的数学写法：
-  - 对关系族 `tau`，可写成：
-    - `M_tau = sum_((l,h) in S_tau) alpha_(l,h) T_(l,h)`
-  - 其中：
-    - `S_tau` 是一组头-层位置
-    - `T_(l,h)` 是该头的局部拓扑贡献
-    - `alpha_(l,h)` 是功能权重
-- 为什么叫“中观”：
-  - 微观不是它：
-    - 单神经元、单头
-  - 宏观也不是它：
-    - 整个模型所有层一起
-  - 它处在中间尺度：
-    - 足够大，能形成稳定功能
-    - 又足够局部，不是全局同步
-- 为什么叫“冗余”：
-  - 因为同一种协议通常不是只由唯一通道承载
-  - 而是多个头、多个层有部分重叠、部分替代
-  - 这种冗余带来：
-    - 容错
-    - 泛化
-    - 抗单点损坏
-- 为什么叫“场”：
-  - 因为它更像一个分布：
-    - 在层轴上有峰值
-    - 在头轴上有热点
-    - 在关系族上有职责分工
-  - 它不是离散标签，更像一个强度分布面
-- `拓扑协议层` 和 `中观冗余场` 的关系：
-  - `拓扑协议层`
-    - 回答的是：
-      - “关系按什么规则组织”
-  - `中观冗余场`
-    - 回答的是：
-      - “这套规则由哪一片分布式子系统承载”
-  - 所以两者关系是：
-    - `协议 = 规则`
-    - `冗余场 = 载体`
-- 在当前项目里的作用分工：
-  1. `共享基底`
-    - 给概念一个稳定锚点
-  2. `拓扑协议层`
-    - 决定关系如何路由和组织
-  3. `中观冗余场`
-    - 负责把关系协议稳定落地，而不依赖单点
-- 当前最稳的总结：
-  - `拓扑协议层`
-    - 是语言关系的统一动态图语法
-  - `中观冗余场`
-    - 是承载这套语法的分布式中尺度子系统
-  - 所以当前关系机制不能再被理解成：
-    - “几个关键神经元”
-  - 而必须理解成：
-    - “统一协议 + 分布式中观承载”
-
-
-
-
-
-## 2026-03-10 术语深化：TT 协议层 与 GPT-2 / Qwen3 中的中观冗余场差异
-- 用户请求：
-  - 继续详细讲解拓扑协议层与中观冗余场
-- 本轮工作类型：
-  - 理论深化
-  - 未新增实验脚本
-- 本轮命令：
-  - `Add-Content research/gpt5/docs/AGI_GPT5_MEMO.md`
-- `TT` 的最直接含义：
-  - 不是 `token-token` 的简单缩写
-  - 在当前项目语境里更准确地表示：
-    - `Topology-to-Topology`
-  - 即：
-    - 关系的主结构在拓扑空间中生成
-    - 关系的比较、对齐、传播也主要在拓扑空间中完成
-- 为什么不是 `H-H`：
-  - 如果关系主要是 `H-H`，说明关系更像静态表征空间中的向量差或标签轴
-  - 但当前多轮实验显示：
-    - `hypernym`
-    - `antonym`
-    - `synonym`
-    - `meronym`
-    - `cause-effect`
-    - 大多数都更偏 `T`
-  - 所以更合理的判断是：
-    - 关系不是首先被存成“概念向量之间的固定差”
-    - 而是首先被实现为一种连通模式
-- `TT` 的数学形式：
-  - 对两个关系实例 `r1, r2`，若它们属于同一关系族 `tau`
-  - 不是要求：
-    - `H(a)-H(b) ≈ H(c)-H(d)`
-  - 而更接近要求：
-    - `Pi_tau(T(a,b;x)) ≈ Pi_tau(T(c,d;x'))`
-  - 也就是：
-    - 两个关系实例在拓扑组织方式上同型
-- 所以 `TT` 真正表达的是：
-  - 关系相似性主要不是“点对点向量差相似”
-  - 而是“动态图结构相似”
-- 为什么语言里的复杂关系更容易落到 `TT`：
-  - 因为很多关系本质上都不是单属性
-  - 例如：
-    - 上下位关系要处理类别嵌套
-    - 因果关系要处理方向性和条件依赖
-    - 部分整体关系要处理结构归属
-  - 这些都更像图结构问题，不像单轴属性问题
-- `TT` 协议层的直观理解：
-  - 一个概念先在 `H` 空间中获得身份锚点
-  - 再进入 `T` 空间参与关系组织
-  - 关系真正稳定成型时，比较的是：
-    - 这两个概念如何被连接
-    - 而不是它们各自是什么静态点
-- 因此更合适的总体公式是：
-  - `Concept = anchor in H + routing participation in T`
-  - `Relation = structured transformation mainly in T`
-- 为什么 `GPT-2` 和 `Qwen3` 会不一样：
-  - 两者共享协议层思想
-  - 但承载协议的中观冗余场组织方式不同
-- `GPT-2` 的特点：
-  1. `表征与路由缠绕更多`
-    - 很多层同时兼做表征和拓扑组织
-  2. `冗余更松散`
-    - 功能热点分布更散
-  3. `边界较模糊`
-    - 某些关系偶尔还能在 `H` 里看到较强痕迹
-  4. `末层收束感更强`
-    - 往往靠后面层把较混合的结构重新收起来
-- `Qwen3` 的特点：
-  1. `早层和深层分工更清楚`
-    - 早层偏门控和初始表征
-    - 深层偏关系协议组织
-  2. `拓扑承载更集中`
-    - 关系更稳定落在 `T`
-  3. `专职头更明显`
-    - 但依然不是单头决定，而是专职头群 + 冗余场
-  4. `HH 痕迹更弱`
-    - 更少把关系直接留在静态表征差分里
-- 所以两者差异不是“有没有协议层”
-  - 而更像：
-    - `GPT-2`：协议层已经存在，但和表征链缠绕较重
-    - `Qwen3`：协议层更被独立化、集中化、清晰化
-- `中观冗余场` 在两者中的差异可以压成：
-  - `GPT-2`：
-    - 更像弥散场
-    - 峰值有，但边界不够锐利
-  - `Qwen3`：
-    - 更像模块化热点群
-    - 职责更清楚，但仍保留冗余
-- 为什么这点重要：
-  - 如果一个系统想变强，通常不是把关系完全塞进静态向量
-  - 而是让：
-    - 概念身份
-    - 关系协议
-    - 中观承载
-    三者更清晰分工
-- 这也是为什么当前项目里：
-  - `Qwen3` 看起来通常比 `GPT-2` 更接近“机制分层清楚”的状态
-- 当前最稳总结：
-  - `TT` 说明关系的主计算域在拓扑空间
-  - `中观冗余场` 说明这个主计算域不是单头或单点，而是一片分布式承载区
-  - `GPT-2` 与 `Qwen3` 的区别主要在于：
-    - 协议层与表征层的缠绕程度不同
-    - 冗余场的集中度与专职化程度不同
-
-
-
-
-
-## 2026-03-10 理论评估：`基底 + 个体偏移` 与 `拓扑协议层 + 中观冗余场` 是否可能是同一脉冲编码原理的两个投影
-- 用户请求：
-  - 分析这样一种思路的可能性：
-    - `基底 + 个体偏移`
-    - 和 `拓扑协议层 + 中观冗余场`
-    - 背后都来自脉冲神经网络的统一编码机制
-    - 很可能是同一个原理的产物
-- 本轮工作类型：
-  - 理论评估
-  - 未新增实验脚本
-- 本轮命令：
-  - `Add-Content research/gpt5/docs/AGI_GPT5_MEMO.md`
-- 当前最核心判断：
-  - 这个思路“部分成立”的概率较高
-  - 但“完全是同一个数学对象”的证据还不够
-- 当前概率判断：
-  1. `它们来自同一底层编码原理家族`
-    - 我给 `60% ~ 75%`
-  2. `它们只是同一原理在不同观测坐标下的两个投影`
-    - 我给 `45% ~ 60%`
-  3. `它们严格就是同一个数学对象，只是名字不同`
-    - 我给 `20% ~ 35%`
-- 为什么不能直接说“就是同一个东西”：
-  - 因为两者当前描述的对象层级不同：
-    - `基底 + 个体偏移`
-      - 更偏表征分解
-    - `拓扑协议层 + 中观冗余场`
-      - 更偏动态组织与实现载体
-  - 它们高度相关，但还未证明可一一同构
-- 最合理的统一猜想是：
-  - 同一个脉冲系统在三个视角下会呈现三种对象：
-    1. `统计视角`
-      - 出现 `共享基底 + 个体偏移`
-    2. `动态图视角`
-      - 出现 `拓扑协议层`
-    3. `实现尺度视角`
-      - 出现 `中观冗余场`
-- 若写成统一脉冲系统：
-  - 令神经元脉冲为 `s_i(t) in {0,1}`
-  - 膜电位更新为：
-    - `v_i(t+1) = lambda v_i(t) + sum_j W_ij s_j(t-d_ij) + I_i(t) - theta_i(t)`
-  - 群体状态记为：
-    - `s(t) = [s_1(t), ..., s_n(t)]^T`
-- 从这个系统出发，`基底 + 个体偏移` 如何出现：
-  - 对长期协同放电统计做协方差分解：
-    - `C = E[s(t)s(t)^T]`
-  - 若谱分解为：
-    - `C = U Lambda U^T`
-  - 则前 `k` 个主模态给出共享基底：
-    - `B = span(u_1,...,u_k)`
-  - 某个具体概念状态可写成：
-    - `x_c = U_k a_c + Delta_c`
-  - 所以：
-    - `基底 + 个体偏移`
-    - 本质上是脉冲协同统计压缩后的低秩主模态 + 特异残差
-- 从同一个系统出发，`拓扑协议层` 如何出现：
-  - 在给定上下文和时相下，系统的有效连接不是固定 `W`
-  - 而是条件化后的有效连通：
-    - `A_eff(t) = F(W, s(t), phi(t), g(t))`
+- 本轮读取命令：
+  - `rg -n "4D semantic skeleton|3D vector correction|共享基底|拓扑协议层|中观冗余场" research\gemini\docs\AGI_GEMINI_MEMO.md research\gtp5\doc\AGI_GPT5_MEMO.md`
+  - `git status --short`
+  - `Get-Content tests\codex\test_semantic_4d_confidence_cross_domain_closure.py -TotalCount 260`
+  - `Get-Content tests\codex\test_semantic_4d_confidence_vector_domain_correction.py -TotalCount 260`
+  - `Get-Content tests\codex_temp\semantic_4d_confidence_cross_domain_closure_20260310.json -TotalCount 220`
+  - `Get-Content tests\codex_temp\semantic_4d_confidence_vector_domain_correction_20260310.json -TotalCount 260`
+  - `Get-Content tests\codex\test_brain_learnable_ranking_two_layer_unified_law.py -TotalCount 260`
+- 当前最关键的统一判断：
+  - `共享基底 + 拓扑协议层 + 中观冗余场`
+    - 是机制层语言
+  - `4D semantic skeleton + 3D vector correction`
+    - 是把上述机制压缩成低维可拟合坐标后的统计层语言
+  - 两者不是互斥关系，而是：
+    - `高维机制对象 -> 低维充分统计量`
+- 数学上可写成两层：
+  1. 机制层
+    - `x_c = B_f + Delta_c + R_c + G_c`
+    - `T_c = T_f + Delta_c^topo + R_c^topo + G_c^topo`
+    - 其中：
+      - `B_f`：共享基底
+      - `R_c^topo`：拓扑协议层中的关系组织
+      - `M_tau = sum_{(l,h) in S_tau} alpha_{l,h} T_{l,h}`：某关系族 `tau` 的中观冗余场
+  2. 压缩层
+    - 对每个样本行 `r`，先构造原始向量 `z_r`
+    - 再压成 `s_r in R^4`
+    - 最后加上域修正 `d_r in R^3`
+- `共享基底` 的严格写法：
+  - 对概念族 `F = {x_1,...,x_n}`，令
+    - `mu_F = (1/n) sum_i x_i`
+    - `Sigma_F = (1/n) sum_i (x_i-mu_F)(x_i-mu_F)^T`
+  - 若 `Sigma_F = U Lambda U^T`，取前 `k` 个主方向：
+    - `B_F = span(u_1,...,u_k)`
+  - 任一概念可分解为：
+    - `x_c = mu_F + U_k a_c + Delta_c`
   - 这里：
-    - `phi(t)` 表示相位/同步结构
-    - `g(t)` 表示调制或门控状态
-  - 当关系被处理时，真正起作用的是：
-    - 哪些神经群在何时同步
-    - 哪些路径被临时打开
-  - 这就是拓扑协议层
-- 从同一个系统出发，`中观冗余场` 如何出现：
-  - 若某一类关系或功能不是由单群体承载
-  - 而是由多个部分重叠的群体共同承载：
-    - `M_tau = sum_{m in G_tau} beta_m A_m(t)`
-  - 则 `G_tau` 构成一个中尺度冗余集合
-  - 这就是中观冗余场
-- 所以当前最有力的统一写法是：
-  - `共享基底`
-    - 是脉冲协同统计的低秩结果
-  - `个体偏移`
-    - 是低秩结果之外的特异修正
-  - `拓扑协议层`
-    - 是同一系统在在线运行时的条件连通规则
-  - `中观冗余场`
-    - 是这套规则的分布式实现载体
-- 也就是说，它们最可能的关系不是：
-  - “四个彼此独立的模块”
-  - 而是：
-    - `同一个脉冲编码系统的四个不同投影面`
-- 为什么这个思路有较高可能性：
-  1. `都具有复用结构`
-    - 共享基底复用特征
-    - 协议层复用关系组织规则
-  2. `都具有稀疏激活`
-    - 偏移通常只改少数方向
-    - 协议层通常只打开局部路径
-  3. `都具有冗余容错`
-    - 基底可由多个神经群共同近似
-    - 协议由中观冗余场承载
-  4. `都符合最小能量倾向`
-    - 先复用旧模态，再做最小修正
-    - 先复用既有路由模式，再做局部切换
-- 为什么还不能下更高结论：
-  1. `静态分解` 和 `动态组织` 还没闭合为单一方程
-  2. 目前缺少真实脉冲网络上的直接验证
-  3. 还没证明：
-    - 同一组脉冲相位变量
-    - 可以同时解释基底形成、关系协议和中观冗余场
-- 当前最合理的统一母式可以先写成：
-  - `x_c(t) = U_k a_c(t) + Delta_c(t)`
-  - `a_c(t+1), Delta_c(t+1) = G(U_k, Delta_c, A_eff(t), M_tau(t), input)`
+    - `mu_F + U_k a_c` 是共享基底部分
+    - `Delta_c` 是个体偏移
+- `拓扑协议层` 的严格写法：
+  - attention 诱导动态邻接：
+    - `A_{l,h}(x) = softmax(Q_{l,h}(x) K_{l,h}(x)^T / sqrt(d))`
+  - 把整层整头拼成拓扑状态：
+    - `T(x) = vec({A_{l,h}(x)})`
+  - 关系族 `tau` 的主要结构不主要落在 `H` 空间，而主要落在 `T` 空间
+  - 这就是：
+    - `关系 = 拓扑协议`
+    - 而不是“概念上的附加标签”
+- `中观冗余场` 的严格写法：
+  - 单头不是最小因果单元，小头群通常也不是
+  - 更合理的写法是：
+    - `M_tau = sum_{(l,h) in S_tau} alpha_{l,h} T_{l,h}`
+  - 其中 `S_tau` 是跨层、跨头的小区域集合
+  - 它的性质是：
+    - 专职化
+    - 冗余化
+    - 分布式
+  - 所以中观冗余场不是一个点，而是一片承载同一种协议的拓扑子场
+- `4D semantic skeleton` 的实际计算定义来自脚本 `test_semantic_4d_confidence_cross_domain_closure.py`
+  - 对每个样本行 `r`，先取原始向量：
+    - `z_r = [brain_components]`，若域为 `brain`
+    - `z_r = [signal_a, signal_b, signal_c, signal_d]`，若域为 `D` 或 `real_task`
+  - 然后压缩成四维语义包：
+    - `s_1 = mean(z_r)`，即 `family_mean_confidence`
+    - `s_2 = min(z_r)`，即 `worst_case_confidence`
+    - `s_3 = max(z_r) - std(z_r)`，即 `global_trust_reserve`
+    - `s_4 = mean(upper_half(z_r)) - mean(lower_half(z_r))`，即 `family_concept_margin`
   - 其中：
-    - `U_k` 表示共享基底
-    - `Delta_c` 表示个体偏移
-    - `A_eff(t)` 表示拓扑协议
-    - `M_tau(t)` 表示中观冗余场
-  - 这不是最终闭环方程，但已经说明：
-    - 四者最可能属于同一动力系统，而不是四块独立拼图
-- 当前最稳总结：
-  - 这个思路不是空想，概率中高
-  - 但现阶段更稳的说法应是：
-    - `它们高度可能属于同一底层编码原理家族`
+    - `upper_half/lower_half` 来自对 `z_r` 排序后的上半段和下半段
+- `4D` 的第一层排名律为：
+  - `phi_r = [1, s_1, s_2, s_3, s_4, I_brain, I_D, I_real]`
+  - `y_rank(r) = phi_r^T w`
+  - 通过 ridge 回归求：
+    - `w = argmin_w sum_r (y_r - phi_r^T w)^2 + lambda ||w||_2^2`
+  - 当前结果中的包系数约为：
+    - `family_mean_confidence = 0.1498`
+    - `worst_case_confidence = 0.0243`
+    - `global_trust_reserve = 0.2161`
+    - `family_concept_margin = -0.0351`
+  - 说明当前四维包中：
+    - `global_trust_reserve`
+    - `family_mean_confidence`
+    - 是更强主项
+- `3D vector correction` 的实际定义来自脚本 `test_semantic_4d_confidence_vector_domain_correction.py`
+  - 不是直接对 `4D` 再多加三个自由参数
+  - 而是对不同域构造一个最小三维修正基 `c_r`
+  - `brain` 域：
+    - 若 `b = brain_components`
+    - `c_1 = mean(b_1..b_4) - mean(b_5..b_7)`
+    - `c_2 = max(b) - min(b)`
+    - `c_3 = std(b)`
+  - `D` 域：
+    - `c_1 = signal_c + 0.5 signal_b - 0.25 signal_a`
+    - `c_2 = signal_b - signal_a`
+    - `c_3 = signal_c - signal_b`
+  - `real_task` 域：
+    - `c_1 = signal_d + 0.5 signal_c`
+    - `c_2 = signal_c - signal_b`
+    - `c_3 = signal_d - signal_b`
+- `3D` 修正的第二层校准律为：
+  - `psi_r = [1, y_rank(r), c_1, c_2, c_3, I_brain*c, I_D*c, I_real*c, I_brain, I_D, I_real]`
+  - `y_hat(r) = psi_r^T theta`
+  - 同样通过 ridge 求：
+    - `theta = argmin_theta sum_r (y_r - psi_r^T theta)^2 + gamma ||theta||_2^2`
+- `3D` 为什么不是拍脑袋，而是当前最小必要修正：
+  - 实验在 `correction_dim in {2,3}` 上搜索
+  - 目标函数为：
+    - `J = mean_held_out_gap - 0.01 * held_out_score_correlation`
+  - 最优结果稳定落在：
+    - `best_correction_dim = 3`
+  - 说明：
+    - `2D` 还不够
+    - `3D` 是当前观测下的最小可行向量修正
+- 从机制层到压缩层的当前合理对应关系是：
+  1. `共享基底`
+    - 在压缩层主要投影为：
+      - `family_mean_confidence`
+    - 以及一部分：
+      - `family_concept_margin`
+  2. `拓扑协议层`
+    - 在压缩层主要投影为：
+      - `global_trust_reserve`
+      - `family_concept_margin`
+    - 因为它们反映的是概念边界的可分性和协议稳定余量
+  3. `中观冗余场`
+    - 在压缩层主要投影为：
+      - `worst_case_confidence`
+      - `global_trust_reserve`
+    - 因为冗余场提供的正是最坏情况下的下界和剩余缓冲
+  4. `3D vector correction`
+    - 对应的是：
+      - 同一套高维机制在不同域下的投影畸变
+    - 不是新增本体结构，而是域间坐标修正
+- 所以这四个名词的层次关系可以压成一句话：
+  - `共享基底 + 拓扑协议层 + 中观冗余场`
+    - 描述“系统内部到底有什么”
+  - `4D semantic skeleton + 3D vector correction`
+    - 描述“这些内部对象在跨域观测里最小可以被压成什么坐标”
+- 当前最稳的理论结论：
+  - 旧三件套不是被新术语推翻了
+  - 而是被进一步压缩成了一个低维统计闭包：
+    - `高维机制三件套 -> 4D 骨架`
+    - `跨域投影差异 -> 3D 修正`
+  - 这也是为什么当前主线从机制叙事继续收紧成：
+    - `4D semantic skeleton + 3D vector correction`
+
+## 2026-03-10 00:42:00 更新冷评估：纳入最新远端进展后的 AGI 概率、问题与硬伤
+- 用户请求：
+  - 分析这个项目的最新进展，实现通用人工智能的概率是多少，有哪些问题和硬伤
+- 本轮工作类型：
+  - 更新版冷评估
+  - 已纳入最新远端合入的脚本、看板和 memo 进展
+- 本轮纳入的最新变化：
+  1. 项目规模明显扩大
+    - 当前 `tests/codex` 约 `153` 个脚本
+    - 当前 `frontend/src/blueprint` 约 `96` 个可视化组件
+  2. 研究重心从单纯语言机制解释，扩展到：
+    - `4D semantic skeleton + 3D vector correction`
+    - `shared central loop`
+    - `two-layer unified law`
+    - `real multistep memory`
+    - `continuous grounding`
+  3. 最新最强候选从原来的“共享基底 + 拓扑协议层 + 中观场”
+    - 进一步转向：
+      - `4D semantic skeleton + 3D vector correction`
+    - 且脑侧扩增稳定性结果显著改善
+- 更新后的概率判断：
+  1. `这个项目直接产出真正 AGI`
+    - 从上一轮的 `1% ~ 5%`
+    - 上调到 `2% ~ 8%`
+  2. `项目产出对 AGI 很重要的中间理论/关键机制`
+    - 从 `20% ~ 40%`
+    - 上调到 `30% ~ 50%`
+  3. `项目产出大量高价值局部规律、但仍不足以闭合 AGI`
+    - 仍然维持在 `60%+`
+- 为什么略微上调而不是大幅上调：
+  - 新进展确实增强了三点：
+    1. `理论主干更收敛`
+      - 最新候选骨架比之前更紧
+    2. `项目不再只停在语言内省`
+      - 已出现任务闭环、域修正、脑侧候选约束等方向
+    3. `工程化表达更完整`
+      - 有更多可视化、更多脚本、更多可复核路径
+  - 但这些变化仍然没有跨过 AGI 的硬门槛
+- 当前最新最强进展：
+  1. `4D + 3D` 路线收敛
+    - 当前 strongest candidate 已明显从更松散机制语言收紧为：
+      - `4D semantic skeleton + 3D vector correction`
+  2. `脑侧弱点暂未反证主骨架`
+    - 通过受控扩增，脑侧误差显著回落
+    - 说明先前脑侧弱点更像样本薄弱，而非主骨架直接错误
+  3. `解释框架更成体系`
+    - 共享基底
+    - 拓扑协议层
+    - 中观冗余场
+    - 4D + 3D 骨架
+    这些模块开始形成更完整的上层叙事
+- 但最关键的问题与硬伤依然存在，而且并没有被最新进展消除：
+  1. `开放世界接地仍未闭合`
+    - 即便有 continuous grounding 方向，仍未证明系统能在真实连续环境里自动形成稳定概念
+  2. `训练机制仍未闭合`
+    - 解释和拟合越来越强
+    - 但“这种结构如何稳定长成”仍未证明
+  3. `跨模态统一仍缺强证据`
+    - 目前仍以语言和代理指标为主
+    - 没有强力证明视觉/听觉/动作统一进入同一协议层
+  4. `长期代理闭环仍然缺失`
+    - 尚未看到开放环境里的长期规划、自主纠错、稳定记忆污染控制闭环
+  5. `评价指标仍偏内部`
+    - 最新很多结果依然是：
+      - gap
+      - correlation
+      - held-out error
+      - collapse ratio
+    - 这些对于理论压缩重要，但不能直接等价于 AGI 能力
+  6. `项目复杂度上升很快`
+    - 脚本和看板数量快速增加
+    - 这提升了探索能力
+    - 也提高了理论漂移、指标过拟合、叙事自洽但外部无效的风险
+- 当前最准确的总判断：
+  - 最新进展说明这个项目不是停滞的，反而是显著加速的
+  - 但它离“真正 AGI 即将实现”仍然很远
+  - 更合理的说法是：
+    - 这个项目现在已经进入“可能产出一套重要机制候选”的阶段
+    - 但离“证明这套机制足以闭合 AGI”还有明显距离
+- 如果要继续提升“最终导向 AGI”的概率，最关键的顺序仍然是：
+  1. `把最小因果规模测清`
+    - `top-8 / top-16 / layer-cluster`
+  2. `做跨模态统一验证`
+    - 文本 / 视觉 / 听觉 / 动作
+  3. `做训练与持续学习闭环`
+    - 证明该机制不只是能解释，而是真能生长和维持
+  4. `做开放世界代理任务`
+    - 把内部指标推进到真实长期任务指标
+
+## 2026-03-10 16:24 Git 排查记录
+
+- 背景：
+  - 上一次执行远端拉取时，先做了 `git stash push --include-untracked -m "codex_pre_pull_20260310_1540"`，随后用户中断了流程，导致 `stash pop` 没有执行。
+- 关键命令：
+  - `git status --short --branch`
+  - `git stash list --max-count=5`
+  - `git stash show --name-status --include-untracked 'stash@{0}'`
+  - `git rev-parse 'stash@{0}^1' 'stash@{0}^2' 'stash@{0}^3'`
+  - `git ls-tree -r --name-only 'stash@{0}^3' -- research/gpt5/docs`
+  - `git restore --source='stash@{0}^3' --worktree -- research/gpt5/docs/AGI_GPT5_MEMO2.md`
+- 结论：
+  - `research/gpt5/docs/AGI_GPT5_MEMO2.md` 并没有丢失，而是作为未跟踪文件被收进了 `stash@{0}` 的第三父树。
+  - 现在该文件已经单独恢复回工作区，当前状态是未跟踪文件。
+- 理论/数学研究进度：
+  - 本次没有新增机制实验或数学推导。
+  - 当前推进主要是维护研究轨迹的可追溯性，确保实验记录、理论判断和 git 状态能一一对应。
+  - 从研究方法上，这一步是在保护“证据链完整性”，避免把版本操作错误误判成理论或实验结论的变化。
+
+## 2026-03-10 16:26 Git 恢复续记
+
+- 关键命令：
+  - `git restore --source='stash@{0}^3' --worktree -- tests/codex/test_gpt2_qwen3_basis_protocol_coupling.py`
+  - `git restore --source='stash@{0}^3' --worktree -- tests/codex_temp/gpt2_qwen3_basis_protocol_coupling_20260310.json`
+  - `git status --short --branch`
+  - `git stash show --name-status --include-untracked 'stash@{0}'`
+- 结果：
+  - 已恢复 `tests/codex/test_gpt2_qwen3_basis_protocol_coupling.py`
+  - 已恢复 `tests/codex_temp/gpt2_qwen3_basis_protocol_coupling_20260310.json`
+  - 当前工作区保留三个未跟踪文件：`AGI_GPT5_MEMO2.md`、测试脚本、临时 JSON
+  - `stash@{0}` 中尚未处理的核心内容只剩 `research/gpt5/docs/AGI_GPT5_MEMO.md` 的本地改动
+- 理论/数学研究进度：
+  - 本次仍无新增数学推导。
+  - 但实验资产已经恢复，后续可以继续对 `gpt2/qwen3 basis protocol coupling` 结果做复盘与结构化分析。
+
+## 2026-03-10 16:31 Git 合并 `AGI_GPT5_MEMO.md` 续记
+
+- 关键命令：
+  - `git diff --unified=20 HEAD 'stash@{0}' -- research/gpt5/docs/AGI_GPT5_MEMO.md`
+  - `git show 'stash@{0}:research/gpt5/docs/AGI_GPT5_MEMO.md'`
+  - `rg -n "^## " research/gpt5/docs/AGI_GPT5_MEMO.md`
+- 合并策略：
+  - 不直接 `stash pop`。
+  - 先比对当前文件与 `stash@{0}` 的标题级区块。
+  - 识别出当前文件缺失的 5 个区块后，只把这些缺失区块追加回当前文件，避免覆盖远端已拉取的新内容。
+- 已恢复到 `AGI_GPT5_MEMO.md` 的区块：
+  - `术语展开：拓扑协议层 与 中观冗余场`
+  - `术语深化：TT 协议层 与 GPT-2 / Qwen3 中的中观冗余场差异`
+  - `理论评估：基底 + 个体偏移 与 拓扑协议层 + 中观冗余场`
+  - `理论推进：把 基底 + 偏移 + 协议 + 冗余场 压成统一脉冲相位编码模型`
+  - `实验推进：基底/偏移 与 协议/冗余场 的第一版耦合测试`
+- 结果：
+  - 当前 `research/gpt5/docs/AGI_GPT5_MEMO.md` 已同时包含远端更新和本地 stash 中缺失的 5 段内容。
+  - 这次采用的是“按标题补齐缺失区块”的安全合并，不是整文件覆盖。
+- 理论/数学研究进度：
+  - 已恢复一组完整的理论链条：
+    - 术语澄清
+    - 统一假设评估
+    - 统一脉冲相位母式
+    - 第一版耦合实验
+  - 其中最重要的新增研究状态仍是：
+    - `偏移大小 -> 拓扑重排强度` 已出现第一版正证据
+    - `共享基底强度 -> 协议稳定性` 仍证据不足，需要扩样和改指标
+
+## 2026-03-10 17:00 再次拉取远端并与本地合并
+
+- 关键命令：
+  - `git fetch origin main`
+  - `git rev-list --left-right --count HEAD...origin/main`
+  - `git show --stat --name-only --oneline origin/main --`
+  - `git stash push --include-untracked -m "codex_pre_pull_20260310_1638"`
+  - `git restore --source=HEAD --worktree --staged research/gpt5/docs/AGI_GPT5_MEMO.md`
+  - `git merge --ff-only origin/main`
+  - `git restore --source='stash@{0}^3' --worktree -- research/gpt5/docs/AGI_GPT5_MEMO2.md`
+  - `git restore --source='stash@{0}^3' --worktree -- tests/codex/test_gpt2_qwen3_basis_protocol_coupling.py`
+  - `git restore --source='stash@{0}^3' --worktree -- tests/codex_temp/gpt2_qwen3_basis_protocol_coupling_20260310.json`
+  - `rg -n "^## 2026-03-10 术语展开：|^## 2026-03-10 术语深化：|^## 2026-03-10 理论评估：|^## 2026-03-10 理论推进：|^## 2026-03-10 实验推进：" research/gpt5/docs/AGI_GPT5_MEMO.md`
+- 远端状态：
+  - 本次远端从 `305eaa1` 更新到 `7b01333`
+  - 远端提交标题：`SPDM`
+  - 远端再次修改了 `research/gpt5/docs/AGI_GPT5_MEMO.md`
+- 合并策略：
+  - 先把当前本地改动和 3 个未跟踪文件收入新的 `stash@{0}`
+  - 快进合并远端 `origin/main`
+  - 再从 `stash@{0}^3` 恢复未跟踪文件
+  - 最后继续对 `AGI_GPT5_MEMO.md` 使用“按标题补齐缺失区块”的内容级安全合并
+- 结果：
+  - 远端代码已成功拉到本地并完成合并
+  - 本地文件 `AGI_GPT5_MEMO2.md`、测试脚本、临时 JSON 已恢复
+  - `AGI_GPT5_MEMO.md` 已同时保留远端 `SPDM` 新内容和本地 5 个理论/实验区块
+  - 工作区当前保留 4 个未提交项，属于本地恢复后的内容
+- 理论/数学研究进度：
+  - 本次没有新增数学推导，但成功保住了同一条研究链：
+    - `拓扑协议层`
+    - `中观冗余场`
+    - `统一脉冲相位母式`
+    - `基底/偏移` 与 `协议/冗余场` 的第一版耦合实验
+  - 当前最重要的理论状态没有变化：
+    - `偏移大小 -> 拓扑重排强度` 仍有第一版正证据
+    - `共享基底强度 -> 协议稳定性` 仍需扩样与更强指标验证
+
+## 2026-03-10 17:10 SPDM 结果审查与 AGI 距离判断
+
+- 审查对象：
+  - `tests/gemini/test_e2e_spdm_prototype.py`
+  - `tests/gemini_temp/e2e_spdm_20260310.json`
+  - `tests/gemini/test_lif_gate_ablation.py`
+  - `tests/gemini_temp/lif_gate_ablation_20260310.json`
+- 复核命令：
+  - `rg -n "SPDM|spdm|LIF|pulse|phase" research/gpt5/docs/AGI_GPT5_MEMO.md tests/gemini tests/gemini_temp`
+  - `Get-Content tests/gemini/test_e2e_spdm_prototype.py -TotalCount 260`
+  - `Get-Content tests/gemini/test_e2e_spdm_prototype.py -Tail 260`
+  - `Get-Content tests/gemini/test_lif_gate_ablation.py -TotalCount 260`
+  - `Get-Content tests/gemini/test_lif_gate_ablation.py | Select-Object -Skip 360 -First 200`
+  - `Get-Content tests/gemini_temp/e2e_spdm_20260310.json -TotalCount 260`
+  - `Get-Content tests/gemini_temp/lif_gate_ablation_20260310.json -TotalCount 260`
+  - `python -m py_compile tests/gemini/test_e2e_spdm_prototype.py`
+  - `python -m py_compile tests/gemini/test_lif_gate_ablation.py`
+  - `python tests/gemini/test_e2e_spdm_prototype.py --epochs 2 --json-out tests/gemini_temp/e2e_spdm_smoke_20260310.json`
+  - `python tests/gemini/test_lif_gate_ablation.py --epochs 2 --json-out tests/gemini_temp/lif_gate_ablation_smoke_20260310.json`
+- 关键结果：
+  - `e2e_spdm_20260310.json` 中：
+    - `baseline best_ppl = 2.4398`
+    - `e2e_spdm best_ppl = 2.4018`
+    - `hierarchy_gradient = 1.0`
+    - 脚本把 `H_ppl_gap_closed` 与 `H_spdm_preserved` 都判成 `PASS`
+  - `lif_gate_ablation_20260310.json` 中：
+    - `sigmoid best_val_ppl = 51.8623`
+    - `lif best_val_ppl = 51.9743`
+    - `baseline best_val_ppl = 5.6731`
+    - `LIF` 确实显著更稀疏，但没有带来任务级优势
+- 最关键的有效性判断：
+  1. `SPDM` 结果在“软约束正则化”这个狭义层面是有效的：
+    - 它说明并行辅助约束不会像早先硬骨架那样把 PPL 直接打崩。
+  2. 但它在“SPDM 已成为主干推理机制”这个强结论上无效：
+    - `dict_constraint` 和 `lif_constraint` 只作为 `aux loss` 存在，并不参与主干前向推理。
+    - 因此当前更准确的表述应是：
+      - `Transformer + SPDM regularization`
     - 而不是：
-    - `已经证明四者就是同一个数学对象`
+      - `SPDM-driven LM`
+- 暴露出的主要问题 / 硬伤：
+  1. `机制没有进入推理主路径`
+    - 当前前向仍是标准 attention + MLP，SPDM 只是训练时约束。
+  2. `保留性指标是自指的`
+    - `H_spdm_preserved` 读取的是 constraint 分支自己的稀疏系数，而不是主干中可因果调用的机制量。
+  3. `数据分布过于简单`
+    - 训练语料是小词表模板合成文本，能证明局部机制可训练，不能证明真实语言或开放世界有效。
+  4. `缺少稳健性统计`
+    - 当前基本是单次运行结论，没有 seed 分布、置信区间、显著性分析。
+  5. `LIF 只带来稀疏，不带来强能力收益`
+    - 在 full run 里，LIF 相对 sigmoid 几乎不提升 PPL，且整套 skeleton 仍远差于 baseline。
+  6. `脚本可复现性有缺口`
+    - 2 epoch smoke 复核时，`test_e2e_spdm_prototype.py` 在输出 `✅/❌` 时触发 GBK 编码异常，导致结果文件没有写出。
+- 对 AGI 距离的当前判断：
+  - 这一步更像：
+    - “把候选统一机制从硬瓶颈改造成软正则”
+  - 不是：
+    - “已经找到可闭环的 AGI 主干”
+  - 如果硬给阶段估计：
+    - `SPDM` 作为机制候选，成熟度约可给 `10% ~ 15%`
+    - 作为开放世界 AGI 闭环贡献，当前更接近 `<5%`
+  - 仍然缺的硬块至少包括：
+    - 真实推理路径中的机制落地
+    - 真实语料与真实任务泛化
+    - 因果级机制验证
+    - 长时程持续学习与开放环境闭环
+- 理论/数学研究进度：
+  - 本轮没有新增数学母式。
+  - 但一个关键理论判断被收紧了：
+    - `SPDM` 现在更像统一编码动力学的“软约束投影器”
+    - 还不是该动力学本身已经在主干计算图中闭环实现
 
+## 2026-03-10 17:16 SPDM 修正版实验方案
 
-
-
-
-## 2026-03-10 理论推进：把 `基底 + 偏移 + 协议 + 冗余场` 压成统一脉冲相位编码模型
 - 用户请求：
-  - 继续
-- 本轮工作类型：
-  - 理论推进
-  - 未新增实验脚本
+  - 给出一个 `SPDM` 修正版实验方案
 - 本轮命令：
-  - `Add-Content research/gpt5/docs/AGI_GPT5_MEMO.md`
-- 目标：
-  - 把以下四个对象压到同一套动力学里：
-    - `共享基底 + 个体偏移`
-    - `拓扑协议层 + 中观冗余场`
-- 当前最合理的统一变量集合：
-  - `a(t)`：低维基底坐标
-  - `delta(t)`：个体偏移坐标
-  - `phi(t)`：群体相位状态
-  - `g(t)`：门控/调制状态
-  - `A_eff(t)`：有效拓扑
-  - `M_tau(t)`：关系族 `tau` 的中观冗余场强度
-- 用脉冲相位系统描述：
-  - 神经元 `i` 的瞬时脉冲：
-    - `s_i(t) = H(v_i(t) - theta_i(t))`
-  - 膜电位更新：
-    - `v_i(t+1) = lambda v_i(t) + sum_j W_ij s_j(t-d_ij) + I_i(t) - theta_i(t)`
-  - 相位变量更新：
-    - `phi_i(t+1) = phi_i(t) + omega_i + sum_j K_ij sin(phi_j(t)-phi_i(t)) + eta_i(t)`
-- 统一编码的关键假设：
-  - 概念不是由某个单神经元表示
-  - 而是由“基底坐标 + 偏移坐标 + 相位耦合结构”共同决定
-- 统一表示式：
-  - `x_c(t) = U a_c(t) + V delta_c(t)`
-  - 其中：
-    - `U`：共享基底字典
-    - `V`：偏移字典
-    - `a_c(t)`：概念在共享基底上的系数
-    - `delta_c(t)`：概念的个体修正系数
-- 为什么这一步能统一 `基底 + 偏移`：
-  - `U a_c(t)` 给出稳定共性骨架
-  - `V delta_c(t)` 给出特异差异
-  - 两者共同组成概念内容
-- 为什么这一步还能接上 `拓扑协议层`：
-  - 在线运行时，真正生效的连通不是固定 `W`
-  - 而是相位和门控调制后的有效连通：
-    - `A_eff(t) = sigma(W ⊙ C(phi(t)) ⊙ G(g(t)))`
-  - 其中：
-    - `C(phi)` 描述相位相干度，例如：
-      - `C_ij(phi) = (1 + cos(phi_i - phi_j)) / 2`
-    - `G(g)` 描述门控开关
-- 这说明：
-  - `拓扑协议层`
-  - 本质上就是相位同步 + 门控调制后形成的条件路由图
-- 为什么还能接上 `中观冗余场`：
-  - 对关系族 `tau`，定义若干神经群 `G_tau^m`
-  - 每个群产生一块局部有效拓扑 `A_tau^m(t)`
-  - 则：
-    - `M_tau(t) = sum_m beta_m A_tau^m(t)`
-  - 这就是中观冗余场
-- 于是四个对象可统一成一条链：
-  1. `U a_c(t)`
-    - 形成共享骨架
-  2. `V delta_c(t)`
-    - 形成个体修正
-  3. `A_eff(t)`
-    - 决定当前关系如何被路由和绑定
-  4. `M_tau(t)`
-    - 负责把这套关系结构稳定承载在中尺度神经群上
-- 更完整的状态更新可写成：
-  - `a(t+1) = F_a(a(t), delta(t), input, M(t))`
-  - `delta(t+1) = F_d(a(t), delta(t), novelty, error)`
-  - `phi(t+1) = F_phi(phi(t), a(t), g(t), input)`
-  - `g(t+1) = F_g(context, reward, uncertainty)`
-  - `A_eff(t) = sigma(W ⊙ C(phi(t)) ⊙ G(g(t)))`
-  - `M_tau(t) = Pool_tau(A_eff(t))`
-- 这里最关键的解释是：
-  - `a(t)` 和 `delta(t)`
-    - 给出“是什么”
-  - `phi(t)` 和 `A_eff(t)`
-    - 给出“如何连接和路由”
-  - `M_tau(t)`
-    - 给出“由哪片神经群稳定承载”
-- 因此，若这个统一模型成立：
-  - `共享基底 + 个体偏移`
-    - 是内容编码面
-  - `拓扑协议层 + 中观冗余场`
-    - 是运行组织面
-  - 两者不是分离原理，而是同一动力系统的内容面与组织面
-- 这个统一模型在 DNN 中应出现的等价物：
-  1. `U a + V delta`
-    - 对应隐藏态里的共享子空间 + 偏移残差
-  2. `A_eff(t)`
-    - 对应 attention 邻接矩阵
-  3. `M_tau(t)`
-    - 对应一组跨层跨头的关系热点区，而不是单头
-  4. `phi / g`
-    - 在 DNN 中不直接显式存在
-    - 但会投影成：
-      - attention pattern 的稳定相位样式
-      - 层间门控强度变化
-      - 上下文切换时的路由重排
-- 这给出一个重要预测：
-  - 如果 `基底 + 偏移` 与 `协议 + 冗余场` 真来自同一原理
-  - 那么在 DNN 里应当存在：
-    - `共享基底强度` 与 `关系协议强度` 的可测耦合
-    - `偏移大小` 与 `局部路由重排强度` 的可测耦合
-- 更具体的两个可检验预测：
-  1. 当概念偏移 `||delta_c||` 变大时
-    - 其进入关系协议层所需的拓扑重排量也应系统增大
-  2. 当共享基底投影 `||P_U x_c||` 更稳定时
-    - 关系协议的跨 prompt 稳定性也应更高
-- 当前最稳的结论：
-  - 这套统一脉冲相位模型已经能把四个对象放进同一框架
-  - 但它仍然是“候选统一母式”
-  - 还不是已证完的最终定理
-- 下一步最值得做的不是继续空谈：
-  - 而是直接在现有 DNN 上测上述两个耦合预测
-
-
-
-
-
-## 2026-03-10 实验推进：`基底/偏移` 与 `协议/冗余场` 的第一版耦合测试
-- 用户请求：
-  - 继续
-- 本轮工作类型：
-  - 新增轻量聚合实验
-  - 复用现有 GPT-2 / Qwen3 工件，不重新跑模型
-- 新增脚本：
-  - `tests/codex/test_gpt2_qwen3_basis_protocol_coupling.py`
-- 结果文件：
-  - `tests/codex_temp/gpt2_qwen3_basis_protocol_coupling_20260310.json`
-- 本轮命令：
-  - `rg -n "offset|delta|topology|protocol|stability|shared basis|basis|relation protocol|repr_topology|relation_coupling|concept_path_signature" tests/codex tests/codex_temp -g "*.py" -g "*.json"`
-  - `Get-ChildItem tests/codex | Select-Object Name | Sort-Object Name | Select-Object -Last 40`
-  - `Get-ChildItem tests/codex_temp -Filter "gpt2_qwen3*.json" | Select-Object Name | Sort-Object Name`
-  - `Get-Content tests/codex_temp/gpt2_qwen3_concept_path_signature_20260308.json -TotalCount 220`
-  - `Get-Content tests/codex_temp/gpt2_qwen3_relation_gating_layer_separation_20260308.json -TotalCount 220`
-  - `Get-Content tests/codex_temp/gpt2_qwen3_relation_path_families_20260308.json -TotalCount 220`
-  - `Get-Content tests/codex_temp/gpt2_qwen3_concept_protocol_field_mapping_20260308.json -TotalCount 260`
-  - `Get-Content tests/codex_temp/gpt2_qwen3_relation_protocol_mesofield_scale_20260308.json -TotalCount 260`
-  - `python -m py_compile tests/codex/test_gpt2_qwen3_basis_protocol_coupling.py`
-  - `python tests/codex/test_gpt2_qwen3_basis_protocol_coupling.py`
-- 设计的两组耦合指标：
-  1. `偏移大小 -> 拓扑重排强度`
-    - 使用每层 `D_repr_by_layer`
-    - 对比每层 `G_topo_by_layer + R_topo_by_layer`
-  2. `共享基底强度 -> 协议稳定性`
-    - 使用 `B_repr_by_layer` 的 top-k 强度
-    - 对比概念进入其真实 field 的协议层稳定度（按 layer usage 熵反推）
-- 第一组结果：`偏移大小 -> 拓扑重排强度`
-  - `GPT-2`：
-    - `offset_vs_protocol_reorder_corr = 0.1126`
-    - `offset_vs_relation_topo_corr = 0.2019`
-  - `Qwen3-4B`：
-    - `offset_vs_protocol_reorder_corr = 0.2077`
-    - `offset_vs_relation_topo_corr = 0.4793`
-- 这说明：
-  - 第一版证据支持“偏移越大，进入协议层时所需的拓扑重排通常越强”
-  - 且这种趋势在 `Qwen3-4B` 上更明显
-- 第二组结果：`共享基底强度 -> 协议稳定性`
-  - `GPT-2`：
-    - `basis_strength_vs_protocol_stability_corr = 0.8691`
-    - 但样本仅 `3`
-  - `Qwen3-4B`：
-    - `basis_strength_vs_protocol_stability_corr = 0.0600`
-    - 同样样本仅 `3`
-  - pooled：
-    - `basis_strength_vs_protocol_stability_corr_pooled = -0.5531`
-    - 样本仅 `6`
-- 解释：
-  - 第二组目前不能下结论
-  - 不是理论被推翻，而是：
-    - 现有概念协议工件只有 `apple / cat / truth` 三个锚点
-    - 样本过少
-    - 协议稳定性的当前代理指标也还过于粗糙
-- 当前最稳结论：
-  1. `偏移 -> 拓扑重排` 这条耦合已有第一版正证据
-  2. `共享基底 -> 协议稳定性` 这条目前证据不足，不能判定
-  3. 因此当前最合理的判断是：
-    - 统一脉冲编码假说得到一半支持
-    - 但还没有形成完整双耦合闭环
-- 下一步最值得做：
-  1. 扩大 concept-protocol 映射样本，不再只用 `apple / cat / truth`
-  2. 把协议稳定性从“layer usage 熵”换成更强的跨 prompt / 跨关系族稳定指标
-  3. 若这两步完成，再重新测第二组耦合
+  - `Get-Content research/gpt5/docs/AGI_GPT5_MEMO2.md -Tail 40`
+  - `apply_patch` 追加方案记录
+- 修正版核心方向：
+  - 不再做 `Transformer + SPDM aux loss`
+  - 改做 `SPDM enters forward path`
+  - 也就是让 `dictionary routing / pulse gate / phase state` 直接参与主干计算，而不是只在训练期做约束
+- 方案主轴：
+  1. `前向接入`
+    - 用 `x -> basis + offset -> protocol-routed attention -> pulse-gated MLP` 替代当前纯标准块
+  2. `真实验证`
+    - 不再只看模板语料 PPL
+    - 同时看自然语料、跨分布泛化和小型任务闭环
+  3. `因果验证`
+    - 对前向里的 `basis / offset / pulse gate / phase state` 做定向消融
+    - 检查任务指标是否同步下跌
+  4. `稳健性`
+    - 所有关键结论至少做多 seed 统计
+- 理论/数学研究进度：
+  - 当前方案把 `SPDM` 的定位从“软正则解释器”推进到“候选主干动力学”
+  - 这一步的关键收敛是：
+    - 是否能让 `B, Δ, T, G`
+    - 同时成为前向变量、训练变量、因果变量和任务变量
