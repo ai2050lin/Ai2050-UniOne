@@ -91,6 +91,10 @@ import Qwen3DeepSeekProtocolFieldBoundaryAtlasDashboard from './Qwen3DeepSeekPro
 import Qwen3DeepSeekMechanismBridgeDashboard from './Qwen3DeepSeekMechanismBridgeDashboard';
 import Qwen3DeepSeekRelationBoundaryAtlasDashboard from './Qwen3DeepSeekRelationBoundaryAtlasDashboard';
 import Qwen3DeepSeekRelationTopologyBridgeDashboard from './Qwen3DeepSeekRelationTopologyBridgeDashboard';
+import Qwen3DeepSeekSharedSupportHeadBridgeDashboard from './Qwen3DeepSeekSharedSupportHeadBridgeDashboard';
+import Qwen3DeepSeekSharedLayerBandCausalOrientationDashboard from './Qwen3DeepSeekSharedLayerBandCausalOrientationDashboard';
+import Qwen3DeepSeekSharedLayerBandTargetedAblationDashboard from './Qwen3DeepSeekSharedLayerBandTargetedAblationDashboard';
+import LocalPulseRegionHeterogeneityDashboard from './LocalPulseRegionHeterogeneityDashboard';
 import DnnBrainPuzzleBridgeDashboard from './DnnBrainPuzzleBridgeDashboard';
 import DProblemAtlasDashboard from './DProblemAtlasDashboard';
 import AgiConceptS1ToS7Summary from './AgiConceptS1ToS7Summary';
@@ -1409,6 +1413,46 @@ export const GeminiTab = () => {
                         把关系端点 family 的拓扑支持、头群集中度和边界分型联动起来，直接回答为什么某些关系能收缩成 `compact`，而另一些关系会停在 `layer-cluster` 或 `distributed`。
                     </div>
                     <Qwen3DeepSeekRelationTopologyBridgeDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#0ea5e9', marginBottom: '12px', borderBottom: '1px solid rgba(14,165,233,0.35)', paddingBottom: '8px' }}>
+                        五点三十九补、Qwen3 / DeepSeek7B 共享支撑桥
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把概念调用头和关系中观场头接到同一张共享支撑图上，直接比较“精确同头复用”与“层级软重合”，判断真实模型里共享基底更像头级机制还是中观层级机制。
+                    </div>
+                    <Qwen3DeepSeekSharedSupportHeadBridgeDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981', marginBottom: '12px', borderBottom: '1px solid rgba(16,185,129,0.35)', paddingBottom: '8px' }}>
+                        五点三十九续、Qwen3 / DeepSeek7B 共享层带因果取向
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把共享层带和概念边界、关系中观因果尺度、结构化任务增益放到同一张图上，直接看真实模型里的共享支撑是偏概念边界，还是偏关系协议与任务收益。
+                    </div>
+                    <Qwen3DeepSeekSharedLayerBandCausalOrientationDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#ef4444', marginBottom: '12px', borderBottom: '1px solid rgba(239,68,68,0.35)', paddingBottom: '8px' }}>
+                        五点三十九终、Qwen3 / DeepSeek7B 共享层带定向消融
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        直接对高共享层带做真实消融，把“预测取向”和“实际伤害方向”放在一张图上，检查共享层带相关性是否已经升级成因果证据。
+                    </div>
+                    <Qwen3DeepSeekSharedLayerBandTargetedAblationDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981', marginBottom: '12px', borderBottom: '1px solid rgba(16,185,129,0.35)', paddingBottom: '8px' }}>
+                        五点三十九后、局部脉冲脑区异质性基准
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        回到更接近脑侧的核心约束：不假定任何全局控制器，只允许神经元读取上一步的局部脉冲和局部状态，再比较同质脑区、异质脑区和局部回放三组系统，看系统级整合是否仍能涌现。
+                    </div>
+                    <LocalPulseRegionHeterogeneityDashboard />
                 </div>
 
                 <div style={{ marginBottom: '28px' }}>

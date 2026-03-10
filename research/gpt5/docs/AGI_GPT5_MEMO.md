@@ -12051,3 +12051,279 @@
   - 不再只看恢复准确率，还要看中观冗余场规模变化是否同步。
 - 任务块 3：把共享原子因果桥接回最小控制桥
   - 直接测试 `shared_core_t` 是否能预测共享原子脆弱区与 rollback trigger 区。
+
+## 2026-03-10 16:18 真实模型共享支撑桥：从精确同头复用收敛到层级共享支撑
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_qwen3_deepseek7b_shared_support_head_bridge.py`
+- `python tests/codex/test_qwen3_deepseek7b_shared_support_head_bridge.py`
+- `npm --prefix frontend run build`
+- `Copy-Item tests/codex_temp/qwen3_deepseek7b_shared_support_head_bridge_20260310.json frontend/src/blueprint/data/qwen3_deepseek7b_shared_support_head_bridge_sample.json -Force`
+
+### 新增文件与产物
+- `tests/codex/test_qwen3_deepseek7b_shared_support_head_bridge.py`
+- `tests/codex_temp/qwen3_deepseek7b_shared_support_head_bridge_20260310.json`
+- `frontend/src/blueprint/Qwen3DeepSeekSharedSupportHeadBridgeDashboard.jsx`
+- `frontend/src/blueprint/data/qwen3_deepseek7b_shared_support_head_bridge_sample.json`
+
+### 本轮目标
+- 把此前的 toy 共享原子因果桥，往真实模型证据上推进一步。
+- 不再只问：
+  - “概念头和关系头是否精确复用同一颗头？”
+- 而是同时问：
+  - “是否存在非平凡共享质量？”
+  - “是否存在层级软重合？”
+  - “这种层级共享是否跟机制桥接分一起抬升？”
+
+### 关键结果
+- 精确头重合：
+  - `qwen_exact_head_overlap = 0.0000`
+  - `deepseek_exact_head_overlap = 0.0000`
+- 软头重合：
+  - `qwen_soft_head_overlap = 0.0210`
+  - `deepseek_soft_head_overlap = 0.0309`
+- 层级重合：
+  - `qwen_layer_overlap = 0.3333`
+  - `deepseek_layer_overlap = 0.5000`
+- 层级软重合：
+  - `qwen_soft_layer_overlap = 0.3714`
+  - `deepseek_soft_layer_overlap = 0.5256`
+- 共享质量：
+  - `qwen_shared_mass = 0.0332`
+  - `deepseek_shared_mass = 0.0514`
+- 机制桥接增益：
+  - `deepseek_minus_qwen_mechanism_bridge = +0.1510`
+- 假设：
+  - `H1_real_models_have_nontrivial_shared_mass = true`
+  - `H2_deepseek_has_stronger_layer_overlap_than_qwen = true`
+  - `H3_compact_relations_carry_more_shared_support = true`
+  - `H4_layer_shared_support_tracks_mechanism_bridge = true`
+
+### 当前理论推进
+- 真实模型侧目前不支持“严格同头复用”这个强版本说法。
+- 但它支持一个更重要、也更贴近脑侧的版本：
+  - 概念调用与关系中观场并不一定复用同一颗头
+  - 却会在同一层带、同一中观区域上出现共享支撑
+- 因而当前更稳的统一表述是：
+  - `共享基底 / 关系协议 / 中观冗余场`
+- 在真实模型里更像“层级共享支撑 + 分布式局部读出”，而不是“单头级唯一模块”。
+
+### 对主线的意义
+- 这一步把主线从：
+  - `shared atom causal coupling`（toy）
+- 推进到：
+  - `shared support mesoscale bridge`（real model）
+- 也就是说，统一结构不再只在小模型里呈现为共享原子，到了真实模型里开始表现成层带级共享支撑。
+- 这与“拓扑协议层 + 中观冗余场”很一致，说明项目主线正在从微观单元统一，过渡到中观层级统一。
+
+### 下一阶段的大任务块
+- 任务块 1：真实模型层带因果消融
+  - 不再只看后验共享分数，而是直接对高共享层带做真实消融，观察概念、关系、恢复是否联动下跌。
+- 任务块 2：共享层带接回最小控制桥
+  - 测试 `shared_core / protocol_gate` 是否能预测这些高共享层带的脆弱区和 rollback trigger 区。
+- 任务块 3：脑侧约束前置化
+  - 把当前“层级软重合 / 共享质量 / 紧致关系共享增益”从后验评价推进成训练约束，逼统一结构继续缩而不塌。
+
+## 2026-03-10 16:26 真实模型共享层带因果取向：Qwen3 偏概念边界，DeepSeek 偏关系协议与任务增益
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_qwen3_deepseek7b_shared_layer_band_causal_orientation.py`
+- `python tests/codex/test_qwen3_deepseek7b_shared_layer_band_causal_orientation.py`
+- `Copy-Item tests/codex_temp/qwen3_deepseek7b_shared_layer_band_causal_orientation_20260310.json frontend/src/blueprint/data/qwen3_deepseek7b_shared_layer_band_causal_orientation_sample.json -Force`
+- `npm --prefix frontend run build`
+
+### 新增文件与产物
+- `tests/codex/test_qwen3_deepseek7b_shared_layer_band_causal_orientation.py`
+- `tests/codex_temp/qwen3_deepseek7b_shared_layer_band_causal_orientation_20260310.json`
+- `frontend/src/blueprint/Qwen3DeepSeekSharedLayerBandCausalOrientationDashboard.jsx`
+- `frontend/src/blueprint/data/qwen3_deepseek7b_shared_layer_band_causal_orientation_sample.json`
+
+### 本轮目标
+- 把“共享支撑层带”继续从后验结构，推进到真实模型因果取向读数。
+- 直接回答三个问题：
+  - Qwen3 的共享层带更偏概念边界还是关系协议？
+  - DeepSeek 的共享层带更偏概念边界还是关系协议？
+  - 这种取向差异，是否已经接到结构化任务收益？
+
+### 关键结果
+- Qwen3：
+  - `mean_concept_shared_layer_hit = 0.1600`
+  - `mean_relation_shared_layer_hit = 0.0992`
+  - `orientation = -0.0608` -> `concept_led`
+  - `concept_hit_margin_corr = 0.4138`
+- DeepSeek-7B：
+  - `mean_concept_shared_layer_hit = 0.0379`
+  - `mean_relation_shared_layer_hit = 0.2694`
+  - `orientation = 0.2314` -> `relation_led`
+  - `relation_hit_behavior_gain_corr = 0.8190`
+- 跨模型增益：
+  - `deepseek_minus_qwen_orientation = +0.2922`
+  - `deepseek_minus_qwen_mechanism_bridge = +0.1510`
+- 假设：
+  - `H1_qwen_shared_layers_are_concept_led = true`
+  - `H2_deepseek_shared_layers_are_relation_led = true`
+  - `H3_qwen_shared_layers_track_concept_causal_margin = true`
+  - `H4_deepseek_relation_shared_layers_track_task_gain_and_bridge = true`
+
+### 当前理论推进
+- 这一步表明：
+  - “共享层带”并不是一个无差别公共底座。
+- 它在不同真实模型里已经出现明确取向：
+  - Qwen3 更像“概念边界牵引型共享层带”
+  - DeepSeek 更像“关系协议 / 结构化收益牵引型共享层带”
+- 因而当前统一结构应从：
+  - `共享基底 + 协议层`
+- 进一步改写成：
+  - `共享支撑底座 + 取向化协议门控`
+- 也就是共享部分仍共享，但它会在不同模型里被推向不同功能侧。
+
+### 对主线的意义
+- 这一步把真实模型主线继续向“更小统一结构”推进了一步：
+  - 微观侧：共享原子因果联动
+  - 中观侧：共享层带支撑
+  - 模型差异侧：共享层带取向化
+- 这说明以后不该只问“有没有共享结构”，而该问：
+  - “共享结构被哪种协议门控推向了哪个功能侧？”
+- 这对把 `共享基底 / 个体偏移 / 关系协议 / 门控 / 拓扑 / 整合` 再压成更小一套统一结构很关键。
+
+### 下一阶段的大任务块
+- 任务块 1：真实模型高共享层带因果消融
+  - 直接对 Qwen3 / DeepSeek 的高共享层带做 targeted ablation，验证取向读数是否转成真实因果差异。
+- 任务块 2：共享层带接回最小控制桥
+  - 测试 `shared_core / protocol_gate` 是否能预测哪些共享层带会先伤概念边界，哪些会先伤关系协议与行为增益。
+- 任务块 3：取向化协议门控训练约束
+  - 把“概念偏置 / 关系偏置 / 共享底座稳定度”从后验评价推进成训练项，逼统一结构继续缩而不塌。
+
+## 2026-03-10 16:34 真实共享层带定向消融：相关性取向尚未自动升级成因果取向
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_qwen3_deepseek7b_shared_layer_band_targeted_ablation.py`
+- `python tests/codex/test_qwen3_deepseek7b_shared_layer_band_targeted_ablation.py`
+- `Copy-Item tests/codex_temp/qwen3_deepseek7b_shared_layer_band_targeted_ablation_20260310.json frontend/src/blueprint/data/qwen3_deepseek7b_shared_layer_band_targeted_ablation_sample.json -Force`
+- `npm --prefix frontend run build`
+
+### 新增文件与产物
+- `tests/codex/test_qwen3_deepseek7b_shared_layer_band_targeted_ablation.py`
+- `tests/codex_temp/qwen3_deepseek7b_shared_layer_band_targeted_ablation_20260310.json`
+- `frontend/src/blueprint/Qwen3DeepSeekSharedLayerBandTargetedAblationDashboard.jsx`
+- `frontend/src/blueprint/data/qwen3_deepseek7b_shared_layer_band_targeted_ablation_sample.json`
+
+### 本轮目标
+- 把“共享层带取向”从后验相关读数推进到真实干预验证。
+- 直接测试：
+  - 消融高共享层带后，Qwen3 是否先伤概念边界？
+  - 消融高共享层带后，DeepSeek 是否先伤关系协议？
+
+### 关键结果
+- Qwen3：
+  - `mean_concept_causal_margin = -0.1625`
+  - `mean_relation_causal_margin = -0.1323`
+  - `actual_targeted_orientation = 0.0302` -> `balanced`
+  - 预测是 `concept_led`，实际未稳定重现
+- DeepSeek-7B：
+  - `mean_concept_causal_margin = 0.0670`
+  - `mean_relation_causal_margin = -0.3228`
+  - `actual_targeted_orientation = -0.3899` -> `concept_led`
+  - 预测是 `relation_led`，实际方向相反
+- 假设：
+  - `H1_qwen_targeted_ablation_hits_concepts_more = false`
+  - `H2_deepseek_targeted_ablation_hits_relations_more = false`
+  - `H3_targeted_ablation_beats_control_on_both_models = false`
+  - `H4_actual_orientation_matches_prediction = false`
+
+### 当前理论推进
+- 这一步非常关键，因为它给出了负结果：
+  - “共享层带命中率 / 取向”这种相关性结构，当前还不能直接当成因果脆弱区代理。
+- 也就是说：
+  - 共享支撑层带确实存在
+  - 取向化读数也确实存在
+  - 但真实干预后，伤害方向并不按预测自动展开
+- 因而当前更稳的理论更新是：
+  - `共享结构` 与 `因果脆弱结构` 尚未完全重合
+  - 其间还隔着一个没有显式建模的 `门控选择 / 上下文条件 / 任务相位` 层
+
+### 对破解脉冲神经网络编码结构的意义
+- 这是一次非常有价值的收缩：
+  - 它阻止我们把“统计共享”误判成“因果核心”
+- 对脑侧逆向工程而言，这恰好逼近一个更真实的结论：
+  - 大脑里的共享编码底座很可能只是可用资源池
+  - 真正决定当前功能输出与脆弱区的，是相位门控、上下文路由和任务状态
+- 所以项目主线应从：
+  - `共享底座 -> 直接因果核心`
+- 改成：
+  - `共享底座 + 状态/相位门控 -> 当前因果核心`
+
+### 下一阶段的大任务块
+- 任务块 1：门控条件化因果消融
+  - 不再做静态共享层带消融，而要按 concept-phase / relation-phase / task-phase 分条件消融。
+- 任务块 2：共享层带接回最小控制桥的状态变量
+  - 用 `shared_core / protocol_gate / phase_state` 去预测哪些共享层带在何种状态下才会变成因果脆弱区。
+- 任务块 3：从共享结构转向条件因果结构
+  - 研究重点不再是“共享最多的是谁”，而是“在什么状态下，哪一片共享资源被门控成当前功能核心”。
+
+## 2026-03-10 16:58 局部脉冲脑区异质性基准：无全局控制器条件下的系统级整合与局部回放恢复
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_local_pulse_region_heterogeneity_benchmark.py`
+- `python tests/codex/test_local_pulse_region_heterogeneity_benchmark.py`
+- `Copy-Item tests/codex_temp/local_pulse_region_heterogeneity_benchmark_20260310.json frontend/src/blueprint/data/local_pulse_region_heterogeneity_benchmark_sample.json -Force`
+- `npm --prefix frontend run build`
+
+### 新增文件与产物
+- `tests/codex/test_local_pulse_region_heterogeneity_benchmark.py`
+- `tests/codex_temp/local_pulse_region_heterogeneity_benchmark_20260310.json`
+- `frontend/src/blueprint/LocalPulseRegionHeterogeneityDashboard.jsx`
+- `frontend/src/blueprint/data/local_pulse_region_heterogeneity_benchmark_sample.json`
+
+### 本轮目标
+- 把研究重点收回到更接近脑侧的硬约束：
+  - 不假定任何显式全局控制器
+  - 每个神经元只能基于上一步局部脉冲和局部状态更新
+  - 脑区差异只来自局部动力学和连接异质性
+- 直接验证在这种条件下，系统级整合、编码分离和损伤恢复是否仍能涌现。
+
+### 关键结果
+- 最优系统：`heterogeneous_local_replay`
+- 指标：
+  - `same_family_success_rate = 0.6458`
+  - `lesion_recovery_rate = 0.6204`
+  - `encoding_separation = 0.7083`
+  - `transfer_stability = 0.9994`
+  - `local_integration_score = 0.6172`
+- 增益：
+  - `replay_gain_vs_heterogeneous = +0.0603`
+  - `replay_recovery_gain_vs_homogeneous = +0.0463`
+- 假设：
+  - `H2_local_replay_improves_recovery = true`
+  - `H3_no_global_controller_still_supports_system_level_integration = true`
+  - `H1_region_heterogeneity_improves_local_integration = false`
+  - `H4_region_heterogeneity_increases_specialization = false`
+
+### 当前理论推进
+- 这一步给出了一个很重要的收缩结论：
+  - 在没有任何显式全局控制器的条件下，纯局部脉冲更新已经足以支撑可观的系统级整合和损伤恢复。
+- 但它同时也给出一个限制：
+  - 脑区异质性并不会自动带来更强整合或更强专职分化。
+- 因而当前更稳的结构更新是：
+  - `局部脉冲规则` 是必要核心
+  - `局部回放/局部状态复现` 是当前最明确的恢复增益来源
+  - `脑区异质性` 还需要和条件门控、任务相位、局部路由一起建模，才会稳定转成优势
+
+### 对破解脉冲神经网络编码结构的意义
+- 这轮结果直接支撑了一个更贴近大脑的方向：
+  - 大脑不需要一个全局指挥器先存在，系统级整合可以从局部更新和局部状态传递中涌现。
+- 但同时也说明：
+  - 不能把“脑区异质性存在”直接等价成“功能优势已经形成”
+  - 真正决定当前功能核心的，仍然很可能是局部状态、相位条件和局部回放怎样把资源选出来
+- 所以后续主线应继续从：
+  - `共享结构 / 全局桥接坐标`
+- 压到：
+  - `局部状态 + 局部脉冲 + 条件门控 + 区域异质性`
+
+### 下一阶段的大任务块
+- 任务块 1：条件化局部因果消融
+  - 按 concept-phase / relation-phase / recovery-phase 对局部脉冲网络做条件消融，找出哪些局部状态会把同一片资源变成当前因果核心。
+- 任务块 2：局部回放与中观冗余场桥接
+  - 把 recovery、local replay 和 mesofield 冗余接到同一套读数里，确认恢复优势到底来自局部状态复现，还是来自更大尺度冗余接管。
+- 任务块 3：最小控制桥去全局化
+  - 把 `shared_core / protocol_gate` 进一步改写成 `local_state / regional_bias / neighborhood_gain` 一类局部量，不再默认存在全局低维控制器。
