@@ -44,6 +44,10 @@ import Semantic4DConfidenceCrossDomainDashboard from './Semantic4DConfidenceCros
 import Semantic4DDomainCorrectionDashboard from './Semantic4DDomainCorrectionDashboard';
 import Semantic4DVectorDomainCorrectionDashboard from './Semantic4DVectorDomainCorrectionDashboard';
 import Semantic4DBrainAugmentationDashboard from './Semantic4DBrainAugmentationDashboard';
+import Semantic4DBrainConstraintExpansionDashboard from './Semantic4DBrainConstraintExpansionDashboard';
+import Semantic4DBrainConstraintSweepDashboard from './Semantic4DBrainConstraintSweepDashboard';
+import Semantic4DBrainCandidateCoverageDashboard from './Semantic4DBrainCandidateCoverageDashboard';
+import OpenWorldContinuousGroundingDashboard from './OpenWorldContinuousGroundingDashboard';
 import EPS_SNN_Dashboard from './EPS_SNN_Dashboard';
 import HRRPhaseRigorousDashboard from './HRRPhaseRigorousDashboard';
 import AppleOrthogonalityDashboard from './AppleOrthogonalityDashboard';
@@ -663,6 +667,38 @@ export const GeminiTab = () => {
                         只对训练侧脑样本做受控扩增，并在留一法中排除持出样本的派生副本，用来判断脑侧大误差是不是由样本过薄造成。
                     </div>
                     <Semantic4DBrainAugmentationDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#0f766e', marginBottom: '12px', borderBottom: '1px solid rgba(15,118,110,0.28)', paddingBottom: '8px' }}>二点三十五、语义 4D + 3D 的脑侧候选约束系统扩展</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把脑侧桥接结果拆成组件聚焦约束和跨模型聚合约束，直接检查在更系统的脑侧候选约束面上，当前统一骨架是否还能保持稳定。
+                    </div>
+                    <Semantic4DBrainConstraintExpansionDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#16a34a', marginBottom: '12px', borderBottom: '1px solid rgba(22,163,74,0.28)', paddingBottom: '8px' }}>二点三十六、语义 4D + 3D 的脑侧候选约束混合扫描</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        直接扫描脑侧约束的轻量混合区，回答“脑侧约束是不是越多越好”，并寻找既能压低脑侧误差、又不明显伤害 D 与真实任务的有效配置。
+                    </div>
+                    <Semantic4DBrainConstraintSweepDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#059669', marginBottom: '12px', borderBottom: '1px solid rgba(5,150,105,0.28)', paddingBottom: '8px' }}>二点三十七、语义 4D + 3D 的脑侧候选覆盖面扩展</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在上一轮轻量有效区上，只增量加入少量候选覆盖锚点，直接测试脑侧误差能否继续下降，而不重新掉回全量过约束。
+                    </div>
+                    <Semantic4DBrainCandidateCoverageDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#0284c7', marginBottom: '12px', borderBottom: '1px solid rgba(2,132,199,0.28)', paddingBottom: '8px' }}>二点三十八、开放世界连续流接地闭环</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把接地基准推进到连续流环境，加入背景漂移、模态缺失、噪声片段和旧概念重访，再配合更新律扫描，直接看闭环能否从负转正。
+                    </div>
+                    <OpenWorldContinuousGroundingDashboard />
                 </div>
 
                 {/* 3. 测试记录 (E1~E6) - 多层阶段化展示 */}
