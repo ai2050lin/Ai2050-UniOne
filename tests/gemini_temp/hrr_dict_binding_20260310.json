@@ -1,0 +1,273 @@
+{
+  "timestamp": "2026-03-10T15:44:27.808494",
+  "experiment": "hrr_dict_binding_step2",
+  "args": {
+    "d_model": 256,
+    "dict_size": 64,
+    "n_vocab": 100,
+    "n_trials": 100,
+    "train_epochs": 5,
+    "json_out": "tests/gemini_temp/hrr_dict_binding_20260310.json"
+  },
+  "train_time_sec": 8.391510248184204,
+  "dict_orthogonality": 0.950172483921051,
+  "dict_rank": 64,
+  "hrr_results": {
+    "group_A_random": {
+      "1": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.7171066230535508,
+        "avg_noise": 0.9842371309697655,
+        "n_trials": 100
+      },
+      "2": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.5824539136886596,
+        "avg_noise": 1.3755568575249404,
+        "n_trials": 100
+      },
+      "3": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.5017127984762192,
+        "avg_noise": 1.7183091774830603,
+        "n_trials": 100
+      },
+      "5": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.40446080416440966,
+        "avg_noise": 2.2370384818302096,
+        "n_trials": 100
+      },
+      "8": {
+        "accuracy": 0.99,
+        "avg_cosine": 0.33672879859805105,
+        "avg_noise": 2.8064096486944665,
+        "n_trials": 100
+      },
+      "10": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.30119339302182196,
+        "avg_noise": 3.1852521093408654,
+        "n_trials": 100
+      },
+      "15": {
+        "accuracy": 0.88,
+        "avg_cosine": 0.24370034098625182,
+        "avg_noise": 3.9189009785370996,
+        "n_trials": 100
+      },
+      "20": {
+        "accuracy": 0.87,
+        "avg_cosine": 0.22899945974349975,
+        "avg_noise": 4.536427177609142,
+        "n_trials": 100
+      }
+    },
+    "group_B_trained_dict": {
+      "1": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.7152654677629471,
+        "avg_noise": 1.006146213099887,
+        "n_trials": 100
+      },
+      "2": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.5805741837620735,
+        "avg_noise": 1.3974637499190354,
+        "n_trials": 100
+      },
+      "3": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.4994960579276085,
+        "avg_noise": 1.7407876865032574,
+        "n_trials": 100
+      },
+      "5": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.40597852170467374,
+        "avg_noise": 2.2670487402529544,
+        "n_trials": 100
+      },
+      "8": {
+        "accuracy": 0.98,
+        "avg_cosine": 0.3349526037275791,
+        "avg_noise": 2.837985832760109,
+        "n_trials": 100
+      },
+      "10": {
+        "accuracy": 0.94,
+        "avg_cosine": 0.2987296037375927,
+        "avg_noise": 3.2199457253670456,
+        "n_trials": 100
+      },
+      "15": {
+        "accuracy": 0.81,
+        "avg_cosine": 0.2422974494099617,
+        "avg_noise": 3.9945600091992755,
+        "n_trials": 100
+      },
+      "20": {
+        "accuracy": 0.68,
+        "avg_cosine": 0.21189144626259804,
+        "avg_noise": 4.576285831113648,
+        "n_trials": 100
+      }
+    },
+    "group_C_ortho_dict": {
+      "1": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.717983672618866,
+        "avg_noise": 1.0000254764264462,
+        "n_trials": 100
+      },
+      "2": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.5817186924815178,
+        "avg_noise": 1.4141499165807883,
+        "n_trials": 100
+      },
+      "3": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.5036316108703613,
+        "avg_noise": 1.740304638212956,
+        "n_trials": 100
+      },
+      "5": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.4044121778011322,
+        "avg_noise": 2.2442598185611,
+        "n_trials": 100
+      },
+      "8": {
+        "accuracy": 0.97,
+        "avg_cosine": 0.32833491519093516,
+        "avg_noise": 2.872376685870932,
+        "n_trials": 100
+      },
+      "10": {
+        "accuracy": 0.98,
+        "avg_cosine": 0.29046124286949637,
+        "avg_noise": 3.189250970337799,
+        "n_trials": 100
+      },
+      "15": {
+        "accuracy": 0.89,
+        "avg_cosine": 0.2464877811819315,
+        "avg_noise": 3.937524562727342,
+        "n_trials": 100
+      },
+      "20": {
+        "accuracy": 0.7,
+        "avg_cosine": 0.21539929561316967,
+        "avg_noise": 4.487652700405051,
+        "n_trials": 100
+      }
+    },
+    "group_D_unitary": {
+      "1": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.813171517252922,
+        "avg_noise": 0.6182728462095026,
+        "n_trials": 100
+      },
+      "2": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.6321852785348893,
+        "avg_noise": 0.7904820781750397,
+        "n_trials": 100
+      },
+      "3": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.5387614354491234,
+        "avg_noise": 0.9290010811271898,
+        "n_trials": 100
+      },
+      "5": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.4228553032875061,
+        "avg_noise": 1.1672361031487015,
+        "n_trials": 100
+      },
+      "8": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.34121702864766124,
+        "avg_noise": 1.4504033092456734,
+        "n_trials": 100
+      },
+      "10": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.30591321766376495,
+        "avg_noise": 1.6092918562060243,
+        "n_trials": 100
+      },
+      "15": {
+        "accuracy": 0.92,
+        "avg_cosine": 0.25417948834598064,
+        "avg_noise": 1.9660496008194257,
+        "n_trials": 100
+      },
+      "20": {
+        "accuracy": 0.84,
+        "avg_cosine": 0.21906151875853538,
+        "avg_noise": 2.2561226798595744,
+        "n_trials": 100
+      }
+    },
+    "group_E_untrained_dict": {
+      "1": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.7096603780984878,
+        "avg_noise": 1.006781333459001,
+        "n_trials": 100
+      },
+      "2": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.5839481589198112,
+        "avg_noise": 1.4147735255998413,
+        "n_trials": 100
+      },
+      "3": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.5011473429203034,
+        "avg_noise": 1.7402107218075533,
+        "n_trials": 100
+      },
+      "5": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.40742567390203477,
+        "avg_noise": 2.266976985348931,
+        "n_trials": 100
+      },
+      "8": {
+        "accuracy": 1.0,
+        "avg_cosine": 0.3339084807038307,
+        "avg_noise": 2.882225936264829,
+        "n_trials": 100
+      },
+      "10": {
+        "accuracy": 0.96,
+        "avg_cosine": 0.297372929751873,
+        "avg_noise": 3.189450749341479,
+        "n_trials": 100
+      },
+      "15": {
+        "accuracy": 0.8,
+        "avg_cosine": 0.24174814425408842,
+        "avg_noise": 3.8976245994666896,
+        "n_trials": 100
+      },
+      "20": {
+        "accuracy": 0.62,
+        "avg_cosine": 0.21117988385260106,
+        "avg_noise": 4.598578892470143,
+        "n_trials": 100
+      }
+    }
+  },
+  "hypotheses": {
+    "H_hrr_trained_better_than_random": "PASS",
+    "H_hrr_trained_better_than_untrained": "PASS",
+    "H_hrr_ortho_boost": "PASS",
+    "H_hrr_capacity_advantage": "FAIL"
+  }
+}

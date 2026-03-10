@@ -48,6 +48,11 @@ import Semantic4DBrainConstraintExpansionDashboard from './Semantic4DBrainConstr
 import Semantic4DBrainConstraintSweepDashboard from './Semantic4DBrainConstraintSweepDashboard';
 import Semantic4DBrainCandidateCoverageDashboard from './Semantic4DBrainCandidateCoverageDashboard';
 import OpenWorldContinuousGroundingDashboard from './OpenWorldContinuousGroundingDashboard';
+import OpenWorldGroundingActionLoopDashboard from './OpenWorldGroundingActionLoopDashboard';
+import OpenWorldGroundingGoalStateDashboard from './OpenWorldGroundingGoalStateDashboard';
+import OpenWorldLongHorizonGoalDashboard from './OpenWorldLongHorizonGoalDashboard';
+import OpenWorldSubgoalPlanningDashboard from './OpenWorldSubgoalPlanningDashboard';
+import OpenWorldVariablePlanningTrainableDashboard from './OpenWorldVariablePlanningTrainableDashboard';
 import EPS_SNN_Dashboard from './EPS_SNN_Dashboard';
 import HRRPhaseRigorousDashboard from './HRRPhaseRigorousDashboard';
 import AppleOrthogonalityDashboard from './AppleOrthogonalityDashboard';
@@ -76,6 +81,9 @@ import RealMultistepDynamicTemperatureDashboard from './RealMultistepDynamicTemp
 import RealMultistepLongHorizonJointTemperatureDashboard from './RealMultistepLongHorizonJointTemperatureDashboard';
 import RealMultistepUltraLongHorizonTemperatureDashboard from './RealMultistepUltraLongHorizonTemperatureDashboard';
 import RealMultistepSegmentSummaryDashboard from './RealMultistepSegmentSummaryDashboard';
+import RealMultistepUnifiedControlManifoldDashboard from './RealMultistepUnifiedControlManifoldDashboard';
+import RealMultistepMinimalControlBridgeDashboard from './RealMultistepMinimalControlBridgeDashboard';
+import SharedAtomCausalUnificationDashboard from './SharedAtomCausalUnificationDashboard';
 import Qwen3DeepSeekAttentionTopologyDashboard from './Qwen3DeepSeekAttentionTopologyDashboard';
 import Qwen3DeepSeekAttentionTopologyAtlasDashboard from './Qwen3DeepSeekAttentionTopologyAtlasDashboard';
 import Qwen3DeepSeekConceptProtocolFieldMappingDashboard from './Qwen3DeepSeekConceptProtocolFieldMappingDashboard';
@@ -85,6 +93,7 @@ import Qwen3DeepSeekRelationBoundaryAtlasDashboard from './Qwen3DeepSeekRelation
 import Qwen3DeepSeekRelationTopologyBridgeDashboard from './Qwen3DeepSeekRelationTopologyBridgeDashboard';
 import DnnBrainPuzzleBridgeDashboard from './DnnBrainPuzzleBridgeDashboard';
 import DProblemAtlasDashboard from './DProblemAtlasDashboard';
+import AgiConceptS1ToS7Summary from './AgiConceptS1ToS7Summary';
 
 export const GeminiTab = () => {
     const [expandedSteps, setExpandedSteps] = useState({});
@@ -374,6 +383,12 @@ export const GeminiTab = () => {
                         构建基于微分几何、神经纤维丛拓扑（NFBT）和纯代数演化的智能引擎（Mother Engine），抛弃传统 BP 黑盒与堆叠算力路线。<br />
                         <span style={{ color: '#a855f7', fontWeight: 'bold' }}>进展突破: </span>建立“极效三定律”（侧抑制正交、引力雕刻、能量坍塌）；通过解剖 DNN 证实大脑的激活稀疏性编码方式；发现 Attention 的极低秩关联拓扑；在无 BP 下利用局部规则实现空白网络自发涌现稀疏特征（峰度激增至 19.7）。
                     </div>
+                </div>
+
+                {/* S1-S7 原理与硬伤总结 */}
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#c084fc', marginBottom: '12px', borderBottom: '1px solid rgba(192,132,252,0.3)', paddingBottom: '8px' }}>一点五、核心概念探究与局限反思</div>
+                    <AgiConceptS1ToS7Summary />
                 </div>
 
                 {/* 2. 完整路线图 */}
@@ -699,6 +714,48 @@ export const GeminiTab = () => {
                         把接地基准推进到连续流环境，加入背景漂移、模态缺失、噪声片段和旧概念重访，再配合更新律扫描，直接看闭环能否从负转正。
                     </div>
                     <OpenWorldContinuousGroundingDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#dc2626', marginBottom: '12px', borderBottom: '1px solid rgba(220,38,38,0.28)', paddingBottom: '8px' }}>二点三十九、开放世界最小动作回路断点</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把连续流接地接上最小动作回路和自纠错环，直接看当前接地正增益有没有真正传到代理闭环，并定位断点出现在哪一层。
+                    </div>
+                    <OpenWorldGroundingActionLoopDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#16a34a', marginBottom: '12px', borderBottom: '1px solid rgba(22,163,74,0.28)', paddingBottom: '8px' }}>二点四十、开放世界长期目标/保留状态闭环</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在最小动作回路之上加入旧概念保留目标和回放储备，直接测试长期状态能否把代理闭环从负边界翻到正区。
+                    </div>
+                    <OpenWorldGroundingGoalStateDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#ea580c', marginBottom: '12px', borderBottom: '1px solid rgba(234,88,12,0.28)', paddingBottom: '8px' }}>二点四十一、开放世界长期多步目标维持</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把旧概念保留目标扩成 repeated family switching 的长期目标链，直接比较 `direct_action / stateful_trust / goal_state_replay`
+                        在阶段切换、目标捕获和长期闭环分数上的差异。
+                    </div>
+                    <OpenWorldLongHorizonGoalDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#2563eb', marginBottom: '12px', borderBottom: '1px solid rgba(37,99,235,0.28)', paddingBottom: '8px' }}>二点四十二、开放世界阶段性子目标程序</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把长期目标继续推进成多阶段子目标程序，直接比较 episode 成功率、阶段过渡和规划闭环分数，判断系统是不是开始进入真正的规划链。
+                    </div>
+                    <OpenWorldSubgoalPlanningDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#0891b2', marginBottom: '12px', borderBottom: '1px solid rgba(8,145,178,0.28)', paddingBottom: '8px' }}>二点四十三、可变长度规划链与可学习闭环</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把固定子目标程序推进成可变长度、带失败回退的规划链，再把混合回放律、长期目标状态和动作策略并进同一可学习机制，
+                        优先外部化看 episode 成功率、回退恢复率、旧概念污染控制和开放环境稳定性。
+                    </div>
+                    <OpenWorldVariablePlanningTrainableDashboard />
                 </div>
 
                 {/* 3. 测试记录 (E1~E6) - 多层阶段化展示 */}
@@ -1252,8 +1309,41 @@ export const GeminiTab = () => {
                 </div>
 
                 <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#14b8a6', marginBottom: '12px', borderBottom: '1px solid rgba(20,184,166,0.35)', paddingBottom: '8px' }}>
+                        五点三十三、真实多步统一控制流形
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把低维统一控制流形接回真实多步 episode，统一调制阶段状态、记忆门控和失败回退，直接看最大长度任务上的真实成功率、
+                        恢复率和保留率能否一起超过单锚点基线与旧 state machine。
+                    </div>
+                    <RealMultistepUnifiedControlManifoldDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f97316', marginBottom: '12px', borderBottom: '1px solid rgba(249,115,22,0.35)', paddingBottom: '8px' }}>
+                        五点三十三补、最小统一控制桥
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把 `共享基底 / 协议 / 门控` 进一步压成 2 维最小控制桥，直接比较压缩前后的真实任务综合分、回退恢复率、旧概念保留、
+                        脑侧约束对齐和最大长度回退时间线。
+                    </div>
+                    <RealMultistepMinimalControlBridgeDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '12px', borderBottom: '1px solid rgba(56,189,248,0.35)', paddingBottom: '8px' }}>
+                        五点三十三续、共享原子因果桥
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把共享字典从相关性推进到因果验证，直接比较“共享原子 / 单侧原子 / 随机原子”被打掉后，
+                        概念解码、关系解码和噪声恢复是否会一起下跌。
+                    </div>
+                    <SharedAtomCausalUnificationDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
                     <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#0ea5e9', marginBottom: '12px', borderBottom: '1px solid rgba(14,165,233,0.35)', paddingBottom: '8px' }}>
-                        五点三十三、Qwen3 / DeepSeek7B 拓扑直测
+                        五点三十四、Qwen3 / DeepSeek7B 拓扑直测
                     </div>
                     <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
                         对 `Qwen3-4B` 和 `DeepSeek-7B` 直接跑同协议 `attention-topology` 测量，比较 family residual、entropy 和 `apple / cat / truth` 的残差排序，确认 `T` 是否已经进入对称直测状态。
@@ -1263,7 +1353,7 @@ export const GeminiTab = () => {
 
                 <div style={{ marginBottom: '28px' }}>
                     <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '12px', borderBottom: '1px solid rgba(56,189,248,0.35)', paddingBottom: '8px' }}>
-                        五点三十四、Qwen3 / DeepSeek7B 拓扑图谱
+                        五点三十五、Qwen3 / DeepSeek7B 拓扑图谱
                     </div>
                     <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
                         把 `T` 的直测从三个 probe 扩到完整概念集，直接看两模型在更大概念域里是否仍保持稳定的 family-basis 拓扑结构。
@@ -1273,7 +1363,7 @@ export const GeminiTab = () => {
 
                 <div style={{ marginBottom: '28px' }}>
                     <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '12px', borderBottom: '1px solid rgba(245,158,11,0.35)', paddingBottom: '8px' }}>
-                        五点三十五、Qwen3 / DeepSeek7B 概念到协议场调用
+                        五点三十六、Qwen3 / DeepSeek7B 概念到协议场调用
                     </div>
                     <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
                         直接显示 `apple / cat / truth` 在两模型里调用的是哪片头群-层群区域，回答“概念如何进入协议场”，而不是只问“最强头是谁”。
@@ -1283,7 +1373,7 @@ export const GeminiTab = () => {
 
                 <div style={{ marginBottom: '28px' }}>
                     <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#fbbf24', marginBottom: '12px', borderBottom: '1px solid rgba(251,191,36,0.35)', paddingBottom: '8px' }}>
-                        五点三十六、Qwen3 / DeepSeek7B 协议场边界图谱
+                        五点三十七、Qwen3 / DeepSeek7B 协议场边界图谱
                     </div>
                     <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
                         把 `k*(c, tau)` 扩到 9 个概念，直接比较两模型在协议场上的最小因果边界分布，回答“协议场能不能被小规模头群稳定打塌”。
@@ -1293,7 +1383,7 @@ export const GeminiTab = () => {
 
                 <div style={{ marginBottom: '28px' }}>
                     <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#22c55e', marginBottom: '12px', borderBottom: '1px solid rgba(34,197,94,0.35)', paddingBottom: '8px' }}>
-                        五点三十七、Qwen3 / DeepSeek7B 机制桥接
+                        五点三十八、Qwen3 / DeepSeek7B 机制桥接
                     </div>
                     <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
                         把当前模型侧主线从 `GPT-2` 切换到 `Qwen3-4B` 和 `DeepSeek-7B`，统一比较共享基底、偏移、门控、关系、拓扑和协议场调用，并明确哪些部分已经进入同协议直测。
@@ -1303,7 +1393,7 @@ export const GeminiTab = () => {
 
                 <div style={{ marginBottom: '28px' }}>
                     <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#facc15', marginBottom: '12px', borderBottom: '1px solid rgba(250,204,21,0.35)', paddingBottom: '8px' }}>
-                        五点三十八、Qwen3 / DeepSeek7B 关系族边界图谱
+                        五点三十九、Qwen3 / DeepSeek7B 关系族边界图谱
                     </div>
                     <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
                         把六类关系协议压成边界分型，直接比较两模型在 `compact / mixed / layer-cluster / distributed` 四类上的分布差异。
