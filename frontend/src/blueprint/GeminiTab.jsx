@@ -14,6 +14,36 @@ import ConceptVectorAlgebraGraph from './ConceptVectorAlgebraGraph';
 import HyperSpaceBindingGraph from './HyperSpaceBindingGraph';
 import AGIUnifiedTheoryEngine from './AGIUnifiedTheoryEngine';
 import SNNBrainMappingGraph from './SNNBrainMappingGraph';
+import AgiMilestoneProgressDashboard from './AgiMilestoneProgressDashboard';
+import AgiTaskBlockDashboard from './AgiTaskBlockDashboard';
+import UnifiedStructureCompressionDashboard from './UnifiedStructureCompressionDashboard';
+import UnifiedUpdateLawDashboard from './UnifiedUpdateLawDashboard';
+import UnifiedUpdateLawDBridgeDashboard from './UnifiedUpdateLawDBridgeDashboard';
+import PhaseGatedUnifiedLawDashboard from './PhaseGatedUnifiedLawDashboard';
+import StateVariableUnifiedLawDashboard from './StateVariableUnifiedLawDashboard';
+import TwoLayerUnifiedLawDashboard from './TwoLayerUnifiedLawDashboard';
+import LearnableTwoLayerUnifiedLawDashboard from './LearnableTwoLayerUnifiedLawDashboard';
+import LearnableRankingTwoLayerUnifiedLawDashboard from './LearnableRankingTwoLayerUnifiedLawDashboard';
+import RealTaskDrivenTwoLayerUnifiedLawDashboard from './RealTaskDrivenTwoLayerUnifiedLawDashboard';
+import DRealTaskCocalibratedTwoLayerLawDashboard from './DRealTaskCocalibratedTwoLayerLawDashboard';
+import BrainDRealCocalibratedTwoLayerLawDashboard from './BrainDRealCocalibratedTwoLayerLawDashboard';
+import BrainLearnableRankingTwoLayerLawDashboard from './BrainLearnableRankingTwoLayerLawDashboard';
+import ParameterizedSharedModalityLawDashboard from './ParameterizedSharedModalityLawDashboard';
+import SharedCentralLoopModalityDashboard from './SharedCentralLoopModalityDashboard';
+import SharedCentralLoopShellDashboard from './SharedCentralLoopShellDashboard';
+import SharedCentralLoopShellLocalizationDashboard from './SharedCentralLoopShellLocalizationDashboard';
+import SharedCentralLoopOutputShellFactorizationDashboard from './SharedCentralLoopOutputShellFactorizationDashboard';
+import SharedCentralLoopProtocolShellFactorizationDashboard from './SharedCentralLoopProtocolShellFactorizationDashboard';
+import SharedCentralLoopFamilyShellFactorizationDashboard from './SharedCentralLoopFamilyShellFactorizationDashboard';
+import SharedCentralLoopBasisShellFactorizationDashboard from './SharedCentralLoopBasisShellFactorizationDashboard';
+import SharedCentralLoopMinimalInterfaceStateDashboard from './SharedCentralLoopMinimalInterfaceStateDashboard';
+import SharedCentralLoopConfidenceDimensionDashboard from './SharedCentralLoopConfidenceDimensionDashboard';
+import SharedCentralLoopConfidenceSemanticsDashboard from './SharedCentralLoopConfidenceSemanticsDashboard';
+import SharedCentralLoopConfidenceMinimizationDashboard from './SharedCentralLoopConfidenceMinimizationDashboard';
+import Semantic4DConfidenceCrossDomainDashboard from './Semantic4DConfidenceCrossDomainDashboard';
+import Semantic4DDomainCorrectionDashboard from './Semantic4DDomainCorrectionDashboard';
+import Semantic4DVectorDomainCorrectionDashboard from './Semantic4DVectorDomainCorrectionDashboard';
+import Semantic4DBrainAugmentationDashboard from './Semantic4DBrainAugmentationDashboard';
 import EPS_SNN_Dashboard from './EPS_SNN_Dashboard';
 import HRRPhaseRigorousDashboard from './HRRPhaseRigorousDashboard';
 import AppleOrthogonalityDashboard from './AppleOrthogonalityDashboard';
@@ -23,6 +53,34 @@ import RelationCouplingTraceDashboard from './RelationCouplingTraceDashboard';
 import RelationProtocolHeadAtlasDashboard from './RelationProtocolHeadAtlasDashboard';
 import RelationProtocolHeadCausalDashboard from './RelationProtocolHeadCausalDashboard';
 import RelationProtocolHeadGroupCausalDashboard from './RelationProtocolHeadGroupCausalDashboard';
+import RelationProtocolMesofieldScaleDashboard from './RelationProtocolMesofieldScaleDashboard';
+import ConceptProtocolFieldMappingDashboard from './ConceptProtocolFieldMappingDashboard';
+import GateLawDynamicsDashboard from './GateLawDynamicsDashboard';
+import ProtocolFieldBoundaryAtlasDashboard from './ProtocolFieldBoundaryAtlasDashboard';
+import GateLawNonlinearDynamicsDashboard from './GateLawNonlinearDynamicsDashboard';
+import RelationBoundaryAtlasDashboard from './RelationBoundaryAtlasDashboard';
+import ToyGroundingCreditContinualDashboard from './ToyGroundingCreditContinualDashboard';
+import MechanismAgiBridgeDashboard from './MechanismAgiBridgeDashboard';
+import RealMultistepAgiClosureDashboard from './RealMultistepAgiClosureDashboard';
+import RealMultistepLengthScanDashboard from './RealMultistepLengthScanDashboard';
+import RealMultistepMemoryBoostDashboard from './RealMultistepMemoryBoostDashboard';
+import RealMultistepBetaScanDashboard from './RealMultistepBetaScanDashboard';
+import RealMultistepMemoryMultiscaleDashboard from './RealMultistepMemoryMultiscaleDashboard';
+import RealMultistepMemoryGatedMultiscaleDashboard from './RealMultistepMemoryGatedMultiscaleDashboard';
+import RealMultistepGateTemperatureDashboard from './RealMultistepGateTemperatureDashboard';
+import RealMultistepDynamicTemperatureDashboard from './RealMultistepDynamicTemperatureDashboard';
+import RealMultistepLongHorizonJointTemperatureDashboard from './RealMultistepLongHorizonJointTemperatureDashboard';
+import RealMultistepUltraLongHorizonTemperatureDashboard from './RealMultistepUltraLongHorizonTemperatureDashboard';
+import RealMultistepSegmentSummaryDashboard from './RealMultistepSegmentSummaryDashboard';
+import Qwen3DeepSeekAttentionTopologyDashboard from './Qwen3DeepSeekAttentionTopologyDashboard';
+import Qwen3DeepSeekAttentionTopologyAtlasDashboard from './Qwen3DeepSeekAttentionTopologyAtlasDashboard';
+import Qwen3DeepSeekConceptProtocolFieldMappingDashboard from './Qwen3DeepSeekConceptProtocolFieldMappingDashboard';
+import Qwen3DeepSeekProtocolFieldBoundaryAtlasDashboard from './Qwen3DeepSeekProtocolFieldBoundaryAtlasDashboard';
+import Qwen3DeepSeekMechanismBridgeDashboard from './Qwen3DeepSeekMechanismBridgeDashboard';
+import Qwen3DeepSeekRelationBoundaryAtlasDashboard from './Qwen3DeepSeekRelationBoundaryAtlasDashboard';
+import Qwen3DeepSeekRelationTopologyBridgeDashboard from './Qwen3DeepSeekRelationTopologyBridgeDashboard';
+import DnnBrainPuzzleBridgeDashboard from './DnnBrainPuzzleBridgeDashboard';
+import DProblemAtlasDashboard from './DProblemAtlasDashboard';
 
 export const GeminiTab = () => {
     const [expandedSteps, setExpandedSteps] = useState({});
@@ -365,6 +423,246 @@ export const GeminiTab = () => {
                             </div>
                         ))}
                     </div>
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#86efac', marginBottom: '12px', borderBottom: '1px solid rgba(134,239,172,0.28)', paddingBottom: '8px' }}>二点五、里程碑进度</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        用统一时间轴展示整体研究现在推进到了哪一站、当前卡在哪里、以及下一阶段最值得投入的工作，不再只靠长文字判断项目位置。
+                    </div>
+                    <AgiMilestoneProgressDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#7dd3fc', marginBottom: '12px', borderBottom: '1px solid rgba(125,211,252,0.28)', paddingBottom: '8px' }}>二点六、A/B/C/D 大任务块</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把当前四个最大任务块压成状态卡，直接看哪些块已经进入闭环，哪些块还只是阶段性推进。
+                    </div>
+                    <AgiTaskBlockDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#34d399', marginBottom: '12px', borderBottom: '1px solid rgba(52,211,153,0.28)', paddingBottom: '8px' }}>二点七、统一结构压缩</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把 `共享基底 / 个体偏移 / 关系协议 / 门控 / 拓扑 / 整合` 压成更小的四对象视角，直接看压缩后还能保留多少桥接解释力。
+                    </div>
+                    <UnifiedStructureCompressionDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '12px', borderBottom: '1px solid rgba(56,189,248,0.28)', paddingBottom: '8px' }}>二点八、统一更新律候选</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在四因子结构之上只保留两参数动态修正，直接看 `adaptive_offset` 是否已经能通过一条更小的更新律逼近当前桥接分数。
+                    </div>
+                    <UnifiedUpdateLawDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f472b6', marginBottom: '12px', borderBottom: '1px solid rgba(244,114,182,0.28)', paddingBottom: '8px' }}>二点九、统一更新律到 D 桥接</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        对比“桥接里学到的小律”和“D 上重新拟合的小律”，直接观察统一结构一进入接地闭环后，主导项是否从 routing 切到 stabilization。
+                    </div>
+                    <UnifiedUpdateLawDBridgeDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#22c55e', marginBottom: '12px', borderBottom: '1px solid rgba(34,197,94,0.28)', paddingBottom: '8px' }}>二点十、相位门控统一律</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        用一条带相位门控的小律联合覆盖内部桥接和 `D`，直接看“阶段依赖”是否已经成为必要结构，以及它现在解决的是排序还是标定。
+                    </div>
+                    <PhaseGatedUnifiedLawDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#facc15', marginBottom: '12px', borderBottom: '1px solid rgba(250,204,21,0.28)', paddingBottom: '8px' }}>二点十一、状态变量统一律</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在相位门控律之上再加 `z_state` 和小标定项，直接看它能不能同时改善联合误差和联合相关性。
+                    </div>
+                    <StateVariableUnifiedLawDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#a855f7', marginBottom: '12px', borderBottom: '1px solid rgba(168,85,247,0.28)', paddingBottom: '8px' }}>二点十二、双层统一律</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把统一律正式拆成“排序层 + 标定层”，直接判断这条主线是真进步，还是只是在当前样本上过拟合。
+                    </div>
+                    <TwoLayerUnifiedLawDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981', marginBottom: '12px', borderBottom: '1px solid rgba(16,185,129,0.28)', paddingBottom: '8px' }}>二点十三、可学习双层统一律</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        用带正则的可学习标定层替代解析拟合，直接检查双层统一律是不是已经从“原型”进入“可训练方向”。
+                    </div>
+                    <LearnableTwoLayerUnifiedLawDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#60a5fa', marginBottom: '12px', borderBottom: '1px solid rgba(96,165,250,0.28)', paddingBottom: '8px' }}>二点十四、可学习排序层双层统一律</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把排序层也推进到可学习版本，直接比较“只学习标定层”和“排序层 + 标定层都学习”哪条路更稳、更适合进入真实任务闭环。
+                    </div>
+                    <LearnableRankingTwoLayerUnifiedLawDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f97316', marginBottom: '12px', borderBottom: '1px solid rgba(249,115,22,0.28)', paddingBottom: '8px' }}>二点十五、真实任务驱动双层统一律</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        不再只在桥接样本上验证，而是直接用 `qwen3/deepseek` 的概念条件真实任务 `behavior_gain` 来训练和评估双层统一律。
+                    </div>
+                    <RealTaskDrivenTwoLayerUnifiedLawDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f43f5e', marginBottom: '12px', borderBottom: '1px solid rgba(244,63,94,0.28)', paddingBottom: '8px' }}>二点十六、D 与真实任务共标定双层统一律</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把 `D` 问题的外部闭环指标和真实任务 `behavior_gain` 放进同一套排序层与标定层，直接看外部闭环能不能开始收敛成一条统一律。
+                    </div>
+                    <DRealTaskCocalibratedTwoLayerLawDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#0ea5e9', marginBottom: '12px', borderBottom: '1px solid rgba(14,165,233,0.28)', paddingBottom: '8px' }}>二点十七、脑侧 + D + 真实任务共标定双层统一律</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把脑侧候选约束也压进同一套排序层与标定层，检查模型内部桥接、D 闭环和真实任务收益是否开始共享更小的统一结构。
+                    </div>
+                    <BrainDRealCocalibratedTwoLayerLawDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#06b6d4', marginBottom: '12px', borderBottom: '1px solid rgba(6,182,212,0.28)', paddingBottom: '8px' }}>二点十八、脑侧可学习排序层双层统一律</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        不再用手工脑侧聚合，而是直接让脑侧组件分数进入排序层，检查脑侧约束能否作为可学习域并入同一条统一律。
+                    </div>
+                    <BrainLearnableRankingTwoLayerLawDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981', marginBottom: '12px', borderBottom: '1px solid rgba(16,185,129,0.28)', paddingBottom: '8px' }}>二点十九、跨模态共享机制参数化实验</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        直接比较“完全共享”“共享机制加模态参数”“模态独立拟合”，测试视觉、触觉、语言是否更像同一机制的不同参数区。
+                    </div>
+                    <ParameterizedSharedModalityLawDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '12px', borderBottom: '1px solid rgba(56,189,248,0.28)', paddingBottom: '8px' }}>二点二十、共享中央回路多模态实验</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        进一步测试“模态专属投影 + 共享中央回路 + 共享读出”的低秩写法，验证是否存在一个统一回路处理视觉、触觉、语言等不同模态的信息。
+                    </div>
+                    <SharedCentralLoopModalityDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#22c55e', marginBottom: '12px', borderBottom: '1px solid rgba(34,197,94,0.28)', paddingBottom: '8px' }}>二点二十一、共享中央回路 + 模态外壳实验</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        如果纯中央回路过弱，就继续测试“统一回路处理公共结构，模态差异主要落在输入/输出外壳”的写法，看它是否更符合多模态数据。
+                    </div>
+                    <SharedCentralLoopShellDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#fbbf24', marginBottom: '12px', borderBottom: '1px solid rgba(251,191,36,0.28)', paddingBottom: '8px' }}>二点二十二、共享中央回路壳层定位实验</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        直接比较输入壳、中央回路内部参数区、输出壳三种位置，判断模态差异最可能挂在统一回路的哪一层。
+                    </div>
+                    <SharedCentralLoopShellLocalizationDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#a855f7', marginBottom: '12px', borderBottom: '1px solid rgba(168,85,247,0.28)', paddingBottom: '8px' }}>二点二十三、共享中央回路输出壳细分实验</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把当前最强的输出壳继续拆成校准壳、协议壳、任务读出壳，定位模态差异到底主要落在最终读出的哪一层。
+                    </div>
+                    <SharedCentralLoopOutputShellFactorizationDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f472b6', marginBottom: '12px', borderBottom: '1px solid rgba(244,114,182,0.28)', paddingBottom: '8px' }}>二点二十四、共享中央回路协议壳细分实验</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把当前最强的协议型输出壳继续拆成 family、relation、action/planning 三类协议壳，定位多模态差异主要重写哪种协议。
+                    </div>
+                    <SharedCentralLoopProtocolShellFactorizationDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981', marginBottom: '12px', borderBottom: '1px solid rgba(16,185,129,0.28)', paddingBottom: '8px' }}>二点二十五、共享中央回路 family 壳细分实验</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把当前最强的 family 协议壳继续拆成共享基底壳、个体偏移壳、family 内部层级壳，定位多模态差异先落在哪一部分。
+                    </div>
+                    <SharedCentralLoopFamilyShellFactorizationDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#3b82f6', marginBottom: '12px', borderBottom: '1px solid rgba(59,130,246,0.28)', paddingBottom: '8px' }}>二点二十六、共享中央回路共享基底壳细分实验</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把当前最强的共享基底壳继续拆成原型位置壳、原型边界宽度壳、原型间距壳，定位多模态差异更像先重写哪一种原型结构。
+                    </div>
+                    <SharedCentralLoopBasisShellFactorizationDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#0ea5e9', marginBottom: '12px', borderBottom: '1px solid rgba(14,165,233,0.28)', paddingBottom: '8px' }}>二点二十七、共享中央回路最小接口状态实验</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        比较共享中央回路与原型位置壳之间三类最小接口候选：原型中心状态、原型置信度状态、家族激活态。
+                    </div>
+                    <SharedCentralLoopMinimalInterfaceStateDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '12px', borderBottom: '1px solid rgba(56,189,248,0.28)', paddingBottom: '8px' }}>二点二十八、共享中央回路置信状态维度扫描</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        扫描 `prototype_confidence_state` 的最小维度，确认共享中央回路输出给原型位置壳的最小接口到底需要几维。
+                    </div>
+                    <SharedCentralLoopConfidenceDimensionDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#06b6d4', marginBottom: '12px', borderBottom: '1px solid rgba(6,182,212,0.28)', paddingBottom: '8px' }}>二点二十九、共享中央回路置信状态语义反推</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        对 5 个原始置信分量做 `4 选 5` 组合扫描，确认 `4D confidence packet` 里哪一维是冗余分量。
+                    </div>
+                    <SharedCentralLoopConfidenceSemanticsDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#0891b2', marginBottom: '12px', borderBottom: '1px solid rgba(8,145,178,0.28)', paddingBottom: '8px' }}>二点三十、共享中央回路置信状态最小化</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        对当前胜出的 4 个语义置信分量做 `3 选 4` 压缩扫描，确认这个语义 4D 状态包是否还能继续压缩。
+                    </div>
+                    <SharedCentralLoopConfidenceMinimizationDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#0284c7', marginBottom: '12px', borderBottom: '1px solid rgba(2,132,199,0.28)', paddingBottom: '8px' }}>二点三十一、语义 4D 置信状态跨域闭环</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        直接测试当前最优语义 `4D confidence packet` 能否单独支撑 `brain / D / real-task` 的统一跨域闭环。
+                    </div>
+                    <Semantic4DConfidenceCrossDomainDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#2563eb', marginBottom: '12px', borderBottom: '1px solid rgba(37,99,235,0.28)', paddingBottom: '8px' }}>二点三十二、语义 4D 骨架 + 轻量域修正</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在语义 `4D confidence packet` 骨架上只补一个轻量域修正标量，测试它能否追近更大特征集合。
+                    </div>
+                    <Semantic4DDomainCorrectionDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#1d4ed8', marginBottom: '12px', borderBottom: '1px solid rgba(29,78,216,0.28)', paddingBottom: '8px' }}>二点三十三、语义 4D 骨架 + 极小向量域修正</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把单标量域修正升级成 `2D/3D` 极小向量修正，测试修正层的最小复杂度是否至少需要向量化。
+                    </div>
+                    <Semantic4DVectorDomainCorrectionDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#1e40af', marginBottom: '12px', borderBottom: '1px solid rgba(30,64,175,0.28)', paddingBottom: '8px' }}>二点三十四、语义 4D + 3D 的脑侧扩增稳定性</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        只对训练侧脑样本做受控扩增，并在留一法中排除持出样本的派生副本，用来判断脑侧大误差是不是由样本过薄造成。
+                    </div>
+                    <Semantic4DBrainAugmentationDashboard />
                 </div>
 
                 {/* 3. 测试记录 (E1~E6) - 多层阶段化展示 */}
@@ -715,6 +1013,286 @@ export const GeminiTab = () => {
                         展示 `top-3` 头群联合消融与同层对照群联合消融的 `TT` 峰值塌缩率差异，用来判断关系协议是否开始在小头群层面变得因果。
                     </div>
                     <RelationProtocolHeadGroupCausalDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#fde68a', marginBottom: '12px', borderBottom: '1px solid rgba(253,230,138,0.35)', paddingBottom: '8px' }}>
+                        五点十三、关系协议中观场规模扫描
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        展示 `k=1/3/8/16` 的联合消融曲线、关系 x `k` 热图，以及层簇消融对比，用来判断关系协议是否存在统一最小因果规模，还是依赖关系族的分布式中观场。
+                    </div>
+                    <RelationProtocolMesofieldScaleDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#93c5fd', marginBottom: '12px', borderBottom: '1px solid rgba(147,197,253,0.35)', paddingBottom: '8px' }}>
+                        五点十四、概念到协议场调用映射
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        展示 `apple / cat / truth` 在进入各自协议场时，具体调用的是哪片头群-层群区域，用来回答“概念是如何进入协议层”的问题，而不再只看单个最强头。
+                    </div>
+                    <ConceptProtocolFieldMappingDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#86efac', marginBottom: '12px', borderBottom: '1px solid rgba(134,239,172,0.35)', paddingBottom: '8px' }}>
+                        五点十五、G 门控律层间递推
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        展示 “只用 factor” 与 “factor + 上一层门控状态” 对下一层门控的预测差异，用来判断 `G` 是否具有可学习的层间递推，而不只是静态因子分解。
+                    </div>
+                    <GateLawDynamicsDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#fcd34d', marginBottom: '12px', borderBottom: '1px solid rgba(252,211,77,0.35)', paddingBottom: '8px' }}>
+                        五点十六、协议场边界图谱
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把 `k*(c, tau)` 从单个概念扩展到更大的概念集合，直接显示哪些概念存在较小边界，哪些概念在当前模型中更像无固定小边界的分布式调用。
+                    </div>
+                    <ProtocolFieldBoundaryAtlasDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#60a5fa', marginBottom: '12px', borderBottom: '1px solid rgba(96,165,250,0.35)', paddingBottom: '8px' }}>
+                        五点十七、G 非线性递推
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        展示 `factor / linear / nonlinear` 三档门控预测强度，直接看线性递推之外还有多少局部非线性修正，以及这些修正集中在哪些层迁移。
+                    </div>
+                    <GateLawNonlinearDynamicsDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#fbbf24', marginBottom: '12px', borderBottom: '1px solid rgba(251,191,36,0.35)', paddingBottom: '8px' }}>
+                        五点十八、关系族边界类型图谱
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把六类关系协议压缩成 `紧致边界 / 仅层簇边界 / 分布式无边界` 三类，方便直接比较不同模型对不同关系族的实现形态。
+                    </div>
+                    <RelationBoundaryAtlasDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#34d399', marginBottom: '12px', borderBottom: '1px solid rgba(52,211,153,0.35)', paddingBottom: '8px' }}>
+                        五点十九、toy 接地-信用-持续学习闭环
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把 toy 基准中的接地、延迟信用分配和持续学习放到同一视图，直接比较 `plain_local` 与 `trace_gated_local`，看 trace、稳定化和少量回放是否真的形成闭环增益。
+                    </div>
+                    <ToyGroundingCreditContinualDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '12px', borderBottom: '1px solid rgba(56,189,248,0.35)', paddingBottom: '8px' }}>
+                        五点二十、机制到 AGI 桥接总览
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把 `G` 非线性递推、协议场边界和 toy 闭环收益压到一个统一桥接分数里，直接看不同模型的解释力离 AGI 能力闭环还有多远。
+                    </div>
+                    <MechanismAgiBridgeDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#22c55e', marginBottom: '12px', borderBottom: '1px solid rgba(34,197,94,0.35)', paddingBottom: '8px' }}>
+                        五点二十一、真实多步 AGI 闭环
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把三步序列任务、phase 切换、保留率和总体成功率放到同一视图里，直接看局部 trace 是否真的从 toy 外推到了更真实的多步任务。
+                    </div>
+                    <RealMultistepAgiClosureDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f97316', marginBottom: '12px', borderBottom: '1px solid rgba(249,115,22,0.35)', paddingBottom: '8px' }}>
+                        五点二十二、真实多步长度扫描
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        扫描 `L=3..6` 的任务长度，直接观察真实闭环分数、保留率和 trace 优势面积，回答“任务一变长，机制掉得有多快”。
+                    </div>
+                    <RealMultistepLengthScanDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f43f5e', marginBottom: '12px', borderBottom: '1px solid rgba(244,63,94,0.35)', paddingBottom: '8px' }}>
+                        五点二十三、长程增强机制
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在 `trace_gated_local` 上再加慢记忆锚点，直接比较它能否进一步压平 `L=3..12` 的长程衰减。
+                    </div>
+                    <RealMultistepMemoryBoostDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#34d399', marginBottom: '12px', borderBottom: '1px solid rgba(52,211,153,0.35)', paddingBottom: '8px' }}>
+                        五点二十四、慢记忆 beta 扫描
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在 `trace_anchor_local` 内扫描慢记忆时间常数 `beta`，直接判断“平均最优 beta”和“最长任务最优 beta”是否一致，给后续多时间常数记忆簇提供依据。
+                    </div>
+                    <RealMultistepBetaScanDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#22c55e', marginBottom: '12px', borderBottom: '1px solid rgba(34,197,94,0.35)', paddingBottom: '8px' }}>
+                        五点二十五、多时间常数记忆簇
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        比较单锚点和多锚点系统，直接看多时间常数是提升平均闭环，还是主要改善保留率与长程衰减平坦度，为后续记忆簇设计提供依据。
+                    </div>
+                    <RealMultistepMemoryMultiscaleDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '12px', borderBottom: '1px solid rgba(56,189,248,0.35)', paddingBottom: '8px' }}>
+                        五点二十六、门控多时间常数读出
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        在多时间常数记忆簇上加入上下文门控，直接看门控是否真的在选择时间尺度，以及这种选择能否把保留优势转成更高的长程闭环。
+                    </div>
+                    <RealMultistepMemoryGatedMultiscaleDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#0891b2', marginBottom: '12px', borderBottom: '1px solid rgba(8,145,178,0.35)', paddingBottom: '8px' }}>
+                        五点二十七、DNN-脑拼图桥
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把 DNN 中已经提取出的数学部件，与脑机制候选映射放到一张总览图上，直接回答第三路线已经拼出了哪些结构、还缺哪些硬伤。
+                    </div>
+                    <DnnBrainPuzzleBridgeDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '12px', borderBottom: '1px solid rgba(245,158,11,0.35)', paddingBottom: '8px' }}>
+                        五点二十八、门控温度 tau_g 扫描
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        直接测试门控变硬还是变软，对平均闭环、最长任务和时间尺度选择性的影响，回答长任务到底需要硬选择还是软混合。
+                    </div>
+                    <RealMultistepGateTemperatureDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981', marginBottom: '12px', borderBottom: '1px solid rgba(16,185,129,0.35)', paddingBottom: '8px' }}>
+                        五点二十九、动态门控温度策略
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        从固定温度推进到动态温度，对比长度自适应、阶段自适应和不确定性自适应几类策略，直接看哪种门控律真正带来增益。
+                    </div>
+                    <RealMultistepDynamicTemperatureDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#0ea5e9', marginBottom: '12px', borderBottom: '1px solid rgba(14,165,233,0.35)', paddingBottom: '8px' }}>
+                        五点三十、长程联合温度律
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把温度律扩到 `L=8..20`，联合使用长度、阶段和剩余步数，直接看它是否开始在真正长程任务上超过固定温度和单锚点。
+                    </div>
+                    <RealMultistepLongHorizonJointTemperatureDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f472b6', marginBottom: '12px', borderBottom: '1px solid rgba(244,114,182,0.35)', paddingBottom: '8px' }}>
+                        五点三十一、超长程温度律
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把保持链继续推到 `L=24/28/32`，直接看联合温度律还能保留多少优势，以及它在哪个区间开始进入新的退化区。
+                    </div>
+                    <RealMultistepUltraLongHorizonTemperatureDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '12px', borderBottom: '1px solid rgba(56,189,248,0.35)', paddingBottom: '8px' }}>
+                        五点三十二、段级摘要状态
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        给超长程链显式加入段级摘要变量 `s_t`，直接看状态压缩能否帮助联合温度律恢复 `L=32` 的末端表现，并判断它是在补强动态策略还是已经超过单锚点基线。
+                    </div>
+                    <RealMultistepSegmentSummaryDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#0ea5e9', marginBottom: '12px', borderBottom: '1px solid rgba(14,165,233,0.35)', paddingBottom: '8px' }}>
+                        五点三十三、Qwen3 / DeepSeek7B 拓扑直测
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        对 `Qwen3-4B` 和 `DeepSeek-7B` 直接跑同协议 `attention-topology` 测量，比较 family residual、entropy 和 `apple / cat / truth` 的残差排序，确认 `T` 是否已经进入对称直测状态。
+                    </div>
+                    <Qwen3DeepSeekAttentionTopologyDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#38bdf8', marginBottom: '12px', borderBottom: '1px solid rgba(56,189,248,0.35)', paddingBottom: '8px' }}>
+                        五点三十四、Qwen3 / DeepSeek7B 拓扑图谱
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把 `T` 的直测从三个 probe 扩到完整概念集，直接看两模型在更大概念域里是否仍保持稳定的 family-basis 拓扑结构。
+                    </div>
+                    <Qwen3DeepSeekAttentionTopologyAtlasDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '12px', borderBottom: '1px solid rgba(245,158,11,0.35)', paddingBottom: '8px' }}>
+                        五点三十五、Qwen3 / DeepSeek7B 概念到协议场调用
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        直接显示 `apple / cat / truth` 在两模型里调用的是哪片头群-层群区域，回答“概念如何进入协议场”，而不是只问“最强头是谁”。
+                    </div>
+                    <Qwen3DeepSeekConceptProtocolFieldMappingDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#fbbf24', marginBottom: '12px', borderBottom: '1px solid rgba(251,191,36,0.35)', paddingBottom: '8px' }}>
+                        五点三十六、Qwen3 / DeepSeek7B 协议场边界图谱
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把 `k*(c, tau)` 扩到 9 个概念，直接比较两模型在协议场上的最小因果边界分布，回答“协议场能不能被小规模头群稳定打塌”。
+                    </div>
+                    <Qwen3DeepSeekProtocolFieldBoundaryAtlasDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#22c55e', marginBottom: '12px', borderBottom: '1px solid rgba(34,197,94,0.35)', paddingBottom: '8px' }}>
+                        五点三十七、Qwen3 / DeepSeek7B 机制桥接
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把当前模型侧主线从 `GPT-2` 切换到 `Qwen3-4B` 和 `DeepSeek-7B`，统一比较共享基底、偏移、门控、关系、拓扑和协议场调用，并明确哪些部分已经进入同协议直测。
+                    </div>
+                    <Qwen3DeepSeekMechanismBridgeDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#facc15', marginBottom: '12px', borderBottom: '1px solid rgba(250,204,21,0.35)', paddingBottom: '8px' }}>
+                        五点三十八、Qwen3 / DeepSeek7B 关系族边界图谱
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把六类关系协议压成边界分型，直接比较两模型在 `compact / mixed / layer-cluster / distributed` 四类上的分布差异。
+                    </div>
+                    <Qwen3DeepSeekRelationBoundaryAtlasDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981', marginBottom: '12px', borderBottom: '1px solid rgba(16,185,129,0.35)', paddingBottom: '8px' }}>
+                        五点三十九、Qwen3 / DeepSeek7B 关系拓扑-边界桥接
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把关系端点 family 的拓扑支持、头群集中度和边界分型联动起来，直接回答为什么某些关系能收缩成 `compact`，而另一些关系会停在 `layer-cluster` 或 `distributed`。
+                    </div>
+                    <Qwen3DeepSeekRelationTopologyBridgeDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#fbbf24', marginBottom: '12px', borderBottom: '1px solid rgba(251,191,36,0.35)', paddingBottom: '8px' }}>
+                        五点四十、D Problem Atlas
+                    </div>
+                    <div style={{ color: '#cbd5e1', fontSize: '12px', lineHeight: '1.7', marginBottom: '10px' }}>
+                        把 `GPT-2 / Qwen3 / DeepSeek-7B` 的高维接地桥接结果和 dual-store 参数扫描压到一张图里，直接看当前 D 为什么卡在 `novel / retention` 双目标边界。
+                    </div>
+                    <DProblemAtlasDashboard />
                 </div>
 
                 {/* 6. 接下来的工作 */}

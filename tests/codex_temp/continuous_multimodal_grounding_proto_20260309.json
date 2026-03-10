@@ -1,0 +1,48 @@
+{
+  "meta": {
+    "timestamp": "2026-03-09 20:33:22",
+    "seed": 42,
+    "num_seeds": 10,
+    "noise": 0.18,
+    "dropout_p": 0.1,
+    "missing_modality_p": 0.22,
+    "runtime_sec": 0.5618419647216797
+  },
+  "systems": {
+    "direct_multimodal": {
+      "phase1_family_accuracy": 0.9833333333333334,
+      "phase1_concept_accuracy": 0.5121212121212121,
+      "novel_family_accuracy": 0.9902777777777778,
+      "novel_concept_accuracy": 0.19722222222222224,
+      "retention_family_accuracy": 0.9878787878787879,
+      "retention_concept_accuracy": 0.33787878787878783,
+      "overall_family_accuracy": 0.9833333333333332,
+      "overall_concept_accuracy": 0.33333333333333337,
+      "crossmodal_consistency": 0.12333333333333334,
+      "grounding_score": 0.5086651397697909
+    },
+    "shared_offset_multimodal": {
+      "phase1_family_accuracy": 0.9833333333333334,
+      "phase1_concept_accuracy": 0.5151515151515151,
+      "novel_family_accuracy": 0.9902777777777778,
+      "novel_concept_accuracy": 0.19166666666666668,
+      "retention_family_accuracy": 0.9878787878787879,
+      "retention_concept_accuracy": 0.32272727272727275,
+      "overall_family_accuracy": 0.9833333333333332,
+      "overall_concept_accuracy": 0.34090909090909094,
+      "crossmodal_consistency": 0.12666666666666665,
+      "grounding_score": 0.5069209537232793
+    }
+  },
+  "gains_vs_direct": {
+    "novel_concept_gain": -0.005555555555555564,
+    "retention_concept_gain": -0.015151515151515083,
+    "overall_concept_gain": 0.007575757575757569,
+    "crossmodal_consistency_gain": 0.003333333333333313,
+    "grounding_score_gain": -0.0017441860465116088
+  },
+  "hypotheses": {
+    "H1_shared_offset_beats_direct_on_grounding": false,
+    "H2_shared_offset_beats_direct_on_consistency": true
+  }
+}
