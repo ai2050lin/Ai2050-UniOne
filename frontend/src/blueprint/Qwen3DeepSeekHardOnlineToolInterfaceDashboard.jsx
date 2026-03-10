@@ -53,22 +53,10 @@ export default function Qwen3DeepSeekHardOnlineToolInterfaceDashboard() {
     const rows = [];
     for (const [key, row] of Object.entries(payload?.models || {})) {
       const breakdown = row?.relation_tool_joint_head_online_tool_interface?.failure_breakdown || {};
-      rows.push({
-        id: `${MODEL_LABELS[key] || key}:schema`,
-        比例: Number(breakdown.schema_mismatch || 0),
-      });
-      rows.push({
-        id: `${MODEL_LABELS[key] || key}:timeout`,
-        比例: Number(breakdown.timeout_pressure || 0),
-      });
-      rows.push({
-        id: `${MODEL_LABELS[key] || key}:state`,
-        比例: Number(breakdown.state_drift || 0),
-      });
-      rows.push({
-        id: `${MODEL_LABELS[key] || key}:verify`,
-        比例: Number(breakdown.verify_mismatch || 0),
-      });
+      rows.push({ id: `${MODEL_LABELS[key] || key}:schema`, 比例: Number(breakdown.schema_mismatch || 0) });
+      rows.push({ id: `${MODEL_LABELS[key] || key}:timeout`, 比例: Number(breakdown.timeout_pressure || 0) });
+      rows.push({ id: `${MODEL_LABELS[key] || key}:state`, 比例: Number(breakdown.state_drift || 0) });
+      rows.push({ id: `${MODEL_LABELS[key] || key}:verify`, 比例: Number(breakdown.verify_mismatch || 0) });
     }
     return rows;
   }, [payload]);
