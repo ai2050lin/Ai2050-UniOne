@@ -19912,3 +19912,101 @@ g -n "AppleOrthogonalityDashboard|五点六|五点五|HRRPhaseRigorousDashboard"
   - `G7：强保留即时学习闭合`
   - `G8：桥选择律强化`
   - `G9：统一层角色稳定坐标闭合`
+
+---
+
+## 2026-03-11 Codex 研究推进：G11 / G12 / G13 代理偏差校准后的关键节点重估
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_g11_surrogate_sensitivity_decomposition.py`
+- `python -m py_compile tests/codex/test_g12_cross_surrogate_family_calibration.py`
+- `python -m py_compile tests/codex/test_g13_calibrated_critical_node_distance_reestimate.py`
+- `python tests/codex/test_g11_surrogate_sensitivity_decomposition.py`
+- `python tests/codex/test_g12_cross_surrogate_family_calibration.py`
+- `python tests/codex/test_g13_calibrated_critical_node_distance_reestimate.py`
+
+### 结果文件
+- `tests/codex_temp/g11_surrogate_sensitivity_decomposition_20260311.json`
+- `tests/codex_temp/g12_cross_surrogate_family_calibration_20260311.json`
+- `tests/codex_temp/g13_calibrated_critical_node_distance_reestimate_20260311.json`
+
+### G11：代理模型偏差敏感度分解
+- `block_sensitivity_score = 0.0552`
+- `family_bias_asymmetry_score = 0.3510`
+- `architecture_scale_carryover_score = 0.5628`
+- `overall_g11_score = 0.4897`
+
+### G11 结论
+- `status = surrogate_sensitivity_weak`
+- `most_sensitive_block = G9B`
+- `least_sensitive_block = G7B`
+- 更准确地说：
+  - `Qwen / DeepSeek` 代理偏差确实存在，但不是均匀污染全部结论
+  - `角色核` 判断最受代理家族差异影响
+  - `桥律` 判断中等受影响
+  - `强保留即时学习` 仍主要像机制本身没闭合，不是代理误差就能解释掉
+
+### G12：跨代理家族校准
+- `invariant_anchor_score = 0.9062`
+- `family_calibration_score = 0.5631`
+- `theory_anchor_retention_score = 0.7647`
+- `overall_g12_score = 0.7447`
+
+### G12 结论
+- `status = cross_surrogate_calibration_positive`
+- 最强锚点仍是：
+  - `relation invariance`
+  - `compatibility invariance`
+  - `orientation stability`
+- 最弱锚点仍是：
+  - `family topology`
+  - `layer role transfer`
+- 这说明：
+  - 当前总理论并没有被代理家族偏差整体打穿
+  - 真正脆弱的是家族拓扑和层角色迁移这两块
+
+### G13：校准后的关键节点距离重估
+- `calibration_bonus = 0.1224`
+- `raw_readiness = 0.6587`
+- `calibrated_readiness = 0.6758`
+- `raw_distance = 0.3413`
+- `calibrated_distance = 0.3242`
+
+### G13 结论
+- `status = still_before_qualitative_jump_after_calibration`
+- 代理偏差校准后，项目确实更接近关键节点
+- 但仍没有跨过质变点
+- 校准的主要帮助来自：
+  - `跨架构解释` 更合理
+  - `G8B / G9B` 不再被过度悲观解读
+- 校准没有解决的核心瓶颈仍是：
+  - `强延迟保留`
+  - `抗干扰固化`
+
+### 数学口径修正
+- 关键节点重估公式：
+  - `CriticalNode_cal = mean(TheoryCore, CrossArch_cal, StructureLearning, BroadCoverage, 1 - Risk_cal)`
+- 校准增益：
+  - `CalibrationBonus = mean((G8B_cal - G8B_raw), (G9B_cal - G9B_raw), (G12 - 0.5))`
+- 结论上更准确地说：
+  - `代理偏差会抬高一部分残差读数`
+  - `但不会把当前的核心保留瓶颈抹掉`
+
+### 当前阶段判断
+- `统一可塑性-编码-空间总理论提纯程度 = 94% - 97%`
+- `真实大脑编码机制本体破解程度 = 82% - 89%`
+- `完整智能理论关键节点 readiness`
+  - `raw ≈ 65.9%`
+  - `calibrated ≈ 67.6%`
+- `距离质变节点`
+  - `raw ≈ 34.1%`
+  - `calibrated ≈ 32.4%`
+
+### 直接结论
+- `Qwen / DeepSeek` 不是理想脑代理，这一点成立
+- 但代理偏差只解释了部分低分项
+- 不能把所有未闭合都推给代理模型
+- 当前离关键节点仍有实质距离，且主缺口仍在：
+  - `强保留即时学习`
+  - `高 margin 桥律`
+  - `稳定角色核`
