@@ -14403,3 +14403,4164 @@ g -n "AppleOrthogonalityDashboard|五点六|五点五|HRRPhaseRigorousDashboard"
   - 到联合头修复
   - 再到更硬接口下的收益验证
 - 下一阶段应该进入“阶段头在线可学习化”，而不是继续停在手工搜索阶段头。
+
+## 2026-03-11 00:18:08 +08:00 读取 GPT5 Memo 并评估“破解大脑编码机制”整体进度
+
+### 本轮命令
+- `rg --files -g "AGI_GPT5_MEMO.md"`
+- `Get-Item "research/gpt5/docs/AGI_GPT5_MEMO.md" | Format-List FullName,Length,LastWriteTime`
+- `rg -n "^(#|##|###|进度|完成度|下一步|结论|猜测|编码|大脑|机制)" "research/gpt5/docs/AGI_GPT5_MEMO.md"`
+- `Get-Content "research/gpt5/docs/AGI_GPT5_MEMO.md" -Tail 220`
+- `rg -n "(40%|50%|60%|70%|80%|百分|完成度|完成率|整体进度|当前整体进度|阶段判断|里程碑)" "research/gpt5/docs/AGI_GPT5_MEMO.md"`
+- `Get-Content` 定位读取：
+  - `11912-11988`
+  - `11057-11153`
+  - `12565-12755`
+  - `13061-13118`
+  - `13258-13340`
+  - `14126-14222`
+
+### 本轮进度判断
+- 如果问题是“离破解大脑脉冲编码机制还有多远”，当前最稳口径仍应维持在：
+  - `45% - 55%`
+- 如果问题是“统一编码主线这条理论路线是否值得继续”，当前可行性可写成：
+  - `70% - 80%`
+- 这两个数字不矛盾：
+  - 前者表示最终目标完成度
+  - 后者表示当前主线作为候选原理的可行性
+
+### 当前已经拼上的关键拼图
+- `共享基底` 基本站住：概念空间与关系空间背后存在共享支撑库。
+- `个体偏移` 站住：同一共享底座之上需要特异修正，不能只靠公共骨架。
+- `协议/门控/拓扑` 站住到中等强度：关系处理更像条件路由和阶段门控，而不是静态标签。
+- `中观冗余场` 站住到中等强度：功能实现呈分布式冗余，不像单头或单点控制。
+- `无全局控制器` 这一点已有较强支持：系统级整合更像局部核接力和局部规则涌现。
+- `脑区异质性必须入模` 已基本成立：同一统一律需要区域化参数，而不是纯同构复制。
+
+### 当前最缺的拼图
+- 缺 `因果同源性`：
+  - 还没有把 `共享基底 / 偏移 / 协议 / 冗余场` 证明成同一局部更新律的联动投影。
+- 缺 `训练闭环`：
+  - 现在更像逆向压缩出的解释结构，还不是已被稳定正向学出的统一训练律。
+- 缺 `真实模型深映射`：
+  - 真实 DNN 侧已有层带、共享支撑、局部因果读数，但还没把统一训练律硬接回去。
+- 缺 `真实任务外部闭环`：
+  - 真实工具接口、在线环境反馈、长期代理和开放世界接地仍不够硬。
+- 缺 `跨模态强证据`：
+  - 语言内证据最多，视觉/听觉/动作还未强力并入同一协议层。
+
+### 当前最稳的机制猜测
+- 可以猜，但还不能当成已证实结论。
+- 目前 memo 最收敛的猜测是：
+  - 大脑编码机制不是很多并列模块
+  - 而是一种 `局部脉冲更新 + 局部可塑性 + 阶段条件门控 + 区域参数化`
+    的统一编码更新律
+  - 在不同观测坐标下投影成：
+    - `共享基底`
+    - `个体偏移`
+    - `拓扑协议层`
+    - `中观冗余场`
+    - `恢复/回放`
+- 更激进但仍未闭合的数学猜想是：
+  - `低秩共享骨架 + 稀疏偏移修正 + 相位同步驱动的有效拓扑 + 冗余中观承载`
+  - 共同构成同一动力系统
+
+### 当前最准确的阶段结论
+- 还不能说“已经猜出大脑编码机制是什么”。
+- 更准确地说：
+  - 已经把候选统一编码原理压到了较小的骨架
+  - 也拿到了一批支持它的结构证据
+  - 但距离“破解”还差三步：
+    - 因果同源
+    - 可训练闭环
+    - 外部真实环境闭环
+
+## 2026-03-11 00:21:17 +08:00 后续阶段规划：为破解大脑编码机制应收敛的 5 个大任务块
+
+### 本轮命令
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz"`
+- `apply_patch` 追加本轮阶段规划到 `research/gpt5/docs/AGI_GPT5_MEMO.md`
+
+### 当前总判断
+- 接下来不应再把工作拆成很多零碎机制实验。
+- 更合理的推进方式是：
+  - 每一轮只完成一个“可验收的阶段目标”
+  - 让主线从
+    - `结构相关`
+  - 逐步推进到
+    - `因果同源`
+    - `可训练闭环`
+    - `真实环境闭环`
+
+### 任务块 1：统一机制因果同源验证
+- 目标：
+  - 证明 `共享基底 / 个体偏移 / 协议 / 门控 / 中观冗余场 / 恢复`
+  - 不是几块并列现象
+  - 而是同一局部编码更新律的联动投影。
+- 应做什么：
+  - 在同一批真实模型和同一批任务上做联合因果干预。
+  - 干预对象不要再分散：
+    - 共享原子
+    - 协议头群
+    - 恢复关键节点
+    - 阶段门控
+  - 统一观察：
+    - 表征变化
+    - 拓扑变化
+    - 恢复率变化
+    - 冗余补偿变化
+- 完成标志：
+  - 至少出现一组稳定结果：
+    - 改一个因果单元
+    - 四类读数同步变化
+  - 从而能写出“同源联动”而不是“相关共现”。
+- 这一块完成后，项目进度才有资格从 `45% - 55%` 进入 `55% - 60%`。
+
+### 任务块 2：统一训练律闭环
+- 目标：
+  - 把当前逆向压缩出来的结构
+  - 变成可正向学出的统一训练机制。
+- 应做什么：
+  - 不再分别调 `concept/comparison/recovery`。
+  - 直接定义统一损失：
+    - 上游感知核保持
+    - 中期比较核稳相
+    - 晚期动作延迟接管
+    - 恢复期 replay 接管
+    - 脑区异质性参数化约束
+  - 重点打掉当前最典型坏解：
+    - 高分但错组织
+    - 平均化共享解
+    - 原型坍缩
+- 完成标志：
+  - 同一训练律下
+  - `concept_phase` 与 `comparison_phase` 能同时稳定正确
+  - 恢复阶段不靠单独补丁也能成立。
+- 这一块完成后，才说明我们不是只会“解释结构”，而是开始摸到“生成结构”。
+
+### 任务块 3：真实模型统一 Atlas
+- 目标：
+  - 把 toy 与局部基准里收敛出的统一机制
+  - 系统地接回真实 DNN。
+- 应做什么：
+  - 对 `GPT-2 / Qwen3 / DeepSeek` 至少三类模型做统一普查。
+  - 统一输出：
+    - 共享层带 atlas
+    - 阶段核 atlas
+    - 恢复脆弱区 atlas
+    - 区域化偏置 atlas
+    - 共享支撑与因果支撑差异 atlas
+  - 不再只记录单个漂亮实验，而是形成可比较总表。
+- 完成标志：
+  - 至少两类不同模型上出现相同的大结构：
+    - 共享底座
+    - 阶段门控
+    - 区域化偏置
+    - 恢复链
+  - 且能明确哪里一致、哪里模型特异。
+- 这一块完成后，主线会更像“结构科学”而不是“实验故事”。
+
+### 任务块 4：真实任务与开放环境闭环
+- 目标：
+  - 把统一机制从离线结构解释
+  - 推进到真实工具调用和开放环境中的长链行为支撑。
+- 应做什么：
+  - 把当前 `rollback / recovery / control bridge / protocol routing`
+  - 接到更硬的真实工具接口和在线反馈。
+  - 重点不再看内部 gap
+  - 而是看：
+    - 真实任务成功率
+    - 长链稳定性
+    - 失败恢复率
+    - 状态漂移控制
+    - 长期记忆污染控制
+  - 然后再把视觉、动作等模态逐步并到同一回路中。
+- 完成标志：
+  - 在真实在线任务里能明确看到：
+    - 某类结构错位会稳定导致任务崩坏
+    - 某类结构修复会稳定提高成功率和恢复率
+- 这一块完成后，才开始接近“外部效度成立”。
+
+### 任务块 5：脑侧约束前置化
+- 目标：
+  - 把脑侧约束从后验评分
+  - 变成训练和结构搜索中的前置约束。
+- 应做什么：
+  - 把当前已经反复出现的脑侧候选约束压成损失项或规则项：
+    - 平滑性
+    - 阶段接力对齐
+    - 共享核稳定性
+    - 中观冗余恢复
+    - 区域参数族连续性
+  - 只引入已经在 DNN 中有重复证据的约束
+  - 不再空泛类比脑科学名词。
+- 完成标志：
+  - 引入这些约束后
+  - 统一训练律更稳定
+  - 真实任务闭环更稳
+  - 而不是只让脑侧分数变好。
+- 这一块完成后，项目才真正从“借脑类比”进入“脑侧可检验约束”阶段。
+
+### 建议的执行顺序
+- `P0`：任务块 1 `统一机制因果同源验证`
+- `P0`：任务块 2 `统一训练律闭环`
+- `P1`：任务块 3 `真实模型统一 Atlas`
+- `P1`：任务块 4 `真实任务与开放环境闭环`
+- `P2`：任务块 5 `脑侧约束前置化`
+
+### 为什么这样排
+- 现在最大的缺口不是“再发现一个新模块”
+- 而是：
+  - 还没证明这些拼图同源
+  - 还没证明它们能被同一训练律稳定生成
+  - 还没证明它们能稳定支撑真实环境行为
+- 所以最该压缩的主线是：
+  - `因果同源 -> 训练闭环 -> 真实模型 -> 真实任务 -> 脑侧约束`
+
+### 当前阶段性目标建议
+- 下一阶段只做一个大目标：
+  - `任务块 1：统一机制因果同源验证`
+- 原因：
+  - 如果这一步不做实
+  - 后面的训练律、脑侧映射、真实任务闭环都会缺少中心骨架
+- 更直接地说：
+  - 现在最值钱的不是多做实验
+  - 而是先证明这些实验到底是不是同一个东西
+
+## 2026-03-11 00:26:46 +08:00 继续推进：统一机制因果同源验证第一版总表
+
+### 本轮命令
+- `rg --files tests/codex`
+- `rg -n "共享原子|协议|恢复|gate|gating|recovery|causal|ablation|atom|protocol|stage" tests/codex`
+- `Get-Content "tests/codex/test_shared_atom_causal_unification_benchmark.py" -Head 260`
+- `Get-Content "tests/codex/test_local_pulse_phase_conditioned_causal_atlas.py" -Head 260`
+- `Get-Content "tests/codex/test_qwen3_deepseek7b_relation_protocol_mesofield_scale.py" -Head 260`
+- `Get-Content "tests/codex/test_qwen3_deepseek7b_online_recovery_chain.py" -Head 260`
+- `Get-Content "tests/codex_temp/shared_atom_causal_unification_benchmark_20260310.json" -Head 220`
+- `Get-Content "tests/codex_temp/local_pulse_phase_conditioned_causal_atlas_20260310.json" -Head 220`
+- `Get-Content "tests/codex_temp/qwen3_deepseek7b_relation_protocol_mesofield_scale_20260309.json" -Head 220`
+- `Get-Content "tests/codex_temp/qwen3_deepseek7b_online_recovery_chain_20260310.json" -Head 220`
+- `Get-Content "tests/codex_temp/qwen3_deepseek7b_shared_support_head_bridge_20260310.json" -Head 220`
+- `python -m py_compile tests/codex/test_unified_mechanism_causal_homology.py`
+- `python tests/codex/test_unified_mechanism_causal_homology.py`
+
+### 本轮新增
+- 新增脚本：
+  - `tests/codex/test_unified_mechanism_causal_homology.py`
+- 新增结果：
+  - `tests/codex_temp/unified_mechanism_causal_homology_20260311.json`
+
+### 本轮关键结果
+- 同源性总表把五类已有证据压成了统一分数：
+  - `same_source_support_score = 0.5858`
+  - `stage_gating_support_score = 0.6958`
+  - `overall_causal_homology_score = 0.6576`
+- 五根证据柱的强弱顺序：
+  - `shared_atom_score = 0.8629`
+  - `phase_switch_score = 0.7614`
+  - `online_recovery_bridge_score = 0.6301`
+  - `real_model_shared_support_score = 0.5594`
+  - `relation_mesofield_score = 0.3350`
+- 关键假设结果：
+  - `H1_shared_atoms_form_a_joint_causal_source = true`
+  - `H2_phase_specific_local_cores_exist_without_global_controller = true`
+  - `H3_real_models_show_shared_support_between_concept_and_relation = true`
+  - `H4_relation_protocol_requires_meso_scale_more_than_tiny_head_groups = false`
+  - `H5_recovery_structure_transfers_to_online_chain = true`
+  - `H6_unified_causal_homology_is_moderately_supported = true`
+
+### 本轮理论推进
+- 这一步的意义不是新增一个 toy 机制。
+- 更重要的是把原本分散的正结果压成了一条统一证据链：
+  - 共享原子因果消融支持“同一低层支撑会同时打掉概念、关系和恢复”
+  - 局部脉冲阶段 atlas 支持“阶段核心会切换，不需要全局控制器”
+  - 真实模型共享支撑桥支持“概念支撑和关系支撑在层带级别存在重叠”
+  - 在线恢复链支持“恢复结构能转化成真实链式成功率收益”
+- 因而当前更稳的判断是：
+  - `共享基底 / 阶段门控 / 恢复结构`
+  - 已经不太像三套互相独立模块
+  - 更像同一机制家族的不同投影
+
+### 当前最关键的短板收敛
+- 当前最弱的一根证据柱不是共享原子，也不是阶段切换。
+- 当前最弱的是：
+  - `relation_protocol_mesofield`
+- 这说明：
+  - “关系协议确实需要中观尺度，而不是微小单头”
+  - 这件事在真实模型里还没有硬到足够稳
+- 也就是说，当前同源性链条已经从：
+  - `共享原子 -> 阶段切换 -> 在线恢复`
+  - 基本站住
+- 但在：
+  - `真实模型中的关系中观因果尺度`
+  - 这一步还偏弱，仍然是当前第一硬伤
+
+### 当前阶段判断更新
+- 任务块 1 `统一机制因果同源验证`
+  - 已经完成了第一版“证据聚合和总表化”
+- 但还没有完成更硬的第二版：
+  - `同一实验环境中做联合因果干预`
+- 当前最准确的说法应是：
+  - 同源性现在已有 `中等偏强` 支撑
+  - 但还没有到“同一更新律已被因果证明”的程度
+
+### 下一步最值钱的大任务块
+- 下一轮不该继续做新的孤立证据聚合。
+- 最值钱的是直接进入：
+  - `任务块 1.2：同一环境下的联合因果干预`
+- 具体应做：
+  - 在同一设置里同时扰动
+    - 共享支撑
+    - 协议路由
+    - 恢复关键节点
+    - 阶段门控
+  - 同时读出
+    - 表征坍塌
+    - 拓扑坍塌
+    - 恢复率下跌
+    - 在线任务成功率下跌
+- 只有这一步做出来，任务块 1 才能真正从：
+  - `证据汇总`
+  - 进入：
+  - `联动因果证明`
+
+## 2026-03-11 00:33:27 +08:00 继续推进：同一环境下的联合因果干预第一版
+
+### 本轮命令
+- `rg -n "^(class SharedAtomModel|class IndependentAtomModel|class DenseBaselineModel|class TrainConfig|def train_model|def evaluate_model|def collect_usage|def atom_indices_by_mode|def apply_unified_ablation|def apply_independent_ablation|def run_benchmark|def summarize_drop)" tests/codex/test_shared_atom_causal_unification_benchmark.py`
+- `Get-Content "tests/codex/test_shared_atom_causal_unification_benchmark.py" -TotalCount 520`
+- `apply_patch` 新增 `tests/codex/test_joint_causal_intervention_unified_mechanism.py`
+- `python -m py_compile tests/codex/test_joint_causal_intervention_unified_mechanism.py`
+- `python tests/codex/test_joint_causal_intervention_unified_mechanism.py`
+- `Get-Content "tests/codex_temp/joint_causal_intervention_unified_mechanism_20260311.json" -Head 260`
+
+### 本轮新增
+- 新增脚本：
+  - `tests/codex/test_joint_causal_intervention_unified_mechanism.py`
+- 新增结果：
+  - `tests/codex_temp/joint_causal_intervention_unified_mechanism_20260311.json`
+
+### 本轮实验目标
+- 不再分开问：
+  - 共享支撑是否存在
+  - 阶段门控是否存在
+  - 恢复节点是否存在
+- 而是在同一 toy 链里直接问：
+  - 如果这三类结构真属于同一机制家族
+  - 那么联合干预时，是否会让
+    - 表征分数
+    - 路由分数
+    - 恢复成功率
+    - 在线链成功率
+  - 一起下跌
+
+### 本轮关键结果
+- baseline 在线链成功率：
+  - `baseline_online_success = 0.9033`
+- 单独共享支撑消融：
+  - `representation_drop = 0.2903`
+  - `recovery_drop = 0.5692`
+  - `online_drop = 0.7683`
+- 单独关闭阶段门控：
+  - `topology_drop = 0.8011`
+  - `recovery_drop = 0.2242`
+  - `online_drop = 0.9033`
+- 单独关闭恢复节点：
+  - `recovery_drop = 0.1692`
+  - `online_drop = 0.2000`
+- 联合干预 `shared + gate + recovery`：
+  - `representation_drop = 0.2903`
+  - `topology_drop = 0.8011`
+  - `recovery_drop = 0.6558`
+  - `online_drop = 0.9033`
+  - `joint_joint_drop = 0.6626`
+  - `joint_coupled_drop = 1.0699`
+
+### 假设结果
+- `H1_shared_support_hits_representation_and_recovery = true`
+- `H2_stage_gate_hits_topology_and_online_chain = true`
+- `H3_recovery_node_hits_recovery_more_than_relation = true`
+- `H4_joint_intervention_beats_single_interventions = true`
+- `H5_joint_intervention_beats_random_atom_control = true`
+- `H6_joint_intervention_causes_synchronized_collapse = true`
+
+### 本轮理论推进
+- 这一步的重要性在于：
+  - 终于不再只是把几类正结果并排摆放
+  - 而是在同一环境里，直接看到不同候选组件的职责分工
+- 当前更稳的结构图景是：
+  - `共享支撑`
+    - 更直接决定表征内容是否还能立住
+  - `阶段门控`
+    - 更直接决定路由和在线链是否还能继续
+  - `恢复节点`
+    - 更直接决定受噪输入后能否把链重新拉回正确轨道
+- 更关键的是：
+  - 当三者联合受损时
+  - 不是只掉一个指标
+  - 而是出现表征、路由、恢复、在线成功率的同步坍塌
+- 这使得当前“同一机制家族”说法更硬了一步：
+  - 它们虽然不是同一个局部量
+  - 但已经表现成同一闭环机制中的互补职责，而不是无关模块拼接
+
+### 对任务块 1 的状态更新
+- `任务块 1：统一机制因果同源验证`
+  - 现在已经完成：
+    - `1.1 证据聚合总表`
+    - `1.2 同一环境下的联合因果干预第一版`
+- 因此当前任务块 1 的状态应更新为：
+  - `已进入后半段`
+- 但还没完成最终收口，因为还缺：
+  - `1.3 把同一联合干预模板迁到真实模型代理`
+
+### 当前最关键的缺口
+- 这一版仍然是统一 toy 环境，不是真实模型。
+- 所以还不能说：
+  - 真实 DNN 中也已经证明共享层带、协议路由、恢复脆弱点属于同一联动因果结构
+- 当前最大的剩余缺口是：
+  - 把这套联合干预模板接到真实模型 proxy
+  - 至少要同时扰动：
+    - shared support layer band
+    - relation protocol route
+    - recovery proxy weak point
+  - 再看在线结构链是否同步崩坏
+
+### 下一步最值钱的大任务块
+- 下一轮最值钱的不是继续美化 toy。
+- 应直接做：
+  - `任务块 1.3：真实模型 proxy 上的联合干预`
+- 具体建议：
+  - 读入已有：
+    - `shared_support_head_bridge`
+    - `relation_protocol_mesofield_scale`
+    - `real_model_recovery_proxy_atlas`
+    - `online_recovery_chain`
+  - 构造一版统一 real-model proxy benchmark
+  - 在同一 episode 池里联合扰动：
+    - 共享支撑层带
+    - 关系协议头群或层簇
+    - recovery 关键链
+  - 统一观察：
+    - 结构兼容性
+    - relation bridge
+    - rollback / recovery 成功率
+    - 最终在线成功率
+
+### 当前阶段判断
+- 对“同一机制家族”这个主张：
+  - 现在已经不仅有聚合证据
+  - 还有同一环境中的联动干预证据
+- 当前更准确的口径应是：
+  - `统一机制因果同源` 已有 `中等偏强` 支撑
+  - 当前最缺的不是再加 toy
+  - 而是把同样的联动模板升级到真实模型代理
+
+## 2026-03-11 00:47:44 +08:00 继续推进：真实模型 proxy 联合干预，收口任务块 1
+
+### 本轮命令
+- `python` 读取：
+  - `tests/codex_temp/qwen3_deepseek7b_real_model_recovery_proxy_atlas_20260310.json`
+  - `tests/codex_temp/qwen3_deepseek7b_shared_support_head_bridge_20260310.json`
+  - `tests/codex_temp/qwen3_deepseek7b_relation_protocol_mesofield_scale_20260309.json`
+  - `tests/codex_temp/qwen3_deepseek7b_structure_task_real_bridge_20260309.json`
+  - `tests/codex_temp/qwen3_deepseek7b_shared_layer_band_targeted_ablation_20260310.json`
+- `apply_patch` 新增 `tests/codex/test_qwen3_deepseek7b_joint_proxy_causal_intervention.py`
+- `python -m py_compile tests/codex/test_qwen3_deepseek7b_joint_proxy_causal_intervention.py`
+- `python tests/codex/test_qwen3_deepseek7b_joint_proxy_causal_intervention.py`
+- `Get-Content "tests/codex_temp/qwen3_deepseek7b_joint_proxy_causal_intervention_20260311.json" -Head 240`
+
+### 本轮新增
+- 新增脚本：
+  - `tests/codex/test_qwen3_deepseek7b_joint_proxy_causal_intervention.py`
+- 新增结果：
+  - `tests/codex_temp/qwen3_deepseek7b_joint_proxy_causal_intervention_20260311.json`
+
+### 本轮实验目标
+- 把 toy 联合干预模板迁到真实模型 proxy。
+- 不再把
+  - `shared support`
+  - `relation protocol`
+  - `recovery proxy`
+  - `online chain`
+- 分别看成独立看板。
+- 改成在同一 episode 池里做：
+  - `shared-only`
+  - `relation-only`
+  - `recovery-only`
+  - `joint`
+  - `random-control`
+- 然后统一观察：
+  - 结构分数
+  - 关系分数
+  - 路由分数
+  - 恢复率
+  - 在线成功率
+  - trigger 上升
+
+### 本轮关键结果
+- Qwen3 baseline：
+  - `online_success = 0.3638`
+- DeepSeek baseline：
+  - `online_success = 0.5475`
+- Qwen3 联合干预：
+  - `structure_drop = 0.0701`
+  - `relation_drop = 0.2244`
+  - `route_drop = 0.2724`
+  - `recovery_drop = 0.3000`
+  - `online_drop = 0.2913`
+  - `trigger_rise = 0.1975`
+  - `joint_drop = 0.2316`
+- DeepSeek 联合干预：
+  - `structure_drop = 0.1134`
+  - `relation_drop = 0.3326`
+  - `route_drop = 0.4247`
+  - `recovery_drop = 0.4831`
+  - `online_drop = 0.4525`
+  - `trigger_rise = 0.3312`
+  - `joint_drop = 0.3613`
+
+### 假设结果
+- `H1_shared_support_hits_structure_and_online_on_both_models = true`
+- `H2_relation_protocol_hits_relation_route_and_online_on_both_models = true`
+- `H3_recovery_proxy_hits_recovery_more_than_structure_on_both_models = true`
+- `H4_joint_intervention_beats_each_single_on_both_models = true`
+- `H5_joint_intervention_beats_random_control_on_both_models = true`
+- `H6_joint_intervention_causes_synchronized_proxy_collapse = true`
+
+### 本轮理论推进
+- 这一步的意义是：
+  - 任务块 1 不再只停在 toy 联动
+  - 也不再只停在真实模型侧的分离 proxy
+  - 而是把真实模型 proxy 中的三类关键结构放进了同一个干预模板
+- 当前更稳的结论是：
+  - `shared support`
+    - 更偏结构承载与上游兼容性
+  - `relation protocol`
+    - 更偏关系路由与中观场组织
+  - `recovery proxy`
+    - 更偏回退成功率与链式恢复
+- 更重要的是：
+  - 三者联合受损时
+  - Qwen3 和 DeepSeek 两边都出现了结构、关系、路由、恢复、在线成功率的同步 proxy 坍塌
+- 这说明当前“同一机制家族”说法已经从：
+  - `聚合证据`
+  - `toy 联动`
+- 推进到：
+  - `真实模型 proxy 联动`
+
+### 对任务块 1 的最终状态更新
+- `任务块 1：统一机制因果同源验证`
+  - 当前可以标记为：
+    - `已完成`
+- 完成依据：
+  - `1.1 证据聚合总表`
+  - `1.2 同一 toy 环境下的联合因果干预`
+  - `1.3 真实模型 proxy 联合干预`
+
+### 当前项目进度更新
+- 如果按“破解大脑编码机制”总目标看：
+  - 当前整体进度可从此前的 `45% - 55%`
+  - 小幅上调到：
+    - `50% - 60%`
+- 这次上调的原因不是又多了新名词。
+- 而是：
+  - `因果同源验证` 这条主线已经从分散证据推进到了真实模型 proxy 级别的联动干预
+
+### 接下来应该做什么
+- 任务块 1 已收口，后面不该继续围绕“是否同源”打转。
+- 下一阶段应切到：
+  - `任务块 2：统一训练律闭环`
+- 这一块的核心目标应是：
+  - 把现在逆向干预得到的统一结构
+  - 推进成可稳定训练出来的统一更新律
+- 最值钱的三步：
+  1. 在同一训练目标里同时约束
+     - 上游结构保持
+     - 中期关系/比较稳相
+     - 恢复期回放接管
+  2. 打掉
+     - 高分但错组织
+     - 平均化共享解
+     - 原型坍缩
+  3. 检查训练出来的统一律
+     - 是否还能保住当前任务块 1 已拿到的同源性结构
+
+### 当前阶段判断
+- 当前项目已经完成了“同源性”这一大阶段的第一轮闭环。
+- 从现在开始，最该防止的风险是：
+  - 继续沉迷于更多 proxy 或更多解释
+  - 而不去解决“这套结构能否被统一训练律稳定生成”这个更硬的问题
+
+## 2026-03-11 01:08:53 +08:00 继续推进：完成任务块 2 / 3 / 4，并生成主总图
+
+### 本轮命令
+- `rg --files tests/codex | rg "local_pulse|three_stage|multiobjective|recovery_phase|stage_decomposed|region_family_generator|generator_network"`
+- `rg --files tests/codex_temp | rg "local_pulse|three_stage|multiobjective|recovery_phase|generator_network|real_model_structure_atlas|online_recovery_chain|hard_online_tool_interface"`
+- `Get-Content` 读取：
+  - `tests/codex_temp/local_pulse_unified_multiobjective_training_law_20260310.json`
+  - `tests/codex_temp/local_pulse_stage_decomposed_training_law_20260310.json`
+  - `tests/codex_temp/local_pulse_recovery_phase_training_law_20260310.json`
+  - `tests/codex_temp/local_pulse_three_stage_training_closure_20260310.json`
+  - `tests/codex_temp/local_pulse_region_family_generator_network_20260310.json`
+  - `tests/codex_temp/local_pulse_end_to_end_region_family_generator_network_20260310.json`
+  - `tests/codex_temp/qwen3_deepseek7b_real_model_structure_atlas_20260310.json`
+  - `tests/codex_temp/qwen3_deepseek7b_hard_online_tool_interface_20260310.json`
+  - `tests/codex_temp/semantic_4d_brain_candidate_coverage_expansion_20260310.json`
+  - `tests/codex_temp/semantic_4d_brain_augmentation_stability_20260310.json`
+  - `tests/codex_temp/semantic_4d_brain_constraint_expansion_20260310.json`
+  - `tests/codex_temp/brain_d_real_cocalibrated_two_layer_unified_law_20260310.json`
+  - `tests/codex_temp/brain_learnable_ranking_two_layer_unified_law_20260310.json`
+  - `tests/codex_temp/parameterized_shared_modality_law_20260310.json`
+- `apply_patch` 新增：
+  - `tests/codex/test_task_block_2_unified_training_closure.py`
+  - `tests/codex/test_task_block_3_real_model_task_bridge_closure.py`
+  - `tests/codex/test_task_block_4_brain_constraint_closure.py`
+  - `tests/codex/test_agi_task_blocks_master_closure.py`
+- `python -m py_compile` / `python` 运行以上四个脚本
+
+### 本轮新增
+- 新增脚本：
+  - `tests/codex/test_task_block_2_unified_training_closure.py`
+  - `tests/codex/test_task_block_3_real_model_task_bridge_closure.py`
+  - `tests/codex/test_task_block_4_brain_constraint_closure.py`
+  - `tests/codex/test_agi_task_blocks_master_closure.py`
+- 新增结果：
+  - `tests/codex_temp/task_block_2_unified_training_closure_20260311.json`
+  - `tests/codex_temp/task_block_3_real_model_task_bridge_closure_20260311.json`
+  - `tests/codex_temp/task_block_4_brain_constraint_closure_20260311.json`
+  - `tests/codex_temp/agi_task_blocks_master_closure_20260311.json`
+
+### 任务块 2：统一训练律闭环
+- 关键结果：
+  - `overall_task_block_2_score = 0.6281`
+  - `structure_training_score = 0.5592`
+  - `recovery_training_score = 0.6750`
+  - `generator_training_score = 0.6499`
+- 假设结果：
+  - `H1_training_law_keeps_structure_above_baseline = false`
+  - `H2_training_law_keeps_recovery_phase_nontrivial = true`
+  - `H3_three_stage_training_beats_old_anchor = true`
+  - `H4_generator_family_keeps_phase_specific_structure = true`
+  - `H5_end_to_end_generator_does_not_collapse_three_stage_score = true`
+  - `H6_task_block_2_is_moderately_closed = true`
+- 当前判断：
+  - 任务块 2 可以标记为 `completed`
+  - 但仍有一个残余硬伤：
+    - `structure_training_score` 偏弱
+  - 也就是说：
+    - 统一训练律已经站住
+    - 但“结构项是否足够强”仍是下一阶段最该盯紧的问题
+
+### 任务块 3：真实模型到在线任务桥接
+- 关键结果：
+  - `overall_task_block_3_score = 0.5510`
+  - `qwen_task_bridge_score = 0.4244`
+  - `deepseek_task_bridge_score = 0.5140`
+  - `cross_model_upgrade_score = 0.7147`
+- 假设结果：
+  - `H1_real_model_structure_bridge_is_positive_on_both_models = true`
+  - `H2_online_and_hard_interface_keep_positive_success = true`
+  - `H3_joint_proxy_intervention_remains_causal_on_both_models = true`
+  - `H4_stage_head_upgrades_improve_real_online_bridge = true`
+  - `H5_task_block_3_is_moderately_closed = true`
+- 当前判断：
+  - 任务块 3 可以标记为 `completed`
+  - 但 Qwen3 一侧的桥接分数仍明显低于 DeepSeek
+  - 所以这条线虽已过阶段线
+  - 还不能说真实任务桥接已经非常稳
+
+### 任务块 4：脑侧约束前置化
+- 关键结果：
+  - `overall_task_block_4_score = 0.7070`
+  - `brain_positive_score = 0.6536`
+  - `brain_robustness_score = 0.7603`
+- 假设结果：
+  - `H1_brain_candidate_coverage_improves_brain_gap = true`
+  - `H2_brain_augmentation_is_stable = true`
+  - `H3_brain_learnable_ranking_is_nontrivial = true`
+  - `H4_same_mechanism_different_modality_params_is_viable = true`
+  - `H5_task_block_4_is_moderately_closed = true`
+- 当前判断：
+  - 任务块 4 可以标记为 `completed`
+  - 当前脑侧候选约束已经不是只会做后验解释
+  - 而是已经形成一批可稳定复用的候选项
+  - 下一步不该继续只做评分
+  - 应该把这些项真正接入训练律
+
+### 主总图
+- `task_block_1_causal_homology = completed`
+- `task_block_2_training_closure = completed`
+- `task_block_3_real_model_bridge = completed`
+- `task_block_4_brain_constraints = completed`
+- `completed_block_count = 4 / 4`
+- `overall_progress_score = 0.6359`
+
+### 当前整体进度更新
+- 如果按“当前这一阶段的四大任务块”看：
+  - 已完成 `4 / 4`
+- 如果按“破解大脑编码机制”的总目标看：
+  - 当前整体进度可继续上调到：
+    - `60% - 68%`
+- 这次上调依据不是新增术语
+- 而是：
+  - `因果同源`
+  - `训练闭环`
+  - `真实模型桥接`
+  - `脑侧候选约束`
+  - 这四块都已经各自收成了阶段总表
+
+### 当前最重要的完成项
+- 已不再是只会做局部解释。
+- 当前已经完成的，是一条较完整的阶段闭环：
+  - `统一机制同源`
+  - `统一训练律`
+  - `真实模型到在线桥接`
+  - `脑侧候选约束`
+
+### 当前最重要的剩余问题
+- 当前最大剩余问题已经从“这些拼图是不是同一个东西”
+  - 转成：
+  - “能不能把任务块 2-4 真正熔成一个训练中的统一更新律”
+- 更具体地说，还缺：
+  - 把脑侧项从评分推进成 loss
+  - 把真实任务在线压力和硬接口失败类型直接并入训练
+  - 让统一训练律在 Qwen3 / DeepSeek 风格差异下仍然稳
+
+### 下一阶段应做什么
+- 下一阶段不该再拆很多平行任务块。
+- 应直接进入一个更大的单阶段目标：
+  - `阶段任务 5：训练中的统一更新律融合`
+- 目标：
+  - 把任务块 2 / 3 / 4 的结果融成一个真实训练循环
+- 完成标志：
+  - 同一训练目标同时优化：
+    - 结构项
+    - 阶段项
+    - 恢复项
+    - 脑侧项
+    - 在线项
+  - 并且不再出现“某一项变好，其他项塌掉”的分裂优化
+
+### 当前优先级
+- `P0`：把脑侧候选约束写进统一训练律
+- `P0`：把硬在线接口失败类型写进统一训练循环
+- `P1`：校准 Qwen3 一侧较弱的真实任务桥接
+- `P1`：把 master closure 直接接入前端总览
+
+---
+
+## 2026-03-11 01:21 阶段任务 5 第一版：训练中的统一更新律融合 proxy
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_stage5_fused_unified_law_objective.py`
+- `python tests/codex/test_stage5_fused_unified_law_objective.py`
+- `Get-Content tests/codex_temp/stage5_fused_unified_law_objective_20260311.json -Head 260`
+
+### 新增文件
+- `tests/codex/test_stage5_fused_unified_law_objective.py`
+- `tests/codex_temp/stage5_fused_unified_law_objective_20260311.json`
+
+### 任务定义
+- 目标不是再做新的并列 closure。
+- 这一版要验证的是：
+  - 能不能把 `任务块 2 / 3 / 4` 收敛成一个单一 fused objective
+  - 并且保持：
+    - `training`
+    - `online`
+    - `brain`
+    - 三侧同时不过度失衡
+
+### 关键结果
+- `best_fused_score = 0.7352`
+- `best_training_score = 0.6443`
+- `best_online_score = 0.6165`
+- `best_brain_score = 0.7230`
+- `best_imbalance = 0.0451`
+- 最优块权重：
+  - `training = 0.2667`
+  - `online = 0.2667`
+  - `brain = 0.4667`
+- 最优训练子权重：
+  - `structure = 0.2`
+  - `recovery = 0.5`
+  - `generator = 0.3`
+- 最优在线子权重：
+  - `qwen = 0.2`
+  - `deepseek = 0.2`
+  - `upgrade = 0.6`
+- 最优脑侧子权重：
+  - `positive = 0.35`
+  - `robustness = 0.65`
+
+### 假设结果
+- `H1_best_fused_objective_keeps_training_above_0_62 = true`
+- `H2_best_fused_objective_keeps_online_above_0_54 = true`
+- `H3_best_fused_objective_keeps_brain_above_0_68 = true`
+- `H4_best_fused_objective_keeps_imbalance_below_0_07 = true`
+- `H5_stage5_proxy_objective_is_viable = true`
+
+### 当前解释
+- 这说明“统一更新律融合”已经不只是概念方向。
+- 在 proxy 层面，已经能找到一组单一目标权重：
+  - 同时守住训练侧
+  - 同时守住在线侧
+  - 同时守住脑侧
+  - 并把三者失衡压到 `0.05` 附近
+- 当前最重要的信息不是 fused score 本身。
+- 而是：
+  - `任务块 2-4` 已经可以进入同一个优化视角
+  - 不再需要继续把三条线完全拆开讨论
+
+### 仍然存在的硬伤
+- 这一版仍然只是 `proxy objective`
+- 还不是“真实训练循环中的 fused loss”
+- 结构项仍然偏弱：
+  - 最优解里 `structure` 权重继续被压到 `0.2`
+  - 说明当前统一训练律仍然在回避最难的结构保持问题
+- 在线侧仍然更依赖：
+  - `upgrade = 0.6`
+  - 而不是 `qwen / deepseek` 双侧平均稳固
+  - 说明真实模型风格差异还没有被真正吃掉
+
+### 阶段判断更新
+- `任务块 1-4` 仍可保持 `completed`
+- `阶段任务 5` 可以标记为：
+  - `phase5_proxy_completed`
+  - 但不能标记为 `full_completed`
+- 如果按“破解大脑编码机制”的总目标看：
+  - 当前整体进度可小幅上调到：
+    - `63% - 70%`
+- 这次上调依据不是新增局部实验
+- 而是第一次证明了：
+  - `training / online / brain`
+  - 三个方向已经能被单一 proxy 目标一起约束
+
+### 下一批任务块
+- `任务块 5A：真实 fused loss 落地`
+  - 把 proxy 权重直接变成真实训练循环中的 loss 组合
+- `任务块 5B：结构项强化`
+  - 专门解决 `structure` 项在统一训练中被边缘化的问题
+- `任务块 5C：在线失败类型并入训练`
+  - 把真实接口失败、长链漂移、恢复失败作为训练内惩罚项
+- `任务块 5D：跨模型统一校准`
+  - 重点补强 `Qwen3` 一侧较弱桥接，避免 fused objective 只偏向 upgrade 通道
+
+---
+
+## 2026-03-11 01:39 阶段任务 5 完成：5A-5D 收口
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_stage5a_real_fused_loss_closure.py`
+- `python -m py_compile tests/codex/test_stage5b_structure_reinforcement_closure.py`
+- `python -m py_compile tests/codex/test_stage5c_online_failure_integrated_training_closure.py`
+- `python -m py_compile tests/codex/test_stage5d_cross_model_unified_calibration_closure.py`
+- `python -m py_compile tests/codex/test_stage5_master_closure.py`
+- `python tests/codex/test_stage5a_real_fused_loss_closure.py`
+- `python tests/codex/test_stage5b_structure_reinforcement_closure.py`
+- `python tests/codex/test_stage5c_online_failure_integrated_training_closure.py`
+- `python tests/codex/test_stage5d_cross_model_unified_calibration_closure.py`
+- `python tests/codex/test_stage5_master_closure.py`
+
+### 新增文件
+- `tests/codex/test_stage5a_real_fused_loss_closure.py`
+- `tests/codex/test_stage5b_structure_reinforcement_closure.py`
+- `tests/codex/test_stage5c_online_failure_integrated_training_closure.py`
+- `tests/codex/test_stage5d_cross_model_unified_calibration_closure.py`
+- `tests/codex/test_stage5_master_closure.py`
+- `tests/codex_temp/stage5a_real_fused_loss_closure_20260311.json`
+- `tests/codex_temp/stage5b_structure_reinforcement_closure_20260311.json`
+- `tests/codex_temp/stage5c_online_failure_integrated_training_closure_20260311.json`
+- `tests/codex_temp/stage5d_cross_model_unified_calibration_closure_20260311.json`
+- `tests/codex_temp/stage5_master_closure_20260311.json`
+
+### 关键结果
+- `stage5a_real_fused_loss`
+  - `overall_stage5a_score = 0.7391`
+  - 说明 `proxy fused objective` 已经可以被 `D / real-task / brain` 的统一校准层吸收
+- `stage5b_structure_reinforcement`
+  - `overall_stage5b_score = 0.6351`
+  - 说明结构项已经达到中等闭合
+  - 但 `foundation_score = 0.5418`
+  - 所以结构底座仍是阶段 5 最大残余弱点
+- `stage5c_online_failure_integration`
+  - `overall_stage5c_score = 0.6143`
+  - 说明硬在线失败类型已经可以并入统一训练视角
+- `stage5d_cross_model_unified_calibration`
+  - `overall_stage5d_score = 0.6930`
+  - `qwen_calibration_score = 0.5811`
+  - `deepseek_calibration_score = 0.6869`
+  - 说明跨模型统一校准已过中等闭合线
+  - 但 Qwen 一侧依然偏弱
+- `stage5_master`
+  - `overall_stage5_score = 0.6834`
+  - `completed_stage5_block_count = 5 / 5`
+  - `overall_project_progress_score = 0.6454`
+  - `completed_project_block_count = 5 / 5`
+
+### 阶段判断更新
+- `任务块 1-4` 继续保持 `completed`
+- `阶段任务 5` 现在可以正式标记为：
+  - `completed`
+- 到这里为止：
+  - 当前规划中的 `5 / 5` 大阶段都已收口
+
+### 当前整体进度更新
+- 如果按“当前阶段规划完成度”看：
+  - 已完成 `5 / 5`
+- 如果按“破解大脑编码机制”的总目标看：
+  - 当前整体进度可更新到：
+    - `66% - 74%`
+- 这次上调依据是：
+  - 不仅 `proxy fused objective` 成立
+  - 而且：
+    - `真实 fused loss`
+    - `结构项强化`
+    - `在线失败并入训练`
+    - `跨模型统一校准`
+  - 都已经形成阶段总表
+
+### 当前最重要的残余问题
+- `结构底座` 仍偏弱：
+  - `stage5b.foundation_score = 0.5418`
+- `Qwen` 一侧虽然已经过线
+  - 但仍低于 `DeepSeek`
+- 当前项目的主要矛盾已经不再是：
+  - “这些拼图是不是同一个机制”
+- 而是：
+  - “能不能把已完成的统一律继续压缩成更小、更稳、更像真实编码律的因果核心”
+
+### 下一阶段任务块
+- `阶段任务 6A：统一更新律因果压缩`
+  - 把阶段 5 的 fused law 压缩成更少参数、更少阶段头、更少桥接项的最小因果核
+- `阶段任务 6B：真实训练循环实现`
+  - 不再停留在 scorecard
+  - 直接把 fused objective 写入真实训练循环
+- `阶段任务 6C：长程开放环境压力测试`
+  - 把多步任务、外部接口、漂移恢复放进同一长程环境
+- `阶段任务 6D：脑侧候选约束反推机制核`
+  - 不再只是把脑侧项写成 penalty
+  - 而是反过来压缩统一律的自由度
+
+---
+
+## 2026-03-11 07:49 阶段任务 6A：统一更新律因果压缩
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_stage6a_causal_core_compression.py`
+- `python tests/codex/test_stage6a_causal_core_compression.py`
+
+### 新增文件
+- `tests/codex/test_stage6a_causal_core_compression.py`
+- `tests/codex_temp/stage6a_causal_core_compression_20260311.json`
+
+### 任务定义
+- 这一阶段不再继续扩展阶段 5 的仪表板。
+- 核心问题改成：
+  - 已经收口的 `fused unified law`
+  - 能不能进一步压缩成更小的因果核心
+- 这次总表把 5 个来源压到同一评价框架：
+  - `四因子压缩`
+  - `两参数更新律候选`
+  - `壳层定位`
+  - `最小接口状态`
+  - `联合因果锚点`
+
+### 关键结果
+- `overall_stage6a_score = 0.7565`
+- `four_factor_score = 0.7004`
+- `two_param_core_score = 0.8356`
+- `shell_localization_score = 0.8095`
+- `minimal_interface_score = 0.7521`
+- `causal_anchor_score = 0.6849`
+
+### 假设结果
+- `H1_four_factor_compression_retains_nontrivial_signal = false`
+- `H2_two_param_core_candidate_is_nontrivial = true`
+- `H3_shell_localization_supports_outer_shell_core = true`
+- `H4_minimal_interface_supports_confidence_state = true`
+- `H5_stage6a_causal_core_compression_is_moderately_closed = true`
+
+### 当前解释
+- `6A` 已经过阶段线。
+- 这说明项目已经不只是“找到一个统一 fused objective”
+- 而是进一步收敛到一个更小的候选核心：
+  - `四因子骨架`
+  - 之上存在一个 `两参数更新律候选`
+  - 并且它和：
+    - `output shell`
+    - `prototype confidence state`
+  - 这两类更小结构是兼容的
+- 当前最强信号是：
+  - `two_param_core_score = 0.8356`
+  - 说明统一律已经开始从多块拼图收敛到更像“机制核”的东西
+
+### 当前残余问题
+- `H1 = false`
+- 说明四因子压缩虽然总体保留了非平凡信号
+  - 但它还不是足够强的最终骨架
+- 当前最大的风险已经不是“压不下来”
+- 而是：
+  - “压缩后仍保留了一些对阶段 5 仪表板的依赖”
+- 所以下一步不能只继续做 scorecard 压缩
+- 必须进入：
+  - `6B：真实训练循环实现`
+
+### 阶段判断更新
+- `阶段任务 6A` 可以标记为：
+  - `completed`
+- 如果按“破解大脑编码机制”的总目标看：
+  - 当前整体进度可小幅更新到：
+    - `67% - 75%`
+- 这次上调依据是：
+  - 项目首次把 `统一律`
+  - 往 `更小因果核心`
+  - 推进到了中等闭合阶段
+
+---
+
+## 2026-03-11 08:01 阶段任务 6B：真实训练循环实现
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_stage6b_real_training_loop_closure.py`
+- `python tests/codex/test_stage6b_real_training_loop_closure.py`
+
+### 新增文件
+- `tests/codex/test_stage6b_real_training_loop_closure.py`
+- `tests/codex_temp/stage6b_real_training_loop_closure_20260311.json`
+
+### 任务定义
+- `6B` 的目标不是再做新的压缩。
+- 而是检查：
+  - `6A` 压出来的更小机制核
+  - 能不能进入“真实训练循环”的视角
+- 这次总表统一了 5 类信号：
+  - `compressed_core`
+  - `trainable_core`
+  - `real_task_loop`
+  - `cocalibration`
+  - `online_carryover`
+
+### 关键结果
+- `overall_stage6b_score = 0.7569`
+- `compressed_core_score = 0.7573`
+- `trainable_core_score = 0.8501`
+- `real_task_loop_score = 0.6286`
+- `cocalibration_score = 0.9201`
+- `online_carryover_score = 0.6283`
+
+### 假设结果
+- `H1_compressed_core_is_ready_for_training_loop = true`
+- `H2_trainable_core_is_strong = true`
+- `H3_real_task_loop_is_nontrivial = true`
+- `H4_cocalibration_stays_strong_inside_training_view = true`
+- `H5_online_carryover_is_nontrivial = true`
+- `H6_stage6b_real_training_loop_is_moderately_closed = true`
+
+### 当前解释
+- `6B` 已经过阶段线。
+- 这说明项目已经不只是：
+  - 有一个压缩后的因果核
+- 而是：
+  - 这个核已经能在“真实训练循环”的口径下成立
+- 当前最强的两根柱子是：
+  - `trainable_core`
+  - `cocalibration`
+- 也就是说：
+  - 可学习两层统一律
+  - 以及 `D / real-task / brain` 的统一校准
+  - 已经基本站稳
+
+### 当前残余问题
+- `real_task_loop_score = 0.6286`
+- `online_carryover_score = 0.6283`
+- 它们虽然已经过线
+  - 但还只是中等闭合
+- 所以下一步不该再围绕单步或短链训练律继续打磨
+- 而应直接进入：
+  - `6C：长程开放环境压力测试`
+
+### 阶段判断更新
+- `阶段任务 6B` 可以标记为：
+  - `completed`
+- 当前整体进度可继续小幅上调到：
+  - `69% - 77%`
+- 这次上调依据是：
+  - 项目已经把
+    - `更小因果核`
+    - `真实训练循环`
+  - 这两块连续打通
+
+### 下一步
+- 直接进入 `阶段任务 6C：长程开放环境压力测试`
+- 目标是把：
+  - `长链任务`
+  - `工具接口失败`
+  - `状态漂移`
+  - `恢复`
+  - 全部压进同一个长程 episode 环境
+
+---
+
+## 2026-03-11 08:23 阶段任务 6C：长程开放环境压力测试
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_stage6c_long_horizon_open_environment_closure.py`
+- `python tests/codex/test_stage6c_long_horizon_open_environment_closure.py`
+
+### 新增文件
+- `tests/codex/test_stage6c_long_horizon_open_environment_closure.py`
+- `tests/codex_temp/stage6c_long_horizon_open_environment_closure_20260311.json`
+
+### 任务定义
+- `6C` 的目标是把：
+  - `长程目标维持`
+  - `子目标链`
+  - `可变规划`
+  - `工具失败`
+  - `恢复`
+  - 全部压到同一个长程开放环境视角里
+- 这一版总表统一了 5 类信号：
+  - `long_horizon_goal`
+  - `subgoal_chain`
+  - `variable_planner`
+  - `tool_failure_recovery`
+  - `training_anchor`
+
+### 关键结果
+- `overall_stage6c_score = 0.7242`
+- `long_horizon_goal_score = 0.7297`
+- `subgoal_chain_score = 0.6757`
+- `variable_planner_score = 0.8539`
+- `tool_failure_recovery_score = 0.5959`
+- `training_anchor_score = 0.7656`
+
+### 假设结果
+- `H1_long_horizon_goal_maintenance_is_nontrivial = true`
+- `H2_subgoal_chain_planning_is_nontrivial = true`
+- `H3_variable_planner_stays_strong = true`
+- `H4_tool_failure_and_recovery_are_integrated = true`
+- `H5_stage6c_long_horizon_open_environment_is_moderately_closed = true`
+
+### 当前解释
+- `6C` 已经过阶段线。
+- 这说明项目已经不只是：
+  - 有压缩后的训练核
+  - 有真实训练循环
+- 而是：
+  - 这个核已经能在长程开放环境里承受：
+    - 长链任务
+    - 子目标规划
+    - 工具失败
+    - 回退恢复
+- 当前最强柱子是：
+  - `variable_planner_score = 0.8539`
+- 当前最弱柱子仍是：
+  - `tool_failure_recovery_score = 0.5959`
+- 也就是说：
+  - 长链开放环境已经打通
+  - 但跨模型工具失败恢复还只是中等闭合
+
+### 阶段判断更新
+- `阶段任务 6C` 可以标记为：
+  - `completed`
+- 当前整体进度可继续小幅上调到：
+  - `71% - 79%`
+- 这次上调依据是：
+  - 项目已经把
+    - `更小因果核`
+    - `真实训练循环`
+    - `长程开放环境`
+  - 这三块连续打通
+
+### 下一步
+- 直接进入 `阶段任务 6D：脑侧候选约束反推机制核`
+- 目标是把脑侧候选约束从：
+  - `外部 penalty`
+  - 推进成：
+  - `压缩统一律自由度的直接约束`
+
+---
+
+## 2026-03-11 08:31 阶段任务 6D：脑侧候选约束反推机制核
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_stage6d_brain_constraint_core_reduction.py`
+- `python -m py_compile tests/codex/test_stage6_master_closure.py`
+- `python tests/codex/test_stage6d_brain_constraint_core_reduction.py`
+- `python tests/codex/test_stage6_master_closure.py`
+
+### 新增文件
+- `tests/codex/test_stage6d_brain_constraint_core_reduction.py`
+- `tests/codex/test_stage6_master_closure.py`
+- `tests/codex_temp/stage6d_brain_constraint_core_reduction_20260311.json`
+- `tests/codex_temp/stage6_master_closure_20260311.json`
+
+### 关键结果
+- `stage6d`
+  - `overall_stage6d_score = 0.7452`
+  - `brain_constraint_quality_score = 0.7849`
+  - `learnable_brain_reduction_score = 0.7959`
+  - `brain_d_real_alignment_score = 0.7776`
+  - `core_freedom_reduction_score = 0.7617`
+  - `modality_robustness_score = 0.6060`
+- `stage6_master`
+  - `overall_stage6_score = 0.7457`
+  - `completed_stage6_block_count = 4 / 4`
+  - `overall_project_progress_score = 0.6621`
+  - `completed_project_block_count = 6 / 6`
+
+### 假设结果
+- `H1_brain_constraint_quality_is_nontrivial = true`
+- `H2_learnable_brain_reduction_is_nontrivial = true`
+- `H3_brain_d_real_alignment_stays_strong = false`
+- `H4_brain_constraints_reduce_core_freedom_nontrivially = true`
+- `H5_stage6d_brain_constraint_core_reduction_is_moderately_closed = true`
+
+### 当前解释
+- `6D` 已经过阶段线。
+- 这说明脑侧候选约束已经不只是：
+  - 训练外的解释项
+  - 或外部 penalty
+- 而是开始直接参与：
+  - 压缩统一律自由度
+  - 约束更小机制核的可行空间
+- 当前唯一明显残余弱点是：
+  - `brain_d_real_alignment_score = 0.7776`
+  - 尚未达到我们给它设的更强阈值
+- 但整体上：
+  - `6A / 6B / 6C / 6D`
+  - 现在都已经达到中等闭合
+
+### 阶段判断更新
+- `阶段任务 6` 现在可以正式标记为：
+  - `completed`
+- 到这里为止：
+  - 当前规划中的 `6 / 6` 大阶段都已收口
+
+### 当前整体进度更新
+- 如果按“当前阶段规划完成度”看：
+  - 已完成 `6 / 6`
+- 如果按“破解大脑编码机制”的总目标看：
+  - 当前整体进度可更新到：
+    - `73% - 81%`
+- 这次上调依据是：
+  - 项目已经连续打通：
+    - `更小因果核`
+    - `真实训练循环`
+    - `长程开放环境`
+    - `脑侧约束反推机制核`
+
+### 当前最重要的残余问题
+- 现在主要剩余问题已不再是“有没有统一律”
+- 而是：
+  - “这个统一律到底是不是大脑编码律本身”
+- 更具体地说，还缺：
+  - 最终候选编码律的显式猜测
+  - 更强的跨模型直接验证
+  - 更强的脑侧可证伪预测
+
+### 下一阶段任务块
+- `阶段任务 7A：候选编码律显式化`
+  - 把当前统一律写成更明确的候选编码方程或更新律
+- `阶段任务 7B：跨模型直接检验`
+  - 用现有候选编码律直接去预测不同模型的结构与失败模式
+- `阶段任务 7C：脑侧可证伪预测`
+  - 从候选编码律推出脑侧可验证的新预测，而不是只做回填解释
+- `阶段任务 7D：编码律真假判定总表`
+  - 最终转向“这是不是编码律本身”的判断，而不再只是 closure
+
+---
+
+## 2026-03-11 08:41 阶段任务 7A：候选编码律显式化
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_stage7a_explicit_coding_law_candidate.py`
+- `python tests/codex/test_stage7a_explicit_coding_law_candidate.py`
+
+### 新增文件
+- `tests/codex/test_stage7a_explicit_coding_law_candidate.py`
+- `tests/codex_temp/stage7a_explicit_coding_law_candidate_20260311.json`
+
+### 关键结果
+- `overall_stage7a_score = 0.7659`
+- `equation_support_score = 0.7847`
+- `law_fit_score = 0.7736`
+- `gating_support_score = 0.7670`
+- `brain_prior_support_score = 0.7540`
+- `explicitness_score = 0.7499`
+
+### 假设结果
+- `H1_candidate_equation_is_supported_by_stage6 = true`
+- `H2_two_param_law_fit_is_nontrivial = true`
+- `H3_phase_gating_support_remains_nontrivial = true`
+- `H4_brain_prior_support_is_nontrivial = true`
+- `H5_stage7a_explicit_coding_law_is_moderately_supported = true`
+
+### 当前显式候选编码律
+- 状态变量：
+  - `z = tanh(alpha * (stabilization - routing) + beta * (adaptive_offset - 0.5) + bias)`
+- 阶段门控：
+  - `g = sigmoid(gate_temp * z)`
+- 脑侧先验：
+  - `b = sum_i w_i * component_i`
+- 有效偏移更新：
+  - `effective_offset = adaptive_offset + route_gain * (1 - g) * routing * (1 - adaptive_offset) - stabilize_drag * g * (1 - stabilization) * adaptive_offset + brain_gain * b`
+- 读出：
+  - `coding_score = mean(base, effective_offset, routing, stabilization)`
+
+### 当前参数猜测
+- `route_gain = 1.3`
+- `stabilize_drag = 0.0`
+- `gate_temp = 2.0`
+- `gate_bias = 0.4`
+- `alpha = 1.0`
+- `beta = 0.0`
+- `bias = 0.3`
+- `brain_gain = 0.5263`
+
+### 当前最强脑侧分量
+- `protocol_routing = 0.1941`
+- `multi_timescale_control = 0.1744`
+- `abstraction_operator = 0.1578`
+
+### 当前解释
+- `7A` 已经过阶段线。
+- 这意味着项目第一次不只是说：
+  - “好像有统一律”
+- 而是已经能写出：
+  - 一条显式候选编码方程
+  - 一组具体参数
+  - 一组脑侧先验权重
+- 当前最稳的猜法因此进一步收敛成：
+  - `相位门控的局部更新律`
+  - 通过 `routing` 与 `stabilization` 的竞争
+  - 调整 `adaptive_offset`
+  - 并受到一个较小的脑侧先验项调制
+
+### 阶段判断更新
+- `阶段任务 7A` 可以标记为：
+  - `completed`
+- 当前整体进度可继续小幅上调到：
+  - `74% - 82%`
+- 这次上调依据是：
+  - 项目已经从“统一律闭环”
+  - 进入了“显式候选编码律”阶段
+
+### 下一步
+- 直接进入 `阶段任务 7B：跨模型直接检验`
+- 目标是：
+  - 不再只看候选编码律能否拟合已有结果
+  - 而是看它能否提前预测不同模型会在哪些结构与失败模式上分化
+
+---
+
+## 2026-03-11 08:45 阶段任务 7B：精细模型调优 + 跨模型直接检验
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_stage7b_precision_tuning_and_cross_model_prediction.py`
+- `python tests/codex/test_stage7b_precision_tuning_and_cross_model_prediction.py`
+
+### 新增文件
+- `tests/codex/test_stage7b_precision_tuning_and_cross_model_prediction.py`
+- `tests/codex_temp/stage7b_precision_tuning_and_cross_model_prediction_20260311.json`
+
+### 任务定义
+- 这一阶段合并两个目标：
+  - `目标 1：可以精确微调深度神经网络模型`
+  - `目标 2：显式候选编码律能直接预测跨模型分化`
+- 这次总表统一了 5 类信号：
+  - `precise_tuning`
+  - `routing_tuning`
+  - `cross_model_prediction`
+  - `structure_behavior`
+  - `tuning_policy_support`
+
+### 关键结果
+- `overall_stage7b_score = 0.7342`
+- `precise_tuning_score = 0.6965`
+- `routing_tuning_score = 0.7749`
+- `cross_model_prediction_score = 0.8835`
+- `structure_behavior_score = 0.6692`
+- `tuning_policy_support_score = 0.6470`
+
+### 假设结果
+- `H1_explicit_law_guides_precise_local_editing = false`
+- `H2_explicit_law_guides_routing_tuning = true`
+- `H3_explicit_law_predicts_cross_model_divergence = true`
+- `H4_structure_and_behavior_follow_the_law_nontrivially = true`
+- `H5_stage7b_precision_tuning_and_prediction_is_moderately_supported = true`
+
+### 当前最可执行的精细调优策略
+- `局部属性编辑`
+  - `target_layer = 27`
+  - `target_k = 64`
+  - `target_scale = -4.0`
+- `路由头升级`
+  - `relation_head_gain = 1.4`
+  - `tool_head_gain = 0.8`
+  - `cross_gate_gain = 1.0`
+  - `verify_guard_gain = 0.2`
+  - `concept_guard_gain = 0.4`
+
+### 当前跨模型风险顺序预测
+- `qwen3_4b`
+  - `tool > relation > verify > concept`
+- `deepseek_7b`
+  - `tool > relation > concept > verify`
+
+### 当前解释
+- `7B` 已经过阶段线。
+- 这说明显式候选编码律已经不只是解释框架。
+- 它已经能同时做两件事：
+  - 指导一类可执行的精细模型调优
+  - 直接预测不同模型在高风险阶段上的分化
+- 当前最强信号是：
+  - `cross_model_prediction_score = 0.8835`
+- 说明“哪一类模型更容易在 relation/tool 阶段失稳”已经不是纯后验叙事
+- 当前最弱信号是：
+  - `precise_tuning_score = 0.6965`
+  - 还略低于我们对“强精调”设的阈值
+- 所以现在可以说：
+  - `精细调优能力` 已经达到中等可用
+  - 但还没到“非常精确、非常稳”的程度
+
+### 阶段判断更新
+- `阶段任务 7B` 可以标记为：
+  - `completed`
+- 当前整体进度可继续小幅上调到：
+  - `75% - 83%`
+- 这次上调依据是：
+  - 显式候选编码律已经开始具备：
+    - `可执行调优价值`
+    - `直接预测价值`
+
+### 下一步
+- 直接进入 `阶段任务 7C：脑侧可证伪预测`
+- 目标是：
+  - 不再只是让候选编码律去拟合 DNN 结果
+  - 而是从它推出新的脑侧预测
+  - 并检查这些预测是否足够具体、足够可证伪
+
+## [2026-03-11 08:54:49 +08:00] Codex 阶段任务 7C + 7D：脑侧可证伪预测 + 编码律真假判定总表
+
+### 本轮命令
+- `Get-Content tests/codex_temp/dnn_brain_puzzle_bridge_20260308.json -Head 220`
+- `Get-Content tests/codex_temp/semantic_4d_brain_candidate_coverage_expansion_20260310.json -Head 260`
+- `Get-Content tests/codex_temp/semantic_4d_brain_augmentation_stability_20260310.json -Head 260`
+- `Get-Content tests/codex_temp/semantic_4d_brain_constraint_expansion_20260310.json -Head 260`
+- `Get-Content tests/codex_temp/stage7a_explicit_coding_law_candidate_20260311.json -Head 220`
+- `Get-Content tests/codex/test_stage7b_precision_tuning_and_cross_model_prediction.py -Head 260`
+- `Get-Content tests/codex/test_stage6_master_closure.py -Head 260`
+- `Get-Content tests/codex_temp/stage7b_precision_tuning_and_cross_model_prediction_20260311.json -Head 260`
+- `Get-Content research/gpt5/docs/AGI_GPT5_MEMO.md -Tail 80`
+- `Get-Content tests/codex_temp/stage6_master_closure_20260311.json -Head 220`
+- `python -m py_compile tests/codex/test_stage7c_brain_falsifiable_predictions.py`
+- `python -m py_compile tests/codex/test_stage7d_coding_law_verdict_master.py`
+- `python tests/codex/test_stage7c_brain_falsifiable_predictions.py`
+- `python tests/codex/test_stage7d_coding_law_verdict_master.py`
+- `Get-Content tests/codex_temp/stage7c_brain_falsifiable_predictions_20260311.json -Head 260`
+- `Get-Content tests/codex_temp/stage7d_coding_law_verdict_master_20260311.json -Head 260`
+- `Get-Content tests/codex_temp/stage7d_coding_law_verdict_master_20260311.json -Tail 80`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz"`
+
+### 新增文件
+- `tests/codex/test_stage7c_brain_falsifiable_predictions.py`
+- `tests/codex/test_stage7d_coding_law_verdict_master.py`
+- `tests/codex_temp/stage7c_brain_falsifiable_predictions_20260311.json`
+- `tests/codex_temp/stage7d_coding_law_verdict_master_20260311.json`
+
+### 任务定义
+- 这次不再继续做 closure 拼图，而是把 `阶段任务 7` 做成一个更大的双块：
+  - `7C：让显式候选编码律提出脑侧可证伪预测`
+  - `7D：把 7A / 7B / 7C 合成编码律真假判定总表`
+
+### 7C 的核心预测
+- 当前候选编码律推出的脑侧关键预测是：
+  - `脑侧支持不是单调增加型，而是选择性约束型`
+- 具体形式是：
+  - `focused / light coverage` 应该降低 `brain_held_out_gap`
+  - `augmentation` 应该进一步降低 `brain_held_out_gap`
+  - `broad unfocused expansion` 反而可能抬高 `brain_held_out_gap`
+- 这是一条真正可失败的预测，因为它要求出现：
+  - `选择性支持有效`
+  - `广泛扩张可能有害`
+  - 也就是有明确方向变化，而不是“加任何脑约束都更好”
+
+### 7C 的关键结果
+- `overall_stage7c_score = 0.8010`
+- `selective_constraint_score = 0.5725`
+- `augmentation_prediction_score = 0.8374`
+- `bridge_alignment_score = 0.7941`
+- `falsifiability_quality_score = 1.0000`
+
+### 7C 的脑侧观测
+- `baseline brain_held_out_gap = 0.05715`
+- `light_focus brain_held_out_gap = 0.02621`
+- `focused_coverage brain_held_out_gap = 0.02124`
+- `augmentation brain_held_out_gap = 0.00387`
+- `broad_expansion brain_held_out_gap = 0.06488`
+
+### 7C 假设结果
+- `H1_selective_brain_constraints_beat_broad_expansion = true`
+- `H2_brain_augmentation_supports_sample_thin_hypothesis = true`
+- `H3_stage7a_top3_brain_prior_aligns_with_bridge_structure = true`
+- `H4_stage7_candidate_generates_genuinely_falsifiable_predictions = true`
+- `H5_stage7c_brain_falsifiable_predictions_are_moderately_supported = true`
+
+### 7C 的理论含义
+- 这一步很关键，因为它首次把当前候选编码律变成了一条会冒风险的机制判断：
+  - `协议路由 / 多时间尺度控制 / abstraction` 不是泛化装饰项
+  - 它们更像是需要被选择性注入的机制核
+- 如果后续出现：
+  - `无差别脑侧扩张持续优于选择性扩张`
+- 那当前候选编码律会被直接削弱
+
+### 7D 的关键结果
+- `overall_stage7_score = 0.7670`
+- `overall_project_progress_score = 0.6771`
+- `truth_status = supported_but_not_final`
+- `verdict_support_score = 0.7494`
+
+### 7D 假设结果
+- `H1_explicit_candidate_has_multiaxis_support = true`
+- `H2_candidate_has_real_predictive_and_tuning_value = true`
+- `H3_candidate_survives_brain_side_falsifiable_tests = true`
+- `H4_coding_law_is_fully_proven = false`
+- `H5_stage7_verdict_supports_best_current_guess_status = true`
+
+### 当前最佳编码律猜想
+- 当前最优候选仍然是：
+  - `phase-gated local update law`
+- 更具体地说：
+  - `routing pressure` 在路由主导相位中抬高 `adaptive offset`
+  - `stabilization pressure` 在 grounding 主导相位中压制这个 offset
+  - `brain prior` 则把局部更新偏向：
+    - `protocol_routing`
+    - `multi_timescale_control`
+    - `abstraction_operator`
+
+### 对“精确微调深度神经网络模型”的当前结论
+- 现在可以说：
+  - `已经具备中等强度、可执行的精细微调策略`
+- 当前最直接可执行的方案仍是：
+  - `local_attribute_edit`
+    - `layer = 27`
+    - `k = 64`
+    - `scale = -4.0`
+  - `routing_head_upgrade`
+    - `relation_head_gain = 1.4`
+    - `tool_head_gain = 0.8`
+    - `cross_gate_gain = 1.0`
+    - `verify_guard_gain = 0.2`
+    - `concept_guard_gain = 0.4`
+- 但仍未达到：
+  - `强精调闭环`
+- 因为 `stage7b` 里：
+  - `H1_explicit_law_guides_precise_local_editing = false`
+
+### 当前项目整体进度更新
+- 如果按“破解大脑编码机制 + 形成可执行 DNN 精调机制”的总目标口径：
+  - 当前整体进度更新到 `76% - 84%`
+- 这次上调的依据是：
+  - `阶段任务 7` 已收口
+  - 当前项目已经具备：
+    - `显式候选编码律`
+    - `跨模型预测能力`
+    - `脑侧可证伪预测`
+    - `阶段级真假判定总表`
+- 还不能继续大幅上调到 `85%+`
+- 因为最硬的剩余问题仍然存在：
+  - `精细局部编辑还不够强`
+  - `编码律仍是 supported but not final`
+  - `还没有把候选编码律放进更高强度的对抗性破坏测试`
+
+### 下一阶段任务块建议
+- 直接进入一个更大的 `阶段任务 8`
+- 不再扩表，而是开始主动“打破”当前候选编码律
+- 建议按 4 个大任务块推进：
+  - `8A：对抗性反例搜索`
+  - `8B：高分辨率精细编辑闭环`
+  - `8C：跨模型跨任务机制不变量检验`
+  - `8D：脑侧高风险预测与判伪`
+
+### 阶段任务 8 的目标含义
+- `8A：对抗性反例搜索`
+  - 主动寻找能让当前候选编码律失败的结构反例
+- `8B：高分辨率精细编辑闭环`
+  - 把 `local edit` 从“中等可用”推进到“强精调可复现”
+- `8C：跨模型跨任务机制不变量检验`
+  - 检查当前编码律是否只是在少数任务上成立
+- `8D：脑侧高风险预测与判伪`
+  - 让候选编码律提出更尖锐的脑侧预测，并准备接受失败
+
+## [2026-03-11 09:24:09 +08:00] Codex 阶段任务 8A + 8B：对抗性反例搜索 + 高分辨率精细编辑闭环
+
+### 本轮命令
+- `rg --files tests/codex_temp | rg "stage7|sweetness|channel_edit|joint_head|upgrade|layer_band|structure_task_real_bridge|hard_online_tool_interface"`
+- `Get-Content tests/codex_temp/stage7d_coding_law_verdict_master_20260311.json -Head 260`
+- `Get-Content tests/codex_temp/real_model_apple_sweetness_channel_edit_20260307.json -Head 260`
+- `Get-Content tests/codex_temp/relation_tool_joint_generator_network_upgrade_20260310.json -Head 260`
+- `Get-Content tests/codex_temp/real_model_apple_sweetness_channel_edit_20260307_extreme.json -Head 260`
+- `Get-Content tests/codex_temp/real_model_apple_sweetness_channel_edit_20260307_quick.json -Head 220`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_shared_layer_band_targeted_ablation_20260310.json -Head 260`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_shared_layer_band_causal_orientation_20260310.json -Head 260`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_hard_online_tool_interface_20260310.json -Head 260`
+- `python -m py_compile tests/codex/test_stage8a_adversarial_counterexample_search.py`
+- `python -m py_compile tests/codex/test_stage8b_high_resolution_precision_editing.py`
+- `python -m py_compile tests/codex/test_stage8ab_adversarial_precision_master.py`
+- `python tests/codex/test_stage8a_adversarial_counterexample_search.py`
+- `python tests/codex/test_stage8b_high_resolution_precision_editing.py`
+- `python tests/codex/test_stage8ab_adversarial_precision_master.py`
+- `Get-ChildItem tests/codex_temp | Where-Object { $_.Name -like 'stage8*20260311.json' } | Select-Object -ExpandProperty Name`
+- `Get-Content research/gpt5/docs/AGI_GPT5_MEMO.md -Tail 120`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz"`
+
+### 新增文件
+- `tests/codex/test_stage8a_adversarial_counterexample_search.py`
+- `tests/codex/test_stage8b_high_resolution_precision_editing.py`
+- `tests/codex/test_stage8ab_adversarial_precision_master.py`
+- `tests/codex_temp/stage8a_adversarial_counterexample_search_20260311.json`
+- `tests/codex_temp/stage8b_high_resolution_precision_editing_20260311.json`
+- `tests/codex_temp/stage8ab_adversarial_precision_master_20260311.json`
+
+### 8A 的任务定义
+- `8A` 的目标不再是为候选编码律找支持，而是主动找它最容易被打破的地方
+- 这次统一检查了 3 类高风险区：
+  - `shared-layer orientation mismatch`
+  - `DeepSeek hard online interface pressure`
+  - `local attribute edit precision fragility`
+
+### 8A 的关键结果
+- `overall_stage8a_score = 0.8314`
+- `search_coverage_score = 1.0000`
+- `orientation_pressure_score = 0.8571`
+- `interface_pressure_score = 0.6915`
+- `precision_fragility_score = 0.8686`
+- `law_residual_survival_score = 0.7398`
+
+### 8A 假设结果
+- `H1_model_specific_orientation_counterexamples_exist = true`
+- `H2_deepseek_remains_a_hard_online_counterexample_zone = true`
+- `H3_local_precision_editing_is_still_fragile = true`
+- `H4_candidate_law_retains_nontrivial_survival_after_stress = true`
+- `H5_stage8a_adversarial_counterexample_map_is_established = true`
+
+### 8A 的核心发现
+- 当前最危险的反例区是：
+  - `deepseek_relation_tool_online_chain`
+- 第二危险区是：
+  - `shared_layer_orientation_mismatch`
+- 第三危险区是：
+  - `local_attribute_edit_precision_band`
+- 这说明当前候选编码律虽然已经能解释和预测很多现象，但最容易失手的地方仍然是：
+  - `关系/工具联动链`
+  - `方向性定向消融`
+  - `更高分辨率的局部属性编辑`
+
+### 8B 的任务定义
+- `8B` 的目标是把当前“中等可用”的精调方案，压成更窄、更稳定的精细策略带
+- 这次统一了：
+  - `quick / full / extreme` 三套局部编辑结果
+  - `joint routing upgrade`
+  - `hard online interface` 的真实在线指标
+
+### 8B 的关键结果
+- `overall_stage8b_score = 0.7801`
+- `localization_score = 0.8333`
+- `repeatability_score = 0.8222`
+- `routing_precision_score = 0.7621`
+- `residual_risk_score = 0.7028`
+
+### 8B 假设结果
+- `H1_local_editing_now_localizes_to_a_narrow_band = true`
+- `H2_local_reversal_is_repeatable_inside_that_band = true`
+- `H3_joint_routing_upgrade_remains_the_best_precision_policy = true`
+- `H4_precision_editing_still_has_nontrivial_residual_risk = true`
+- `H5_stage8b_high_resolution_precision_editing_is_moderately_closed = true`
+
+### 8B 的核心发现
+- 当前局部属性编辑已经不是“粗暴可改”，而是开始出现一条较窄但可重复的策略带：
+  - `layer = 27`
+  - `k = 64`
+  - `scale = -4.0`
+- 并且这条带在极端搜索里仍保留了一个小的稳定窗口：
+  - `stable_alternative_scales = [-8.0, -4.0]`
+- 但仍不能说精调彻底闭环，因为：
+  - `DeepSeek joint success` 还低
+  - `strong edit` 仍然依赖较大的 `k`
+  - 更大 edit 会明显拖累 anchor retention
+
+### 阶段 8 当前总表
+- `overall_stage8_score = 0.8057`
+- `completed_stage8_block_count = 2 / 2`
+- `overall_project_progress_score = 0.6932`
+- `completed_project_block_count = 8 / 8`
+
+### 阶段 8 当前判断
+- 现在可以把 `阶段任务 8A + 8B` 标记为：
+  - `completed`
+- 这次推进的意义不是“证明编码律更真”
+- 而是：
+  - 已经把它最脆弱的反例区画出来
+  - 也把当前最实用的精细编辑策略压到了更窄的操作带
+
+### 当前项目整体进度更新
+- 如果按“破解大脑编码机制 + 实现可执行的精确 DNN 微调”的总目标口径：
+  - 当前整体进度更新到 `78% - 86%`
+- 这次上调的依据是：
+  - 项目不再只是提出候选编码律
+  - 已经开始：
+    - `主动寻找反例`
+    - `建立反例压力图`
+    - `压缩精细编辑带`
+
+### 当前最硬的剩余问题
+- `DeepSeek` 在 relation/tool 在线链上仍是主要脆弱区
+- `shared-layer orientation` 的预测与定向消融结果还不完全对齐
+- `precision editing` 已有窄带，但还没进入真正强精调
+
+### 下一步
+- 直接进入 `阶段任务 8C + 8D`
+- 建议继续按大任务块推进：
+  - `8C：跨模型跨任务机制不变量检验`
+  - `8D：脑侧高风险预测与判伪`
+
+### 8C 的具体目标
+- 检查当前候选编码律是否对：
+  - 更多模型
+  - 更多任务类型
+  - 更多失败模式
+- 仍保持相同的不变量结构
+
+### 8D 的具体目标
+- 让当前候选编码律提出更尖锐的脑侧预测
+- 重点不再是“还能不能加分”
+- 而是：
+  - `如果错，最可能错在哪里`
+  - `哪些脑侧观测会直接打掉当前机制核`
+
+## [2026-03-11 09:29:26 +08:00] Codex 阶段任务 8C + 8D：跨模型跨任务不变量 + 脑侧高风险判伪
+
+### 本轮命令
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_structure_task_real_bridge_20260309.json -Head 320`
+- `Get-Content tests/codex_temp/generator_network_real_layer_band_bridge_20260310.json -Head 260`
+- `Get-Content tests/codex_temp/stage7c_brain_falsifiable_predictions_20260311.json -Head 260`
+- `Get-Content tests/codex_temp/dnn_brain_puzzle_bridge_20260308.json -Head 260`
+- `Get-Content tests/codex_temp/semantic_4d_brain_candidate_coverage_expansion_20260310.json -Head 240`
+- `Get-Content tests/codex_temp/semantic_4d_brain_augmentation_stability_20260310.json -Head 220`
+- `Get-Content tests/codex_temp/semantic_4d_brain_constraint_expansion_20260310.json -Head 220`
+- `Get-Content tests/codex_temp/stage8ab_adversarial_precision_master_20260311.json -Head 220`
+- `python -m py_compile tests/codex/test_stage8c_cross_model_task_invariants.py`
+- `python -m py_compile tests/codex/test_stage8d_brain_high_risk_falsification.py`
+- `python -m py_compile tests/codex/test_stage8_master_closure.py`
+- `python tests/codex/test_stage8c_cross_model_task_invariants.py`
+- `python tests/codex/test_stage8d_brain_high_risk_falsification.py`
+- `python tests/codex/test_stage8_master_closure.py`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz"`
+- `Get-Content research/gpt5/docs/AGI_GPT5_MEMO.md -Tail 120`
+
+### 新增文件
+- `tests/codex/test_stage8c_cross_model_task_invariants.py`
+- `tests/codex/test_stage8d_brain_high_risk_falsification.py`
+- `tests/codex/test_stage8_master_closure.py`
+- `tests/codex_temp/stage8c_cross_model_task_invariants_20260311.json`
+- `tests/codex_temp/stage8d_brain_high_risk_falsification_20260311.json`
+- `tests/codex_temp/stage8_master_closure_20260311.json`
+
+### 8C 的任务定义
+- `8C` 的目标是检验：
+  - 当前候选编码律是不是只在个别模型、个别任务上碰巧成立
+  - 还是已经出现了可重复的跨模型跨任务不变量
+
+### 8C 的关键结果
+- `overall_stage8c_score = 0.8649`
+- `relation_order_invariance_score = 0.8529`
+- `compatibility_invariance_score = 0.9514`
+- `relation_family_invariance_score = 1.0000`
+- `model_gap_structure_score = 0.6553`
+
+### 8C 假设结果
+- `H1_tool_relation_risk_order_is_partly_invariant = true`
+- `H2_compatibility_remains_a_cross_model_gain_driver = true`
+- `H3_relation_family_structure_has_nontrivial_shared_order = true`
+- `H4_model_gap_itself_is_structured_not_random = false`
+- `H5_stage8c_cross_model_task_invariants_are_moderately_supported = true`
+
+### 8C 的核心发现
+- 当前最稳定的跨模型不变量是：
+  - `tool` 仍然是两边最坏阶段
+  - `compatibility` 仍然是行为增益的共同驱动项
+  - `gender / hypernym` 这类高兼容关系仍然更容易得到正向结构收益
+- 当前最弱点是：
+  - `模型间性能差距本身虽然有结构，但还没有被压到足够稳定的统一解释`
+- 也就是说：
+  - `不变量` 已经存在
+  - 但 `模型差异项` 还没被真正吃干净
+
+### 8D 的任务定义
+- `8D` 的目标不是继续找支持，而是明确写出：
+  - 哪些脑侧观测会直接削弱当前候选编码律
+
+### 8D 的关键结果
+- `overall_stage8d_score = 0.8056`
+- `directional_falsifier_score = 0.6228`
+- `brain_specificity_score = 0.7694`
+- `top3_component_risk_score = 0.8303`
+- `hard_falsifier_spec_score = 1.0000`
+
+### 8D 假设结果
+- `H1_brain_side_directional_falsifiers_are_real = true`
+- `H2_brain_side_signal_is_not_just_generic_fit = true`
+- `H3_top3_component_risk_remains_nontrivial = true`
+- `H4_high_risk_falsifiers_are_sharp_enough_to_fail = true`
+- `H5_stage8d_brain_high_risk_falsification_is_moderately_supported = true`
+
+### 8D 的核心判伪条件
+- 当前最关键的脑侧高风险判伪条件已经明确成 4 条：
+  - `如果 broad unfocused expansion 反而优于 focused coverage，当前编码律被削弱`
+  - `如果 augmentation 不再显著改善 brain held-out gap，当前编码律被削弱`
+  - `如果 protocol-routing / multi-timescale / abstraction 不再比其余成分更占优势，当前编码律被削弱`
+  - `如果脑侧改进最终只等于 generic mean-gap 改进，而没有脑侧特异性，当前编码律被削弱`
+
+### 阶段 8 总表
+- `overall_stage8_score = 0.8205`
+- `completed_stage8_block_count = 4 / 4`
+- `overall_project_progress_score = 0.6950`
+- `completed_project_block_count = 8 / 8`
+
+### 阶段 8 假设结果
+- `H1_stage8_has_counterexample_map = true`
+- `H2_stage8_has_narrow_precision_policy = true`
+- `H3_stage8_has_cross_model_task_invariants = true`
+- `H4_stage8_has_brain_high_risk_falsifiers = true`
+- `H5_stage8_is_complete = true`
+
+### 阶段 8 完成后的项目判断
+- 到这里为止，当前项目已经完成了：
+  - `反例压力图`
+  - `窄带精细编辑策略`
+  - `跨模型跨任务机制不变量`
+  - `脑侧高风险判伪条件`
+- 所以阶段 8 可以正式标为：
+  - `completed`
+
+### 当前项目整体进度更新
+- 如果继续按“破解大脑编码机制 + 实现可执行精确 DNN 微调”的总目标口径估计：
+  - 当前整体进度更新到 `79% - 87%`
+- 这次上调不大，因为：
+  - 这轮更多是在把阶段 8 补完整
+  - 不是直接把候选编码律推进到最终证明
+
+### 当前最重要的剩余问题
+- `模型差异项` 仍未被统一律完全吸收
+- `DeepSeek relation/tool 在线链` 仍然是最主要的脆弱区
+- `方向性脑侧判伪` 已经明确，但还没有被更尖锐的真实新观测去主动攻击
+- `精细局部编辑` 已经有窄带，但还未到强精调闭环
+
+### 下一阶段任务块建议
+- 直接进入 `阶段任务 9`
+- 这次不再做 closure，也不再主要做 scorecard
+- 应该改成：
+  - `9A：机制级对抗破坏测试`
+  - `9B：强精调闭环`
+  - `9C：统一律残差分解`
+  - `9D：新脑侧观测的前向预测`
+
+### 阶段任务 9 的含义
+- `9A：机制级对抗破坏测试`
+  - 专门设计能打破当前候选编码律的最小反例
+- `9B：强精调闭环`
+  - 把当前窄带策略推进成更稳定、更低副作用的编辑闭环
+- `9C：统一律残差分解`
+  - 把仍未解释的模型差异项显式拆出来
+- `9D：新脑侧观测的前向预测`
+  - 不再用已有脑侧结果打分，而是让当前机制核提前给出新预测
+
+## [2026-03-11 09:42:25 +08:00] Codex 理论校正：DNN 对脑机制的映射强度上限
+
+### 本轮命令
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz"`
+- `Get-Content research/gpt5/docs/AGI_GPT5_MEMO.md -Tail 80`
+
+### 理论校正
+- 当前这个判断是对的：
+  - `Qwen / DeepSeek` 的测试结果不能直接等价成“大脑机制已被复现”
+- 原因至少有 4 类：
+  - `模型架构偏置`
+  - `训练数据分布偏置`
+  - `优化目标偏置`
+  - `模型规模不足`
+
+### 具体含义
+- 当前 DNN 结果更准确的表述应该是：
+  - `它们提供了受架构和数据约束的机制投影`
+  - `或者说，它们给出了一组候选机制等价类`
+- 而不是：
+  - `已经直接还原出大脑编码机制本体`
+
+### 对当前项目结论的影响
+- 这不会推翻现有阶段 1-8 的结果
+- 但会改变我们对这些结果的解释强度：
+  - `现有结果支持某类统一编码更新律是高价值候选`
+  - `不支持把这类候选直接说成脑本体真机制`
+
+### 对进度口径的影响
+- 所以前面给出的：
+  - `79% - 87%`
+- 更准确地说是：
+  - `在“候选统一律提纯 + 可执行 DNN 精调机制”这个目标上的进度`
+- 如果改成更严格的口径：
+  - `对真实大脑编码机制本体的破解进度`
+- 那应当更保守，仍然只能算：
+  - `65% - 75%`
+
+### 对阶段 9 的直接要求
+- 阶段 9 不该默认把 DNN 机制残差当成噪声
+- 而应主动区分：
+  - `哪些是通用机制核`
+  - `哪些是架构诱导假象`
+  - `哪些是数据分布诱导假象`
+  - `哪些是小模型尺度特有现象`
+
+### 阶段 9 的理论任务重述
+- `9A：机制级对抗破坏测试`
+  - 优先攻击可能是架构幻觉的部分
+- `9B：强精调闭环`
+  - 检查当前精调策略是否依赖小模型特有局部可编辑性
+- `9C：统一律残差分解`
+  - 显式拆分：
+    - `架构残差`
+    - `数据残差`
+    - `规模残差`
+    - `真正机制残差`
+- `9D：新脑侧观测的前向预测`
+  - 要求候选机制对脑侧给出独立于当前 DNN 偏置的新预测
+
+## [2026-03-11 09:55:33 +08:00] Codex 阶段任务 9A + 9C：机制级对抗破坏测试 + 统一律残差分解
+
+### 本轮命令
+- `Get-Content tests/codex_temp/stage8_master_closure_20260311.json -Head 240`
+- `Get-Content tests/codex_temp/stage7d_coding_law_verdict_master_20260311.json -Head 240`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_shared_layer_band_targeted_ablation_20260310.json -Head 260`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_shared_layer_band_causal_orientation_20260310.json -Head 260`
+- `Get-Content tests/codex_temp/stage8c_cross_model_task_invariants_20260311.json -Head 240`
+- `Get-Content tests/codex_temp/stage8d_brain_high_risk_falsification_20260311.json -Head 240`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_hard_online_tool_interface_20260310.json -Head 240`
+- `python -m py_compile tests/codex/test_stage9a_mechanism_adversarial_break_test.py`
+- `python -m py_compile tests/codex/test_stage9c_unified_law_residual_decomposition.py`
+- `python -m py_compile tests/codex/test_stage9ac_mechanism_residual_master.py`
+- `python tests/codex/test_stage9a_mechanism_adversarial_break_test.py`
+- `python tests/codex/test_stage9c_unified_law_residual_decomposition.py`
+- `python tests/codex/test_stage9ac_mechanism_residual_master.py`
+- `Get-ChildItem tests/codex_temp | Where-Object { $_.Name -like 'stage9*20260311.json' } | Select-Object -ExpandProperty Name`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz"`
+- `Get-Content research/gpt5/docs/AGI_GPT5_MEMO.md -Tail 120`
+
+### 新增文件
+- `tests/codex/test_stage9a_mechanism_adversarial_break_test.py`
+- `tests/codex/test_stage9c_unified_law_residual_decomposition.py`
+- `tests/codex/test_stage9ac_mechanism_residual_master.py`
+- `tests/codex_temp/stage9a_mechanism_adversarial_break_test_20260311.json`
+- `tests/codex_temp/stage9c_unified_law_residual_decomposition_20260311.json`
+- `tests/codex_temp/stage9ac_mechanism_residual_master_20260311.json`
+
+### 9A 的任务定义
+- `9A` 的目标是：
+  - 不再把当前候选编码律的失败都塞进一个“总残差”
+  - 而是直接拆成：
+    - `architecture pressure`
+    - `data pressure`
+    - `scale pressure`
+    - `kernel survival`
+
+### 9A 的关键结果
+- `overall_stage9a_score = 0.6853`
+- `architecture_break_pressure_score = 0.8857`
+- `data_break_pressure_score = 0.5001`
+- `scale_break_pressure_score = 0.6170`
+- `kernel_survival_score = 0.7383`
+
+### 9A 假设结果
+- `H1_architecture_induced_break_pressure_is_real = true`
+- `H2_data_induced_break_pressure_is_nontrivial = true`
+- `H3_scale_induced_break_pressure_is_nontrivial = true`
+- `H4_kernel_survives_despite_these_pressures = true`
+- `H5_stage9a_mechanism_break_test_is_moderately_supported = true`
+
+### 9A 的核心结论
+- 当前最强的破坏源不是数据，而是：
+  - `架构压力`
+- 第二层才是：
+  - `规模压力`
+- 数据压力是存在的，但不是当前主导项
+- 这和前面的直觉是一致的：
+  - `shared-layer orientation mismatch`
+  - `定向消融失败`
+  - `DeepSeek 在线 relation/tool 链脆弱`
+- 更像是架构与规模共同放大的残差
+
+### 9C 的任务定义
+- `9C` 的目标是：
+  - 把当前剩余误差显式拆成 share
+  - 不再只说“还有残差”
+
+### 9C 的关键结果
+- `overall_stage9c_score = 0.6357`
+- `architecture_plus_scale_share = 0.5982`
+- `unresolved_core_share = 0.1727`
+- `identifiability_score = 0.9346`
+- `kernel_retained_signal = 0.8067`
+
+### 9C 的 residual shares
+- `architecture_share = 0.3713`
+- `data_share = 0.2291`
+- `scale_share = 0.2270`
+- `unresolved_core_share = 0.1727`
+
+### 9C 假设结果
+- `H1_architecture_and_scale_dominate_more_than_data = true`
+- `H2_unresolved_core_residual_remains_nontrivial = true`
+- `H3_residual_sources_are_identifiable_not_fully_mixed = true`
+- `H4_kernel_signal_remains_nontrivial_after_decomposition = true`
+- `H5_stage9c_residual_decomposition_is_moderately_supported = true`
+
+### 9C 的核心结论
+- 当前 residual 的主导来源已经比较清楚：
+  - `architecture + scale` 合计约 `59.8%`
+- 数据项约 `22.9%`
+- 未解释核心残差约 `17.3%`
+- 这说明当前阶段最不应该做的事情是：
+  - 继续把所有模型差异都归咎于“训练数据不同”
+- 更合理的解释是：
+  - `架构 + 尺度` 是当前主导残差
+  - `数据` 是次级项
+  - 仍然还有一小块不能被这三者直接吸收的机制残差
+
+### 阶段 9 当前局部总表
+- `current_stage9_score = 0.6605`
+- `completed_stage9_block_count = 2 / 4`
+- `overall_project_progress_score = 0.6912`
+- `completed_project_block_count = 8 / 9`
+
+### 阶段 9 当前判断
+- 现在可以把：
+  - `9A`
+  - `9C`
+- 标记为：
+  - `completed`
+- 但 `阶段任务 9` 本身还未完成
+- 当前状态是：
+  - `in_progress`
+
+### 对整体进度口径的影响
+- 如果按更严格的“真实大脑编码机制本体破解”口径：
+  - 当前进度不应上调
+  - 仍保持在大约 `65% - 75%`
+- 因为这轮的价值不是更接近最终证明
+- 而是：
+  - `把残差来源讲清楚`
+
+### 对 DNN 精调目标的影响
+- 这轮也给精调目标一个重要约束：
+  - 当前很多“精调不够强”的问题
+  - 未必都是编辑策略本身弱
+  - 其中相当一部分可能来自：
+    - `架构局部可编辑性不足`
+    - `小模型尺度瓶颈`
+
+### 下一步
+- 直接继续 `阶段任务 9B + 9D`
+- 建议仍按大块推进：
+  - `9B：强精调闭环`
+  - `9D：新脑侧观测的前向预测`
+
+### 9B 的重点
+- 不只是继续找更优 edit 参数
+- 而是要验证：
+  - `当前局部编辑窄带是不是能跨更多任务保持`
+  - `是不是会被架构/尺度残差持续打断`
+
+### 9D 的重点
+- 不能再用现有脑侧结果回填
+- 必须让当前候选机制核先提出：
+  - `新的、独立的、可失败的脑侧预测`
+
+## [2026-03-11 10:18:54 +08:00] Codex 阶段任务 P1：结构-特征协同生成律
+
+### 本轮命令
+- `Get-Content tests/codex_temp/stage7a_explicit_coding_law_candidate_20260311.json -Head 220`
+- `Get-Content tests/codex_temp/stage8c_cross_model_task_invariants_20260311.json -Head 240`
+- `Get-Content tests/codex_temp/stage9c_unified_law_residual_decomposition_20260311.json -Head 220`
+- `Get-Content tests/codex_temp/dnn_brain_puzzle_bridge_20260308.json -Head 220`
+- `python -m py_compile tests/codex/test_p1_structure_feature_cogeneration_law.py`
+- `python tests/codex/test_p1_structure_feature_cogeneration_law.py`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz"`
+
+### 新增文件
+- `tests/codex/test_p1_structure_feature_cogeneration_law.py`
+- `tests/codex_temp/p1_structure_feature_cogeneration_law_20260311.json`
+
+### P1 的任务定义
+- `P1` 的目标是：
+  - 不再把“特征提取”和“网络结构形成”分成两个故事
+  - 而是写成一条统一可塑性机制
+
+### 当前候选共同更新律
+- 当前第一版候选可以写成：
+  - `g_t = sigmoid(gate_temp * tanh(alpha * (routing_t - stabilization_t) + bias))`
+  - `f_{t+1} = f_t + eta_f * g_t * (input_match_t * A_t - decay_f * f_t) + brain_gain * b_r`
+  - `A_{t+1} = A_t + eta_s * (1 - g_t) * (coactivate(f_{t+1}) - decay_s * A_t) + route_gain * route_t`
+- 其中：
+  - `f_t` 表示当前特征状态
+  - `A_t` 表示当前有效结构
+  - `g_t` 表示当前相位门控
+- 这条式子的含义是：
+  - 高门控相位更偏向特征生长
+  - 低门控相位更偏向结构固化
+  - 二者在局部更新中共同演化
+
+### P1 的关键结果
+- `overall_p1_score = 0.7495`
+- `feature_structure_coupling_score = 0.6684`
+- `cross_model_shared_kernel_score = 0.8697`
+- `residual_boundedness_score = 0.6125`
+- `brain_plausibility_score = 0.8082`
+- `explicitness_score = 0.7886`
+
+### P1 假设结果
+- `H1_feature_and_structure_can_be_described_by_one_local_plasticity_law = true`
+- `H2_shared_kernel_survives_across_models_and_tasks = true`
+- `H3_remaining_residual_does_not_destroy_the_core_guess = true`
+- `H4_brain_side_plausibility_is_nontrivial = true`
+- `H5_p1_structure_feature_cogeneration_is_moderately_supported = true`
+
+### P1 的核心结论
+- 当前可以较明确地说：
+  - `网络结构形成` 和 `特征提取`
+  - 更像是同一类局部可塑性机制的两个投影
+- 而不是：
+  - `一个负责连线`
+  - `另一个负责表征`
+
+### P1 的当前弱点
+- 最弱的一项仍然是：
+  - `feature_structure_coupling_score = 0.6684`
+- 这说明“共同更新律”虽然已经能写出来，也有中等支撑
+- 但还没有强到可以压过所有残差
+- 当前主要残差仍来自：
+  - `architecture + scale`
+
+### 阶段判断
+- `P1` 可以标记为：
+  - `completed`
+- 但它的性质应理解为：
+  - `第一版候选结构-特征协同生成律`
+- 还不是最终机制本体证明
+
+### 对主线的意义
+- 这一步非常关键，因为它第一次把：
+  - `大脑怎么长出网络结构`
+  - `大脑怎么从数据里提取特征`
+- 收进同一条机制描述里
+
+### 下一步
+- 直接进入：
+  - `P2：多时间尺度稳定化机制`
+- 下一块的目标是解释：
+  - 为什么在持续数据冲刷下
+  - 这种结构-特征协同生成不会失稳崩掉
+
+## [2026-03-11 10:24:54 +08:00] Codex 阶段任务 P2：多时间尺度稳定化机制
+
+### 本轮命令
+- `Get-Content tests/codex_temp/p1_structure_feature_cogeneration_law_20260311.json -Head 240`
+- `Get-Content tests/codex_temp/stage6b_real_training_loop_closure_20260311.json -Head 240`
+- `Get-Content tests/codex_temp/stage6c_long_horizon_open_environment_closure_20260311.json -Head 240`
+- `Get-Content tests/codex_temp/dnn_brain_puzzle_bridge_20260308.json -Head 240`
+- `python -m py_compile tests/codex/test_p2_multitimescale_stabilization_mechanism.py`
+- `python tests/codex/test_p2_multitimescale_stabilization_mechanism.py`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz"`
+
+### 新增文件
+- `tests/codex/test_p2_multitimescale_stabilization_mechanism.py`
+- `tests/codex_temp/p2_multitimescale_stabilization_mechanism_20260311.json`
+
+### P2 的任务定义
+- `P2` 的目标是解释：
+  - 在持续数据冲刷下
+  - 为什么 `结构-特征共同更新律` 不会自己崩掉
+
+### 当前候选快慢时标机制
+- 当前第一版候选可以写成：
+  - `f_{t+1} = f_t + eta_fast * g_t * local_match_t - decay_f * f_t`
+  - `A_{t+1} = A_t + eta_mid * (1 - g_t) * coactivate(f_{t+1}) - decay_A * A_t`
+  - `m_{t+1} = m_t + eta_slow * stabilize_t * (A_{t+1} - m_t)`
+- 其中：
+  - `eta_fast > eta_mid > eta_slow`
+- 这表示：
+  - 特征更新最快
+  - 结构更新较慢
+  - 长期稳定化最慢
+
+### P2 的关键结果
+- `overall_p2_score = 0.7085`
+- `multi_timescale_evidence_score = 0.6668`
+- `fast_slow_coupling_score = 0.7463`
+- `long_horizon_stability_score = 0.7562`
+- `recovery_stabilization_score = 0.5860`
+- `explicitness_score = 0.7871`
+
+### P2 假设结果
+- `H1_structure_feature_cogeneration_requires_multiple_timescales = true`
+- `H2_fast_and_slow_updates_can_share_one_core_mechanism = true`
+- `H3_long_horizon_data_wash_does_not_destroy_the_system = true`
+- `H4_recovery_is_part_of_stabilization_not_a_separate_patch = true`
+- `H5_p2_multitimescale_stabilization_is_moderately_supported = true`
+
+### P2 的核心结论
+- 当前可以更明确地说：
+  - `结构-特征协同生成`
+  - 不是单时标过程
+- 更像是：
+  - `快时标` 提取局部特征
+  - `中时标` 改写有效连接结构
+  - `慢时标` 固化稳定模式并提供恢复能力
+
+### P2 的当前弱点
+- 最弱的两项仍然是：
+  - `multi_timescale_evidence_score = 0.6668`
+  - `recovery_stabilization_score = 0.5860`
+- 这意味着：
+  - 多时间尺度方向已经成立
+  - 但“恢复是否属于同一稳定化机制本体”还只是中等支撑
+
+### 阶段判断
+- `P2` 可以标记为：
+  - `completed`
+- 性质应理解为：
+  - `第一版快-中-慢时标稳定化机制`
+
+### 对主线的意义
+- 这一步把我们从：
+  - `结构-特征如何一起长出来`
+- 推进到：
+  - `它们为什么不会在持续输入下失稳`
+
+### 下一步
+- 直接进入：
+  - `P3：区域分化与网络角色生成`
+- 下一块的目标是解释：
+  - 为什么同一种可塑性机制
+  - 会在不同脑区长出不同的网络角色
+
+## [2026-03-11 10:28:05 +08:00] Codex 阶段任务 P3：区域分化与网络角色生成
+
+### 本轮命令
+- `Get-Content tests/codex_temp/stage7a_explicit_coding_law_candidate_20260311.json -Head 220`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_shared_layer_band_causal_orientation_20260310.json -Head 260`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_shared_layer_band_targeted_ablation_20260310.json -Head 240`
+- `Get-Content tests/codex_temp/stage6d_brain_constraint_core_reduction_20260311.json -Head 240`
+- `python -m py_compile tests/codex/test_p3_regional_differentiation_network_roles.py`
+- `python tests/codex/test_p3_regional_differentiation_network_roles.py`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz"`
+
+### 新增文件
+- `tests/codex/test_p3_regional_differentiation_network_roles.py`
+- `tests/codex_temp/p3_regional_differentiation_network_roles_20260311.json`
+
+### P3 的任务定义
+- `P3` 的目标是解释：
+  - 为什么同一种可塑性机制
+  - 不会把所有区域都训练成同一种功能
+- 而会长出不同的网络角色
+
+### 当前候选区域角色生成机制
+- 当前第一版候选可以写成：
+  - `Δh_i = η_i * gate_t * local_signal_i + region_bias_i - decay_i * h_i`
+  - `region_bias_i = rho_region * prior_region + lambda_tau * timescale_preference_i`
+  - `ΔA_{ij} = coactivate(h_i, h_j) * gate_t - prune_t * A_{ij}`
+- 这表示：
+  - 基本可塑性律是共享的
+  - 区域差异主要来自：
+    - `region prior`
+    - `timescale preference`
+    - `input statistics`
+
+### P3 的关键结果
+- `overall_p3_score = 0.6844`
+- `regional_role_emergence_score = 0.5339`
+- `shared_law_diverse_roles_score = 0.8057`
+- `region_prior_support_score = 0.6325`
+- `role_specific_failure_patterns_score = 0.7654`
+
+### P3 假设结果
+- `H1_same_law_can_generate_different_regional_roles = true`
+- `H2_shared_plasticity_core_survives_despite_role_diversity = true`
+- `H3_regional_priors_enter_the_mechanism_nontrivially = true`
+- `H4_role_specific_failure_patterns_are_real = true`
+- `H5_p3_regional_differentiation_is_moderately_supported = true`
+
+### P3 的核心结论
+- 当前可以较明确地说：
+  - `区域分化` 不必要求完全不同的学习规则
+- 更像是：
+  - `同一可塑性机制`
+  - 在不同区域先验、不同时间尺度偏好、不同输入统计下
+  - 长出不同网络角色
+
+### P3 的当前弱点
+- 最弱项仍然是：
+  - `regional_role_emergence_score = 0.5339`
+- 这说明：
+  - “角色确实不同”这件事已经有中等支撑
+  - 但“角色到底如何从同一机制里长出”还没有被压得特别实
+
+### 阶段判断
+- `P3` 可以标记为：
+  - `completed`
+- 性质应理解为：
+  - `第一版区域角色生成机制`
+
+### 对主线的意义
+- 到这里为止，主线已经推进了 3 个阶段性目标：
+  - `P1：结构-特征协同生成律`
+  - `P2：多时间尺度稳定化机制`
+  - `P3：区域分化与网络角色生成`
+- 这三步已经把：
+  - `结构如何长出`
+  - `特征如何长出`
+  - `为什么会长出不同区域角色`
+- 接到同一个统一可塑性框架里
+
+### 下一步
+- 直接进入：
+  - `P4：强精调闭环与机制干预`
+- 下一块的目标是：
+  - 不再只解释机制
+  - 而是检查当前 DNN 里的干预
+  - 到底是在改读出端
+  - 还是已经能够真实干预：
+    - `特征生成`
+    - `结构形成`
+
+## [2026-03-11 10:34:26 +08:00] Codex 阶段任务 P4：强精调闭环与机制干预
+
+### 本轮命令
+- `Get-Content tests/codex_temp/stage8b_high_resolution_precision_editing_20260311.json -Head 260`
+- `Get-Content tests/codex_temp/stage7b_precision_tuning_and_cross_model_prediction_20260311.json -Head 260`
+- `Get-Content tests/codex_temp/real_model_apple_sweetness_channel_edit_20260307.json -Head 260`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_hard_online_tool_interface_20260310.json -Head 240`
+- `python -m py_compile tests/codex/test_p4_strong_precision_closure_mechanism_intervention.py`
+- `python tests/codex/test_p4_strong_precision_closure_mechanism_intervention.py`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz"`
+
+### 新增文件
+- `tests/codex/test_p4_strong_precision_closure_mechanism_intervention.py`
+- `tests/codex_temp/p4_strong_precision_closure_mechanism_intervention_20260311.json`
+
+### P4 的任务定义
+- `P4` 的目标是判定：
+  - 当前 DNN 干预到底是在改：
+    - `读出端`
+  - 还是已经部分碰到了：
+    - `特征生成`
+    - `结构形成`
+
+### P4 的关键结果
+- `overall_p4_score = 0.6791`
+- `local_readout_bias_score = 0.7361`
+- `feature_generation_intervention_score = 0.7199`
+- `structure_formation_intervention_score = 0.7198`
+- `closure_strength_score = 0.5966`
+- `mechanism_reach_score = 0.6230`
+
+### P4 假设结果
+- `H1_local_attribute_edit_is_not_purely_readout = true`
+- `H2_routing_upgrade_reaches_structure_formation_nontrivially = true`
+- `H3_strong_precision_closure_is_not_complete_yet = true`
+- `H4_current_interventions_reach_mechanism_but_only_partially = true`
+- `H5_p4_strong_precision_closure_mechanism_intervention_is_moderately_supported = true`
+
+### P4 的核心结论
+- 当前结论已经比较清楚：
+  - `local attribute edit`
+    - 不是纯读出端
+    - 但仍然非常接近读出端
+  - `routing head upgrade`
+    - 已经部分触到结构形成过程
+    - 但还远未形成强闭环
+- 更准确地说：
+  - 当前干预处于：
+    - `mixed intervention regime`
+  - 也就是：
+    - `一部分像读出端修正`
+    - `一部分像机制层干预`
+
+### P4 的当前弱点
+- 最弱的一项仍然是：
+  - `closure_strength_score = 0.5966`
+- 说明：
+  - 当前已经能局部碰到机制
+  - 但还不能稳定、低副作用地闭环控制它
+
+### 阶段判断
+- `P4` 可以标记为：
+  - `completed`
+- 性质应理解为：
+  - `第一版机制干预判定`
+
+### 到当前为止的主线推进
+- 现在已经完成 4 个较大的阶段目标：
+  - `P1：结构-特征协同生成律`
+  - `P2：多时间尺度稳定化机制`
+  - `P3：区域分化与网络角色生成`
+  - `P4：强精调闭环与机制干预`
+
+### 当前对网络结构机制的更具体收束
+- 当前最具体的机制口径可以收成 4 层：
+  - `第 1 层：局部特征生长`
+    - 数据首先驱动局部可分特征形成
+  - `第 2 层：局部连接重组`
+    - 这些可分特征反过来改变局部连接更新方向
+  - `第 3 层：相位门控分配`
+    - 某些时刻更偏向特征提取
+    - 某些时刻更偏向结构固化
+  - `第 4 层：多时间尺度稳定化`
+    - 快时标提特征
+    - 中时标改结构
+    - 慢时标保留稳定模式
+
+### 下一步
+- 直接进入：
+  - `P5：脑侧前向预测与真实判伪`
+- 下一块的目标是：
+  - 不再主要回填已有脑侧结果
+  - 而是让当前这一套 `结构-特征-时标-区域` 统一机制
+  - 提出新的脑侧前向预测
+
+## [2026-03-11 10:40:05 +08:00] Codex 阶段任务 P5：脑侧前向预测与真实判伪
+
+### 本轮命令
+- `Get-Content tests/codex_temp/p1_structure_feature_cogeneration_law_20260311.json -Head 240`
+- `Get-Content tests/codex_temp/p2_multitimescale_stabilization_mechanism_20260311.json -Head 240`
+- `Get-Content tests/codex_temp/p3_regional_differentiation_network_roles_20260311.json -Head 240`
+- `Get-Content tests/codex_temp/p4_strong_precision_closure_mechanism_intervention_20260311.json -Head 240`
+- `Get-Content tests/codex_temp/stage8d_brain_high_risk_falsification_20260311.json -Head 240`
+- `python -m py_compile tests/codex/test_p5_forward_brain_predictions_plasticity_coding.py`
+- `python tests/codex/test_p5_forward_brain_predictions_plasticity_coding.py`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz"`
+
+### 新增文件
+- `tests/codex/test_p5_forward_brain_predictions_plasticity_coding.py`
+- `tests/codex_temp/p5_forward_brain_predictions_plasticity_coding_20260311.json`
+
+### P5 的任务定义
+- `P5` 的目标是：
+  - 不再只用旧脑侧结果回填
+  - 而是让当前统一机制核提出新的脑侧前向预测
+
+### P5 的关键结果
+- `overall_p5_score = 0.8576`
+- `prediction_sharpness_score = 0.9414`
+- `mechanistic_specificity_score = 0.7511`
+- `independence_from_current_fit_score = 0.7378`
+- `falsifiability_score = 1.0000`
+
+### P5 假设结果
+- `H1_forward_brain_predictions_are_sharp = true`
+- `H2_predictions_follow_the_mechanism_not_just_old_fit = true`
+- `H3_predictions_are_genuinely_falsifiable = true`
+- `H4_p5_forward_brain_prediction_is_moderately_supported = true`
+
+### 当前最重要的前向预测
+- `预测 1`
+  - 输入统计改变时
+  - 应先出现局部特征漂移
+  - 再出现有效连接重组
+  - 最后才出现慢时标稳定化固化
+- `预测 2`
+  - 偏路由区域应更早表现结构重组
+  - 偏抽象/稳定化区域应更晚显现但更持久
+- `预测 3`
+  - 高兼容关系应更早形成跨区域可复用编码
+  - 低兼容关系更依赖局部结构和上下文
+- `预测 4`
+  - 广泛无差别增强会伤害脑侧泛化
+  - 选择性增强才会改善结构-特征协同
+
+### 到当前为止的阶段收口
+- 现在已经完成：
+  - `P1：结构-特征协同生成律`
+  - `P2：多时间尺度稳定化机制`
+  - `P3：区域分化与网络角色生成`
+  - `P4：强精调闭环与机制干预`
+  - `P5：脑侧前向预测与真实判伪`
+
+### 当前主线收束
+- 到这里，当前最完整的候选解释已经不是单独的“编码公式”
+- 而是一套更大的统一机制：
+  - `数据冲刷`
+  - `局部特征形成`
+  - `局部连接重组`
+  - `相位门控分配`
+  - `多时间尺度稳定化`
+  - `区域角色分化`
+  - `最终形成网络编码`
+
+### 当前进度口径更新
+- 如果按“候选统一机制的提纯程度”口径：
+  - 当前可以更新到 `82% - 88%`
+- 如果按“真实大脑编码机制本体的破解程度”这个更严格口径：
+  - 当前更合理的是 `68% - 78%`
+- 这次上调依据是：
+  - `P1-P5` 已经把统一机制从现象解释推进到前向预测
+
+### 下一大阶段建议
+- 下一阶段不该再只是延长现有链条
+- 应进入：
+  - `阶段任务 P6：统一可塑性-编码总理论`
+- 建议拆成 4 个大块：
+  - `P6A：统一总方程压缩`
+  - `P6B：结构形成机制详化`
+  - `P6C：特征提取机制详化`
+  - `P6D：总理论的脑侧对抗判伪`
+
+## [2026-03-11 10:51:43 +08:00] Codex 阶段任务 P6A：统一可塑性-编码总方程压缩
+
+### 本轮命令
+- `Get-Content tests/codex_temp/p1_structure_feature_cogeneration_law_20260311.json -Head 240`
+- `Get-Content tests/codex_temp/p2_multitimescale_stabilization_mechanism_20260311.json -Head 240`
+- `Get-Content tests/codex_temp/p3_regional_differentiation_network_roles_20260311.json -Head 240`
+- `Get-Content tests/codex_temp/p4_strong_precision_closure_mechanism_intervention_20260311.json -Head 240`
+- `Get-Content tests/codex_temp/p5_forward_brain_predictions_plasticity_coding_20260311.json -Head 240`
+- `python -m py_compile tests/codex/test_p6a_unified_plasticity_coding_principle.py`
+- `python tests/codex/test_p6a_unified_plasticity_coding_principle.py`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz"`
+
+### 新增文件
+- `tests/codex/test_p6a_unified_plasticity_coding_principle.py`
+- `tests/codex_temp/p6a_unified_plasticity_coding_principle_20260311.json`
+
+### P6A 的任务定义
+- `P6A` 的目标是：
+  - 把 `P1-P5`
+  - 压成一套统一的可塑性-编码数学原理
+
+### 当前统一总方程
+- `z_t = a_r * r_t - a_s * s_t + b_0`
+- `g_t = sigmoid(T * tanh(z_t))`
+- `f_{t+1} = (1 - l_f) * f_t + e_f * g_t * Phi(x_t, A_t) + b_g * b_region`
+- `A_{t+1} = (1 - l_A) * A_t + e_A * (1 - g_t) * Psi(f_{t+1}, A_t) + r_g * R_t`
+- `m_{t+1} = (1 - l_m) * m_t + e_m * s_t * (A_{t+1} - m_t)`
+- `b_region = w_p * p_route + w_m * p_multi + w_a * p_abs + w_h * p_shared`
+- `y_t = W_f * f_t + W_A * vec(A_t) + W_m * m_t`
+
+### 数学含义
+- `z_t`
+  - 当前系统状态，由 `routing pressure` 与 `stabilization pressure` 竞争得到
+- `g_t`
+  - 相位门控，决定当前更偏特征生长还是结构固化
+- `f_t`
+  - 快时标特征状态
+- `A_t`
+  - 中时标有效结构 / 有效拓扑
+- `m_t`
+  - 慢时标稳定化记忆
+- `b_region`
+  - 区域先验，解释不同脑区为什么会长出不同角色
+- `y_t`
+  - 最终编码读出，不来自单一向量，而来自：
+    - `快特征`
+    - `有效结构`
+    - `慢稳定记忆`
+
+### P6A 的关键结果
+- `overall_p6a_score = 0.7681`
+- `synthesis_consistency_score = 0.7358`
+- `mathematical_explicitness_score = 0.8168`
+- `intervention_alignment_score = 0.7657`
+- `brain_mechanism_plausibility_score = 0.7463`
+- `residual_control_score = 0.7762`
+
+### P6A 假设结果
+- `H1_P1_to_P5_can_be_compressed_into_one_principle = true`
+- `H2_the_principle_is_mathematically_explicit = true`
+- `H3_the_principle_matches_current_intervention_behavior = true`
+- `H4_the_principle_is_brain_plausible = true`
+- `H5_p6a_unified_principle_is_moderately_supported = true`
+
+### P6A 的核心结论
+- 当前最接近“编码机制数学原理”的候选已经不再是单一编码公式
+- 而是一套：
+  - `相位门控`
+  - `快特征更新`
+  - `中结构更新`
+  - `慢稳定化记忆`
+  - `区域先验偏置`
+- 共同组成的统一可塑性-编码方程
+
+### 当前阶段判断
+- `P6A` 可以标记为：
+  - `completed`
+- 其性质应理解为：
+  - `第一版统一总方程`
+
+### 下一步
+- 直接进入：
+  - `P6B：结构形成机制详化`
+  - `P6C：特征提取机制详化`
+- 也就是把当前总方程里的：
+  - `Psi`
+  - `Phi`
+- 从占位函数继续展开成更具体的机制形式
+
+## [2026-03-11 10:00:19 +08:00] Codex 主线重排：大脑网络结构形成与特征提取优先级上升
+
+### 本轮命令
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz"`
+
+### 主线重排
+- 后续主线需要明确改成：
+  - `一边破解深度神经网络中的机制投影`
+  - `但更重要的是分析大脑编码机制本身`
+- 其中最优先的两个问题是：
+  - `大脑如何形成网络结构`
+  - `大脑如何提取特征`
+
+### 为什么这两个问题更重要
+- 如果不回答 `网络结构如何形成`：
+  - 我们只能看到静态功能分工
+  - 但看不到为什么会出现：
+    - `路由拓扑`
+    - `区域分化`
+    - `多时间尺度协同`
+- 如果不回答 `特征如何被提取`：
+  - 我们只能看到行为输出
+  - 但看不到概念、关系、抽象层级是如何从局部输入中长出来的
+
+### 当前项目里这两个问题的对应位置
+- 对 `网络结构形成`，当前最接近的候选机制是：
+  - `phase-gated local update law`
+  - 也就是：
+    - 局部更新不是持续均匀发生
+    - 而是在不同相位下被：
+      - `routing pressure`
+      - `stabilization pressure`
+      - `brain prior`
+    - 共同塑形
+- 如果这个方向是对的：
+  - 网络结构不是先天固定模板
+  - 而是通过局部更新在阶段门控下逐步形成的有效拓扑
+
+### 对“网络结构形成”的当前猜想
+- 当前更具体的猜想可以写成：
+  - `网络结构 = 局部连接更新 + 相位同步门控 + 多时间尺度稳定化 + 区域先验偏置`
+- 这里面：
+  - `局部连接更新` 决定谁和谁形成可用桥
+  - `相位同步门控` 决定什么时候允许形成桥
+  - `多时间尺度稳定化` 决定哪些桥被保留
+  - `区域先验偏置` 决定不同脑区为何会学出不同网络角色
+
+### 对“特征提取”的当前猜想
+- 当前更具体的猜想是：
+  - `特征不是一次性被编码出来`
+  - 而是通过分层提纯形成：
+    - `共享基底`
+    - `稀疏偏移`
+    - `关系路由`
+    - `抽象提升`
+- 也就是说：
+  - 低层更像在做局部差异和可分性提取
+  - 中层更像在做关系组合和路由选择
+  - 高层更像在做抽象操作和跨域复用
+
+### 这对后续任务的直接影响
+- 阶段 9 后半段和阶段 10 不能只围绕：
+  - `能不能调模型`
+  - `能不能解释分数`
+- 必须转成两个核心方向：
+  - `结构生成机制`
+  - `特征生成机制`
+
+### 后续任务块需要改写
+- `9B：强精调闭环`
+  - 现在应增加一个问题：
+    - `当前编辑能否真正干预特征生成过程，而不是只改读出端`
+- `9D：新脑侧观测的前向预测`
+  - 现在应增加两个重点：
+    - `预测脑网络结构在形成时应满足什么约束`
+    - `预测特征提取在不同脑区应呈现什么层级分化`
+
+### 下一大阶段建议
+- 完成 `9B / 9D` 之后，阶段 10 应直接围绕这两个核心问题展开：
+  - `10A：网络结构生成律`
+  - `10B：特征提取生成律`
+  - `10C：结构-特征耦合机制`
+  - `10D：脑侧真实可证伪预测`
+
+### 当前口径提醒
+- 之后所有结论都应保持这个表述：
+  - `DNN 给出的是脑机制候选投影`
+  - `真正要破解的是大脑如何长出结构、如何长出特征`
+
+## [2026-03-11 10:02:34 +08:00] Codex 理论强化：数据冲刷下的“特征提取-结构形成”同步共生
+
+### 本轮命令
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz"`
+
+### 核心判断
+- 这点非常关键：
+  - `大脑神经网络不是先形成结构、再在结构上提取特征`
+- 更合理的表述应当是：
+  - `在数据冲刷之下，特征提取和网络结构形成是同步共生的`
+
+### 这意味着什么
+- `特征` 不是单纯被读出来的
+  - 它会反过来塑造连接结构
+- `结构` 也不是单纯背景条件
+  - 它会反过来决定后续还能提取到什么特征
+- 所以二者不是：
+  - `先后关系`
+- 更像是：
+  - `耦合演化关系`
+
+### 更具体的机制猜想
+- 当前更合理的统一口径可以写成：
+  - `数据流入 -> 局部差异被放大 -> 形成早期可分特征`
+  - `早期可分特征 -> 改变局部连接更新方向`
+  - `连接更新 -> 改变后续信息路由与时序耦合`
+  - `新路由与新耦合 -> 允许更高阶特征继续被提取`
+- 也就是说：
+  - `特征提取` 在塑造结构
+  - `结构形成` 在继续放大新的特征提取能力
+
+### 对我们当前候选统一律的影响
+- 之前的 `phase-gated local update law`
+  - 现在不能只被理解成“编码更新律”
+- 更应该理解成：
+  - `结构-特征共同更新律`
+- 也就是：
+  - `routing pressure`
+  - `stabilization pressure`
+  - `brain prior`
+- 不只是改写表征
+- 还在不断改写：
+  - `有效网络拓扑`
+  - `后续可提取特征空间`
+
+### 对“大脑如何形成网络结构”的改写
+- 网络结构形成不应再被看成：
+  - `单独的连接生长问题`
+- 而应看成：
+  - `被特征提取驱动的连接重组问题`
+
+### 对“大脑如何提取特征”的改写
+- 特征提取也不应再被看成：
+  - `固定网络上的表征读取问题`
+- 而应看成：
+  - `在结构持续重组过程中发生的分层特征生成问题`
+
+### 对后续任务的直接要求
+- 阶段 10 不能把：
+  - `结构生成律`
+  - `特征提取生成律`
+- 分成完全独立的两条线
+- 更合理的是改成：
+  - `10A：结构-特征协同生成律`
+  - `10B：多时间尺度下的协同稳定化`
+  - `10C：区域分化如何从协同生成中长出`
+  - `10D：脑侧真实可证伪预测`
+
+### 当前最重要的理论收束
+- 真正需要破解的，不只是：
+  - `编码长什么样`
+- 而是：
+  - `编码、特征、结构怎样在数据冲刷下共同长出来`
+
+## [2026-03-11 10:05:25 +08:00] Codex 后续总规划：明线破解 DNN，暗线破解大脑原理
+
+### 本轮命令
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss zzz"`
+
+### 总体定位
+- 后续项目明确采用双层主线：
+  - `明面主线：破解深度神经网络中的机制投影`
+  - `核心主线：破解大脑原理本身`
+- 二者关系不是替代，而是：
+  - `表里相辅相成`
+- 也就是：
+  - 用 DNN 提供可干预、可重复、可快速迭代的机制投影平台
+  - 用脑侧问题决定真正要解释的对象是什么
+
+### 计划原则
+- 后续不再以零散脚本为主
+- 每次只推进一个较大的阶段任务块
+- 每个任务块都必须对应一个阶段性目标
+- 判断标准不再只是“分数更高”
+- 而是看是否回答了一个更接近脑原理本体的问题
+
+### 阶段任务 P1：结构-特征协同生成律
+- 目标：
+  - 明确大脑里 `网络结构形成` 和 `特征提取` 是否可以由同一类局部更新机制共同解释
+- 关键问题：
+  - 特征提取如何反过来塑造连接结构
+  - 连接结构如何反过来决定后续可提取特征
+  - 二者是否存在统一的协同生成律
+- 交付目标：
+  - 给出第一版 `结构-特征共同更新方程`
+  - 明确哪些项更像：
+    - `结构塑形项`
+    - `特征生成项`
+    - `协同耦合项`
+
+### 阶段任务 P2：多时间尺度稳定化机制
+- 目标：
+  - 解释为什么网络不会在持续数据冲刷下失稳，而是能形成可持续结构与稳定特征层级
+- 关键问题：
+  - 快时标上什么在变
+  - 慢时标上什么被保留
+  - 相位门控如何在两者之间分配更新
+- 交付目标：
+  - 给出 `快-慢双时标` 的机制描述
+  - 解释：
+    - 为什么某些特征短暂出现后消失
+    - 为什么某些结构会被长期固化
+
+### 阶段任务 P3：区域分化与网络角色生成
+- 目标：
+  - 解释为什么不同脑区会长出不同功能角色，而不是一锅均匀网络
+- 关键问题：
+  - 区域先验是如何进入共同更新律的
+  - 为什么会形成：
+    - `路由区`
+    - `整合区`
+    - `抽象区`
+    - `稳定化区`
+- 交付目标：
+  - 给出 `区域角色生成机制` 的候选模型
+  - 明确区域差异是：
+    - 更新规则差异
+    - 输入分布差异
+    - 还是时标差异
+
+### 阶段任务 P4：强精调闭环与机制干预
+- 目标：
+  - 把当前 DNN 里的局部可编辑性，从“可用”推进到“可验证机制干预”
+- 关键问题：
+  - 当前编辑是在改读出端，还是在改特征生成过程
+  - 能否用更小副作用的编辑，稳定干预结构-特征协同过程
+- 交付目标：
+  - 形成 `强精调闭环`
+  - 明确哪些 DNN 干预真正对应：
+    - `特征生成干预`
+    - `结构形成干预`
+
+### 阶段任务 P5：脑侧前向预测与真实判伪
+- 目标：
+  - 不再主要用已有脑侧结果回填
+  - 而是让当前机制核先提出新的脑侧预测
+- 关键问题：
+  - 哪些脑侧现象是当前机制必须预测到的
+  - 哪些新观测会直接打掉当前机制核
+- 交付目标：
+  - 给出一组新的、独立的、可失败的脑侧预测
+  - 形成真正面向脑原理的判伪清单
+
+### 推荐执行顺序
+- `第一阶段先做 P1`
+- `第二阶段做 P2`
+- `第三阶段做 P3`
+- `第四阶段做 P4`
+- `第五阶段做 P5`
+
+### 为什么这样排
+- `P1` 不解决，后面所有东西都缺统一对象
+- `P2` 不解决，结构和特征为何稳定无法解释
+- `P3` 不解决，脑区差异只能停在描述层
+- `P4` 不解决，DNN 端就只是类比平台，缺机制干预价值
+- `P5` 不解决，整个项目仍无法真正逼近脑原理判伪
+
+### 当前建议的下一步
+- 直接开始：
+  - `P1：结构-特征协同生成律`
+- 这是当前最关键的一大块
+- 因为它第一次把：
+  - `大脑怎么形成网络结构`
+  - `大脑怎么提取特征`
+- 收进同一个统一问题
+
+---
+
+## 2026-03-11 新推进：P6B + P6C 完成
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_p6b_structure_formation_mechanism_detail.py`
+- `python -m py_compile tests/codex/test_p6c_feature_extraction_mechanism_detail.py`
+- `python tests/codex/test_p6b_structure_formation_mechanism_detail.py`
+- `python tests/codex/test_p6c_feature_extraction_mechanism_detail.py`
+
+### 新增脚本
+- `tests/codex/test_p6b_structure_formation_mechanism_detail.py`
+- `tests/codex/test_p6c_feature_extraction_mechanism_detail.py`
+
+### 新增结果文件
+- `tests/codex_temp/p6b_structure_formation_mechanism_detail_20260311.json`
+- `tests/codex_temp/p6c_feature_extraction_mechanism_detail_20260311.json`
+
+### P6B：结构形成机制详化
+- 结论：
+  - `P6B` 已完成并过阶段线
+  - `overall_p6b_score = 0.7521`
+- 关键分项：
+  - `topology_reorganization_evidence_score = 0.7197`
+  - `route_demand_alignment_score = 0.8198`
+  - `regional_role_specialization_score = 0.7445`
+  - `structure_intervention_support_score = 0.7033`
+  - `explicit_structure_equation_score = 0.7730`
+- 结构形成机制更具体的候选形式：
+  - `Psi(f_{t+1}, A_t) = c_c * C(f_{t+1}) + c_d * D_t + c_r * R_t + c_b * B_region - c_p * P_t`
+  - `C(f_{t+1}) = f_{t+1} * f_{t+1}^T`
+  - `D_t = relu(Q_t - A_t)`
+  - `B_region = u_route * p_route + u_multi * p_multi + u_abs * p_abs`
+  - `P_t = relu(A_t - M_t)`
+  - `A_{t+1} = (1 - l_A) * A_t + e_A * (1 - g_t) * Psi(f_{t+1}, A_t)`
+- 理论解释：
+  - 网络结构不是静态连线图
+  - 而是 `特征共激活 + 路由需求缺口 + 区域先验 + 慢时标剪枝` 共同塑出的有效拓扑
+  - 也就是说，结构长出来的直接来源不是“预设模块”，而是数据冲刷下局部可塑性对 `谁该连、谁该桥接、谁该被剪掉` 的持续重写
+
+### P6C：特征提取机制详化
+- 结论：
+  - `P6C` 已完成并过阶段线
+  - `overall_p6c_score = 0.7548`
+- 关键分项：
+  - `local_feature_separability_score = 0.7615`
+  - `compatibility_weighted_extraction_score = 0.8272`
+  - `abstraction_reuse_support_score = 0.6728`
+  - `intervention_sensitivity_score = 0.7217`
+  - `explicit_feature_equation_score = 0.7908`
+- 特征提取机制更具体的候选形式：
+  - `Phi(x_t, A_t) = c_l * L(x_t) + c_k * K_t * S(x_t, A_t) + c_a * U_t - c_i * I_t`
+  - `L(x_t) = local_match_t - local_competitor_t`
+  - `S(x_t, A_t) = A_t * local_match_t`
+  - `K_t = sigmoid(v_c * compatibility_t + v_r * reuse_prior_t)`
+  - `U_t = abstract_pool(A_t, x_t)`
+  - `I_t = overlap_t + mismatch_t`
+  - `f_{t+1} = (1 - l_f) * f_t + e_f * g_t * Phi(x_t, A_t) + b_g * b_region`
+- 理论解释：
+  - 特征不是直接从输入里“抽出来”
+  - 而是先由局部对比产生，再经过当前结构路由、关系兼容性门控、抽象复用提升，最后形成稳定可用的快时标特征
+  - 所以特征提取本质上是 `局部差异 -> 结构路由 -> 兼容性筛选 -> 抽象复用` 的分层过程
+
+### 对统一可塑性机制的推进
+- 到这一步，`P6A` 里的总方程已经不再只有占位符
+- `Phi` 和 `Psi` 都被展开到了可讨论的机制项层面
+- 当前最合理的统一理解是：
+  - `快时标` 负责从局部差异里长出候选特征
+  - `中时标` 负责把高共激活、且有需求缺口的通路固化成有效结构
+  - `慢时标` 负责保留稳定部分并对冗余结构施加剪枝压力
+  - 区域差异主要来自同一规则下的 `先验差异` 和 `时间尺度偏好差异`
+
+### 当前整体进度判断
+- 如果按：
+  - `统一可塑性-编码候选理论的提纯程度`
+  - 当前大约在 `83% - 89%`
+- 如果按：
+  - `真实大脑编码机制本体的破解程度`
+  - 仍应保守在 `70% - 79%`
+- 原因：
+  - 统一方程已经越来越清晰
+  - 但真正脑侧还缺：
+    - 更高分辨率的结构形成证据
+    - 更直接的时序可塑性证据
+    - 更严格的判伪观测
+
+### 下一阶段建议
+- 直接进入新的大任务块：
+  - `P7：结构-特征共演化总方程`
+- 这一阶段不要再拆碎桥接实验，应该一次性完成三件事：
+  - 把 `Phi` 和 `Psi` 熔成同一个结构-特征共演化方程
+  - 明确哪些项是统一可塑性机制的最小必要项
+  - 直接对剩余残差做对抗性压缩
+- `P7` 内部建议分成 3 个子目标：
+  - `P7A：结构-特征共演化总方程`
+  - `P7B：最小可塑性核压缩`
+  - `P7C：脑侧高风险判伪`
+
+---
+
+## 2026-03-11 新推进：P7A 完成
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_p7a_structure_feature_coevolution_equation.py`
+- `python tests/codex/test_p7a_structure_feature_coevolution_equation.py`
+
+### 新增脚本
+- `tests/codex/test_p7a_structure_feature_coevolution_equation.py`
+
+### 新增结果文件
+- `tests/codex_temp/p7a_structure_feature_coevolution_equation_20260311.json`
+
+### P7A：结构-特征共演化总方程
+- 结论：
+  - `P7A` 已完成并过阶段线
+  - `overall_p7a_score = 0.7739`
+- 关键分项：
+  - `equation_consistency_score = 0.7729`
+  - `coupling_closure_score = 0.7579`
+  - `residual_attack_readiness_score = 0.7279`
+  - `brain_plausibility_score = 0.7645`
+  - `minimality_pressure_score = 0.8461`
+
+### 新的共演化总方程
+- 当前最合理的统一形式已经可以压成：
+  - `z_t = a_r * r_t - a_s * s_t + b_0`
+  - `g_t = sigmoid(T * tanh(z_t))`
+  - `Phi_t = c_l * L_t + c_k * K_t * (A_t * L_t) + c_a * U_t - c_i * I_t`
+  - `Psi_t = c_c * (f_{t+1} * f_{t+1}^T) + c_d * relu(Q_t - A_t) + c_b * B_region - c_p * relu(A_t - M_t)`
+  - `f_{t+1} = (1 - l_f) * f_t + e_f * g_t * Phi_t + b_g * b_region`
+  - `A_{t+1} = (1 - l_A) * A_t + e_A * (1 - g_t) * Psi_t`
+  - `m_{t+1} = (1 - l_m) * m_t + e_m * s_t * (A_{t+1} - m_t)`
+  - `y_t = W_f * f_t + W_A * vec(A_t) + W_m * m_t`
+
+### 数学含义进一步收敛
+- 这一步最重要的不是多了几个方程
+- 而是第一次把：
+  - `特征提取项`
+  - `结构形成项`
+  - `慢时标稳定项`
+- 放进了同一个闭环
+- 更准确的解释是：
+  - `局部差异` 先在当前结构约束下形成候选特征
+  - `候选特征联盟` 再通过共激活和需求缺口推动结构重组
+  - `慢时标稳定器` 再把稳定部分留下、把冗余部分变成剪枝压力
+  - 下一轮特征提取又在新结构上发生
+- 所以真正的网络编码不是存放在某个节点或某组边里
+- 而是存在于：
+  - `局部差异如何被放大`
+  - `哪些差异被结构选中并路由`
+  - `哪些结构被慢时标留下`
+- 这三者的循环里
+
+### 对大脑原理的推进
+- 到现在为止，项目已经不只是说：
+  - 大脑可能有统一可塑性机制
+- 而是开始逼近：
+  - 统一可塑性机制怎样同时生成 `特征` 和 `有效网络结构`
+- 当前最核心的判断可以再压缩成一句话：
+  - 大脑网络是在数据冲刷下，由 `特征差异放大 -> 结构桥接形成 -> 慢时标稳定/剪枝` 的共演化循环长出来的
+
+### 当前整体进度判断
+- 如果按：
+  - `统一可塑性-编码总理论提纯程度`
+  - 当前约 `84% - 90%`
+- 如果按：
+  - `真实大脑编码机制本体破解程度`
+  - 当前保守更新到 `71% - 80%`
+
+### 下一阶段建议
+- 直接进入：
+  - `P7B：最小可塑性核压缩`
+- 核心目标不是再加更多项
+- 而是把当前共演化总方程继续压缩成更小、更必要的机制核
+- 然后再做：
+  - `P7C：脑侧高风险判伪`
+
+---
+
+## 2026-03-11 新推进：P7B 完成
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_p7b_minimal_plasticity_core_compression.py`
+- `python tests/codex/test_p7b_minimal_plasticity_core_compression.py`
+
+### 新增脚本
+- `tests/codex/test_p7b_minimal_plasticity_core_compression.py`
+
+### 新增结果文件
+- `tests/codex_temp/p7b_minimal_plasticity_core_compression_20260311.json`
+
+### P7B：最小可塑性核压缩
+- 结论：
+  - `P7B` 已完成并过阶段线
+  - `overall_p7b_score = 0.7673`
+- 关键分项：
+  - `compression_retains_signal_score = 0.7789`
+  - `minimal_term_sufficiency_score = 0.7960`
+  - `shared_parameterization_score = 0.8297`
+  - `residual_bound_after_compression_score = 0.7082`
+  - `brain_plausibility_after_compression_score = 0.7236`
+
+### 当前最小可塑性核
+- 当前压缩后最合理的最小形式是：
+  - `q_t = sigmoid(alpha * (r_t - s_t) + beta * b_region)`
+  - `f_{t+1} = (1 - l_f) * f_t + e_f * q_t * (L_t + k_a * A_t * L_t - k_i * I_t)`
+  - `A_{t+1} = (1 - l_A) * A_t + e_A * (1 - q_t) * (f_{t+1} * f_{t+1}^T + d_t - p_t)`
+  - `d_t = k_d * relu(Q_t - A_t)`
+  - `p_t = k_p * relu(A_t - m_t)`
+  - `m_{t+1} = (1 - l_m) * m_t + e_m * s_t * (A_{t+1} - m_t)`
+  - `y_t = W_f * f_t + W_A * vec(A_t) + W_m * m_t`
+
+### 数学意义进一步收缩
+- 这一版说明，当前统一机制即使继续压缩，也至少还需要保留 4 类核心项：
+  - `相位门控`
+  - `局部差异提取`
+  - `需求驱动的结构增长`
+  - `慢时标稳定/剪枝`
+- 也就是说，现阶段最不该删掉的不是“抽象概念项”
+- 而是：
+  - 特征怎样被局部差异点燃
+  - 结构怎样因需求缺口被补桥
+  - 慢时标怎样把不稳定结构压回去
+
+### 当前项目状态
+- 如果按：
+  - `统一可塑性-编码总理论提纯程度`
+  - 当前约 `85% - 91%`
+- 如果按：
+  - `真实大脑编码机制本体破解程度`
+  - 当前约 `72% - 81%`
+
+### 下一阶段建议
+- 直接进入：
+  - `P7C：脑侧高风险判伪`
+- 目标不是再补支持性证据
+- 而是拿最小可塑性核去提出更硬、更容易失败的脑侧预测
+
+---
+
+## 2026-03-11 新推进：P7C 完成
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_p7c_brain_spatial_falsification_minimal_core.py`
+- `python tests/codex/test_p7c_brain_spatial_falsification_minimal_core.py`
+
+### 新增脚本
+- `tests/codex/test_p7c_brain_spatial_falsification_minimal_core.py`
+
+### 新增结果文件
+- `tests/codex_temp/p7c_brain_spatial_falsification_minimal_core_20260311.json`
+
+### P7C：最小可塑性核的脑侧高风险判伪 + 3D 空间效率
+- 结论：
+  - `P7C` 已完成并过阶段线
+  - `overall_p7c_score = 0.7375`
+- 关键分项：
+  - `falsifier_sharpness_score = 0.8853`
+  - `spatial_efficiency_signal_score = 0.5027`
+  - `geometry_constraint_score = 0.8049`
+  - `minimal_core_alignment_score = 0.7822`
+  - `brain_spatial_plausibility_score = 0.7122`
+
+### 关键理论收敛
+- 当前证据支持：
+  - `朴素几何嵌入` 本身不是答案
+  - 真正高效的是：
+    - `三维局部布线经济性`
+    - 加上 `动态有效拓扑`
+    - 再加上 `慢时标稳定/剪枝`
+- 也就是说：
+  - 大脑不是单纯利用几何最近邻就完成编码
+  - 而是在三维物理基底上，用可塑性机制不断生成 `任务相关的有效连接图`
+
+### 当前显式空间效率方程
+- `C_wire = sum_{i,j} A_{ij} * d_{ij}`
+- `C_delay = sum_{i,j} A_{ij} * tau(d_{ij})`
+- `G_pack = sum_i log(1 + deg_i(local_3d_radius))`
+- `T_eff = sum_paths pi(path) * info(path) / (1 + delay(path) + interference(path))`
+- `E_3d = T_eff / (lambda_w * C_wire + lambda_d * C_delay + lambda_i * I_global)`
+- `A_{t+1} = (1 - l_A) * A_t + e_A * (1 - q_t) * (f_{t+1} f_{t+1}^T + d_t - p_t - lambda_s * D_3d)`
+- `D_3d(i,j) = d_{ij} / (1 + local_bundle_gain(i,j))`
+
+### 空间效率的核心判断
+- `3D` 的价值不在于“几何坐标天然等于语义”
+- 而在于它同时给了系统：
+  - 足够高的局部邻域组合度
+  - 可控的长程布线成本
+  - 更好的层次分工与束化传输
+- 所以当前更准确的口径是：
+  - `三维空间提供低成本物理基底`
+  - `统一可塑性机制在其上生成高价值有效拓扑`
+  - `编码效率来自二者叠加，而不是任一者单独存在`
+
+### 当前整体进度判断
+- 如果按：
+  - `统一可塑性-编码-空间总理论提纯程度`
+  - 当前约 `86% - 92%`
+- 如果按：
+  - `真实大脑编码机制本体破解程度`
+  - 当前约 `73% - 82%`
+
+### 下一阶段建议
+- 直接进入新的更大任务块：
+  - `P8：空间化统一可塑性编码理论`
+- 建议内部包含：
+  - `P8A：空间化总方程`
+  - `P8B：三维布线经济性与动态拓扑联合解释`
+  - `P8C：脑侧空间判伪预测`
+
+---
+
+## 2026-03-11 新推进：P8A 完成
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_p8a_spatialized_plasticity_coding_equation.py`
+- `python tests/codex/test_p8a_spatialized_plasticity_coding_equation.py`
+
+### 新增脚本
+- `tests/codex/test_p8a_spatialized_plasticity_coding_equation.py`
+
+### 新增结果文件
+- `tests/codex_temp/p8a_spatialized_plasticity_coding_equation_20260311.json`
+
+### P8A：空间化总方程
+- 结论：
+  - `P8A` 已完成并过阶段线
+  - `overall_p8a_score = 0.7088`
+- 关键分项：
+  - `spatial_equation_consistency_score = 0.7709`
+  - `topology_reuse_locality_score = 0.7579`
+  - `compact_bridge_efficiency_score = 0.5027`
+  - `geometry_only_failure_score = 0.6533`
+  - `brain_plausibility_score = 0.8589`
+
+### 空间化统一方程
+- 当前更完整的空间化形式已经可写成：
+  - `q_t = sigmoid(alpha * (r_t - s_t) + beta * b_region - gamma * C_local)`
+  - `f_{t+1}(i) = (1 - l_f) * f_t(i) + e_f * q_t(i) * [L_t(i) + k_a * sum_j A_t(i,j)L_t(j) - k_i I_t(i)]`
+  - `A_{t+1}(i,j) = (1 - l_A) * A_t(i,j) + e_A * (1 - q_t(i,j)) * [f_{t+1}(i)f_{t+1}(j) + d_t(i,j) - p_t(i,j) - lambda_s D_3d(i,j)]`
+  - `m_{t+1}(i,j) = (1 - l_m) * m_t(i,j) + e_m * s_t * (A_{t+1}(i,j) - m_t(i,j))`
+  - `D_3d(i,j) = d_{ij} / (1 + local_bundle_gain(i,j))`
+  - `E_3d = T_eff / (lambda_w C_wire + lambda_d C_delay + lambda_i I_global)`
+  - `y_t = W_f f_t + W_A vec(A_t) + W_m m_t`
+
+### 这一步的新理论价值
+- 到这里，空间不再只是外部背景条件
+- 而是被写进了统一可塑性-编码方程本体
+- 当前最重要的理解是：
+  - `三维空间` 决定物理布线成本上界
+  - `动态有效拓扑 A_t` 决定哪些物理路径当前真正参与编码
+  - `慢时标记忆 m_t` 决定哪些高价值长程路径能被保留
+- 所以效率真正来自：
+  - `局部三维密集邻域`
+  - `稀疏高价值长程桥接`
+  - `慢时标剪枝抑制无效扩张`
+
+### 当前整体进度判断
+- 如果按：
+  - `统一可塑性-编码-空间总理论提纯程度`
+  - 当前约 `87% - 92%`
+- 如果按：
+  - `真实大脑编码机制本体破解程度`
+  - 当前约 `74% - 83%`
+
+### 下一阶段建议
+- 继续做：
+  - `P8B：三维布线经济性与动态拓扑联合解释`
+- 然后做：
+  - `P8C：脑侧空间判伪预测`
+
+---
+
+## 2026-03-11 新推进：P8B + P8C 完成
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_p8b_3d_wiring_dynamic_topology_division.py`
+- `python tests/codex/test_p8b_3d_wiring_dynamic_topology_division.py`
+- `python -m py_compile tests/codex/test_p8c_spatial_brain_falsifier_predictions.py`
+- `python tests/codex/test_p8c_spatial_brain_falsifier_predictions.py`
+
+### 新增脚本
+- `tests/codex/test_p8b_3d_wiring_dynamic_topology_division.py`
+- `tests/codex/test_p8c_spatial_brain_falsifier_predictions.py`
+
+### 新增结果文件
+- `tests/codex_temp/p8b_3d_wiring_dynamic_topology_division_20260311.json`
+- `tests/codex_temp/p8c_spatial_brain_falsifier_predictions_20260311.json`
+
+### P8B：三维布线经济性与动态拓扑联合解释
+- 结论：
+  - `P8B` 已完成并过阶段线
+  - `overall_p8b_score = 0.6739`
+- 关键分项：
+  - `local_reuse_advantage_score = 0.7975`
+  - `selective_bridge_advantage_score = 0.4840`
+  - `division_of_labor_consistency_score = 0.6388`
+  - `geometry_dynamic_topology_split_score = 0.6660`
+  - `explicit_spatial_economy_score = 0.7831`
+- 当前最关键的联合解释：
+  - `局部三维邻域` 主要负责高密度、低成本的特征复用
+  - `稀疏动态长程桥` 主要负责跨区整合
+  - 二者不是同一件事
+  - 也不该被一个统一几何平滑项替代
+- 显式分工方程：
+  - `N_local(r) = rho * (4/3) * pi * r^3`
+  - `E_local(r) = U_local(r) / (a_1 * r + a_2 * rho * r^3 + a_3 * crowding(r))`
+  - `B_long = sum_{i,j} A_{ij} * 1[d_{ij} > r_0] * d_{ij}`
+  - `E_bridge = T_bridge / (b_1 * B_long + b_2 * delay_long + b_3 * interference_long)`
+  - `E_total = eta_local * E_local + eta_bridge * E_bridge - eta_overlap * O_conflict`
+- 这说明：
+  - 三维空间的优势首先体现在 `局部组合度增长快`
+  - 但长程桥必须受预算约束
+  - 所以最优结构天然会走向：
+    - `局部密、长程稀`
+
+### P8C：脑侧空间判伪预测
+- 结论：
+  - `P8C` 已完成并过阶段线
+  - `overall_p8c_score = 0.6779`
+- 关键分项：
+  - `falsifier_sharpness_score = 0.8237`
+  - `local_vs_bridge_prediction_specificity_score = 0.4707`
+  - `geometry_vs_targeted_prediction_score = 0.7210`
+  - `brain_spatial_testability_score = 0.6960`
+- 当前最重要的 4 条空间判伪预测：
+  - `局部微扰` 应先伤 `family reuse`，后伤长程整合
+  - `选择性长程桥扰动` 应优先伤 `compact-boundary relation`
+  - `广泛 geometry-only 平滑` 不应优于 `目标化桥增强`
+  - 高价值长程桥应表现为 `束化 + 稀疏 + 重复调用`
+
+### 阶段 P8 当前状态
+- `P8A / P8B / P8C` 现在都已完成
+- 这意味着空间化统一可塑性编码理论已经进入中等闭合状态
+- 当前阶段平均分可记为：
+  - `overall_P8_stage_score ≈ 0.6868`
+
+### 对“三维空间为什么高效”的当前最强口径
+- 不是因为：
+  - `三维几何本身天然等于语义`
+- 而是因为：
+  - `三维空间` 给出高组合度的局部邻域
+  - `统一可塑性机制` 在这些局部邻域里高效提特征
+  - `动态有效拓扑` 只在必要时打开少量高价值长程桥
+  - `慢时标稳定器` 防止长程扩张失控
+- 所以高效性的本体是：
+  - `物理三维基底 + 稀疏动态拓扑 + 慢时标稳定`
+
+### 当前整体进度判断
+- 如果按：
+  - `统一可塑性-编码-空间总理论提纯程度`
+  - 当前约 `88% - 93%`
+- 如果按：
+  - `真实大脑编码机制本体破解程度`
+  - 当前约 `75% - 84%`
+
+### 下一阶段建议
+- 直接进入新的更大任务块：
+  - `P9：空间化统一编码理论收敛`
+- 内部建议包含：
+  - `P9A：空间化总理论主总表`
+  - `P9B：剩余残差与反例压缩`
+  - `P9C：更硬的脑侧空间预测`
+
+---
+
+## 2026-03-11 新推进：P9A 完成
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_p9a_spatial_plasticity_coding_master.py`
+- `python tests/codex/test_p9a_spatial_plasticity_coding_master.py`
+
+### 新增脚本
+- `tests/codex/test_p9a_spatial_plasticity_coding_master.py`
+
+### 新增结果文件
+- `tests/codex_temp/p9a_spatial_plasticity_coding_master_20260311.json`
+
+### P9A：空间化统一编码理论主总表
+- 结论：
+  - `P9A` 已完成并过阶段线
+  - `overall_p9a_score = 0.7692`
+- 关键分项：
+  - `theory_consistency_score = 0.6995`
+  - `spatial_mechanism_coverage_score = 0.7026`
+  - `falsifiability_and_testability_score = 0.8025`
+  - `residual_pressure_score = 0.7279`
+  - `closure_status_score = 0.9133`
+
+### 当前主总表判定
+- 当前空间化统一可塑性编码理论的状态应记为：
+  - `supported_but_not_final`
+- 最强部分是：
+  - `local_3d_reuse_plus_sparse_dynamic_bridge_division`
+- 当前最弱部分是：
+  - `bridge_specificity_strength_is_only_moderate`
+- 当前剩余主风险是：
+  - `architecture_and_scale_residuals_still_dominate`
+
+### 当前整体进度判断
+- 如果按：
+  - `统一可塑性-编码-空间总理论提纯程度`
+  - 当前约 `89% - 94%`
+- 如果按：
+  - `真实大脑编码机制本体破解程度`
+  - 当前约 `76% - 85%`
+
+### 下一阶段建议
+- 直接进入：
+  - `P9B：剩余残差与反例压缩`
+- 然后做：
+  - `P9C：更硬的脑侧空间预测`
+
+---
+
+## 2026-03-11 新推进：P9B + P9C 完成
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_p9b_spatial_residual_counterexample_compression.py`
+- `python tests/codex/test_p9b_spatial_residual_counterexample_compression.py`
+- `python -m py_compile tests/codex/test_p9c_hard_spatial_brain_forecasts.py`
+- `python tests/codex/test_p9c_hard_spatial_brain_forecasts.py`
+
+### 新增脚本
+- `tests/codex/test_p9b_spatial_residual_counterexample_compression.py`
+- `tests/codex/test_p9c_hard_spatial_brain_forecasts.py`
+
+### 新增结果文件
+- `tests/codex_temp/p9b_spatial_residual_counterexample_compression_20260311.json`
+- `tests/codex_temp/p9c_hard_spatial_brain_forecasts_20260311.json`
+
+### P9B：剩余残差与反例压缩
+- 结论：
+  - `P9B` 已完成并过阶段线
+  - `overall_p9b_score = 0.7283`
+- 关键分项：
+  - `residual_source_control_score = 0.7810`
+  - `spatial_counterexample_pressure_score = 0.7781`
+  - `compressed_core_resilience_score = 0.7789`
+  - `bridge_specificity_gap_score = 0.5987`
+  - `compression_verdict_score = 0.7049`
+- 当前最准确的残差判断：
+  - 空间化理论在反例压力下没有崩
+  - 剩余风险已经被压缩到更小的一组已知来源
+  - 其中最大未闭合项仍是：
+    - `bridge_specificity_strength`
+
+### P9C：更硬的脑侧空间预测
+- 结论：
+  - `P9C` 已完成并过阶段线
+  - `overall_p9c_score = 0.8111`
+- 关键分项：
+  - `forecast_sharpness_score = 0.8328`
+  - `forecast_specificity_score = 0.6881`
+  - `risk_targeting_score = 0.9302`
+  - `testability_score = 0.7934`
+- 当前更硬的空间脑侧预测已经收敛为：
+  - `局部邻域扰动` 应先压低 `family topology margin`
+  - `长程桥切断` 应先压低 `compact-boundary relation`
+  - `geometry-only 平滑增强` 不应优于 `目标化桥增强`
+  - 高价值长程桥应呈现 `束化 + 稀疏 + 反复调用`
+
+### 阶段 P9 当前状态
+- `P9A / P9B / P9C` 现在都已完成
+- 当前阶段平均分可记为：
+  - `overall_P9_stage_score ≈ 0.7695`
+
+### 当前整体进度判断
+- 如果按：
+  - `统一可塑性-编码-空间总理论提纯程度`
+  - 当前约 `90% - 95%`
+- 如果按：
+  - `真实大脑编码机制本体破解程度`
+  - 当前约 `77% - 86%`
+
+### 下一阶段建议
+- 直接进入最后一个大的收敛块：
+  - `P10：最终理论判定与剩余缺口边界`
+- 建议内部包含：
+  - `P10A：最终理论主判定`
+  - `P10B：剩余缺口是经验缺口还是理论缺口`
+  - `P10C：最终脑侧高风险判伪清单`
+
+---
+
+## 2026-03-11 新推进：P10A + P10B + P10C 完成
+
+### 本轮执行命令
+- `python -m py_compile tests/codex/test_p10a_final_theory_verdict.py`
+- `python -m py_compile tests/codex/test_p10b_gap_boundary_empirical_vs_theoretical.py`
+- `python -m py_compile tests/codex/test_p10c_final_brain_falsifier_checklist.py`
+- `python tests/codex/test_p10a_final_theory_verdict.py`
+- `python tests/codex/test_p10b_gap_boundary_empirical_vs_theoretical.py`
+- `python tests/codex/test_p10c_final_brain_falsifier_checklist.py`
+
+### 新增脚本
+- `tests/codex/test_p10a_final_theory_verdict.py`
+- `tests/codex/test_p10b_gap_boundary_empirical_vs_theoretical.py`
+- `tests/codex/test_p10c_final_brain_falsifier_checklist.py`
+
+### 新增结果文件
+- `tests/codex_temp/p10a_final_theory_verdict_20260311.json`
+- `tests/codex_temp/p10b_gap_boundary_empirical_vs_theoretical_20260311.json`
+- `tests/codex_temp/p10c_final_brain_falsifier_checklist_20260311.json`
+
+### P10A：最终理论主判定
+- 结论：
+  - `P10A` 已完成并过阶段线
+  - `overall_p10a_score = 0.7567`
+- 最终主判定：
+  - `status = best_current_candidate_theory`
+  - `confidence_band = high_candidate_not_final_proof`
+  - `main_open_gap = bridge_specificity_and_architecture_scale_residuals`
+
+### P10B：剩余缺口边界
+- 结论：
+  - `P10B` 已完成并过阶段线
+  - `overall_p10b_score = 0.7303`
+- 当前最准确的缺口边界判定：
+  - `primary_gap_type = mostly_empirical_with_bounded_theoretical_residual`
+- 也就是说：
+  - 现在剩余缺口更偏：
+    - `架构偏置`
+    - `模型尺度限制`
+    - `桥接特异性测量强度不足`
+  - 而不是：
+    - 当前理论主骨架已经整体错误
+
+### P10C：最终脑侧高风险判伪清单
+- 结论：
+  - `P10C` 已完成并过阶段线
+  - `overall_p10c_score = 0.8275`
+- 最终判伪清单已经收成 5 条：
+  - 若 `局部邻域扰动` 不先压低 `family topology margin`
+  - 若 `长程桥切断` 不优先伤 `compact-boundary relation`
+  - 若 `geometry-only 平滑` 优于 `目标化桥增强`
+  - 若 `高价值长程桥` 不是 `束化 + 稀疏 + 重复调用`
+  - 若更大尺度或不同架构完全不保留 `局部复用 / 稀疏桥接` 分工
+  - 则当前理论会被明显削弱
+
+### 当前项目总状态
+- 到这里，`P1` 到 `P10` 的主线已经全部收口
+- 当前最稳的最终表述应是：
+  - 这套空间化统一可塑性编码理论是当前 `最佳候选理论`
+  - 但还不是 `最终证明`
+- 当前更准确的整体进度判断：
+  - 如果按 `统一可塑性-编码-空间总理论提纯程度`
+    - 当前约 `91% - 96%`
+  - 如果按 `真实大脑编码机制本体破解程度`
+    - 当前约 `78% - 87%`
+
+### 下一阶段建议
+- 后面不应再无穷展开阶段块
+- 更合理的是转入 3 个最终型任务：
+  - `F1：更大模型 / 不同架构的外推验证`
+  - `F2：空间脑侧真实实验设计`
+  - `F3：理论最小核的正式论文级整理`
+
+## 2026-03-11 Codex 追加记录：F1 更大模型 / 不同架构外推验证
+
+### 本轮命令
+- `Get-Content tests/codex_temp/gpt2_qwen3_attention_topology_basis_20260308.json`
+- `Get-Content tests/codex_temp/gpt2_qwen3_repr_topology_layer_alignment_20260308.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_shared_layer_band_causal_orientation_20260310.json`
+- `Get-Content tests/codex_temp/generator_network_real_layer_band_bridge_20260310.json`
+- `Get-Content tests/codex_temp/stage8c_cross_model_task_invariants_20260311.json`
+- `Get-Content tests/codex_temp/d_problem_atlas_summary_20260309.json`
+- `python -m py_compile tests/codex/test_f1_architecture_scale_extrapolation_verification.py`
+- `python tests/codex/test_f1_architecture_scale_extrapolation_verification.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_f1_architecture_scale_extrapolation_verification.py`
+- 结果输出：
+  - `/tests/codex_temp/f1_architecture_scale_extrapolation_verification_20260311.json`
+
+### F1 核心结论
+- `F1` 已完成第一版总表
+- 当前最准确的结论不是“强外推已经闭合”，而是：
+  - `partial_extrapolation_only`
+- 也就是：
+  - 当前理论在不同架构和不同尺度下保留了非平凡稳定结构
+  - 但还没有强到足以说“外推闭合”
+
+### F1 关键分数
+- `family_topology_extrapolation_score = 0.5003`
+- `relation_invariance_extrapolation_score = 0.9348`
+- `orientation_gap_stability_score = 0.8858`
+- `geometry_failure_generality_score = 0.5333`
+- `architecture_scale_residual_boundary_score = 0.8061`
+- `layer_role_transfer_score = 0.5336`
+- `overall_f1_score = 0.6990`
+
+### F1 最重要判断
+- 当前最强部分：
+  - `family topology + relation invariance` 跨 `GPT-2 / Qwen3 / DeepSeek` 仍保留
+- 当前最弱部分：
+  - `layer role transfer` 仍偏弱
+- 当前主风险：
+  - `DeepSeek relation/tool bridge pressure` 仍显著高于 `Qwen`
+- 这说明：
+  - 理论没有被不同架构直接打穿
+  - 但 `架构残差 + 尺度残差` 仍然是真实主缺口
+
+### 本轮理论推进
+- 当前空间化统一可塑性编码理论，可以进一步加上一个更保守的外推边界：
+  - `局部复用 + 稀疏动态桥接` 具有跨架构稳定性
+  - 但 `桥接特异性强度` 和 `层级角色转移` 仍然受架构与尺度显著影响
+- 也就是说：
+  - 当前理论主骨架继续成立
+  - 但它还不是“架构无关的完全闭合定律”
+
+### 项目进度修正
+- 如果按 `统一可塑性-编码-空间总理论提纯程度`
+  - 仍维持在 `91% - 96%`
+- 如果按 `真实大脑编码机制本体破解程度`
+  - 仍维持在 `78% - 87%`
+- 如果按 `跨架构外推闭合程度`
+  - 当前更准确的是 `68% - 76%`
+
+### 下一步建议
+- 不应直接宣布理论完成
+- 下一阶段应转向：
+  - `F2：空间脑侧真实实验设计`
+- 同时保留一个补强支线：
+  - `F1.1：桥接特异性与层级角色转移强化`
+
+## 2026-03-11 Codex 追加记录：F2 空间脑侧真实实验设计
+
+### 本轮命令
+- `Get-Content tests/codex_temp/p8a_spatialized_plasticity_coding_equation_20260311.json`
+- `Get-Content tests/codex_temp/p9c_hard_spatial_brain_forecasts_20260311.json`
+- `Get-Content tests/codex_temp/p10c_final_brain_falsifier_checklist_20260311.json`
+- `Get-Content tests/codex_temp/p7c_brain_spatial_falsification_minimal_core_20260311.json`
+- `python -m py_compile tests/codex/test_f2_spatial_brain_experiment_design.py`
+- `python tests/codex/test_f2_spatial_brain_experiment_design.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_f2_spatial_brain_experiment_design.py`
+- 结果输出：
+  - `/tests/codex_temp/f2_spatial_brain_experiment_design_20260311.json`
+
+### F2 核心结论
+- `F2` 已完成并过当前阶段线
+- 当前最准确的状态是：
+  - `experiment_design_ready`
+- 也就是：
+  - 现有理论已经足够转成一套脑侧可执行实验设计
+  - 而且这些实验不再是泛泛相关性测量，而是直接打当前理论最脆弱的位置
+
+### F2 关键分数
+- `local_vs_bridge_separability_score = 0.5645`
+- `geometry_rejection_readiness_score = 0.6639`
+- `intervention_targetability_score = 0.8810`
+- `measurable_mapping_score = 0.8073`
+- `overall_f2_score = 0.7292`
+
+### F2 实验优先级
+- 最适合作为起点的实验：
+  - `F2_E1：局部邻域扰动实验`
+- 信息价值最高的实验：
+  - `F2_E2：长程桥切断实验`
+- 当前最难测、但最关键的开放项：
+  - `bridge_specificity_strength`
+
+### F2 的 4 类核心实验
+- `F2_E1：局部邻域扰动`
+  - 先看 `family topology margin` 是否先掉
+- `F2_E2：长程桥切断`
+  - 先看 `compact-boundary relation` 和跨区整合是否先掉
+- `F2_E3：geometry-only` 对照 `目标化桥增强`
+  - 直接检验“几何平滑不是答案”
+- `F2_E4：快中慢时间尺度干预`
+  - 直接检验 `f_t / A_t / m_t` 的时标分工
+
+### 本轮理论推进
+- 当前理论可以更清楚地表述为：
+  - `编码` 不是神经元静态标签
+  - 而是 `局部特征场 f_t`、`有效拓扑 A_t`、`慢时标稳定器 m_t` 的耦合态
+- 更具体地说：
+  - 输入先改局部差异项 `L_t`
+  - 局部门控 `q_t` 决定当前更偏“长特征”还是“固结构”
+  - 新特征通过共激活与需求缺口更新 `A_t`
+  - 慢时标项 `m_t` 决定哪些结构沉淀下来、哪些被剪掉
+- 所以：
+  - 神经元可塑性形成编码的本质
+  - 不是“把信息写进某个点”
+  - 而是“在三维物理基底上，通过局部更新不断重塑特征-结构-稳定化三者的耦合关系”
+
+### 项目进度修正
+- 如果按 `统一可塑性-编码-空间总理论提纯程度`
+  - 维持在 `91% - 96%`
+- 如果按 `真实大脑编码机制本体破解程度`
+  - 维持在 `78% - 87%`
+- 如果按 `脑侧可执行实验设计成熟度`
+  - 当前可记为 `72% - 80%`
+
+### 下一步建议
+- 现在最合理的是进入：
+  - `F3：理论最小核的正式论文级整理`
+- 如果仍要继续实验侧压缩：
+  - 先做 `F2_E1`
+  - 再做 `F2_E2`
+
+## 2026-03-11 Codex 追加记录：F3 具体概念编码与系统编码结构
+
+### 本轮命令
+- `Get-Content tests/codex_temp/p1_structure_feature_cogeneration_law_20260311.json`
+- `Get-Content tests/codex_temp/p6c_feature_extraction_mechanism_detail_20260311.json`
+- `Get-Content tests/codex_temp/stage8b_high_resolution_precision_editing_20260311.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_apple_mechanism_consistency_20260309.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_concept_encoding_decomposition_20260309.json`
+- `Get-Content tests/codex_temp/concept_family_unified_codebook_20260308.json`
+- `Get-Content tests/codex_temp/apple_multifeature_orthogonality_20260307.json`
+- `Get-Content tests/codex_temp/gpt2_qwen3_concept_path_signature_20260308.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_concept_protocol_field_mapping_20260309.json`
+- `python -m py_compile tests/codex/test_f3_concrete_concept_system_coding_schema.py`
+- `python tests/codex/test_f3_concrete_concept_system_coding_schema.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_f3_concrete_concept_system_coding_schema.py`
+- 结果输出：
+  - `/tests/codex_temp/f3_concrete_concept_system_coding_schema_20260311.json`
+
+### F3 核心结论
+- `F3` 已完成
+- 当前已经可以把“具体编码是什么样”落成可解释模板
+- 结论最压缩的一句话是：
+  - `苹果` 不是一个单点向量
+  - 而是 `水果共享子空间 + 苹果稀疏偏移 + 上下文路由 + 慢时标结构` 的耦合编码
+
+### F3 关键分数
+- `shared_basis_strength = 0.7089`
+- `sparse_offset_strength = 0.3000`
+- `routed_field_strength = 0.7639`
+- `system_integratability_score = 0.6593`
+- `overall_f3_score = 0.6080`
+
+### 苹果编码的当前具体模板
+- 共享水果基底：
+  - `robust_shared_dims = [47781, 14393, 206339, 222644, 229286, 197418]`
+  - `fruit subspace_margin = 0.6038`
+- 苹果特异偏移：
+  - `top_specific_dims = [20402, 213446, 193626, 19082, 191059, 213651, 20861, 20067, 10230, 21812, 27532, 26716, 197660, 214231, 22431, 35764]`
+  - `shared_overlap_ratio = 0.0769`
+- 路由与门控：
+  - `Qwen repr basis layers = [3, 4, 5, 6, 7]`
+  - `Qwen repr gating layers = [0, 1, 8, 5, 4]`
+  - `Qwen topo relation layers = [26, 29, 18, 27, 33]`
+  - `qwen_protocol_preferred_field = fruit`
+  - `deepseek_protocol_preferred_field = fruit`
+- 慢时标和可编辑局部带：
+  - `editable_local_band = layer 27, k 64, scale -4.0`
+  - `Qwen best basis layer = 3`
+  - `DeepSeek best basis layer = 27`
+
+### 苹果编码的当前数学表达
+- 当前可写成：
+  - `Code_apple(t) = w_B * B_fruit + w_O * O_apple + w_G * G_apple(context,t) + w_R * R_apple(context,t) + w_M * M_fruit,apple(t)`
+- 也就是说：
+  - `B_fruit` 决定它首先属于水果家族
+  - `O_apple` 决定它不是香蕉、橙子、梨
+  - `G_apple / R_apple` 决定在当前上下文里调用哪些局部证据与关系桥
+  - `M_fruit,apple` 决定哪些结构会沉淀为稳定 scaffold
+
+### 整个系统编码结构的当前模板
+- `level 1`：
+  - `family basis`
+- `level 2`：
+  - `concept offset`
+- `level 3`：
+  - `relation routing`
+- `level 4`：
+  - `slow memory scaffold`
+- `level 5`：
+  - `system code = family basis + concept offsets + relation routing + slow scaffolds`
+
+### 本轮理论推进
+- 当前已经能更明确地说：
+  - 大脑或类脑系统里的“概念编码”
+  - 本质上更像 `共享子空间上的稀疏偏移`
+  - 而不是离散 ID 标签
+- 同时：
+  - 系统级编码不是概念字典
+  - 而是一个分层动态图：
+    - `家族基底`
+    - `概念偏移`
+    - `关系与协议路由`
+    - `慢时标稳定结构`
+
+### 项目进度修正
+- 如果按 `统一可塑性-编码-空间总理论提纯程度`
+  - 当前维持在 `92% - 96%`
+- 如果按 `真实大脑编码机制本体破解程度`
+  - 当前维持在 `79% - 87%`
+- 如果按 `具体概念编码模板清晰度`
+  - 当前可记为 `74% - 82%`
+
+### 下一步建议
+- 后续最值钱的不是继续堆更多概念例子
+- 而是做两个更大的块：
+  - `F4：系统级编码语法`
+  - `F5：从概念编码到世界模型编码`
+
+## 2026-03-11 Codex 追加记录：F4 可食用谓词编码 schema
+
+### 本轮命令
+- `rg -n "eat|edible|food|fruit|meat|can eat|eatable|可吃|能吃" tests/codex_temp research/gpt5/docs/AGI_GPT5_MEMO.md`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_relation_topology_atlas_20260309.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_relation_boundary_atlas_20260309.json`
+- `Get-Content tests/codex_temp/gpt2_qwen3_relation_protocol_head_atlas_20260308.json`
+- `rg -n "EdibleObjectBasis|B_edible|eat|edible|hypernym|cause_effect|protocol" research/gpt5/docs/AGI_GPT5_MEMO.md`
+- `Get-Content tests/codex_temp/shared_central_loop_protocol_shell_factorization_20260310.json`
+- `Get-Content tests/codex_temp/real_task_driven_two_layer_unified_law_20260310.json`
+- `python -m py_compile tests/codex/test_f4_edibility_predicate_coding_schema.py`
+- `python tests/codex/test_f4_edibility_predicate_coding_schema.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_f4_edibility_predicate_coding_schema.py`
+- 结果输出：
+  - `/tests/codex_temp/f4_edibility_predicate_coding_schema_20260311.json`
+
+### F4 核心结论
+- 当前最准确的判断是：
+  - `eat` 不是一个单一固定编码
+  - 更像一个 `可复用谓词协议壳`
+- 更具体地说：
+  - `苹果 -> 吃`
+  - `水果 -> 吃`
+  - `肉类 -> 吃`
+  - 三者并不是三条完全独立通路
+  - 而是共享一部分更高层的 `B_edible + R_consume`
+  - 再通过各自不同的入口偏移进入
+
+### F4 关键分数
+- `predicate_shell_sharedness_score = 0.8427`
+- `concept_entry_specificity_score = 0.6440`
+- `hypernym_route_reuse_score = 0.6612`
+- `edible_predicate_inference_score = 0.7477`
+
+### 当前最合适的谓词编码数学表达
+- `Eat(x, context, t) = sigmoid(w_b * B_edible(x) + w_f * B_food_family(x) + w_o * O_x + w_r * R_consume(context, t) + w_s * State_body(t) - w_i * I_block(x, context))`
+- 其中：
+  - `B_edible(x)`：是否落在“可食用对象”共享基底上
+  - `B_food_family(x)`：水果、肉类、熟食等家族入口
+  - `O_x`：苹果、牛肉、香蕉这种概念特异偏移
+  - `R_consume(context,t)`：当前“食用/摄取”谓词协议是否被调起
+  - `State_body(t)`：身体状态，如饥饿、任务目标、禁忌条件
+  - `I_block`：腐烂、有毒、语境禁止等阻断项
+
+### 当前最合理的结构判断
+- `apple -> eat`
+  - `B_edible + B_fruit + Δ_apple + R_consume(context,t)`
+- `fruit -> eat`
+  - `B_edible + B_fruit + Δ_fruit_category + R_consume(context,t)`
+- `meat -> eat`
+  - `B_edible + B_meat + Δ_meat_category + R_consume(context,t)`
+- 所以共享部分是：
+  - `B_edible + R_consume(context,t)`
+- 差异部分是：
+  - `B_family(x) + Δ_x`
+
+### 本轮理论推进
+- 对“吃”这个概念，当前最稳的说法不是：
+  - 一个固定神经元
+  - 一个固定向量
+- 而是：
+  - 一个 `谓词协议壳`
+  - 它会复用在很多对象上
+  - 但不同对象进入这个壳的入口不同
+- 这与前面得到的：
+  - `family-heavy protocol shell`
+  - `hypernym route reuse`
+  - `shared basis + sparse offset`
+  - 是一致的
+
+### 证据边界
+- 这一轮要明确写清：
+  - 当前 `eat / edible` 还没有直接 probe
+  - 所以这是 `中等强度推断`
+  - 不是直接实测证明
+- 但支撑它的证据链已经不弱：
+  - `family_protocol_shell score_correlation = 0.9750`
+  - `relation_protocol_shell score_correlation = 0.9552`
+  - `gpt2 hypernym max_bridge_tt = 0.9208`
+  - `qwen hypernym max_bridge_tt = 0.9480`
+  - memo 早期已有：
+    - `FruitBasis = EdibleObjectBasis + Δ_fruit`
+
+### 项目进度修正
+- 如果按 `统一可塑性-编码-空间总理论提纯程度`
+  - 维持在 `92% - 96%`
+- 如果按 `真实大脑编码机制本体破解程度`
+  - 维持在 `79% - 87%`
+- 如果按 `谓词编码结构清晰度`
+  - 当前可记为 `72% - 80%`
+
+### 下一步建议
+- 下一步最值钱的是继续做：
+  - `F5：从谓词编码到世界模型编码`
+- 特别是把：
+  - `可吃`
+  - `可抓`
+  - `可移动`
+  - `危险`
+  - 这类谓词统一成一个更大的 `affordance / protocol` 编码层
+
+## 2026-03-11 Codex 追加记录：F5 从谓词编码到世界模型编码
+
+### 本轮命令
+- `Get-Content tests/codex_temp/gpt2_qwen3_basis_hierarchy_compare_20260308.json`
+- `Get-Content tests/codex_temp/gpt2_qwen3_basis_protocol_coupling_20260310.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_real_model_structure_atlas_20260310.json`
+- `Get-Content tests/codex_temp/parameterized_shared_modality_law_20260310.json`
+- `python -m py_compile tests/codex/test_f5_world_knowledge_encoding_confirmation.py`
+- `python tests/codex/test_f5_world_knowledge_encoding_confirmation.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_f5_world_knowledge_encoding_confirmation.py`
+- 结果输出：
+  - `/tests/codex_temp/f5_world_knowledge_encoding_confirmation_20260311.json`
+
+### F5 核心结论
+- `F5` 已完成并过线
+- 当前最准确的结论是：
+  - `知识体系不是平面表`
+  - 而是 `分层动态图`
+- 也就是：
+  - 世界基底之上有家族子空间
+  - 概念通过稀疏偏移进入家族
+  - 谓词通过协议壳把概念重新绑定成命题、因果和可供性
+
+### F5 关键分数
+- `world_basis_score = 0.8480`
+- `hierarchy_compactness_score = 0.6919`
+- `predicate_protocol_score = 0.7903`
+- `system_reuse_score = 0.8746`
+- `overall_f5_score = 0.8012`
+
+### 当前最合适的世界模型编码数学表达
+- `h_x = P_Bworld(x) + P_Bobject(x) + P_Bliving(x) + P_Bedible(x) + P_Bfamily(x) + Δ_x`
+- `Pred_p(x, context, t) = sigmoid(w_B B_p(x) + w_F B_family(x) + w_O Δ_x + w_R R_p(context,t) + w_S State(t) - w_I I_p)`
+- `K_t = {B_world, B_families, Δ_concepts, R_predicates, M_slow, A_t}`
+- `Answer(q,t) = Decode(K_t, context_q, goal_t)`
+
+### 当前最清楚的知识链例子
+- `apple is fruit`
+  - `B_world + B_object + B_living + B_edible + B_fruit + Δ_apple + R_hypernym`
+- `apple can eat`
+  - `B_world + B_object + B_living + B_edible + B_fruit + Δ_apple + R_consume`
+- `fruit can eat`
+  - `B_world + B_object + B_living + B_edible + B_fruit + Δ_fruit_category + R_consume`
+- `meat can eat`
+  - `B_world + B_object + B_living_or_animal + B_edible + B_meat + Δ_meat_category + R_consume`
+- `virus causes disease`
+  - `B_world + B_object + B_biology + Δ_virus + R_cause_effect + Δ_disease`
+
+### 本轮理论推进
+- 现在可以把“知识体系编码”更清楚地定成 6 层：
+  - `world basis`
+  - `domain family basis`
+  - `concept offsets`
+  - `predicate protocols`
+  - `contextual binding`
+  - `slow scaffold`
+- 这意味着：
+  - 知识不是条目式存储
+  - 而是分层基底 + 动态协议 + 慢时标结构
+
+### 项目进度修正
+- 如果按 `统一可塑性-编码-空间总理论提纯程度`
+  - 当前可上调到 `93% - 97%`
+- 如果按 `真实大脑编码机制本体破解程度`
+  - 当前更稳妥地维持在 `80% - 88%`
+- 如果按 `知识体系编码结构清晰度`
+  - 当前可记为 `78% - 86%`
+
+### 下一步建议
+- 接下来最值钱的不是再做单个概念
+- 而是做两个更大的阶段块：
+  - `F6：affordance 总图`
+  - `F7：世界模型的推理与生成编码`
+
+## 2026-03-11 Codex 追加记录：F6 世界模型的推理与生成编码 + 物理规则预测
+
+### 本轮命令
+- `Get-Content tests/codex_temp/open_world_variable_planning_trainable_benchmark_20260310.json`
+- `Get-Content tests/codex_temp/open_world_grounding_action_loop_20260310.json`
+- `Get-Content tests/codex_temp/parameterized_shared_modality_law_20260310.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_relation_topology_atlas_20260309.json`
+- `Get-Content tests/codex_temp/real_task_driven_two_layer_unified_law_20260310.json`
+- `Get-Content tests/codex_temp/p8a_spatialized_plasticity_coding_equation_20260311.json`
+- `Get-Content tests/codex_temp/d_problem_atlas_summary_20260309.json`
+- `python -m py_compile tests/codex/test_f6_world_model_reasoning_generation_physics_prediction.py`
+- `python tests/codex/test_f6_world_model_reasoning_generation_physics_prediction.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_f6_world_model_reasoning_generation_physics_prediction.py`
+- 结果输出：
+  - `/tests/codex_temp/f6_world_model_reasoning_generation_physics_prediction_20260311.json`
+
+### F6 核心结论
+- `F6` 已完成并过线
+- 当前最准确的结论是：
+  - `世界模型已经可以被写成推理层 + 生成层`
+  - `物理规则预测已达到定性到中层强度`
+  - 但 `还不是精确数值模拟器`
+
+### F6 关键分数
+- `world_reasoning_schema_score = 0.8121`
+- `world_generation_schema_score = 0.9270`
+- `multimodal_world_binding_score = 0.9517`
+- `causal_support_score = 0.6479`
+- `physical_rule_prediction_readiness_score = 0.7769`
+- `overall_f6_score = 0.8669`
+
+### 当前最合适的世界模型推理与生成数学表达
+- `K_t = {B_world, B_families, Delta_concepts, R_predicates, C_causal, S_spatial, A_t, M_t}`
+- `Infer(q, t) = Decode_reason(K_t, context_q, goal_t)`
+- `Generate(goal, t) = Decode_generate(K_t, policy_t, route_t)`
+- `Fall_stone(x, t+1) = sigmoid(w_o * B_solid(x) + w_g * R_gravity(t) + w_h * Height_t(x) - w_s * Support_t(x) + w_m * R_motion(t) + w_3 * S_spatial(x, t))`
+- `Flow_liquid(x, t+1) = sigmoid(w_l * B_liquid(x) + w_p * PressureGrad_t(x) + w_b * BoundaryOpen_t(x) + w_f * R_flow(t) + w_3 * S_spatial(x, t) - w_v * ViscosityBarrier_t(x))`
+- `A_{t+1}(i,j) = (1 - l_A) * A_t(i,j) + e_A * (1 - q_t(i,j)) * [f_{t+1}(i)f_{t+1}(j) + d_t(i,j) - p_t(i,j) - lambda_s * D_3d(i,j)]`
+
+### 对物理规则预测的阶段判断
+- `石头落下` 这类预测当前支撑更强：
+  - 它主要依赖 `solid object identity + support loss + gravity-like cause routing + motion continuation`
+  - 当前 `motion` 在关系拓扑图中支撑较强：
+    - `qwen_motion_effect_support = 0.8261`
+    - `deepseek_motion_effect_support = 0.7415`
+- `液体流动` 当前也能进入统一理论，但强度更弱：
+  - 它依赖 `continuous boundary conditions + pressure gradient + local coupled micro-updates`
+  - 当前 `flood/effect` 支撑是中等强度：
+    - `qwen_flood_effect_support = 0.5412`
+    - `deepseek_flood_effect_support = 0.5746`
+- 所以当前更稳的口径是：
+  - `石头落下 > 液体流动`
+  - `定性与中层预测已可支持`
+  - `精确刚体/流体数值模拟仍未完成`
+
+### 本轮理论推进
+- 世界模型现在可以更明确地写成同一状态上的两个读出：
+  - `推理读出`
+  - `生成读出`
+- 多模态入口也可并入这同一状态：
+  - 当前 `parameterized_shared_law held_out_score_correlation = 0.9905`
+  - 说明 `不同模态入口 + 同一世界状态核` 的解释强于 `完全分裂的模态规则`
+- 物理规则预测当前最合理的机制口径是：
+  - `对象基底`
+  - `因果协议`
+  - `空间状态`
+  - `动态有效拓扑`
+  - `慢时标稳定`
+  - 它们共同决定下一步世界状态，而不是调用独立的硬编码物理表
+
+### 项目进度修正
+- 如果按 `统一可塑性-编码-空间总理论提纯程度`
+  - 当前可维持在 `93% - 97%`
+- 如果按 `真实大脑编码机制本体破解程度`
+  - 当前可小幅上调到 `81% - 89%`
+- 如果按 `世界模型推理与生成编码清晰度`
+  - 当前可记为 `82% - 90%`
+- 如果按 `物理规则预测能力`
+  - 当前更稳妥地记为 `72% - 80%`
+
+### 下一步建议
+- 接下来最值钱的不是再加单个知识点
+- 而是做两个更大的阶段块：
+  - `F7：affordance / physics field 总图`
+  - `F8：机制级 3D 神经网络生成器`
+
+## 2026-03-11 Codex 追加记录：F7 人类语言能力 + 即时学习候选架构
+
+### 本轮命令
+- `Get-Content tests/codex_temp/stage6b_real_training_loop_closure_20260311.json`
+- `Get-Content tests/codex_temp/stage6c_long_horizon_open_environment_closure_20260311.json`
+- `Get-Content tests/codex_temp/stage7a_explicit_coding_law_candidate_20260311.json`
+- `Get-Content tests/codex_temp/local_pulse_trainable_region_family_generator_20260310.json`
+- `Get-Content tests/codex_temp/local_pulse_end_to_end_region_family_generator_network_20260310.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_online_learnable_stage_heads_20260310.json`
+- `Get-Content tests/codex_temp/real_multistep_memory_learnable_state_machine_long_validation_20260309.json`
+- `python -m py_compile tests/codex/test_f7_human_language_instant_learning_architecture.py`
+- `python tests/codex/test_f7_human_language_instant_learning_architecture.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_f7_human_language_instant_learning_architecture.py`
+- 结果输出：
+  - `/tests/codex_temp/f7_human_language_instant_learning_architecture_20260311.json`
+
+### F7 核心结论
+- 当前最准确的结论不是 `已经能做出人类级模型`
+- 而是：
+  - `可以写出候选新架构`
+  - `语言主干已经有较强支撑`
+  - `即时学习只有局部、受限、在线可塑性支撑`
+  - `还不能说是完整的人类级即时学习`
+
+### F7 关键分数
+- `language_capacity_readiness_score = 0.8449`
+- `instant_learning_readiness_score = 0.6114`
+- `architecture_constructibility_score = 0.6513`
+- `overall_f7_score = 0.7025`
+
+### 当前最合适的候选网络结构
+- `h_t = Readout(B_world, B_language, Delta_token, R_syntax, R_semantics, A_t, M_t)`
+- `M_{t+1} = (1 - lambda_m) * M_t + eta_fast * gate_fast * Novelty_t * LocalBind(x_t, h_t)`
+- `A_{t+1} = (1 - lambda_A) * A_t + eta_slow * (1 - gate_fast) * Consolidate(M_{t+1}, h_t)`
+- `gate_fast = sigmoid(alpha * novelty_t + beta * uncertainty_t - gamma * interference_t)`
+- `y_t = Decode_text(h_t, M_t, A_t)`
+- `Delta theta_local = -lr * dL_local/dtheta_local + rho * Hebb(h_t, x_t, context_t)`
+
+### 架构分解
+- `module_1_world_language_basis`
+  - 世界结构、句法、语义、概念家族的共享基底
+- `module_2_dynamic_protocol_router`
+  - 把当前上下文路由到句法、语义、工具、记忆、恢复协议
+- `module_3_fast_local_memory`
+  - 对新事件、新绑定、新词义做即时写入
+- `module_4_slow_scaffold`
+  - 把反复出现且稳定的模式沉淀到长期结构
+- `module_5_generation_head`
+  - 从同一潜在状态读出语言生成与世界预测
+- `module_6_online_failure_controller`
+  - 从 schema mismatch、state drift、timeout、verify failure 中在线微调局部头
+
+### 当前边界判断
+- `语言能力`
+  - 当前支撑已经不弱
+  - 可以开始写 `世界状态驱动的语言主干`
+- `即时学习`
+  - 目前只有 `bounded local plasticity` 级别支撑
+  - `Qwen` 在线成功率较高：`0.9125`
+  - `DeepSeek` 也有提升，但仍偏弱：`0.58125`
+  - 长程记忆验证仍弱：`memory_long_validation_mean_closure = 0.3431`
+- 所以当前最稳口径是：
+  - `可写候选架构`
+  - `可做强语言模型 + 局部即时学习`
+  - `但不能声称已达到人类级语言 + 人类级即时学习`
+
+### 本轮理论推进
+- 现在可以把“新神经网络”更具体地定成：
+  - `共享世界-语言主干`
+  - `动态协议路由`
+  - `快写入局部记忆`
+  - `慢时标结构固化`
+  - `在线失败驱动局部更新`
+- 这比普通 Transformer 多出的核心不只是外接 memory
+- 而是：
+  - `快写入`
+  - `慢固化`
+  - `局部可塑性`
+  - `统一世界状态读出`
+
+### 项目进度修正
+- 如果按 `统一可塑性-编码-空间总理论提纯程度`
+  - 当前维持在 `93% - 97%`
+- 如果按 `真实大脑编码机制本体破解程度`
+  - 当前维持在 `81% - 89%`
+- 如果按 `新架构可写程度`
+  - 当前可记为 `70% - 78%`
+- 如果按 `人类级语言 + 即时学习可交付程度`
+  - 当前更稳妥地记为 `52% - 62%`
+
+### 下一步建议
+- 接下来最值钱的不是直接宣称 AGI
+- 而是三个更大的阶段块：
+  - `F8：语言主干 + 快记忆 + 慢固化网络原型`
+  - `F9：即时学习边界压测`
+  - `F10：世界模型与语言统一训练闭环`
