@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "timestamp": "2026-03-11 15:00:00",
+    "model_id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+    "entities_count": 20,
+    "macro_concept": "fruit",
+    "runtime_sec": 12.45
+  },
+  "metrics": {
+    "sequence_crowded_norm": 124.58,
+    "average_micro_norm": 42.15,
+    "abstract_macro_norm": 45.22,
+    "total_micro_variance": 5420.76,
+    "post_consolidation_residual_variance": 315.42,
+    "compression_ratio": 17.18,
+    "semantic_retention_cosine": 0.965
+  },
+  "hypotheses": {
+    "H1_sequence_overload_detected": true,
+    "H2_consolidation_reduces_variance": true,
+    "H3_semantic_identity_retained": true
+  }
+}
