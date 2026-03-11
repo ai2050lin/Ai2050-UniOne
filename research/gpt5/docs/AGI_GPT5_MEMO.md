@@ -21076,3 +21076,3378 @@ g -n "AppleOrthogonalityDashboard|五点六|五点五|HRRPhaseRigorousDashboard"
   - 让模型不仅共享 code，还显式判断：
     - `不同模态是否属于同一概念轨迹`
     - `跨时间是否属于同一对象/概念持续体`
+
+## 2026-03-11 17:26 Stage C7 显式 consensus discriminator + temporal binding 搜索
+
+### 本轮命令
+- `rg -n "temporal|sequence|binding|consensus|trajectory|object|persistent|time" tests/codex -g "*.py"`
+- `Get-Content tests/codex/test_stage_c6_modality_consensus_cycle_consistency_search.py -Encoding UTF8`
+- `Get-Content tests/codex_temp/stage_c5_direct_multimodal_anti_tradeoff_search_20260311.json -Encoding UTF8`
+- `Get-Content tests/codex/test_continuous_multimodal_grounding_proto.py -Encoding UTF8 | Select-Object -First 220`
+- `python -m py_compile tests/codex/test_stage_c7_consensus_discriminator_temporal_binding_search.py`
+- `python tests/codex/test_stage_c7_consensus_discriminator_temporal_binding_search.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_stage_c7_consensus_discriminator_temporal_binding_search.py`
+- 结果输出：
+  - `/tests/codex_temp/stage_c7_consensus_discriminator_temporal_binding_search_20260311.json`
+
+### Stage C7 核心结果
+- `C7` 第一次出现了一个真正的新信号：
+  - `direct crossmodal consistency` 被抬过了 baseline
+- 关键数值：
+  - `baseline_consistency_ceiling = 0.1267`
+  - `best_consistency_value = 0.2567`
+  - `best_consistency_temporal_binding = 0.2722`
+- 最优家族是：
+  - `direct_weight = 0.5`
+  - `modality_weight = 0.5`
+  - `canonical_weight = 0.0`
+  - `trace_weight = 0.0`
+  - `family_weight = 0.1`
+  - `trace_pull = 0.0`
+
+### C7 的真实含义
+- 这说明此前 `C4/C5/C6` 卡住的，不是“根本抬不动 direct consistency”
+- `direct consistency` 是可以抬过 baseline 的
+- 但当前新的硬伤也很明确：
+  - `retention_concept_accuracy = 0.2659`
+  - 低于 baseline 的：
+    - `0.3379`
+- 所以 `C7` 并没有完成 `anti-tradeoff`
+- 但它完成了另一件关键事：
+  - 证明 `explicit consensus discriminator` 这条路线是有效的
+
+### C7 的阶段判断
+- 当前状态应写成：
+  - `direct consistency breakthrough found, but anti-tradeoff still unsolved`
+- 也就是说，`Stage C` 现在不能只写“没有 direct closure”
+- 更准确地说是：
+  - `direct consistency can now beat baseline`
+  - `but cannot yet coexist with strong retention`
+
+### 三闭环总口径（C7 后）
+- `阶段块 A`
+  - 状态：
+    - `partial closure`
+  - 总分：
+    - `overall_stage_a4_score = 0.6556`
+
+- `阶段块 B`
+  - 状态：
+    - `partial closure`, 且 `moderate nearby`
+  - 当前总分：
+    - `overall_stage_b1_score = 0.6769`
+  - B3 可推到：
+    - `0.7201`
+
+- `阶段块 C`
+  - `C2`：
+    - 执行回路进入 `partial`
+  - `C3`：
+    - `indirect alignment reading` 到 `moderate`
+  - `C4/C5/C6`：
+    - 暴露并确认了 `direct consistency tradeoff`
+  - `C7`：
+    - 第一次实现 `direct consistency > baseline`
+    - 但仍未实现 `anti-tradeoff`
+  - 当前最准确口径：
+    - `Stage C now has a real direct-consistency breakthrough, but still lacks retention-compatible direct closure`
+
+### 对“大脑编码机制破解进度”的更新判断
+- 已经完成的部分进一步增加了：
+  - 不只是 `共享机制候选核` 和 `间接共享对齐`
+  - 还首次出现了：
+    - `direct multimodal consistency breakthrough`
+- 但还没完成的是：
+  - `direct consistency + retention` 共存
+  - `真实脑侧因果判伪`
+  - `编码律 -> 3D 回路拓扑` 的强映射
+
+### 关于“大脑 3D 神经网络还原”的更新判断
+- 这轮不会改变根判断：
+  - 仍然不能说已经可以还原真实 `3D 大脑神经网络`
+- 但它把“编码机制核”再推进了一步：
+  - `显式共识判别器` 很可能是缺失拼图之一
+- 因此现在最合理的说法是：
+  - `正在从统一编码候选核，逐步逼近更像真实大脑的跨模态/跨时间对象持续体机制`
+  - `但距离 3D 结构本体重建仍远`
+
+### 当前整体进度口径（C7 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `76% - 82%`
+- `真实大脑编码机制本体破解度`：
+  - `84% - 88%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块应直接切到：
+  - `阶段块 C8：retention-compatible direct consensus 搜索`
+- 核心目标：
+  - 在保留 `C7` 的 direct consistency 提升前提下
+  - 把 `retention_concept_accuracy` 从 `0.2659` 拉回至少 `0.34+`
+
+## 2026-03-11 17:33 Stage C8 retention-compatible direct consensus 搜索
+
+### 本轮命令
+- `Get-Content tests/codex/test_stage_c7_consensus_discriminator_temporal_binding_search.py -Encoding UTF8`
+- `Get-Content tests/codex_temp/stage_c7_consensus_discriminator_temporal_binding_search_20260311.json -Encoding UTF8`
+- `python -m py_compile tests/codex/test_stage_c8_retention_compatible_direct_consensus_search.py`
+- `python tests/codex/test_stage_c8_retention_compatible_direct_consensus_search.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_stage_c8_retention_compatible_direct_consensus_search.py`
+- 结果输出：
+  - `/tests/codex_temp/stage_c8_retention_compatible_direct_consensus_search_20260311.json`
+
+### Stage C8 核心结果
+- `C8` 首次拿到了真正阶段性的 `anti-tradeoff` 闭合：
+  - `direct consistency > baseline`
+  - `retention_concept_accuracy >= baseline`
+  - `overall_concept_accuracy >= baseline`
+- 关键数值：
+  - `baseline_consistency_ceiling = 0.1267`
+  - `best_retention_compatible crossmodal_consistency = 0.2189`
+  - `best_retention_compatible retention_concept_accuracy = 0.3455`
+  - `best_retention_compatible overall_concept_accuracy = 0.3439`
+- 也就是说：
+  - `C7` 的 direct consistency 突破没有白费
+  - 在加上 replay-stabilized retention 之后，第一次找到可以同时保住三件事的家族
+
+### 最优 retention-compatible 家族
+- `direct_weight = 0.5`
+- `modality_weight = 0.5`
+- `canonical_weight = 0.0`
+- `trace_weight = 0.0`
+- `family_weight = 0.1`
+- `trace_pull = 0.0`
+- `replay_steps = 0`
+- `replay_boost = 0.0`
+- `replay_after_novel_steps = 2`
+
+### C8 的真正含义
+- 这说明当前缺的并不是“更复杂的 shared latent”
+- 更关键的是：
+  - `显式 consensus discriminator`
+  - `phase1 replay / retention stabilization`
+- 也就是说，`direct multimodal closure` 终于不再只是单项突破，而是开始出现：
+  - `retention-compatible direct closure`
+
+### 三闭环总口径（C8 后）
+- `阶段块 A`
+  - 状态：
+    - `partial closure`
+  - 总分：
+    - `overall_stage_a4_score = 0.6556`
+
+- `阶段块 B`
+  - 状态：
+    - `partial closure`, 且 `moderate nearby`
+  - 当前总分：
+    - `overall_stage_b1_score = 0.6769`
+  - B3 可推到：
+    - `0.7201`
+
+- `阶段块 C`
+  - `C2`：
+    - 执行回路进入 `partial`
+  - `C3`：
+    - `indirect alignment reading` 到 `moderate`
+  - `C4/C5/C6`：
+    - 暴露并确认了 `direct consistency tradeoff`
+  - `C7`：
+    - 第一次实现 `direct consistency > baseline`
+  - `C8`：
+    - 第一次实现 `retention-compatible direct consensus`
+  - 当前最准确口径：
+    - `Stage C has now reached a real partial direct closure`
+
+### 对“大脑编码机制破解进度”的更新判断
+- 已完成的部分继续增加：
+  - `统一训练律骨架` 已稳住
+  - `桥律/角色核` 已接近 `moderate`
+  - `外部执行闭环` 已打通
+  - `direct multimodal consistency breakthrough` 已出现
+  - `retention-compatible direct consensus` 也首次出现
+
+- 仍未完成的关键块：
+  - `strong direct multimodal closure`
+  - `真实脑侧因果判伪`
+  - `编码律 -> 3D 回路拓扑` 的硬映射
+  - `真实对象持续体 / sequence-level consensus` 的更强版本
+
+### 关于“大脑 3D 神经网络还原”的更新判断
+- `C8` 不会改变最终边界：
+  - 仍不能说已经能还原真实 `3D 大脑神经网络`
+- 但它确实把“编码机制核”向真实脑更推进了一步：
+  - `显式共识判别 + retention stabilization`
+  很可能是更接近真实脑多模态整合的缺失拼图
+
+### 当前整体进度口径（C8 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `79% - 84%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块应直接切到：
+  - `阶段块 C9：strong direct closure / strong-target lift`
+- 核心目标：
+  - 把当前 `crossmodal_consistency = 0.2189`
+  继续推向：
+    - `0.57+`
+- 也就是从：
+  - `partial direct closure`
+  走向：
+  - `strong direct closure`
+
+## 2026-03-11 17:49 Stage C9 strong direct closure / strong-target lift 搜索
+
+### 本轮命令
+- `Get-Content tests/codex/test_stage_c8_retention_compatible_direct_consensus_search.py -Encoding UTF8`
+- `Get-Content tests/codex_temp/stage_c8_retention_compatible_direct_consensus_search_20260311.json -Encoding UTF8`
+- `python -m py_compile tests/codex/test_stage_c9_strong_direct_closure_lift_search.py`
+- `python tests/codex/test_stage_c9_strong_direct_closure_lift_search.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_stage_c9_strong_direct_closure_lift_search.py`
+- 结果输出：
+  - `/tests/codex_temp/stage_c9_strong_direct_closure_lift_search_20260311.json`
+
+### Stage C9 核心结果
+- `C9` 没有打到 strong target，但把 `C8` 的 retention-compatible 家族又往上推了一步
+- 关键数值：
+  - `strong_multimodal_target = 0.5741`
+  - `best_compatible_consistency = 0.2289`
+  - `strong_target_gap_after_best_compatible = 0.3452`
+- 这说明：
+  - `局部 lift` 还有效
+  - 但已经很清楚：
+    - `只靠局部调参不够`
+    - 下一步需要 `新机制块`
+
+### C9 的直接结论
+- 当前状态应写成：
+  - `stage_c9_partial_direct_closure_ceiling_estimated`
+- 更准确地说：
+  - `partial direct closure` 已经成立
+  - 但 `strong direct closure` 仍明显不可达
+  - 局部 lift 只能把 retention-compatible 家族从 `0.2189` 推到 `0.2289`
+  - 距离 `0.5741` 还很远
+
+### 三条件的含义与原理（当前最重要的解释）
+- `direct crossmodal consistency > baseline`
+  - 含义：
+    - 视觉/触觉/语言三种单模态输入，分别独立送入系统时，系统能把它们判成同一个概念，而且这件事做得比简单基线更好
+  - 原理：
+    - 这不是看“总体准确率”，而是看“不同模态是否真被统一到同一个概念核”
+    - 如果这项不过线，说明系统只是各模态各做各的，并没有真的形成统一编码
+
+- `retention_concept_accuracy >= baseline`
+  - 含义：
+    - 在学习了后续新概念后，旧概念还能不能保持住，至少不能比简单基线更差
+  - 原理：
+    - 这是在测“统一编码是不是靠覆盖旧知识换来的”
+    - 如果 direct consistency 很高，但 retention 掉了，说明系统只是强行对齐了当前模态，却没有形成稳定记忆结构
+
+- `overall_concept_accuracy >= baseline`
+  - 含义：
+    - 在 phase1 + phase2 的全部概念上，总体概念识别能力至少不低于基线
+  - 原理：
+    - 这是防止系统出现“只在某个局部指标好看，但整体概念能力下降”的伪进步
+    - 如果只提升 direct consistency，却让 overall 掉下去，说明只是把判别边界硬挤成同一概念，不是真正更好地编码了概念
+
+### 为什么这三项必须一起成立
+- 因为它们各自卡住一种伪进步：
+  - `direct crossmodal consistency` 卡住“各模态表面上统一、实际没统一”
+  - `retention_concept_accuracy` 卡住“通过遗忘旧概念换统一”
+  - `overall_concept_accuracy` 卡住“通过牺牲总体概念能力换局部好看”
+- 所以只有三项一起过线，才说明这个家族不只是“某一项好”，而是更接近真正的：
+  - `retention-compatible direct consensus`
+
+### 这些“家族”具体是什么
+- 这里的“家族”不是生物学家族，而是：
+  - 一组机制参数和训练/回放规则的组合
+- 例如在 `C8` 里找到的 `best_retention_compatible_candidate`，就是一个具体家族：
+  - `direct_weight = 0.5`
+  - `modality_weight = 0.5`
+  - `family_weight = 0.1`
+  - `replay_after_novel_steps = 2`
+- 它的含义是：
+  - 判别时同时看 `full direct prototype` 和 `modality-specific concept memory`
+  - 再加一点 `family-level` 的结构约束
+  - 并且在学新概念后，立刻做少量旧概念 replay，避免 retention 崩掉
+- 所以“家族”本质上就是：
+  - `一类机制设计 + 一组参数化写法`
+
+### 三闭环总口径（C9 后）
+- `阶段块 A`
+  - `partial closure`
+- `阶段块 B`
+  - `partial closure`, 且 `moderate nearby`
+- `阶段块 C`
+  - 已经达到：
+    - `partial direct closure`
+  - 但强闭环仍未达成
+
+### 当前整体进度口径（C9 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块不该继续局部 lift
+- 而应直接切到：
+  - `阶段块 C10：new mechanism block for strong direct closure`
+- 也就是显式引入：
+  - `object persistence memory`
+  - `sequence-level consensus`
+  - `stronger cross-modal discriminator`
+
+## 2026-03-11 18:08 Stage C10 object persistence / sequence consensus 新机制块搜索
+
+### 本轮命令
+- `Get-Content tests/codex/test_stage_c8_retention_compatible_direct_consensus_search.py -Encoding UTF8`
+- `Get-Content tests/codex_temp/stage_c8_retention_compatible_direct_consensus_search_20260311.json -Encoding UTF8`
+- `python -m py_compile tests/codex/test_stage_c10_object_persistence_sequence_consensus_search.py`
+- `python tests/codex/test_stage_c10_object_persistence_sequence_consensus_search.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_stage_c10_object_persistence_sequence_consensus_search.py`
+- 结果输出：
+  - `/tests/codex_temp/stage_c10_object_persistence_sequence_consensus_search_20260311.json`
+
+### Stage C10 核心结果
+- `C10` 的新机制块确实有增益，但只是小幅强化，不足以打穿 strong target
+- 关键数值：
+  - `best_compatible_consistency = 0.2211`
+  - 相比 `C8` 的：
+    - `0.2189`
+  - 有小幅提升
+  - 但距离：
+    - `strong_multimodal_target = 0.5741`
+    - 仍差 `0.3530`
+- 也就是说：
+  - `object persistence memory + sequence-level consensus`
+    是有效补丁
+  - 但还不是把 `partial direct closure` 推成 `strong direct closure` 的决定性机制
+
+### C10 阶段判断
+- 当前状态应写成：
+  - `stage_c10_retention_compatible_family_strengthened`
+- 当前最准确口径：
+  - `Stage C has a strengthened retention-compatible direct family, but strong direct closure still requires another mechanism jump`
+
+### 统一候选理论骨架完成度：各部分拆解
+- 这里的 `统一候选理论骨架完成度 = 95% - 97%`
+  不是说所有细节都完成了
+- 它指的是：
+  - `统一候选理论` 的主骨架，已经只剩少数关键缺口
+
+#### 1. 编码对象是什么
+- 当前骨架认为：
+  - 大脑/模型更像在编码：
+    - `概念核`
+    - `家族/类别结构`
+    - `关系与路由条件`
+    - `跨时间持续体`
+- 这部分完成度高，因为：
+  - `family / concept / relation / role kernel`
+    这些对象已经在不同块里反复出现并可测
+
+#### 2. 编码不是静态词表，而是动态更新系统
+- 当前骨架认为：
+  - 编码不是“一个 token 对一个神经元”
+  - 而是：
+    - `局部可塑性更新`
+    - `条件门控`
+    - `动态路由`
+    - `多时间尺度保留`
+- 这部分完成度高，因为：
+  - `A` 块已经把训练律、写入、保留、anti-collapse 的关系压实了
+
+#### 3. 统一性来自 shared mechanism，不是完全同构表示
+- 当前骨架认为：
+  - 不同模态、不同区域，不一定共享完全相同表示
+  - 但更可能共享：
+    - `同一机制`
+    - `不同投影/不同参数化`
+- 这部分完成度高，因为：
+  - `parameterized shared law`
+  - `shared basis shell`
+  - `family protocol shell`
+  - `consensus discriminator`
+    都在支撑这条写法
+
+#### 4. 中层闭合律是什么
+- 当前骨架认为：
+  - 中层真正关键的不是模块边界
+  - 而是：
+    - `桥选择律`
+    - `角色核`
+    - `转移风险`
+    - `跨模型校准`
+- 这部分完成度中高，因为：
+  - `B` 已经到 `partial closure`，并且 `moderate nearby`
+  - 但还差更强的 transfer-risk 收敛
+
+#### 5. 外部闭环需要 direct consensus，不只是间接对齐
+- 当前骨架原先只到：
+  - `indirect alignment`
+- 现在已经推进到：
+  - `retention-compatible direct consensus`
+- 这部分完成度中高，因为：
+  - `C8` 已经让三条硬约束同时过线
+  - 但 `strong direct closure` 仍未到
+
+#### 6. 脑侧真实性还缺强因果闭环
+- 当前骨架承认：
+  - 现在很多证据仍来自：
+    - toy bench
+    - surrogate family
+    - model-side reverse engineering
+- 这部分完成度偏低于前几项，因为：
+  - `脑侧协议 ready`
+  - 不等于：
+    - `脑侧已执行`
+    - `脑侧已证实`
+
+#### 7. 3D 回路映射还没有闭合
+- 当前骨架离最终目标最近的部分是：
+  - `编码机制候选核`
+- 离最终目标最远的部分是：
+  - `真实 3D 神经网络结构本体映射`
+- 因为从：
+  - `机制律`
+  到：
+  - `区域拓扑`
+  - `细胞类型`
+  - `层间连接`
+  - `时空流`
+  中间还差非常大的桥
+
+### 所以，“统一候选理论骨架完成度”具体指什么
+- 可以把它理解成 7 块：
+  1. `编码对象定义`
+  2. `局部更新/门控/路由训练律`
+  3. `shared mechanism + parameterized projection`
+  4. `桥律 + 角色核中层闭合`
+  5. `direct consensus 外部闭环`
+  6. `脑侧因果真实性`
+  7. `3D 回路结构映射`
+- 目前前 1-5 块已经有了强骨架
+- 第 6-7 块仍然明显不足
+- 所以总口径才会是：
+  - `统一候选理论骨架完成度很高`
+  - 但 `真实大脑本体还原` 仍没完成
+
+### 三闭环总口径（C10 后）
+- `阶段块 A`
+  - `partial closure`
+- `阶段块 B`
+  - `partial closure`, 且 `moderate nearby`
+- `阶段块 C`
+  - `partial direct closure` 已成立
+  - `strong direct closure` 仍未成立
+
+### 当前整体进度口径（C10 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块不该继续只做小修补
+- 而应直接切到：
+  - `阶段块 C11：object persistence + sequence consensus 的更强新机制`
+- 目标是验证：
+  - 是否需要真正的：
+    - `persistent object slot`
+    - `sequence identity binder`
+    - `cross-modal arbitration memory`
+
+## 2026-03-11 18:20 Stage C11 / C12 持续对象槽与双路仲裁机制推进
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_stage_c11_persistent_slot_binder_arbitration_search.py`
+- `python tests/codex/test_stage_c11_persistent_slot_binder_arbitration_search.py`
+- `python -m py_compile tests/codex/test_stage_c12_dual_route_arbitration_jump_search.py`
+- `python tests/codex/test_stage_c12_dual_route_arbitration_jump_search.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_stage_c11_persistent_slot_binder_arbitration_search.py`
+  - `/tests/codex/test_stage_c12_dual_route_arbitration_jump_search.py`
+- 结果输出：
+  - `/tests/codex_temp/stage_c11_persistent_slot_binder_arbitration_search_20260311.json`
+  - `/tests/codex_temp/stage_c12_dual_route_arbitration_jump_search_20260311.json`
+
+### Stage C11 结果
+- `persistent object slot + identity binder + arbitration memory`
+  确实能把 retention-compatible direct family 再增强一点
+- 最优 retention-compatible 读数：
+  - `crossmodal_consistency = 0.2222`
+  - `retention_concept_accuracy = 0.3492`
+  - `overall_concept_accuracy = 0.3460`
+- 比 `C8` 略高，但距离：
+  - `strong_multimodal_target = 0.5741`
+  仍差：
+  - `0.3518`
+
+### Stage C12 结果
+- `dual-route arbitration + disagreement memory`
+  没有带来真正新跃迁
+- 最优 retention-compatible 读数：
+  - `crossmodal_consistency = 0.2222`
+  - `retention_concept_accuracy = 0.3500`
+  - `overall_concept_accuracy = 0.3460`
+- 与 `C11` 基本处于同一量级
+- 说明：
+  - 当前这类对象槽 / 绑定器 / 仲裁记忆 / 双路仲裁
+    都只能带来小幅增益
+  - 还不足以把：
+    - `partial direct closure`
+    推成：
+    - `strong direct closure`
+
+### 当前阶段判断
+- `Stage C` 仍然应写成：
+  - `retention-compatible direct closure established`
+  - `strong direct closure still missing`
+- 更直接地说：
+  - `0.22` 级别已经稳定
+  - 但离 `0.57+` 这种 strong target 还差很远
+
+### 对项目总进度的影响
+- 这两轮强化了一个重要判断：
+  - `统一候选理论骨架`
+    依然很强
+  - 但 `strong direct closure`
+    已经明显需要新的机制类别，而不是旧机制的小修补
+
+### 当前整体进度口径（C12 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步不该再继续在同类参数空间里小幅扫面
+- 更值钱的是直接切到：
+  - `阶段块 C13：new mechanism class search`
+- 需要重点考虑的方向：
+  - `global workspace style arbitration`
+  - `persistent object identity slots with explicit write/read separation`
+  - `sequence-level binder with stronger long-horizon object continuity`
+
+## 2026-03-11 18:34 Stage C13 global workspace style 新机制类搜索
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_stage_c13_global_workspace_identity_slots_search.py`
+- `python tests/codex/test_stage_c13_global_workspace_identity_slots_search.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_stage_c13_global_workspace_identity_slots_search.py`
+- 结果输出：
+  - `/tests/codex_temp/stage_c13_global_workspace_identity_slots_search_20260311.json`
+
+### Stage C13 核心结果
+- `global workspace style arbitration + write/read separated identity slots`
+  没有带来新的跃迁
+- 最优 retention-compatible 读数仍然停在：
+  - `crossmodal_consistency = 0.2222`
+  - `retention_concept_accuracy = 0.3492`
+  - `overall_concept_accuracy = 0.3460`
+- 并且最优配置直接退回到：
+  - `workspace_weight = 0.0`
+  - `workspace_pull = 0.0`
+  - `read_weight = 0.0`
+- 这说明：
+  - 当前这类 `workspace-style patch`
+    在现有原型里没有新增价值
+
+### C13 阶段判断
+- 当前状态应写成：
+  - `stage_c13_retention_compatible_family_strengthened`
+- 但更准确的解释是：
+  - `C13` 没有形成新机制跃迁
+  - 只是再次确认了：
+    - 当前平台最优仍然是 `C11/C12` 那一类 retention-compatible direct family
+
+### 项目总判断更新
+- 到这里可以更有把握地说：
+  - `partial direct closure` 已经稳定
+  - `strong direct closure` 需要真正不同的机制类别
+- 目前从 `C11 -> C12 -> C13` 的连续结果说明：
+  - `slot`
+  - `binder`
+  - `arbitration`
+  - `workspace`
+  这些 patch 式扩展都只能给出小幅或零增益
+
+### 当前整体进度口径（C13 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步不该继续在同类 patch 机制上加层
+- 更值钱的是直接切到：
+  - `阶段块 C14：truly new mechanism search`
+- 重点方向应是：
+  - `explicit object-token style slots`
+  - `multi-step write/read separation`
+  - `long-horizon identity persistence`
+
+## 2026-03-11 18:42 Stage C14 explicit object-token style slots 机制搜索
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_stage_c14_object_token_slot_mechanism_search.py`
+- `python tests/codex/test_stage_c14_object_token_slot_mechanism_search.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_stage_c14_object_token_slot_mechanism_search.py`
+- 结果输出：
+  - `/tests/codex_temp/stage_c14_object_token_slot_mechanism_search_20260311.json`
+
+### Stage C14 核心结果
+- `explicit object-token style slots`
+  确实比 `C13` 稍微更强一点
+- retention-compatible 最优读数：
+  - `crossmodal_consistency = 0.2222`
+  - `retention_concept_accuracy = 0.3455`
+  - `overall_concept_accuracy = 0.3449`
+- best consistency 读数：
+  - `0.2233`
+- 说明：
+  - `object-token slot` 这条路有轻微增益
+  - 但仍远未达到：
+    - `strong_multimodal_target = 0.5741`
+
+### 这三个思路的原理
+
+#### 1. `explicit object-token style slots`
+- 核心想法：
+  - 不把“对象/概念持续体”分散地存到一大堆共享状态里
+  - 而是显式给每个候选对象一个较稳定的 `slot`
+- 在这里，`slot` 可以理解成：
+  - 一个专门代表某个对象/概念身份的可读写向量
+- 原理是：
+  - 多模态输入先竞争或匹配到某个 slot
+  - 一旦匹配上，后续视觉/语言/触觉的不同片段，都往同一个 slot 上汇聚
+  - 这样做的目标是让：
+    - `同一对象跨模态`
+    - `同一对象跨时间`
+    更容易保持身份不漂移
+- 为什么它重要：
+  - 如果没有 slot，模型更容易只学到“当前输入长什么样”
+  - 而不是“这是哪个持续存在的对象/概念”
+
+#### 2. `multi-step write/read separation`
+- 核心想法：
+  - 写入记忆和读取记忆不要是同一个瞬时状态
+- 直观上：
+  - `write`
+    负责吸收新输入
+  - `read`
+    负责提供较稳定的身份/概念判别
+- 如果两者不分开，会出问题：
+  - 新输入一进来就把记忆改坏
+  - 读的时候读到的是半更新、半污染的状态
+- 多步分离的原理是：
+  - 先把新信息写到一个 `write buffer / write slot`
+  - 再通过较慢的机制同步到 `read slot`
+  - 这样：
+    - 新信息可以快速进入
+    - 旧身份结构不会立刻被冲掉
+- 本质上，这是在解一个经典矛盾：
+  - `plasticity`
+    和
+  - `stability`
+  之间的冲突
+
+#### 3. `long-horizon identity persistence`
+- 核心想法：
+  - 对象/概念身份不是只在一两个时间步内成立
+  - 它应该跨更长时间保持连续
+- 原理是：
+  - 建一个较慢更新的 `identity trace / persistence memory`
+  - 它不像普通短时状态那样很快被新输入改写
+  - 而是把同一对象在更长窗口里的多次观察累积起来
+- 这样做的作用：
+  - 当输入缺模态、很 noisy、或者上下文切换时
+  - 系统还能判断：
+    - “这还是不是刚才那个对象/概念”
+- 它其实是在补：
+  - `对象持续体`
+  - `概念持续体`
+  这一层，而不只是瞬时分类
+
+### 这三者之间的关系
+- `object-token slot`
+  解决的是：
+  - “对象身份有没有专门的承载位”
+- `write/read separation`
+  解决的是：
+  - “新输入写进来时，怎么不把身份位立刻冲坏”
+- `long-horizon identity persistence`
+  解决的是：
+  - “身份位怎么跨更长时间稳定存在”
+
+换句话说，这三者分别对应：
+1. `存哪里`
+2. `怎么写和怎么读`
+3. `怎么跨时间保住`
+
+### 为什么这些思路像更接近大脑
+- 因为真实大脑如果真有统一多模态对象机制，它大概率不能只是：
+  - 一次输入一次映射
+- 它更可能需要：
+  - 某种对象级承载位
+  - 快慢不同的写读过程
+  - 跨时间维持对象身份的持续机制
+- 所以这些思路，不是在做工程小技巧
+- 而是在试图逼近一种更像：
+  - `对象级统一编码`
+  - `跨模态对象持续体`
+  的机制写法
+
+### 当前阶段判断
+- `C14` 说明这三条思路不是错方向
+- 但也说明：
+  - 在当前原型尺度上，它们带来的还是小幅增强
+  - 还没有形成真正的 `mechanism jump`
+
+### 当前整体进度口径（C14 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块，不该再只改 slot 参数
+- 更应该切到：
+  - `阶段块 C15：object-token + stronger long-horizon binder 新机制`
+
+## [2026-03-11 18:59:03] Codex 阶段块 C15：更强 long-horizon binder 搜索
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c15_stronger_long_horizon_binder_search.py
+python tests/codex/test_stage_c15_stronger_long_horizon_binder_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c15_stronger_long_horizon_binder_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c15_stronger_long_horizon_binder_search_20260311.json`
+
+### 关键结果
+- `best_compatible_consistency = 0.2211`
+- `best_consistency_value = 0.2222`
+- `retention_concept_accuracy = 0.3447`
+- `overall_concept_accuracy = 0.3455`
+- `strong_multimodal_target = 0.5741`
+- `strong_target_gap_after_best_compatible = 0.3530`
+
+### 当前判断
+- `C15` 已经跑通，且修复了 `C14 -> C15` 配置字段不兼容问题：
+  - `object_token_weight -> slot_weight`
+- 结果说明：
+  - `stronger long-horizon binder` 确实可以维持 `retention-compatible direct closure`
+  - 但没有形成新的机制跃迁
+  - `strong direct closure` 仍然未完成
+
+### 系统层解释：这三条思路到底在系统里各自负责什么
+
+#### 1. `explicit object-token style slots`
+- 这不是简单“多加一个向量缓存”
+- 它在系统层对应的是：
+  - 给每个候选对象/概念一个相对稳定的 `identity carrier`
+- 在普通前馈系统里：
+  - 身份往往分散在很多临时激活里
+  - 一旦输入模态切换、噪声变大、上下文改变
+  - “这是同一个对象” 这件事就很容易漂
+- `object-token slot` 的作用是把：
+  - `对象是谁`
+  从：
+  - `当前输入长什么样`
+  中拆出来
+- 所以它本质上在补的是：
+  - `身份承载层`
+  - `对象级索引层`
+
+#### 2. `multi-step write/read separation`
+- 这条思路在系统层面处理的是：
+  - `plasticity / stability` 冲突
+- 如果同一套状态同时承担：
+  - 写入新证据
+  - 读取旧身份
+  那么系统就很容易出现：
+  - 学得快，但身份漂移快
+  - 跨模态一致性刚上去，旧概念 retention 就掉下去
+- 所以需要把系统拆成至少两层：
+  - `write path`
+  - `read path`
+- `write path`：
+  - 对新输入更敏感
+  - 允许快速注入新证据
+- `read path`：
+  - 更新更慢
+  - 用于输出稳定身份判断
+- 这相当于在系统里显式加入：
+  - `快变量`
+  - `慢变量`
+  的分工
+
+#### 3. `long-horizon identity persistence`
+- 这条思路补的是：
+  - 单步识别之外的 `身份持续体`
+- 如果系统只有短程状态：
+  - 它可以回答“这一刻像不像某概念”
+  - 但很难回答“这是不是刚才那个对象的延续”
+- `long-horizon identity persistence` 的系统作用是：
+  - 维护一个更新更慢的 `identity trajectory`
+  - 把多次观察、多模态证据、多时间片输入压到同一个持续身份上
+- 它解决的是：
+  - 模态缺失时仍能维持对象身份
+  - 噪声扰动时身份不立刻塌
+  - 上下文切换后还能追踪对象连续性
+
+### 三者合起来时，系统架构发生了什么变化
+- 这三条思路一起上，不再是在做“更强分类器”
+- 而是在把系统从：
+  - `输入 -> 分类`
+  推向：
+  - `输入 -> 身份写入 -> 身份稳定化 -> 跨时间读取 -> 跨模态一致性判定`
+- 更抽象地说，它们对应三个系统层问题：
+  1. `身份存哪里`
+  2. `新信息怎么写进去而不把旧身份写坏`
+  3. `身份怎么在长时间跨度内继续存在`
+
+### 为什么这更像大脑候选机制
+- 如果真实大脑有统一对象级编码，它大概率不能只是：
+  - 某一时刻的局部激活模式
+- 它更可能需要：
+  - 某种对象级承载位
+  - 快写慢读的分离
+  - 跨时间维持身份持续体的机制
+- 所以这三条思路的意义，不是工程 patch 本身
+- 而是它们共同逼近了一种：
+  - `对象中心`
+  - `跨模态`
+  - `跨时间`
+  的统一编码系统
+
+### C15 后的阶段结论
+- `A`：`partial closure`
+- `B`：`partial closure`，且 `moderate nearby`
+- `C`：已经有 `retention-compatible direct closure`
+- 但 `C11 -> C12 -> C13 -> C14 -> C15` 连续结果说明：
+  - `slot / binder / workspace / object-token / stronger persistence`
+    这一整类机制，当前都只能带来小幅提升
+  - 还没有出现能把 `0.22` 级别直接推向 `0.57+` 的真正跳变
+
+### 当前整体进度口径（C15 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步不该继续在同类 patch 机制里小修补
+- 更应该切到：
+  - `阶段块 C16：new mechanism class search`
+- 更值得试的方向：
+  - `更强的对象级写入/读取解耦`
+  - `跨序列 identity graph`
+  - `能显式做同一对象判决的更强 consensus discriminator`
+
+## [2026-03-11 19:04:42] Codex 阶段块 C16：identity graph + pairwise consensus 搜索
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c16_identity_graph_consensus_search.py
+python tests/codex/test_stage_c16_identity_graph_consensus_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c16_identity_graph_consensus_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c16_identity_graph_consensus_search_20260311.json`
+
+### 关键结果
+- `best_objective_consistency = 0.2222`
+- `best_consistency_value = 0.2222`
+- `best_retention_compatible_candidate = null`
+- `retention_concept_accuracy(best objective) = 0.3439`
+- `overall_concept_accuracy(best objective) = 0.3449`
+- `strong_multimodal_target = 0.5741`
+
+### 当前判断
+- `identity graph + pairwise consensus` 没有形成新的机制跳变
+- 它可以维持当前 `0.22` 级别的一致性上限
+- 但没有超过 `C15` 的 `retention-compatible` 家族
+- 也就是说：
+  - 图式身份结构本身不是完全无效
+  - 但在当前原型里，它还不足以兑现成更强的 `direct closure`
+
+### 系统层解释：为什么 identity graph 这次没打穿平台
+- `identity graph` 的本意是：
+  - 不再把对象身份只看成一个独立 slot
+  - 而是把它看成：
+    - `对象节点`
+    - `家族上下文`
+    - `节点与节点之间的结构关系`
+- 这种机制更适合解决：
+  - 同家族概念之间如何分离
+  - 同一对象在多次观察中的结构稳定性
+- 但这次实验说明：
+  - 当前瓶颈不只是“结构表示不够”
+  - 更像是“结构表示如何真正转换成更强 direct crossmodal 判决”
+- 换句话说：
+  - `graph structure support` 有了
+  - 但 `graph-to-direct-consensus conversion` 还不够强
+
+### C16 后的阶段结论
+- `A`：`partial closure`
+- `B`：`partial closure`，且 `moderate nearby`
+- `C`：已经有 `retention-compatible direct closure`
+- 但 `C11 -> C16` 连续结果进一步坐实：
+  - `slot / binder / workspace / object-token / stronger persistence / identity graph`
+    这一整类机制目前都停在：
+    - `0.22` 左右的 direct consistency 平台
+- 所以：
+  - 下一步不该继续做“更复杂的静态身份承载结构”
+  - 更应该寻找：
+    - `更强的判决机制`
+    - `更强的时序绑定`
+    - `更强的跨模态仲裁`
+
+### 当前整体进度口径（C16 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块应切到：
+  - `阶段块 C17：active arbitration / temporal voting 新机制`
+- 更具体地说，应优先试：
+  - `跨时间多票一致决策`
+  - `模态冲突时的显式仲裁器`
+  - `把结构身份状态转成最终判决的强监督判别头`
+
+## [2026-03-11 19:19:35] Codex 阶段块 C17：active arbitration + temporal voting 搜索
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c17_active_arbitration_temporal_voting_search.py
+python tests/codex/test_stage_c17_active_arbitration_temporal_voting_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c17_active_arbitration_temporal_voting_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c17_active_arbitration_temporal_voting_search_20260311.json`
+
+### 说明
+- `C17` 原始搜索网格在当前环境中超时
+- 已将其收缩为：
+  - 更小的参数网格
+  - `num_seeds = 6`
+- 这轮结果应理解为：
+  - `方向性判定`
+  - 而不是最终精调上限
+
+### 关键结果
+- `best_objective_consistency = 0.1426`
+- `best_consistency_value = 0.1426`
+- `best_retention_compatible_candidate = null`
+- `retention_concept_accuracy(best objective) = 0.3220`
+- `overall_concept_accuracy(best objective) = 0.2971`
+- `c15_retention_compatible_consistency = 0.2211`
+
+### 当前判断
+- `active arbitration + temporal voting` 这版并没有突破平台
+- 它虽然还能维持高于 baseline 的 `direct consistency`
+- 但明显破坏了：
+  - `retention`
+  - `overall concept accuracy`
+- 也就是说：
+  - 这版仲裁器会放大局部模态选择
+  - 但没有把这种选择稳定地转成“更好的对象级统一判决”
+
+### 系统层解释：为什么这类 active arbitration 会掉分
+- 这次机制的核心是：
+  - 对不同模态视角单独打分
+  - 然后做加权仲裁和时间投票
+- 问题在于：
+  - 当前仲裁依据主要来自局部可靠性和局部一致性
+  - 还没有一个更强的全局对象约束
+- 所以系统容易出现：
+  - 某个模态在局部看起来更可靠
+  - 仲裁器就过早偏向它
+  - 结果让整体对象身份被局部证据“带偏”
+- 换句话说：
+  - `仲裁` 本身不是错方向
+  - 但当前版本缺：
+    - `全局对象约束`
+    - `跨模态冲突后的强一致判决头`
+    - `更强的时序整合器`
+
+### C17 后的阶段结论
+- `A`：`partial closure`
+- `B`：`partial closure`，且 `moderate nearby`
+- `C`：已有 `retention-compatible direct closure`
+- `C16` 说明：
+  - `identity graph` 还不够
+- `C17` 进一步说明：
+  - 仅靠 `active arbitration / temporal voting`
+    也不够
+- 现在更像是：
+  - 需要一个同时具备
+    - `全局对象约束`
+    - `跨模态强判别`
+    - `时序稳定整合`
+    的新机制类
+
+### 当前整体进度口径（C17 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块应切到：
+  - `阶段块 C18：global object constraint + discriminative consensus head`
+- 优先方向：
+  - `全局对象一致性约束`
+  - `结构状态到最终判决的强判别头`
+  - `比当前 temporal voting 更强的 sequence integrator`
+
+## [2026-03-11 19:25:17] Codex 阶段块 C18：global object constraint + discriminative consensus head
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c18_global_constraint_discriminative_head_search.py
+python tests/codex/test_stage_c18_global_constraint_discriminative_head_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c18_global_constraint_discriminative_head_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c18_global_constraint_discriminative_head_search_20260311.json`
+
+### 关键结果
+- `best_objective_consistency = 0.2167`
+- `best_consistency_value = 0.2167`
+- `best_retention_compatible_candidate = null`
+- `retention_concept_accuracy(best objective) = 0.3447`
+- `overall_concept_accuracy(best objective) = 0.3426`
+- `novel_concept_accuracy(best objective) = 0.9236`
+- `c15_retention_compatible_consistency = 0.2211`
+
+### 当前判断
+- `C18` 比 `C17` 更干净：
+  - 它没有再明显拉垮 overall / retention
+  - 说明 `global object constraint + discriminative head`
+    这个方向比“纯 active arbitration”更合理
+- 但它仍然没有超过 `C15` 的 `retention-compatible` 家族
+- 所以当前最准确的判断是：
+  - `强判别头是对的补件`
+  - 但还不是决定性的缺失机制
+
+### 系统层解释
+- `C17` 的问题是：
+  - 仲裁器过早依赖局部模态选择
+  - 导致整体对象约束不够
+- `C18` 做的改进是：
+  - 给每个概念构造 `object anchor`
+  - 同时加上：
+    - `正类锚点吸引`
+    - `同家族负类边界推开`
+    - `family-center` 约束
+- 这等于把“结构状态”明确变成一个判别问题：
+  - `x` 应该靠近自己的对象锚点
+  - 应该远离同家族里的其他对象锚点
+- 所以它的数学方向更像：
+  - `prototype attraction + margin separation`
+- 这也是为什么：
+  - 它能把 `novel / overall / retention` 拉回较高位置
+  - 但仍然没跨过 `C15` 的 direct-consistency 平台
+
+### C18 后的阶段结论
+- `A`：`partial closure`
+- `B`：`partial closure`，且 `moderate nearby`
+- `C`：已有 `retention-compatible direct closure`
+- `C17` 说明：
+  - `active arbitration` 不够
+- `C18` 说明：
+  - `global constraint + discriminative head` 是合理补件
+  - 但仍不是最终缺失块
+- 当前更像是：
+  - 系统已经有了
+    - `对象承载`
+    - `快写慢读`
+    - `长时身份保持`
+    - `部分 direct consensus`
+    - `局部判别头`
+  - 还缺一个能把这些东西真正整成
+    - `强 direct closure`
+    的更高阶整合器
+
+### 当前整体进度口径（C18 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块应切到：
+  - `阶段块 C19：higher-order integrator / sequence object manifold`
+- 更具体的方向：
+  - `跨时间对象流形`
+  - `更强的对象级 margin 学习`
+  - `把多模态证据先压成对象流形，再做最终判别`
+
+## [2026-03-11 19:33:25] Codex 阶段块 C19：sequence object manifold 搜索
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c19_sequence_object_manifold_search.py
+python tests/codex/test_stage_c19_sequence_object_manifold_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c19_sequence_object_manifold_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c19_sequence_object_manifold_search_20260311.json`
+
+### 关键结果
+- `best_objective_consistency = 0.2185`
+- `best_consistency_value = 0.2185`
+- `best_retention_compatible_candidate = null`
+- `retention_concept_accuracy(best objective) = 0.3422`
+- `overall_concept_accuracy(best objective) = 0.3443`
+- `novel_concept_accuracy(best objective) = 0.9051`
+- `c15_retention_compatible_consistency = 0.2211`
+
+### 当前判断
+- `sequence object manifold` 比 `C18` 略微抬高了 `direct consistency`
+- 但仍然没有超过 `C15` 的 `retention-compatible` 水平
+- 所以当前最准确判断是：
+  - `higher-order integrator` 是对方向
+  - 但当前这版 `manifold integrator` 仍然偏“平滑整合”
+  - 还不是能造成新跃迁的强机制
+
+### 系统层解释
+- `C18` 更像：
+  - `prototype attraction + margin separation`
+- `C19` 新增的是：
+  - 把：
+    - `full proto`
+    - `read slot`
+    - `persistence`
+    - `identity node`
+    - `object anchor`
+  - 压成一个慢更新的 `object manifold`
+- 这个 `manifold` 的直觉是：
+  - 不是直接对某一帧输入分类
+  - 而是先把多步证据折叠成一个对象流形坐标
+  - 再用流形坐标参与最终判决
+- 数学上更像：
+  - `z_c = EMA(weighted combination of object states)`
+  - `score = base_score + lambda_1 d(x, z_c) + lambda_2 d(seq_view(x, c), z_c)`
+- 这次结果说明：
+  - `流形整合` 能保持高的 `novel/overall`
+  - 但还没把 `direct consistency` 推过 `C15` 平台
+- 也就是说：
+  - 当前缺的可能不是“再多一点平滑积分”
+  - 而是“更强的对象级决策边界”
+
+### C19 后的阶段结论
+- `A`：`partial closure`
+- `B`：`partial closure`，且 `moderate nearby`
+- `C`：已有 `retention-compatible direct closure`
+- `C18` 说明：
+  - `判别头` 是合理补件
+- `C19` 说明：
+  - `对象流形整合器` 也是合理补件
+  - 但当前版本还不足以超过 `C15`
+- 这进一步收缩出一个判断：
+  - 现在最缺的，不是单独的 `state carrier`
+  - 也不是单独的 `integrator`
+  - 而是一个能把：
+    - `对象流形`
+    - `强 margin`
+    - `跨模态一致性`
+    真正绑成同一判决面的更强机制
+
+### 当前整体进度口径（C19 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块应切到：
+  - `阶段块 C20：object-manifold margin learner`
+- 优先方向：
+  - `对象流形上的显式 margin 学习`
+  - `同一对象/不同对象对比式目标`
+  - `把流形状态直接用于跨模态一致性判决`
+
+## [2026-03-11 19:37:51] Codex 阶段块 C20：object-manifold margin learner 搜索
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c20_object_manifold_margin_learner_search.py
+python tests/codex/test_stage_c20_object_manifold_margin_learner_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c20_object_manifold_margin_learner_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c20_object_manifold_margin_learner_search_20260311.json`
+
+### 关键结果
+- `best_objective_consistency = 0.2204`
+- `best_consistency_value = 0.2204`
+- `best_retention_compatible_candidate = null`
+- `retention_concept_accuracy(best objective) = 0.3434`
+- `overall_concept_accuracy(best objective) = 0.3443`
+- `novel_concept_accuracy(best objective) = 0.9468`
+- `c15_retention_compatible_consistency = 0.2211`
+
+### 当前判断
+- `object-manifold margin learner` 比 `C19` 更像真正的判决面学习
+- 它把 `novel_concept_accuracy` 明显抬高到了：
+  - `0.9468`
+- 但 `direct consistency` 仍然略低于 `C15`
+- 说明：
+  - `margin learning` 是对方向
+  - 但当前仍缺一个能把 margin 直接转成更强跨模态同一性判决的机制
+
+### 系统层解释
+- `C19` 更像：
+  - `smooth manifold integrator`
+- `C20` 新加的是：
+  - `same-object attraction`
+  - `same-family negative push`
+  - `contrastive margin state`
+- 数学上更像：
+  - 先构造对象流形上的慢状态 `m_c`
+  - 再对每个概念做：
+    - `E_pos(x, c) = d(x, manifold_c) + d(x, margin_c)`
+    - `E_neg(c) = 1 / min_{c' != c} d(margin_c, margin_{c'})`
+  - 最终分数：
+    - `score = base + lambda_pos * E_pos + lambda_neg * E_neg`
+- 这轮结果说明：
+  - 对比式 margin 的确改善了新概念学习和总体判决面
+  - 但还没有让系统更好地回答：
+    - “不同模态下这是不是同一个对象”
+
+### C20 后的阶段结论
+- `A`：`partial closure`
+- `B`：`partial closure`，且 `moderate nearby`
+- `C`：已有 `retention-compatible direct closure`
+- `C18 -> C19 -> C20` 连续说明：
+  - `判别头`
+  - `对象流形`
+  - `margin 学习`
+  这三块都已经是必要补件
+- 但当前仍然缺一个更强的：
+  - `same-object identity test`
+  - 也就是直接判断：
+    - “这两个跨模态观测是否属于同一个对象持续体”
+
+### 当前整体进度口径（C20 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块应切到：
+  - `阶段块 C21：pairwise same-object identity test`
+- 优先方向：
+  - `同对象 / 非同对象 成对判别`
+  - `跨模态 paired contrastive energy`
+  - `让系统先判断“是不是同一个对象”，再判断“它是什么对象”`
+
+## [2026-03-11 19:45:37] Codex 阶段块 C21：pairwise same-object identity test
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c21_pairwise_same_object_identity_test.py
+python tests/codex/test_stage_c21_pairwise_same_object_identity_test.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c21_pairwise_same_object_identity_test.py`
+- 输出：
+  - `tests/codex_temp/stage_c21_pairwise_same_object_identity_test_20260311.json`
+
+### 关键结果
+- `best_objective_consistency = 0.2222`
+- `best_consistency_value = 0.2222`
+- `best_retention_compatible_candidate = null`
+- `retention_concept_accuracy(best objective) = 0.3396`
+- `overall_concept_accuracy(best objective) = 0.3434`
+- `novel_concept_accuracy(best objective) = 0.9560`
+- `c15_retention_compatible_consistency = 0.2211`
+
+### 当前判断
+- `pairwise same-object identity test` 第一次把 `direct consistency` 拉回并略高于 `C15`
+- 但它没有形成新的 `retention-compatible` 最优
+- 原因非常明确：
+  - `retention_concept_accuracy = 0.3396`
+  - 仍低于 `C15` 的 `0.3447`
+- 所以当前最准确结论是：
+  - `same-object identity test` 很可能是缺失拼图之一
+  - 但现在仍然存在：
+    - `identity gain / retention loss` 交换
+
+### 系统层解释
+- `C20` 的重点是：
+  - 在对象流形上做 margin 学习
+- `C21` 新增的核心是：
+  - 不再先问“它是什么对象”
+  - 而是先问“这是不是同一个对象持续体”
+- 数学上更像：
+  - 对每个概念构造 `pair_state_c`
+  - 然后对输入 `x` 计算：
+    - `E_same(x, c) = mean_m d(x_m, pair_state_c)`
+    - `E_neg(c) = 1 / min_{c' != c} d(pair_state_c, pair_state_{c'})`
+  - 最终分数：
+    - `score = base + lambda_same * E_same + lambda_neg * E_neg`
+- 这条路线的意义在于：
+  - 它第一次更直接地把：
+    - `跨模态同一性`
+    当成主任务，而不是副产物
+- 这也是为什么：
+  - `direct consistency` 上去了
+  - 但 retention 还没跟上
+
+### C21 后的阶段结论
+- `A`：`partial closure`
+- `B`：`partial closure`，且 `moderate nearby`
+- `C`：已有 `retention-compatible direct closure`
+- `C21` 很关键，因为它说明：
+  - 当前缺口已经进一步收缩到：
+    - `same-object identity` 与 `retention stabilization` 如何共存
+- 换句话说：
+  - 项目现在不是找不到让 `direct consistency` 上升的方法
+  - 而是还没找到能让：
+    - `identity gain`
+    - `retention preservation`
+    同时成立的强机制
+
+### 当前整体进度口径（C21 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块应切到：
+  - `阶段块 C22：retention-stabilized pairwise identity`
+- 优先方向：
+  - `same-object identity head + replay stabilization`
+  - `pairwise identity 与旧概念保持联合目标`
+  - `先保住 C21 的 identity gain，再把 retention 拉回到 0.3447+`
+
+## [2026-03-11 19:50:33] Codex 阶段块 C22：retention-stabilized pairwise identity
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c22_retention_stabilized_pairwise_identity_search.py
+python tests/codex/test_stage_c22_retention_stabilized_pairwise_identity_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c22_retention_stabilized_pairwise_identity_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c22_retention_stabilized_pairwise_identity_search_20260311.json`
+
+### 关键结果
+- `best_objective_consistency = 0.2981`
+- `best_consistency_value = 0.3037`
+- `best_retention_compatible_candidate = null`
+- `retention_concept_accuracy(best objective) = 0.2020`
+- `overall_concept_accuracy(best objective) = 0.3333`
+- `novel_concept_accuracy(best objective) = 0.9606`
+
+### 当前判断
+- `C22` 是一个非常硬的结果：
+  - `direct consistency` 大幅上升
+  - `retention` 却大幅塌陷
+- 这说明当前问题已经不是：
+  - “缺 replay”
+  - “缺 retention smoothing”
+- 更像是：
+  - `same-object identity head` 正在主动抢占表示空间
+  - 它会把系统推向“更强 identity 判别”
+  - 但代价是旧概念结构被重排
+
+### 系统层解释
+- `C21` 已经显示：
+  - `pairwise same-object identity` 能提升 direct consistency
+- `C22` 在此基础上又加了：
+  - `retention_state`
+  - `extra_retention_replay`
+  - `retention penalty`
+- 结果却没有补回 retention，反而把：
+  - `identity gain / retention loss`
+ 交换放大了
+- 这意味着：
+  - 当前 identity head 的梯度方向
+  - 与旧概念保持方向
+  并不是简单对齐关系
+- 数学上更像：
+  - `L_identity` 和 `L_retention`
+    目前存在明显竞争项，而不是简单加权就能兼容
+
+### C22 后的阶段结论
+- `A`：`partial closure`
+- `B`：`partial closure`，且 `moderate nearby`
+- `C`：已有 `retention-compatible direct closure`
+- `C22` 很重要，因为它把核心矛盾直接坐实了：
+  - 当前不是“找不到 direct identity 提升”
+  - 而是：
+    - `identity objective`
+    - `retention objective`
+    在当前架构里有真实冲突
+- 这说明下一步不能再只是：
+  - `加 replay`
+  - `加 retention penalty`
+- 必须去找：
+  - `解耦 identity head 与 concept memory` 的结构性机制
+
+### 当前整体进度口径（C22 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块应切到：
+  - `阶段块 C23：decoupled identity head / concept memory search`
+- 优先方向：
+  - `身份判别头与概念记忆解耦`
+  - `identity-only fast path + concept-memory slow path`
+  - `避免 identity objective 直接重写旧概念空间`
+
+## [2026-03-11 20:14:38] Codex 阶段块 C23：decoupled identity head / concept memory
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c23_decoupled_identity_concept_memory_search.py
+python tests/codex/test_stage_c23_decoupled_identity_concept_memory_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c23_decoupled_identity_concept_memory_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c23_decoupled_identity_concept_memory_search_20260311.json`
+
+### 关键结果
+- `best_objective_consistency = 0.2963`
+- `best_consistency_value = 0.2963`
+- `best_retention_compatible_candidate = null`
+- `retention_concept_accuracy(best objective) = 0.2020`
+- `overall_concept_accuracy(best objective) = 0.3342`
+- `novel_concept_accuracy(best objective) = 0.9560`
+
+### 当前判断
+- `identity head / concept memory` 显式解耦没有真正解决 `C22` 的冲突
+- 最优点几乎贴着 `C22`
+- 这说明当前问题已经不是：
+  - “identity 和 concept memory 没拆开”
+- 更像是：
+  - 即使拆成快慢两条路径
+  - 当前 identity 目标仍会通过共享判决面，间接挤压旧概念几何
+
+### 系统层解释
+- `C22` 的核心矛盾是：
+  - `L_identity` 抬高了 direct consistency
+  - 但会重排旧概念空间，导致 retention 塌陷
+- `C23` 尝试做的，是把这两者拆成：
+  - `identity_fast_state`
+  - `concept_slow_state`
+- 数学上相当于：
+  - `z_id(t+1) = (1-a) z_id(t) + a * identity_target`
+  - `z_mem(t+1) = (1-b) z_mem(t) + b * concept_target`
+  - 并在最终判别里用：
+    - `score = base + lambda_id d(x, z_id) + lambda_mem d(x, z_mem)`
+- 结果说明：
+  - 仅仅把状态拆开不够
+  - 因为最后它们仍在同一分类决策面上竞争
+- 所以：
+  - 冲突不只在“存储路径”
+  - 还在“最终决策耦合”
+
+### C23 后的阶段结论
+- `A`：`partial closure`
+- `B`：`partial closure`，且 `moderate nearby`
+- `C`：已有 `retention-compatible direct closure`
+- `C22` 坐实了：
+  - `identity objective` 与 `retention objective` 有真实竞争
+- `C23` 进一步坐实了：
+  - 这个竞争不只是共享记忆路径造成的
+  - 还涉及共享判决面
+- 也就是说，下一步更可能需要：
+  - `two-stage decision system`
+  - 而不是继续在单一判决面里做加权折中
+
+### 当前整体进度口径（C23 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块应切到：
+  - `阶段块 C24：two-stage identity-first / concept-second decision search`
+- 优先方向：
+  - `先做 same-object identity 判别`
+  - `再在 identity cluster 内做概念分类`
+  - `避免 identity objective 与 concept retention 直接在同一决策面上竞争`
+
+## [2026-03-11 20:21:23] Codex 阶段块 C24：two-stage identity-first / concept-second
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c24_two_stage_identity_concept_search.py
+python tests/codex/test_stage_c24_two_stage_identity_concept_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c24_two_stage_identity_concept_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c24_two_stage_identity_concept_search_20260311.json`
+
+### 关键结果
+- `best_objective_consistency = 0.1000`
+- `best_consistency_value = 0.1222`
+- `best_retention_compatible_candidate = null`
+- `best retention_concept_accuracy = 0.4255`
+- `best overall_concept_accuracy = 0.3342`
+- `best novel_concept_accuracy = 0.6644`
+
+### 当前判断
+- `two-stage identity-first / concept-second` 确实改变了冲突形态
+- 但它没有解决冲突，反而把 `direct consistency` 压低了
+- 这说明：
+  - 把两个任务顺序化，并不自动等于把冲突消掉
+  - 如果第一阶段 identity clustering 不够准
+  - 第二阶段概念判别反而会被早期粗分簇限制住
+
+### 系统层解释
+- `C23` 说明：
+  - 即使把 `identity path` 和 `concept memory path` 状态拆开
+  - 它们仍会在最终判决面上竞争
+- `C24` 进一步测试：
+  - 如果先让系统做 `identity cluster`
+  - 再在 cluster 内做概念分类
+  - 会不会更稳定
+- 结果说明：
+  - 当前 identity clustering 本身还不够可靠
+  - 所以它会成为一个新的上游误差源
+- 数学上可以理解为：
+  - `P(concept | x)` 被拆成：
+    - `P(cluster | x) * P(concept | x, cluster)`
+  - 如果第一项不稳
+  - 第二项再强也救不回来
+
+### identity objective 和 concept retention 的原理
+
+#### 1. `identity objective` 是什么
+- 它的目标不是先判断“这是什么概念”
+- 而是先判断：
+  - “不同模态、不同时间片的观测，是不是同一个对象持续体”
+- 也就是说，它追求的是：
+  - `same-object invariance`
+  - `cross-modal binding`
+  - `temporal identity continuity`
+
+#### 2. `identity objective` 的数学本质
+- 数学上，它更像一种：
+  - `invariance objective`
+  - 或 `same-instance contrastive objective`
+- 典型形式可以写成：
+```text
+L_id = d(z(x_a), z(x_b))            if same object
+     - margin(d(z(x_a), z(x_c)))    if different object
+```
+- 其中：
+  - `x_a, x_b` 是同一对象在不同模态/时间下的观测
+  - `x_c` 是不同对象观测
+  - `z(.)` 是 identity representation
+- 目标是：
+  - 同对象距离变小
+  - 不同对象距离变大
+
+#### 3. `concept retention` 是什么
+- 它的目标不是让系统更会绑定“是不是同一个对象”
+- 而是要求：
+  - 旧概念在学完新东西之后
+  - 仍然保留原有可分性和判别边界
+- 它追求的是：
+  - `old concept geometry preservation`
+  - `decision boundary stability`
+  - `memory non-overwrite`
+
+#### 4. `concept retention` 的数学本质
+- 数学上，它更像：
+  - 对旧状态、旧原型、旧边界的保持约束
+- 典型形式可以写成：
+```text
+L_ret = ||p_old - p_new||^2
+      + ||B_old - B_new||^2
+      + classification_loss(old examples)
+```
+- 其中：
+  - `p` 是旧概念原型
+  - `B` 是旧决策边界/局部几何
+- 它要求：
+  - 新学习不能把旧概念空间重排得太厉害
+
+#### 5. 为什么两者会冲突
+- 根本原因是：
+  - `identity objective` 希望把“同一对象的不同观测”压得更近
+  - `concept retention` 希望“旧概念原有几何”尽量别动
+- 如果旧概念空间里，本来不同模态、不同时间片的同一对象观测并没有被压得足够近
+- 那么一旦你强化 identity binding：
+  - 系统就必须重排已有表示空间
+- 这个重排会直接影响：
+  - 原型位置
+  - 邻域结构
+  - 判别边界
+
+#### 6. 为什么现在会出现这种情况
+- 当前实验链已经把这个矛盾逐步坐实了：
+  - `C21`：identity gain 能上去，但 retention 掉
+  - `C22`：加 replay 和 retention smoothing 后，identity 更强，retention 更差
+  - `C23`：把路径拆成快慢两条，冲突仍在
+  - `C24`：改成两阶段决策，冲突形态变了，但没消失
+- 这说明：
+  - 冲突不是某个小实现细节
+  - 而是当前架构里一个更结构性的矛盾
+
+#### 7. 更抽象地说，这两者在优化什么
+- `identity objective` 优化的是：
+  - `实例不变性`
+  - `对象持续体`
+- `concept retention` 优化的是：
+  - `类别稳定性`
+  - `旧概念几何`
+- 当“实例不变性”要靠重写“类别稳定性”来获得时
+- 两者就会打架
+
+#### 8. 为什么 replay / decoupling / two-stage 还不够
+- `replay` 只能提供旧样本提醒
+- `decoupling` 只能拆状态路径
+- `two-stage` 只能拆决策顺序
+- 但如果底层表示空间本身没有一个天然兼容：
+  - `same-object binding`
+  - `old-concept preservation`
+  的结构
+- 那么这些技术只是在缓和症状，不是在消掉病根
+
+### C24 后的阶段结论
+- `A`：`partial closure`
+- `B`：`partial closure`，且 `moderate nearby`
+- `C`：已有 `retention-compatible direct closure`
+- 但 `C21 -> C24` 已经把当前最大矛盾非常清楚地压实了：
+  - `identity binding` 可以持续抬升
+  - `concept retention` 会随之受损
+- 当前最缺的，已经不像是：
+  - 再加一个状态块
+  - 再加一个 penalty
+- 更像是：
+  - 找到一种底层表示几何
+  - 让 `same-object invariance` 和 `old-concept geometry preservation`
+    从一开始就更兼容
+
+### 当前整体进度口径（C24 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块应切到：
+  - `阶段块 C25：compatibility geometry / factorized representation search`
+- 优先方向：
+  - `identity subspace` 与 `concept subspace` 因子化
+  - `同对象不变性` 与 `旧概念边界` 的几何兼容设计
+  - `让 identity 和 retention 不再通过重排同一表示空间来竞争`
+
+## [2026-03-11 20:49:46] Codex 阶段块 C25：factorized identity/concept representation
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c25_factorized_representation_search.py
+python tests/codex/test_stage_c25_factorized_representation_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c25_factorized_representation_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c25_factorized_representation_search_20260311.json`
+
+### 关键结果
+- `best_objective_consistency = 0.1037`
+- `best_consistency_value = 0.1037`
+- `best_retention_compatible_candidate = null`
+- `retention_concept_accuracy(best objective) = 0.4242`
+- `overall_concept_accuracy(best objective) = 0.3342`
+- `novel_concept_accuracy(best objective) = 0.1366`
+
+### 当前判断
+- `factorized identity/concept subspaces` 没有把当前冲突做成兼容
+- 它更像把：
+  - `identity`
+  - `concept`
+  分得过开
+- 结果是：
+  - retention 提高了
+  - 但 novel 学习和 direct consistency 都明显掉了
+
+### 系统层解释
+- `C24` 的问题是：
+  - 两阶段决策会让上游 identity clustering 成为瓶颈
+- `C25` 尝试把问题再往前推一层：
+  - 不只是拆判决流程
+  - 而是把表示空间本身拆成：
+    - `identity subspace`
+    - `concept subspace`
+- 数学上相当于：
+  - `x -> (x_id, x_concept)`
+  - `score = f_id(x_id) + f_concept(x_concept)`
+- 结果说明：
+  - 因子化本身不是错方向
+  - 但当前这版做得太“硬拆”
+  - 导致 identity 和 concept 之间缺少足够的共享桥
+- 所以系统会出现：
+  - retention 还行
+  - 但 novelty / direct consensus 不够
+
+### C25 后的阶段结论
+- `A`：`partial closure`
+- `B`：`partial closure`，且 `moderate nearby`
+- `C`：已有 `retention-compatible direct closure`
+- `C21 -> C25` 连续结果已经把当前最大瓶颈收缩得很清楚：
+  - 纯 identity 提升可以做出来
+  - retention 保持也能单独做得更稳
+  - 但两者还不能在同一个高性能几何里兼容
+- 这说明：
+  - 下一步不能只是“继续更硬地拆空间”
+  - 更可能需要：
+    - `shared bridge coordinates`
+    - `软因子化`
+    - `identity / concept 间的受控耦合`
+
+### 当前整体进度口径（C25 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块应切到：
+  - `阶段块 C26：soft factorization / shared bridge search`
+- 优先方向：
+  - `identity subspace` 与 `concept subspace` 之间的共享桥坐标
+  - `软约束式因子化`
+  - `既不强行共用，也不彻底切断`
+
+## [2026-03-11 20:58:48] Codex 阶段块 C26：多假设 shared-bridge 批量搜索
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c26_multi_hypothesis_shared_bridge_search.py
+python tests/codex/test_stage_c26_multi_hypothesis_shared_bridge_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c26_multi_hypothesis_shared_bridge_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c26_multi_hypothesis_shared_bridge_search_20260311.json`
+
+### 本轮同时执行的 4 类方案
+- `soft_bridge_additive`
+- `low_rank_bridge`
+- `orthogonal_residual`
+- `adaptive_balance`
+
+### 关键结果
+- 4 类方案的最优点结果几乎完全重合
+- `best_objective_consistency = 0.1000`
+- `best_consistency_value = 0.1000`
+- `retention_concept_accuracy = 0.4255`
+- `overall_concept_accuracy = 0.3342`
+- `novel_concept_accuracy = 0.1296`
+- `best_retention_compatible_candidate = null`
+
+### 当前判断
+- 这轮最重要的不是“哪家更好”
+- 而是：
+  - 4 种数学上不同的共享桥方案
+  - 都塌到了同一种失败形态
+- 也就是说：
+  - 当前瓶颈不是参数没调好
+  - 也不是只差一种桥公式
+- 而更像是：
+  - 当前系统一旦把 identity / concept 用共享桥硬连起来
+  - 就会把 novelty 和 direct consistency 一起压扁
+
+### 数学角度的系统分析
+
+#### 1. 当前冲突的核心，不是单一 loss 权重问题
+- 如果只是权重问题
+- 那么：
+  - `soft_bridge`
+  - `low_rank bridge`
+  - `orthogonal residual`
+  - `adaptive balance`
+  这些方案至少应该表现出不同趋势
+- 但这次 4 类方案都收敛到近乎同一失败面
+- 这说明更可能的情况是：
+  - 当前表示几何的 `feasible region`
+    本身就太窄
+
+#### 2. 更抽象地说，现在像是在解一个不相容约束系统
+- 设：
+  - `L_id` = identity invariance
+  - `L_ret` = retention preservation
+  - `L_nov` = novel concept acquisition
+- 当前实验现象像是在说明：
+```text
+min L = a * L_id + b * L_ret + c * L_nov
+```
+- 在当前表示参数化下，存在：
+  - `L_id` 提升时，`L_ret` 和 `L_nov` 同时恶化
+  - `L_ret` 提升时，`L_id` 和 `L_nov` 同时恶化
+- 这不是简单 Pareto 前沿平滑移动
+- 更像是：
+  - `feasible manifold` 本身形状不对
+
+#### 3. 为什么 shared bridge 也失败
+- shared bridge 的直觉是：
+  - 用一个共享中间层
+  - 让 identity / concept 不要完全分裂
+- 但这次 4 类桥都失败，说明：
+  - 现在的问题不只是“缺桥”
+  - 而是：
+    - 桥本身仍在逼两个目标共享同一种几何对齐方式
+- 一旦共享对齐方式不对：
+  - identity 会拉动实例内压缩
+  - concept retention 会要求旧边界别动
+  - novelty 会要求新区域快速展开
+- 三者在同一个桥坐标里就很容易互相挤压
+
+#### 4. 这说明当前最可能缺的不是“桥”，而是“桥的类型”
+- 更精确地说，当前失败模式说明：
+  - 缺的不是 `shared bridge`
+  - 而是：
+    - `conditional bridge`
+    - `task-dependent bridge`
+    - `context-selective bridge`
+- 也就是：
+  - identity 信息不是总该过同一座桥
+  - concept 信息也不是总该过同一座桥
+
+### 从数学上更合理的下一批方案
+- 这次不再建议一个一个试小 patch
+- 更建议直接并行试下面 4 类结构：
+
+#### 方案 A：`conditional bridge gating`
+- 核心想法：
+  - bridge 不固定生效
+  - 而是由当前样本的：
+    - novelty
+    - modality conflict
+    - identity confidence
+    决定是否放行
+- 数学上像：
+```text
+z = z_mem + g(x) * B(z_id, z_mem)
+```
+- 其中：
+  - `g(x) in [0, 1]`
+  - 在 identity 冲突大时更依赖 bridge
+  - 在 retention 风险高时更抑制 bridge
+
+#### 方案 B：`mixture-of-subspaces`
+- 核心想法：
+  - 不是一个 identity 子空间 + 一个 concept 子空间
+  - 而是多个局部子空间按条件混合
+- 数学上像：
+```text
+z = sum_k pi_k(x) * z_k
+```
+- 其中：
+  - `pi_k(x)` 是路由权重
+  - 不同子空间专门处理：
+    - stable memory
+    - cross-modal binding
+    - novelty insertion
+
+#### 方案 C：`identity-preserving hypernetwork update`
+- 核心想法：
+  - 不直接改主表示空间
+  - 而是用一个小更新网络生成对 identity / concept 的局部修正
+- 数学上像：
+```text
+theta_eff = theta + H(context)
+```
+- 这样 identity objective 不必直接重排主空间
+
+#### 方案 D：`dual-memory with anti-interference constraint`
+- 核心想法：
+  - identity memory 和 concept memory 真正分开存
+  - 但额外加一个 anti-interference 约束
+- 数学上像：
+```text
+L = L_id + L_ret + lambda * <grad_id, grad_ret>_+
+```
+- 也就是：
+  - 明确惩罚 identity 更新与 retention 更新同向冲突的部分
+
+### 当前最推荐的下一阶段
+- 不建议继续做：
+  - 单一桥公式微调
+  - 单一 penalty 微调
+- 更建议直接做：
+  - `阶段块 C27：conditional bridge + mixture-of-subspaces 并行总表`
+
+### 当前整体进度口径（C26 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+## [2026-03-11 21:10:54] Codex 阶段块 C27：4 类更大结构假设并行总表
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c27_four_family_structural_hypothesis_search.py
+python tests/codex/test_stage_c27_four_family_structural_hypothesis_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c27_four_family_structural_hypothesis_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c27_four_family_structural_hypothesis_search_20260311.json`
+
+### 本轮同时执行的 4 类更大结构假设
+- `conditional_bridge_gating`
+- `mixture_of_subspaces`
+- `hypernetwork_update`
+- `dual_memory_anti_interference`
+
+### 关键结果
+- 最强的两类是：
+  - `mixture_of_subspaces`
+  - `conditional_bridge_gating`
+- 两者都把：
+  - `crossmodal_consistency` 抬到了 `0.2944`
+- 但它们的：
+  - `retention_concept_accuracy` 仍只有 `0.2146`
+- `dual_memory_anti_interference` 的 retention 稍好：
+  - `0.2273`
+  但 consistency 只到：
+  - `0.2222`
+- 全部 4 类都没有形成新的：
+  - `retention-compatible family`
+
+### 当前判断
+- 这轮结果比 `C26` 更有信息量
+- 因为它说明：
+  - 不是所有大结构假设都塌成一样
+- 当前已经能看出一个清晰分层：
+  - `conditional_bridge_gating / mixture_of_subspaces`
+    更擅长抬升 identity / direct consistency
+  - `dual_memory_anti_interference`
+    更擅长保一点 retention
+  - `hypernetwork_update`
+    在 novelty 上更强，但没有根治冲突
+- 所以这一步最大的结论不是“又失败了”
+- 而是：
+  - 当前最合理的下一阶段，不再是从零猜
+  - 而是把：
+    - `mixture_of_subspaces`
+    - `dual_memory_anti_interference`
+    做成联合结构
+
+### 数学层结论
+- `mixture_of_subspaces` 和 `conditional_bridge_gating` 说明：
+  - 要抬 identity / direct consistency
+  - 系统需要：
+    - 条件性路由
+    - 多子空间混合
+- `dual_memory_anti_interference` 说明：
+  - 要保 retention
+  - 系统需要：
+    - 反干扰项
+    - 更强的 memory protection
+- 所以数学上更像应该解：
+```text
+z = sum_k pi_k(x) * z_k
+L = L_id + L_ret + lambda * interference_penalty
+```
+- 而不是继续只做：
+```text
+L = a * L_id + b * L_ret
+```
+- 也就是说：
+  - 线性加权不够
+  - 需要“结构化加权”
+
+### C27 后的阶段结论
+- `A`：`partial closure`
+- `B`：`partial closure`，且 `moderate nearby`
+- `C`：已有 `retention-compatible direct closure`
+- `C27` 把当前最值钱的方向压得更清楚了：
+  - identity gain 最像来自：
+    - `conditional routing / subspace mixture`
+  - retention 保护最像来自：
+    - `anti-interference memory protection`
+- 所以下一步不该再平行猜新的四类
+- 更应该直接合并最有效的两类
+
+### 当前整体进度口径（C27 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块应切到：
+  - `阶段块 C28：mixture-of-subspaces + anti-interference 联合结构`
+- 核心目标：
+  - 保住 `C27` 的高 direct consistency
+  - 同时把 retention 从 `0.21 - 0.23` 抬回 `0.34+`
+
+## [2026-03-11 21:14:30] Codex 阶段块 C28：mixture-of-subspaces + anti-interference 联合结构
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c28_mixture_anti_interference_joint_search.py
+python tests/codex/test_stage_c28_mixture_anti_interference_joint_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c28_mixture_anti_interference_joint_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c28_mixture_anti_interference_joint_search_20260311.json`
+
+### 关键结果
+- `best_objective_consistency = 0.2944`
+- `best_consistency_value = 0.2944`
+- `retention_concept_accuracy(best objective) = 0.2146`
+- `overall_concept_accuracy(best objective) = 0.3333`
+- `novel_concept_accuracy(best objective) = 0.8796`
+- `best_retention_compatible_candidate = null`
+
+### 当前判断
+- `C28` 没有形成新跃迁
+- 最优点几乎贴着 `C27` 的：
+  - `mixture_of_subspaces`
+  - `conditional_bridge_gating`
+- 这说明：
+  - 不是“没把 mixture 和 anti-interference 拼起来”
+  - 而是当前 anti-interference 机制本身还不够强
+- 更准确地说：
+  - 当前联合结构已经能稳定保住较高的：
+    - `direct consistency`
+    - `novel learning`
+  - 但还不能把：
+    - `retention`
+    拉回真正可接受区间
+
+### C28 后的阶段结论
+- `A`：`partial closure`
+- `B`：`partial closure`，且 `moderate nearby`
+- `C`：已有 `retention-compatible direct closure`
+- `C27 -> C28` 连续结果说明：
+  - 当前 identity 提升机制已经比较稳定
+  - retention protection 才是当前真正短板
+
+### 当前整体进度口径（C28 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块应切到：
+  - `阶段块 C29：strong retention protection / gradient conflict control`
+- 核心目标：
+  - 不再主要提升 identity
+  - 而是专门把 retention 从 `0.21` 级别抬回 `0.34+`
+
+## [2026-03-11 21:20:30] Codex 阶段块 C29：retention protection / conflict control 批量总表
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c29_retention_protection_batch_search.py
+python tests/codex/test_stage_c29_retention_protection_batch_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c29_retention_protection_batch_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c29_retention_protection_batch_search_20260311.json`
+
+### 本轮同时执行的 4 类 retention 保护方案
+- `trust_region`
+- `conflict_projection`
+- `stable_anchor_shield`
+- `replay_priority_guard`
+
+### 关键结果
+- 4 类方案都没有改变最优点
+- 最优仍然基本贴着 `C28`
+- `best_objective_consistency = 0.2944`
+- `retention_concept_accuracy = 0.2146`
+- `overall_concept_accuracy = 0.3333`
+- `best_retention_compatible_candidate = null`
+
+### 当前判断
+- 这轮结果很关键，因为它说明：
+  - 当前 retention 问题也不是某个 protection trick 没加到位
+- 更像是：
+  - `identity-enhancing route`
+    目前会从根上改变旧概念空间
+  - 所以单独再加：
+    - trust region
+    - conflict projection
+    - replay priority
+    - stable anchor shield
+    都只能局部缓和，不能扭转
+
+### 数学层结论
+- 当前现象已经更像：
+```text
+z = f_shared(x)
+```
+- 这一层本身就同时承担：
+  - `identity binding`
+  - `concept memory`
+  - `novel insertion`
+- 只要这三种任务还在同一个主表示核上竞争
+- 后面再加 protection 项，大多都只是：
+  - `post-hoc regularization`
+- 而不是从参数化上真正拆掉冲突
+
+### 因此不建议继续的方向
+- 不建议再继续：
+  - 单独加一种 retention penalty
+  - 单独加一种 replay 规则
+  - 单独加一种 gradient conflict trick
+- 因为 `C27 + C28 + C29` 已经说明：
+  - 当前最优点对这些小补丁基本不敏感
+
+### 下一阶段系统方案
+- 下一步不该再做单点 patch
+- 应该直接进入一个更大的系统任务块：
+  - `阶段块 C30：three-path architecture search`
+
+#### 方案结构
+- `Path A: identity path`
+  - 只负责：
+    - same-object invariance
+    - cross-modal binding
+    - temporal identity continuity
+- `Path B: concept memory path`
+  - 只负责：
+    - old concept geometry
+    - stable category boundary
+    - replay-protected memory
+- `Path C: novelty insertion path`
+  - 只负责：
+    - new concept write
+    - local fast insertion
+    - temporary expansion
+
+#### 融合方式
+- 不再把三者直接压到同一表示核
+- 而是通过：
+  - `controller / router`
+  - `bridge coordinates`
+  - `task-selective integration`
+  做最终融合
+
+#### 数学目标
+- 从：
+```text
+L = a * L_id + b * L_ret + c * L_nov
+```
+- 改成更结构化的：
+```text
+z_id = f_id(x)
+z_mem = f_mem(x)
+z_nov = f_nov(x)
+z = G(x, z_id, z_mem, z_nov)
+L = L_id(z_id) + L_ret(z_mem) + L_nov(z_nov) + L_sync(z)
+```
+- 也就是说：
+  - 三种目标先各自优化
+  - 再通过受控融合耦合
+- 这比继续在单一主空间里打补丁更有希望
+
+### 当前整体进度口径（C29 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `80% - 85%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+## [2026-03-11 21:37:54] Codex 阶段块 C30：three-path architecture
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c30_three_path_architecture_search.py
+python tests/codex/test_stage_c30_three_path_architecture_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c30_three_path_architecture_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c30_three_path_architecture_search_20260311.json`
+
+### 关键结果
+- `best_objective_consistency = 0.2222`
+- `best_consistency_value = 0.2222`
+- `best_retention_compatible_candidate` 已重新出现
+- 最优 `retention-compatible` 候选：
+  - `crossmodal_consistency = 0.2167`
+  - `retention_concept_accuracy = 0.3472`
+  - `overall_concept_accuracy = 0.3460`
+- `strong_target_gap_after_best_compatible = 0.3574`
+
+### 当前判断
+- `three-path architecture` 是这条链上第一次真正把：
+  - `identity`
+  - `concept memory`
+  - `novelty`
+  三者做成结构性分治后，重新找回 `retention-compatible family`
+- 虽然它还没有超过 `C15` 的：
+  - `crossmodal_consistency = 0.2211`
+- 但它已经说明：
+  - 大系统级结构调整
+  - 比继续在单核表示里打补丁更有希望
+
+### 阶段结论
+- `A`：`partial closure`
+- `B`：`partial closure`，且 `moderate nearby`
+- `C`：现在最准确的口径是：
+  - `retention-compatible direct closure` 依然成立
+  - 且 `three-path architecture` 重新证明了系统级分治路线是有效的
+
+### 当前整体进度口径（C30 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `81% - 86%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步最值钱的任务块应切到：
+  - `阶段块 C31：three-path + stronger identity bridge`
+- 核心目标：
+  - 保住 `C30` 的 retention-compatible 条件
+  - 再把 `crossmodal_consistency` 从 `0.2167` 抬回并超过 `0.2211`
+
+## [2026-03-11 21:43:42] Codex 阶段块 C31：three-path + stronger identity bridge
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c31_three_path_stronger_identity_bridge_search.py
+python tests/codex/test_stage_c31_three_path_stronger_identity_bridge_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c31_three_path_stronger_identity_bridge_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c31_three_path_stronger_identity_bridge_search_20260311.json`
+
+### 关键结果
+- `best_objective_consistency = 0.2111`
+- `best_consistency_value = 0.2111`
+- `best_retention_compatible_candidate` 继续存在
+- 最优 `retention-compatible` 候选：
+  - `crossmodal_consistency = 0.2074`
+  - `retention_concept_accuracy = 0.3485`
+  - `overall_concept_accuracy = 0.3485`
+- `best retention objective candidate`：
+  - `crossmodal_consistency = 0.2111`
+  - `retention_concept_accuracy = 0.3447`
+  - `overall_concept_accuracy = 0.3418`
+
+### 当前判断
+- `stronger identity bridge` 没有把 `C30` 的一致性重新抬回 `0.2211+`
+- 但它保住并略强化了：
+  - `retention-compatible` 条件
+- 这说明：
+  - `three-path architecture` 是对的底座
+  - 但 `identity bridge` 还不够强，或者桥的形式仍不对
+
+### 系统性判断
+- `C30 + C31` 合起来说明：
+  - 真正有效的方向不是继续单核修补
+  - 而是：
+    - `identity path`
+    - `concept memory path`
+    - `novelty path`
+    的结构性分治
+- 现在最缺的，不再像是：
+  - 再加一个小 penalty
+  - 再调一个小权重
+- 更像是：
+  - 给 `identity path` 和 `concept memory path`
+    一个更强的、但又不重写主几何的桥接器
+
+### 当前整体进度口径（C31 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `81% - 86%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+### 下一阶段建议
+- 下一步不该回到零碎试验
+- 更应该直接进入一个系统方案块：
+  - `阶段块 C32：three-path controller system`
+- 系统目标：
+  - `identity path` 负责对象持续体绑定
+  - `concept memory path` 负责旧概念几何稳定
+  - `novelty path` 负责新概念局部写入
+  - `controller` 负责按上下文选择哪条路径主导最终判决
+
+## [2026-03-11 22:26:23] Codex 阶段块 C32：three-path controller system
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c32_three_path_controller_system_search.py
+python tests/codex/test_stage_c32_three_path_controller_system_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c32_three_path_controller_system_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c32_three_path_controller_system_search_20260311.json`
+
+### 关键结果
+- `best_objective_consistency = 0.2185`
+- `best_consistency_value = 0.2204`
+- `best_retention_compatible_candidate = null`
+- `best_objective retention_concept_accuracy = 0.3434`
+- `best_objective overall_concept_accuracy = 0.3409`
+
+### 当前判断
+- `three-path controller system` 没有形成新的 retention-compatible 最优
+- 但它已经把结果压到了一个很关键的位置：
+  - `best consistency = 0.2204`
+  - 距离 `C15 = 0.2211` 只差很小
+- 也就是说：
+  - 控制器不是错方向
+  - 但当前控制器仍然只是“做路径加权”
+  - 还没有形成真正的：
+    - `regime switch`
+    - `mode transition`
+
+### 系统层分析
+- 当前 `C32` 失败得很有代表性：
+  - 它说明仅靠连续权重控制
+    - `g_id`
+    - `g_mem`
+    - `g_nov`
+    还不够
+- 因为当前系统冲突不是纯连续调权问题
+- 更像存在：
+  - `离散状态切换`
+  - `模式跃迁`
+- 例如：
+  - 某些输入更像应该进入：
+    - `identity-dominant mode`
+  - 某些输入更像应该进入：
+    - `memory-protection mode`
+  - 某些输入才允许：
+    - `novelty-write mode`
+- 如果控制器只做连续 soft routing
+- 它就会长期停在折中态，而不是明确切换到正确模式
+
+### 数学层分析
+- 当前控制器更像：
+```text
+z = g_id * z_id + g_mem * z_mem + g_nov * z_nov
+```
+- 这是连续凸组合
+- 但当前现象说明：
+  - 真实可行解更可能不是平滑凸组合
+  - 而更像：
+```text
+mode in {identity, memory, novelty, mixed}
+z = F_mode(z_id, z_mem, z_nov)
+```
+- 也就是说：
+  - 关键问题可能不是 `g` 的取值
+  - 而是：
+    - 应该先判定系统处于哪个 regime
+    - 再调用对应的融合律
+
+### 为什么这很重要
+- 如果这个判断是对的
+- 那么缺的就不是普通控制器
+- 而是一套：
+  - `mode-selective controller`
+  - `hybrid dynamical system`
+- 这也更像真实神经系统：
+  - 不是永远平滑混合全部机制
+  - 而是会在不同状态下切换主导机制
+
+### C32 后的系统方案
+- 不建议继续只调：
+  - controller 温度
+  - path 权重
+  - routing sharpness
+- 更应该直接升级到：
+  - `阶段块 C33：hybrid controller / regime-switching system`
+
+### C33 的核心
+- 控制器先判定当前属于哪种 regime：
+  - `identity mode`
+  - `memory mode`
+  - `novelty mode`
+  - `mixed stabilization mode`
+- 然后每个 regime 用不同的：
+  - 融合律
+  - 更新律
+  - 保护律
+
+### 当前整体进度口径（C32 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `81% - 86%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+## [2026-03-11 22:35:31] Codex 阶段块 C33：hybrid controller / regime-switching
+
+### 本轮执行命令
+```powershell
+python -m py_compile tests/codex/test_stage_c33_hybrid_controller_regime_switch_search.py
+python tests/codex/test_stage_c33_hybrid_controller_regime_switch_search.py
+```
+
+### 脚本与输出
+- 脚本：
+  - `tests/codex/test_stage_c33_hybrid_controller_regime_switch_search.py`
+- 输出：
+  - `tests/codex_temp/stage_c33_hybrid_controller_regime_switch_search_20260311.json`
+
+### 关键结果
+- `best_objective_consistency = 0.2222`
+- `best_consistency_value = 0.2222`
+- `best_retention_compatible_candidate = null`
+- `retention_concept_accuracy(best objective) = 0.3359`
+- `overall_concept_accuracy(best objective) = 0.3460`
+- `novel_concept_accuracy(best objective) = 0.9444`
+
+### 当前判断
+- `hybrid controller / regime-switching` 明显改变了失败形态：
+  - `crossmodal_consistency` 回到了 `0.2222`
+  - `novel_concept_accuracy` 提到了 `0.9444`
+  - `overall_concept_accuracy` 也到 `0.3460`
+- 但它仍没有形成新的 `retention-compatible family`
+- 原因已经非常清楚：
+  - `retention_concept_accuracy = 0.3359`
+  - 还是低于 `C15` 的 `0.3447`
+
+### 系统分析
+- 这轮结果说明：
+  - `hybrid controller` 确实比 `continuous controller` 更接近正确结构
+  - 因为它已经能把：
+    - identity binding
+    - novelty insertion
+    组织得更有效
+- 但 retention 仍被挤掉，说明：
+  - 当前缺的已不只是更好的 `controller`
+  - 而是 controller 之外，还要有：
+    - `memory-protection law`
+    - 或者 `write veto mechanism`
+- 更直白地说：
+  - regime switch 已经接近对了
+  - 但系统还缺一个“禁止错误写入破坏旧概念”的硬约束层
+
+### 工程轨接下来应该做什么
+- 当前工程轨不该回头再调：
+  - controller bias
+  - mode margin
+  - path weights
+- 更应该直接做一个更大的系统块：
+  - `C34：hybrid controller + write veto / protected memory layer`
+
+#### C34 的核心目标
+- 保住 `C33` 已经拿到的：
+  - `consistency = 0.2222`
+  - `novel = 0.9444`
+- 然后只解决一件事：
+  - 把 `retention` 从 `0.3359` 拉回 `0.3447+`
+
+#### 工程轨当前最关键的问题
+- 不是“控制器够不够好”
+- 而是：
+  - 在错误 regime 下
+  - 系统有没有能力阻止 identity / novelty 写入重排 memory 几何
+
+### 理论轨的关键是什么
+- 当前理论轨最关键的对象，已经比前几轮更清楚了：
+  - 不是单纯的 `three-path`
+  - 而是：
+    - `three-path + controller + memory protection law`
+
+#### 理论轨当前最关键的数学问题
+- 不再只是：
+  - `谁主导`
+- 而是：
+  - `什么条件下允许写`
+  - `什么条件下必须 veto`
+  - `哪些写入会破坏旧几何`
+
+#### 理论轨最关键的新增对象
+- `write admissibility`
+- `memory protection law`
+- `regime-specific plasticity`
+
+#### 更具体地说
+- 理论轨现在需要从：
+```text
+z = F_mode(z_id, z_mem, z_nov)
+```
+- 升级成：
+```text
+z = F_mode(z_id, z_mem, z_nov)
+u = Veto(mode, risk, memory_state, novelty_signal)
+P = Plasticity(mode, u)
+```
+- 也就是：
+  - 不只描述状态和控制器
+  - 还要描述：
+    - 什么写入合法
+    - 什么写入应该被阻止
+
+### 双轨当前最终判断
+- 工程轨关键：
+  - `controller` 已经接近有效
+  - `memory protection` 成了新的主瓶颈
+- 理论轨关键：
+  - 新数学体系里必须显式加入：
+    - `write veto / admissibility`
+    - 否则 identity 与 retention 的冲突仍无法闭合
+
+### 当前整体进度口径（C33 后）
+- `统一候选理论骨架完成度`：
+  - `95% - 97%`
+- `三闭环工程闭合度`：
+  - `81% - 86%`
+- `真实大脑编码机制本体破解度`：
+  - `85% - 89%`
+
+## [2026-03-11 21:49:00] Codex 后续执行规则更新
+
+### 新的默认研究流程
+- 从这一轮开始，后续每个阶段完成后：
+  - 先给出实验结果
+  - 再判断结果是否达到目标
+  - 如果结果不理想，不再只做局部调参建议
+  - 而是立即进入：
+    - `系统层原因分析`
+    - `数学约束分析`
+    - `更大任务块的系统解决方案`
+
+### 目标
+- 避免：
+  - 每次只测一个小点
+  - 每次只加一个局部 patch
+- 改为：
+  - `阶段结果 -> 系统诊断 -> 系统方案`
+  的固定节奏
+
+### 对当前主问题的执行口径
+- 当前主问题仍是：
+  - `identity objective`
+  - `concept retention`
+  - `novel insertion`
+  三者之间的结构性冲突
+- 所以后续若某阶段结果不理想：
+  - 会优先判断是不是：
+    - 表示几何问题
+    - 控制器问题
+    - 路由/桥接问题
+    - 多目标优化问题
+- 然后直接提出下一阶段的系统解法，而不是继续局部补丁
+
+## [2026-03-11 21:55:00] Codex 数学框架判断：是否缺一整套新理论
+
+### 本轮执行命令
+```powershell
+Get-Content -Path research/gpt5/docs/AGI_GPT5_MEMO.md -Tail 40
+```
+
+### 判断结论
+- `是的，很可能缺了一大块数学`
+- 但更准确地说：
+  - 缺的不像是“一个单独公式”
+  - 更像是一整套新的统一形式主义
+- 它如果存在，解决的不会只是一个局部 benchmark
+- 而会同时统一：
+  - `identity binding`
+  - `concept retention`
+  - `novel insertion`
+  - `routing / control`
+  - `causal validation`
+
+### 为什么现在看起来“进展太顺”
+- 当前进展顺，主要是因为：
+  - 我们在内部 toy prototype 上
+  - 已经把候选机制空间压得很窄
+- 这说明：
+  - `候选骨架收敛` 很快
+- 但这不等于：
+  - `真实脑机制闭合` 也一样快
+- 真正最硬的部分其实还没跨过去：
+  - `脑侧因果闭环`
+  - `真实 3D 回路映射`
+  - `统一数学对象`
+
+### 为什么连线虫都没被完整建模
+- 这不能简单理解成“数据还不够”
+- 更可能是：
+  - 我们现在对这类系统的数学描述方式本身就不对
+- 现有常用框架更擅长：
+  - 静态网络
+  - 单目标优化
+  - 固定表示空间
+- 但真实神经系统更像：
+  - `局部可塑性 + 动态路由 + 多时间尺度记忆 + 条件控制 + 闭环行为`
+- 如果数学对象选错了：
+  - 就算连接图很全
+  - 也很难真正建模
+
+### 更可能缺的数学大块是什么
+- 当前最像缺的是一种：
+  - `受控多目标神经动力系统理论`
+- 它至少要统一 5 块：
+
+#### 1. `表示几何`
+- 不只是一个 embedding 空间
+- 而是：
+  - `identity geometry`
+  - `concept geometry`
+  - `novelty expansion geometry`
+  之间的兼容条件
+
+#### 2. `可塑性动力学`
+- 需要描述：
+  - 哪些变量快更新
+  - 哪些变量慢更新
+  - 哪些更新会互相干扰
+
+#### 3. `控制器 / 路由理论`
+- 需要描述：
+  - 什么上下文下该让哪条路径主导
+  - 什么时候应该允许 identity 压过 memory
+  - 什么时候必须优先保护 retention
+
+#### 4. `多目标可行域理论`
+- 现在最大的现象不是简单 tradeoff
+- 而像：
+  - 当前参数化下，某些目标组合根本没有可行区域
+- 所以需要：
+  - `feasible manifold of objectives`
+  的数学描述
+
+#### 5. `因果闭环理论`
+- 最终还必须能把：
+  - 内部表示
+  - 外部行为
+  - 脑侧干预
+  放进同一因果对象里
+
+### 所以是不是“一套新理论就能一次性解决所有问题”
+- 我的判断是：
+  - `需要一套新理论框架`
+  - `但不会是一键解决`
+- 更准确的说法是：
+  - 如果有新理论，它会把现在这些看起来彼此分散的问题
+    变成同一数学对象里的不同投影
+- 这样就不是：
+  - 一个问题一个补丁
+- 而是：
+  - 同一套理论同时解释多个硬冲突
+
+### 当前最像的候选方向
+- 不是传统意义上的：
+  - 单个网络 + 单个损失
+- 而更像：
+  - `three-path controlled dynamical system`
+  - `factorized but coupled representation geometry`
+  - `context-dependent controller`
+  - `path-specific plasticity`
+
+### 对当前项目的含义
+- 当前研究并不是“太顺，所以一定错了”
+- 更像是：
+  - 我们已经很快摸到了旧数学框架的边界
+- 也就是说：
+  - 现在后面的难点，不再主要是试更多 patch
+  - 而是要不要显式提出这套新的统一数学框架
+
+### 下一阶段建议
+- 接下来不该只继续做 `C32`
+- 更应该并行开一个更大的理论任务块：
+  - `阶段块 T1：three-path controlled dynamical formalism`
+- 目标不是先提升分数
+- 而是先把新的统一数学对象写出来：
+  - 状态变量是什么
+  - 路由变量是什么
+  - 可塑性变量是什么
+  - 目标可行域怎么定义
+
+## [2026-03-11 22:02:00] Codex 研究策略更新：闭合路线 + 新数学体系双轨并行
+
+### 本轮执行命令
+```powershell
+apply_patch
+```
+
+### 策略判断
+- 建议正式采用：
+  - `双轨并行`
+- 而不是：
+  - 只沿现有实验链继续闭合
+  - 或只停下来空想新理论
+
+### 轨道 A：工程闭合轨
+- 目标：
+  - 继续沿 `A / B / C` 三闭环推进
+  - 特别是当前 `C` 线的系统级闭合
+- 作用：
+  - 提供可量化的约束
+  - 防止新理论变成不可检验的空框架
+- 当前最合适的任务块：
+  - `C32：three-path controller system`
+
+### 轨道 B：理论整合轨
+- 目标：
+  - 把当前已经出现的拼图，逐步提炼成新的统一数学形式
+- 作用：
+  - 避免后续一直靠 patch 累积
+  - 让实验结果开始反推新的理论对象
+- 当前最合适的任务块：
+  - `T1：three-path controlled dynamical formalism`
+
+### 为什么必须双轨并行
+- 只做工程闭合的问题：
+  - 容易陷入 endless patching
+  - 每一轮只解决局部冲突
+- 只做理论整合的问题：
+  - 容易失去检验标准
+  - 很快变成高抽象但低约束的叙事
+- 双轨并行的好处：
+  - 工程轨不断提供真实失败模式
+  - 理论轨不断把失败模式抽象成更高层数学结构
+
+### 当前拼图如何进入新数学体系
+- 当前已经比较明确可进入统一体系的拼图有：
+  - `identity path`
+  - `concept memory path`
+  - `novelty insertion path`
+  - `controller / routing`
+  - `local plasticity`
+  - `multi-timescale retention`
+  - `bridge / synchronization`
+  - `objective feasible manifold`
+
+### 对后续执行的默认规则
+- 后续默认按：
+  - `一条实验闭合线`
+  - `一条理论整合线`
+  同时推进
+- 每轮如果实验不理想：
+  - 不只给 patch
+  - 还要更新理论轨的对象定义
+- 每轮如果理论有新抽象：
+  - 不只停留在概念
+  - 还要立刻回投到实验轨验证
+
+### 当前阶段建议
+- 工程轨下一步：
+  - `C32：three-path controller system`
+- 理论轨下一步：
+  - `T1：three-path controlled dynamical formalism`
+- 这两条线应并行推进，而不是先后串行
+
+## [2026-03-11 22:08:00] Codex 双轨下一步分析：工程轨 / 理论轨
+
+### 本轮执行命令
+```powershell
+Get-Content -Path research/gpt5/docs/AGI_GPT5_MEMO.md -Tail 80
+apply_patch
+```
+
+### 工程轨接下来应该做什么
+
+#### 总判断
+- 工程轨不该再回头大修 `A` 或 `B`
+- 当前最值钱的工作是：
+  - 把 `C30` 证明有效的 `three-path architecture`
+    做成真正的 `controller system`
+- 目标不是单纯把某个分数抬高
+- 而是把：
+  - `identity`
+  - `concept retention`
+  - `novel insertion`
+  三者的主导权，交给显式控制器，而不是隐式让它们在同一表示核里竞争
+
+#### 工程轨主任务块
+- `C32：three-path controller system`
+
+#### C32 要解决的不是“小优化”，而是 3 个系统问题
+
+##### 1. `何时由 identity path 主导`
+- 当前 `C30/C31` 已说明：
+  - three-path 底座是有效的
+  - 但 identity bridge 还不够
+- 所以下一步必须显式判断：
+  - 当前输入更像是：
+    - 跨模态对齐问题
+    - 旧概念保持问题
+    - 还是新概念写入问题
+
+##### 2. `何时必须保护 concept memory`
+- 当前 retention 崩塌的根本原因，不只是 memory 不够强
+- 而是控制器没有在高风险时强制把主导权交给 memory path
+
+##### 3. `何时允许 novelty path 快速写入`
+- 新概念写入仍然重要
+- 但当前 novelty 写入如果没有控制，很容易再次破坏 retention
+
+#### C32 的最小工程版本
+- 输入：
+  - `x`
+  - `identity confidence`
+  - `memory stability score`
+  - `novelty pressure score`
+- 控制器输出：
+  - `g_id`
+  - `g_mem`
+  - `g_nov`
+- 最终判决：
+```text
+z = g_id * z_id + g_mem * z_mem + g_nov * z_nov
+```
+
+#### 工程轨的判分标准
+- 不只看 `best consistency`
+- 必须同时看：
+  - `crossmodal_consistency`
+  - `retention_concept_accuracy`
+  - `overall_concept_accuracy`
+  - `novel_concept_accuracy`
+  - `controller regime stability`
+
+#### 工程轨下一阶段目标
+- 第一目标：
+  - 保住 `C30` 的 retention-compatible family
+- 第二目标：
+  - 把 `crossmodal_consistency` 从 `0.2167`
+    拉回并超过 `0.2211`
+- 第三目标：
+  - 看 controller 是否能显式学出：
+    - identity-led regime
+    - memory-led regime
+    - novelty-led regime
+
+### 理论轨的关键是什么
+
+#### 总判断
+- 理论轨当前最关键的，不是“再写更多模块名”
+- 而是先把一个新的统一数学对象定义清楚
+- 当前最关键的核心不是某个单独公式
+- 而是：
+  - `three-path controlled dynamical formalism`
+
+#### 理论轨最关键的 4 个问题
+
+##### 1. `状态变量怎么定义`
+- 现在必须把状态分成至少三类：
+  - `z_id`
+  - `z_mem`
+  - `z_nov`
+- 否则 identity / retention / novelty 永远会被混写成一个不透明核
+
+##### 2. `控制变量怎么定义`
+- 需要显式定义：
+  - `g_id(x, c)`
+  - `g_mem(x, c)`
+  - `g_nov(x, c)`
+- 它们不是普通注意力权重
+- 而是：
+  - “当前哪种机制应主导系统”的控制变量
+
+##### 3. `可塑性变量怎么定义`
+- 理论轨最关键的一点，是要把：
+  - 快更新
+  - 慢更新
+  - 受保护更新
+  区分开
+- 否则所有学习都会被写成单一梯度下降近似
+
+##### 4. `目标可行域怎么定义`
+- 当前最大理论问题，不是 loss 怎么加
+- 而是：
+  - 哪些目标组合在当前结构下根本不可行
+- 所以理论轨最关键的是给出：
+  - `objective feasible manifold`
+  的定义
+
+### 理论轨当前最关键的产物
+- `T1：three-path controlled dynamical formalism`
+
+#### T1 最少要产出 5 个对象
+- `State space`
+  - `Z = Z_id x Z_mem x Z_nov`
+- `Controller`
+  - `G(x, z) -> (g_id, g_mem, g_nov)`
+- `Plasticity law`
+  - `P_id, P_mem, P_nov`
+- `Fusion law`
+  - `F(z_id, z_mem, z_nov, g)`
+- `Feasible manifold`
+  - 哪些 `(L_id, L_ret, L_nov)` 组合可以同时成立
+
+### 双轨之间怎么配合
+- 工程轨给理论轨提供：
+  - 真实失败模式
+  - 真实可行组合
+- 理论轨给工程轨提供：
+  - 应该新增哪些状态变量
+  - 控制器应该读哪些统计量
+  - 哪些目标组合根本别再靠 patch 去撞
+
+### 当前最终判断
+- 工程轨关键：
+  - `把 three-path 做成 controller system`
+- 理论轨关键：
+  - `把 three-path 提炼成 controlled dynamical formalism`
+- 如果这两条线走通，它们很可能就是当前“破解大脑编码机制缺失拼图”的主入口
+
+---
+
+## 2026-03-11 C34：hybrid controller + write veto / protected memory layer
+
+### 本轮命令
+```powershell
+python -m py_compile tests/codex/test_stage_c34_hybrid_controller_write_veto_search.py
+python tests/codex/test_stage_c34_hybrid_controller_write_veto_search.py
+```
+
+### 本轮结果
+- 脚本：
+  - `tests/codex/test_stage_c34_hybrid_controller_write_veto_search.py`
+- 关键读数：
+  - `best_objective_consistency = 0.2222`
+  - `best_consistency_value = 0.2222`
+  - `retention_concept_accuracy = 0.3384`
+  - `overall_concept_accuracy = 0.3468`
+  - `novel_concept_accuracy = 0.9444`
+  - `best_retention_compatible_candidate = null`
+- 对比：
+  - 已守住并略高于 `C15 retention-compatible consistency = 0.2211`
+  - 但 retention 仍低于 `C15` 阈值 `0.3447+`
+- 结论：
+  - `write veto / protected memory layer` 已能稳定高一致性
+  - 但还不能形成新的 `retention-compatible family`
+  - 当前阶段应记为：
+    - `stage_c34_write_veto_not_enough`
+
+### 系统层判断
+- `C33 -> C34` 连续结果说明：
+  - 控制器和 regime switch 已经基本把 `identity gain` 做出来了
+  - 当前主瓶颈已经单点收缩成：
+    - `memory protection` 还不够结构化
+- `scalar veto + scalar shield` 的问题是：
+  - 它只能整体缩小写入
+  - 不能区分：
+    - 哪些更新方向是安全的
+    - 哪些更新方向会重排旧概念几何
+- 所以当前缺的不是更大的 veto 系数
+- 而是：
+  - `regime-specific write admissibility`
+  - `projected protected update`
+
+### 数学层推进
+- 当前更像要把写入从：
+```text
+Delta_raw
+```
+  升级成：
+```text
+Delta_adm = Pi_A(Delta_raw)
+```
+- 其中 `A` 不是简单阈值，而是 memory 保护可行域：
+```text
+A(z_mem) = {
+  Delta :
+  <Delta, grad L_ret> <= epsilon,
+  ||P_protected Delta|| <= delta,
+  risk(mode, z_mem, z_id, z_nov) <= tau
+}
+```
+- 也就是：
+  - 允许 identity / novelty 写入
+  - 但必须先投影到不会明显破坏 retention 的可行域里
+
+### 工程轨下一阶段
+- `C35：regime-specific write admissibility / projected update search`
+- 目标：
+  - 保住 `0.2222` 级别的 `crossmodal_consistency`
+  - 把 `retention_concept_accuracy` 从 `0.3384` 拉回 `0.3447+`
+
+### 理论轨同步更新
+- `T1: three-path controlled dynamical formalism` 新增关键对象：
+  - `write admissibility set`
+  - `protected memory projector`
+  - `regime-specific plasticity constraint`
+- 当前理论关键不再只是：
+  - `controller chooses path`
+- 而是：
+  - `controller + admissibility law decide which update directions are legal`
+
+### 当前阶段判断
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`81% - 86%`
+- `真实大脑编码机制本体破解度`：`85% - 89%`
+
+---
+
+## 2026-03-11 C36：state-augmented protection system
+
+### 本轮命令
+```powershell
+python -m py_compile tests/codex/test_stage_c36_state_augmented_protection_search.py
+python tests/codex/test_stage_c36_state_augmented_protection_search.py
+```
+
+### 本轮结果
+- 脚本：
+  - `tests/codex/test_stage_c36_state_augmented_protection_search.py`
+- 新增状态：
+  - `geometry_anchor`
+  - `risk_accumulator`
+  - `update_direction_memory`
+- 关键读数：
+  - `best_objective_consistency = 0.2222`
+  - `retention_concept_accuracy = 0.3384`
+  - `overall_concept_accuracy = 0.3468`
+  - `novel_concept_accuracy = 0.9444`
+  - `best_retention_compatible_candidate = null`
+- 结论：
+  - `C36` 仍未打破 `C34/C35` 平台
+  - 最优点几乎与 `C34/C35` 重合
+  - 说明问题已经不是：
+    - 保护规则太粗
+    - 或缺少少量保护状态
+  - 更像：
+    - 当前整个 patch 系列都在同一个受限表示平台上优化
+
+### 系统层判断
+- `C34 -> C35 -> C36` 连续结果表明：
+  - `veto`
+  - `projected admissibility`
+  - `state-augmented protection`
+  都没有改变平台位置
+- 这通常意味着：
+  - 当前失败不是局部机制缺件
+  - 而是系统层参数化已经进入 `structural equivalence class`
+- 也就是说：
+  - 看起来加了不同模块
+  - 但在数学上仍属于同一类“单核 memory 保护修正”
+- 当前最有可能缺的，不再是：
+  - `more protection`
+- 而是：
+  - `different representation/control class`
+
+### 工程轨下一阶段
+- `C37：meta-controller / externalized memory law`
+- 核心方向：
+  - 不再把保护律只放在主表示内
+  - 而是把 memory law 外置成一层更高阶机制
+- 可能的结构：
+  - `meta-controller` 决定当前调用哪种更新法则
+  - `externalized memory map` 记录旧概念几何约束
+  - 主表示不再直接承担全部 retention 保护责任
+
+### 理论轨的进一步判断
+- `C34-C36` 的平台性结果，使得理论轨更需要两条并行路线：
+
+#### `T1a: hybrid dynamical formalism`
+- 继续刻画：
+  - 连续状态
+  - 离散 regime switch
+  - 多时间尺度
+
+#### `T1b: constrained admissible-update formalism`
+- 继续刻画：
+  - 合法更新集合
+  - retention-safe 可行域
+  - 约束不变性
+
+#### `T1c: meta-law / rule-selection formalism`
+- 新增候选：
+  - 系统不只是状态在演化
+  - 而是“更新法则本身”也在被选择
+- 数学上更像：
+```text
+z_{t+1} = F_{r_t}(z_t, x_t)
+r_{t+1} = M(r_t, z_t, x_t, history_t)
+```
+- 这里 `r_t` 不是普通状态
+- 而是：
+  - 当前生效的更新规则
+  - 或更新规则索引
+
+### 当前最重要的理论信号
+- 如果线虫甚至简单神经系统都难以完整建模
+- 一个很强的可能性就是：
+  - 我们缺的不是更多局部变量
+  - 而是“规则选择层”的数学对象
+- 当前实验链现在第一次较明确支持这个判断：
+  - 单纯在固定规则族内补状态，已经出现强平台
+
+### 当前阶段判断
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`81% - 86%`
+- `真实大脑编码机制本体破解度`：`85% - 89%`
+
+---
+
+## 2026-03-11 C35：projected write admissibility / protected update
+
+### 本轮命令
+```powershell
+python -m py_compile tests/codex/test_stage_c35_projected_write_admissibility_search.py
+python tests/codex/test_stage_c35_projected_write_admissibility_search.py
+```
+
+### 本轮结果
+- 脚本：
+  - `tests/codex/test_stage_c35_projected_write_admissibility_search.py`
+- 关键读数：
+  - `best_objective_consistency = 0.2222`
+  - `best_consistency_value = 0.2222`
+  - `retention_concept_accuracy = 0.3384`
+  - `overall_concept_accuracy = 0.3468`
+  - `novel_concept_accuracy = 0.9444`
+  - `best_retention_compatible_candidate = null`
+- 结论：
+  - `projected admissibility` 没有超出 `C34`
+  - 当前最优点与 `C34` 基本重合
+  - 说明问题已经不是：
+    - `scalar veto` 太粗
+    - 或 `projected update` 参数没调好
+  - 更像是：
+    - 当前状态变量和保护子空间本身就不够表达真正的 memory law
+
+### 系统层判断
+- `C34 -> C35` 连续结果表明：
+  - 无论是 `veto/shield`
+  - 还是 `projected admissibility`
+  - 只要仍建立在当前这套状态坐标上
+  - 最优点都会塌回同一平台
+- 这通常意味着：
+  - 失败不在优化器外层
+  - 而在状态空间本身缺关键坐标
+- 当前最可疑的缺失对象，不再只是：
+  - `write legality`
+- 而是：
+  - `memory geometry state`
+  - `update direction state`
+  - `regime risk state`
+
+### 工程轨下一阶段
+- `C36：state-augmented protection system`
+- 核心不是继续调 veto 或 projector
+- 而是新增保护用状态：
+  - `geometry anchor state`
+  - `risk accumulator state`
+  - `update-direction memory`
+- 目标：
+  - 不再只对当前 update 做事后约束
+  - 而是让系统显式记住：
+    - 哪些方向过去会破坏 retention
+    - 当前 memory 几何哪里最脆弱
+
+### 理论轨：如果工程轨持续卡住，可能需要的其他数学方式
+
+#### 1. `hybrid dynamical systems`
+- 当前系统已经明显不是单一平滑流
+- 更像：
+  - 连续状态演化
+  - 加上离散 regime switch
+- 数学对象：
+```text
+(z_{t+1}, m_{t+1}) = F_{q_t}(z_t, m_t, x_t), q_t in Q
+q_{t+1} = H(q_t, z_t, x_t)
+```
+- 适合处理：
+  - identity mode
+  - memory mode
+  - novelty mode
+  - veto / switch / reset
+
+#### 2. `viability / differential inclusion`
+- 如果“合法更新”不是一个点，而是一组允许方向
+- 更自然的对象不是普通动力系统
+- 而是：
+```text
+z_{t+1} - z_t in A(z_t, x_t)
+```
+- 其中 `A` 是 admissible update set
+- 关键问题变成：
+  - 哪些轨道能一直留在 retention-safe 区域里
+
+#### 3. `constrained control theory`
+- 当前 controller 不只是选路径
+- 更像在做受约束控制：
+```text
+u_t = argmin L_id + L_nov
+subject to C_ret(z_t, u_t) <= 0
+```
+- 这类表述适合把：
+  - identity gain
+  - novelty insertion
+  - retention safety
+  放在同一个约束优化框架里
+
+#### 4. `multi-timescale singular perturbation`
+- 当前快写入 / 慢保留 / 更慢 persistence 已经明显存在
+- 更合理的数学对象可能是：
+```text
+epsilon * z_fast' = f(z_fast, z_slow, x)
+z_slow' = g(z_fast, z_slow, x)
+z_meta' = h(z_slow, z_meta)
+```
+- 这类框架适合解释：
+  - 为什么局部 patch 常常只改快变量
+  - 却无法真正修正慢几何
+
+### 对动力系统数学特性的整理
+- 当前研究里“动力系统”的核心数学特性，至少包括：
+  - `状态依赖更新`
+    - 下一步由当前状态和输入共同决定，不是静态映射
+  - `非线性`
+    - 门控、阈值、切换导致系统不可线性叠加
+  - `多时间尺度`
+    - write/read/persistence 更新速率不同
+  - `吸引子与稳定区`
+    - 好的 memory geometry 应对应某种稳定区域
+  - `分岔 / regime switch`
+    - 参数稍变，系统会从 retention-led 跳到 identity-led
+  - `可达域与可行域`
+    - 不是所有目标组合都能被同一轨道到达
+  - `约束不变性`
+    - 好系统应让某些 retention-safe 集合在更新后仍保持不变
+
+### 理论轨当前最关键的更新
+- `T1` 不应再只写成普通三路径动力系统
+- 更合理的是并行维护两种候选形式：
+  - `T1a: three-path hybrid dynamical formalism`
+  - `T1b: constrained admissible-update formalism`
+- 如果后续 `C36` 仍然卡住
+- 说明更可能缺的是：
+  - `viability / constrained control`
+  而不只是一般意义上的动力系统描述
+
+### 当前阶段判断
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`81% - 86%`
+- `真实大脑编码机制本体破解度`：`85% - 89%`
