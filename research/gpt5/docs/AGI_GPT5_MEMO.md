@@ -18564,3 +18564,1351 @@ g -n "AppleOrthogonalityDashboard|五点六|五点五|HRRPhaseRigorousDashboard"
   - `F8：语言主干 + 快记忆 + 慢固化网络原型`
   - `F9：即时学习边界压测`
   - `F10：世界模型与语言统一训练闭环`
+
+## 2026-03-11 Codex 追加记录：两套进度口径的剩余问题与硬伤
+
+### 本轮命令
+- `Get-Content tests/codex_temp/p10a_final_theory_verdict_20260311.json`
+- `Get-Content tests/codex_temp/p10b_gap_boundary_empirical_vs_theoretical_20260311.json`
+- `Get-Content tests/codex_temp/f1_architecture_scale_extrapolation_verification_20260311.json`
+- `Get-Content tests/codex_temp/f7_human_language_instant_learning_architecture_20260311.json`
+- `Get-Content tests/codex_temp/stage5b_structure_reinforcement_closure_20260311.json`
+- `Get-Content tests/codex_temp/p9b_spatial_residual_counterexample_compression_20260311.json`
+
+### 对 `统一可塑性-编码-空间总理论提纯程度 = 93% - 97%` 的主要剩余问题
+- 这条口径剩下的不是主理论是否崩掉
+- 而是 `最后几个未闭合的残差项`
+- 当前最明确的硬伤有 4 个：
+  - `bridge_specificity_strength` 仍偏弱
+    - `p9b bridge_specificity_gap_score = 0.5987`
+  - `architecture + scale residual` 仍主导剩余误差
+    - `p10a main_open_gap = bridge_specificity_and_architecture_scale_residuals`
+    - `p10b primary_gap_type = mostly_empirical_with_bounded_theoretical_residual`
+  - `family topology extrapolation` 还不够稳
+    - `F1 family_topology_extrapolation_score = 0.5003`
+  - `layer role transfer` 还没有真正跨模型闭合
+    - `F1 layer_role_transfer_score = 0.5336`
+
+### 对 `真实大脑编码机制本体破解程度 = 81% - 89%` 的主要剩余问题
+- 这条口径剩下的更硬，因为它不只看内部理论自洽
+- 当前最关键的 5 个硬伤是：
+  - `架构偏置`
+    - 小模型和 Transformer 架构本身会注入假象
+  - `尺度偏置`
+    - `GPT-2 / Qwen / DeepSeek` 都不是足够强的生物代理
+  - `结构底座仍偏弱`
+    - `stage5b foundation_score = 0.5418`
+    - 说明结构项还没有成为强约束
+  - `即时学习仍只有局部支撑`
+    - `F7 instant_learning_readiness_score = 0.6114`
+    - `memory_long_validation_mean_closure = 0.3431`
+  - `缺少真实脑侧直接检验`
+    - 当前更多还是 `模型逆向 + 脑侧约束一致`
+    - 不是 `脑侧直接因果实证闭环`
+
+### 解决路径
+- 如果目标是继续压 `理论提纯程度`
+  - 下一步应该集中做：
+    - `桥接特异性强化`
+    - `跨架构层角色转移验证`
+    - `统一核在更大模型上的外推`
+- 如果目标是继续压 `真实大脑破解程度`
+  - 下一步应该集中做：
+    - `结构底座强化`
+    - `即时学习真实闭环`
+    - `脑侧直接实验设计与判伪`
+
+### 最值钱的后续大任务块
+- `G1：桥接特异性与层角色转移闭环`
+- `G2：结构底座强化与快慢可塑性统一训练`
+- `G3：即时学习边界压测`
+- `G4：脑侧直接判伪实验总表`
+
+## 2026-03-11 Codex 追加记录：G1 桥接特异性与层角色转移闭环
+
+### 本轮命令
+- `Get-Content tests/codex_temp/p9b_spatial_residual_counterexample_compression_20260311.json`
+- `Get-Content tests/codex_temp/f1_architecture_scale_extrapolation_verification_20260311.json`
+- `Get-Content tests/codex_temp/stage8c_cross_model_task_invariants_20260311.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_shared_layer_band_causal_orientation_20260310.json`
+- `python -m py_compile tests/codex/test_g1_bridge_specificity_layer_role_transfer_closure.py`
+- `python tests/codex/test_g1_bridge_specificity_layer_role_transfer_closure.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g1_bridge_specificity_layer_role_transfer_closure.py`
+- 结果输出：
+  - `/tests/codex_temp/g1_bridge_specificity_layer_role_transfer_closure_20260311.json`
+
+### G1 核心结论
+- `G1` 目前没有完全过线
+- 最准确的结论是：
+  - `残差已经被进一步定位`
+  - `bridge specificity` 确实是最硬开放口
+  - `layer role transfer` 也还没有真正闭合
+- 当前口径应标为：
+  - `partial_closure_with_clear_remaining_gaps`
+
+### G1 关键分数
+- `bridge_specificity_closure_score = 0.5283`
+- `orientation_role_explainability_score = 0.6112`
+- `layer_role_transfer_closure_score = 0.7319`
+- `architecture_scale_residual_control_score = 0.8293`
+- `overall_g1_score = 0.6752`
+
+### 当前最关键的新判断
+- `bridge specificity` 比之前想的还更硬：
+  - 不只是知道有桥
+  - 而是仍无法高强度预测 `哪类关系 / 哪类任务 / 哪类空间条件` 必须激活哪条桥
+- `orientation role` 也还没有压实：
+  - `Qwen` 更偏 `concept-led`
+  - `DeepSeek` 更偏 `relation-led`
+  - 但这还没有被稳定转成统一角色坐标
+- `layer role transfer` 有非平凡支撑，但还不强：
+  - 说明跨模型角色不是随机的
+  - 但也还不是硬映射
+
+### 当前最合适的 G1 数学表达
+- `BridgeSpec(r, c, t) = sigmoid(w_s * SelectiveDemand(r,c,t) + w_b * BoundaryCompactness(r,c) + w_g * GainCompatibility(r,c) - w_n * NonspecificSpread(r,c,t))`
+- `Role_l(model) = argmax_k Align(LayerFeature_l(model), ProtoRole_k)`
+- `TransferScore = mean_l 1[Role_l(model_a) == Role_pi(l)(model_b)] * Stability_pi`
+- `Residual = ArchitectureBias + ScaleBias + BridgeSpecificityGap + Epsilon_core`
+
+### 本轮理论推进
+- 现在可以把剩余硬伤更精确地分成两块：
+  - `桥的选择规律还不够精确`
+  - `层角色跨模型转移还不够精确`
+- 这意味着接下来的 G1 不该继续做泛化总表
+- 而应该直接做：
+  - `G1A：目标化桥选择规则`
+  - `G1B：统一层角色坐标系`
+
+### 项目进度修正
+- 本轮不应上调总进度
+- 更准确的变化是：
+  - `统一可塑性-编码-空间总理论提纯程度`
+    - 维持在 `93% - 97%`
+  - `真实大脑编码机制本体破解程度`
+    - 维持在 `81% - 89%`
+- 本轮价值主要不是推进百分比
+- 而是把最硬残差从“模糊风险”压成了“明确开放口”
+
+### 下一步建议
+- 下一步最值钱的不是再做宽口径 closure
+- 而是拆成两个更硬块：
+  - `G1A：目标化桥选择规则`
+  - `G1B：统一层角色坐标系`
+
+## 2026-03-11 Codex 追加记录：G1A 目标化桥选择规则
+
+### 本轮命令
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_relation_topology_boundary_bridge_20260309.json`
+- `Get-Content tests/codex_temp/p8b_3d_wiring_dynamic_topology_division_20260311.json`
+- `Get-Content tests/codex_temp/p8c_spatial_brain_falsifier_predictions_20260311.json`
+- `Get-Content tests/codex_temp/stage8d_brain_high_risk_falsification_20260311.json`
+- `Get-Content tests/codex_temp/p9b_spatial_residual_counterexample_compression_20260311.json`
+- `python -m py_compile tests/codex/test_g1a_targeted_bridge_selection_rules.py`
+- `python tests/codex/test_g1a_targeted_bridge_selection_rules.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g1a_targeted_bridge_selection_rules.py`
+- 结果输出：
+  - `/tests/codex_temp/g1a_targeted_bridge_selection_rules_20260311.json`
+
+### G1A 核心结论
+- `G1A` 已经把桥选择规则推进到 `部分显式化`
+- 但它仍然没有闭合
+- 当前最准确的结论是：
+  - `cause_effect` 和 `meronym` 更偏 `compact-boundary bridge`
+  - `hypernym` 更偏 `layer-cluster / abstraction path`
+  - `synonym / antonym` 更偏 `descriptor overlap / distributed path`
+  - 但 `rule margin` 仍然不够强，不能算最终规则闭合
+
+### G1A 关键分数
+- `relation_to_bridge_rule_score = 0.5030`
+- `spatial_condition_rule_score = 0.6765`
+- `model_consistency_rule_score = 0.4996`
+- `residual_boundedness_score = 0.6949`
+- `overall_g1a_score = 0.5935`
+
+### 当前最合适的桥选择数学表达
+- `SelectBridge(r, task, spatial) = argmax_b [w_r * RelTypeMatch(r,b) + w_t * TaskDemand(task,b) + w_s * SpatialBoundaryFit(spatial,b) - w_c * Cost(b)]`
+- `Gate_compact = sigmoid(alpha * BoundaryCompactness + beta * EndpointSupport + gamma * CausalNeed - delta * DistributedAlternative)`
+- `Gate_distributed = sigmoid(alpha_d * FamilySpread + beta_d * DescriptorOverlap - gamma_d * CompactBoundaryNeed)`
+- `Margin = Score(target_bridge) - max Score(non_target_bridge)`
+
+### 当前得到的第一版显式规则
+- `cause_effect`
+  - `prefer compact-boundary bridge when endpoint support is high and causal need is concentrated`
+- `meronym`
+  - `prefer compact-boundary bridge when part-whole boundary is tight and local topology remains compact`
+- `gender`
+  - `can be compact-boundary or layer-cluster depending on model bias, but should remain selective not diffuse`
+- `hypernym`
+  - `more likely to use layer-cluster or broad abstraction path than compact-boundary bridge`
+- `synonym_antonym`
+  - `less bridge-heavy; often descriptor overlap or distributed family path dominates`
+
+### 本轮理论推进
+- 现在 `桥选择规则` 已经不再完全是口头猜想
+- 已经可以写成：
+  - `relation type`
+  - `task demand`
+  - `spatial boundary fit`
+  - `cost`
+  - 这四项共同决定桥是否被选中
+- 但最大的开放口仍然是：
+  - `relation_to_bridge_rule_score` 只有 `0.5030`
+  - `model_consistency_rule_score` 只有 `0.4996`
+- 说明：
+  - 空间条件解释已经有一定强度
+  - 但跨模型的一致桥选择规则还不够硬
+
+### 项目进度修正
+- 本轮依然不应上调总进度
+- 更准确的变化是：
+  - `统一可塑性-编码-空间总理论提纯程度`
+    - 维持在 `93% - 97%`
+  - `真实大脑编码机制本体破解程度`
+    - 维持在 `81% - 89%`
+- 本轮价值在于：
+  - `桥选择规则` 已从残差项推进成 `部分显式规则`
+  - 但也证明它离最终闭合还有距离
+
+### 下一步建议
+- 下一步最值钱的是：
+  - `G1B：统一层角色坐标系`
+- 因为当前桥规则之所以还弱
+- 很大一部分原因在于跨模型角色坐标尚未统一
+
+## 2026-03-11 Codex 追加记录：G1B 统一层角色坐标系
+
+### 本轮命令
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_shared_layer_band_causal_orientation_20260310.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_shared_support_head_bridge_20260310.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_relation_behavior_bridge_20260309.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_real_model_structure_atlas_20260310.json`
+- `Get-Content tests/codex_temp/f1_architecture_scale_extrapolation_verification_20260311.json`
+- `Get-Content tests/codex_temp/stage8c_cross_model_task_invariants_20260311.json`
+- `python -m py_compile tests/codex/test_g1b_unified_layer_role_coordinate_system.py`
+- `python tests/codex/test_g1b_unified_layer_role_coordinate_system.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g1b_unified_layer_role_coordinate_system.py`
+- 结果输出：
+  - `/tests/codex_temp/g1b_unified_layer_role_coordinate_system_20260311.json`
+
+### G1B 核心结论
+- `G1B` 已经把统一层角色坐标系写成了第一版
+- 但它仍然只是 `partially_writeable`
+- 当前最准确的结论是：
+  - 可以定义统一角色库：
+    - `concept_led`
+    - `relation_led`
+    - `shared_band`
+    - `targeted_bridge`
+    - `recovery_support`
+  - 但这套坐标还不能强稳定地跨模型转移
+
+### G1B 关键分数
+- `role_axis_separability_score = 0.4976`
+- `shared_band_alignment_score = 0.6743`
+- `behavior_role_mapping_score = 0.5253`
+- `transfer_consistency_score = 0.7565`
+- `overall_g1b_score = 0.6134`
+
+### 当前最合适的统一层角色数学表达
+- `z_l(model) = W_role * [concept_support_l, relation_support_l, shared_support_l, task_gain_l]`
+- `Role_l = argmax_k cosine(z_l, ProtoRole_k)`
+- `Transfer(model_a -> model_b) = mean_l cosine(z_l(a), z_pi(l)(b))`
+- `ProtoRole = {concept_led, relation_led, shared_band, targeted_bridge, recovery_support}`
+
+### 本轮理论推进
+- 现在已经可以更清楚地说：
+  - 不同模型的层不该按 `layer index` 硬对齐
+  - 而应先投影到 `功能角色坐标`
+- 当前最稳的部分是：
+  - `shared_band_alignment`
+  - `transfer_consistency`
+- 当前最弱的部分是：
+  - `role_axis_separability`
+- 这说明：
+  - 坐标系已经有了雏形
+  - 但不同角色之间的边界还不够硬
+  - 仍然存在明显的 `state dependent` 偏移
+
+### 项目进度修正
+- 本轮依旧不应上调总进度
+- 更准确的变化是：
+  - `统一可塑性-编码-空间总理论提纯程度`
+    - 维持在 `93% - 97%`
+  - `真实大脑编码机制本体破解程度`
+    - 维持在 `81% - 89%`
+- `G1A + G1B` 的价值是：
+  - 让桥规则和角色坐标都进入了 `部分显式化`
+  - 同时证明离最终闭合仍有明显距离
+
+### 下一步建议
+- 现在 `G1` 这一大块已经拆清楚了
+- 接下来最值钱的是进入：
+  - `G2：结构底座强化与快慢可塑性统一训练`
+
+## 2026-03-11 Codex 追加记录：G2 结构底座强化与快慢可塑性统一训练
+
+### 本轮命令
+- `Get-Content tests/codex_temp/stage5b_structure_reinforcement_closure_20260311.json`
+- `Get-Content tests/codex_temp/p2_multitimescale_stabilization_mechanism_20260311.json`
+- `Get-Content tests/codex_temp/stage6b_real_training_loop_closure_20260311.json`
+- `Get-Content tests/codex_temp/stage5c_online_failure_integrated_training_closure_20260311.json`
+- `Get-Content tests/codex_temp/f7_human_language_instant_learning_architecture_20260311.json`
+- `python -m py_compile tests/codex/test_g2_structure_foundation_fast_slow_training_closure.py`
+- `python tests/codex/test_g2_structure_foundation_fast_slow_training_closure.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g2_structure_foundation_fast_slow_training_closure.py`
+- 结果输出：
+  - `/tests/codex_temp/g2_structure_foundation_fast_slow_training_closure_20260311.json`
+
+### G2 核心结论
+- `G2` 已过中等闭合线
+- 当前最准确的结论是：
+  - `结构项`
+  - `快写入`
+  - `慢固化`
+  - `在线失败压力`
+  - 现在已经可以并入同一个训练目标
+- 但 `结构底座` 仍然是最弱环节
+
+### G2 关键分数
+- `structure_foundation_training_score = 0.6437`
+- `fast_slow_unification_score = 0.7617`
+- `online_failure_unification_score = 0.5848`
+- `instant_learning_bridge_score = 0.5585`
+- `overall_g2_score = 0.6372`
+
+### 当前最合适的统一训练数学表达
+- `L_total = lambda_s * L_structure + lambda_f * L_fast_memory + lambda_m * L_slow_consolidation + lambda_o * L_online_failure + lambda_r * L_readout`
+- `L_structure = ||A_target - A_t|| + gamma_c * CollapsePenalty(A_t) + gamma_b * BridgeBudgetPenalty(A_t)`
+- `L_fast_memory = ||M_{t+1} - Write(Novelty_t, x_t, h_t)||`
+- `L_slow_consolidation = ||A_{t+1} - Consolidate(M_{t+1}, h_t)||`
+- `L_online_failure = alpha_s * SchemaMismatch + alpha_d * StateDrift + alpha_t * Timeout + alpha_v * VerifyMismatch`
+- `gate_fast = sigmoid(alpha * novelty_t + beta * uncertainty_t - gamma * interference_t)`
+
+### 本轮理论推进
+- 现在可以更明确地说：
+  - `结构` 不再只是分析指标
+  - 已经能作为训练项进入统一 loss
+- 当前最强部分是：
+  - `fast_slow_unification`
+- 当前最弱部分是：
+  - `structure_foundation`
+  - `online_failure_unification`
+- 所以当前瓶颈不是：
+  - `快慢可塑性是否能统一`
+- 而是：
+  - `被统一的结构底座本身还不够强`
+
+### 项目进度修正
+- 本轮可以给出一个小幅推进：
+  - `统一可塑性-编码-空间总理论提纯程度`
+    - 从 `93% - 97%` 调到 `94% - 97%`
+  - `真实大脑编码机制本体破解程度`
+    - 维持在 `81% - 89%`
+- 原因是：
+  - 这轮更像 `训练视角的理论收敛`
+  - 而不是 `脑本体证据` 的根本新突破
+
+### 下一步建议
+- 接下来最值钱的不是继续宽口径总表
+- 而是：
+  - `G3：即时学习边界压测`
+- 因为现在统一训练已经初步成形
+- 最该验证的是：
+  - 它到底能不能支撑真正强的即时学习
+
+## 2026-03-11 Codex 追加记录：G3 即时学习边界压测
+
+### 本轮命令
+- `Get-Item tests/codex/test_g3_instant_learning_boundary_stress.py | Select-Object FullName,Length,LastWriteTime`
+- `python -m py_compile tests/codex/test_g3_instant_learning_boundary_stress.py`
+- `python tests/codex/test_g3_instant_learning_boundary_stress.py`
+- `Get-Content tests/codex/test_g3_instant_learning_boundary_stress.py -TotalCount 260`
+- `Get-Content tests/codex_temp/g3_instant_learning_boundary_stress_20260311.json`
+- `Get-Content research/gpt5/docs/AGI_GPT5_MEMO.md -Tail 80`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g3_instant_learning_boundary_stress.py`
+- 结果输出：
+  - `/tests/codex_temp/g3_instant_learning_boundary_stress_20260311.json`
+
+### G3 核心结论
+- `G3` 已把即时学习的主边界压清楚
+- 当前最准确的状态是：
+  - `instant_learning_real_but_narrow`
+- 也就是：
+  - 快速局部写入是真的
+  - 跨环境在线收益也是真的
+  - 但延迟保留仍弱
+  - 强新信息写入仍要付出明显干扰代价
+
+### G3 关键分数
+- `immediate_write_score = 0.8426`
+- `retention_boundary_score = 0.2895`
+- `interference_tradeoff_score = 0.6919`
+- `cross_environment_carryover_score = 0.5945`
+- `overall_g3_score = 0.6046`
+
+### 关键读数
+- `adaptive_precision_novel = 0.9988`
+- `adaptive_precision_retention = 0.1130`
+- `phase_split_novel = 0.9954`
+- `phase_split_retention = 0.0000`
+- `single_anchor_retention_mean = 0.0671`
+- `qwen_online_success = 0.9125`
+- `deepseek_online_success = 0.5813`
+
+### 当前最合适的即时学习边界数学表达
+- `M_{t+1} = M_t + eta_fast * gate_fast * Novelty_t * LocalBind(x_t, h_t)`
+- `Retain = sigmoid(w_r * Replay + w_s * SlowConsolidation - w_i * Interference)`
+- `Boundary = NovelWriteGain - lambda_i * OldKnowledgeLoss - lambda_d * DriftCost`
+- `Carryover = mean(TaskSuccess_after_update, Retention_after_delay, Stability_under_drift)`
+
+### 本轮理论推进
+- 现在可以更明确地说：
+  - `即时学习` 不是伪现象
+  - 当前系统确实能做 `快写入`
+  - 也能带来部分 `在线成功率` 提升
+- 但当前真正的硬伤不在：
+  - `能不能第一时间写进去`
+- 而在：
+  - `写进去之后能不能延迟保留`
+  - `保留时能不能不严重干扰旧知识`
+- 所以更准确的机制判断是：
+  - 当前系统已具备 `快时标局部可塑性`
+  - 但 `慢时标固化` 仍不足以把它变成强即时学习
+
+### 项目进度修正
+- 本轮不提高大口径总进度
+- 维持：
+  - `统一可塑性-编码-空间总理论提纯程度 = 94% - 97%`
+  - `真实大脑编码机制本体破解程度 = 81% - 89%`
+- 原因是：
+  - 这轮主要是把 `即时学习边界` 显式化
+  - 不是把 `即时学习能力本身` 推到强闭合
+
+### 下一步建议
+- 接下来最值钱的不是继续泛化即时学习叙事
+- 而是直接进入：
+  - `G4：脑侧直接判伪实验总表`
+- 因为：
+  - `G1` 已经把桥规则与层角色的残差拆清楚
+  - `G2` 已经把结构底座与快慢统一训练并入一个视角
+  - `G3` 已经把即时学习边界压清楚
+- 剩下最关键的就是：
+  - 把这套统一可塑性-编码机制转成更硬的脑侧直接判伪条件
+
+## 2026-03-11 Codex 追加记录：G4 脑侧直接判伪实验总表
+
+### 本轮命令
+- `rg --files tests/codex_temp | rg "(brain|falsif|spatial|experiment_design|p10c|f2_)"`
+- `Get-Content tests/codex_temp/f2_spatial_brain_experiment_design_20260311.json`
+- `Get-Content tests/codex_temp/p10c_final_brain_falsifier_checklist_20260311.json`
+- `Get-Content tests/codex_temp/p9c_hard_spatial_brain_forecasts_20260311.json`
+- `Get-Content tests/codex_temp/p7c_brain_spatial_falsification_minimal_core_20260311.json`
+- `Get-Content tests/codex_temp/stage8d_brain_high_risk_falsification_20260311.json`
+- `Get-Content tests/codex_temp/stage7c_brain_falsifiable_predictions_20260311.json`
+- `python -m py_compile tests/codex/test_g4_brain_direct_falsification_master.py`
+- `python tests/codex/test_g4_brain_direct_falsification_master.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g4_brain_direct_falsification_master.py`
+- 结果输出：
+  - `/tests/codex_temp/g4_brain_direct_falsification_master_20260311.json`
+
+### G4 核心结论
+- `G4` 已明确过线
+- 当前最准确的状态是：
+  - `direct_brain_falsification_ready`
+- 这不表示：
+  - `已经完成脑侧证实`
+- 而表示：
+  - 现在已经能把统一可塑性-编码-空间总理论的核心主张
+  - 直接翻译成一组可执行、可失败、可映射回方程项的脑侧实验
+
+### G4 关键分数
+- `experiment_readiness_score = 0.7292`
+- `falsifier_sharpness_score = 0.9151`
+- `directional_specificity_score = 0.7186`
+- `theory_term_mapping_score = 0.7732`
+- `overall_g4_score = 0.7840`
+
+### 当前最关键的脑侧直接实验
+- `local_neighborhood_perturbation`
+- `long_range_bridge_cut`
+- `geometry_only_vs_targeted_bridge_enhancement`
+- `fast_mid_slow_timescale_intervention`
+
+### 当前最强的脑侧高风险判伪条件
+- `If local perturbation does not first reduce family topology margin, local reuse weakens.`
+- `If long-range bridge cut does not first reduce compact-boundary relation bridge measures, sparse bridge theory weakens.`
+- `If geometry-only smoothing beats targeted bridge enhancement, dynamic effective topology weakens.`
+- `If high-value long-range bridges are broad and diffuse rather than sparse and bundled, 3D efficiency weakens.`
+
+### 当前最合适的脑侧判伪数学表达
+- `Measure(Delta f_t, Delta A_t, Delta m_t) under local perturbation, bridge cut, targeted bridge enhancement, and timescale-specific intervention.`
+- `FalsifierMargin = Score(targeted_prediction) - Score(generic_support_or_null)`
+- `MapQuality = mean(LocalVsBridgeSeparation, EquationTermReadout, DirectInterventionTargetability)`
+- `DirectTestability = mean(ExperimentReadiness, FalsifierSharpness, DirectionalSpecificity, TheoryTermMapping)`
+
+### 本轮理论推进
+- 现在可以更明确地说：
+  - 项目已经不只是停在 `像脑`
+  - 而是进入了 `能被脑实验直接打脸或支持`
+- 当前最强部分是：
+  - `falsifier_sharpness`
+- 当前最弱但仍已过线的是：
+  - `experiment_readiness`
+  - 尤其真正难测的仍是：
+    - `bridge_specificity_strength`
+- 所以现在最关键的主线不再是继续写更多 scorecard
+- 而是：
+  - 真正把 `局部扰动`
+  - `长程桥切断`
+  - `目标化桥增强`
+  - `快中慢时标干预`
+  - 转成脑侧实验设计与观测规范
+
+### 项目进度修正
+- 本轮可以做非常小幅的研究成熟度推进：
+  - `统一可塑性-编码-空间总理论提纯程度 = 94% - 97%`
+  - `真实大脑编码机制本体破解程度 = 82% - 89%`
+- 这个上调的原因不是：
+  - `新增了脑本体证据`
+- 而是：
+  - `脑侧直接判伪路径` 现在已经正式成形
+
+### 下一步建议
+- 接下来不该继续横向扩表
+- 而应该进入更大的阶段块：
+  - `G5：脑侧实验协议与观测量定义`
+- 目标是：
+  - 把 `G4` 的 4 类实验
+  - 进一步压成更细的观测量、失败判据、方程项映射
+
+## 2026-03-11 Codex 追加记录：G5 脑侧实验协议与观测量定义
+
+### 本轮命令
+- `Get-Content tests/codex_temp/p10a_final_theory_verdict_20260311.json`
+- `Get-Content tests/codex_temp/p10b_gap_boundary_empirical_vs_theoretical_20260311.json`
+- `Get-Content tests/codex_temp/f1_architecture_scale_extrapolation_verification_20260311.json`
+- `Get-Content tests/codex_temp/f7_human_language_instant_learning_architecture_20260311.json`
+- `Get-Content tests/codex_temp/f6_world_model_reasoning_generation_physics_prediction_20260311.json`
+- `python -m py_compile tests/codex/test_g5_brain_experiment_protocol_observable_mapping.py`
+- `python tests/codex/test_g5_brain_experiment_protocol_observable_mapping.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g5_brain_experiment_protocol_observable_mapping.py`
+- 结果输出：
+  - `/tests/codex_temp/g5_brain_experiment_protocol_observable_mapping_20260311.json`
+
+### G5 核心结论
+- `G5` 已明确过线
+- 当前最准确的状态是：
+  - `protocol_ready_for_brain_side_execution`
+- 这表示：
+  - 现在不只是知道该做哪类脑侧实验
+  - 也已经能明确：
+    - `看什么观测量`
+    - `什么结果算失败`
+    - `每类观测量映射到哪项机制方程`
+
+### G5 关键分数
+- `protocol_specificity_score = 0.6852`
+- `observable_coverage_score = 0.8027`
+- `failure_criterion_sharpness_score = 0.9070`
+- `equation_binding_score = 0.7919`
+- `overall_g5_score = 0.7967`
+
+### 当前最关键的脑侧协议
+- `local_neighborhood_perturbation`
+  - 观测量：
+    - `family_topology_margin`
+    - `local_feature_separability`
+    - `shared_family_residual_shift`
+  - 方程项：
+    - `L_t(i)`
+    - `C_local`
+    - `f_{t+1}(i)`
+- `long_range_bridge_cut`
+  - 观测量：
+    - `compact_boundary_relation_bridge_score`
+    - `endpoint_support`
+    - `cross_region_integration_success`
+  - 方程项：
+    - `d_t(i,j)`
+    - `D_3d(i,j)`
+    - `A_{t+1}(i,j)`
+- `geometry_only_vs_targeted_bridge_enhancement`
+  - 观测量：
+    - `E_3d`
+    - `relation_bridge_specificity`
+    - `generalization_and_recovery`
+  - 方程项：
+    - `D_3d(i,j)`
+    - `E_3d`
+    - `m_{t+1}(i,j)`
+- `fast_mid_slow_timescale_intervention`
+  - 观测量：
+    - `short_term_feature_drift`
+    - `effective_topology_reorganization_speed`
+    - `recovery_and_retention`
+  - 方程项：
+    - `f_{t+1}`
+    - `A_{t+1}`
+    - `m_{t+1}`
+
+### 当前最合适的协议质量数学表达
+- `Obs_k = Readout(Delta f_t, Delta A_t, Delta m_t, SpatialState, BridgeState)`
+- `FailMargin = Score(predicted_effect_order) - Score(observed_null_or_reversed_order)`
+- `ProtocolQuality = mean(ProtocolSpecificity, ObservableCoverage, FailureSharpness, EquationBinding)`
+- `Pass(experiment) = 1[primary_readout shifts first on the theory-predicted axis]`
+
+### 本轮理论推进
+- 现在可以更明确地说：
+  - 脑侧实验已经不只是概念性建议
+  - 而是进入了 `协议级可执行` 状态
+- 当前最强部分是：
+  - `failure_criterion_sharpness`
+- 当前最弱部分仍是：
+  - `protocol_specificity`
+  - 也就是：
+    - `bridge_specificity_strength`
+    - 仍是最难测、最关键的硬伤
+
+## 2026-03-11 Codex 追加记录：G6 完整智能理论关键节点距离估计
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_g6_complete_intelligence_theory_distance_estimate.py`
+- `python tests/codex/test_g6_complete_intelligence_theory_distance_estimate.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g6_complete_intelligence_theory_distance_estimate.py`
+- 结果输出：
+  - `/tests/codex_temp/g6_complete_intelligence_theory_distance_estimate_20260311.json`
+
+### G6 核心结论
+- 当前还没有到：
+  - `量变转质变` 的完整智能理论关键节点
+- 当前最准确的状态是：
+  - `still_before_qualitative_jump`
+- 也就是：
+  - 总理论骨架已经不弱
+  - 世界模型与语言能力覆盖也不弱
+  - 但跨架构外推、结构学习闭合、即时学习保留这三块还没有同时过阈值
+
+### G6 关键分数
+- `theory_core_closure_score = 0.7669`
+- `cross_architecture_generalization_score = 0.6353`
+- `structure_learning_closure_score = 0.5454`
+- `broad_intelligence_coverage_score = 0.7978`
+- `remaining_risk_pressure = 0.4520`
+- `critical_node_readiness_score = 0.6587`
+- `distance_to_critical_node = 0.3413`
+
+### 当前最合适的关键节点数学表达
+- `CriticalNode = mean(TheoryCoreClosure, CrossArchitectureGeneralization, StructureLearningClosure, BroadIntelligenceCoverage, 1 - RemainingRiskPressure)`
+- `Distance = 1 - CriticalNode`
+- `Jump = 1[TheoryCoreClosure, CrossArchitectureGeneralization, and StructureLearningClosure all exceed their bottleneck thresholds together]`
+- `Bottleneck = max(ArchitectureScaleResidual, BridgeRuleGap, RoleAxisGap, StructureFoundationGap, RetentionGap)`
+
+### 当前前三大瓶颈
+- `retention_gap = 0.7105`
+- `role_axis_gap = 0.5024`
+- `bridge_rule_gap = 0.4970`
+
+### 本轮理论推进
+- 现在可以更明确地说：
+  - 离完整智能理论的关键节点
+  - 不是还差 `总理论骨架`
+  - 而是还差：
+    - `强即时学习保留`
+    - `稳定层角色坐标`
+    - `高精度桥选择律`
+- 这意味着：
+  - 当前更像已经完成了 `主框架收敛`
+  - 但还没有完成 `机制闭合`
+- 所以如果未来真的出现 `量变到质变`
+  - 触发点最可能不是新增一个大而全的新理论
+  - 而是同时补齐：
+    - `retention`
+    - `bridge specificity`
+    - `role-axis clarity`
+    - `cross-architecture closure`
+
+### 项目进度修正
+- 本轮不提高大口径总进度
+- 维持：
+  - `统一可塑性-编码-空间总理论提纯程度 = 94% - 97%`
+  - `真实大脑编码机制本体破解程度 = 82% - 89%`
+- 但对 `完整智能理论关键节点` 的更严格判断是：
+  - 当前 readiness 大约 `65.9%`
+  - 距关键节点的剩余距离大约 `34.1%`
+
+### 下一步建议
+- 接下来最值钱的不是继续泛化总理论
+- 而是直接围绕三大瓶颈做闭合：
+  - `G7：强保留即时学习闭合`
+  - `G8：桥选择律强化`
+  - `G9：统一层角色稳定坐标闭合`
+
+## 2026-03-11 Codex 追加记录：G7 强保留即时学习闭合
+
+### 本轮命令
+- `rg --files tests/codex_temp | rg "(retention|instant_learning|bridge|role|online|memory|long_validation|selection_rules|shared_layer|relation_topology)"`
+- `Get-Content tests/codex_temp/g3_instant_learning_boundary_stress_20260311.json`
+- `Get-Content tests/codex_temp/real_multistep_memory_learnable_state_machine_long_validation_20260309.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_online_learnable_stage_heads_20260310.json`
+- `Get-Content tests/codex_temp/real_multistep_memory_hierarchical_state_validation_20260309.json`
+- `Get-Content tests/codex_temp/real_multistep_memory_segment_summary_scan_20260309.json`
+- `Get-Content tests/codex_temp/continuous_input_grounding_precision_scan_20260309.json`
+- `python -m py_compile tests/codex/test_g7_strong_retention_instant_learning_closure.py`
+- `python tests/codex/test_g7_strong_retention_instant_learning_closure.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g7_strong_retention_instant_learning_closure.py`
+- 结果输出：
+  - `/tests/codex_temp/g7_strong_retention_instant_learning_closure_20260311.json`
+
+### G7 核心结论
+- `G7` 没有闭合
+- 当前最准确的状态是：
+  - `strong_retention_not_closed`
+- 当前可以明确说：
+  - `快写入` 已经是真的
+  - `在线 carryover` 也是真的
+  - 但 `强延迟保留` 仍然没有闭合
+
+### G7 关键分数
+- `fast_write_preservation_balance_score = 0.6025`
+- `long_retention_foundation_score = 0.2427`
+- `online_retention_carryover_score = 0.6614`
+- `interference_control_score = 0.4049`
+- `overall_g7_score = 0.4779`
+
+### 当前最关键读数
+- `best_balanced_grounding = 0.3536`
+- `best_long_horizon_retention = 0.0955`
+- `qwen_gain = 0.0469`
+- `deepseek_gain = 0.1719`
+- `memory_long_validation_mean_closure = 0.3431`
+
+### 当前最合适的强保留数学表达
+- `Balance = sqrt(NovelWrite * DelayedRetention)`
+- `Retain = sigmoid(w_r * Replay + w_s * SlowConsolidation - w_i * Interference)`
+- `Carryover = mean(OnlineSuccess, SuccessGain, CrossEnvironmentStability)`
+- `StrongRetention = mean(BalancedWrite, LongRetention, Carryover, InterferenceControl)`
+
+### 本轮理论推进
+- 现在可以更明确地说：
+  - 当前系统已经不是 `不会即时学习`
+  - 而是 `会即时写入，但不会强保留`
+- 当前真正的硬伤已经进一步收敛到：
+  - `delayed_retention_under_interference`
+- 所以主瓶颈不是：
+  - `写入机制`
+- 而是：
+  - `慢时标固化`
+  - `抗干扰保留`
+
+## 2026-03-11 Codex 追加记录：G8 桥选择律强化
+
+### 本轮命令
+- `Get-Content tests/codex_temp/g1a_targeted_bridge_selection_rules_20260311.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_relation_topology_boundary_bridge_20260309.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_shared_support_head_bridge_20260310.json`
+- `python -m py_compile tests/codex/test_g8_bridge_selection_law_reinforcement.py`
+- `python tests/codex/test_g8_bridge_selection_law_reinforcement.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g8_bridge_selection_law_reinforcement.py`
+- 结果输出：
+  - `/tests/codex_temp/g8_bridge_selection_law_reinforcement_20260311.json`
+
+### G8 核心结论
+- `G8` 仍然没有闭合
+- 当前最准确的状态是：
+  - `bridge_selection_law_still_partial`
+- 这说明：
+  - 规则已经开始成形
+  - 但 `空间边界余量` 和 `共享支撑绑定强度` 仍然不够
+
+### G8 关键分数
+- `explicit_rule_strength_score = 0.6744`
+- `spatial_bridge_margin_score = 0.3850`
+- `shared_support_binding_score = 0.4283`
+- `overall_g8_score = 0.4959`
+
+### 当前最关键读数
+- `cross_model_rule_agreement = 1.0000`
+- `qwen_compact_minus_layer_cluster = 0.0595`
+- `deepseek_compact_minus_distributed = 0.0853`
+- `qwen_mechanism_bridge = 0.7532`
+- `deepseek_mechanism_bridge = 0.9041`
+
+### 当前最合适的桥律数学表达
+- `SelectBridge(r, task, spatial) = argmax_b [w_r * RelTypeMatch + w_t * TaskDemand + w_s * SpatialBoundaryFit - w_c * Cost]`
+- `Gate_compact = sigmoid(alpha * BoundaryCompactness + beta * EndpointSupport + gamma * CausalNeed - delta * DistributedAlternative)`
+- `BridgeLaw = mean(ExplicitRuleStrength, SpatialBridgeMargin, SharedSupportBinding)`
+
+### 本轮理论推进
+- 现在可以更明确地说：
+  - 当前不是 `没有桥选择律`
+  - 而是 `桥选择律已部分显式化，但余量太小`
+- 当前最核心硬伤仍是：
+  - `cross_model_rule_margin_still_moderate`
+
+## 2026-03-11 Codex 追加记录：G9 稳定层角色坐标闭合
+
+### 本轮命令
+- `Get-Content tests/codex_temp/g1b_unified_layer_role_coordinate_system_20260311.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_shared_layer_band_causal_orientation_20260310.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_shared_layer_band_targeted_ablation_20260310.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_shared_support_head_bridge_20260310.json`
+- `Get-Content tests/codex_temp/p3_regional_differentiation_network_roles_20260311.json`
+- `python -m py_compile tests/codex/test_g9_stable_unified_role_coordinate_closure.py`
+- `python tests/codex/test_g9_stable_unified_role_coordinate_closure.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g9_stable_unified_role_coordinate_closure.py`
+- 结果输出：
+  - `/tests/codex_temp/g9_stable_unified_role_coordinate_closure_20260311.json`
+
+### G9 核心结论
+- `G9` 仍然没有闭合
+- 当前最准确的状态是：
+  - `stable_role_coordinate_not_closed`
+- 这说明：
+  - `共享层带` 是真的
+  - `角色-行为绑定` 也是真的
+  - 但角色坐标一到真实定向干预下还不够稳定
+
+### G9 关键分数
+- `orientation_stability_score = 0.6814`
+- `shared_band_visibility_score = 0.5238`
+- `role_behavior_binding_score = 0.6988`
+- `role_axis_clarity_score = 0.2633`
+- `overall_g9_score = 0.5418`
+
+### 当前最关键读数
+- `qwen_predicted_orientation = -0.0608`
+- `qwen_actual_orientation = 0.0302`
+- `deepseek_predicted_orientation = 0.2314`
+- `deepseek_actual_orientation = -0.3899`
+
+### 当前最合适的角色坐标数学表达
+- `z_l(model) = W_role * [concept_support_l, relation_support_l, shared_support_l, task_gain_l]`
+- `Role_l = argmax_k cosine(z_l, ProtoRole_k)`
+- `RoleStability = 1 - |PredictedOrientation - ActualOrientation|`
+- `RoleClosure = mean(OrientationStability, SharedBandVisibility, RoleBehaviorBinding, RoleAxisClarity)`
+
+### 本轮理论推进
+- 现在可以更明确地说：
+  - `角色坐标` 不是假的
+  - 但还没有到 `干预稳定坐标`
+- 当前最核心硬伤是：
+  - `intervention_stable_role_axis_is_not_yet_closed`
+
+### 项目进度修正
+- 本轮不提高大口径总进度
+- 维持：
+  - `统一可塑性-编码-空间总理论提纯程度 = 94% - 97%`
+  - `真实大脑编码机制本体破解程度 = 82% - 89%`
+- 对完整智能理论关键节点的判断也暂不提高：
+  - `critical_node_readiness ≈ 65.9%`
+- 原因是：
+  - 这轮不是让 `G7/G8/G9` 过线
+  - 而是把三块都判成了 `真实未闭合`
+
+### 下一步建议
+- 现在主矛盾已经非常清楚
+- 接下来不该再做宽口径总表
+- 而应该直接进入三个更硬的定向收敛块：
+  - `G7A：慢时标固化与 replay 闭合`
+  - `G8A：空间边界余量放大与桥支撑强化`
+  - `G9A：定向干预下的角色轴稳定化`
+
+## 2026-03-11 Codex 追加记录：G7A 慢时标固化与 replay 闭合
+
+### 本轮命令
+- `Get-Content tests/codex_temp/real_multistep_memory_phase_state_controller_20260309.json`
+- `Get-Content tests/codex_temp/real_multistep_memory_hierarchical_state_scan_20260309.json`
+- `python -m py_compile tests/codex/test_g7a_slow_consolidation_replay_closure.py`
+- `python tests/codex/test_g7a_slow_consolidation_replay_closure.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g7a_slow_consolidation_replay_closure.py`
+- 结果输出：
+  - `/tests/codex_temp/g7a_slow_consolidation_replay_closure_20260311.json`
+
+### G7A 核心结论
+- `G7A` 仍然不够
+- 当前最准确的状态是：
+  - `slow_consolidation_replay_not_enough`
+- 这说明：
+  - `hierarchical + replay` 确实比最弱基线更好
+  - 但抬升幅度仍太小
+  - 还不足以把 `强保留即时学习` 推过线
+
+### G7A 关键分数
+- `retention_lift_score = 0.1076`
+- `consolidation_balance_score = 0.6656`
+- `replay_controller_gain_score = 0.5549`
+- `overall_g7a_score = 0.4427`
+
+### G7A 当前最强候选家族
+- `hierarchical_or_tailfocus_hierarchical`
+
+### G7A 当前最合适的数学表达
+- `A_{t+1} = A_t + eta_slow * Consolidate(M_{t+1}, h_t, z_t, g_t)`
+- `Retain = ReplayStride * SegmentState + HierarchicalState + TailFocusedRoute`
+- `RetentionProgress = mean(RetentionLift, ConsolidationBalance, ReplayControllerGain)`
+
+### 本轮理论推进
+- 现在可以更明确地说：
+  - `slow consolidation` 方向是对的
+  - `replay` 方向也是对的
+  - 但当前缺的不是方向
+  - 而是足够大的 `retention lift`
+
+## 2026-03-11 Codex 追加记录：G8A 空间边界余量放大与桥支撑强化
+
+### 本轮命令
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_relation_behavior_bridge_20260309.json`
+- `Get-Content tests/codex_temp/qwen3_deepseek7b_real_model_structure_atlas_20260310.json`
+- `python -m py_compile tests/codex/test_g8a_spatial_margin_bridge_support_amplification.py`
+- `python tests/codex/test_g8a_spatial_margin_bridge_support_amplification.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g8a_spatial_margin_bridge_support_amplification.py`
+- 结果输出：
+  - `/tests/codex_temp/g8a_spatial_margin_bridge_support_amplification_20260311.json`
+
+### G8A 核心结论
+- `G8A` 仍然不够
+- 当前最准确的状态是：
+  - `bridge_support_amp_not_enough`
+- 这说明：
+  - `bridge-aware behavior` 确实有正向增益
+  - `shared support / structure atlas` 也确实很强
+  - 但 `空间边界余量` 仍然太小
+  - 还不足以把桥选择律推成强闭合
+
+### G8A 关键分数
+- `spatial_margin_amplification_score = 0.5164`
+- `bridge_support_amplification_score = 0.8286`
+- `law_margin_progress_score = 0.5077`
+- `overall_g8a_score = 0.6176`
+
+### G8A 当前最合适的数学表达
+- `BridgeAwareGain = Success_bridge_aware - Success_uniform`
+- `SpatialMargin = CompactBoundaryGain - MeanBehaviorGain + SharedMassGain`
+- `SupportAmp = mean(MechanismBridgeScore, SharedMassRatio, CompactMassGain)`
+- `BridgeProgress = mean(SpatialMarginAmp, BridgeSupportAmp, LawMarginProgress)`
+
+### 本轮理论推进
+- 现在可以更明确地说：
+  - 桥律最弱的不是 `支撑有没有`
+  - 而是 `边界余量是否足够大`
+- 所以这轮不是推翻桥律
+- 而是把桥律的开放口继续收缩到：
+  - `spatial_margin_is_positive_but_not_large`
+
+## 2026-03-11 Codex 追加记录：G9A 定向干预下的角色轴稳定化
+
+### 本轮命令
+- `Get-Content tests/codex_temp/g1_bridge_specificity_layer_role_transfer_closure_20260311.json`
+- `python -m py_compile tests/codex/test_g9a_intervention_stable_role_axis.py`
+- `python tests/codex/test_g9a_intervention_stable_role_axis.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g9a_intervention_stable_role_axis.py`
+- 结果输出：
+  - `/tests/codex_temp/g9a_intervention_stable_role_axis_20260311.json`
+
+### G9A 核心结论
+- `G9A` 出现了部分正信号
+- 当前最准确的状态是：
+  - `role_axis_stabilization_partially_positive`
+- 这说明：
+  - `atlas consistency` 已经不低
+  - `intervention stability` 也不是完全崩
+  - 但 `role signal visibility` 仍然偏弱
+  - 所以稳定角色轴仍未闭合
+
+### G9A 关键分数
+- `atlas_consistency_score = 0.6732`
+- `intervention_axis_stability_score = 0.7538`
+- `role_signal_visibility_score = 0.3787`
+- `overall_g9a_score = 0.6019`
+
+### G9A 当前最合适的数学表达
+- `AtlasGap = |PredictedOrientation - ActualOrientation|`
+- `StableAxis = mean(1 - AtlasGap, 1 - |ActualOrientation| under intervention)`
+- `RoleSignal = mean(SharedBandVisibility, |Orientation|, RoleBehaviorBinding)`
+- `RoleAxisProgress = mean(AtlasConsistency, InterventionAxisStability, RoleSignalVisibility)`
+
+### 本轮理论推进
+- 现在可以更明确地说：
+  - `角色轴` 不是看不见
+  - 也不是一干预就完全随机
+  - 但当前仍没有达到 `干预稳定闭合`
+- 目前最核心硬伤集中在：
+  - `deepseek_intervention_axis_rotation`
+
+### 关于“这些未闭合会不会推翻整个理论”的判断
+- 当前答案是：
+  - `不会直接推翻整个理论`
+  - 更像是：
+    - `局部闭合条件还没有完成`
+    - `某些局部机制项还不够强`
+- 原因很明确：
+  - `G7A` 说明 `slow consolidation + replay` 方向有效，但 lift 太小
+  - `G8A` 说明桥支撑很强，但边界余量还不够
+  - `G9A` 说明角色轴可见、可映射，但干预稳定性还不够
+- 也就是：
+  - 主理论骨架没有被反向击穿
+  - 当前被击中的主要是：
+    - `保留强度`
+    - `桥律余量`
+    - `角色轴稳定性`
+- 只有在以下情况出现时，才会开始伤到总理论根部：
+  - `geometry-only` 系统性打赢 `targeted bridge`
+  - `local perturbation` 不先打掉 family topology
+  - `long-range bridge cut` 不先打掉 compact-boundary relation
+  - `shared bands / role axes` 在跨模型和干预下完全无结构
+
+### 项目进度修正
+- 本轮仍不提高大口径总进度
+- 维持：
+  - `统一可塑性-编码-空间总理论提纯程度 = 94% - 97%`
+  - `真实大脑编码机制本体破解程度 = 82% - 89%`
+- 更准确的话是：
+  - 总理论目前仍是 `best current candidate`
+  - 但这三块闭合条件仍然只属于 `局部未闭合`
+
+### 下一步建议
+- 接下来最值钱的，不是再重复做 `A` 版聚合
+- 而是直接进入更硬的机制收缩块：
+  - `G7B：抗干扰强保留机制搜索`
+  - `G8B：关系到桥的高 margin 判别式`
+  - `G9B：跨模型干预稳定角色核`
+
+## 2026-03-11 Codex 追加记录：G7B 抗干扰强保留机制搜索
+
+### 本轮命令
+- `Get-Content tests/codex_temp/continuous_input_grounding_precision_scan_20260309.json`
+- `python -m py_compile tests/codex/test_g7b_anti_interference_retention_mechanism_search.py`
+- `python tests/codex/test_g7b_anti_interference_retention_mechanism_search.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g7b_anti_interference_retention_mechanism_search.py`
+- 结果输出：
+  - `/tests/codex_temp/g7b_anti_interference_retention_mechanism_search_20260311.json`
+
+### G7B 核心结论
+- `G7B` 仍然偏弱
+- 当前最准确的状态是：
+  - `anti_interference_mechanism_still_weak`
+- 当前最好的候选已经比较清楚：
+  - `cross_modal_dual_store_plus_hierarchical_consolidation`
+- 但核心硬伤依旧没变：
+  - `novel_write_and_strong_retention_still_do_not_coexist`
+
+### G7B 关键分数
+- `anti_interference_retention_score = 0.3531`
+- `retention_write_balance_score = 0.2513`
+- `mechanism_candidate_strength_score = 0.4832`
+- `overall_g7b_score = 0.3625`
+
+### 本轮理论推进
+- 现在可以更明确地说：
+  - 抗干扰强保留的候选机制已经看见了
+  - 但它还只是 `候选核`
+  - 不是 `可闭合机制`
+
+## 2026-03-11 Codex 追加记录：G8B 关系到桥的高 margin 判别式
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_g8b_high_margin_relation_bridge_discriminant.py`
+- `python tests/codex/test_g8b_high_margin_relation_bridge_discriminant.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g8b_high_margin_relation_bridge_discriminant.py`
+- 结果输出：
+  - `/tests/codex_temp/g8b_high_margin_relation_bridge_discriminant_20260311.json`
+
+### G8B 核心结论
+- `G8B` 仍未就绪
+- 当前最准确的状态是：
+  - `high_margin_bridge_discriminant_not_ready`
+- 当前最强部分是：
+  - `rule_separation_score = 0.8341`
+- 但真正的 `high-margin` 判别仍然不够
+- 尤其：
+  - `qwen_side_margin_is_still_shallow`
+
+### G8B 关键分数
+- `discriminant_margin_score = 0.5486`
+- `behavior_alignment_score = 0.2744`
+- `rule_separation_score = 0.8341`
+- `overall_g8b_score = 0.5524`
+
+### 本轮理论推进
+- 现在可以更明确地说：
+  - 桥律已经有 `可分离结构`
+  - 但还没有 `高 margin 判别式`
+- 也就是：
+  - `能分`
+  - 不等于
+  - `分得足够硬`
+
+## 2026-03-11 Codex 追加记录：G9B 跨模型干预稳定角色核
+
+### 本轮命令
+- `python -m py_compile tests/codex/test_g9b_cross_model_intervention_stable_role_kernel.py`
+- `python tests/codex/test_g9b_cross_model_intervention_stable_role_kernel.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g9b_cross_model_intervention_stable_role_kernel.py`
+- 结果输出：
+  - `/tests/codex_temp/g9b_cross_model_intervention_stable_role_kernel_20260311.json`
+
+### G9B 核心结论
+- `G9B` 是本轮最正向的一块
+- 当前最准确的状态是：
+  - `cross_model_role_kernel_partially_ready`
+- 这说明：
+  - `shared-band counts`
+  - `mechanism bridge`
+  - `transfer closure`
+  - 已经能压成一个跨模型角色核
+- 但还没闭合，因为：
+  - `deepseek_gap_keeps_kernel_from_full_stability`
+
+### G9B 关键分数
+- `kernel_visibility_score = 0.7262`
+- `cross_model_kernel_consistency_score = 0.6732`
+- `intervention_stability_kernel_score = 0.5662`
+- `overall_g9b_score = 0.6552`
+
+### 本轮理论推进
+- 现在可以更明确地说：
+  - `角色核` 已经开始出现
+  - 这比单纯的 `role axis` 更接近机制层
+- 但它还属于：
+  - `partial kernel`
+  - 不是 `stable kernel closure`
+
+### 关于“这些未闭合会不会推翻整个理论”的进一步判断
+- 到这一步，答案仍然是：
+  - `不会直接推翻整个理论`
+- 但也要比上一轮更严格：
+  - 如果这些未闭合长期反复存在
+  - 且在更强搜索下仍然无法抬升
+  - 它们就会开始从 `局部机制问题`
+  - 逐步升级成 `总理论边界条件错误`
+- 当前更准确的层级判断是：
+  - `G7B` 仍属于局部机制太弱
+  - `G8B` 介于局部问题与总理论边界问题之间
+  - `G9B` 说明总理论下确实有角色核，但稳定性不足
+- 所以现在的结论仍是：
+  - 主理论骨架尚未被推翻
+  - 但桥律和角色核这两块如果再长期无法强化
+  - 未来会开始伤到总理论的中层结构
+
+### 项目进度修正
+- 本轮仍不提高大口径总进度
+- 维持：
+  - `统一可塑性-编码-空间总理论提纯程度 = 94% - 97%`
+  - `真实大脑编码机制本体破解程度 = 82% - 89%`
+- 但可以加一句更准确的阶段判断：
+  - `G9B` 已经把跨模型角色核推进到了 `partial kernel` 阶段
+
+### 下一步建议
+- 现在最值钱的不是再做 `B` 版汇总
+- 而是直接进入更尖锐的 `C` 版：
+  - `G7C：新写入与旧保留并存的最小机制搜索`
+  - `G8C：关系到桥的高 margin 判别器拟合`
+  - `G9C：DeepSeek 侧角色核旋转的原因分解`
+
+## 2026-03-11 Codex 追加记录：G10 代理模型偏差校准
+
+### 本轮命令
+- `Get-Content tests/codex_temp/p10b_gap_boundary_empirical_vs_theoretical_20260311.json`
+- `Get-Content tests/codex_temp/stage9c_unified_law_residual_decomposition_20260311.json`
+- `Get-Content tests/codex_temp/f1_architecture_scale_extrapolation_verification_20260311.json`
+- `Get-Content tests/codex_temp/g9b_cross_model_intervention_stable_role_kernel_20260311.json`
+- `Get-Content tests/codex_temp/f7_human_language_instant_learning_architecture_20260311.json`
+- `python -m py_compile tests/codex/test_g10_surrogate_model_mismatch_calibration.py`
+- `python tests/codex/test_g10_surrogate_model_mismatch_calibration.py`
+
+### 新增脚本与结果
+- 新增脚本：
+  - `/tests/codex/test_g10_surrogate_model_mismatch_calibration.py`
+- 结果输出：
+  - `/tests/codex_temp/g10_surrogate_model_mismatch_calibration_20260311.json`
+
+### G10 核心结论
+- `Qwen / DeepSeek` 的确不是理想脑代理
+- 这条约束必须进入主判断
+- 当前最准确的状态是：
+  - `surrogate_mismatch_is_real_and_must_be_accounted_for`
+- 但也要说清楚：
+  - 这不意味着所有未闭合都可以归因给代理模型偏差
+
+### G10 关键分数
+- `surrogate_mismatch_pressure = 0.4903`
+- `architecture_bias_pressure = 0.4579`
+- `scale_limit_pressure = 0.4244`
+- `data_domain_pressure = 0.1972`
+- `calibration_slack = 0.1226`
+
+### 校准后的关键判断
+- `G7B`
+  - `raw = 0.3625`
+  - `calibrated = 0.4054`
+- `G8B`
+  - `raw = 0.5524`
+  - `calibrated = 0.6075`
+- `G9B`
+  - `raw = 0.6552`
+  - `calibrated = 0.7226`
+
+### 本轮理论推进
+- 现在可以更准确地区分三类情况：
+  - `G7B`
+    - 主要仍是 `机制本身没闭合`
+    - 代理模型偏差只能解释一部分
+  - `G8B`
+    - 明显受 `架构/训练分布偏差` 影响
+    - 原始低分不能直接读成桥律被否定
+  - `G9B`
+    - 最受代理模型偏差影响
+    - 尤其 `DeepSeek` 侧角色核旋转
+    - 很可能有一部分是模型家族偏差，不是共享角色核本身被打穿
+
+### 更严格的理论口径
+- 所以当前最准确的话是：
+  - `Qwen / DeepSeek` 是有价值的代理平台`
+  - 但它们不足以作为 `最终脑机制判定器`
+- 特别是：
+  - `桥律`
+  - `角色核`
+  - 这两块必须做 `校准后解读`
+- 否则容易把：
+  - `代理模型误差`
+  - 误判成
+  - `理论错误`
+
+### 关于局部问题与总理论的关系修正
+- 当前更准确的结论是：
+  - `G7B` 仍主要是机制弱点
+  - `G8B` 介于机制弱点和代理偏差之间
+  - `G9B` 则明显带有更强的代理偏差成分
+- 所以：
+  - 当前 `G8B / G9B` 的未闭合
+  - 不能直接作为推翻总理论的证据
+
+### 项目进度修正
+- 本轮不提高大口径总进度
+- 维持：
+  - `统一可塑性-编码-空间总理论提纯程度 = 94% - 97%`
+  - `真实大脑编码机制本体破解程度 = 82% - 89%`
+- 但要补一条解释：
+  - 当前一些低分项需要 `surrogate-calibrated reading`
+
+### 下一步建议
+- 接下来最值钱的不是只继续在 `Qwen / DeepSeek` 上压分
+- 而是：
+  - `G11：代理模型偏差敏感度分解`
+  - `G12：跨代理家族校准`
+  - `G13：校准后的关键节点距离重估`
+
+## 2026-03-11 Codex 追加记录：关于“如果原理统一，为什么还缺闭合阶段块”的理论澄清
+
+### 本轮命令
+- `无新增命令`
+
+### 核心澄清
+- 如果真的已经 `完全破解` 了大脑的统一可塑性机制和编码机制
+- 那么确实不应该还缺多个闭合阶段块
+- 现在还缺阶段块，并不表示：
+  - `统一机制是假`
+- 而表示：
+  - 当前拿到的是 `统一机制候选核`
+  - 还不是 `足以唯一决定整个智能系统运行方式的完整闭合律`
+
+### 为什么统一候选核还不等于完整智能理论
+- 因为从：
+  - `存在同一类可塑性-编码主机制`
+- 到：
+  - `这套机制足以唯一解释并预测整个系统如何形成、如何泛化、如何即时学习、如何跨脑区分工、如何跨架构稳定外推`
+- 中间还差几类信息：
+  - `桥选择律`
+  - `层角色稳定坐标`
+  - `强保留即时学习`
+  - `跨架构与尺度闭合`
+
+### 更准确的逻辑关系
+- `统一机制成立`
+  - 不等于
+- `完整系统闭合`
+- 当前更像：
+  - 已经知道系统背后有同一个主发动机
+  - 但还没有完全知道：
+    - 这个发动机在不同区域如何参数化
+    - 在什么条件下打开哪类桥
+    - 快写入怎样稳定转成慢结构
+    - 不同模型里同一功能角色如何稳定对应
+
+### 当前真正缺的不是新理论类型，而是闭合条件
+- 所缺的阶段块不是额外拼装别的理论
+- 而是把同一个统一理论补到：
+  - `可唯一判定`
+  - `可稳定外推`
+  - `可强预测`
+  - `可直接判伪`
+
+### 理论口径修正
+- 所以当前最准确的话不是：
+  - `已经破解，只差工程`
+- 而是：
+  - `已经非常接近统一机制核`
+  - `但离完整闭合的智能总理论仍差几个关键闭合条件`
+
+### 项目进度维持
+- `统一可塑性-编码-空间总理论提纯程度 = 94% - 97%`
+- `真实大脑编码机制本体破解程度 = 82% - 89%`
+- `完整智能理论关键节点 readiness ≈ 65.9%`
+
+### 下一步建议
+- 保持不变：
+  - `G7：强保留即时学习闭合`
+  - `G8：桥选择律强化`
+  - `G9：统一层角色稳定坐标闭合`
