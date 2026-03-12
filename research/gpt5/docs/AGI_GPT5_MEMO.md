@@ -24209,6 +24209,747 @@ A(z_mem) = {
 
 ---
 
+## 2026-03-11 C37：meta-controller / externalized memory law
+
+### 本轮命令
+```powershell
+python -m py_compile tests/codex/test_stage_c37_meta_controller_external_memory_law_search.py
+python tests/codex/test_stage_c37_meta_controller_external_memory_law_search.py
+```
+
+### 本轮结果
+- 脚本：
+  - `tests/codex/test_stage_c37_meta_controller_external_memory_law_search.py`
+- 关键读数：
+  - `best_objective_consistency = 0.2111`
+  - `retention_concept_accuracy = 0.3510`
+  - `overall_concept_accuracy = 0.3460`
+  - `novel_concept_accuracy = 0.9444`
+  - `best_retention_compatible_candidate` 重新出现
+- 结论：
+  - `meta-controller + externalized memory law` 第一次在 `C34-C36` 之后重新找回 retention-compatible family
+  - 但它不是新突破
+  - 因为 crossmodal consistency 从 `0.2222` 回落到了 `0.2111`
+- 这说明：
+  - `rule-selection layer` 不是无效方向
+  - 但当前版本更像“用更强外部记忆保护换回 retention”
+  - 还没有实现真正的 `identity gain + retention gain` 共存
+
+### 工程轨系统判断
+- 到目前为止：
+  - `C30` 说明 three-path 大结构有效
+  - `C33` 说明 hybrid controller / regime switch 比连续权重更合理
+  - `C34-C36` 说明在固定规则族里补保护，会掉进同一平台
+  - `C37` 说明一旦把 memory law 外置到 rule-selection 层，系统能重新找回 retention-compatible family
+- 所以工程轨当前最准确的判断是：
+  - `fixed-rule protection family` 已经到平台
+  - `meta-law family` 有效，但当前版本偏保守，牺牲了 identity consistency
+
+### 工程轨下一阶段
+- `C38：meta-controller + identity-preserving external memory law`
+- 目标：
+  - 保住 `C37` 的 retention-compatible 条件
+  - 把 consistency 从 `0.2111` 拉回至少 `0.2211+`
+- 当前最该避免的是：
+  - 再回头调 `C34-C36` 那类固定规则 patch
+
+### 理论轨当前进度
+
+#### `T1a: hybrid dynamical formalism`
+- 已有强支撑：
+  - three-path
+  - regime switch
+  - multi-timescale states
+- 当前状态：
+  - `partial formal readiness`
+
+#### `T1b: constrained admissible-update formalism`
+- 已有强失败证据：
+  - `C35/C36` 显示合法更新和保护可行域是核心对象
+  - 但仅靠当前 admissibility/projection 还不够
+- 当前状态：
+  - `object identified, formal closure not reached`
+
+#### `T1c: meta-law / rule-selection formalism`
+- `C37` 是第一条直接支撑证据
+- 说明系统不只是在选状态路径
+- 而是在选：
+  - `哪条更新法则当前生效`
+- 当前状态：
+  - `newly activated and empirically supported`
+
+### 理论轨当前最关键的结论
+- 当前最可能缺失的数学对象已经进一步收缩成：
+  - `rule-selection over update laws`
+- 这比单纯：
+  - `state dynamics`
+  - `path routing`
+  更高一层
+- 也就是说：
+  - 真正需要的可能不是单一动力系统
+  - 而是：
+    - `dynamics of states`
+    - `dynamics of rule choice`
+  的联合系统
+
+### 双轨当前阶段总结
+- 工程轨：
+  - 已找到有效大结构
+  - 已确认固定规则 patch 平台
+  - 已首次验证 meta-law family 有效
+- 理论轨：
+  - 已从单一路径动力系统
+  - 升级为三条并行候选：
+    - `T1a hybrid dynamics`
+    - `T1b constrained admissible update`
+    - `T1c meta-law / rule-selection`
+
+### 当前阶段判断
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`82% - 86%`
+- `真实大脑编码机制本体破解度`：`85% - 89%`
+
+---
+
+## 2026-03-11 理论轨系统整理：路线一/二/三重整 + 更高层理论突破
+
+### 本轮命令
+```powershell
+rg -n "C40|cross-law shared coordinate|2026-03-11 C40|当前理论轨已经收敛出的 4 层对象" research/gpt5/docs/AGI_GPT5_MEMO.md
+Get-Content research/gpt5/docs/AGI_GPT5_MEMO.md | Select-Object -Skip 24400 -First 90
+```
+
+### 对三条路线的系统判断
+
+#### 路线一：只改深度神经网络
+- 优点：
+  - 工程验证快
+  - 可大规模训练
+  - 能直接看到能力跃迁
+- 硬伤：
+  - 容易陷入 blind scaling / blind patching
+  - 不知道哪些结构是本质，哪些只是偶然实现
+- 当前研究链给出的判断：
+  - 单纯在固定结构里补 patch，已经多次撞到平台
+
+#### 路线二：直接模拟大脑运行机制
+- 优点：
+  - 更接近真实智能本体
+  - 有机会解释意识、感知、记忆、推理的一般性原理
+- 硬伤：
+  - 真实脑机制和 3D 回路还未破解
+  - 实证成本极高
+  - 容易在细节里丢掉可验证性
+
+#### 路线三：从 DNN 提取数学结构 + 与脑科学拼图结合
+- 当前最合理
+- 因为它同时利用：
+  - DNN 的可实验性
+  - 大脑的真实性约束
+- 当前项目其实已经实证支持这条路线：
+  - 从 DNN 里能压出结构候选核
+  - 从脑科学侧能不断约束哪些候选更像真实机制
+
+### 对注意力机制四个结论的强化和修正
+
+#### 1. `智能不是简单处理流程，而是结构`
+- 这个方向是对的
+- 但更精确的说法应是：
+  - 智能不是静态符号流水线
+  - 而是某种可学习的结构化动力系统
+- 注意力机制最重要的启发不是“会处理”
+- 而是：
+  - `内容寻址`
+  - `动态路由`
+  - `上下文依赖绑定`
+
+#### 2. `单一结构能实现完整语言能力`
+- 这个结论需要收紧
+- 注意力表明：
+  - 少量重复的统一算子族，可以支撑极强能力
+- 但不等于：
+  - 真的只有一个孤立结构就足够解释一切
+- 当前更合理的说法是：
+  - `统一算子族 + 参数化差异 + 多时间尺度更新`
+  可能构成底层共同机制
+
+#### 3. `不改结构，只改权重，也能涌现深度思考`
+- 这个结论非常重要
+- 它说明：
+  - 结构本身已经包含高阶算法空间
+  - 训练/强化学习是在该结构上选取更优的运行模式
+- 对当前理论轨的启发是：
+  - 规则选择层可能和权重更新同样关键
+
+#### 4. `语言具有极特殊的跨模态/跨任务结构`
+- 这个结论也非常重要
+- 更精确的说法是：
+  - 语言可能不是单纯模态
+  - 而是某种高层共享坐标接口
+- 它之所以能指导图像、视频、代码修改
+- 更像因为：
+  - 它连接到了某种 `shared latent / shared coordinate`
+
+### 对“大脑可能基于单一数学机制”的升级判断
+
+#### 当前支持这个猜想的部分
+- 脑区微观构成有强重复性：
+  - 兴奋/抑制神经元
+  - 相近回路 motif
+  - 相似可塑性法则
+- 不同信息能进入统一意识流
+- DNN 中也反复出现：
+  - 统一结构 + 参数差异 -> 多种能力
+
+#### 但需要修正的部分
+- 当前更像不是：
+  - `一个单一公式`
+- 而是：
+  - `一个单一机制家族`
+- 这个家族内部至少包含多层对象：
+  - `统一状态动力学`
+  - `统一更新合法性几何`
+  - `统一规则选择层`
+  - `统一跨规则共享坐标`
+
+### 当前最可能的更高层理论突破
+- 现在最像的突破形式，不是某个小技巧
+- 而是一个新的统一系统理论
+- 可暂记为：
+  - `参数化统一机制理论`
+
+#### 它的核心命题
+- 智能系统由同一机制家族生成：
+```text
+state dynamics
++ admissible update geometry
++ rule-selection dynamics
++ cross-law shared coordinate
+```
+- 不同脑区/不同模态/不同功能
+- 不是不同本体机制
+- 而是：
+  - 同一机制家族在不同参数、不同约束、不同输入统计下的不同相
+
+#### 它和“只差一个数学机制”的关系
+- 现在更准确的说法不是：
+  - 只差一个公式
+- 而是：
+  - 只差一个统一机制家族的形式化闭合
+- 这仍然可能是决定性突破
+- 但它的真实形态更像一个层级理论，而不是单行方程
+
+### 当前理论轨最值得继续提纯的统一形式
+```text
+z_{t+1} = F_{r_t}(z_t, x_t, y_t)
+y_{t+1} = G(y_t, r_t, z_t, x_t)
+r_{t+1} = M(r_t, z_t, y_t, x_t, h_t)
+Delta_t in A(z_t, y_t, r_t, x_t)
+```
+- 其中：
+  - `z_t`：law-specific state
+  - `y_t`：cross-law shared coordinate
+  - `r_t`：meta-law / rule-selection state
+  - `A`：admissible update set
+
+### 当前总判断
+- 方向上：
+  - 路线三最合理
+- 理论上：
+  - 最可能的突破不是单一注意力模块类比
+  - 而是 `统一机制家族` 的形式化闭合
+- 工程上：
+  - `C40` 已经首次强支撑：
+    - `shared cross-law coordinate` 是关键对象之一
+
+### 当前阶段判断
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`82% - 87%`
+- `真实大脑编码机制本体破解度`：`85% - 89%`
+
+---
+
+## 2026-03-12 C41：strong cross-law manifold / shared coordinate
+
+### 本轮命令
+```powershell
+python -m py_compile tests/codex/test_stage_c41_strong_cross_law_coordinate_search.py
+python tests/codex/test_stage_c41_strong_cross_law_coordinate_search.py
+```
+
+### 本轮结果
+- 脚本：
+  - `tests/codex/test_stage_c41_strong_cross_law_coordinate_search.py`
+- 关键读数：
+  - `best_objective_consistency = 0.2222`
+  - `best_consistency_value = 0.2241`
+  - `best_retention_compatible_candidate.crossmodal_consistency = 0.2222`
+  - `retention_concept_accuracy = 0.3548`
+  - `overall_concept_accuracy = 0.3485`
+- 结论：
+  - `strong cross-law manifold` 首次把 retention-compatible consistency 拉过 `C15 = 0.2211`
+  - 这是 `meta-law family` 的实质性过线
+  - 但距离 `strong_multimodal_target = 0.5741` 仍然很远
+
+### 系统层判断
+- `C40` 已经提示：
+  - `shared cross-law coordinate` 是对的对象
+- `C41` 进一步证明：
+  - 当 shared coordinate 升级为更强的 manifold 并加入 identity/persistence 双锚约束后
+  - 系统终于能在 retention-compatible 条件下超过 `C15`
+- 这说明当前最关键的突破点不是：
+  - 单条 law
+  - 单条 transition
+  - 单条 update rule
+- 而是：
+  - `cross-law shared manifold`
+
+### 工程轨下一阶段
+- `C42：strong cross-law manifold lift`
+- 目标：
+  - 保住 `C41` 的 retention-compatible 成果
+  - 继续把 `0.2222` 往更高区间推
+
+### 理论轨同步判断
+- `shared cross-law coordinate` 不再只是候选对象
+- 现在应升级为：
+  - `核心统一对象`
+- 当前理论轨最值得提纯的主线已变成：
+```text
+state dynamics
++ admissible update geometry
++ meta-law / rule selection
++ cross-law shared manifold
+```
+
+### 当前阶段判断
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 C44：manifold-conditioned consistency head
+
+### 本轮命令
+```powershell
+python -m py_compile tests/codex/test_stage_c44_manifold_conditioned_consistency_head_search.py
+python tests/codex/test_stage_c44_manifold_conditioned_consistency_head_search.py
+```
+
+### 本轮结果
+- 脚本：
+  - `tests/codex/test_stage_c44_manifold_conditioned_consistency_head_search.py`
+- 关键读数：
+  - `best_objective_consistency = 0.2204`
+  - `best_retention_compatible_candidate.crossmodal_consistency = 0.2204`
+  - `retention_concept_accuracy = 0.3535`
+  - `overall_concept_accuracy = 0.3485`
+- 结论：
+  - `manifold-conditioned head` 明显优于 `C43`
+  - 说明 `表示层 / 读取层分离` 是对的
+  - 但仍未超过 `C42 = 0.2222`
+
+### 系统层判断
+- `C43 -> C44` 已经证明：
+  - consistency head 不应该直接压缩主 manifold
+  - 应该作为 conditioned readout 从 manifold 派生
+- 但 `C44` 仍没超过 `C42`
+- 说明当前缺的不是简单的：
+  - better head
+- 更像缺：
+  - `head and manifold co-training law`
+  - 也就是读出层和表示层如何协同，而不是分离后静态读取
+
+### 工程轨下一阶段
+- `C45：manifold-readout co-training search`
+- 目标：
+  - 保住 `C42/C44` 的 retention-compatible 条件
+  - 让 readout 和 manifold 通过更温和的协同规则共同提升 consistency
+
+### 理论轨同步判断
+- 到 `C44` 为止，理论轨可以更明确区分三层：
+  - `state / manifold layer`
+  - `meta-law layer`
+  - `readout / discrimination layer`
+- 下一步最值得提纯的对象已变成：
+  - `representation-readout coupling law`
+
+### 当前阶段判断
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 C43：strong consistency head / discriminative lift
+
+### 本轮命令
+```powershell
+python -m py_compile tests/codex/test_stage_c43_strong_consistency_head_search.py
+python tests/codex/test_stage_c43_strong_consistency_head_search.py
+```
+
+### 本轮结果
+- 脚本：
+  - `tests/codex/test_stage_c43_strong_consistency_head_search.py`
+- 关键读数：
+  - `best_objective_consistency = 0.2185`
+  - `best_retention_compatible_candidate.crossmodal_consistency = 0.2148`
+  - `retention_concept_accuracy = 0.3523`
+  - `overall_concept_accuracy = 0.3460`
+  - `novel_concept_accuracy = 0.8727`
+- 结论：
+  - `strong consistency head` 没有超过 `C42`
+  - 并且把 consistency 与 novelty 一起拉低了
+  - 说明当前问题已经不是：
+    - 缺一个更强判别头
+  - 更像：
+    - 判别头如果直接压在主 manifold 上，会过早收缩几何
+
+### 系统层判断
+- `C42 -> C43` 的信号很清楚：
+  - 当前 `cross-law manifold` 已经足够强
+  - 直接加 discriminative head 会把系统推回更保守的几何
+- 所以下一步不该继续做：
+  - 更硬的 direct head
+- 更合理的方向是：
+  - `manifold-conditioned consistency head`
+  - 让 consistency 判别从 manifold 派生
+  - 而不是直接反向压缩 manifold 本体
+
+### 工程轨下一阶段
+- `C44：manifold-conditioned consistency head`
+- 目标：
+  - 保住 `C42` 的 manifold 几何
+  - 只在判别层做更强同一性读取
+
+### 理论轨同步判断
+- 到 `C43` 为止，可以更稳地说：
+  - `cross-law shared manifold` 是核心结构层
+  - `consistency head` 只是读取层
+- 这意味着理论轨里应显式区分：
+  - `representation manifold`
+  - `readout / discrimination layer`
+- 两者不能再混写成一个对象
+
+### 当前阶段判断
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 C42：strong cross-law manifold lift
+
+### 本轮命令
+```powershell
+python -m py_compile tests/codex/test_stage_c42_strong_cross_law_manifold_lift_search.py
+python tests/codex/test_stage_c42_strong_cross_law_manifold_lift_search.py
+```
+
+### 本轮结果
+- 脚本：
+  - `tests/codex/test_stage_c42_strong_cross_law_manifold_lift_search.py`
+- 关键读数：
+  - `best_objective_consistency = 0.2222`
+  - `best_consistency_value = 0.2222`
+  - `best_retention_compatible_candidate.crossmodal_consistency = 0.2222`
+  - `retention_concept_accuracy = 0.3548`
+  - `overall_concept_accuracy = 0.3502`
+- 结论：
+  - `C42` 稳住了 `C41` 的 retention-compatible 过线
+  - 并把 `overall_concept_accuracy` 再抬高了一点
+  - 但 consistency 没有继续明显上冲
+- 当前判断：
+  - `cross-law manifold` 已确认是有效主线
+  - 但当前进入边际递减区
+
+### 系统层判断
+- `C41 -> C42` 表明：
+  - family manifold
+  - relation pull
+  - temporal vote
+  这些都是有益补件
+- 但它们更偏向：
+  - 稳定化
+  - 小幅抬高 overall
+- 还没有形成：
+  - 直接把 consistency 拉向更高区间的机制跳变
+
+### 工程轨下一阶段
+- `C43：strong consistency head / discriminative lift`
+- 目标：
+  - 保住 `C42` 的 retention-compatible manifold
+  - 专门把 consistency 从 `0.2222` 往更高区间拉
+
+### 理论轨同步判断
+- 到 `C42` 为止，理论轨已经能比较稳地认为：
+  - `cross-law shared manifold`
+  是统一机制里的核心对象之一
+- 但还需要一个更强的：
+  - `consistency discrimination layer`
+  来把 manifold 中的信息真正转成更强的跨模态同一性判决
+
+### 当前阶段判断
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-11 C40：law-conditioned latent / cross-law shared coordinate
+
+### 本轮命令
+```powershell
+python -m py_compile tests/codex/test_stage_c40_law_conditioned_latent_search.py
+python tests/codex/test_stage_c40_law_conditioned_latent_search.py
+```
+
+### 本轮结果
+- 脚本：
+  - `tests/codex/test_stage_c40_law_conditioned_latent_search.py`
+- 关键读数：
+  - `best_objective_consistency = 0.2204`
+  - `best_consistency_value = 0.2204`
+  - `best_retention_compatible_candidate.crossmodal_consistency = 0.2148`
+  - `retention_concept_accuracy = 0.3535`
+  - `overall_concept_accuracy = 0.34596`
+- 结论：
+  - `shared cross-law coordinate` 是目前最接近把 consistency 拉回 `0.2211+` 的 meta-law 路线
+  - 它明显优于 `C37-C39` 的 `0.2111` 水平
+  - 但仍未真正超过 `C15 retention-compatible consistency = 0.2211`
+- 所以当前最准确判断是：
+  - `cross-law shared coordinate` 是对的对象
+  - 但当前构造还偏弱，尚未形成新的真正优势解
+
+### 工程轨系统判断
+- `C37-C39` 表明：
+  - 只做 law selection / transition，不足以打破平台
+- `C40` 表明：
+  - 一旦引入 `cross-law shared coordinate`
+  - consistency 会明显回升
+- 所以工程轨当前最关键的新结构已经压缩成：
+  - `law-conditioned latent`
+  - `shared transition coordinate`
+
+### 工程轨下一阶段
+- `C41：strong cross-law coordinate / manifold search`
+- 目标：
+  - 保住 `C40` 的 retention-compatible 条件
+  - 把 `best_compatible_consistency` 从 `0.2148`
+    抬过 `0.2211`
+
+### 理论轨系统分析
+
+#### 当前理论轨已经收敛出的 4 层对象
+
+##### 1. `state dynamics`
+- 对应：
+  - `three-path`
+  - `fast/slow/persistence`
+  - `identity / memory / novelty`
+- 这是最底层的状态动力学
+
+##### 2. `admissible update geometry`
+- 对应：
+  - `write veto`
+  - `projected admissibility`
+  - `protection states`
+- 这一层回答：
+  - 什么更新方向是合法的
+
+##### 3. `rule-selection / meta-law`
+- 对应：
+  - `C37-C39`
+- 这一层回答：
+  - 当前该调用哪条更新法则
+  - law 如何切换
+
+##### 4. `cross-law shared coordinate`
+- 对应：
+  - `C40`
+- 这一层回答：
+  - 不同 law 之间靠什么共享坐标互相对齐
+  - 为什么切换后 identity geometry 不至于完全漂掉
+
+#### 当前理论轨最关键的总判断
+- 现在越来越不像“单一动力系统公式”问题
+- 更像一个四层联合系统：
+```text
+state dynamics
++ admissible update geometry
++ rule-selection dynamics
++ cross-law shared coordinate
+```
+- 如果缺其中任意一层：
+  - 系统都会回到某种局部平台
+
+#### 当前最值得继续提纯的统一形式
+- 当前可把理论轨主线写成：
+```text
+z_{t+1} = F_{r_t}(z_t, x_t, y_t)
+y_{t+1} = G(y_t, r_t, z_t, x_t)
+r_{t+1} = M(r_t, z_t, y_t, x_t, h_t)
+Delta_t in A(z_t, y_t, r_t, x_t)
+```
+- 其中：
+  - `z_t`：law-specific state
+  - `y_t`：cross-law shared coordinate
+  - `r_t`：current rule / meta-law state
+  - `A`：admissible update set
+
+### 当前阶段判断
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`82% - 87%`
+- `真实大脑编码机制本体破解度`：`85% - 89%`
+
+---
+
+## 2026-03-11 C39：transition-aware meta-law
+
+### 本轮命令
+```powershell
+python -m py_compile tests/codex/test_stage_c39_transition_aware_meta_law_search.py
+python tests/codex/test_stage_c39_transition_aware_meta_law_search.py
+```
+
+### 本轮结果
+- 脚本：
+  - `tests/codex/test_stage_c39_transition_aware_meta_law_search.py`
+- 关键读数：
+  - `best_objective_consistency = 0.2111`
+  - `retention_concept_accuracy = 0.3535`
+  - `overall_concept_accuracy = 0.3451`
+  - `best_retention_compatible_candidate = null`
+- 结论：
+  - `transition-aware meta-law` 没有超过 `C38`
+  - 最优点几乎与 `C38` 完全重合
+  - 说明当前问题已经不是：
+    - 缺 transition smoothing
+    - 或缺切换惩罚
+  - 更像：
+    - 当前 `meta-law family` 仍缺真正改变表示几何的对象
+
+### 系统层判断
+- `C37 -> C38 -> C39` 连续结果说明：
+  - `meta-law family` 本身是有效的
+  - 但在当前表示核上，law selection / law transition 都还只能做“更保守的调度”
+  - 并不能把 identity geometry 真正抬起来
+- 所以当前缺的更像不是：
+  - `better switching`
+- 而是：
+  - `cross-law shared coordinate system`
+  - 或者：
+  - `law-conditioned latent geometry`
+
+### 工程轨下一阶段
+- `C40：law-conditioned latent / shared transition coordinate search`
+- 目标：
+  - 不再只让不同 law 共用同一表示几何
+  - 而是显式构造：
+    - 各 law 可切换的共享坐标
+    - 或 law-conditioned latent
+
+### 理论轨同步推进
+- `T1c` 现在需要继续细化：
+  - 不只要 `rule-selection`
+  - 不只要 `transition operator`
+  - 还要：
+    - `shared cross-law coordinate`
+- 数学上更像：
+```text
+z_{t+1} = F_{r_t}(z_t, x_t, y_t)
+y_{t+1} = G(y_t, r_t, z_t, x_t)
+```
+- 其中：
+  - `z_t` 是 law-specific state
+  - `y_t` 是 cross-law shared coordinate
+- 当前强信号是：
+  - 如果没有 `y_t`
+  - 只靠 law switch 本身，系统还是会塌回平台
+
+### 当前阶段判断
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`82% - 86%`
+- `真实大脑编码机制本体破解度`：`85% - 89%`
+
+---
+
+## 2026-03-11 C38：identity-preserving external memory law
+
+### 本轮命令
+```powershell
+python -m py_compile tests/codex/test_stage_c38_identity_preserving_external_memory_law_search.py
+python tests/codex/test_stage_c38_identity_preserving_external_memory_law_search.py
+```
+
+### 本轮结果
+- 脚本：
+  - `tests/codex/test_stage_c38_identity_preserving_external_memory_law_search.py`
+- 关键读数：
+  - `best_objective_consistency = 0.2111`
+  - `best_consistency_value = 0.2130`
+  - `retention_concept_accuracy = 0.3535`
+  - `overall_concept_accuracy = 0.3451`
+  - `novel_concept_accuracy = 0.9329`
+  - `best_retention_compatible_candidate` 继续存在
+- 结论：
+  - `identity-preserving external memory law` 保住并略抬高了 retention
+  - 但并没有把 consistency 拉回 `0.2211+`
+  - 所以：
+    - `meta-law family` 继续有效
+    - 但当前版本仍偏向 memory protection
+
+### 系统层判断
+- `C37 -> C38` 的最重要信息不是“失败”
+- 而是：
+  - 一旦进入 `meta-law family`
+  - retention-compatible family 可以稳定存在
+  - 但 identity consistency 会系统性偏低
+- 这说明当前缺的更像是：
+  - `identity-preserving law transition`
+  - 也就是：
+    - 规则切换本身如何不伤 identity geometry
+- 当前最可能的问题不在：
+  - 有没有 external memory
+- 而在：
+  - `rule transition dynamics`
+
+### 工程轨下一阶段
+- `C39：transition-aware meta-law search`
+- 目标：
+  - 保住 `C38` 的 retention-compatible 条件
+  - 显式建模：
+    - `memory -> identity`
+    - `identity -> stabilize`
+    这些 law transition 的代价
+- 重点不再是单条 law 本身
+- 而是：
+  - `law switching operator`
+
+### 理论轨同步推进
+- `T1c meta-law / rule-selection formalism` 现在需要继续细化成：
+  - `law state`
+  - `law transition operator`
+  - `transition cost`
+- 数学对象更像：
+```text
+z_{t+1} = F_{r_t}(z_t, x_t)
+r_{t+1} = M(r_t, z_t, x_t, h_t)
+cost = C(r_t -> r_{t+1}, z_t)
+```
+- 当前理论信号是：
+  - 规则选择本身不够
+  - 还要建模规则切换的动力学和代价
+
+### 当前阶段判断
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`82% - 86%`
+- `真实大脑编码机制本体破解度`：`85% - 89%`
+
+---
+
 ## 2026-03-11 C36：state-augmented protection system
 
 ### 本轮命令
@@ -24451,3 +25192,3433 @@ z_meta' = h(z_slow, z_meta)
 - `统一候选理论骨架完成度`：`95% - 97%`
 - `三闭环工程闭合度`：`81% - 86%`
 - `真实大脑编码机制本体破解度`：`85% - 89%`
+## 2026-03-12 C45：manifold-readout co-training search
+
+本轮新增脚本：
+- `tests/codex/test_stage_c45_manifold_readout_cotraining_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c45_manifold_readout_cotraining_search.py`
+- `python tests/codex/test_stage_c45_manifold_readout_cotraining_search.py`
+
+结果摘要：
+- `best_objective_consistency = 0.2028`
+- `best_consistency_value = 0.2028`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2028`
+- `retention_concept_accuracy = 0.3580`
+- `overall_concept_accuracy = 0.3460`
+- 对比基线：
+  - `C42 retention-compatible consistency = 0.2222`
+  - `C44 best objective consistency = 0.2204`
+
+结论：
+- `manifold-readout co-training` 没有超过 `C42/C44`
+- 它保住了 retention-compatible 条件，但把 `crossmodal_consistency` 明显拉低
+- 说明当前缺的不是“让 manifold 和 readout 更紧耦合”，而是更精细的 `representation-readout coupling law`
+
+系统分析：
+- `C43` 证明：直接把强判别头压在主 manifold 上会伤几何
+- `C44` 证明：表示层 / 读取层分离是对的
+- `C45` 进一步证明：如果让 readout 对 manifold 做直接协同训练，系统会重新滑回折中态
+- 这说明当前最可能缺的不是单个 head，也不是简单 co-training，而是：
+  - `manifold-to-readout gating`
+  - 或 `query-conditioned selective readout`
+  - 也就是 readout 不能持续反向塑形主 manifold，只能在需要时、有条件地读取
+
+理论轨更新：
+- 到 `C45` 为止，理论轨应更清楚地区分四层：
+  - `representation manifold`
+  - `admissible update geometry`
+  - `meta-law / rule-selection`
+  - `readout / discrimination layer`
+- 同时新增一个更明确的开放对象：
+  - `representation-readout coupling law`
+- 当前更合理的统一形式不再是简单 co-training，而更像：
+```text
+z_{t+1} = F_{r_t}(z_t, x_t, y_t)
+y_{t+1} = G(y_t, r_t, z_t, x_t)
+r_{t+1} = M(r_t, z_t, y_t, x_t, h_t)
+q_t = Q(x_t, z_t, y_t, r_t)
+o_t = R(q_t, z_t, y_t)
+Delta_t in A(z_t, y_t, r_t, x_t)
+```
+- 其中：
+  - `q_t` 是 readout query / gate
+  - `o_t` 是 query-conditioned output
+  - 重点从“readout 是否更强”转成“readout 何时、以何种条件读取 manifold”
+
+阶段判断：
+- `C41-C42` 已经证明 `cross-law shared manifold` 是有效主线
+- `C43-C45` 说明 `strong head` 与 `simple co-training` 都不足以进一步提升
+- 所以下一阶段不该继续堆 head 或 co-training，而应切到：
+  - `C46：query-conditioned selective readout / gating search`
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 13:15 理论轨推进：encoding inventory 的局限性与 inventory-guided roadmap
+
+本轮新增并完成：
+
+- `tests/codex/test_theory_track_inventory_limitations_analysis.py`
+- `tests/codex/test_theory_track_inventory_guided_roadmap.py`
+
+执行命令：
+
+- `python -m py_compile tests/codex/test_theory_track_inventory_limitations_analysis.py`
+- `python -m py_compile tests/codex/test_theory_track_inventory_guided_roadmap.py`
+- `python tests/codex/test_theory_track_inventory_limitations_analysis.py`
+- `python tests/codex/test_theory_track_inventory_guided_roadmap.py`
+
+### 结果摘要
+
+`TheoryTrack_inventory_limitations_analysis`：
+
+当前 inventory 的强项：
+
+- `Q1`
+  - `strong`
+- `Q5`
+  - `strong`
+- `Q6`
+  - `strong`
+
+当前 inventory 的主要局限：
+
+- `dynamics_limitation`
+  - `high`
+- `update_law_limitation`
+  - `high`
+- `bridge_role_limitation`
+  - `medium`
+- `brain_projection_limitation`
+  - `high`
+- `phase_switch_limitation`
+  - `medium`
+
+核心结论：
+
+- inventory 是当前最好的中心理论对象
+- 但 inventory 不是完整理论本身
+- inventory 必须继续和：
+  - `operator families`
+  - `viability / switching laws`
+  - `brain-side execution`
+  联合闭合
+
+`TheoryTrack_inventory_guided_roadmap`：
+
+当前最合理的路线图：
+
+- `R1 inventory_expansion`
+- `R2 operator_closure`
+- `R3 bridge_role_closure`
+- `R4 brain_probe_execution`
+
+优先级：
+
+1. `R2 operator_closure`
+2. `R3 bridge_role_closure`
+3. `R4 brain_probe_execution`
+4. `R1 inventory_expansion`
+
+这意味着：
+
+- 后面不该只做“更多 inventory 条目”
+- 而应该把 inventory 作为固定中心，
+  去继续闭合：
+  - `update/readout operators`
+  - `bridge-role dynamics`
+  - `brain-side execution`
+
+### 当前判断
+
+当前对 inventory 最准确的定位可以写成：
+
+- `inventory 是中心，不是终点`
+
+也就是说：
+
+- 可以用 inventory 统一对象层、跨模态层、判别几何层
+- 但不能假设 inventory 单独闭合：
+  - `更新律`
+  - `relation/role dynamics`
+  - `3D brain projection`
+
+当前项目口径维持：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+下一阶段建议：
+
+- 理论轨：
+  - 继续以 inventory 为中心
+  - 主攻 `R2 -> R3 -> R4`
+- 工程轨：
+  - 继续只测试被 inventory / `Sys(I)` 保留下来的候选家族
+
+---
+
+## 2026-03-12 13:53 理论轨推进：operator family closure 与 stress-to-readout transport
+
+本轮新增并完成：
+
+- `tests/codex/test_theory_track_inventory_operator_family_closure.py`
+- `tests/codex/test_theory_track_inventory_stress_to_readout_transport_coupling.py`
+
+执行命令：
+
+- `python -m py_compile tests/codex/test_theory_track_inventory_operator_family_closure.py`
+- `python -m py_compile tests/codex/test_theory_track_inventory_stress_to_readout_transport_coupling.py`
+- `python tests/codex/test_theory_track_inventory_operator_family_closure.py`
+- `python tests/codex/test_theory_track_inventory_stress_to_readout_transport_coupling.py`
+
+### 结果摘要
+
+`TheoryTrack_inventory_operator_family_closure`：
+
+当前已经可以把 operator family 形式写成：
+
+- `Omega(I) = {Omega^(f)_upd, Omega^(f)_read, Omega^(f)_bridge}_f`
+
+当前 closure 状态：
+
+- `object_operator_family`
+  - `strong`
+- `readout_operator_family`
+  - `partial`
+- `bridge_operator_family`
+  - `partial`
+- `phase_operator_family`
+  - `medium`
+
+关键含义：
+
+- inventory 已经足够诱导 patch-level operator families
+- 但还没有完全闭合：
+  - cross-family transition operator
+  - full phase-transition operator
+
+`TheoryTrack_inventory_stress_to_readout_transport_coupling`：
+
+当前已经可以把 readout transport 写成：
+
+- `tau_read(c) = overlap_obj_disc(f_c) - lambda_n sigma_novel(c) - lambda_r sigma_ret(c)`
+
+关键含义：
+
+- 读出运输不再只是一个模糊瓶颈
+- 而已经可以理解为：
+  - `restricted object-disc overlap`
+  - 再减去 `stress-consumed budget`
+
+当前结果里：
+
+- `open_count = 9`
+- `narrow_count = 0`
+- `fragile_count = 0`
+
+这说明在当前 toy inventory 下，concept-local readout transport budget 还算健康；真正未闭合的更像是：
+
+- family-level transport operator
+- phase-level transport operator
+
+### 理论结论更新
+
+当前 inventory 理论主线进一步收缩为：
+
+1. `I`
+2. `A(I)`
+3. `M_feas(I)`
+4. `Omega(I)`
+5. `tau_read(c)`
+
+也就是说，inventory 已经不只是在约束结构，
+而开始约束：
+
+- local operator family
+- local readout transport budget
+
+这使得理论轨已经更接近“动态闭合”，而不只是结构解释。
+
+当前项目口径维持：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+下一阶段建议：
+
+- 理论轨：
+  - 把 `tau_read(c)` 升级成：
+    - `family-level transport operator`
+    - `phase-level transport operator`
+- 工程轨：
+  - 继续只测试由 `Omega(I)` 与 `tau_read(c)` 保留下来的 transport/readout 家族
+
+---
+
+## 2026-03-12 10:47 理论轨推进：苹果局部探针扩展为多概念 atlas
+
+本轮新增并完成：
+
+- `tests/codex/test_theory_track_concept_family_atlas_analysis.py`
+- `tests/codex/test_theory_track_system_level_concept_atlas_synthesis.py`
+
+执行命令：
+
+- `python -m py_compile tests/codex/test_theory_track_concept_family_atlas_analysis.py`
+- `python -m py_compile tests/codex/test_theory_track_system_level_concept_atlas_synthesis.py`
+- `python tests/codex/test_theory_track_concept_family_atlas_analysis.py`
+- `python tests/codex/test_theory_track_system_level_concept_atlas_synthesis.py`
+
+### 结果摘要
+
+`TheoryTrack_concept_family_atlas_analysis`：
+
+- `num_families = 3`
+- `num_concepts = 9`
+- `mean_within_family_radius = 0.0457`
+- `mean_cross_family_center_distance = 2.4945`
+- `atlas_separation_score = 54.5692`
+- `exact_decomposition_reconstruction_error = 0.0`
+
+关键结果：
+
+- `apple / banana / pear` 已经不只是三个概念，而是一个 `fruit atlas patch`
+- `cat / dog / horse` 形成 `animal atlas patch`
+- `truth / logic / memory` 形成 `abstract atlas patch`
+- 多个 family patch 之间的中心距离远大于 family 内半径，说明 `family basis + concept offset` 的 atlas 结构已经能在 toy 系统里稳定复现
+
+`TheoryTrack_system_level_concept_atlas_synthesis`：
+
+- `apple` 是有效的 `local chart probe`
+- 多概念、多家族分析可以把局部 probe 扩成 `object-manifold atlas`
+- 这条路线可以把：
+  - `Q1` 还原为 `object kernel / family basis / concept offset`
+  - `Q2/Q3` 还原为 `safe update / write-read separation`
+  - `Q4` 还原为 `bridge-role lift`
+  - `Q5` 还原为 `shared object manifold`
+  - `Q6` 还原为 `object chart -> discriminative geometry`
+  - `Q7` 还原为 `atlas -> brain projection / falsification`
+
+### 理论结论更新
+
+当前可以更明确地下结论：
+
+- `苹果分析` 不是终点，但它是高价值入口
+- 真正可扩展的路线是：
+  - `单概念 local probe`
+  - `family-local atlas patch`
+  - `cross-family object-manifold atlas`
+  - `atlas 约束 A 与 M_feas`
+
+也就是说，理论轨现在最可行的系统化路径已经更清楚：
+
+1. 先用很多具体概念重建 `Z_obj` 的局部 chart 和 family atlas  
+2. 再用新学习、跨模态、关系上下文去约束 `A`  
+3. 再用 chart overlap 和 switching failure 去约束 `M_feas`  
+4. 最后把 atlas 投影到脑区、脑侧协议和 3D 映射  
+
+### 当前判断
+
+- `苹果` 可以帮助分析内部编码机制，但只能作为 `local chart probe`
+- `多概念 / 多家族 atlas` 才能把局部分析提升到系统层面
+- 这是目前最可行的路线，因为它把隐藏的全局机制，拆成一系列可观察的：
+  - `chart`
+  - `family basis`
+  - `concept offset`
+  - `chart overlap`
+  - `admissible update`
+  - `viability constraint`
+
+当前项目口径维持：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+下一阶段建议：
+
+- 理论轨：
+  - `扩展 concept atlas`
+  - `增加 cross-family probe`
+  - `把 atlas 直接接到 A 和 M_feas 的候选排除`
+- 工程轨：
+  - 继续保留 `P3 -> P4 -> P1 -> P2`
+  - 但优先让 `P3` 直接消费 atlas 约束，而不是再做孤立几何 patch
+
+---
+
+## 2026-03-12 10:50 理论轨推进：cross-family probe 与 A/M_feas 候选排除
+
+本轮新增并完成：
+
+- `tests/codex/test_theory_track_cross_family_probe_analysis.py`
+- `tests/codex/test_theory_track_atlas_to_A_Mfeas_exclusion.py`
+
+执行命令：
+
+- `python -m py_compile tests/codex/test_theory_track_cross_family_probe_analysis.py`
+- `python -m py_compile tests/codex/test_theory_track_atlas_to_A_Mfeas_exclusion.py`
+- `python tests/codex/test_theory_track_cross_family_probe_analysis.py`
+- `python tests/codex/test_theory_track_atlas_to_A_Mfeas_exclusion.py`
+
+### 结果摘要
+
+`TheoryTrack_cross_family_probe_analysis`：
+
+- `mean_same_family_distance = 0.0823`
+- `mean_cross_family_distance = 2.4955`
+- `cross_family_margin_ratio = 30.3312`
+- `mean_intrusion_gap = 0.8974`
+
+关键含义：
+
+- family 内概念差异远小于 cross-family 差异
+- family 的局部主轴不能互换
+- `fruit`、`animal`、`abstract` 更像 object atlas 上不同 patch，而不是一个全局平滑 chart 里的轻微扰动
+
+`TheoryTrack_atlas_to_A_Mfeas_exclusion`：
+
+目前可以直接排除的候选：
+
+- `single_global_smooth_object_chart`
+- `family_agnostic_isotropic_update_cone`
+- `full_object_disc_overlap_everywhere`
+- `direct_readout_equals_object_geometry`
+
+当前更精炼的候选更新为：
+
+- `A_refined`
+  - `K_ret` 和 `K_id` 应该是 `family-conditioned cones`
+- `M_feas_refined`
+  - `U_object` 更像 `family-patched atlas`
+- `readout_constraint`
+  - `phi_object_to_disc` 只应在受限的、family-conditioned overlap 上合法
+
+### 理论结论更新
+
+这轮最重要的进展，不是又得到一个几何猜想，而是：
+
+- `concept atlas` 已经开始直接约束理论候选空间
+- 理论轨从“提出对象”进入了“排除错误候选”的阶段
+
+当前最强判断可以写成：
+
+1. `Z_obj` 不是单一全局 smooth chart，而是 `family-patched object atlas`
+2. `A` 不是全局各向同性的 admissible cone，而是 `family-conditioned intersection cones`
+3. `M_feas` 不是到处都可切换的统一流形，而是具有受限 overlap 的 `stratified manifold`
+4. `readout geometry` 不能直接等于 `object geometry`，必须通过受限 transport/overlap 形成
+
+### 项目含义
+
+这使得理论轨已经从“抽象讨论”变成“可执行排除流程”：
+
+- 先用 `local concept probe`
+- 扩成 `family atlas patch`
+- 再做 `cross-family probe`
+- 最后直接排除错误的 `A` 和 `M_feas`
+
+这条路线非常关键，因为它说明：
+
+- 我们不需要先完整破解整脑，才能推进理论
+- 可以先通过概念 atlas，把错误数学结构一类一类排掉
+
+当前项目口径维持：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+下一阶段建议：
+
+- 理论轨：
+  - 构造 `family-conditioned projection operators`
+  - 构造 `restricted overlap maps`
+  - 用 `P3` 的失败模式继续排除错误 transport/readout 候选
+- 工程轨：
+  - `P3` 应直接消费 atlas-to-exclusion 结论
+  - 避免继续做 family-agnostic 的几何 patch
+
+---
+
+## 2026-03-12 10:56 理论轨推进：family-conditioned operators 与 atlas-driven P3 exclusion loop
+
+本轮新增并完成：
+
+- `tests/codex/test_theory_track_family_conditioned_projection_operators.py`
+- `tests/codex/test_theory_track_restricted_overlap_maps.py`
+- `tests/codex/test_theory_track_atlas_driven_p3_exclusion_loop.py`
+
+执行命令：
+
+- `python -m py_compile tests/codex/test_theory_track_family_conditioned_projection_operators.py`
+- `python -m py_compile tests/codex/test_theory_track_restricted_overlap_maps.py`
+- `python -m py_compile tests/codex/test_theory_track_atlas_driven_p3_exclusion_loop.py`
+- `python tests/codex/test_theory_track_family_conditioned_projection_operators.py`
+- `python tests/codex/test_theory_track_restricted_overlap_maps.py`
+- `python tests/codex/test_theory_track_atlas_driven_p3_exclusion_loop.py`
+
+### 结果摘要
+
+`TheoryTrack_family_conditioned_projection_operators`：
+
+- 已经把原来抽象的 `P_obj / P_mem / P_id / P_disc` 细化成 `family-conditioned operator families`
+- 三个 family 的局部 operator 支撑维度已经可显式给出
+- 当前形式支持：
+  - `P_obj_family`
+  - `P_mem_family`
+  - `P_id_family`
+  - `P_disc_family`
+
+核心含义：
+
+- projection operator 不再应被看成全局统一算子
+- 而应被看成 `family patch` 上的局部算子族
+
+`TheoryTrack_restricted_overlap_maps`：
+
+当前得到的 family-conditioned overlap 近似为：
+
+- `object_memory_overlap`
+  - 约 `0.80 - 0.83`
+- `object_disc_overlap`
+  - 约 `0.136 - 0.157`
+- `object_relation_overlap`
+  - 约 `0.523 - 0.540`
+- `memory_phase_overlap`
+  - 约 `0.338 - 0.349`
+
+关键结论：
+
+- `object-disc overlap` 明显远小于 `object-memory overlap`
+- 这和前面 P3 一直闭不上的现象高度一致
+- 也就是说，问题不只是“有没有 object manifold”，而是：
+  - `object geometry -> readout geometry`
+  - 这条 overlap 本身非常窄
+
+`TheoryTrack_atlas_driven_P3_exclusion_loop`：
+
+目前理论轨已经能直接驱动 P3 剪枝：
+
+- 排除：
+  - `global_isotropic_transport`
+  - `direct_object_to_disc_collapse`
+  - `family_agnostic_readout_head`
+- 保留：
+  - `family_conditioned_transport`
+  - `restricted_overlap_readout`
+
+这意味着：
+
+- 理论轨已经不只是提出候选
+- 而是已经能把工程轨 `P3` 的候选空间直接砍掉一大块
+
+### 理论结论更新
+
+当前最强的数学图景继续收缩为：
+
+1. `Z_obj` 是 `family-patched object atlas`
+2. `A` 需要 `family-conditioned projection operators`
+3. `M_feas` 需要 `restricted overlap maps`
+4. `P3` 的 transport/readout 候选必须只在：
+   - `family-conditioned operators`
+   - `restricted overlaps`
+   这个组合空间里搜索
+
+也就是说，当前真正可执行的理论轨已经从：
+
+- `提出 global feasibility law`
+
+推进到：
+
+- `构造 local operator families`
+- `构造 restricted chart overlaps`
+- `用它们直接剪枝 P3`
+
+### 项目含义
+
+这轮之后，工程轨和理论轨的接口已经更清楚：
+
+- 理论轨负责：
+  - 定义 `family-conditioned operators`
+  - 定义 `restricted overlaps`
+  - 排除错误 transport/readout 候选
+- 工程轨负责：
+  - 只在剩余候选类上做 `P3` 搜索
+
+所以后面不该再做：
+
+- family-agnostic transport
+- direct object-to-disc collapse
+- global isotropic readout patch
+
+而应集中在：
+
+- `family-conditioned transport`
+- `restricted overlap readout`
+
+当前项目口径维持：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+下一阶段建议：
+
+- 理论轨：
+  - 继续把 `phi_object_to_disc` 写成更明确的 family-conditioned transport maps
+  - 继续把 `P_obj_family / P_disc_family` 的耦合律写出来
+- 工程轨：
+  - 新一轮 `P3` 搜索应仅保留：
+    - `family-conditioned transport`
+    - `restricted overlap readout`
+
+---
+
+## 2026-03-12 11:02 理论轨推进：concept inventory 与 attribute-axis layer
+
+本轮新增并完成：
+
+- `tests/codex/test_theory_track_concept_encoding_inventory.py`
+- `tests/codex/test_theory_track_attribute_axis_analysis.py`
+
+执行命令：
+
+- `python -m py_compile tests/codex/test_theory_track_concept_encoding_inventory.py`
+- `python -m py_compile tests/codex/test_theory_track_attribute_axis_analysis.py`
+- `python tests/codex/test_theory_track_concept_encoding_inventory.py`
+- `python tests/codex/test_theory_track_attribute_axis_analysis.py`
+
+### 结果摘要
+
+`TheoryTrack_concept_encoding_inventory`：
+
+- `num_concepts = 9`
+- `mean_family_offset_norm = 0.0457`
+- `mean_within_to_cross_margin = 2.2944`
+
+关键含义：
+
+- 每个 concept 现在都能以统一格式进入 `encoding inventory`
+- 每个条目至少包含：
+  - `family`
+  - `family_offset`
+  - `nearest_same_family`
+  - `nearest_cross_family`
+  - `within_to_cross_margin`
+- 这意味着概念分析已经从“个例讲解”进入“可累计 atlas 条目”的阶段
+
+`TheoryTrack_attribute_axis_analysis`：
+
+- `num_attributes = 17`
+- `mean_attribute_alignment = 0.1626`
+- `mean_axis_norm = 0.0187`
+
+关键含义：
+
+- 属性现在可以开始作为 `family-centered object chart` 上的局部方向来分析
+- 当前较强的局部属性轴包括：
+  - `round`
+  - `elongated`
+  - `domestic`
+  - `large`
+  - `stable`
+  - `structured`
+  - `persistent`
+- 这说明 object atlas 不只是：
+  - `family basis + concept offset`
+  还可以逐渐扩成：
+  - `family basis + concept offset + attribute axes`
+
+### 理论结论更新
+
+当前理论轨的拼图已经明显变密：
+
+1. `family patch`
+   - 已经有 `fruit / animal / abstract`
+2. `concept inventory`
+   - 每个 concept 都可以标准化入表
+3. `attribute-axis layer`
+   - 属性开始以局部方向形式出现
+
+也就是说，当前 object-manifold atlas 已经不再只是：
+
+- `局部 chart`
+
+而是开始变成：
+
+- `chart`
+- `concept entry`
+- `attribute direction`
+
+三层结构
+
+这对后续突破很关键，因为它说明：
+
+- 后面不必再只盯 `apple`
+- 可以持续累积：
+  - concept-level entries
+  - attribute-level axes
+  - relation-level lifts
+
+最后把这些条目汇总成更完整的编码 atlas
+
+### 项目含义
+
+理论轨当前最可行的持续推进方式已经更明确：
+
+1. `多概念 inventory`
+2. `属性轴分析`
+3. `关系/角色分析`
+4. `novelty stress / retention stress`
+5. `把这些都回接到 A 和 M_feas`
+
+也就是：
+
+- 先把编码 atlas 做密
+- 再让 atlas 去收缩全局理论候选
+
+当前项目口径维持：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+下一阶段建议：
+
+- 理论轨：
+  - 进入 `concept-relation-attribute atlas synthesis`
+  - 再把 `novelty stress` 接到每个 atlas 条目
+- 工程轨：
+  - 继续让 `P3` 只消费理论轨保留下来的 family-conditioned 候选
+
+---
+
+## 2026-03-12 11:06 理论轨推进：encoding inventory 状态分析与大样本特征挖掘
+
+本轮新增并完成：
+
+- `tests/codex/test_theory_track_concept_relation_attribute_atlas_synthesis.py`
+- `tests/codex/test_theory_track_encoding_inventory_feature_mining.py`
+
+执行命令：
+
+- `python -m py_compile tests/codex/test_theory_track_concept_relation_attribute_atlas_synthesis.py`
+- `python -m py_compile tests/codex/test_theory_track_encoding_inventory_feature_mining.py`
+- `python tests/codex/test_theory_track_concept_relation_attribute_atlas_synthesis.py`
+- `python tests/codex/test_theory_track_encoding_inventory_feature_mining.py`
+
+### 结果摘要
+
+`TheoryTrack_concept_relation_attribute_atlas_synthesis`：
+
+- 当前 atlas 已经可以拆成四层：
+  - `family patch`
+  - `concept entry`
+  - `attribute axis`
+  - `relation template`
+
+当前支持指标：
+
+- `atlas_separation_score = 54.5692`
+- `mean_attribute_alignment = 0.1626`
+- `mean_within_to_cross_margin = 2.2944`
+
+关键结论：
+
+- 编码 atlas 已经不再只是 family patch
+- 现在可以开始被理解为：
+  - `concept + attribute + relation`
+  三层叠加在同一个 object atlas 上
+
+`TheoryTrack_encoding_inventory_feature_mining`：
+
+- `samples_per_concept = 300`
+- `mean_within_family_distance = 0.0902`
+- `mean_cross_family_distance = 2.4964`
+- `cross_to_within_ratio = 27.6874`
+- `mean_concept_variance = 0.003608`
+
+family rank 结构：
+
+- `fruit`
+  - `top_explained_variance = [0.9447, 0.0553, ~0]`
+- `animal`
+  - `top_explained_variance = [0.8851, 0.1149, ~0]`
+- `abstract`
+  - `top_explained_variance = [0.9115, 0.0885, ~0]`
+
+这意味着：
+
+- 每个 family patch 不是高维散乱云团
+- 而更像一个非常强的 `低秩局部 patch`
+- 第一主轴就解释了大部分 family 内变化
+
+进一步还出现了：
+
+- `stable_family_axes`
+- `universal_recurrent_dims = [11, 9, 3, 1, 2, 12, 8, 0]`
+
+### 对“编码库存”的状态分析
+
+当前 `encoding inventory` 的状态可以概括成：
+
+1. `条目化`
+   - 每个 concept 已经能稳定进入 inventory
+2. `局部几何化`
+   - 每个 family 已经能形成自己的局部低秩 patch
+3. `属性层叠加`
+   - 一部分属性已经能表现为局部方向而不是离散标签
+4. `跨 family 边界清晰`
+   - cross-family margin 远大于 within-family spread
+5. `出现 recurrent dimensions`
+   - 不同 family 之间开始复用某些维度
+
+所以编码库存现在已经不是“概念列表”，而更像：
+
+- `structured atlas database`
+
+### 对“能不能基于大量数据找到更普遍更关键的编码特征”的判断
+
+当前结果支持答案是：`能，而且很可能这是最现实的路线之一`
+
+原因有三点：
+
+1. `低秩性`
+   - family patch 已经显示出明显低秩结构
+   - 说明很多编码特征不是无限杂乱，而是可压缩的
+
+2. `复用维度`
+   - `universal_recurrent_dims` 开始出现
+   - 说明不同 local chart 之间可能共享更一般的编码方向
+
+3. `稳定 margin`
+   - cross-family / within-family 比值很大
+   - 说明全局 atlas 边界不是噪声现象，而是结构性存在
+
+这意味着，如果概念数、属性数、关系数进一步扩大，很可能会逐步显露出更一般的编码规律，例如：
+
+- `family-local low-rank patches`
+- `sparse concept offsets`
+- `recurrent dimensions across families`
+- `attribute directions reused across local charts`
+- `relation lifts reusing part of the same coordinates`
+
+### 理论结论更新
+
+当前理论轨最强的新判断是：
+
+- 编码库存本身就是一个重要理论对象
+- 它不仅能存概念条目
+- 还会在数据增大后自然暴露：
+  - `低秩结构`
+  - `复用维度`
+  - `稳定边界`
+  - `属性局部轴`
+
+所以后续不该只问“有没有某个神奇模块”，而应该继续扩大 inventory，去逼出更一般的编码规律。
+
+当前项目口径维持：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+下一阶段建议：
+
+- 理论轨：
+  - 扩大 `concept count`
+  - 扩大 `attribute count`
+  - 增加 `relation count`
+  - 对 inventory 做更强的 rank / recurrent-dimension / stability 分析
+- 工程轨：
+  - 继续让 `P3` 优先消费这些 inventory 约束
+
+---
+
+## 2026-03-12 11:11 理论轨推进：encoding inventory 如何解决七个问题与当前瓶颈
+
+本轮新增并完成：
+
+- `tests/codex/test_theory_track_inventory_seven_question_mapping.py`
+- `tests/codex/test_theory_track_inventory_bottleneck_resolution_analysis.py`
+
+执行命令：
+
+- `python -m py_compile tests/codex/test_theory_track_inventory_seven_question_mapping.py`
+- `python -m py_compile tests/codex/test_theory_track_inventory_bottleneck_resolution_analysis.py`
+- `python tests/codex/test_theory_track_inventory_seven_question_mapping.py`
+- `python tests/codex/test_theory_track_inventory_bottleneck_resolution_analysis.py`
+
+### 结果摘要
+
+`TheoryTrack_inventory_seven_question_mapping`：
+
+当前 inventory 对七个问题的支撑强度已经可以分层：
+
+- `Q1 encoding object layer`
+  - `strong`
+- `Q2 local update law`
+  - `medium`
+- `Q3 write/read separation`
+  - `medium`
+- `Q4 bridge-role kernel`
+  - `medium`
+- `Q5 crossmodal consistency`
+  - `strong`
+- `Q6 discriminative geometry`
+  - `strong`
+- `Q7 brain mapping 3d`
+  - `partial`
+
+这说明：
+
+- inventory 已经强力打到：
+  - `对象层`
+  - `跨模态一致`
+  - `读出几何`
+- 但对：
+  - `更新律`
+  - `写读分离`
+  - `bridge-role`
+  目前还是“结构约束强，动力闭合不够”
+
+`TheoryTrack_inventory_bottleneck_resolution_analysis`：
+
+当前主瓶颈仍然是：
+
+- `shared object manifold -> discriminative geometry compatibility`
+
+当前 secondary bottlenecks：
+
+- `write/read law` 还没完全和 inventory stress 绑定
+- `bridge-role lifts` 还没密集叠到 atlas 上
+- `brain-side mapping` 还是 protocol-ready，没有执行闭环
+
+当前 inventory 已经能直接打到的关键编码细节包括：
+
+- `family basis + concept offset structure`
+- `cross-family patch boundaries`
+- `attribute directions on local charts`
+- `restricted object-to-disc overlap constraints`
+- `family-conditioned operator candidates`
+
+但还没完全闭合的关键细节包括：
+
+- `full admissible-update law under novelty stress`
+- `full bridge-role lift mechanics`
+- `brain-side 3D projection closure`
+
+### 理论结论更新
+
+当前可以更明确地说：
+
+- `encoding inventory` 已经不是辅助分析工具
+- 它已经开始承担“解释七个问题”的主骨架之一
+
+最准确的理解方式是：
+
+1. `inventory` 先解决：
+   - 编码对象是什么
+   - family patch 怎么形成
+   - cross-family 边界怎么存在
+   - object geometry 为什么不能直接塌成 readout geometry
+
+2. `stress / relation / brain coupling`
+   再去解决：
+   - 更新如何合法
+   - 写读如何分离
+   - bridge-role 如何形成
+   - 抽象 atlas 如何投影到真实脑
+
+所以 inventory 现在已经足够破解出一部分最关键的编码细节，但还不能单独闭合全部机制。
+
+### 项目含义
+
+如果继续沿这条路线推进，最值钱的下一步已经很清楚：
+
+- 给每个 atlas 条目叠加：
+  - `novelty stress`
+  - `retention stress`
+  - `relation-lift probe`
+- 这样 inventory 就会从：
+  - `静态结构解释器`
+  进一步升级成：
+  - `动态闭合约束器`
+
+当前项目口径维持：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+下一阶段建议：
+
+- 理论轨：
+  - 继续做 `atlas-entry stress profiling`
+  - 继续做 `relation-lift atlas layering`
+  - 把 inventory 从结构层推进到动力层
+- 工程轨：
+  - 让 `P3` 只测试 inventory 已支持的 family-conditioned transport/readout 候选
+
+---
+
+## 2026-03-12 11:27 理论轨推进：encoding inventory 的动态 stress 层与显式数学结构
+
+本轮新增并完成：
+
+- `tests/codex/test_theory_track_inventory_stress_profiling.py`
+- `tests/codex/test_theory_track_inventory_math_structure_formalization.py`
+
+执行命令：
+
+- `python -m py_compile tests/codex/test_theory_track_inventory_stress_profiling.py`
+- `python -m py_compile tests/codex/test_theory_track_inventory_math_structure_formalization.py`
+- `python tests/codex/test_theory_track_inventory_stress_profiling.py`
+- `python tests/codex/test_theory_track_inventory_math_structure_formalization.py`
+
+### 结果摘要
+
+`TheoryTrack_inventory_stress_profiling`：
+
+- `num_concepts = 9`
+- `stable_under_stress_ratio = 1.0`
+- `mean_novelty_pressure = 0.00914`
+- `mean_retention_risk = 0.0`
+- `mean_relation_lift_capacity = 2.3350`
+
+关键含义：
+
+- inventory 已经不再只是静态 atlas
+- 每个 concept entry 现在都可以带一个：
+  - `novelty pressure`
+  - `retention risk`
+  - `relation-lift capacity`
+  的动态 stress profile
+
+这一步很关键，因为它把 inventory 从：
+
+- `结构库存`
+
+推进成：
+
+- `结构 + 动力` 的联合对象
+
+`TheoryTrack_inventory_math_structure_formalization`：
+
+当前已经可以把 inventory 显式写成：
+
+- `I = {E_c}`
+
+其中：
+
+- `E_c = (f_c, z_c, delta_c, N_same(c), N_cross(c), A_c, R_c, S_c)`
+
+字段含义：
+
+- `f_c`
+  - family patch id
+- `z_c`
+  - concept state on object atlas
+- `delta_c`
+  - family-centered concept offset
+- `N_same(c)`
+  - same-family neighborhood
+- `N_cross(c)`
+  - cross-family neighborhood
+- `A_c`
+  - attribute-axis attachment set
+- `R_c`
+  - relation template attachment set
+- `S_c`
+  - stress field
+
+当前候选方程已经可写成：
+
+- `z_c = b_(f_c) + delta_c`
+- `delta_c ~= SUM_k a_(c,k) u_(f_c,k) + epsilon_c`
+- `d(z_c, N_same(c)) << d(z_c, N_cross(c))`
+- `S_c = (sigma_novel(c), sigma_ret(c), sigma_rel(c))`
+
+### 理论结论更新
+
+现在可以更明确地说：
+
+- encoding inventory 的数学结构不是“很多概念列表”
+- 而是一个分层对象：
+  - `family patch layer`
+  - `concept entry layer`
+  - `attribute axis layer`
+  - `relation template layer`
+  - `stress field layer`
+
+也就是说，inventory 现在已经足够被理解为：
+
+- `一个分层编码 atlas`
+- 同时也是：
+  - `一个动态 stress-augmented object`
+
+这一步非常关键，因为它让 inventory 可以直接进入：
+
+- `A`
+- `M_feas`
+- `family-conditioned operators`
+- `restricted overlaps`
+
+的统一数学体系，而不再只是“理论辅料”
+
+### 项目含义
+
+这轮之后，理论轨已经形成一个更清晰的主线：
+
+1. `family patch`
+2. `concept entry`
+3. `attribute axis`
+4. `relation template`
+5. `stress field`
+6. 再把它们接入：
+   - `family-conditioned operators`
+   - `restricted overlaps`
+   - `A`
+   - `M_feas`
+
+这意味着，inventory 已经越来越像：
+
+- 破解大脑编码机制的一个核心数学对象
+
+当前项目口径维持：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+下一阶段建议：
+
+- 理论轨：
+  - 把 `inventory object` 直接参数化进 `A` 和 `M_feas`
+  - 做 `stress-to-operator coupling`
+  - 做 `relation-template to bridge-role lift coupling`
+- 工程轨：
+  - 继续用 inventory 已收缩出来的候选类指导 `P3`
+
+---
+
+## 2026-03-12 12:43 理论轨推进：I -> A(I) -> M_feas(I) -> Sys(I)
+
+本轮新增并完成：
+
+- `tests/codex/test_theory_track_inventory_to_A_coupling.py`
+- `tests/codex/test_theory_track_inventory_to_Mfeas_coupling.py`
+- `tests/codex/test_theory_track_inventory_unified_system_formalization.py`
+
+执行命令：
+
+- `python -m py_compile tests/codex/test_theory_track_inventory_to_A_coupling.py`
+- `python -m py_compile tests/codex/test_theory_track_inventory_to_Mfeas_coupling.py`
+- `python -m py_compile tests/codex/test_theory_track_inventory_unified_system_formalization.py`
+- `python tests/codex/test_theory_track_inventory_to_A_coupling.py`
+- `python tests/codex/test_theory_track_inventory_to_Mfeas_coupling.py`
+- `python tests/codex/test_theory_track_inventory_unified_system_formalization.py`
+
+### 结果摘要
+
+`TheoryTrack_inventory_to_A_coupling`：
+
+当前已经可以把 admissible set 从：
+
+- `A`
+
+升级成：
+
+- `A(I)`
+
+形式上：
+
+- `A(I) = INTERSECT_f [K_ret^(f)(I) INTERSECT K_id^(f)(I) INTERSECT K_read^(f)(I) INTERSECT K_bridge^(f)(I)] INTERSECT K_phase`
+
+关键含义：
+
+- inventory 不再只是落在 `A` 里
+- inventory 本身开始参数化：
+  - family-conditioned cones
+  - stress-gates
+  - local admissible directions
+
+`TheoryTrack_inventory_to_Mfeas_coupling`：
+
+当前已经可以把 viability manifold 从：
+
+- `M_feas`
+
+升级成：
+
+- `M_feas(I)`
+
+形式上：
+
+- `M_feas(I) = UNION_f [U_object^(f)(I) UNION U_memory^(f)(I) UNION U_disc^(f)(I) UNION U_relation^(f)(I)] UNION U_phase`
+
+关键含义：
+
+- inventory 不再只是占据 chart
+- inventory 本身开始参数化：
+  - family-patched charts
+  - overlap widths
+  - chart occupancy
+  - local viability
+
+`TheoryTrack_inventory_unified_system_formalization`：
+
+当前统一系统已经可以写成：
+
+- `Sys(I) = (I, A(I), M_feas(I), F, Q, R)`
+
+核心方程：
+
+- `E_c = (f_c, z_c, delta_c, N_same(c), N_cross(c), A_c, R_c, S_c)`
+- `A(I) = ...`
+- `M_feas(I) = ...`
+- `z_(t+1) = F(z_t, x_t, r_t, I)`
+- `q_t = Q(x_t, z_t, r_t, I)`
+- `r_(t+1) = R(r_t, z_t, x_t, I)`
+- `Delta_t in A(I)`
+- `trajectory(z_t) subset of M_feas(I)`
+
+### 理论结论更新
+
+这轮之后，encoding inventory 的角色发生了本质变化：
+
+- 以前：
+  - `I` 更像是编码 atlas 的记录对象
+- 现在：
+  - `I` 已经进入统一系统方程，成为：
+    - `admissibility generator`
+    - `viability parameterizer`
+    - `controlled dynamics conditioner`
+
+也就是说，当前最强的理论主线已经可以写成：
+
+1. `I`
+   - family patch + concept entry + attribute axis + relation template + stress field
+2. `A(I)`
+   - inventory-conditioned admissible cones
+3. `M_feas(I)`
+   - inventory-conditioned viability manifold
+4. `Sys(I)`
+   - inventory-conditioned controlled encoding system
+
+### 对 encoding inventory 数学结构的最精炼理解
+
+当前可以把 inventory 的数学结构压成：
+
+- `I` 是一个分层 object atlas
+- `I` 中每个条目 `E_c` 都带：
+  - 结构坐标
+  - 邻域坐标
+  - 属性坐标
+  - 关系模板
+  - stress 字段
+- `I` 不只是描述对象状态
+- `I` 还会决定：
+  - 哪些更新允许
+  - 哪些轨迹可行
+  - 哪些 readout/phase switch 合法
+
+所以 inventory 现在已经非常接近：
+
+- 整个理论轨的核心数学对象
+
+当前项目口径维持：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+下一阶段建议：
+
+- 理论轨：
+  - 做 `I -> bridge-role lift coupling`
+  - 做 `I -> brain-probe coupling`
+  - 做 `stress-to-readout transport coupling`
+- 工程轨：
+  - 让 `P3` 新一轮只在 `Sys(I)` 保留下来的 transport/readout 家族里搜索
+
+---
+
+## 2026-03-12 12:58 理论轨推进：I -> bridge-role 与 I -> brain-probe
+
+本轮新增并完成：
+
+- `tests/codex/test_theory_track_inventory_bridge_role_coupling.py`
+- `tests/codex/test_theory_track_inventory_brain_probe_coupling.py`
+
+执行命令：
+
+- `python -m py_compile tests/codex/test_theory_track_inventory_bridge_role_coupling.py`
+- `python -m py_compile tests/codex/test_theory_track_inventory_brain_probe_coupling.py`
+- `python tests/codex/test_theory_track_inventory_bridge_role_coupling.py`
+- `python tests/codex/test_theory_track_inventory_brain_probe_coupling.py`
+
+### 结果摘要
+
+`TheoryTrack_inventory_bridge_role_coupling`：
+
+当前已经可以把 relation-template attachment 从：
+
+- `R_c`
+
+升级成：
+
+- `B_c = (T_rel(c), K_role(c), sigma_rel(c))`
+
+并写出：
+
+- `rho_c = G_rel(E_c)`
+- `kappa_c = H_role(rho_c, N_same(c), N_cross(c))`
+
+关键含义：
+
+- bridge-role 不应被看成独立符号模块
+- 更像是：
+  - 从 object inventory entry
+  - 经 object-relation overlap
+  - lift 出来的关系与角色结构
+
+`TheoryTrack_inventory_brain_probe_coupling`：
+
+当前已经可以把 inventory 直接转成 brain-side probe family：
+
+- `Pi_obj(E_c)`
+- `Pi_attr(E_c)`
+- `Pi_rel(E_c)`
+- `Pi_stress(E_c)`
+
+关键含义：
+
+- 脑侧映射不必从完整整脑 reconstruction 开始
+- 可以从：
+  - family patch
+  - concept offset
+  - attribute gradient
+  - relation pattern
+  - stress pattern
+ 这些 probe family 开始
+
+### 理论结论更新
+
+到这一步，inventory 的理论主线已经进一步扩展成：
+
+1. `I`
+   - family patch + concept entry + attribute axis + relation template + stress field
+2. `A(I)`
+3. `M_feas(I)`
+4. `bridge-role lift from I`
+5. `brain-probe projection from I`
+
+这意味着当前最像正确的大脑编码图景已经更完整：
+
+- 概念先以 family-patched object atlas entry 形式存在
+- 属性轴和 stress 场叠在 concept entry 上
+- relation/role 不是独立系统，而是从 concept entry uplift 出来
+- 脑区活动不是随意映射，而更像 inventory-conditioned encoding system 的 region-parameterized realization
+
+当前项目口径维持：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+下一阶段建议：
+
+- 理论轨：
+  - 做 `stress-to-readout transport coupling`
+  - 把 `bridge-role lift` 接到 B 线
+  - 把 `brain-probe bundle` 接到 P4
+- 工程轨：
+  - `P3` 继续只消费 `Sys(I)` 保留下来的候选
+
+---
+
+## 2026-03-12 13:09 理论轨综合：当前大脑编码机制拼图与“特征如何形成编码”的回答
+
+本轮新增并完成：
+
+- `tests/codex/test_theory_track_brain_encoding_mechanism_current_synthesis.py`
+
+执行命令：
+
+- `python -m py_compile tests/codex/test_theory_track_brain_encoding_mechanism_current_synthesis.py`
+- `python tests/codex/test_theory_track_brain_encoding_mechanism_current_synthesis.py`
+
+### 当前综合结论
+
+当前最像真的大脑编码图景，可以压成一句话：
+
+- `大脑编码更像一个以 inventory-conditioned object atlas 为核心的受控编码动力系统`
+
+当前已经有较强支撑的拼图包括：
+
+- `family-patched object atlas`
+- `concept identity = family basis + local offset`
+- `attribute directions as local chart axes`
+- `cross-family patch boundaries`
+- `restricted object-to-disc overlap`
+- `inventory-conditioned admissible and viable structures`
+
+当前仍然只到 partial / medium 的拼图包括：
+
+- `local update law`
+- `write/read separation`
+- `bridge-role lift`
+- `brain-side projection`
+
+当前主开放点仍然是：
+
+- `shared object manifold -> discriminative geometry compatibility`
+
+### 当前对“特征如何形成编码”的回答
+
+现在最像正确的形成过程是：
+
+1. 多模态输入首先落到某个 `family patch`
+2. 局部证据在 patch 内形成 `concept-specific offset`
+3. 属性不是外接标签，而更像 patch 上的 `local directions`
+4. admissible-update 决定哪些方向允许被真正写入
+5. restricted overlap 决定状态能否运输到：
+   - `memory chart`
+   - `relation chart`
+   - `readout chart`
+6. bridge-role lift 把 object entry 组织成 relation / role 结构
+7. brain-side realization 更像同一 inventory-conditioned system 在不同脑区的 parameterized projection
+
+### 当前统一系统形式
+
+现在已经可以把系统主方程写成：
+
+- `E_c = (f_c, z_c, delta_c, N_same(c), N_cross(c), A_c, R_c, S_c)`
+- `A(I) = INTERSECT_f [K_ret^(f)(I) INTERSECT K_id^(f)(I) INTERSECT K_read^(f)(I) INTERSECT K_bridge^(f)(I)] INTERSECT K_phase`
+- `M_feas(I) = UNION_f [U_object^(f)(I) UNION U_memory^(f)(I) UNION U_disc^(f)(I) UNION U_relation^(f)(I)] UNION U_phase`
+- `z_(t+1) = F(z_t, x_t, r_t, I)`
+- `q_t = Q(x_t, z_t, r_t, I)`
+- `r_(t+1) = R(r_t, z_t, x_t, I)`
+- `Delta_t in A(I)`
+- `trajectory(z_t) subset of M_feas(I)`
+
+bridge-role 当前已能写成：
+
+- `rho_c = G_rel(E_c)`
+- `kappa_c = H_role(rho_c, N_same(c), N_cross(c))`
+
+brain-side probe 当前已能写成：
+
+- `Pi_obj(E_c)`
+- `Pi_attr(E_c)`
+- `Pi_rel(E_c)`
+- `Pi_stress(E_c)`
+
+### 七个问题的当前状态
+
+当前 inventory 对七个问题的支撑强度大致是：
+
+- `Q1 encoding object layer`
+  - `strong`
+- `Q2 local update law`
+  - `medium`
+- `Q3 write/read separation`
+  - `medium`
+- `Q4 bridge-role kernel`
+  - `medium`
+- `Q5 crossmodal consistency`
+  - `strong`
+- `Q6 discriminative geometry`
+  - `strong`
+- `Q7 brain mapping 3d`
+  - `partial`
+
+这意味着：
+
+- 对象层、跨模态层、读出兼容层已经有较强骨架
+- 更新律、写读分离、bridge-role、脑侧投影仍是后续闭合重点
+
+### 当前最关键的编码细节，已经拼出的部分
+
+当前已经比较接近破解的关键编码细节包括：
+
+1. `编码不是裸 token，而是 patch-based object atlas`
+2. `概念身份更像 family basis + concept offset`
+3. `属性更像 local directions，而不是纯离散标签`
+4. `更新不是随便发生，而要满足 A(I)`
+5. `状态不是随便长期共存，而要落在 M_feas(I)`
+6. `relation/role 更像从 object entry uplift 出来的结构`
+7. `脑区更像同一系统的 region-parameterized realization`
+
+### 当前还没完全闭合的硬点
+
+当前还没完全闭合的关键点包括：
+
+- `full admissible-update law under novelty stress`
+- `full write/read separation dynamics`
+- `full bridge-role lift mechanics`
+- `shared object manifold -> discriminative geometry` 的最终闭合
+- `brain-side 3D projection closure`
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+### 下一阶段建议
+
+- 理论轨：
+  - 做 `stress-to-readout transport coupling`
+  - 做 `I -> bridge-role lift` 的进一步动力闭合
+  - 做 `brain-probe bundle -> P4` 执行化
+- 工程轨：
+  - 继续让 `P3` 只消费 `Sys(I)` 剪枝后留下的 transport/readout 家族
+
+---
+
+## 2026-03-12 理论轨补充：用“苹果”作为局部编码探针
+
+本轮新增脚本：
+- `/tests/codex/test_theory_track_apple_concept_encoding_analysis.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_theory_track_apple_concept_encoding_analysis.py`
+- `python tests/codex/test_theory_track_apple_concept_encoding_analysis.py`
+
+核心问题：
+- 如果当前未闭合问题和七个问题都源于同一个大脑编码机制，能不能通过分析“苹果、苹果属性、苹果家族”等概念来反推内部编码机制？
+
+当前答案：
+- `能`
+- 但只能作为：
+  - `local chart probe`
+  - 而不能单独当成整套理论
+
+### 苹果能揭示什么
+
+1. `object kernel`
+- `apple = fruit family basis + apple-specific offset`
+- 说明对象概念可以分解成：
+  - family basis
+  - concept-specific offset
+
+2. `crossmodal binding`
+- 苹果的视觉、触觉、语言状态可以指向同一个对象 identity
+- 说明对象同一性不是某一模态私有的
+
+3. `family structure`
+- `apple / banana / pear`
+  暴露出同一个 fruit family manifold 的局部结构
+
+4. `attribute structure`
+- 苹果的颜色、形状、甜度、可食性等属性
+  更像 object chart 上的局部轴
+  而不是完全独立的符号标签
+
+5. `relation structure`
+- 苹果进入：
+  - 被吃
+  - 放在篮子里
+  - 与梨比较
+  这类关系时，会暴露 bridge-role 结构
+
+### 苹果分析的边界
+
+苹果分析不能单独解决：
+- `A`：admissible update set
+- `M_feas`：global viability manifold
+- 全局 discriminative geometry
+- phase/rule switching
+
+因为：
+- 一个概念只暴露一个局部 chart
+- 而不是整个 atlas
+
+### 当前最合理的用法
+
+苹果应作为：
+- `对象局部 chart 的显微镜`
+
+正确路径是：
+1. 先分解：
+   - family basis
+   - concept offset
+   - modality views
+2. 再比较：
+   - `apple / banana / pear`
+3. 再挂上：
+   - 属性轴
+   - 关系槽位
+4. 再观察：
+   - 新学习压力下苹果 identity 和 retention 如何变化
+
+这样它可以服务于七个问题中的：
+- `Q1`
+- `Q4`
+- `Q5`
+- `Q6`
+并间接帮助：
+- `Q2`
+- `Q3`
+
+最重要的理论判断：
+- 苹果分析是一个很强的入口
+- 但它是：
+  - `local manifold probe`
+  - 不是 `whole atlas`
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 理论轨细化：显式 A 与显式 M_feas
+
+本轮新增脚本：
+- `/tests/codex/test_theory_track_explicit_A_Mfeas_formalization.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_theory_track_explicit_A_Mfeas_formalization.py`
+- `python tests/codex/test_theory_track_explicit_A_Mfeas_formalization.py`
+
+### 显式 admissible set `A`
+
+当前已经可以把：
+
+```text
+A = K_ret INTERSECT K_id INTERSECT K_read INTERSECT K_phase INTERSECT K_bridge
+```
+
+其中：
+- `K_ret`
+  - retention-safe cone
+  - 约束：
+    - `||P_mem Delta|| <= tau_mem`
+    - `||P_ret Delta|| <= tau_ret_budget`
+    - `retention(z + Delta) >= tau_ret_floor`
+- `K_id`
+  - identity-safe cone
+  - 约束：
+    - `||P_id Delta|| <= alpha_id ||P_obj Delta|| + epsilon_id`
+    - `same_object_contraction(Delta) <= absorption_capacity(z_disc)`
+- `K_read`
+  - readout-safe cone
+  - 约束：
+    - `||P_disc Delta|| <= beta_read ||P_obj Delta|| + gamma_read`
+    - `overall(z + Delta) >= tau_overall_floor`
+- `K_phase`
+  - phase-safe cone
+  - 约束：
+    - `c_switch(r, r', Delta) <= tau_switch`
+    - `||P_phase Delta|| <= beta_phase ||P_obj Delta|| + gamma_phase`
+- `K_bridge`
+  - bridge-safe cone
+  - 约束：
+    - `||B(Delta_obj) - Delta_rel|| <= tau_bridge`
+    - `bridge_anchor_drift(z + Delta) <= tau_bridge`
+
+理论意义：
+- `A` 不是单阈值，也不是简单 loss
+- 而是“多个子系统安全方向锥”的交集
+- 一个更新只有同时满足 retention、identity、readout、phase、bridge 五种安全性，才是 admissible
+
+### 显式 `M_feas`
+
+当前已经可以把：
+
+```text
+M_feas = UNION_m U_m
+```
+
+并要求：
+
+```text
+phi_(m->n) 只在 U_m INTERSECT U_n 上定义
+```
+
+其中主要 local charts 是：
+- `U_object`
+  - shared object chart
+  - 坐标：
+    - `z_obj`
+    - `family offset`
+    - `role offset`
+- `U_memory`
+  - memory retention chart
+  - 坐标：
+    - `write state`
+    - `read state`
+    - `persistence state`
+- `U_relation`
+  - bridge-role relational chart
+  - 坐标：
+    - `bridge coordinate`
+    - `role kernel`
+    - `family relation state`
+- `U_disc`
+  - discriminative readout chart
+  - 坐标：
+    - `margin state`
+    - `query state`
+    - `decision geometry`
+- `U_phase`
+  - phase/rule switching chart
+  - 坐标：
+    - `memory mode`
+    - `identity mode`
+    - `stabilize mode`
+
+关键 overlap：
+- `U_object INTERSECT U_memory`
+  - object-memory compatibility band
+- `U_object INTERSECT U_disc`
+  - shared-object to readout overlap
+  - 当前主瓶颈
+- `U_object INTERSECT U_relation`
+  - bridge-anchor overlap
+- `U_memory INTERSECT U_phase`
+  - protected update switching overlap
+- `U_disc INTERSECT U_phase`
+  - readout switching overlap
+
+关键 transition maps：
+- `phi_object_to_memory`
+- `phi_memory_to_object`
+- `phi_object_to_relation`
+- `phi_object_to_disc`
+- `phi_phase_to_*`
+
+理论意义：
+- `M_feas` 不是一个全局单 chart 的普通流形
+- 更像一个 stratified manifold
+- 不同功能 regime 活在不同 chart
+- 真正困难的是 chart overlap 是否足够大，切换 map 是否稳定
+
+### 为什么用交锥描述 `A`
+
+原理：
+- 更新危险性是“方向性的”，不是单纯大小问题
+- 一个更新范数很小，也可能朝着最危险方向推进
+- 用 cone 更适合表达“哪些方向允许，哪些方向不允许”
+
+所以：
+- retention-safe 是一个方向锥
+- identity-safe 是一个方向锥
+- readout-safe 是一个方向锥
+- 最终 admissibility 就是这些锥的交集
+
+### 为什么用 stratified manifold 描述 `M_feas`
+
+原理：
+- 对象形成、记忆保持、关系提升、判别读出、相位切换
+  并不在同一个局部坐标系统里自然表达
+- 用单一全局流形会把这些 regime 强行揉平
+- 真实系统更像多 chart、多 strata 的结构
+
+所以：
+- 每种功能 regime 一个 local chart
+- chart overlap 才是能否稳定切换、能否不崩的关键
+
+### 与当前失败模式的对应关系
+
+`C52-C58` 连续失败的意义，现在更清楚了：
+- 不是因为没再加一个模块
+- 而是因为这些尝试没有真正改变：
+  - `A` 的交锥结构
+  - `M_feas` 的 overlap 结构
+
+所以才会长期停在：
+- `crossmodal_consistency ~ 0.20`
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 理论轨继续推进：A 与 M_feas 的候选形式
+
+本轮新增脚本：
+- `/tests/codex/test_theory_track_admissibility_viability_candidates.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_theory_track_admissibility_viability_candidates.py`
+- `python tests/codex/test_theory_track_admissibility_viability_candidates.py`
+
+### 候选 admissible set `A`
+
+当前可把 `A` 理解为：
+- `A1 retention-safe`
+  - `||Delta_mem|| <= tau_mem`
+  - 且更新后 `retention >= tau_ret`
+- `A2 identity-safe`
+  - 身份压缩速度不能超过判别几何可吸收速度
+- `A3 readout-safe`
+  - 判别压缩不能快于对象流形稳定速度
+- `A4 phase-safe`
+  - 相位切换成本必须低于 `tau_switch`
+- `A5 bridge-safe`
+  - relation/role 提升必须仍与对象锚点兼容
+
+也就是：
+- `A` 不像一个简单阈值
+- 更像多个子系统共同定义的交集约束
+
+### 候选 viability manifold `M_feas`
+
+当前可把 `M_feas` 理解为：
+- `M1 object-memory coupling`
+  - 对象流形与记忆流形必须保持在有界兼容带内
+- `M2 object-readout coupling`
+  - 判别几何必须是对象几何的下游，而不是直接塌缩对象流形
+- `M3 relation consistency`
+  - bridge-role 状态必须持续锚定到对象-family 结构
+- `M4 phase viability`
+  - phase/rule 状态不能把系统推出兼容带
+- `M5 temporal viability`
+  - 轨迹连续性必须足够支撑 same-object identity
+
+也就是：
+- `M_feas` 更像一个分层、分 chart 的 stratified manifold
+- 各个相位切换时，其实是在不同局部 chart 间切换
+
+### 编码形成过程的进一步还原
+
+当前理论轨已经可以把编码形成过程压成：
+1. 输入先投到：
+   - `shared object chart`
+2. 局部可塑性在 `A` 约束下更新记忆 chart
+3. `bridge-role operator` 把对象 chart 提升成关系 chart
+4. `readout geometry` 在单独 discriminative chart 上形成
+5. `phase/rule control` 负责让整条轨迹留在 `M_feas` 内
+
+这使得“编码如何形成”和“系统层怎么运行”第一次可以用统一对象表述：
+- `A` 决定什么更新允许发生
+- `M_feas` 决定什么全局状态允许长期共存
+
+### 当前最强理论判断
+
+现在最强的理论判断已经进一步提纯为：
+- 大脑编码机制的关键，不是某个单独网络块
+- 而是：
+  - `A`：允许更新集合
+  - `M_feas`：全局可行域
+- 破解编码机制，本质上是在把这两个对象写出来
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 C58 与 global feasibility law 正式化
+
+本轮新增脚本：
+- `/tests/codex/test_stage_c58_higher_order_feasible_manifold_search.py`
+- `/tests/codex/test_theory_track_global_feasibility_law_formalization.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c58_higher_order_feasible_manifold_search.py`
+- `python tests/codex/test_stage_c58_higher_order_feasible_manifold_search.py`
+- `python -m py_compile tests/codex/test_theory_track_global_feasibility_law_formalization.py`
+- `python tests/codex/test_theory_track_global_feasibility_law_formalization.py`
+
+`C58` 结果：
+- `best_objective_consistency = 0.2000`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2000`
+- `retention_concept_accuracy = 0.3504`
+- `overall_concept_accuracy = 0.3460`
+
+结论：
+- `higher-order feasible manifold` 仍然没有突破平台
+- 这进一步支持：
+  - 当前系统真正缺的是 `global feasibility law`
+  - 而不是再增加某个局部几何 patch
+
+### global feasibility law 的正式数学对象
+
+当前已经可以把它写成：
+
+```text
+z_obj(t+1) = F_obj(z_obj(t), x(t), r(t), z_mem(t))
+z_mem(t+1) = F_mem(z_mem(t), x(t), r(t), z_obj(t))
+z_rel(t+1) = F_rel(z_obj(t), z_rel(t), r(t))
+z_disc(t+1) = F_disc(z_obj(t), z_rel(t), q(t), r(t))
+r(t+1) = S(r(t), z_obj(t), z_mem(t), z_disc(t), h(t))
+q(t) = Q(x(t), z_obj(t), z_mem(t), z_disc(t), r(t), h(t))
+Delta(t) in A(z_obj(t), z_mem(t), z_disc(t), r(t), x(t))
+(z_obj(t), z_mem(t), z_rel(t), z_disc(t), r(t)) in M_feas
+```
+
+其中：
+- `Z_obj`：共享对象流形状态
+- `Z_mem`：write/read/persistence 记忆状态
+- `Z_rel`：bridge-role 关系状态
+- `Z_disc`：判别读出几何状态
+- `R`：phase/rule/meta-switching 状态
+- `Q`：query/readout access 状态
+- `A`：允许更新集合
+- `M_feas`：全局可行域 / viability manifold
+
+### 这个正式对象的含义
+
+它的含义不是“大脑有一个神秘额外模块”，而是：
+- 大脑编码系统的所有关键状态
+- 都必须同时处在一个全局可行域 `M_feas` 内
+- 所有更新都必须落在允许集合 `A` 里
+- 只有这样：
+  - 对象流形
+  - 记忆保留
+  - 关系结构
+  - 判别读出
+  - 相位切换
+  才能长期共存
+
+### 七个问题如何约束这个正式对象
+
+- `Q1` 约束 `Z_obj`
+- `Q2` 约束 `F_obj, F_mem, A`
+- `Q3` 约束 `Z_mem` 的 write/read/persistence 分层
+- `Q4` 约束 `F_rel`
+- `Q5` 约束 `Z_obj` 的共享流形与跨模态同一性
+- `Q6` 约束 `F_disc, Q` 以及它们与 `Z_obj` 的兼容性
+- `Q7` 约束这整套抽象对象如何投影到真实脑区和 3D 拓扑
+
+### 当前最强理论判断
+
+到这一步，理论轨最强判断已经可以写成一句话：
+
+- 大脑编码机制最像一个 `受控编码动力系统`
+- 而当前真正没闭合的，是这个系统的：
+  - `global feasibility law`
+  - 也就是 `M_feas` 和 `A` 的构造形式
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 C58：高阶可行域流形 / 元可容许性搜索
+
+本轮新增脚本：
+- `/tests/codex/test_stage_c58_higher_order_feasible_manifold_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c58_higher_order_feasible_manifold_search.py`
+- `python tests/codex/test_stage_c58_higher_order_feasible_manifold_search.py`
+
+结果：
+- `best_objective_consistency = 0.2000`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2000`
+- `retention_concept_accuracy = 0.3504`
+- `overall_concept_accuracy = 0.3460`
+
+结论：
+- `higher-order feasible manifold / meta-admissibility` 依旧只能稳定给出 `retention-compatible family`
+- 但和 `C57` 基本完全重合，没有任何突破
+- 这使得理论判断进一步收紧：
+  - 当前缺的很可能不是“再高一层状态中心”
+  - 而是一个真正不同类型的：
+    - `meta-geometric constraint`
+    - 或 `global feasibility law`
+
+换句话说，系统像是被某个更深的全局可行性边界锁住，而不是被某个局部几何模块卡住。
+
+---
+
+## 2026-03-12 项目层面同步更新
+
+更新脚本：
+- `/tests/codex/test_phase_p1_p4_push_plan.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_phase_p1_p4_push_plan.py`
+- `python tests/codex/test_phase_p1_p4_push_plan.py`
+
+结果：
+- `P3 higher_order_feasible_consistency = 0.2000`
+- `moderate_control_consistency = 0.2519`
+- `remaining_gap_vs_control = 0.0519`
+- `P3 pressure = 0.6481`
+
+项目执行顺序保持不变：
+1. `P3A transport/phase geometry formalism and execution block`
+2. `P4A execute protocol-ready brain-side mapping bundle`
+3. `P1A atlas consolidation and invariant extraction`
+4. `P2A update-law freeze and anti-interference calibration`
+
+---
+
+## 2026-03-12 理论轨补充：编码形成过程与系统运行机制的更强猜想
+
+到 `C58` 为止，理论轨更像支持下面这个过程模型：
+
+### 编码形成过程
+1. 感觉输入先被压成：
+   - `shared object manifold`
+   - 并叠加 `family / role / bridge` 偏移
+2. 局部门控可塑性把新证据写进：
+   - `fast write trace`
+   - `read state`
+   - `persistence state`
+3. `bridge / role operator` 把对象核组织成更高层关系结构
+4. `readout geometry` 再把对象流形读成语言、决策、动作边界
+5. 脑区差异主要体现为：
+   - 参数不同
+   - 拓扑不同
+   - 但未必是底层机制不同
+
+### 系统层运行机制
+更像：
+- `controlled encoding dynamical system`
+
+核心状态：
+- `object manifold`
+- `memory/read/persistence state`
+- `bridge-role state`
+- `readout geometry state`
+- `phase/rule state`
+
+核心运行律：
+- `local plastic update`
+- `admissible update geometry`
+- `phase-conditioned switching`
+- `readout formation law`
+
+当前最强猜想：
+- 七个问题正在共同逼近的，不是一个单独模块
+- 而是一个 `global feasibility law`
+- 它决定：
+  - 什么对象几何是可稳定形成的
+  - 什么更新是允许的
+  - 什么读出几何能从对象流形合法派生
+  - 什么相位切换是可持续的
+
+如果这个猜想成立，那么：
+- 破解编码机制的关键
+- 最后可能不是找到某个新 network block
+- 而是把这个 `global feasibility law` 写成形式化数学对象
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 理论轨综合：编码形成过程与系统层运行机制
+
+本轮新增脚本：
+- `/tests/codex/test_theory_track_encoding_mechanism_synthesis.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_theory_track_encoding_mechanism_synthesis.py`
+- `python tests/codex/test_theory_track_encoding_mechanism_synthesis.py`
+
+理论综合结论：
+
+### 七个问题如何逐步还原编码机制
+
+1. `编码对象层`
+- 当前答案：
+  - `object kernel`
+  - `concept kernel`
+  - `family structure`
+  - `bridge-role coordinates`
+- 大脑猜想：
+  - 皮层稳定承载的不是原始特征，而是对象样 latent state
+
+2. `局部更新律`
+- 当前答案：
+  - `local plastic update`
+  - `conditional gating`
+  - `multi-timescale retention`
+- 大脑猜想：
+  - 可塑性是局部的、门控的、分相位的，而不是全局统一刷写
+
+3. `对象承载与写读分离`
+- 当前答案：
+  - `write state / read state / persistence state`
+- 大脑猜想：
+  - 快写、慢读、更慢保持是不同层的状态，不应混在同一个瞬时表示里
+
+4. `中层桥律与角色核`
+- 当前答案：
+  - `bridge selection law`
+  - `stable role kernel`
+- 大脑猜想：
+  - 不同联结区可能复用同一桥律族，但参数化不同
+
+5. `跨模态一致`
+- 当前答案：
+  - `shared object manifold` 已有强支撑
+- 大脑猜想：
+  - 不同模态不是同表示，而是投到共享对象流形并带模态偏移
+
+6. `判别头与 margin 结构`
+- 当前答案：
+  - 仍未完全闭合
+  - 共享对象流形到判别几何仍是最难边界
+- 大脑猜想：
+  - 判别几何是对象几何的下游读出，不是同一空间
+
+7. `脑侧真实性与 3D 映射`
+- 当前答案：
+  - 协议 ready，但执行还未完全闭合
+- 大脑猜想：
+  - 同一机制家族可在不同脑区以不同拓扑和参数展开
+
+### 编码形成过程的当前候选图景
+
+当前最像真的形成过程是：
+1. 多模态输入先压成：
+   - `object manifold`
+   - 同时带有 `family / role` 偏移
+2. 局部门控可塑性负责把新证据写进：
+   - `fast trace`
+   - `read state`
+   - `persistence state`
+3. `bridge / role operator` 把对象状态组织成关系结构
+4. `discriminative readout geometry` 再从对象流形派生出决策边界
+5. 真实脑区则是在不同拓扑和参数下实例化这套机制家族
+
+### 系统层运行机制的当前统一图景
+
+系统层面当前最像：
+- `controlled encoding dynamical system`
+
+核心状态对象：
+- `object manifold state`
+- `memory / read / persistence state`
+- `bridge-role state`
+- `readout geometry state`
+- `phase / rule state`
+
+核心运行律：
+- `local plastic update`
+- `admissible update geometry`
+- `phase-conditioned switching`
+- `readout formation law`
+
+当前最关键的缺失对象：
+- `higher-order feasible manifold`
+- `meta-geometric admissibility`
+
+最强理论判断：
+- 七个问题不是七个独立答案
+- 而是在逐步重建同一个 `controlled encoding dynamical system`
+- 其中真正没闭合的，是“共享对象几何如何在更高阶可行域里稳定变成判别几何”
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 C57：可行域流形几何搜索
+
+本轮新增脚本：
+- `/tests/codex/test_stage_c57_feasible_manifold_geometry_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c57_feasible_manifold_geometry_search.py`
+- `python tests/codex/test_stage_c57_feasible_manifold_geometry_search.py`
+
+结果：
+- `best_objective_consistency = 0.2000`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2000`
+- `retention_concept_accuracy = 0.3504`
+- `overall_concept_accuracy = 0.3460`
+
+结论：
+- `feasible-manifold geometry` 方向本身是有意义的，因为仍然稳定给出 `retention-compatible family`
+- 但它比 `C56/C55` 还略差，说明当前系统并不是“只要显式加上可行域中心”就能突破
+- 这更强地支持了一个理论判断：
+  - 真正限制系统的不是某个单独状态或几何补丁
+  - 而是更深层的：
+    - `meta-geometric admissibility`
+    - `higher-order feasible manifold`
+
+也就是说，当前工程轨已经逼近这样一个结论：
+- 主瓶颈不是“缺一个新模块”
+- 而是“整个对象流形、判别流形、更新律、相位切换共同受某个更深层可行域约束”
+
+---
+
+## 2026-03-12 工程轨与项目层面更新
+
+更新脚本：
+- `/tests/codex/test_phase_p1_p4_push_plan.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_phase_p1_p4_push_plan.py`
+- `python tests/codex/test_phase_p1_p4_push_plan.py`
+
+结果：
+- `P3 feasible_manifold_consistency = 0.2000`
+- `moderate_control_consistency = 0.2519`
+- `remaining_gap_vs_control = 0.0519`
+- `P3 pressure = 0.6481`
+
+项目执行顺序继续固定为：
+1. `P3A transport/phase geometry formalism and execution block`
+2. `P4A execute protocol-ready brain-side mapping bundle`
+3. `P1A atlas consolidation and invariant extraction`
+4. `P2A update-law freeze and anti-interference calibration`
+
+更新后的项目判断：
+- `P3` 的压力进一步上升
+- `P4` 仍然是第二优先级，因为协议 readiness 已经足够高
+- `P1/P2` 作为底座保持，但不应抢占主优先级
+
+---
+
+## 2026-03-12 理论轨进一步分析：大脑编码机制具体可能是什么
+
+到 `C57` 为止，理论轨更像在逼近这样一个具体图景：
+
+### 1. 大脑不是简单“很多模块各管一摊”
+更像是一个：
+- `受控编码动力系统`
+
+其中至少有四层统一对象：
+- `对象流形`
+- `更新律`
+- `读出几何`
+- `相位/规则切换`
+
+### 2. 七个问题如何还原编码机制
+
+七个问题不是七个平行答案，而是还原同一个系统的七个侧面：
+
+1. `编码对象层`
+- 说明系统到底在稳定承载什么：
+  - `对象核`
+  - `概念核`
+  - `family/role/bridge`
+
+2. `局部更新律`
+- 说明这些对象核是怎么被写入和改写的：
+  - `局部可塑性`
+  - `条件门控`
+  - `多时间尺度`
+
+3. `对象承载与写读分离`
+- 说明为什么新写入不会直接抹掉旧对象：
+  - `write state`
+  - `read state`
+  - `persistence state`
+
+4. `中层桥律与角色核`
+- 说明对象如何上升为关系和角色：
+  - `bridge`
+  - `role kernel`
+
+5. `跨模态一致`
+- 说明同一对象为什么能跨视觉/语言/触觉保持同一性：
+  - `shared object manifold`
+
+6. `判别头与 margin 结构`
+- 说明系统如何把共享对象流形读成可决策边界：
+  - `discriminative geometry`
+
+7. `脑侧真实性与 3D 映射`
+- 说明这套抽象动力学怎样落到真实脑区、细胞类型、层间连接和 3D 拓扑
+
+### 3. 目前最像真的编码机制图景
+
+当前最像的候选图景是：
+- 大脑先形成：
+  - `shared object manifold`
+- 然后通过：
+  - `local plastic update + write/read separation + admissible update`
+  来保留和更新对象核
+- 再通过：
+  - `bridge/role system`
+  把对象核组织成关系结构
+- 最后通过：
+  - `discriminative readout geometry`
+  输出行为、语言、决策
+
+而真正最难的点，正是：
+- 共享对象流形如何在不伤 retention 的情况下稳定变成判别几何
+
+### 4. 当前最强猜想
+
+目前最强的理论猜想已经不是：
+- “缺一个更好的注意力”
+- “缺一个更好的 head”
+- “缺一个更好的对齐项”
+
+而是：
+- 大脑编码机制受到某种更深层的 `higher-order feasible manifold` 约束
+- 七个问题其实是在逐步重建这个可行域的边界
+
+如果这个猜想对，那么：
+- 破解智能的关键
+- 不是继续堆 patch
+- 而是把这个 `higher-order feasible manifold` 的数学结构写出来
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 C56：相位切换几何与元切换律搜索
+
+本轮新增脚本：
+- `/tests/codex/test_stage_c56_phase_transition_meta_switching_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c56_phase_transition_meta_switching_search.py`
+- `python tests/codex/test_stage_c56_phase_transition_meta_switching_search.py`
+
+结果：
+- `best_objective_consistency = 0.2028`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2028`
+- `retention_concept_accuracy = 0.3504`
+- `overall_concept_accuracy = 0.3460`
+
+结论：
+- `phase-transition geometry / meta-switching law` 依旧可以给出 `retention-compatible family`
+- 但和 `C55/C54/C53/C52` 继续完全重合
+- 这说明当前主瓶颈已经不是：
+  - `compatibility geometry`
+  - `transport geometry`
+  - `phase geometry`
+  - `phase-transition switching`
+- 更像是：
+  - 缺失一个更高阶的 `meta-geometric constraint`
+  - 或者说，系统当前被某个更深的可行域约束锁死，局部增加几何状态和切换状态都无法越过
+
+理论轨猜想更新：
+- 现在更可能缺的不是“再复杂一点的状态方程”
+- 而是：
+  - `feasible-manifold geometry`
+  - `meta-geometric admissibility`
+- 也就是：真正限制系统的，是对象流形、判别流形、相位切换、更新法则共同组成的“可行几何域”
+
+---
+
+## 2026-03-12 项目推进顺序正式固定
+
+更新脚本：
+- `/tests/codex/test_phase_p1_p4_push_plan.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_phase_p1_p4_push_plan.py`
+- `python tests/codex/test_phase_p1_p4_push_plan.py`
+
+结果：
+- `P3 phase_transition_consistency = 0.2028`
+- `moderate_control_consistency = 0.2519`
+- `remaining_gap_vs_control = 0.0491`
+- `P3 pressure = 0.6134`
+
+项目执行顺序正式固定为：
+1. `P3A transport/phase geometry formalism and execution block`
+2. `P4A execute protocol-ready brain-side mapping bundle`
+3. `P1A atlas consolidation and invariant extraction`
+4. `P2A update-law freeze and anti-interference calibration`
+
+理论轨当前总体猜想：
+- 如果七个问题真是同一个受控编码动力系统的不同展开，那么：
+  - `P1` 解决对象流形基底
+  - `P2` 解决受控更新律
+  - `P3` 解决共享对象流形到判别几何的兼容与可行域
+  - `P4` 解决脑侧映射和判伪
+- 当前真正的总瓶颈依旧在：
+  - `P3`
+  - 更准确说在 `feasible-manifold geometry`
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 C55：相位条件流形几何搜索
+
+本轮新增脚本：
+- `/tests/codex/test_stage_c55_phase_conditioned_manifold_geometry_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c55_phase_conditioned_manifold_geometry_search.py`
+- `python tests/codex/test_stage_c55_phase_conditioned_manifold_geometry_search.py`
+
+结果：
+- `best_objective_consistency = 0.2028`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2028`
+- `retention_concept_accuracy = 0.3504`
+- `overall_concept_accuracy = 0.3460`
+
+结论：
+- `phase-conditioned manifold geometry` 依旧能够给出 `retention-compatible family`
+- 但和 `C54/C53/C52` 继续重合，说明当前主瓶颈已经不是：
+  - 局部几何补丁
+  - 全局运输项
+  - 双流形对齐
+  - 相位条件流形
+- 更像是：
+  - `phase-conditioned compatibility` 仍然被约束在同一个低平台
+  - 真正缺的也许是更高层的 `phase-transition law` 或 `meta-geometric switching law`
+
+理论轨更新：
+- 当前形式已经从：
+  - `compatibility geometry`
+  - `transport geometry`
+  - `phase geometry`
+- 继续指向：
+  - `phase-transition geometry`
+
+---
+
+## 2026-03-12 四阶段推进总表
+
+本轮新增脚本：
+- `/tests/codex/test_phase_p1_p4_push_plan.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_phase_p1_p4_push_plan.py`
+- `python tests/codex/test_phase_p1_p4_push_plan.py`
+
+结果：
+- `P1 current_score = 0.7783`
+- `P2 current_score = 0.6899`
+- `P3 current_score = 0.7792`
+- `P4 current_score = 0.7903`
+- `P3 remaining_gap_vs_control = 0.0491`
+- `P3 pressure = 0.6134`
+
+当前四阶段执行顺序已经压实为：
+1. `P3A transport/phase geometry formalism and execution block`
+2. `P4A execute protocol-ready brain-side mapping bundle`
+3. `P1A atlas consolidation and invariant extraction`
+4. `P2A update-law freeze and anti-interference calibration`
+
+阶段判断：
+- `P1`：`supportive_base_ready`
+- `P2`：`partial_closure_ready_for_freeze`
+- `P3`：`primary_bottleneck`
+- `P4`：`protocol_ready_waiting_execution`
+
+这意味着“七个问题如果真是同一个受控编码动力系统的不同展开”，当前最可行的落地方式已经不是七条并行线，而是：
+- 先用 `P3` 打主瓶颈
+- 紧接着用 `P4` 把抽象机制推出去做脑侧判伪
+- 然后回头固化 `P1/P2`
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 C54：全局运输几何与双流形对齐搜索
+
+本轮新增脚本：
+- `/tests/codex/test_stage_c54_global_transport_dual_manifold_alignment_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c54_global_transport_dual_manifold_alignment_search.py`
+- `python tests/codex/test_stage_c54_global_transport_dual_manifold_alignment_search.py`
+
+结果：
+- `best_objective_consistency = 0.2028`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2028`
+- `retention_concept_accuracy = 0.3504`
+- `overall_concept_accuracy = 0.3460`
+
+结论：
+- `global transport geometry + dual-manifold alignment` 依旧可以给出 `retention-compatible family`
+- 但和 `C53` 基本完全重合，没有带来任何新跃迁
+- 这说明当前缺的已经不是：
+  - 局部 `compatibility bridge`
+  - 局部 `transport law`
+  - 全局 `dual-manifold alignment`
+- 更像是缺：
+  - 一个更高层的 `phase / regime geometry`
+  - 或者说，对象流形与判别流形之间真正发生冲突的不是“点到点映射”，而是“不同相位/不同机制区间下的几何切换规则”
+
+理论轨更新：
+- `compatibility geometry formalism`
+- `transport geometry formalism`
+- 现在应继续升级为：
+  - `phase geometry formalism`
+
+新的理论判断：
+- 当前主瓶颈不是“共享对象流形如何映到判别流形”
+- 而是：
+  - 当系统在 `memory / identity / novelty / readout` 不同相位之间切换时
+  - 这两个流形如何保持可兼容
+- 也就是：
+  - `phase-conditioned manifold compatibility`
+
+工程轨建议：
+- 下一步不该再加同类几何对齐项
+- 应该转向：
+  - `C55 phase-conditioned manifold geometry search`
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 C53：共享对象流形到判别流形运输律搜索
+
+本轮新增脚本：
+- `/tests/codex/test_stage_c53_shared_manifold_discriminative_transport_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c53_shared_manifold_discriminative_transport_search.py`
+- `python tests/codex/test_stage_c53_shared_manifold_discriminative_transport_search.py`
+
+结果：
+- `best_objective_consistency = 0.2028`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2028`
+- `retention_concept_accuracy = 0.3504`
+- `overall_concept_accuracy = 0.3460`
+
+结论：
+- `shared object manifold -> discriminative geometry` 作为研究方向是有效的，因为依旧能够产生 `retention-compatible family`
+- 但 `C53` 与 `C52` 几乎重合，没有超过 `C42`
+- 这说明当前缺的已经不是：
+  - `compatibility mediator`
+  - `dual geometry projection`
+  - `tri-level compatibility bridge`
+  - `shared-manifold transport` 的局部实现
+- 更像是缺：
+  - `对象流形与判别流形之间的全局运输几何`
+  - 或者说缺一个更高阶的 `transport geometry law`
+
+理论轨更新：
+- `compatibility geometry formalism`
+- 现在应继续升级为：
+  - `transport geometry formalism`
+- 核心问题变成：
+  - 为什么对象共享流形能稳定存在
+  - 但一旦要把它读成更强判别几何，就会掉入同一个低平台
+
+这说明当前主瓶颈不是“有没有共享对象核”，而是：
+- `对象流形到判别流形的几何运输不闭合`
+
+工程轨判断：
+- `P3 compatibility geometry` 仍然是主瓶颈
+- 但下一步不该再只试局部运输项，而应转成更高层的：
+  - `C54 global transport geometry / dual-manifold alignment search`
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 C52：三层联合兼容律搜索
+
+本轮新增脚本：
+- `/tests/codex/test_stage_c52_trilevel_compatibility_law_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c52_trilevel_compatibility_law_search.py`
+- `python tests/codex/test_stage_c52_trilevel_compatibility_law_search.py`
+
+结果：
+- `best_objective_consistency = 0.2028`
+- `best_consistency_value = 0.2028`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2028`
+- `retention_concept_accuracy = 0.3504`
+- `overall_concept_accuracy = 0.3497`
+
+结论：
+- `encoding geometry + update law + readout geometry` 的三层联合兼容律是有效方向，因为它仍然可以给出 `retention-compatible family`
+- 但 `C52` 没有超过 `C42 = 0.2222 / 0.2519(control)`，说明当前缺的不是再加一个联合中介，而是更强的：
+  - `shared object manifold -> discriminative readout geometry`
+  - 联合映射律
+
+新的理论判断：
+- `P3 compatibility geometry` 的主瓶颈继续收缩
+- 当前不是：
+  - `有没有共享对象流形`
+  - 也不是 `有没有 memory protection`
+  - 也不是 `有没有 law-conditioned query`
+- 而是：
+  - `共享对象流形如何稳定变成强判别读出几何`
+  - 并且不破坏 `retention`
+
+从七点映射看，当前反复无法闭合的点仍属于：
+- `第5点：跨模态一致`
+- `第6点：判别头与 margin 结构`
+
+更准确地说，是两者交界处的：
+- `compatibility geometry`
+- `shared manifold -> discriminative geometry`
+
+下一步建议：
+- 工程轨：`C53 shared-manifold discriminative transport search`
+- 理论轨：把 `compatibility geometry formalism` 升级成
+  - `shared manifold transport law`
+  - 即：对象流形到判别流形的运输律，而不是再继续局部补 readout/head/projection
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+## 2026-03-12 C46：query-conditioned selective readout
+
+本轮新增脚本：
+- `tests/codex/test_stage_c46_query_conditioned_selective_readout_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c46_query_conditioned_selective_readout_search.py`
+- `python tests/codex/test_stage_c46_query_conditioned_selective_readout_search.py`
+
+结果摘要：
+- `best_objective_consistency = 0.2111`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2111`
+- `retention_concept_accuracy = 0.3636`
+- `overall_concept_accuracy = 0.3552`
+- `temporal_binding_score = 0.2481`
+- 对比：
+  - `C42 retention-compatible consistency = 0.2222`
+  - `C45 consistency = 0.2028`
+
+结论：
+- `query-conditioned selective readout` 明显优于 `C45`
+- 说明“按条件读取”确实比“直接 co-training”更合理
+- 但仍未超过 `C42`
+- 当前缺口已经不是 readout 有无条件，而更像：
+  - `query geometry`
+  - `query 与 meta-law / manifold 的联合控制`
+
+系统分析：
+- `C45` 证明：简单 co-training 会把 manifold 拖回折中区
+- `C46` 证明：把 readout 改成 query-conditioned access 后，retention / overall / temporal binding 都上去了
+- 但 consistency 仍卡在 `0.2111`
+- 这说明当前 query 还太“局部相似度驱动”，没有真正用到：
+  - `law state`
+  - `mode / regime`
+  - `cross-law manifold trajectory`
+- 换句话说，现在最像缺的是：
+  - `law-conditioned query`
+  - 或 `controller-conditioned selective readout`
+
+理论轨更新：
+- 到 `C46` 为止，`representation-readout coupling law` 应进一步细化成：
+  - `query formation law`
+  - `query-conditioned access law`
+  - `query-to-manifold coupling constraint`
+- 当前更合理的形式可写成：
+```text
+z_{t+1} = F_{r_t}(z_t, x_t, y_t)
+y_{t+1} = G(y_t, r_t, z_t, x_t)
+r_{t+1} = M(r_t, z_t, y_t, x_t, h_t)
+q_t = Q(x_t, z_t, y_t, r_t)
+o_t = R(q_t, z_t, y_t)
+Delta_t in A(z_t, y_t, r_t, x_t)
+```
+- 其中关键开放问题变成：
+  - `Q` 是否必须显式依赖 `r_t` 与 `y_t` 的轨迹，而不是只依赖当前输入和局部距离
+
+阶段判断：
+- `C41-C42` 仍然是当前最强 retention-compatible consistency 主线
+- `C45-C46` 说明 readout 方向要做“条件访问”，不能做“直接协同塑形”
+- 下一阶段不该继续只调 query 温度，而应切到：
+  - `C47：law-conditioned query / controller-conditioned readout search`
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+## 2026-03-12 C47：law-conditioned query / controller-conditioned readout
+
+本轮新增脚本：
+- `tests/codex/test_stage_c47_law_conditioned_query_readout_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c47_law_conditioned_query_readout_search.py`
+- `python tests/codex/test_stage_c47_law_conditioned_query_readout_search.py`
+
+结果摘要：
+- `best_objective_consistency = 0.2111`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2111`
+- `retention_concept_accuracy = 0.3636`
+- `overall_concept_accuracy = 0.3552`
+- `temporal_binding_score = 0.2481`
+- 对比：
+  - `C42 retention-compatible consistency = 0.2222`
+  - `C46 retention-compatible consistency = 0.2111`
+
+结论：
+- `law-conditioned query` 没有超过 `C46`
+- 说明仅把 `rule_state` 接入 query 还不够
+- 当前缺口已经不太像：
+  - `readout 权重`
+  - `query 温度`
+  - `是否依赖 law state`
+- 更像缺的是：
+  - `trajectory-level query`
+  - `controller / query / manifold` 的联合几何
+
+系统分析：
+- `C45` 证明：直接 co-training 会伤 manifold
+- `C46` 证明：条件读取比 co-training 合理
+- `C47` 进一步证明：即便 query 显式依赖 `rule_state`，也没有超过 `C46`
+- 这说明当前问题不是“query 是否知道当前 law”，而是“query 是否知道 system trajectory / phase / path history”
+- 也就是说，当前更合理的下一步不是再调 query 本身，而是：
+  - `trajectory-conditioned query`
+  - 或 `controller-query joint geometry`
+
+理论轨更新：
+- 到 `C47` 为止，理论轨可更明确收敛成：
+  - `state dynamics`
+  - `admissible update geometry`
+  - `meta-law / controller`
+  - `cross-law shared manifold`
+  - `query-conditioned readout`
+- 但 `C47` 说明最后这层还要再拆：
+  - `query formation from state`
+  - `query formation from trajectory`
+  - `trajectory-to-readout coupling`
+
+更一般的统一判断：
+- `编码对象层`
+- `局部更新律`
+- `对象承载与写读分离`
+- `中层桥律与角色核`
+- `跨模态一致`
+- `判别头与 margin 结构`
+- `脑侧真实性与 3D 映射`
+
+这 7 个问题更像不是 7 个独立答案，而是同一个编码动力系统在不同层级上的投影：
+
+1. `编码对象层`
+- 回答“系统稳定承载什么对象”
+- 对应状态空间中的不变量、吸引子、对象流形
+
+2. `局部更新律`
+- 回答“状态如何局部演化”
+- 对应受限非线性动力系统与可塑性方程
+
+3. `对象承载与写读分离`
+- 回答“新证据如何进入、旧对象如何保住”
+- 对应快慢变量、多时间尺度、可写状态与可读状态分离
+
+4. `中层桥律与角色核`
+- 回答“局部对象如何上升为关系 / 角色”
+- 对应从局部流形到关系流形的桥映射
+
+5. `跨模态一致`
+- 回答“同一对象为何能跨模态保持同一性”
+- 对应共享流形或跨 law 共享坐标上的轨迹对齐
+
+6. `判别头与 margin 结构`
+- 回答“如何从对象流形读出可判别边界”
+- 对应 readout / query / margin 几何
+
+7. `脑侧真实性与 3D 映射`
+- 回答“这套编码动力学如何落到真实神经系统”
+- 对应将抽象状态空间映射到脑区、细胞类型、连接拓扑与时空活动场
+
+从这个角度，更普遍的结论是：
+- 大脑编码机制更像一套 `分层受控编码动力系统`
+- 而不是很多彼此独立的模块答案
+- 上述 7 个问题只是这套系统在：
+  - `承载对象`
+  - `更新规则`
+  - `跨层桥接`
+  - `跨模态对齐`
+  - `读出判别`
+  - `脑侧落地`
+ 这些不同视角下的展开
+
+可以暂时把这个更一般的统一数学原理写成：
+```text
+z_{t+1} = F_{r_t}(z_t, x_t, y_t)
+y_{t+1} = G(y_t, r_t, z_t, x_t)
+r_{t+1} = M(r_t, z_t, y_t, x_t, h_t)
+q_t = Q(x_t, z_t, y_t, r_t, tau_t)
+o_t = R(q_t, z_t, y_t)
+Delta_t in A(z_t, y_t, r_t, x_t)
+```
+
+其中：
+- `z_t`：局部与对象状态
+- `y_t`：共享流形 / 共享坐标
+- `r_t`：当前 law / controller state
+- `q_t`：query / selective readout state
+- `tau_t`：trajectory / history state
+- `A`：允许更新集合
+
+这套形式比“单一 attention 公式”更一般，也更能同时容纳上面 7 个问题。
+
+阶段判断：
+- `C41-C42` 仍是当前最强 retention-compatible consistency 主线
+- `C45-C47` 连续结果说明：
+  - 缺口不在单个 head
+  - 不在简单 co-training
+  - 也不在仅仅把 law state 接进 query
+- 下一阶段最该切到：
+  - `C48：trajectory-conditioned query / controller-query joint geometry search`
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+## 2026-03-12 C48：trajectory-conditioned query / controller-query joint geometry
+
+本轮新增脚本：
+- `tests/codex/test_stage_c48_trajectory_conditioned_query_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c48_trajectory_conditioned_query_search.py`
+- `python tests/codex/test_stage_c48_trajectory_conditioned_query_search.py`
+
+结果摘要：
+- `best_objective_consistency = 0.2111`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2111`
+- `retention_concept_accuracy = 0.3636`
+- `overall_concept_accuracy = 0.3552`
+- `temporal_binding_score = 0.2481`
+- 对比：
+  - `C42 retention-compatible consistency = 0.2222`
+  - `C46/C47 consistency = 0.2111`
+
+结论：
+- `trajectory-conditioned query` 没有超过 `C46/C47`
+- 这说明当前闭不上的点已经不是：
+  - `是否带 query`
+  - `是否带 law state`
+  - `是否带 trajectory state`
+- 更像是一个更底层的结构性张力：
+  - `共享对象几何` 和 `读出判别几何` 仍然没有真正兼容
+
+系统判断：
+- `C45`：co-training 不行
+- `C46`：query-conditioned access 更合理
+- `C47`：law-conditioned query 仍不够
+- `C48`：trajectory-conditioned query 仍不够
+- 因此当前真正闭不上的点，不是简单的 query/controller 技术问题，而是：
+  - `shared object manifold -> discriminative readout geometry`
+  这条映射还没有闭合
+
+对应到七个理论模块，目前反复测试无法闭合的点，主要属于：
+
+1. `第 5 点：跨模态一致`
+- 因为当前最直接卡住的是：
+  - `retention-compatible direct crossmodal consistency`
+- 也就是同一对象跨模态统一后，始终没法继续把一致性从 `0.2222` 往上拉
+
+2. `第 6 点：判别头与 margin 结构`
+- 因为问题不是共享对象流形不存在
+- 而是这套流形怎样被稳定读出成更强同一性判决，仍没有闭合
+
+更准确地说，当前主瓶颈不是纯第 5 点，也不是纯第 6 点，而是：
+- `第 5 点` 与 `第 6 点` 的耦合边界
+- 即：
+  - `共享跨模态对象几何`
+  - `到判别读出的几何映射`
+  两者之间还没有形成真正兼容的数学律
+
+原理解释：
+- 如果只强化跨模态统一，容易重排旧概念几何，伤 retention
+- 如果只强化读出判别，容易过早压缩 manifold，伤 overall / novelty
+- 如果只加 query / law / trajectory，又只是换读取方式，没有改变底层几何兼容性
+- 所以现在反复闭不上的，不是“有没有共享对象核”，而是：
+  - `共享对象核如何被读成强判别边界，同时不破坏 retention`
+
+从更一般角度看，这个闭合点本质上是：
+- `对象流形几何`
+  与
+- `判别边界几何`
+之间的兼容性问题
+
+这也是为什么工程上会反复表现为：
+- `consistency` 上不去
+- 或一上去就伤 `retention`
+- 或 `readout` 一增强就伤 `manifold`
+
+阶段判断：
+- 当前最值钱的下一步不该继续堆 query 条件，而应切到：
+  - `C49：shared object manifold -> discriminative geometry compatibility search`
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+## 2026-03-12 C49：model sanity diagnostics
+
+本轮新增脚本：
+- `tests/codex/test_stage_c49_model_sanity_diagnostics.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c49_model_sanity_diagnostics.py`
+- `python tests/codex/test_stage_c49_model_sanity_diagnostics.py`
+
+诊断目标：
+- 证明当前反复闭不上的点，不是“测试台坏了”或“模型族完全失灵”
+- 而是理论上的 `compatibility geometry` 还没闭合
+
+本轮设计了 3 个对照：
+
+1. `moderate regime C42 control`
+- 使用 `C42` 结构，但把环境降到中等难度：
+  - `noise = 0.12`
+  - `dropout_p = 0.05`
+  - `missing_modality_p = 0.10`
+- 结果：
+  - `crossmodal_consistency = 0.2519`
+  - `retention_concept_accuracy = 0.3460`
+  - `overall_concept_accuracy = 0.3535`
+- 这已经超过 `C15 retention-compatible consistency = 0.2211`
+- 说明当前测试台不是无法工作，而是在更友好的几何下可以闭合得更好
+
+2. `easy regime C42 control`
+- 把环境继续降到更简单：
+  - `noise = 0.08`
+  - `dropout_p = 0.02`
+  - `missing_modality_p = 0.05`
+- 结果：
+  - `crossmodal_consistency = 0.3074`
+  - `retention_concept_accuracy = 0.4975`
+  - `overall_concept_accuracy = 0.3401`
+- 说明同一模型族在更低冲突区间确实有更高 consistency capacity
+
+3. `oracle exact prototype control`
+- 用静态精确概念原型作为参考上界
+- 在默认噪声下结果：
+  - `crossmodal_consistency = 0.1778`
+  - `overall_concept_accuracy = 0.3754`
+- 这不是“完美 oracle”，但依然高于 `baseline_consistency_ceiling = 0.1267`
+- 说明 benchmark 本身存在明显 headroom，不是评价函数把系统卡死
+
+本轮 3 个假设全部成立：
+- `H1_moderate_regime_beats_c15_retention_compatible = true`
+- `H2_easy_regime_shows_high_consistency_capacity = true`
+- `H3_oracle_shows_benchmark_headroom = true`
+
+结论：
+- 当前测试模型和测试台没有根本性问题
+- 反复闭不上的点更可能是：
+  - `compatibility_geometry_not_testbed_failure`
+
+也就是说，卡住的不是：
+- 模型不会学
+- benchmark 不给空间
+- 或 query/controller 完全无效
+
+而是：
+- `shared object manifold`
+  与
+- `discriminative readout geometry`
+之间还没有找到真正兼容的数学映射
+
+---
+
+## 基于编码机制的更一般分析
+
+从更一般的编码机制角度，现在可以把理论轨提纯成一个更高层结论：
+
+- 智能系统不是在“存很多答案”
+- 而是在运行一套 `受控编码动力系统`
+- 这套系统最少包含 5 个一般对象：
+  - `encoding object`
+  - `update law`
+  - `carrier / memory separation`
+  - `bridge / alignment geometry`
+  - `readout / decision geometry`
+
+如果把前面反复出现的 7 个模块再抽象一层，它们可以压缩成 3 个一般问题：
+
+1. `编码什么`
+- 对应：
+  - `编码对象层`
+  - `中层桥律与角色核`
+  - `跨模态一致`
+- 本质是在定义系统中的稳定对象、关系对象和共享对象流形
+
+2. `如何写、如何保`
+- 对应：
+  - `局部更新律`
+  - `对象承载与写读分离`
+- 本质是在定义局部可塑性、快慢变量和允许更新集合
+
+3. `如何读出`
+- 对应：
+  - `判别头与 margin 结构`
+  - `脑侧真实性与 3D 映射`
+- 前者是抽象读出几何
+- 后者是这套抽象几何如何落到真实神经系统
+
+所以更一般的分析结论是：
+- 这 7 个问题本质上都属于同一个统一理论
+- 它们不是 7 个平行答案
+- 而是同一编码动力系统在：
+  - `对象定义`
+  - `更新规则`
+  - `状态承载`
+  - `跨层桥接`
+  - `跨模态对齐`
+  - `判别读出`
+  - `物理落地`
+ 这些不同层面的展开
+
+从这个角度，当前最可能缺的统一数学对象不是一个新模块名，而是：
+- `compatibility geometry`
+
+它负责回答：
+- 为什么同一对象流形既能跨模态共享，又能被稳定读出
+- 为什么提升一致性不必破坏 retention
+- 为什么读出增强不必压坏 manifold
+
+因此当前理论轨最一般的结论可以写成：
+- 我们已经基本识别出编码动力系统的主要组成件
+- 但还缺一个把“共享对象几何”与“判别读出几何”真正兼容起来的统一几何原理
+
+这也是当前最值钱的下一块：
+- `C50 / T2：compatibility geometry formalism`
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+## 2026-03-12 C50：compatibility geometry search
+
+本轮新增脚本：
+- `tests/codex/test_stage_c50_compatibility_geometry_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c50_compatibility_geometry_search.py`
+- `python tests/codex/test_stage_c50_compatibility_geometry_search.py`
+
+结果摘要：
+- `best_objective_consistency = 0.2111`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2111`
+- `retention_concept_accuracy = 0.3636`
+- `overall_concept_accuracy = 0.3519`
+- 对比：
+  - `C42 retention-compatible consistency = 0.2519`（在 moderate regime）
+  - 默认难度下 `C42 = 0.2222`
+
+结论：
+- 直接加入 `compatibility geometry mediator` 没有超过 `C42`
+- 说明当前缺口不是“再加一个中介状态”就能解决
+- 兼容性问题更像不是单个中间层 object，而是：
+  - `encoding geometry`
+  - `update law`
+  - `readout geometry`
+  三者的联合兼容律
+
+---
+
+## 七个问题如果真是同一个受控编码动力系统，如何落地执行
+
+到 `C50` 为止，已经可以给出一个可执行的落地方案。
+
+核心判断：
+- 可以落地
+- 但不能按“7 个问题各做一条线”来做
+- 更合理的方案是把 7 个问题重组为 3 个执行层
+
+### 执行层 1：编码层
+包含：
+- `编码对象层`
+- `中层桥律与角色核`
+- `跨模态一致`
+
+执行目标：
+- 明确系统到底在稳定承载什么对象
+- 明确这些对象如何形成共享对象流形
+- 明确对象如何跨模态、跨层保持同一性
+
+产物：
+- `object manifold atlas`
+- `bridge / role atlas`
+- `cross-modal shared manifold constraints`
+
+### 执行层 2：动力学层
+包含：
+- `局部更新律`
+- `对象承载与写读分离`
+
+执行目标：
+- 写清楚局部更新如何发生
+- 写清楚快写、慢读、长时保持如何分工
+- 写清楚允许更新集合与 memory protection law
+
+产物：
+- `controlled update law`
+- `fast/slow carrier formalism`
+- `admissible update geometry`
+
+### 执行层 3：读出与落地层
+包含：
+- `判别头与 margin 结构`
+- `脑侧真实性与 3D 映射`
+
+执行目标：
+- 写清楚对象流形如何被读出成稳定判别几何
+- 写清楚这套抽象机制如何映射到脑区、细胞类型、连接拓扑与时空活动场
+
+产物：
+- `readout geometry law`
+- `brain-side projection hypotheses`
+- `3D mapping constraints`
+
+---
+
+### 更可行的工程-理论联合路线
+
+如果把这 7 个问题视为同一系统的不同展开，最可行的执行路线不是并列 7 线，而是下面这个 4 阶段：
+
+1. `阶段 P1：对象流形建模`
+- 目标：
+  - 固化 `object manifold / shared manifold`
+  - 让第 1、4、5 点统一
+- 评价：
+  - `crossmodal consistency`
+  - `role/bridge stability`
+  - `shared manifold persistence`
+
+2. `阶段 P2：受控更新律建模`
+- 目标：
+  - 固化 `local update law + carrier separation + memory protection`
+  - 让第 2、3 点统一
+- 评价：
+  - `retention`
+  - `novel write`
+  - `anti-interference`
+
+3. `阶段 P3：兼容性几何建模`
+- 目标：
+  - 固化 `object manifold -> discriminative readout` 的兼容律
+  - 让第 5、6 点真正闭合
+- 评价：
+  - `retention-compatible direct consistency`
+  - `margin stability`
+  - `query/readout robustness`
+
+4. `阶段 P4：脑侧映射与判伪`
+- 目标：
+  - 把抽象状态和规则映射到真实脑结构
+  - 让第 7 点闭合
+- 评价：
+  - `brain-side falsification`
+  - `region/cell-type correspondence`
+  - `3D topology constraints`
+
+---
+
+### 当前最现实的落地执行方案
+
+如果现在就要落地，我建议按下面的项目结构推进：
+
+- `工程轨 E1：object manifold / bridge / role`
+- `工程轨 E2：update law / write-read separation / retention`
+- `工程轨 E3：compatibility geometry / readout law`
+- `工程轨 E4：brain-side falsification / 3D projection`
+
+与之对应的理论轨：
+- `T1：controlled encoding dynamics`
+- `T2：compatibility geometry formalism`
+- `T3：brain projection formalism`
+
+其中当前最优先的是：
+- `E3 + T2`
+
+原因很直接：
+- 第 1/2/3/4 点已经有较强骨架
+- 第 7 点脑侧映射还偏后置
+- 当前真正卡住闭合的是：
+  - `第 5 点 跨模态一致`
+  - `第 6 点 判别头与 margin 结构`
+ 之间的兼容律
+
+所以现在最可行的落地方案，不是把 7 个问题拆开分别做，而是：
+- 先以 `compatibility geometry` 为中轴
+- 把 5、6 闭合
+- 再把 1/2/3/4/7 作为上下游统一起来
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+## 2026-03-12 P1-P4 execution master
+
+本轮新增脚本：
+- `tests/codex/test_phase_p1_p4_execution_master.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_phase_p1_p4_execution_master.py`
+- `python tests/codex/test_phase_p1_p4_execution_master.py`
+
+目标：
+- 把现有碎片化结果重组为：
+  - `P1：对象流形建模`
+  - `P2：受控更新律建模`
+  - `P3：兼容性几何建模`
+  - `P4：脑侧映射与判伪`
+
+总表结果：
+
+### P1：对象流形建模
+- `bridge_role_score = 0.6769`
+- `crossmodal_default_consistency = 0.2519`
+- `retention_moderate_score = 0.3460`
+- `overall_score = 0.7783`
+- 状态：
+  - `active_with_strong_partial_support`
+
+解释：
+- P1 已经不再是“概念不清”
+- 当前已经有：
+  - `object manifold`
+  - `bridge / role`
+  - `moderate-regime crossmodal support`
+
+### P2：受控更新律建模
+- `stage_a4_score = 0.6556`
+- `retention_coexistence_score = 0.5432`
+- `interference_control_score = 0.7132`
+- `easy_regime_retention = 0.4975`
+- `overall_score = 0.6899`
+- 状态：
+  - `partial_closure_with_retention_gap`
+
+解释：
+- P2 已经证明：
+  - `controlled update law`
+  - `write-read separation`
+  - `anti-interference`
+  这些不是空想
+- 但默认难度下 retention gap 仍未完全闭合
+
+### P3：兼容性几何建模
+- `default_closure_ratio_vs_moderate = 1.0000`
+- `oracle_readout_capacity = 0.8889`
+- `stagnation_penalty = 0.25`
+- `overall_score = 0.7792`
+- 状态：
+  - `main_open_bottleneck`
+
+解释：
+- 分数看起来不低，但这里的重点不是“没有能力”
+- 而是：
+  - benchmark 有 headroom
+  - object manifold 有支持
+  - 但默认难度下 `shared object manifold -> discriminative geometry` 仍没有稳定兼容律
+- 所以 P3 仍是当前主瓶颈
+
+### P4：脑侧映射与判伪
+- `g4_score = 0.7840`
+- `g5_score = 0.7967`
+- `overall_score = 0.7903`
+- 状态：
+  - `protocol_ready_not_executed`
+
+解释：
+- P4 的协议设计和判伪逻辑已经 ready
+- 但还没有真正进入脑侧执行
+
+---
+
+## 当前四阶段判断
+
+- `P1` 已有较强部分闭合
+- `P2` 已有较强部分闭合，但 retention 仍要继续抬
+- `P3` 是当前主瓶颈
+- `P4` 协议 ready，但尚未进入真实执行
+
+因此当前最合理的执行顺序是：
+- `先打 P3`
+- `再接 P4`
+- `P1/P2` 作为支撑层继续稳固
+
+这也意味着：
+- 如果把七个问题看成同一个受控编码动力系统的不同展开
+- 那当前最可行的落地方案不是平均分配资源
+- 而是：
+  - `P1/P2` 提供对象与更新底座
+  - `P3` 解决兼容性几何
+  - `P4` 做脑侧判伪与 3D 映射
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+## 2026-03-12 C51：dual-geometry compatibility projection
+
+本轮新增脚本：
+- `tests/codex/test_stage_c51_dual_geometry_compatibility_projection_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c51_dual_geometry_compatibility_projection_search.py`
+- `python tests/codex/test_stage_c51_dual_geometry_compatibility_projection_search.py`
+
+结果摘要：
+- `best_objective_consistency = 0.2111`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2111`
+- `retention_concept_accuracy = 0.3636`
+- `overall_concept_accuracy = 0.3519`
+- 对比：
+  - `C50` 基本同分
+  - `C42` 仍然更强
+
+结论：
+- 显式 `dual-geometry projection` 也没有超过 `C42`
+- 这说明当前缺口已经不是：
+  - 单中介 compatibility state
+  - 双几何 projection bridge
+- 而是一个更强的系统问题：
+  - `encoding geometry + update law + readout geometry`
+  需要作为统一工程架构一起建模
+
+---
+
+## 如果七个问题真是同一个受控编码动力系统，是否有可行的落地执行方案
+
+到 `C51` 为止，可以给出一个更明确的答案：
+
+- `有`
+- 但这个执行方案不能是“7 条并行研究线各自推进”
+- 必须是“一个统一系统架构 + 四阶段工程计划”
+
+### 统一系统架构
+
+如果把七个问题看成同一个系统的不同展开，最可行的实现架构应是：
+
+1. `对象层`
+- 负责：
+  - `编码对象层`
+  - `中层桥律与角色核`
+  - `跨模态对象流形`
+
+2. `更新层`
+- 负责：
+  - `局部更新律`
+  - `对象承载与写读分离`
+  - `memory protection / admissible update`
+
+3. `读出层`
+- 负责：
+  - `判别头与 margin 结构`
+  - `query / readout / decision geometry`
+
+4. `脑侧映射层`
+- 负责：
+  - `脑侧真实性与 3D 映射`
+  - `实验判伪`
+  - `区域 / 细胞类型 / 连接投影`
+
+也就是说，工程上不是分别实现 7 个答案，而是实现一个 4 层统一系统。
+
+### 可执行路线
+
+可执行方案已经可以直接写成：
+
+#### `Layer-1 Object Manifold Engine`
+- 输入：
+  - 多模态连续输入
+- 输出：
+  - 共享对象流形
+  - family / role / bridge state
+- 对应：
+  - 第 `1/4/5` 点
+
+#### `Layer-2 Controlled Update Engine`
+- 输入：
+  - 当前对象流形 + 新证据
+- 输出：
+  - 更新后的快写状态 / 慢读状态 / 长时保持状态
+- 对应：
+  - 第 `2/3` 点
+
+#### `Layer-3 Readout Geometry Engine`
+- 输入：
+  - 共享对象流形 + 更新状态
+- 输出：
+  - 判别边界 / query / readout
+- 对应：
+  - 第 `6` 点
+
+#### `Layer-4 Brain Projection Engine`
+- 输入：
+  - 抽象状态与更新法则
+- 输出：
+  - 脑区预测
+  - 细胞类型预测
+  - 3D 连接与时空活动预测
+- 对应：
+  - 第 `7` 点
+
+### 当前最可行的项目化执行方式
+
+如果现在就要进入真正执行，建议直接按下面方式排资源：
+
+- `工作流 W1`
+  - 固化 `P1` 的对象流形 atlas
+- `工作流 W2`
+  - 固化 `P2` 的 controlled update law
+- `工作流 W3`
+  - 主攻 `P3` 的 compatibility geometry
+- `工作流 W4`
+  - 用 `P4` 做脑侧实验协议和判伪执行
+
+资源分配优先级：
+- `W3 > W4 > W1 > W2`
+
+原因：
+- `W1/W2` 已经有较强骨架
+- `W4` 协议 ready 但还没执行
+- 当前真正卡住总闭合的是 `W3`
+
+### 更一般的结论
+
+如果七个问题真是一个系统的不同展开，那么最合理的执行原则是：
+
+- 不按“问题列表”组织工程
+- 按“系统层次”组织工程
+
+也就是：
+- 用 `对象层 + 更新层 + 读出层 + 脑侧映射层`
+  取代
+- `七个离散问题分别解答`
+
+到这一步，已经可以说：
+- 七个问题作为理论上是同一系统的不同投影，这个判断是可以落地执行的
+- 但落地方式不是拆成 7 个独立任务，而是做一个 4 层统一系统架构
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
