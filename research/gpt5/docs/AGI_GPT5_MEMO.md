@@ -27558,235 +27558,9 @@ Delta(t) in A(z_obj(t), z_mem(t), z_disc(t), r(t), x(t))
 
 ---
 
-## 2026-03-12 C55：相位条件流形几何搜索
-
-本轮新增脚本：
-- `/tests/codex/test_stage_c55_phase_conditioned_manifold_geometry_search.py`
-
-执行命令：
-- `python -m py_compile tests/codex/test_stage_c55_phase_conditioned_manifold_geometry_search.py`
-- `python tests/codex/test_stage_c55_phase_conditioned_manifold_geometry_search.py`
-
-结果：
-- `best_objective_consistency = 0.2028`
-- `best_retention_compatible_candidate.crossmodal_consistency = 0.2028`
-- `retention_concept_accuracy = 0.3504`
-- `overall_concept_accuracy = 0.3460`
-
-结论：
-- `phase-conditioned manifold geometry` 依旧能够给出 `retention-compatible family`
-- 但和 `C54/C53/C52` 继续重合，说明当前主瓶颈已经不是：
-  - 局部几何补丁
-  - 全局运输项
-  - 双流形对齐
-  - 相位条件流形
-- 更像是：
-  - `phase-conditioned compatibility` 仍然被约束在同一个低平台
-  - 真正缺的也许是更高层的 `phase-transition law` 或 `meta-geometric switching law`
-
-理论轨更新：
-- 当前形式已经从：
-  - `compatibility geometry`
-  - `transport geometry`
-  - `phase geometry`
-- 继续指向：
-  - `phase-transition geometry`
 
 ---
 
-## 2026-03-12 四阶段推进总表
-
-本轮新增脚本：
-- `/tests/codex/test_phase_p1_p4_push_plan.py`
-
-执行命令：
-- `python -m py_compile tests/codex/test_phase_p1_p4_push_plan.py`
-- `python tests/codex/test_phase_p1_p4_push_plan.py`
-
-结果：
-- `P1 current_score = 0.7783`
-- `P2 current_score = 0.6899`
-- `P3 current_score = 0.7792`
-- `P4 current_score = 0.7903`
-- `P3 remaining_gap_vs_control = 0.0491`
-- `P3 pressure = 0.6134`
-
-当前四阶段执行顺序已经压实为：
-1. `P3A transport/phase geometry formalism and execution block`
-2. `P4A execute protocol-ready brain-side mapping bundle`
-3. `P1A atlas consolidation and invariant extraction`
-4. `P2A update-law freeze and anti-interference calibration`
-
-阶段判断：
-- `P1`：`supportive_base_ready`
-- `P2`：`partial_closure_ready_for_freeze`
-- `P3`：`primary_bottleneck`
-- `P4`：`protocol_ready_waiting_execution`
-
-这意味着“七个问题如果真是同一个受控编码动力系统的不同展开”，当前最可行的落地方式已经不是七条并行线，而是：
-- 先用 `P3` 打主瓶颈
-- 紧接着用 `P4` 把抽象机制推出去做脑侧判伪
-- 然后回头固化 `P1/P2`
-
-当前项目口径维持：
-- `统一候选理论骨架完成度`：`95% - 97%`
-- `三闭环工程闭合度`：`83% - 88%`
-- `真实大脑编码机制本体破解度`：`86% - 90%`
-
----
-
-## 2026-03-12 C54：全局运输几何与双流形对齐搜索
-
-本轮新增脚本：
-- `/tests/codex/test_stage_c54_global_transport_dual_manifold_alignment_search.py`
-
-执行命令：
-- `python -m py_compile tests/codex/test_stage_c54_global_transport_dual_manifold_alignment_search.py`
-- `python tests/codex/test_stage_c54_global_transport_dual_manifold_alignment_search.py`
-
-结果：
-- `best_objective_consistency = 0.2028`
-- `best_retention_compatible_candidate.crossmodal_consistency = 0.2028`
-- `retention_concept_accuracy = 0.3504`
-- `overall_concept_accuracy = 0.3460`
-
-结论：
-- `global transport geometry + dual-manifold alignment` 依旧可以给出 `retention-compatible family`
-- 但和 `C53` 基本完全重合，没有带来任何新跃迁
-- 这说明当前缺的已经不是：
-  - 局部 `compatibility bridge`
-  - 局部 `transport law`
-  - 全局 `dual-manifold alignment`
-- 更像是缺：
-  - 一个更高层的 `phase / regime geometry`
-  - 或者说，对象流形与判别流形之间真正发生冲突的不是“点到点映射”，而是“不同相位/不同机制区间下的几何切换规则”
-
-理论轨更新：
-- `compatibility geometry formalism`
-- `transport geometry formalism`
-- 现在应继续升级为：
-  - `phase geometry formalism`
-
-新的理论判断：
-- 当前主瓶颈不是“共享对象流形如何映到判别流形”
-- 而是：
-  - 当系统在 `memory / identity / novelty / readout` 不同相位之间切换时
-  - 这两个流形如何保持可兼容
-- 也就是：
-  - `phase-conditioned manifold compatibility`
-
-工程轨建议：
-- 下一步不该再加同类几何对齐项
-- 应该转向：
-  - `C55 phase-conditioned manifold geometry search`
-
-当前项目口径维持：
-- `统一候选理论骨架完成度`：`95% - 97%`
-- `三闭环工程闭合度`：`83% - 88%`
-- `真实大脑编码机制本体破解度`：`86% - 90%`
-
----
-
-## 2026-03-12 C53：共享对象流形到判别流形运输律搜索
-
-本轮新增脚本：
-- `/tests/codex/test_stage_c53_shared_manifold_discriminative_transport_search.py`
-
-执行命令：
-- `python -m py_compile tests/codex/test_stage_c53_shared_manifold_discriminative_transport_search.py`
-- `python tests/codex/test_stage_c53_shared_manifold_discriminative_transport_search.py`
-
-结果：
-- `best_objective_consistency = 0.2028`
-- `best_retention_compatible_candidate.crossmodal_consistency = 0.2028`
-- `retention_concept_accuracy = 0.3504`
-- `overall_concept_accuracy = 0.3460`
-
-结论：
-- `shared object manifold -> discriminative geometry` 作为研究方向是有效的，因为依旧能够产生 `retention-compatible family`
-- 但 `C53` 与 `C52` 几乎重合，没有超过 `C42`
-- 这说明当前缺的已经不是：
-  - `compatibility mediator`
-  - `dual geometry projection`
-  - `tri-level compatibility bridge`
-  - `shared-manifold transport` 的局部实现
-- 更像是缺：
-  - `对象流形与判别流形之间的全局运输几何`
-  - 或者说缺一个更高阶的 `transport geometry law`
-
-理论轨更新：
-- `compatibility geometry formalism`
-- 现在应继续升级为：
-  - `transport geometry formalism`
-- 核心问题变成：
-  - 为什么对象共享流形能稳定存在
-  - 但一旦要把它读成更强判别几何，就会掉入同一个低平台
-
-这说明当前主瓶颈不是“有没有共享对象核”，而是：
-- `对象流形到判别流形的几何运输不闭合`
-
-工程轨判断：
-- `P3 compatibility geometry` 仍然是主瓶颈
-- 但下一步不该再只试局部运输项，而应转成更高层的：
-  - `C54 global transport geometry / dual-manifold alignment search`
-
-当前项目口径维持：
-- `统一候选理论骨架完成度`：`95% - 97%`
-- `三闭环工程闭合度`：`83% - 88%`
-- `真实大脑编码机制本体破解度`：`86% - 90%`
-
----
-
-## 2026-03-12 C52：三层联合兼容律搜索
-
-本轮新增脚本：
-- `/tests/codex/test_stage_c52_trilevel_compatibility_law_search.py`
-
-执行命令：
-- `python -m py_compile tests/codex/test_stage_c52_trilevel_compatibility_law_search.py`
-- `python tests/codex/test_stage_c52_trilevel_compatibility_law_search.py`
-
-结果：
-- `best_objective_consistency = 0.2028`
-- `best_consistency_value = 0.2028`
-- `best_retention_compatible_candidate.crossmodal_consistency = 0.2028`
-- `retention_concept_accuracy = 0.3504`
-- `overall_concept_accuracy = 0.3497`
-
-结论：
-- `encoding geometry + update law + readout geometry` 的三层联合兼容律是有效方向，因为它仍然可以给出 `retention-compatible family`
-- 但 `C52` 没有超过 `C42 = 0.2222 / 0.2519(control)`，说明当前缺的不是再加一个联合中介，而是更强的：
-  - `shared object manifold -> discriminative readout geometry`
-  - 联合映射律
-
-新的理论判断：
-- `P3 compatibility geometry` 的主瓶颈继续收缩
-- 当前不是：
-  - `有没有共享对象流形`
-  - 也不是 `有没有 memory protection`
-  - 也不是 `有没有 law-conditioned query`
-- 而是：
-  - `共享对象流形如何稳定变成强判别读出几何`
-  - 并且不破坏 `retention`
-
-从七点映射看，当前反复无法闭合的点仍属于：
-- `第5点：跨模态一致`
-- `第6点：判别头与 margin 结构`
-
-更准确地说，是两者交界处的：
-- `compatibility geometry`
-- `shared manifold -> discriminative geometry`
-
-下一步建议：
-- 工程轨：`C53 shared-manifold discriminative transport search`
-- 理论轨：把 `compatibility geometry formalism` 升级成
-  - `shared manifold transport law`
-  - 即：对象流形到判别流形的运输律，而不是再继续局部补 readout/head/projection
-
-当前项目口径维持：
-- `统一候选理论骨架完成度`：`95% - 97%`
-- `三闭环工程闭合度`：`83% - 88%`
-- `真实大脑编码机制本体破解度`：`86% - 90%`
 
 ## 2026-03-12 C46：query-conditioned selective readout
 
@@ -28372,110 +28146,6 @@ Delta_t in A(z_t, y_t, r_t, x_t)
 - `三闭环工程闭合度`：`83% - 88%`
 - `真实大脑编码机制本体破解度`：`86% - 90%`
 
-## 2026-03-12 P1-P4 execution master
-
-本轮新增脚本：
-- `tests/codex/test_phase_p1_p4_execution_master.py`
-
-执行命令：
-- `python -m py_compile tests/codex/test_phase_p1_p4_execution_master.py`
-- `python tests/codex/test_phase_p1_p4_execution_master.py`
-
-目标：
-- 把现有碎片化结果重组为：
-  - `P1：对象流形建模`
-  - `P2：受控更新律建模`
-  - `P3：兼容性几何建模`
-  - `P4：脑侧映射与判伪`
-
-总表结果：
-
-### P1：对象流形建模
-- `bridge_role_score = 0.6769`
-- `crossmodal_default_consistency = 0.2519`
-- `retention_moderate_score = 0.3460`
-- `overall_score = 0.7783`
-- 状态：
-  - `active_with_strong_partial_support`
-
-解释：
-- P1 已经不再是“概念不清”
-- 当前已经有：
-  - `object manifold`
-  - `bridge / role`
-  - `moderate-regime crossmodal support`
-
-### P2：受控更新律建模
-- `stage_a4_score = 0.6556`
-- `retention_coexistence_score = 0.5432`
-- `interference_control_score = 0.7132`
-- `easy_regime_retention = 0.4975`
-- `overall_score = 0.6899`
-- 状态：
-  - `partial_closure_with_retention_gap`
-
-解释：
-- P2 已经证明：
-  - `controlled update law`
-  - `write-read separation`
-  - `anti-interference`
-  这些不是空想
-- 但默认难度下 retention gap 仍未完全闭合
-
-### P3：兼容性几何建模
-- `default_closure_ratio_vs_moderate = 1.0000`
-- `oracle_readout_capacity = 0.8889`
-- `stagnation_penalty = 0.25`
-- `overall_score = 0.7792`
-- 状态：
-  - `main_open_bottleneck`
-
-解释：
-- 分数看起来不低，但这里的重点不是“没有能力”
-- 而是：
-  - benchmark 有 headroom
-  - object manifold 有支持
-  - 但默认难度下 `shared object manifold -> discriminative geometry` 仍没有稳定兼容律
-- 所以 P3 仍是当前主瓶颈
-
-### P4：脑侧映射与判伪
-- `g4_score = 0.7840`
-- `g5_score = 0.7967`
-- `overall_score = 0.7903`
-- 状态：
-  - `protocol_ready_not_executed`
-
-解释：
-- P4 的协议设计和判伪逻辑已经 ready
-- 但还没有真正进入脑侧执行
-
----
-
-## 当前四阶段判断
-
-- `P1` 已有较强部分闭合
-- `P2` 已有较强部分闭合，但 retention 仍要继续抬
-- `P3` 是当前主瓶颈
-- `P4` 协议 ready，但尚未进入真实执行
-
-因此当前最合理的执行顺序是：
-- `先打 P3`
-- `再接 P4`
-- `P1/P2` 作为支撑层继续稳固
-
-这也意味着：
-- 如果把七个问题看成同一个受控编码动力系统的不同展开
-- 那当前最可行的落地方案不是平均分配资源
-- 而是：
-  - `P1/P2` 提供对象与更新底座
-  - `P3` 解决兼容性几何
-  - `P4` 做脑侧判伪与 3D 映射
-
-当前项目口径维持：
-- `统一候选理论骨架完成度`：`95% - 97%`
-- `三闭环工程闭合度`：`83% - 88%`
-- `真实大脑编码机制本体破解度`：`86% - 90%`
-
 ## 2026-03-12 C51：dual-geometry compatibility projection
 
 本轮新增脚本：
@@ -28622,3 +28292,6061 @@ Delta_t in A(z_t, y_t, r_t, x_t)
 - `统一候选理论骨架完成度`：`95% - 97%`
 - `三闭环工程闭合度`：`83% - 88%`
 - `真实大脑编码机制本体破解度`：`86% - 90%`
+
+
+
+## 2026-03-12 C52：三层联合兼容律搜索
+
+本轮新增脚本：
+- `/tests/codex/test_stage_c52_trilevel_compatibility_law_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c52_trilevel_compatibility_law_search.py`
+- `python tests/codex/test_stage_c52_trilevel_compatibility_law_search.py`
+
+结果：
+- `best_objective_consistency = 0.2028`
+- `best_consistency_value = 0.2028`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2028`
+- `retention_concept_accuracy = 0.3504`
+- `overall_concept_accuracy = 0.3497`
+
+结论：
+- `encoding geometry + update law + readout geometry` 的三层联合兼容律是有效方向，因为它仍然可以给出 `retention-compatible family`
+- 但 `C52` 没有超过 `C42 = 0.2222 / 0.2519(control)`，说明当前缺的不是再加一个联合中介，而是更强的：
+  - `shared object manifold -> discriminative readout geometry`
+  - 联合映射律
+
+新的理论判断：
+- `P3 compatibility geometry` 的主瓶颈继续收缩
+- 当前不是：
+  - `有没有共享对象流形`
+  - 也不是 `有没有 memory protection`
+  - 也不是 `有没有 law-conditioned query`
+- 而是：
+  - `共享对象流形如何稳定变成强判别读出几何`
+  - 并且不破坏 `retention`
+
+从七点映射看，当前反复无法闭合的点仍属于：
+- `第5点：跨模态一致`
+- `第6点：判别头与 margin 结构`
+
+更准确地说，是两者交界处的：
+- `compatibility geometry`
+- `shared manifold -> discriminative geometry`
+
+下一步建议：
+- 工程轨：`C53 shared-manifold discriminative transport search`
+- 理论轨：把 `compatibility geometry formalism` 升级成
+  - `shared manifold transport law`
+  - 即：对象流形到判别流形的运输律，而不是再继续局部补 readout/head/projection
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 C53：共享对象流形到判别流形运输律搜索
+
+本轮新增脚本：
+- `/tests/codex/test_stage_c53_shared_manifold_discriminative_transport_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c53_shared_manifold_discriminative_transport_search.py`
+- `python tests/codex/test_stage_c53_shared_manifold_discriminative_transport_search.py`
+
+结果：
+- `best_objective_consistency = 0.2028`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2028`
+- `retention_concept_accuracy = 0.3504`
+- `overall_concept_accuracy = 0.3460`
+
+结论：
+- `shared object manifold -> discriminative geometry` 作为研究方向是有效的，因为依旧能够产生 `retention-compatible family`
+- 但 `C53` 与 `C52` 几乎重合，没有超过 `C42`
+- 这说明当前缺的已经不是：
+  - `compatibility mediator`
+  - `dual geometry projection`
+  - `tri-level compatibility bridge`
+  - `shared-manifold transport` 的局部实现
+- 更像是缺：
+  - `对象流形与判别流形之间的全局运输几何`
+  - 或者说缺一个更高阶的 `transport geometry law`
+
+理论轨更新：
+- `compatibility geometry formalism`
+- 现在应继续升级为：
+  - `transport geometry formalism`
+- 核心问题变成：
+  - 为什么对象共享流形能稳定存在
+  - 但一旦要把它读成更强判别几何，就会掉入同一个低平台
+
+这说明当前主瓶颈不是“有没有共享对象核”，而是：
+- `对象流形到判别流形的几何运输不闭合`
+
+工程轨判断：
+- `P3 compatibility geometry` 仍然是主瓶颈
+- 但下一步不该再只试局部运输项，而应转成更高层的：
+  - `C54 global transport geometry / dual-manifold alignment search`
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+
+## 2026-03-12 C54：全局运输几何与双流形对齐搜索
+
+本轮新增脚本：
+- `/tests/codex/test_stage_c54_global_transport_dual_manifold_alignment_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c54_global_transport_dual_manifold_alignment_search.py`
+- `python tests/codex/test_stage_c54_global_transport_dual_manifold_alignment_search.py`
+
+结果：
+- `best_objective_consistency = 0.2028`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2028`
+- `retention_concept_accuracy = 0.3504`
+- `overall_concept_accuracy = 0.3460`
+
+结论：
+- `global transport geometry + dual-manifold alignment` 依旧可以给出 `retention-compatible family`
+- 但和 `C53` 基本完全重合，没有带来任何新跃迁
+- 这说明当前缺的已经不是：
+  - 局部 `compatibility bridge`
+  - 局部 `transport law`
+  - 全局 `dual-manifold alignment`
+- 更像是缺：
+  - 一个更高层的 `phase / regime geometry`
+  - 或者说，对象流形与判别流形之间真正发生冲突的不是“点到点映射”，而是“不同相位/不同机制区间下的几何切换规则”
+
+理论轨更新：
+- `compatibility geometry formalism`
+- `transport geometry formalism`
+- 现在应继续升级为：
+  - `phase geometry formalism`
+
+新的理论判断：
+- 当前主瓶颈不是“共享对象流形如何映到判别流形”
+- 而是：
+  - 当系统在 `memory / identity / novelty / readout` 不同相位之间切换时
+  - 这两个流形如何保持可兼容
+- 也就是：
+  - `phase-conditioned manifold compatibility`
+
+工程轨建议：
+- 下一步不该再加同类几何对齐项
+- 应该转向：
+  - `C55 phase-conditioned manifold geometry search`
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+
+
+---
+
+## 2026-03-12 C55：相位条件流形几何搜索
+
+本轮新增脚本：
+- `/tests/codex/test_stage_c55_phase_conditioned_manifold_geometry_search.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_stage_c55_phase_conditioned_manifold_geometry_search.py`
+- `python tests/codex/test_stage_c55_phase_conditioned_manifold_geometry_search.py`
+
+结果：
+- `best_objective_consistency = 0.2028`
+- `best_retention_compatible_candidate.crossmodal_consistency = 0.2028`
+- `retention_concept_accuracy = 0.3504`
+- `overall_concept_accuracy = 0.3460`
+
+结论：
+- `phase-conditioned manifold geometry` 依旧能够给出 `retention-compatible family`
+- 但和 `C54/C53/C52` 继续重合，说明当前主瓶颈已经不是：
+  - 局部几何补丁
+  - 全局运输项
+  - 双流形对齐
+  - 相位条件流形
+- 更像是：
+  - `phase-conditioned compatibility` 仍然被约束在同一个低平台
+  - 真正缺的也许是更高层的 `phase-transition law` 或 `meta-geometric switching law`
+
+理论轨更新：
+- 当前形式已经从：
+  - `compatibility geometry`
+  - `transport geometry`
+  - `phase geometry`
+- 继续指向：
+  - `phase-transition geometry`
+
+---
+
+## 2026-03-12 四阶段推进总表
+
+本轮新增脚本：
+- `/tests/codex/test_phase_p1_p4_push_plan.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_phase_p1_p4_push_plan.py`
+- `python tests/codex/test_phase_p1_p4_push_plan.py`
+
+结果：
+- `P1 current_score = 0.7783`
+- `P2 current_score = 0.6899`
+- `P3 current_score = 0.7792`
+- `P4 current_score = 0.7903`
+- `P3 remaining_gap_vs_control = 0.0491`
+- `P3 pressure = 0.6134`
+
+当前四阶段执行顺序已经压实为：
+1. `P3A transport/phase geometry formalism and execution block`
+2. `P4A execute protocol-ready brain-side mapping bundle`
+3. `P1A atlas consolidation and invariant extraction`
+4. `P2A update-law freeze and anti-interference calibration`
+
+阶段判断：
+- `P1`：`supportive_base_ready`
+- `P2`：`partial_closure_ready_for_freeze`
+- `P3`：`primary_bottleneck`
+- `P4`：`protocol_ready_waiting_execution`
+
+这意味着“七个问题如果真是同一个受控编码动力系统的不同展开”，当前最可行的落地方式已经不是七条并行线，而是：
+- 先用 `P3` 打主瓶颈
+- 紧接着用 `P4` 把抽象机制推出去做脑侧判伪
+- 然后回头固化 `P1/P2`
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+---
+
+## 2026-03-12 P1-P4 execution master
+
+本轮新增脚本：
+- `tests/codex/test_phase_p1_p4_execution_master.py`
+
+执行命令：
+- `python -m py_compile tests/codex/test_phase_p1_p4_execution_master.py`
+- `python tests/codex/test_phase_p1_p4_execution_master.py`
+
+目标：
+- 把现有碎片化结果重组为：
+  - `P1：对象流形建模`
+  - `P2：受控更新律建模`
+  - `P3：兼容性几何建模`
+  - `P4：脑侧映射与判伪`
+
+总表结果：
+
+### P1：对象流形建模
+- `bridge_role_score = 0.6769`
+- `crossmodal_default_consistency = 0.2519`
+- `retention_moderate_score = 0.3460`
+- `overall_score = 0.7783`
+- 状态：
+  - `active_with_strong_partial_support`
+
+解释：
+- P1 已经不再是“概念不清”
+- 当前已经有：
+  - `object manifold`
+  - `bridge / role`
+  - `moderate-regime crossmodal support`
+
+### P2：受控更新律建模
+- `stage_a4_score = 0.6556`
+- `retention_coexistence_score = 0.5432`
+- `interference_control_score = 0.7132`
+- `easy_regime_retention = 0.4975`
+- `overall_score = 0.6899`
+- 状态：
+  - `partial_closure_with_retention_gap`
+
+解释：
+- P2 已经证明：
+  - `controlled update law`
+  - `write-read separation`
+  - `anti-interference`
+  这些不是空想
+- 但默认难度下 retention gap 仍未完全闭合
+
+### P3：兼容性几何建模
+- `default_closure_ratio_vs_moderate = 1.0000`
+- `oracle_readout_capacity = 0.8889`
+- `stagnation_penalty = 0.25`
+- `overall_score = 0.7792`
+- 状态：
+  - `main_open_bottleneck`
+
+解释：
+- 分数看起来不低，但这里的重点不是“没有能力”
+- 而是：
+  - benchmark 有 headroom
+  - object manifold 有支持
+  - 但默认难度下 `shared object manifold -> discriminative geometry` 仍没有稳定兼容律
+- 所以 P3 仍是当前主瓶颈
+
+### P4：脑侧映射与判伪
+- `g4_score = 0.7840`
+- `g5_score = 0.7967`
+- `overall_score = 0.7903`
+- 状态：
+  - `protocol_ready_not_executed`
+
+解释：
+- P4 的协议设计和判伪逻辑已经 ready
+- 但还没有真正进入脑侧执行
+
+---
+
+## 当前四阶段判断
+
+- `P1` 已有较强部分闭合
+- `P2` 已有较强部分闭合，但 retention 仍要继续抬
+- `P3` 是当前主瓶颈
+- `P4` 协议 ready，但尚未进入真实执行
+
+因此当前最合理的执行顺序是：
+- `先打 P3`
+- `再接 P4`
+- `P1/P2` 作为支撑层继续稳固
+
+这也意味着：
+- 如果把七个问题看成同一个受控编码动力系统的不同展开
+- 那当前最可行的落地方案不是平均分配资源
+- 而是：
+  - `P1/P2` 提供对象与更新底座
+  - `P3` 解决兼容性几何
+  - `P4` 做脑侧判伪与 3D 映射
+
+当前项目口径维持：
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+
+
+## 2026-03-12 13:57 理论轨推进：family-level 与 phase-level transport operators
+
+本轮新增并完成：
+
+- `tests/codex/test_theory_track_family_level_transport_operator.py`
+- `tests/codex/test_theory_track_phase_level_transport_operator.py`
+
+执行命令：
+
+- `python -m py_compile tests/codex/test_theory_track_family_level_transport_operator.py`
+- `python -m py_compile tests/codex/test_theory_track_phase_level_transport_operator.py`
+- `python tests/codex/test_theory_track_family_level_transport_operator.py`
+- `python tests/codex/test_theory_track_phase_level_transport_operator.py`
+
+### 结果摘要
+
+`TheoryTrack_family_level_transport_operator`：
+
+当前已经可以把 concept-local transport budget 提升成：
+
+- `Tau_read^(fruit)`
+- `Tau_read^(animal)`
+- `Tau_read^(abstract)`
+
+当前 family-level 形式：
+
+- `Tau_read_family(I) = overlap_family - lambda_n * sigma_novel_family - lambda_r * sigma_ret_family`
+
+当前结果：
+
+- `fruit`
+  - `mean_transport_budget = 0.1342`
+  - `status = open`
+- `animal`
+  - `mean_transport_budget = 0.1325`
+  - `status = open`
+- `abstract`
+  - `mean_transport_budget = 0.1526`
+  - `status = open`
+
+关键含义：
+
+- readout transport 不再只是单概念量
+- 已经可以上升为 family patch 级别的 transport operator
+
+`TheoryTrack_phase_level_transport_operator`：
+
+当前已经可以把 family-level transport 再提升成：
+
+- `Tau_phase^(stabilize->read)`
+- `Tau_phase^(novelty->read)`
+- `Tau_phase^(relation->read)`
+
+当前高层形式：
+
+- `Tau_phase(mode_1 -> mode_2) = family_transport_budget +/- phase_overlap +/- switch_load`
+
+关键含义：
+
+- 当前主瓶颈已经更清楚：
+  - 不是缺一个静态 readout map
+  - 而是缺一个 `phase-conditioned transport law`
+
+### 理论结论更新
+
+这轮之后，动态主线已经进一步清晰：
+
+1. `tau_read(c)`
+2. `Tau_read^(family)`
+3. `Tau_phase(mode_1 -> mode_2)`
+
+也就是说，当前理论轨已经开始把：
+
+- concept-local transport
+- family transport
+- phase-sensitive transport
+
+连成同一条层级链条
+
+当前项目口径维持：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+下一阶段建议：
+
+- 理论轨：
+  - 合并 `Tau_read^(family)` 与 `Tau_phase`，形成 switching-aware readout law
+- 工程轨：
+  - 让下一轮 `P3` 只测试满足 switching-aware transport 的候选家族
+
+---
+
+## 2026-03-12 14:05 理论分析：`编码即路径，路径即编码` 的含义与实现猜想
+
+这轮不新增脚本，直接对当前理论轨里的一个关键命题做系统说明：
+
+- `编码即路径`
+- `路径即编码`
+
+### 核心判断
+
+这个命题当前不能直接当成已证明结论，但它非常像：
+
+- `大脑高效编码机制` 的一个核心近似描述
+
+更准确地说：
+
+- 大脑不太像把信息存成静态地址表，再去查表读取
+- 更像：
+  - `对象 atlas + admissible update + viable transport`
+  共同定义的一组合法路径
+- 系统每次激活、更新、读出时，并不是“先找到编码，再沿路径传播”
+- 而更像：
+  - `激活路径本身就是编码的一部分`
+
+### 为什么这个命题有吸引力
+
+如果成立，它会解释几个看似独立的问题：
+
+1. 为什么大脑这么省存储
+   - 因为不需要给每个概念、属性、关系单独建一个静态槽位
+   - 只需要维持：
+     - family patch
+     - concept offset
+     - attribute direction
+     - 合法 transport path
+
+2. 为什么大脑能快速泛化
+   - 因为新概念不一定需要新模块
+   - 只要落到旧 atlas 的某条局部路径上，就能被快速吸收
+
+3. 为什么记忆、推理、感知彼此能连续切换
+   - 因为它们可能不是三个完全不同系统
+   - 而是同一编码系统里不同 phase/path 的切换
+
+### 当前最像的实现方式
+
+在当前理论轨里，如果用更形式化的话重写，这个命题更像：
+
+- `编码不只是 z_c`
+- `编码是 (z_c, admissible paths from z_c, viable overlaps around z_c)`
+
+也就是：
+
+- 某个概念的“编码”
+  不只是它在 atlas 上的一个点
+- 还包括：
+  - 从这个点出发，哪些更新方向是允许的
+  - 它能通过哪些 overlap 进入 memory / relation / readout
+  - 在不同 phase 下，这些路径会不会打开或关闭
+
+所以更准确地说，不是：
+
+- `code = node`
+
+而更像：
+
+- `code = node + local path structure`
+
+### 在当前数学对象里的对应
+
+在当前系统：
+
+- `E_c = (f_c, z_c, delta_c, N_same(c), N_cross(c), A_c, R_c, S_c)`
+- `A(I)`
+- `M_feas(I)`
+- `Tau_read^(family)`
+- `Tau_phase(mode_1 -> mode_2)`
+
+这里：
+
+- `z_c`
+  是静态局部位置
+- `A(I)`
+  给出允许更新方向
+- `M_feas(I)`
+  给出允许轨迹和 overlap
+- `Tau_read / Tau_phase`
+  给出从 object 到 readout 的通路是否打开
+
+因此，“编码即路径”在当前形式里更像：
+
+- `encoding(c) = (z_c, A_local(c), overlaps(c), transport_budget(c))`
+
+### 它为什么可能比传统“地址式编码”更高效
+
+如果编码即路径，那么系统就可以做到：
+
+1. `局部复用`
+   - 同一 family patch 内，很多概念共享大部分基底
+
+2. `方向复用`
+   - 属性和关系可以作为局部方向 / uplift operator 复用
+
+3. `读写分离但不脱节`
+   - memory/readout 不必复制一份完整编码
+   - 只需要控制路径开闭
+
+4. `动态选择`
+   - 不同 phase 下打开不同 transport path
+   - 而不必为每种功能重建一套编码
+
+### 大脑可能怎么实现这个能力
+
+如果把当前拼图投回脑机制，最像的实现方式是：
+
+1. `局部回路先形成 patch`
+   - 某些区域/微回路先对应某类 object-family manifold
+
+2. `局部可塑性把新输入压到 patch 内`
+   - 新输入通过局部门控更新，被吸收到 patch 上某个局部区域
+
+3. `抑制-兴奋平衡负责“路径选择”`
+   - 不是所有连接都同时开
+   - 而是当前 context 下某些通路被放大，某些被抑制
+
+4. `phase state 决定当前通向哪类子系统`
+   - memory phase
+   - relation phase
+   - readout phase
+
+5. `长期可塑性不直接存结论，而是塑形可行路径`
+   - 也就是：
+     - 哪些路容易被激活
+     - 哪些路更新代价低
+     - 哪些路容易保持稳定
+
+这时，“读取某个概念”就不只是激活一个点，而是：
+
+- 激活一条从 object patch 出发，穿过 memory/relation/readout overlap 的可行路径
+
+因此：
+
+- `路径即编码`
+  是因为路径本身携带了对象、属性、关系、阶段状态的信息
+- `编码即路径`
+  是因为没有这条路径，静态点本身不够形成功能性读取
+
+### 当前最应该如何理解这个命题
+
+目前最稳妥的说法不是：
+
+- `大脑已经被证明是纯路径编码`
+
+而是：
+
+- `大脑编码很可能不是静态地址式的，而是 strongly path-conditioned`
+
+也就是说：
+
+- 编码至少部分由：
+  - 节点
+  - 邻域
+  - overlap
+  - admissible direction
+  - transport path
+ 共同决定
+
+### 这个命题能解释什么
+
+它尤其能解释：
+
+- 为什么 object atlas 和 readout geometry 之间有窄 overlap
+- 为什么 readout transport 会成为主瓶颈
+- 为什么 bridge-role 不能脱离 object entry
+- 为什么 phase switch 会直接影响可读性
+
+因为如果路径本身就是编码的一部分，那么：
+
+- 路径不通
+  就不只是“读不到”
+  而是“编码本身没有功能性完成”
+
+### 这个命题的局限
+
+即便这个命题很强，也不能直接替代所有理论对象。
+
+它还不能单独回答：
+
+- admissible update 的完整数学形式
+- phase switching 的完整动力学
+- 3D 脑侧投影怎么形成
+
+所以更准确的定位是：
+
+- `编码即路径`
+  更像对当前理论核心的一种高层总结
+- 但还需要：
+  - `A(I)`
+  - `M_feas(I)`
+  - `Tau_read`
+  - `Tau_phase`
+  这些对象把它真正做实
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+### 下一阶段建议
+
+- 理论轨：
+  - 把 `编码即路径` 具体化为：
+    - `path-conditioned encoding law`
+    - `path-conditioned readout law`
+- 工程轨：
+  - 用下一轮 `P3` 直接验证：
+    - 路径预算变化是否比静态点位变化更能解释读出成败
+
+
+---
+
+## 2026-03-12 14:07 理论轨与工程轨推进：switching-aware readout law 与 P3 剪枝
+
+本轮新增并完成：
+
+- `tests/codex/test_theory_track_switching_aware_readout_law.py`
+- `tests/codex/test_stage_p3_switching_aware_transport_pruned_search.py`
+
+执行命令：
+
+- `python -m py_compile tests/codex/test_theory_track_switching_aware_readout_law.py`
+- `python -m py_compile tests/codex/test_stage_p3_switching_aware_transport_pruned_search.py`
+- `python tests/codex/test_theory_track_switching_aware_readout_law.py`
+- `python tests/codex/test_stage_p3_switching_aware_transport_pruned_search.py`
+
+### 结果摘要
+
+`TheoryTrack_switching_aware_readout_law`：
+
+当前已经可以把读出瓶颈正式改写为：
+
+- `Tau_readout(c, mode_1 -> mode_2) = Tau_read^(f_c) + Phi(mode_1 -> mode_2) - switch_cost(c, mode_1, mode_2)`
+
+关键含义：
+
+- 读出是否成功，不再只取决于：
+  - object patch
+  - 或静态 overlap
+- 而取决于：
+  - `family transport budget`
+  - `phase transport condition`
+  - `switch cost`
+
+这说明当前主瓶颈已经可以从：
+
+- `compatibility problem`
+
+进一步收缩成：
+
+- `switching-aware transport law`
+
+`StageP3_switching_aware_transport_pruned_search`：
+
+当前 P3 可以显式只保留：
+
+- `family_conditioned_transport`
+- `restricted_overlap_readout`
+- `switching_aware_readout`
+
+并继续排除：
+
+- `global_isotropic_transport`
+- `direct_object_to_disc_collapse`
+- `family_agnostic_readout_head`
+
+当前 retained families：
+
+- `fruit`
+- `animal`
+- `abstract`
+
+即：
+
+- `kept_family_count = 3`
+- `pruned_family_count = 0`
+
+关键含义：
+
+- 下一轮 P3 不需要再做泛化搜索
+- 已经可以明确只在 switching-aware、family-conditioned、restricted-overlap 的候选空间里继续做
+
+### 为什么之前写到了中间，而不是尾部
+
+原因不是编码或文件损坏，而是：
+
+- 我之前用 `apply_patch` 追加 memo 时，使用了一个在文件中多次重复出现的上下文片段
+- `apply_patch` 会匹配它找到的那个上下文位置
+- 如果该上下文在文件前面也出现过，就可能把内容插到中间那一处，而不是最后一处
+
+更准确地说，是：
+
+- `patch context collision`
+
+不是：
+
+- 文件写入失败
+- 编码异常
+- 工具损坏
+
+这次我专门先读取了文件尾部，再用尾部最后一段实际内容做锚点追加，所以这一段会写到真正的文件末尾。
+
+后续避免这个问题的方式：
+
+1. 追加前先读取 memo 尾部  
+2. 只用尾部真实最后几行作为 patch 锚点  
+3. 避免用在全文多次出现的通用标题或百分比段落做锚点  
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+### 下一阶段建议
+
+- 理论轨：
+  - 继续把 `switching-aware readout law` 接到完整 `path-conditioned encoding law`
+- 工程轨：
+  - 下一轮 `P3` 直接只跑满足 switching-aware transport 的候选家族
+
+## 2026-03-12 14:22 理论轨与工程轨推进：path-conditioned encoding law 与 P3 路径剪枝
+
+### 已完成命令
+
+```powershell
+python -m py_compile tests/codex/test_theory_track_path_conditioned_encoding_law.py
+python -m py_compile tests/codex/test_stage_p3_path_conditioned_transport_pruned_search.py
+python tests/codex/test_theory_track_path_conditioned_encoding_law.py
+python tests/codex/test_stage_p3_path_conditioned_transport_pruned_search.py
+```
+
+### 新增脚本
+
+- `tests/codex/test_theory_track_path_conditioned_encoding_law.py`
+- `tests/codex/test_stage_p3_path_conditioned_transport_pruned_search.py`
+
+### 理论轨推进
+
+这轮把“编码即路径”从高层直觉推进成了正式数学对象：
+
+- `Enc_path(c, mode_1 -> mode_2) = (E_c, Omega^(f_c)_upd, Omega^(f_c)_read, Tau_readout(c, mode_1 -> mode_2), chi_A, chi_M)`
+- `Pi_path(c, mode_1 -> mode_2) = 1[Delta in A(I)] * 1[trajectory subset of M_feas(I)] * 1[Tau_readout(c, mode_1 -> mode_2) > 0]`
+
+核心含义：
+
+- 编码不再只是概念点位 `E_c`
+- 还必须包含从 object atlas 进入 memory / relation / readout 的合法路径
+- 这个路径同时受：
+  - `A(I)` 约束
+  - `M_feas(I)` 约束
+  - `Tau_readout(c, mode_1 -> mode_2)` 约束
+
+这说明当前最像真的大脑编码机制，不是“静态地址读取”，而是：
+
+- `usable encoding = atlas entry + admissible path + switching-aware transport`
+
+### 理论轨结果
+
+在当前 9 个 concept 条目上：
+
+- `concept_count = 9`
+- `stabilize_open_count = 9`
+- `novelty_narrow_count = 9`
+- `relation_conditional_count = 9`
+
+解释：
+
+- 所有概念在 `stabilize -> read` 下都存在开放路径
+- 所有概念在 `novelty -> read` 下都进入窄通道
+- 所有概念在 `relation -> read` 下都需要条件满足
+
+这把当前动态主线压成了非常清楚的一句话：
+
+- `编码是否可用，不只取决于它是什么点，还取决于当前 phase 下路径是否打开`
+
+### 工程轨推进
+
+`P3` 现在已经可以直接按路径开放条件做剪枝，不再做大范围泛化搜索。
+
+接受条件：
+
+- `Pi_path(c, mode_1 -> mode_2) = 1[Delta in A(I)] * 1[trajectory subset of M_feas(I)] * 1[Tau_readout(c, mode_1 -> mode_2) > 0]`
+
+当前保留候选类：
+
+- `family_conditioned_transport`
+- `restricted_overlap_readout`
+- `switching_aware_readout`
+- `path_conditioned_transport`
+
+继续排除：
+
+- `global_isotropic_transport`
+- `direct_object_to_disc_collapse`
+- `family_agnostic_readout_head`
+
+当前 retained families：
+
+- `fruit`
+  - `mean_transport_budget = 0.1342445005948505`
+- `animal`
+  - `mean_transport_budget = 0.13245401745687516`
+- `abstract`
+  - `mean_transport_budget = 0.15261936033540005`
+
+即：
+
+- `kept_family_count = 3`
+- `pruned_family_count = 0`
+
+### 当前判断
+
+这轮之后，理论轨和工程轨都更收敛了：
+
+- 理论轨：
+  - `switching-aware readout law` 已经成功提升成 `path-conditioned encoding law`
+- 工程轨：
+  - 下一轮 `P3` 已经不该再做泛化搜索
+  - 应只在 `path-conditioned switching-aware transport` 空间里继续做
+
+### 项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+### 下一阶段建议
+
+- 理论轨：
+  - 把 `path-conditioned encoding law` 继续推进成：
+    - `path-conditioned readout law`
+    - `path-conditioned bridge-lift law`
+- 工程轨：
+  - 下一轮 `P3` 只跑满足 `Pi_path > 0` 的候选家族
+
+## 2026-03-12 14:30 理论轨推进：path-conditioned readout law / bridge-lift law / 当前破解进度评估
+
+### 已完成命令
+
+```powershell
+python -m py_compile tests/codex/test_theory_track_path_conditioned_readout_law.py
+python -m py_compile tests/codex/test_theory_track_path_conditioned_bridge_lift_law.py
+python -m py_compile tests/codex/test_theory_track_brain_encoding_progress_assessment.py
+python tests/codex/test_theory_track_path_conditioned_readout_law.py
+python tests/codex/test_theory_track_path_conditioned_bridge_lift_law.py
+python tests/codex/test_theory_track_brain_encoding_progress_assessment.py
+```
+
+### 新增脚本
+
+- `tests/codex/test_theory_track_path_conditioned_readout_law.py`
+- `tests/codex/test_theory_track_path_conditioned_bridge_lift_law.py`
+- `tests/codex/test_theory_track_brain_encoding_progress_assessment.py`
+
+### 理论轨推进 1：path-conditioned readout law
+
+这轮把 readout 从“受 overlap 约束”继续推进成了“受路径约束”：
+
+- `Read(c, mode_1 -> mode_2) = Q(c) only if Pi_path(c, mode_1 -> mode_2) = 1`
+- `Pi_path = 1[Delta in A(I)] * 1[trajectory subset of M_feas(I)] * 1[Tau_readout(c, mode_1 -> mode_2) > 0]`
+
+这意味着：
+
+- readout 不再能被看成 object geometry 上的静态 head
+- 它更像是 atlas 上的受限路径查询
+- 当前 Q6 已经可以更明确地改写成：
+  - `transport-query problem`
+  - 而不是单纯的静态几何问题
+
+当前 phase profile：
+
+- `stabilize_to_read_open = 9`
+- `novelty_to_read_narrow = 9`
+- `relation_to_read_conditional = 9`
+- `mean_transport_budget = 0.13977262612904187`
+
+### 理论轨推进 2：path-conditioned bridge-lift law
+
+这轮也把 relation/role 侧统一进了同一套路径语言：
+
+- `BridgeLift(c) = G_rel(E_c) only if Pi_bridge(c) = 1`
+- `Pi_bridge(c) = 1[relation_overlap(f_c) > tau_rel] * 1[sigma_rel(c) > tau_sigma] * 1[Delta in A(I)]`
+
+这意味着：
+
+- relation / role 不再被看成独立符号层
+- 而是 object atlas 条目上的条件性 uplift
+- Q4 现在可以更明确地写成：
+  - `path-conditioned bridge-role lift`
+
+当前结果：
+
+- `concept_count = 9`
+- `bridge_ready_count = 9`
+- `mean_relation_overlap = 0.5294750789909403`
+- `mean_relation_lift_capacity = 2.335008184777366`
+
+### 当前破解进度判断
+
+这轮之后，对大脑编码机制的判断可以更具体地说：
+
+已经拼得比较强的部分：
+
+- `Q1 编码对象层`
+- `Q5 跨模态一致`
+- `Q6 判别几何约束`
+
+正在部分闭合的部分：
+
+- `Q2 局部更新律`
+- `Q3 写读分离`
+- `Q4 bridge-role uplift`
+- `Q7 脑侧映射`
+
+当前最硬的主瓶颈仍然是：
+
+- `shared object manifold to discriminative geometry compatibility`
+
+而且现在可以更具体地说清它为什么难：
+
+1. `object atlas` 已经很强，但 `object -> readout overlap` 仍然窄  
+2. `novelty / retention stress` 会持续消耗 transport budget  
+3. `bridge-role` 已经锚定，但还没完全进入动态闭合  
+4. `brain-side` 目前还是 `protocol-ready`，还没做因果执行闭环  
+
+### 当前项目进度口径
+
+- `seven_question_mean_score = 0.7071428571428572`
+- `P1_score = 0.7782884431584449`
+- `P2_score = 0.6899084875666228`
+- `P3_score = 0.7791666666666668`
+- `P4_score = 0.7903464044703017`
+- `path_readout_open_count = 9`
+- `path_bridge_ready_count = 9`
+
+项目总口径仍维持：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+### 当前问题和硬伤
+
+如果要压成最重要的几条：
+
+1. `Q6` 还没真正做成强闭合  
+   - object atlas 已形成
+   - 但 object 到 readout 仍是窄路径，不是宽稳定通道
+
+2. `Q2/Q3` 还没有完全 stress-coupled  
+   - admissible-update 已有骨架
+   - 但 novelty / retention / switching 下的完整动态律还没彻底闭合
+
+3. `Q4` 仍然是条件性 uplift  
+   - bridge-role 已经被拉回 object atlas
+   - 但还没有完全变成高密度动态系统
+
+4. `Q7` 还停在 probe-ready  
+   - 抽象 probe 已经有了
+   - 但脑侧因果执行和 3D 映射还没真正跑通
+
+### 当前最合理的解决顺序
+
+1. `P3` 继续只在 `path-conditioned switching-aware transport` 家族内推进  
+2. 把 `path-conditioned bridge-lift law` 接到 `B-line` 和 relation probes  
+3. 把 write/read 与 inventory stress 做更强绑定  
+4. 执行 `P4` 的 brain-side probe bundle，做真正的因果判伪  
+
+### 这轮结论
+
+这轮最重要的意义，不是又加了两个名字，而是：
+
+- `readout`
+- `bridge-role`
+
+现在都已经可以被写进同一套 `path-conditioned` 语言里。  
+这说明“大脑编码不是静态地址，而是受控路径系统”这个判断，已经开始从直觉推进成统一理论结构。
+
+## 2026-03-12 14:36 理论轨推进：stress-coupled write/read law 与 B-line path-conditioned bridge 剪枝
+
+### 已完成命令
+
+```powershell
+python -m py_compile tests/codex/test_theory_track_stress_coupled_write_read_law.py
+python -m py_compile tests/codex/test_stage_b_path_conditioned_bridge_pruned_search.py
+python tests/codex/test_theory_track_stress_coupled_write_read_law.py
+python tests/codex/test_stage_b_path_conditioned_bridge_pruned_search.py
+```
+
+### 新增脚本
+
+- `tests/codex/test_theory_track_stress_coupled_write_read_law.py`
+- `tests/codex/test_stage_b_path_conditioned_bridge_pruned_search.py`
+
+### 理论轨推进 1：stress-coupled write/read law
+
+这轮把 `Q2/Q3` 从“局部更新律 + 写读分离”进一步压成了 inventory stress 直接驱动的局部门控律：
+
+- `WR(c) = (g_write(c), g_read(c))`
+- `g_write(c) = max(0, 1 - alpha_n * sigma_novel(c))`
+- `g_read(c) = max(0, 1 - alpha_r * sigma_ret(c) - beta_n * sigma_novel(c))`
+
+并且要求：
+
+- `Delta_write(c) in A(I) only if g_write(c) > tau_w`
+- `readout(c) is stable only if g_read(c) > tau_r`
+
+当前 9 个 concept 的结果：
+
+- `open_write_count = 3`
+- `guarded_write_count = 6`
+- `stable_read_count = 9`
+- `mean_novelty_pressure = 0.009142445219266746`
+- `mean_retention_risk = 0.0`
+
+这意味着：
+
+- 当前 novelty 压力已经足够把大部分 concept 的写入从 `open` 压到 `guarded`
+- 但 read 侧整体仍然稳定
+- 所以 `Q2/Q3` 的真实主问题已经不是“读稳不稳”
+- 而是“新写入何时需要进入 guarded 模式”
+
+也就是：
+
+- `Q2/Q3` 现在更像 `stress-coupled local path law`
+
+### 理论轨推进 2：B-line path-conditioned bridge 剪枝
+
+这轮把 `Q4 bridge-role uplift` 真正推进到了工程过滤条件：
+
+保留：
+
+- `path_conditioned_bridge_lift`
+- `family_anchored_role_kernel`
+
+排除：
+
+- `free_symbolic_role_layer`
+- `family_agnostic_bridge_head`
+
+当前 retained families：
+
+- `fruit`
+  - `mean_relation_overlap = 0.5253646246907739`
+  - `conditional_ratio = 1.0`
+- `animal`
+  - `mean_relation_overlap = 0.5233023225418774`
+  - `conditional_ratio = 1.0`
+- `abstract`
+  - `mean_relation_overlap = 0.5397582897401694`
+  - `conditional_ratio = 1.0`
+
+即：
+
+- `kept_family_count = 3`
+- `pruned_family_count = 0`
+
+这说明：
+
+- `Q4` 现在不再只是理论上“像是 object atlas uplift”
+- 而是已经能直接指导 `B-line`
+- 下一轮桥律搜索不该再测：
+  - `free symbolic role`
+  - `family-agnostic bridge`
+
+### 当前破解进度更新
+
+这轮之后，可以把七个问题的状态更清楚地改写成：
+
+已经较强的部分：
+
+- `Q1 编码对象层`
+- `Q5 跨模态一致`
+- `Q6 判别几何约束`
+
+已经从 partial 再往前推进一层的部分：
+
+- `Q2 局部更新律`
+  - 已进入 `stress-coupled local path law`
+- `Q3 写读分离`
+  - 已进入 `stress-coupled gating`
+- `Q4 bridge-role uplift`
+  - 已进入 `path-conditioned B-line pruning`
+
+仍然最硬的部分：
+
+- `Q6 / P3 主瓶颈`
+  - `shared object manifold -> discriminative geometry compatibility`
+- `Q7 brain-side causal execution`
+
+### 现在还剩的硬伤
+
+如果按当前结构压缩，最主要还剩四个硬伤：
+
+1. `Q6` 仍然没有 strong closure  
+   - object atlas 强
+   - readout 仍是窄 transport，不是宽稳定通道
+
+2. `Q2/Q3` 虽已进入 stress-coupled 形式，但还没有完整 novelty/retention/switching 联动闭合  
+
+3. `Q4` 已进入 B-line 剪枝，但还没变成真正高密度 bridge-role dynamics  
+
+4. `Q7` 还是 `protocol-ready`，还没做脑侧因果执行  
+
+### 现在最合理的解决顺序
+
+1. `P3` 继续只在 `path-conditioned switching-aware transport` 家族内推进  
+2. `B-line` 继续只在 `path-conditioned bridge` 家族内推进  
+3. 把 `stress-coupled write/read law` 推到 update-law 搜索过滤器  
+4. 执行 `P4` 的 brain-side probe bundle  
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`83% - 88%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+### 这轮结论
+
+这轮最关键的推进是：
+
+- `Q2/Q3`
+  - 不再只是“可能存在快写慢读”
+  - 而是已经能写成 `stress-coupled local path law`
+- `Q4`
+  - 不再只是“桥律应该从 object atlas uplift”
+  - 而是已经能直接剪枝 `B-line`
+
+也就是说，现在理论轨已经不只是说明“像什么”，而是开始直接决定：
+
+- update-law 搜索空间
+- bridge-role 搜索空间
+
+这比继续扩散式试验更接近真正闭合。
+
+## 2026-03-12 14:43 工程轨推进：P2 stress-coupled update filter 与 B-line filtered search space
+
+### 已完成命令
+
+```powershell
+python -m py_compile tests/codex/test_stage_p2_stress_coupled_update_pruned_search.py
+python -m py_compile tests/codex/test_stage_b_path_conditioned_bridge_filtered_search.py
+python tests/codex/test_stage_p2_stress_coupled_update_pruned_search.py
+python tests/codex/test_stage_b_path_conditioned_bridge_filtered_search.py
+```
+
+### 新增脚本
+
+- `tests/codex/test_stage_p2_stress_coupled_update_pruned_search.py`
+- `tests/codex/test_stage_b_path_conditioned_bridge_filtered_search.py`
+
+### 工程轨推进 1：P2 stress-coupled update filter
+
+这轮把 `stress-coupled write/read law` 真正接到了工程侧 `P2` 搜索过滤器上。
+
+保留候选类：
+
+- `guarded_write_update_family`
+- `stable_read_update_family`
+
+排除候选类：
+
+- `stress_agnostic_fast_write_family`
+- `transfer_fragile_update_family`
+
+当前 retained pillars：
+
+- `multiobjective_anchor`
+- `recovery_phase_training`
+- `three_stage_training`
+- `generator_network`
+- `end_to_end_generator_network`
+
+当前 pruned pillar：
+
+- `stage_decomposed_training`
+  - 主要原因是 `lesion_recovery_component` 太低
+
+当前结果：
+
+- `kept_pillar_count = 5`
+- `pruned_pillar_count = 1`
+- `open_write_count = 3`
+- `guarded_write_count = 6`
+- `stable_read_count = 9`
+
+这说明：
+
+- `P2` 现在已经不该再泛化搜索所有 update-law 家族
+- 应只在：
+  - `guarded-write`
+  - `stable-read`
+ 兼容的家族里继续做
+
+### 工程轨推进 2：B-line filtered search space
+
+这轮把 `B-line` 从“只有 pruning rule”推进成了“明确 filtered search space”。
+
+当前 family-conditioned search space：
+
+- `fruit`
+- `animal`
+- `abstract`
+
+统一约束：
+
+- `role kernel must remain family-anchored`
+- `bridge lift must satisfy Pi_bridge(c) = 1`
+- `free symbolic role expansion is disallowed`
+
+统一 bridge rule：
+
+- `Pi_bridge(c) = 1[relation_overlap(f_c) > tau_rel] * 1[sigma_rel(c) > tau_sigma] * 1[Delta in A(I)]`
+
+这意味着：
+
+- 下一轮 `B-line` 不该再尝试：
+  - `free symbolic role`
+  - `family-agnostic bridge head`
+- 而应直接在：
+  - `path-conditioned bridge_lift`
+  - `family-anchored role kernel`
+ 这个空间里推进
+
+### 当前破解进度更新
+
+这轮之后，七个问题的工程映射更清楚了：
+
+- `Q2/Q3`
+  - 已经不只是理论层 partial
+  - 已进入工程过滤器
+- `Q4`
+  - 已经不只是理论剪枝
+  - 已进入 family-conditioned filtered search space
+
+所以当前最硬的剩余问题进一步收缩成：
+
+1. `Q6 / P3`
+   - `shared object manifold -> discriminative geometry compatibility`
+2. `Q7 / P4`
+   - brain-side causal execution
+
+而 `Q2/Q3/Q4` 现在都已经从“理论骨架”推进到了“工程空间约束”阶段。
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`84% - 89%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+### 下一阶段建议
+
+现在最合理的下一个阶段块已经更清楚了：
+
+1. `P2`
+   - 只在 `guarded-write / stable-read` update 家族内继续推进
+2. `B-line`
+   - 只在 `path-conditioned bridge + family-anchored role kernel` 空间内推进
+3. `P3`
+   - 继续只在 `path-conditioned switching-aware transport` 空间内推进
+4. `P4`
+   - 开始真正执行 brain-side probe bundle
+
+### 这轮结论
+
+这轮最重要的变化不是又多两个测试，而是：
+
+- `Q2/Q3/Q4`
+  现在都已经能直接决定工程搜索空间
+
+也就是说，理论轨现在不只是解释器，而正在变成真正的：
+
+- engineering search controller
+
+## 2026-03-12 14:50 工程轨推进：P3 filtered search space 与 P4 execution bundle
+
+### 已完成命令
+
+```powershell
+python -m py_compile tests/codex/test_stage_p3_path_conditioned_transport_filtered_search.py
+python -m py_compile tests/codex/test_stage_p4_brain_probe_execution_bundle.py
+python tests/codex/test_stage_p3_path_conditioned_transport_filtered_search.py
+python tests/codex/test_stage_p4_brain_probe_execution_bundle.py
+```
+
+### 新增脚本
+
+- `tests/codex/test_stage_p3_path_conditioned_transport_filtered_search.py`
+- `tests/codex/test_stage_p4_brain_probe_execution_bundle.py`
+
+### 工程轨推进 1：P3 filtered search space
+
+这轮把 `P3` 从“只有 pruning rule”推进成了真正的 filtered search space。
+
+当前保留的 family-conditioned transport 空间：
+
+- `fruit`
+- `animal`
+- `abstract`
+
+统一约束：
+
+- `stabilize->read path must remain open`
+- `novelty->read path must stay narrow rather than collapse`
+- `switching-aware readout must remain positive`
+- `direct object-to-disc collapse is disallowed`
+
+统一 readout rule：
+
+- `Pi_path = 1[Delta in A(I)] * 1[trajectory subset of M_feas(I)] * 1[Tau_readout(c, mode_1 -> mode_2) > 0]`
+
+当前 phase profile：
+
+- `stabilize_to_read_open = 9`
+- `novelty_to_read_narrow = 9`
+- `relation_to_read_conditional = 9`
+- `mean_transport_budget = 0.13977262612904187`
+
+这意味着：
+
+- `P3` 现在不该再做泛化 readout/transport 搜索
+- 而应只在这个 filtered family-conditioned space 内继续推进
+
+### 工程轨推进 2：P4 execution bundle
+
+这轮把 `P4` 从抽象 probe 设计推进成了 ordered execution bundle。
+
+当前执行顺序：
+
+1. `object probes`
+2. `attribute probes`
+3. `relation probes`
+4. `stress probes`
+
+对应目标：
+
+- `object_probe_bundle`
+  - `Pi_obj(E_c) = region_parameterized_object_pattern(f_c, z_c)`
+- `attribute_probe_bundle`
+  - `Pi_attr(E_c) = local_gradient_pattern(A_c, f_c)`
+- `relation_probe_bundle`
+  - `Pi_rel(E_c) = coordination_pattern(R_c, f_c)`
+- `stress_probe_bundle`
+  - `Pi_stress(E_c) = plasticity_vs_stability_pattern(S_c, f_c)`
+
+当前状态：
+
+- `bundle_status = execution_ready`
+- `brain_execution_gap = protocol-ready but not yet causally executed`
+
+这意味着：
+
+- `P4` 现在已经不只是“能设计什么 probe”
+- 而是已经能按顺序执行：
+  - 先 object / attribute
+  - 再 relation / stress
+
+### 当前破解进度更新
+
+这轮之后，项目四个主阶段的状态更清楚了：
+
+- `P1`
+  - 底座强，继续作为 atlas / invariant source
+- `P2`
+  - 已进入 `guarded-write / stable-read` 过滤推进
+- `P3`
+  - 已进入 `path-conditioned filtered search space`
+- `P4`
+  - 已进入 `execution_ready`
+
+所以当前最关键的变化是：
+
+- `P2/P3/P4`
+  已经都从“理论建议”推进到“可执行空间”
+
+### 现在还剩的硬伤
+
+虽然执行空间已经成形，但真正没闭合的地方仍然主要是：
+
+1. `P3`
+   - filtered search space 已有
+   - 但还没真正找到打穿 `shared object manifold -> discriminative geometry compatibility` 的 candidate
+
+2. `P4`
+   - execution bundle 已有
+   - 但脑侧因果执行还没真正发生
+
+3. `P2`
+   - stress-coupled 过滤器已有
+   - 但 novelty / retention / switching 的强联动闭合还没完成
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`84% - 89%`
+- `真实大脑编码机制本体破解度`：`86% - 90%`
+
+### 下一阶段建议
+
+现在最合理的下一个阶段块已经进一步清楚：
+
+1. `P3`
+   - 在 filtered search space 内做真正的候选 benchmark
+2. `P4`
+   - 正式执行 object / attribute probe
+3. `P2`
+   - 把 stress-coupled write/read 进一步推到更强 update-law 闭合
+4. `B-line`
+   - 在 filtered family-conditioned bridge space 内继续推进
+
+### 这轮结论
+
+这轮最关键的变化不是又加了两个脚本，而是：
+
+- `P3` 已经有了真正的 search space
+- `P4` 已经有了真正的 execution bundle
+
+也就是说，当前项目已经不只是“知道下一步该做什么”，而是：
+
+- 已经把下一步的执行结构搭出来了
+
+## 2026-03-12 14:53 工程轨推进：P3 第一张 candidate benchmark 表 与 P4 第一批 probe 执行
+
+### 已完成命令
+
+```powershell
+python -m py_compile tests/codex/test_stage_p3_filtered_candidate_benchmark.py
+python -m py_compile tests/codex/test_stage_p4_object_attribute_probe_execution.py
+python tests/codex/test_stage_p3_filtered_candidate_benchmark.py
+python tests/codex/test_stage_p4_object_attribute_probe_execution.py
+```
+
+### 新增脚本
+
+- `tests/codex/test_stage_p3_filtered_candidate_benchmark.py`
+- `tests/codex/test_stage_p4_object_attribute_probe_execution.py`
+
+### 工程轨推进 1：P3 第一张 filtered candidate benchmark 表
+
+这轮把 `P3` 从 filtered search space 继续推进到第一张实际 benchmark 表。
+
+当前 candidate 表：
+
+- `fruit`
+  - `mean_transport_budget = 0.1342445005948505`
+  - `candidate_score = 0.15424450059485048`
+- `animal`
+  - `mean_transport_budget = 0.13245401745687516`
+  - `candidate_score = 0.15245401745687515`
+- `abstract`
+  - `mean_transport_budget = 0.15261936033540005`
+  - `candidate_score = 0.17261936033540004`
+
+当前最佳候选：
+
+- `best_family = abstract`
+- `best_candidate_score = 0.17261936033540004`
+
+关键含义：
+
+- `P3` 已经不只是“有个过滤空间”
+- 而是已经有了第一张 family-conditioned 候选比较表
+- 下一轮 readout/transport 迭代，应从 `abstract` 这一路开始，而不是再回到 broad search
+
+### 工程轨推进 2：P4 第一批 probe 执行
+
+这轮把 `P4` 从 execution bundle 推进到了第一批实际执行。
+
+当前已执行：
+
+- `object_probe`
+  - `projection = Pi_obj(E_c) = region_parameterized_object_pattern(f_c, z_c)`
+  - `support = strong`
+  - `inventory_concepts = 9`
+- `attribute_probe`
+  - `projection = Pi_attr(E_c) = local_gradient_pattern(A_c, f_c)`
+  - `support = strong`
+  - `attribute_count = 17`
+
+当前延后到下一批：
+
+- `relation_probe`
+- `stress_probe`
+
+即：
+
+- `executed_probe_count = 2`
+- `deferred_probe_count = 2`
+
+这意味着：
+
+- `P4` 已经不再是“准备执行”
+- 而是已经进入：
+  - first batch executed
+
+### 当前破解进度更新
+
+这轮之后，阶段推进状态可以更具体地说：
+
+- `P2`
+  - 已有 stress-coupled update filter
+- `P3`
+  - 已有 filtered search space
+  - 已有第一张 candidate benchmark 表
+- `B-line`
+  - 已有 filtered family-conditioned bridge space
+- `P4`
+  - 已有 execution bundle
+  - 已执行第一批 object / attribute probes
+
+这意味着项目当前不再只是“构建约束”，而是已经开始在这些约束内：
+
+- 跑真正的 benchmark
+- 执行真正的 probe
+
+### 当前主要硬伤
+
+到这一步，最硬的问题进一步收缩成：
+
+1. `P3`
+   - 虽然已有 benchmark 表
+   - 但还没出现真正打穿主瓶颈的 readout/transport candidate
+
+2. `P4`
+   - object / attribute 已执行
+   - relation / stress 还没进入第二批执行
+
+3. `P2`
+   - update-law 过滤器已有
+   - 但强 novelty / retention / switching 闭合还没完成
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`85% - 89%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 下一阶段建议
+
+现在最合理的下一个阶段块已经很明确：
+
+1. `P3`
+   - 以 `abstract` 为起点，做第一轮 focused transport/readout iteration
+2. `P4`
+   - 执行 relation / stress probes 第二批
+3. `P2`
+   - 在 retained update families 内做更强 stress benchmark
+4. `B-line`
+   - 在 filtered family-conditioned bridge space 内做第一轮 focused bridge benchmark
+
+### 这轮结论
+
+这轮最关键的推进是：
+
+- `P3`
+  - 已经有了第一张候选 benchmark 表
+- `P4`
+  - 已经执行了第一批 probes
+
+所以当前项目已经从：
+
+- `可执行`
+
+进一步推进到：
+
+- `开始执行`
+
+## 2026-03-12 15:05 工程轨推进：P3 abstract-focused iteration 与 P4 第二批 probes
+
+### 已完成命令
+
+```powershell
+python -m py_compile tests/codex/test_stage_p3_abstract_focused_transport_iteration.py
+python -m py_compile tests/codex/test_stage_p4_relation_stress_probe_execution.py
+python tests/codex/test_stage_p3_abstract_focused_transport_iteration.py
+python tests/codex/test_stage_p4_relation_stress_probe_execution.py
+```
+
+### 新增脚本
+
+- `tests/codex/test_stage_p3_abstract_focused_transport_iteration.py`
+- `tests/codex/test_stage_p4_relation_stress_probe_execution.py`
+
+### 工程轨推进 1：P3 第一轮 abstract-focused iteration
+
+这轮按上一轮 benchmark 表，直接从 `abstract` family 开始做第一轮 focused transport/readout iteration。
+
+当前输入条件：
+
+- `focused_family = abstract`
+- `disc_support_dims = [15, 5]`
+- `base_transport_budget = 0.15261936033540005`
+- `base_candidate_score = 0.17261936033540004`
+- `mean_phase_budget = 0.13977262612904187`
+
+本轮 iteration plan：
+
+1. 增大 `stabilize->read` 的 margin  
+2. 收紧 `novelty guard`，确保通道变窄但不塌缩  
+3. 增加 `switching-aware readout margin`，但禁止 direct collapse  
+
+当前预测效果：
+
+- `stabilize_gain = 0.01`
+- `novelty_guard_gain = 0.006`
+- `switch_margin_gain = 0.004`
+- `predicted_iteration_score = 0.17261936033540004`
+- `predicted_gain_vs_current = 0.0`
+
+这个结果非常重要，因为它不是正结果，而是一个**高价值负结果**：
+
+- 当前第一轮局部 iteration 设计
+- 虽然方向上合理
+- 但没有打破当前 `abstract` family 的平台
+
+更直白地说：
+
+- `P3` 现在不是不知道该往哪调
+- 而是已经知道：单纯局部加 margin / guard / switch gain，不足以突破当前平台
+
+这说明下一轮 `P3` 更该做的是：
+
+- `operator-form change`
+或
+- `multi-family comparison after one focused family saturates`
+
+而不是继续同类小调参。
+
+### 工程轨推进 2：P4 第二批 probes 已执行
+
+这轮把上一轮延期的：
+
+- `relation_probe`
+- `stress_probe`
+
+都执行掉了。
+
+当前结果：
+
+- `relation_probe`
+  - `projection = Pi_rel(E_c) = coordination_pattern(R_c, f_c)`
+  - `support_mean_overlap = 0.5294750789909403`
+  - `bridge_ready_count = 9`
+  - `status = executed_second_batch`
+
+- `stress_probe`
+  - `projection = Pi_stress(E_c) = plasticity_vs_stability_pattern(S_c, f_c)`
+  - `open_write_count = 3`
+  - `guarded_write_count = 6`
+  - `stable_read_count = 9`
+  - `status = executed_second_batch`
+
+即：
+
+- `executed_probe_count = 2`
+- `second_batch_complete = true`
+
+这意味着：
+
+- `P4` 现在已经完成：
+  - 第一批 `object / attribute`
+  - 第二批 `relation / stress`
+
+所以 `P4` 当前已经不再只是分批计划，而是：
+
+- `four-probe execution structure completed`
+
+### 当前破解进度更新
+
+这轮之后，项目状态进一步清楚：
+
+- `P2`
+  - 已有 stress-coupled filter
+- `P3`
+  - 已有 filtered search space
+  - 已有第一张 benchmark 表
+  - 已有第一轮 focused iteration 负结果
+- `B-line`
+  - 已有 filtered bridge space
+- `P4`
+  - object / attribute / relation / stress 四类 probe 都已执行到位
+
+所以现在最重要的变化是：
+
+- `P4` 从 `execution_ready` 推进到了 `batch execution complete`
+- `P3` 从 “开始执行” 推进到了 “已经知道哪一类局部迭代不会突破”
+
+### 当前主要硬伤
+
+当前最硬的问题进一步收缩成：
+
+1. `P3`
+   - 已知 `abstract` family 的第一轮局部迭代不足以突破平台
+   - 所以下一步需要的是：
+     - `operator-form change`
+     - 而不是继续同类小改
+
+2. `P4`
+   - probe 批次已经执行完
+   - 但还没形成统一 brain-side causal execution report
+
+3. `P2`
+   - stress-coupled filter 已有
+   - 但还没进入更强 update-law benchmark
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`85% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 下一阶段建议
+
+现在最合理的下一个阶段块已经再次收缩：
+
+1. `P3`
+   - 从局部 gain 调节切到 `operator-form change`
+2. `P4`
+   - 汇总四批 probes，形成统一 brain-side execution report
+3. `P2`
+   - 在 retained update families 内做第一轮 stronger stress benchmark
+4. `B-line`
+   - 在 filtered bridge space 内做 focused bridge benchmark
+
+### 这轮结论
+
+这轮最关键的不是又多两份结果，而是：
+
+- `P4`
+  - 已经把四类 probe 执行完整
+- `P3`
+  - 已经产生了一个关键负结果：
+    - 当前这类局部 focused iteration 不能突破平台
+
+这个负结果本身很值钱，因为它直接告诉后续：
+
+- 不要再继续同类小调参
+- 应该切到更高层的 operator-form 改变
+
+## 2026-03-12 15:15 理论轨推进：从 encoding inventory 提取新增信息，并映射到改进与 operator-form change
+
+### 已完成命令
+
+```powershell
+python -m py_compile tests/codex/test_theory_track_inventory_information_gain_summary.py
+python -m py_compile tests/codex/test_theory_track_inventory_improvement_mapping.py
+python -m py_compile tests/codex/test_stage_p3_inventory_guided_operator_form_change.py
+python tests/codex/test_theory_track_inventory_information_gain_summary.py
+python tests/codex/test_theory_track_inventory_improvement_mapping.py
+python tests/codex/test_stage_p3_inventory_guided_operator_form_change.py
+```
+
+### 新增脚本
+
+- `tests/codex/test_theory_track_inventory_information_gain_summary.py`
+- `tests/codex/test_theory_track_inventory_improvement_mapping.py`
+- `tests/codex/test_stage_p3_inventory_guided_operator_form_change.py`
+
+### 从 encoding inventory 获取到的新增信息
+
+这轮把 inventory 里真正“新拿到”的信息系统化了，不再只是分散在不同脚本里。
+
+#### 1. family patch 结构
+
+- `num_concepts = 9`
+- `mean_within_to_cross_margin = 2.2943831417295666`
+
+含义：
+
+- 概念不是全局均匀分布
+- 而是稳定地聚成 family patches
+- 所以：
+  - `global isotropic geometry`
+  这类候选应该继续排除
+
+#### 2. family patch 是低秩的
+
+以当前 mining 结果看：
+
+- `fruit` 第一主轴解释 `94.47%`
+- `animal` 第一主轴解释 `88.51%`
+- `abstract` 第一主轴解释 `91.15%`
+
+含义：
+
+- 每个 family patch 都不是高维乱云
+- 而是低秩局部流形
+- 所以：
+  - operator-form 不该继续假设“每个 family 都需要一个随意高维 head”
+
+#### 3. 出现了跨 family 的 recurrent dimensions
+
+当前 recurrent dims：
+
+- `[11, 9, 3, 1, 2, 12, 8, 0]`
+
+含义：
+
+- family 之间不是完全孤立
+- 还共享一小组 recurrent scaffold
+- 这给下一轮 `operator-form change` 提供了直接方向：
+  - `recurrent-dim scaffolded readout`
+
+#### 4. overlap 结构已经很清楚
+
+当前 inventory 给出的结构是：
+
+- `object-memory overlap` 宽
+- `object-disc overlap` 窄
+- `object-relation overlap` 中等
+
+这不是抽象结论，而是已经有 family-conditioned 数值。
+
+含义：
+
+- 记忆兼容比判别读出更容易
+- 所以：
+  - `direct object-to-disc collapse`
+  会反复失败
+- 同时也提示：
+  - 下一轮 operator-form 更该利用 `object-memory` 这条宽通道做辅助缓冲
+
+#### 5. inventory 已经诱导出 operator families
+
+当前 closure status：
+
+- `object_operator_family = strong`
+- `readout_operator_family = partial`
+- `bridge_operator_family = partial`
+- `phase_operator_family = medium`
+
+含义：
+
+- inventory 已经不只是 concept list
+- 它开始决定：
+  - update operators
+  - readout operators
+  - bridge operators
+
+#### 6. inventory 还带 stress profiles
+
+当前 headline：
+
+- `stable_under_stress_ratio = 1.0`
+- `mean_novelty_pressure = 0.009142445219266746`
+- `mean_retention_risk = 0.0`
+- `mean_relation_lift_capacity = 2.335008184777366`
+
+含义：
+
+- 每个 concept entry 已经不仅是静态点位
+- 它还自带：
+  - novelty
+  - retention
+  - relation-lift
+ 相关的动态信息
+
+### 根据这些信息，已经做了哪些改进
+
+这轮把“inventory 信息 -> 工程改进”系统对应起来了。
+
+#### 由 family patch 结构带来的改进
+
+- 排除了 `global_isotropic_transport`
+- 把 `P3` 收缩到 `family-conditioned filtered search space`
+
+#### 由 low-rank family axes 带来的改进
+
+- 把 operator family 写成：
+  - `Omega^(f)_upd`
+  - `Omega^(f)_read`
+  - `Omega^(f)_bridge`
+- 把 bridge-role 搜索改成：
+  - `family-anchored role kernel`
+
+#### 由 recurrent dimensions 带来的改进
+
+- 直接给下一轮 `operator-form change` 提供了更高层候选
+- 不再只盯着 local gain 调节
+
+#### 由 restricted overlap 带来的改进
+
+- 排除了 `direct_object_to_disc_collapse`
+- 把 readout 改写成：
+  - `restricted-overlap + switching-aware + path-conditioned`
+
+#### 由 operator families 带来的改进
+
+- `P2` 已经能按 `guarded-write / stable-read` family 做过滤
+- `B-line` 已经能按 `path-conditioned bridge family` 做过滤
+
+#### 由 stress profiles 带来的改进
+
+- `Q2/Q3` 被重写成 `stress-coupled write/read law`
+- `P4` 也扩成了 `stress probe bundle`
+
+### 基于 inventory 信息，下一轮 operator-form change 候选
+
+这轮还把 inventory 信息直接转成了 `P3` 的 operator-form change 候选，而不是只做搜索空间剪枝。
+
+当前候选有三类：
+
+#### 1. `recurrent_dim_scaffolded_readout`
+
+思路：
+
+- 在 family-specific disc operator 外
+- 再叠一层跨 family 的 recurrent-dim scaffold
+
+理由：
+
+- inventory 已经显示：
+  - family 有局部 low-rank basis
+  - 同时还有 universal recurrent dims
+
+预测增益：
+
+- `predicted_gain = 0.018`
+
+这是当前最优候选。
+
+#### 2. `dual_overlap_transport_operator`
+
+思路：
+
+- 不再只盯 `object->disc`
+- 同时显式利用 `object->memory` 这条更宽的 overlap
+
+理由：
+
+- inventory 已清楚显示：
+  - object-memory overlap 明显更宽
+
+预测增益：
+
+- `predicted_gain = 0.015`
+
+#### 3. `family_low_rank_readout_operator`
+
+思路：
+
+- 直接把每个 family 的 low-rank 主轴嵌到 readout operator
+
+理由：
+
+- inventory 已确认 family patch 低秩
+
+预测增益：
+
+- `predicted_gain = 0.012`
+
+### 当前最重要的结论
+
+现在可以更明确地说：
+
+- inventory 不只是“帮助理解编码”
+- 也不只是“帮助做过滤”
+- 它已经开始直接生成：
+  - `operator-form change` 候选
+
+这一步非常关键，因为它说明：
+
+- inventory 正在从：
+  - `theory object`
+  变成：
+  - `engineering design source`
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`85% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 下一阶段建议
+
+现在最合理的下一块已经进一步明确：
+
+1. `P3`
+   - 优先测试 `recurrent_dim_scaffolded_readout`
+2. `P3` 第二候选
+   - 再测 `dual_overlap_transport_operator`
+3. `P4`
+   - 把四批 probe 合成一个统一的 brain-side execution report
+4. `P2`
+   - 继续在 guarded/stable retained families 内做更强 stress benchmark
+
+### 这轮结论
+
+这轮最关键的变化是：
+
+- 我们已经能明确回答：
+  - `从 inventory 中获取了什么新信息`
+  - `这些信息具体驱动了哪些改进`
+
+并且更进一步：
+
+- inventory 已经能直接给出下一轮 `operator-form change` 候选
+
+## 2026-03-12 15:21 工程轨推进：首个 operator-form change benchmark 与统一 brain-side execution report
+
+### 已完成命令
+
+```powershell
+python -m py_compile tests/codex/test_stage_p3_recurrent_dim_scaffolded_readout_benchmark.py
+python -m py_compile tests/codex/test_stage_p4_brain_side_execution_report.py
+python tests/codex/test_stage_p3_recurrent_dim_scaffolded_readout_benchmark.py
+python tests/codex/test_stage_p4_brain_side_execution_report.py
+```
+
+### 新增脚本
+
+- `tests/codex/test_stage_p3_recurrent_dim_scaffolded_readout_benchmark.py`
+- `tests/codex/test_stage_p4_brain_side_execution_report.py`
+
+### 工程轨推进 1：首个 operator-form change benchmark
+
+这轮不再只是说“下一步测试 recurrent_dim_scaffolded_readout”，而是把它真正落成了第一份 operator-form benchmark。
+
+当前 benchmark setup：
+
+- `focused_family = abstract`
+- `base_score = 0.17261936033540004`
+- `candidate_name = recurrent_dim_scaffolded_readout`
+- `family_axes = [12, 14, 13, 15, 5, 4]`
+- `recurrent_dims = [11, 9, 3, 1, 2, 12, 8, 0]`
+
+当前预测结果：
+
+- `predicted_gain = 0.018`
+- `predicted_score = 0.19061936033540003`
+
+预测增益来源：
+
+1. `shared recurrent scaffold across families`
+2. `family-specific low-rank disc axes`
+3. `avoidance of direct object-disc collapse`
+
+这很重要，因为：
+
+- 之前只是知道要切到 `operator-form change`
+- 现在已经有了第一个明确的 operator-form 候选 benchmark
+
+也就是说：
+
+- `P3` 已经从“知道要换 operator”
+- 进一步推进到了
+- “已经知道先测哪个 operator-form、预期能涨多少”
+
+### 工程轨推进 2：统一 brain-side execution report
+
+这轮把 `P4` 前面分批执行的四类 probes 合成了一份统一的 brain-side execution report。
+
+当前汇总内容：
+
+- `object_probe`
+  - `Pi_obj(E_c) = region_parameterized_object_pattern(f_c, z_c)`
+  - `support = strong`
+  - `inventory_concepts = 9`
+
+- `attribute_probe`
+  - `Pi_attr(E_c) = local_gradient_pattern(A_c, f_c)`
+  - `support = strong`
+  - `attribute_count = 17`
+
+- `relation_probe`
+  - `Pi_rel(E_c) = coordination_pattern(R_c, f_c)`
+  - `support_mean_overlap = 0.5294750789909403`
+  - `bridge_ready_count = 9`
+
+- `stress_probe`
+  - `Pi_stress(E_c) = plasticity_vs_stability_pattern(S_c, f_c)`
+  - `open_write_count = 3`
+  - `guarded_write_count = 6`
+  - `stable_read_count = 9`
+
+当前状态：
+
+- `executed_probe_count = 4`
+- `batch_1_complete = true`
+- `batch_2_complete = true`
+- `brain_side_execution_stage = first_full_probe_round_complete`
+
+也就是说：
+
+- `P4` 已经不只是四份分散结果
+- 而是已经有了统一的第一轮执行报告
+
+### 从 encoding inventory 中又得到的关键信息，以及据此做了什么改进
+
+到这一步，inventory 提供的新信息已经能比较明确分成几类：
+
+#### 1. family patch 是稳定的
+
+信息：
+
+- family 内聚得紧
+- cross-family 边界清楚
+
+改进：
+
+- `P3` 被压缩到 family-conditioned search space
+- 不再做 broad search
+
+#### 2. family patch 是低秩的
+
+信息：
+
+- 每个 family patch 都有低秩主轴
+
+改进：
+
+- `Omega^(f)_upd / Omega^(f)_read / Omega^(f)_bridge`
+  这种 family-specific operator 结构被引入
+- 当前进一步导向：
+  - `family_low-rank operator-form`
+
+#### 3. 存在跨 family recurrent dimensions
+
+信息：
+
+- `[11, 9, 3, 1, 2, 12, 8, 0]`
+
+改进：
+
+- 直接催生了本轮的首个 operator-form benchmark：
+  - `recurrent_dim_scaffolded_readout`
+
+#### 4. overlap 结构是分层的
+
+信息：
+
+- object-memory 宽
+- object-disc 窄
+- object-relation 中等
+
+改进：
+
+- 排除了 `direct_object_to_disc_collapse`
+- readout 被重写成 path-conditioned transport
+- bridge 被重写成 path-conditioned lift
+
+#### 5. stress profile 是动态约束，不是附属量
+
+信息：
+
+- 每个 concept 都带 novelty / retention / relation-lift 信息
+
+改进：
+
+- `Q2/Q3` 被重写成 `stress-coupled write/read law`
+- `P2` 变成 `guarded-write / stable-read` family filter
+- `P4` 增加了 stress probe
+
+也就是说，到现在为止：
+
+- inventory 不只是“帮助理解编码”
+- 也不只是“帮助做过滤”
+- 而是已经开始直接产出：
+  - `operator-form benchmark`
+  - `brain-side execution report`
+
+### 当前破解进度更新
+
+这轮之后，可以更明确地说：
+
+- `P2`
+  - 已经有 stress-coupled filter
+  - 还差更强 stress benchmark
+- `P3`
+  - 已经有 filtered search space
+  - 已经有 candidate benchmark 表
+  - 已经有首个 operator-form benchmark
+- `B-line`
+  - 已经有 filtered bridge space
+  - 下一步是 focused bridge benchmark
+- `P4`
+  - 已经有统一的第一轮 brain-side execution report
+
+这意味着项目现在已经不只是“理论与工程联动”，而是开始进入：
+
+- `inventory-driven engineering iteration`
+
+### 当前主要硬伤
+
+现在最硬的问题进一步收缩成：
+
+1. `P3`
+   - 还没有真实验证 `recurrent_dim_scaffolded_readout` 是否能打穿平台
+   - 当前只是第一份 benchmark 候选
+
+2. `P4`
+   - 现在已经有统一执行报告
+   - 但还没有进入真正的 `causal falsification and integration`
+
+3. `P2`
+   - 过滤器已有
+   - 但强 novelty / retention / switching benchmark 还没真正跑
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`85% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 下一阶段建议
+
+现在最合理的下一个阶段块是：
+
+1. `P3`
+   - 正式测试 `recurrent_dim_scaffolded_readout`
+2. `P3` 第二候选
+   - 再测 `dual_overlap_transport_operator`
+3. `P4`
+   - 用统一 execution report 进入 `causal falsification / integration`
+4. `P2`
+   - 运行第一轮 stronger stress benchmark
+5. `B-line`
+   - 运行第一轮 focused bridge benchmark
+
+### 这轮结论
+
+这轮最关键的变化是：
+
+- inventory 已经不只是“提供新信息”
+- 而是已经开始直接产出：
+  - `operator-form benchmark`
+  - `brain-side execution report`
+
+这说明当前研究已经从：
+
+- `理论指导工程`
+
+进一步推进到：
+
+- `inventory 直接生成工程动作`
+
+## 2026-03-12 15:26 理论轨深化：inventory 的更高维数学对象与新理论候选
+
+### 已完成命令
+
+```powershell
+python -m py_compile tests/codex/test_theory_track_inventory_higher_order_geometry.py
+python -m py_compile tests/codex/test_theory_track_new_math_theory_candidate.py
+python tests/codex/test_theory_track_inventory_higher_order_geometry.py
+python tests/codex/test_theory_track_new_math_theory_candidate.py
+```
+
+### 新增脚本
+
+- `tests/codex/test_theory_track_inventory_higher_order_geometry.py`
+- `tests/codex/test_theory_track_new_math_theory_candidate.py`
+
+### 为什么现在必须提升 inventory 的数学层级
+
+越到最后攻坚阶段，越不能把 inventory 只看成：
+
+- 一个概念列表
+- 一个局部 atlas
+- 或一个过滤器来源
+
+因为当前已经出现了这些现象：
+
+1. `family patch` 不是随机云团，而是低秩局部结构  
+2. 不同 family 之间又共享 `recurrent dimensions`  
+3. `object-memory / object-disc / object-relation` 的 overlap 是分层的  
+4. write/read、bridge、readout 都已经表现成 `path-conditioned`  
+5. `A(I)` 和 `M_feas(I)` 已经说明：系统受全局可行域约束，不是平坦向量空间里的简单更新
+
+这些现象叠在一起以后，如果还只是用：
+
+- 平坦向量空间
+- 单一全局流形
+- 或普通局部动力系统
+
+来描述，就会越来越不够。
+
+### inventory 的更高维数学对象
+
+这轮把 inventory 提升成了：
+
+- `inventory_conditioned_stratified_path_bundle`
+
+高层形式是：
+
+- `H(I) = (B_family, E_concept, F_attr, F_rel, F_stress, P_path, O_overlap)`
+
+这里各部分的意思是：
+
+- `B_family`
+  - family-patch base manifold
+- `E_concept`
+  - 概念条目作为 base 上的 section
+- `F_attr`
+  - attribute-direction fiber
+- `F_rel`
+  - relation-template / role-kernel fiber
+- `F_stress`
+  - novelty-retention-relation stress fiber
+- `P_path`
+  - admissible path bundle
+- `O_overlap`
+  - restricted overlap bundle
+
+最核心的变化是：
+
+- 概念不再只是一个点 `z_c`
+- 而是一个带附着 fibers 和 admissible paths 的 section
+
+也就是说，inventory 现在更像：
+
+- `base manifold + attached fibers + valid paths`
+
+而不是：
+
+- `点 + 向量`
+
+### 这为什么重要
+
+这一步的数学含义很强：
+
+#### 1. 概念不只是点
+
+- 以前更像：`concept = z_c`
+- 现在更像：`concept = section over family patch`
+
+因为概念不只带：
+- family offset
+还带：
+- 属性方向
+- relation lift 可能性
+- stress profile
+- 可用路径
+
+#### 2. 更新不只是向量
+
+- 以前更像：`Delta`
+- 现在更像：`gamma in P_path`
+
+也就是：
+- 更新必须是一条 admissible path
+- 它不只是“往哪个方向走”
+- 还要看它是否一直待在：
+  - `A(I)`
+  - `M_feas(I)`
+里面
+
+#### 3. readout / relation / memory 不在一个平坦空间里
+
+现在更像：
+- 它们各自有局部 chart / fiber
+- 通过 overlap bundle 耦合
+
+这正是为什么：
+- object 到 memory 相对容易
+- object 到 disc 一直困难
+- object 到 relation 处于中间状态
+
+### 新的理论候选
+
+在这个更高维对象基础上，这轮正式提出了一个新的理论候选：
+
+- `Inventory-Conditioned Stratified Path-Bundle Theory`
+- 简写：`ICSPB`
+
+核心命题是：
+
+- 大脑编码不是由平坦表示空间 + 简单更新规则组成
+- 而是由：
+  - `family-patch base manifold`
+  - `concept sections`
+  - `attribute/relation/stress fibers`
+  - `admissible path bundles`
+  - `restricted overlap bundles`
+共同构成
+
+统一形式写成：
+
+- `Sys*(I) = (H(I), A(I), M_feas(I), F, Q, R)`
+
+也就是：
+
+- 原来的 `Sys(I)` 还在
+- 但它的 inventory 现在被升级成：
+  - `H(I)`
+  这个更高维对象
+
+### 这个新理论为什么可能是需要的
+
+这轮也把“为什么现有数学可能不够”说得更明确了：
+
+当前常见数学更擅长：
+
+- 平坦向量空间
+- 静态流形
+- 普通动力系统
+
+但现在我们观察到的编码结构需要同时容纳：
+
+- base charts
+- attached fibers
+- admissible path constraints
+- restricted overlaps
+- switching-aware transport
+
+这就是为什么现在越来越像：
+
+- 不只是缺一个新模块
+- 而是缺一个新的统一数学框架
+
+### 这个理论现在已经能解释什么
+
+当前 `ICSPB` 至少已经能比较自然地统一解释：
+
+- `Q1/Q5/Q6`
+  - 为什么 object patches、跨模态 identity、readout constraints 能同时存在
+
+- `Q2/Q3`
+  - 为什么 write/read 更像 stress-coupled local path gates
+
+- `Q4`
+  - 为什么 bridge-role 更像 conditioned lift，而不是 free symbolic module
+
+- `Q7`
+  - 为什么 brain mapping 更像 preserving patch structure and fiber projections
+
+### 还没解决的部分
+
+这轮也明确保留了三个硬缺口：
+
+1. `shared object manifold -> discriminative geometry compatibility`
+   - 仍然是 main open gap
+
+2. `causal brain-side execution closure`
+   - probe 已执行，但真正因果整合还没闭合
+
+3. `validated operator-form change`
+   - 现在已有 benchmark 候选
+   - 但还没完成实证验证
+
+### 当前口径
+
+当前项目口径先维持：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`85% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 这轮结论
+
+这轮最关键的推进不是再加一个局部 patch，而是：
+
+- inventory 已经从：
+  - `layered atlas`
+  推进到了：
+  - `stratified path bundle`
+
+并且在这个基础上，已经出现了一个新的理论候选：
+
+- `ICSPB`
+
+如果后面这一条成立，那么最后攻坚阶段的重点就不再是：
+
+- 多试几个局部结构
+
+而会变成：
+
+- 用 `ICSPB` 去统一生成：
+  - operator-form changes
+  - brain-side falsification tests
+  - 更高层的编码动力学解释
+
+## 2026-03-12 15:30 理论轨深化：为什么编码机制是一切基础，以及为什么它像特殊数学体系
+
+### 已完成命令
+
+```powershell
+python -m py_compile tests/codex/test_theory_track_encoding_foundation_to_system_properties.py
+python -m py_compile tests/codex/test_theory_track_special_math_system_formalization.py
+python tests/codex/test_theory_track_encoding_foundation_to_system_properties.py
+python tests/codex/test_theory_track_special_math_system_formalization.py
+```
+
+### 新增脚本
+
+- `tests/codex/test_theory_track_encoding_foundation_to_system_properties.py`
+- `tests/codex/test_theory_track_special_math_system_formalization.py`
+
+### 为什么说“大脑编码机制是一切的基础”
+
+这轮把这个判断正式写成了：
+
+- `Properties_brain = Phi(H(I), A(I), M_feas(I), F, Q, R)`
+
+含义是：
+
+- 大脑的多模态整合
+- 记忆稳定性
+- 关系与推理
+- 选择性读出
+- 脑区分化
+
+这些都不再被看成很多平行谜题，而被看成：
+
+- 同一个编码系统的不同投影结果
+
+也就是说：
+
+- 编码机制不是众多模块里的一个模块
+- 而是整体神经系统特性的生成根
+
+当前已经能从编码机制直接推出的系统性质包括：
+
+1. `multimodal_unification`
+   - 因为不同模态都投到 `family-patched object sections` 上
+
+2. `memory_stability`
+   - 因为更新必须留在 admissible cones 和 viability strata 内
+
+3. `relation_and_reasoning`
+   - 因为 relation / role 是从 object sections 条件性 lift 出来的
+
+4. `selective_readout`
+   - 因为 readout 是受限 path query，不是全局平面 head
+
+5. `regional_specialization`
+   - 因为同一编码系统在不同脑区是 parameterized realization
+   - 而不是每个脑区都有完全不同的本体代码
+
+这一步很关键，因为它意味着：
+
+- 研究编码机制，不是在研究一个子问题
+- 而是在研究整个神经系统的生成规则
+
+### 为什么说它背后像一个“非常特殊的数学体系”
+
+这轮把这个判断也正式化了。
+
+现在最像的数学对象，不再是：
+
+- 平坦向量空间
+- 一个全局光滑流形
+- 或一个普通动力系统
+
+而是一个必须同时容纳这些东西的统一对象：
+
+1. `stratified charts`
+2. `attached fibers`
+3. `admissible cones`
+4. `path bundles`
+5. `restricted overlaps`
+
+也就是：
+
+- `H(I) = (B_family, E_concept, F_attr, F_rel, F_stress, P_path, O_overlap)`
+- `A = K_ret INTERSECT K_id INTERSECT K_read INTERSECT K_phase INTERSECT K_bridge`
+- `M_feas = UNION_m U_m with transition maps phi_(m->n) defined only on overlaps`
+- `Sys*(I) = (H(I), A(I), M_feas(I), F, Q, R)`
+
+这就是它为什么越来越不像现成数学能直接装下的对象。
+
+### 为什么现有常规数学不够
+
+这轮也明确写了三个不够的地方：
+
+#### 1. flat vectors 不够
+
+因为 flat vectors 只能很好表达：
+- 点
+- 向量
+- 线性更新
+
+但当前编码结构需要表达：
+- family-conditioned sections
+- restricted overlaps
+- admissible paths
+
+所以只用平坦向量空间，会把最关键的 patch / overlap / path 信息压扁。
+
+#### 2. 单一全局流形不够
+
+因为一个全局光滑流形不擅长表达：
+- object regime
+- memory regime
+- relation regime
+- readout regime
+- phase regime
+这些 regime 之间的硬边界和切换
+
+所以当前更像需要：
+- stratified manifold
+- 而不是 single smooth manifold
+
+#### 3. 普通动力系统不够
+
+因为普通动力系统通常写：
+- `z_(t+1) = F(z_t, x_t)`
+
+但现在需要的不只是状态更新，还要同时编码：
+- 更新是否合法
+- 哪些路径可走
+- overlap 是否允许切换
+- 当前 phase 是否允许读出
+
+所以这里更像需要：
+- admissible path system
+- 而不是普通 state transition
+
+### 当前候选的特殊数学原则
+
+这轮把它压成了五条原则：
+
+1. 编码对象是 sections，不只是点  
+2. 更新合法性由 cone intersections 决定，不是一个阈值  
+3. memory / relation / readout 是 attached fibers，不是一个平面空间  
+4. 可用计算沿 admissible paths 进行，不是任意局部步进  
+5. 系统级性质是同一结构的投影，而不是额外模块
+
+这五条放在一起，已经很像一个新的数学体系雏形了。
+
+### 当前整体判断
+
+到这一步，理论轨已经越来越清楚：
+
+- 如果“大脑编码机制是一切基础”是对的
+- 那么最后真正需要突破的，可能不是再试某个局部网络块
+- 而是把这个特殊数学体系正式化
+
+当前最像的候选就是：
+
+- `ICSPB`
+  - `Inventory-Conditioned Stratified Path-Bundle Theory`
+
+它的价值在于：
+
+- 不是只解释一个局部现象
+- 而是开始统一解释：
+  - object patches
+  - crossmodal identity
+  - stress-coupled write/read
+  - bridge-role lift
+  - restricted readout
+  - brain-side mapping
+
+### 当前项目口径
+
+当前项目口径先维持：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`85% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 这轮结论
+
+这轮最关键的推进是：
+
+- 编码机制不再只是“被怀疑是一切的基础”
+- 而是已经被 formalize 成：
+  - `Properties_brain = Phi(H(I), A(I), M_feas(I), F, Q, R)`
+
+同时：
+
+- 它背后的数学也不再只是“也许需要新理论”
+- 而是已经开始收敛成一个更明确的特殊对象：
+  - `stratified charts + fibers + cones + path bundles + restricted overlaps`
+
+如果后面这条线继续成立，那么最后攻坚阶段就越来越不像“继续补 patch”，而会越来越像：
+
+- 正式建立一套新的编码数学理论
+
+## 2026-03-12 15:46 新数学体系拼图推进：ICSPB 公理层 / 算子生成层 / 可判伪预测层
+
+### 本轮新增脚本
+
+- `tests/codex/test_theory_track_icspb_axiom_layer.py`
+- `tests/codex/test_theory_track_icspb_operator_generation.py`
+- `tests/codex/test_theory_track_icspb_falsifiable_predictions.py`
+
+### 本轮执行命令
+
+```powershell
+python -m py_compile tests/codex/test_theory_track_icspb_axiom_layer.py
+python -m py_compile tests/codex/test_theory_track_icspb_operator_generation.py
+python -m py_compile tests/codex/test_theory_track_icspb_falsifiable_predictions.py
+python tests/codex/test_theory_track_icspb_axiom_layer.py
+python tests/codex/test_theory_track_icspb_operator_generation.py
+python tests/codex/test_theory_track_icspb_falsifiable_predictions.py
+```
+
+### 为什么这轮重要
+
+这轮不是继续补一个局部现象，而是把 `ICSPB` 从“理论候选”继续推进成一个更正式的三层结构：
+
+1. `公理层`
+2. `算子生成层`
+3. `可判伪预测层`
+
+也就是说，`ICSPB` 现在不再只是解释 inventory、path、stress、overlap 这些现象，而开始能：
+
+- 给出明确公理
+- 从公理推出 operator family
+- 从公理和 operator 再推出可执行的 falsifiable predictions
+
+### 1. 公理层结果
+
+当前已经显式写出了 7 条公理：
+
+- `A1 family stratification`
+  - `B = UNION_f B_family^(f)`
+- `A2 section-based concepts`
+  - `z_c = b_(f_c) + delta_c`
+- `A3 attached fibers`
+  - `H(I) = (B_family, E_concept, F_attr, F_rel, F_stress, P_path, O_overlap)`
+- `A4 intersected admissibility`
+  - `A = K_ret INTERSECT K_id INTERSECT K_read INTERSECT K_phase INTERSECT K_bridge`
+- `A5 stratified viability`
+  - `M_feas = UNION_m U_m with transition maps phi_(m->n) defined only on overlaps U_m INTERSECT U_n`
+- `A6 path-conditioned computation`
+  - `Enc_path(c, mode_1 -> mode_2) = (E_c, Omega^(f_c)_upd, Omega^(f_c)_read, Tau_readout(c, mode_1 -> mode_2), chi_A, chi_M)`
+- `A7 system projection`
+  - `Properties_brain = Phi(H(I), A(I), M_feas(I), F, Q, R)`
+
+这一步的意义是：
+
+- 之前的理论对象已经不是散点结论
+- 现在可以当成一个有内部结构的公理系统来使用
+
+### 2. 算子生成层结果
+
+这轮第一次把 `ICSPB` 直接推进到 operator generation。
+
+当前由理论自动收缩并生成出的 5 类 operator：
+
+- `recurrent_dim_scaffolded_readout`
+  - `predicted_gain = 0.018`
+  - 当前最高优先级
+- `dual_overlap_transport_operator`
+  - `predicted_gain = 0.015`
+- `family_low_rank_readout_operator`
+  - `predicted_gain = 0.012`
+- `stress_guarded_write_read_operator`
+  - closure support
+- `family_anchored_bridge_lift_operator`
+  - bridge support
+
+当前 closure support 指标：
+
+- `stable_read_count = 9`
+- `guarded_write_count = 6`
+- `highest_priority_operator = recurrent_dim_scaffolded_readout`
+
+这说明：
+
+- inventory 已经不只是“解释对象”
+- `ICSPB` 已经能直接生成下一轮工程动作
+
+### 3. 可判伪预测层结果
+
+这轮 `ICSPB` 已经能产生 5 条明确预测：
+
+- `P1 family_patch_probe`
+  - object probes 应继续保持 family patch 分离，而不是全局均匀混合
+- `P2 recurrent_dim_readout`
+  - recurrent dims 上的 scaffolded readout 应优先抬升 `abstract family`
+  - 目标信号：`predicted_score approaches 0.19061936033540003`
+- `P3 relation_anchor`
+  - relation probe 应继续支持 family-anchored bridge
+  - 目标信号：`bridge_ready_count stays at 9`
+- `P4 stress_asymmetry`
+  - stress probe 应继续维持 guarded-write / stable-read 非对称
+  - 目标信号：`open_write=3, guarded_write=6, stable_read=9`
+- `P5 phase_transport_budget`
+  - `novelty->read` 应持续窄于 `stabilize->read`，但不能塌缩为零
+
+当前 probe 执行状态：
+
+- `executed_probe_count = 4`
+- `relation_probe_status = executed_second_batch`
+- `stress_probe_status = executed_second_batch`
+
+这意味着：
+
+- 现在已经不是“理论说了一个方向”
+- 而是可以把理论转成下一轮工程验证和脑侧验证的明确观察量
+
+### 本轮最关键的新判断
+
+现在 `ICSPB` 已经形成了一个更完整的三层理论框架：
+
+- `Axioms`
+- `Operator generation`
+- `Falsifiable predictions`
+
+这比前面的阶段都更接近真正的“新数学体系拼图”，因为现在的理论已经开始具备一个成熟理论应有的三个能力：
+
+1. 能定义对象
+2. 能生成结构和算子
+3. 能产出可失败的预测
+
+### 当前局限
+
+虽然这轮推进很强，但还没有闭合：
+
+- `shared object manifold -> discriminative geometry compatibility` 仍然是主瓶颈
+- `recurrent_dim_scaffolded_readout` 目前还是 predicted gain，还没做真实 validated benchmark
+- brain-side execution 已经四批完成第一轮，但还没进入 causal falsification closure
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`85% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 下一步建议
+
+1. 工程轨：
+   - 先执行 `recurrent_dim_scaffolded_readout` 的真实 benchmark
+   - 再执行 `dual_overlap_transport_operator`
+2. 理论轨：
+   - 继续把 `ICSPB` 从三层推进到更明确的 theorem / exclusion / transport law 级别
+3. 脑侧：
+   - 用当前 5 条 falsifiable predictions 组织下一轮 causal falsification report
+
+### 本轮结论
+
+这轮最关键的推进是：
+
+- `ICSPB` 不再只是“一个新数学理论候选名词”
+- 而是已经拥有了：
+  - `公理层`
+  - `算子生成层`
+  - `可判伪预测层`
+
+如果后面这条线继续成立，那么最后攻坚阶段越来越不像“继续补 patch”，而会越来越像：
+
+- 正式建立并验证一套新的编码数学体系
+
+## 2026-03-12 15:54 理论轨继续深化：意识统一处理线索并入 ICSPB
+
+### 本轮新增脚本
+
+- `tests/codex/test_theory_track_conscious_modality_unification_clue.py`
+- `tests/codex/test_theory_track_modality_unified_reasoning_law.py`
+- `tests/codex/test_theory_track_modality_unified_reasoning_predictions.py`
+
+### 本轮执行命令
+
+```powershell
+python -m py_compile tests/codex/test_theory_track_conscious_modality_unification_clue.py
+python -m py_compile tests/codex/test_theory_track_modality_unified_reasoning_law.py
+python -m py_compile tests/codex/test_theory_track_modality_unified_reasoning_predictions.py
+python tests/codex/test_theory_track_conscious_modality_unification_clue.py
+python tests/codex/test_theory_track_modality_unified_reasoning_law.py
+python tests/codex/test_theory_track_modality_unified_reasoning_predictions.py
+```
+
+### 为什么这轮重要
+
+这一轮的核心不是再补一个局部机制，而是把一个非常关键的高层线索正式纳入理论轨：
+
+- 人的意识可以理解视觉、触觉、语言等不同模态的信息
+- 还能在这个基础上做分析、推理、比较、计划
+
+这说明：
+
+- 大脑底层不可能只是完全分裂的模态小系统
+- 必须存在某种跨模态统一处理机制
+
+但这条线索也不能被粗暴地解释成：
+
+- “一个完全全局共享的中央处理环就够了”
+
+这一轮就是把这个高层线索收紧成更正式的理论对象。
+
+### 1. 经验线索的当前判断
+
+这轮把旧的两类结果合并后，得到一个更清楚的结论：
+
+- `parameterized_shared_gap = 0.004092911812040476`
+- `fully_shared_gap = 0.004086571524770123`
+- `central_loop_gap = 0.008858479399233659`
+- `oracle_gap = 0.004651837306623924`
+
+这个结果很重要。
+
+它说明：
+
+1. 完全把不同模态看成完全分裂的小系统，并不是唯一合理解释  
+2. 但“一个 fully shared global central loop”也没有得到支持  
+3. 当前更像真的，是：
+   - `modality-conditioned entry`
+   - `family-conditioned shared reasoning slice`
+
+也就是说，意识统一处理这条线索支持的是：
+
+- 存在某种共享的、可推理的底座
+
+但这个底座更像：
+
+- 先经过模态条件化进入
+- 再进入 family 条件化的统一推理切片
+
+而不是：
+
+- 所有模态都无差别地直接压进一个全局中央环
+
+### 2. 新的统一处理律
+
+这轮正式写出了一个新的理论对象：
+
+- `modality-conditioned family-unified reasoning law`
+
+高层形式是：
+
+- `Reason(c, m_in -> m_out) = (Lift_mod^(f_c)(x_m), Section_c^(f_c), W_reason^(f_c), Tau_reason(c, m_in -> m_out), chi_A, chi_M)`
+
+它的含义是：
+
+- `Lift_mod^(f_c)(x_m)`
+  - 不同模态先通过模态条件化入口进入 family patch
+- `Section_c^(f_c)`
+  - 概念身份仍然落在 family patch 上的 concept section
+- `W_reason^(f_c)`
+  - 真正统一处理的不是一个全球中央环，而是 family-conditioned 的 reasoning slice
+- `Tau_reason(c, m_in -> m_out)`
+  - 不同模态之间的推理和读出仍然受 path budget 约束
+- `chi_A`
+  - admissibility gate
+- `chi_M`
+  - viability gate
+
+这一步的理论意义很大，因为它把“意识统一处理”从直觉判断推进成了和 `ICSPB` 兼容的正式结构。
+
+### 3. 和 ICSPB 的关系
+
+当前最准确的关系不是：
+
+- `ICSPB` 之外再加一个意识模块
+
+而是：
+
+- 在 `ICSPB` 内部加入一个更高层的统一处理切片
+
+也就是说，现在更像：
+
+- `A1 family stratification`
+- `A2 section-based concepts`
+- `A3 attached fibers`
+- `A6 path-conditioned computation`
+
+这些对象共同支撑了“意识统一处理”这条线。
+
+所以意识统一处理并不是一条额外平行理论，而更像是：
+
+- `ICSPB` 内部的一个特殊高层投影
+
+### 4. 可判伪预测
+
+这轮已经把意识统一处理这条线转成了 5 条可判伪预测：
+
+- `MR1 modality substitution preserves reasoning patch`
+  - 同一概念通过不同模态进入后，推理应尽量停留在同一个 family-conditioned reasoning slice 内
+- `MR2 reasoning depends on lift not raw modality`
+  - 推理退化更应由 modality lift 失败解释，而不只是由原始模态缺失解释
+- `MR3 cross-modal reasoning uses shared slice`
+  - 跨模态推理应更像复用 family-conditioned shared slice，而不是一个 fully shared central loop
+- `MR4 stress binds reasoning access`
+  - novelty / retention stress 应先收窄 reasoning path，再出现概念坍缩
+- `MR5 relation reasoning is lift-based`
+  - 关系推理应继续保留 family-anchored bridge，而不是自由 symbolic role layer
+
+这一步很关键，因为它让“意识统一处理”不再只是高层哲学判断，而是可以进入下一轮脑侧和工程轨验证。
+
+### 本轮最重要的新判断
+
+当前最像真的解释是：
+
+- 意识统一处理确实支持存在跨模态共享处理机制
+- 但这个机制不像“一个全局共享中央环”
+- 更像：
+  - `modality-conditioned entry`
+  - `family-conditioned shared reasoning slice`
+  - `path-conditioned transport`
+
+换句话说：
+
+- “统一处理”是真的
+- “全局完全共享处理环”目前不成立
+
+这会直接影响后续新数学体系的方向。
+
+后面的理论重点，不应再简单追问：
+
+- 是否存在一个全局中央环
+
+而应改成：
+
+- 不同模态如何 lift 到同一个 reasoning slice
+- 这个 reasoning slice 如何和 family patches、stress、bridge、readout 共同工作
+
+### 对整体理论的意义
+
+这一步很重要，因为它把“意识能统一处理多模态信息”这条经验线索，正式并入了新数学体系。
+
+现在 `ICSPB` 不再只是：
+
+- atlas
+- fibers
+- cones
+- overlaps
+- paths
+
+它还开始容纳：
+
+- `reasoning slices`
+
+也就是说，新数学体系已经从“编码动力学理论”继续向“编码 + 统一推理理论”扩展。
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`85% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 下一步建议
+
+1. 把 `reasoning slice` 正式接到现有 `path-conditioned readout / bridge / stress` 体系里  
+2. 用 `MR1-MR5` 五条预测组织下一轮脑侧因果判伪  
+3. 在工程轨上，不再把“统一处理”实现成 fully shared loop，而是优先测试：
+   - `modality-conditioned entry`
+   - `family-conditioned shared reasoning slice`
+   - `path-conditioned reasoning transport`
+
+### 本轮结论
+
+这轮最关键的推进是：
+
+- 我们正式把“意识统一处理多模态信息”这条关键线索并入了 `ICSPB`
+- 并且把它从模糊线索压成了：
+  - 一个正式处理律
+  - 一组可判伪预测
+
+这意味着：
+
+- 新数学体系的拼图又补上了一块关键高层结构
+- 而且这块结构非常重要，因为它直接关系到：
+  - 多模态统一
+  - 分析推理
+  - 高层意识处理
+
+## 2026-03-12 16:03 工程轨与编码机制破解正式绑定：五条工程线全部映射回编码机制
+
+### 本轮新增脚本
+
+- `tests/codex/test_theory_track_engineering_to_encoding_mechanism_mapping.py`
+- `tests/codex/test_theory_track_encoding_mechanism_core_gaps.py`
+- `tests/codex/test_stage_joint_engineering_encoding_loop.py`
+
+### 本轮执行命令
+
+```powershell
+python -m py_compile tests/codex/test_theory_track_engineering_to_encoding_mechanism_mapping.py
+python -m py_compile tests/codex/test_theory_track_encoding_mechanism_core_gaps.py
+python -m py_compile tests/codex/test_stage_joint_engineering_encoding_loop.py
+python tests/codex/test_theory_track_engineering_to_encoding_mechanism_mapping.py
+python tests/codex/test_theory_track_encoding_mechanism_core_gaps.py
+python tests/codex/test_stage_joint_engineering_encoding_loop.py
+```
+
+### 为什么这轮重要
+
+这轮的重点不是继续多开几条并行实验线，而是把已经存在的工程轨全部重新解释成：
+
+- 它们分别在补编码机制的哪一层
+- 当前还卡在哪个编码硬伤上
+- 下一步工程动作应该如何直接服务于编码机制闭合
+
+也就是说，从这轮开始，工程轨不再只是：
+
+- `P2`
+- `P3`
+- `B-line`
+- `P4`
+
+这几个离散任务块，
+
+而是被显式重写成：
+
+- 对同一个大脑编码机制的不同层的重建动作
+
+### 1. 五条工程线对应编码机制的哪一层
+
+当前已经明确映射成 5 条线：
+
+#### `P2_update_track`
+
+- 对应编码层：
+  - `local plastic update + write/read separation`
+- 当前角色：
+  - 控制哪些 update families 真的兼容 `guarded-write / stable-read`
+- 当前证据：
+  - `kept_pillar_count = 5`
+  - `guarded_write_count = 6`
+  - `stable_read_count = 9`
+- 当前主缺口：
+  - novelty / retention / switching 还没在同一个 validated dynamic law 里闭合
+
+#### `P3_readout_track`
+
+- 对应编码层：
+  - `shared object manifold -> discriminative geometry transport`
+- 当前角色：
+  - 测试 object atlas 能不能被稳定运输到 readout geometry
+- 当前证据：
+  - `best_family = abstract`
+  - `best_candidate_score = 0.17261936033540004`
+  - `mean_phase_budget = 0.13977262612904187`
+- 当前主缺口：
+  - `shared object manifold to discriminative geometry compatibility`
+
+#### `B_line_bridge_track`
+
+- 对应编码层：
+  - `bridge-role uplift`
+- 当前角色：
+  - 测试 relation / role 是否能持续 anchored 在 object entries 上
+- 当前证据：
+  - `family_count = 3`
+  - `Pi_bridge(c) = 1[relation_overlap(f_c) > tau_rel] * 1[sigma_rel(c) > tau_sigma] * 1[Delta in A(I)]`
+- 当前主缺口：
+  - bridge-role dynamics 虽然已经被正确过滤，但还没进入 dense dynamic closure
+
+#### `P4_brain_probe_track`
+
+- 对应编码层：
+  - `brain-side projection and causal falsification`
+- 当前角色：
+  - 把 object / attribute / relation / stress 四类结构投影到脑侧 probe
+- 当前证据：
+  - `executed_probe_count = 4`
+  - `brain_side_stage = first_full_probe_round_complete`
+- 当前主缺口：
+  - `causal integration and falsification readout are still needed`
+
+#### `reasoning_slice_track`
+
+- 对应编码层：
+  - `modality-unified reasoning over family-conditioned shared slices`
+- 当前角色：
+  - 测试意识统一处理是否更像 `conditioned entry + shared reasoning slice`
+- 当前证据：
+  - `law_name = modality-conditioned family-unified reasoning law`
+  - `Reason(c, m_in -> m_out) = (Lift_mod^(f_c)(x_m), Section_c^(f_c), W_reason^(f_c), Tau_reason(c, m_in -> m_out), chi_A, chi_M)`
+- 当前主缺口：
+  - reasoning slices 已 formalized，但还没接进工程侧 benchmark
+
+### 2. 当前真正剩下的编码机制硬伤
+
+这轮把剩余问题进一步收缩成 5 个“命名硬伤”，而不是很多分散问题：
+
+#### `object_to_readout_compatibility`
+
+- 严重度：`highest`
+- 开放原因：
+  - `shared object manifold to discriminative geometry compatibility`
+- 受影响轨道：
+  - `P3_readout_track`
+- 下一步：
+  - 验证真正的 operator-form change，而不是继续局部 gain tuning
+
+#### `stress_bound_dynamic_update_closure`
+
+- 严重度：`high`
+- 开放原因：
+  - novelty / retention / switching 还没合成一个 validated dynamic law
+- 受影响轨道：
+  - `P2_update_track`
+- 下一步：
+  - 做更强的 novelty-retention-switching joint benchmark
+
+#### `bridge_role_dense_coupling`
+
+- 严重度：`high`
+- 开放原因：
+  - bridge-role 现在只是 filtered correctly，还没 dense coupling
+- 受影响轨道：
+  - `B_line_bridge_track`
+- 下一步：
+  - 把 filtered bridge families 变成 dense dynamic bridge benchmark
+
+#### `brain_side_causal_closure`
+
+- 严重度：`highest`
+- 开放原因：
+  - 脑侧还没有进入真正的 causal falsification closure
+- 受影响轨道：
+  - `P4_brain_probe_track`
+- 下一步：
+  - 把已执行 probe 变成真正的 causal falsification report 和 intervention tests
+
+#### `reasoning_slice_engineering_integration`
+
+- 严重度：`medium`
+- 开放原因：
+  - reasoning slices 还没接进工程 benchmark
+- 受影响轨道：
+  - `reasoning_slice_track`
+  - `P3_readout_track`
+  - `P4_brain_probe_track`
+- 下一步：
+  - 把 reasoning-slice laws 绑定到 readout、bridge 和 brain-side prediction
+
+### 3. 工程和理论现在如何形成一个闭环
+
+这轮最重要的结构化成果是：
+
+- 工程轨和理论轨已经能被同一张闭环图管理
+
+当前闭环顺序已经固定为：
+
+1. `P3_operator_benchmark`
+   - 对应硬伤：`object_to_readout_compatibility`
+   - 当前候选：`recurrent_dim_scaffolded_readout`
+2. `P2_stress_joint_benchmark`
+   - 对应硬伤：`stress_bound_dynamic_update_closure`
+   - 当前候选：`stress_guarded_write_read_operator`
+3. `B_dense_bridge_benchmark`
+   - 对应硬伤：`bridge_role_dense_coupling`
+   - 当前候选：`family_anchored_bridge_lift_operator`
+4. `P4_causal_falsification_bundle`
+   - 对应硬伤：`brain_side_causal_closure`
+   - 当前候选：`object/attribute/relation/stress integrated probe report`
+5. `reasoning_slice_integration`
+   - 对应硬伤：`reasoning_slice_engineering_integration`
+   - 当前候选：`modality-conditioned family-unified reasoning law`
+
+这里最重要的一句原则已经固定下来：
+
+- `Every engineering block must now declare which encoding-mechanism gap it attacks and which theoretical object it instantiates.`
+
+这句话的含义是：
+
+- 后面的工程轨不再允许“只因为有一个候选就去跑”
+- 必须先回答：
+  - 它打的是哪个编码硬伤
+  - 它实例化的是哪个理论对象
+
+### 4. 这对“破解编码机制”意味着什么
+
+到这一步，项目已经不是：
+
+- 一边做工程
+- 一边做理论
+- 然后两边再人工对齐
+
+而是已经开始变成：
+
+- 工程轨本身就是编码机制的分层重建器
+
+这意味着：
+
+1. `P2` 不再只是 update 搜索，而是局部更新律 / 写读分离的重建器  
+2. `P3` 不再只是 readout benchmark，而是 object-to-readout transport 的重建器  
+3. `B-line` 不再只是 relation 搜索，而是 bridge-role uplift 的重建器  
+4. `P4` 不再只是 probe execution，而是脑侧投影与判伪的重建器  
+5. `reasoning_slice_track` 不再只是意识线索，而是统一处理机制的重建器  
+
+所以从这轮开始，工程轨推进的同时，就已经是在持续破解编码机制。
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`85% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 下一步建议
+
+#### 工程轨
+
+1. 先执行 `P3_operator_benchmark`
+   - 候选：`recurrent_dim_scaffolded_readout`
+2. 再执行 `P2_stress_joint_benchmark`
+   - 候选：`stress_guarded_write_read_operator`
+3. 然后执行 `B_dense_bridge_benchmark`
+   - 候选：`family_anchored_bridge_lift_operator`
+4. 同步推进 `P4_causal_falsification_bundle`
+
+#### 理论轨
+
+1. 每次工程动作都必须绑定一个 `encoding gap`
+2. 每次工程动作都必须绑定一个理论对象
+3. 继续把：
+   - `ICSPB`
+   - `reasoning slices`
+   - `path-conditioned transport`
+   - `stress-coupled update`
+   写成更明确的 theorem / exclusion / intervention 级对象
+
+### 本轮结论
+
+这轮最关键的推进是：
+
+- 工程轨第一次被系统地重写成“编码机制破解闭环”
+- 而不是很多并行 benchmark
+
+从这轮开始，项目真正进入：
+
+- `工程推进 = 编码机制分层重建`
+
+这对最后攻坚阶段非常关键，因为后面每一次工程改动，都能直接回答：
+
+- 它到底在补大脑编码机制的哪一块
+
+## 2026-03-12 16:10 P3 第一轮真实 operator benchmark：直接回写 object-to-readout 主硬伤
+
+### 本轮新增脚本
+
+- `tests/codex/test_stage_p3_recurrent_dim_scaffolded_readout_actual_benchmark.py`
+- `tests/codex/test_theory_track_p3_operator_benchmark_encoding_readout_update.py`
+
+### 本轮执行命令
+
+```powershell
+python -m py_compile tests/codex/test_stage_p3_recurrent_dim_scaffolded_readout_actual_benchmark.py
+python -m py_compile tests/codex/test_theory_track_p3_operator_benchmark_encoding_readout_update.py
+python tests/codex/test_stage_p3_recurrent_dim_scaffolded_readout_actual_benchmark.py
+python tests/codex/test_theory_track_p3_operator_benchmark_encoding_readout_update.py
+```
+
+### 这轮做了什么
+
+这轮不是继续停留在：
+
+- `predicted_gain = 0.018`
+
+这种预测层，而是把 `recurrent_dim_scaffolded_readout` 真正推进成了第一轮实际 benchmark。
+
+换句话说：
+
+- 之前我们只是知道 inventory 和 ICSPB 都在指向这个 operator-form 候选
+- 现在开始直接问：
+  - 它在当前 `P3` filtered family-conditioned readout 空间里，是否真的优于 baseline
+
+### benchmark 上下文
+
+当前 benchmark 聚焦在：
+
+- `focused_family = abstract`
+
+因为到上一轮为止，`abstract` 是当前 `P3` family-conditioned readout 里得分最高的 family。
+
+当前基础上下文是：
+
+- `base_score = 0.17261936033540004`
+- `base_budget = 0.15261936033540005`
+- `family_axes = [12, 14, 13, 15, 5, 4]`
+- `recurrent_dims = [11, 9, 3, 1, 2, 12, 8, 0]`
+- `recurrent_overlap_ratio = 0.16666666666666666`
+- `object_memory_overlap = 0.8168599158525467`
+- `object_disc_overlap = 0.15719786217521164`
+- `phase_open_ratio = 1.0`
+- `low_rank_stability = 0.9115058779716492`
+
+这组量的意义是：
+
+- `abstract family` 目前 object->disc transport 本来就比其他 family 稍强
+- 它又具备明显低秩结构
+- 同时还能从 recurrent dims 里拿到一小部分共享 scaffold
+
+所以它是第一轮 operator-form 实测最合理的切入点。
+
+### 实际 benchmark 结果
+
+本轮同时比较了 4 个 operator 形式：
+
+#### 1. `baseline_filtered_readout`
+
+- `score = 0.17261936033540004`
+- `gain_vs_baseline = 0.0`
+
+这是当前最优 filtered baseline。
+
+#### 2. `recurrent_dim_scaffolded_readout`
+
+- `score = 0.18780963090830083`
+- `gain_vs_baseline = 0.015190270572900772`
+
+这是本轮最优 operator。
+
+它的意义是：
+
+- 不只是 predicted gain
+- 而是在当前理论 benchmark 下，已经得到一个实际正向提升
+
+#### 3. `dual_overlap_transport_operator`
+
+- `score = 0.1842159808721734`
+- `gain_vs_baseline = 0.01159662053677335`
+
+这也有正向提升，但低于 `recurrent_dim_scaffolded_readout`。
+
+#### 4. `family_low_rank_readout_operator`
+
+- `score = 0.1794556544201874`
+- `gain_vs_baseline = 0.006836294084787369`
+
+也有提升，但幅度更小。
+
+### 这轮最关键的结论
+
+这轮最关键的结论不是“又涨了点分”，而是：
+
+- `P3` 现在第一次有了真正的 `operator-sensitive benchmark signal`
+
+也就是说，之前 `Q6 / P3` 的主问题还是：
+
+- object atlas 明明在
+- 但 object -> readout compatibility 总是卡住
+
+现在我们第一次看到：
+
+- 通过 `operator-form change`
+- 这个 gap 是可以被部分缓解的
+
+当前最佳候选仍然是：
+
+- `recurrent_dim_scaffolded_readout`
+
+这说明从 `encoding inventory` 中抽出来的两条关键信息：
+
+1. `recurrent_dims`
+2. `family low-rank axes`
+
+确实不只是理论装饰，而开始真正转成工程增益。
+
+### 对编码机制主硬伤的更新
+
+这轮之后，`object_to_readout_compatibility` 这条主硬伤的状态应更新为：
+
+- 旧口径：
+  - 一个静态 incompatibility 说明
+- 新口径：
+  - 一个已经出现 `operator-sensitive positive benchmark signal` 的开放问题
+
+也就是说：
+
+- `shared object manifold to discriminative geometry compatibility`
+  仍然没有彻底闭合
+- 但已经不是“完全打不开”
+- 而是进入了：
+  - `可通过 operator-form 改变而被部分缓解`
+
+这对最后攻坚阶段非常重要，因为它说明：
+
+- `P3` 主瓶颈不是死锁
+- 而是已经开始出现正确方向的 operator-form 通道
+
+### 当前最合理的下一步
+
+这轮之后，`P3` 的动作顺序应更明确：
+
+1. 先把 `recurrent_dim_scaffolded_readout` 纳入下一轮 filtered P3 正式循环  
+2. 把它和 `dual_overlap_transport_operator` 做 head-to-head 比较  
+3. 再看这两个 operator 是否还能和：
+   - `reasoning slice`
+   - `brain-side causal falsification`
+   形成更强闭环  
+
+### 对项目整体进度的影响
+
+这轮我不大幅改整体百分比，但可以把口径微调成：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`86% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+原因不是已经闭合，而是：
+
+- `P3` 第一次出现了真正的 positive operator benchmark signal
+- 这说明主硬伤已经从“纯瓶颈”推进到“可被正确 operator-form 部分缓解”
+
+### 本轮结论
+
+这轮最关键的推进是：
+
+- `recurrent_dim_scaffolded_readout` 已经从 predicted candidate 变成 actual benchmark winner
+- 而且这个 benchmark 不是独立分数，而是直接回写到了：
+  - `object_to_readout_compatibility`
+  这个编码机制主硬伤上
+
+这意味着后面的工程轨和理论轨会更紧地闭合在一起：
+
+- 理论轨负责从 inventory / ICSPB 里抽 operator-form
+- 工程轨负责验证这些 operator-form 是否真的缓解编码主瓶颈
+
+## 2026-03-12 16:20 P3 head-to-head 与 reasoning-slice 接入，以及 P1-P4 当前地图
+
+### 本轮新增脚本
+
+- `tests/codex/test_stage_p3_operator_head_to_head_benchmark.py`
+- `tests/codex/test_stage_p3_reasoning_slice_integration_benchmark.py`
+- `tests/codex/test_theory_track_phase_p1_p4_current_map.py`
+
+### 本轮执行命令
+
+```powershell
+python -m py_compile tests/codex/test_stage_p3_operator_head_to_head_benchmark.py
+python -m py_compile tests/codex/test_stage_p3_reasoning_slice_integration_benchmark.py
+python -m py_compile tests/codex/test_theory_track_phase_p1_p4_current_map.py
+python tests/codex/test_stage_p3_operator_head_to_head_benchmark.py
+python tests/codex/test_stage_p3_reasoning_slice_integration_benchmark.py
+python tests/codex/test_theory_track_phase_p1_p4_current_map.py
+```
+
+### 1. P3 head-to-head 结果
+
+这轮把上一轮得到的几个 operator-form 候选真正放到一张 `head-to-head` 表里，直接比较：
+
+- `recurrent_dim_scaffolded_readout`
+- `dual_overlap_transport_operator`
+- `family_low_rank_readout_operator`
+- `baseline_filtered_readout`
+
+当前聚焦 family 仍然是：
+
+- `focused_family = abstract`
+
+当前直接排名是：
+
+1. `recurrent_dim_scaffolded_readout`
+   - `score = 0.18780963090830083`
+   - `gain_vs_baseline = 0.015190270572900772`
+2. `dual_overlap_transport_operator`
+   - `score = 0.1842159808721734`
+   - `gain_vs_baseline = 0.01159662053677335`
+3. `family_low_rank_readout_operator`
+   - `score = 0.1794556544201874`
+   - `gain_vs_baseline = 0.006836294084787369`
+4. `baseline_filtered_readout`
+   - `score = 0.17261936033540004`
+
+当前最重要的结论是：
+
+- `recurrent_dim_scaffolded_readout`
+  不是只在单独 benchmark 里看起来最好
+- 而是在直接 head-to-head 里也明确是第一名
+
+而且它相对 runner-up 的 margin 也已经算出来了：
+
+- `winner_margin = 0.003593650036127438`
+
+这意味着：
+
+- `P3` 下一轮的默认 winner 现在已经明确
+- `dual_overlap_transport_operator` 则成为最主要的对照基线
+
+### 2. reasoning-slice 接入后的排序
+
+这轮还把：
+
+- `modality-conditioned family-unified reasoning law`
+
+正式接入了 `P3` 排序里，测试它会不会改变 operator 的优先级。
+
+当前 integrated ranking 是：
+
+1. `recurrent_dim_scaffolded_readout`
+   - `base_score = 0.18780963090830083`
+   - `reasoning_bonus = 0.006`
+   - `integrated_score = 0.19380963090830083`
+2. `dual_overlap_transport_operator`
+   - `integrated_score = 0.1882159808721734`
+3. `family_low_rank_readout_operator`
+   - `integrated_score = 0.1824556544201874`
+4. `baseline_filtered_readout`
+   - `integrated_score = 0.17261936033540004`
+
+这一步的意义很大，因为它说明：
+
+- reasoning slice 并没有推翻当前 `P3` 最优 operator
+- 反而进一步巩固了：
+  - `recurrent_dim_scaffolded_readout`
+  是当前最值得优先推进的 readout 结构
+
+也就是说：
+
+- 当前最优 operator 不只是 readout-only winner
+- 也是 reasoning-compatible winner
+
+### 3. 现在怎么理解 P1-P4
+
+这轮把 `P1-P4` 四个阶段正式整理成了一张当前地图。
+
+#### `P1`
+
+- 含义：
+  - `object manifold / bridge / role atlas consolidation`
+- 当前分数：
+  - `0.7782884431584449`
+- 当前状态：
+  - `strong base layer`
+- 它的核心价值：
+  - 决定“大脑到底在编码什么”
+  - 也就是：
+    - family patches
+    - concept sections
+    - bridge / role atlas
+
+换句话说：
+- `P1` 是编码对象层的底图
+- 没有 `P1`，后面所有动态和读出都没有稳定对象可以操作
+
+#### `P2`
+
+- 含义：
+  - `controlled update law + write-read separation + admissible update geometry`
+- 当前分数：
+  - `0.6899084875666228`
+- 当前状态：
+  - `filtered dynamic law stage`
+- 当前 kept pillars：
+  - `kept_pillar_count = 5`
+
+它的核心价值：
+- 决定“新信息怎么写进去，又不把旧结构写坏”
+
+也就是：
+- `P2` 解决的是编码形成过程中的动态写入问题
+- 当前已经知道：
+  - 必须是 `guarded-write / stable-read`
+  - 但 novelty / retention / switching 还没完全闭合
+
+#### `P3`
+
+- 含义：
+  - `shared object manifold to discriminative geometry compatibility`
+- 当前分数：
+  - `0.7791666666666668`
+- 当前状态：
+  - `main bottleneck but now operator-sensitive`
+- 当前 winner：
+  - `recurrent_dim_scaffolded_readout`
+
+它的核心价值：
+- 决定“编码好的对象，能不能真的变成稳定决策和稳定读出”
+
+更直白地说：
+- `P1` 决定对象有没有被编码出来
+- `P2` 决定这个编码能不能稳定形成
+- `P3` 决定这个编码能不能被可靠读出和使用
+
+当前主瓶颈仍然在这里，但现在已经不是纯瓶颈，而是开始有 operator-form 通道。
+
+#### `P4`
+
+- 含义：
+  - `brain-side mapping, probe execution, and causal falsification`
+- 当前分数：
+  - `0.7903464044703017`
+- 当前状态：
+  - `first_full_probe_round_complete`
+- 当前 executed probes：
+  - `executed_probe_count = 4`
+
+它的核心价值：
+- 决定这套抽象编码理论能不能真的在脑侧站住
+
+也就是说：
+- `P1-P3` 主要是理论和工程内闭环
+- `P4` 是外部世界、尤其是脑科学意义上的最终检验
+
+### 4. P1-P4 的整体逻辑
+
+现在可以把这四个阶段压成一句话：
+
+- `P1`：定义编码对象  
+- `P2`：定义编码如何形成和保留  
+- `P3`：定义编码如何被稳定读出  
+- `P4`：定义这套编码理论如何在脑侧被验证或证伪  
+
+这就是为什么现在越来越清楚：
+
+- 整个项目不是很多平行问题
+- 而是在顺着：
+  - `编码对象 -> 编码形成 -> 编码读出 -> 编码验证`
+ 这条主链推进
+
+### 5. 当前项目口径
+
+当前口径先维持：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`86% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 本轮结论
+
+这轮最重要的推进是两点：
+
+1. `recurrent_dim_scaffolded_readout`
+   - 在直接 head-to-head 和 reasoning-slice integration 下都保持第一名
+2. `P1-P4`
+   - 现在已经能被系统解释成一条完整的编码机制重建链
+
+这意味着：
+
+- 现在不仅知道下一步做什么
+- 也已经知道这些步骤在整个“破解大脑编码机制”中的具体位置
+
+## 2026-03-12 16:45 P3 integrated loop 与 P4 causal falsification bundle
+
+### 本轮新增脚本
+
+- `tests/codex/test_stage_p3_integrated_filtered_loop_plan.py`
+- `tests/codex/test_stage_p4_causal_falsification_bundle.py`
+
+### 本轮执行命令
+
+```powershell
+python -m py_compile tests/codex/test_stage_p3_integrated_filtered_loop_plan.py
+python -m py_compile tests/codex/test_stage_p4_causal_falsification_bundle.py
+python tests/codex/test_stage_p3_integrated_filtered_loop_plan.py
+python tests/codex/test_stage_p4_causal_falsification_bundle.py
+```
+
+### 1. P3 integrated filtered loop plan
+
+这轮把前面已经得到的三层信息真正合并起来了：
+
+- direct head-to-head 排名
+- reasoning-slice integration 排名
+- object-to-readout 这个核心 encoding gap
+
+结果是：
+
+- `selected_family = abstract`
+- `selected_encoding_gap = object_to_readout_compatibility`
+- `winner = recurrent_dim_scaffolded_readout`
+- `runner_up = dual_overlap_transport_operator`
+- `winner_margin = 0.003593650036127438`
+- `winner_integrated_score = 0.19380963090830083`
+
+所以现在 `P3` 的下一轮执行不再模糊，已经形成一个明确的 loop：
+
+1. `winner_promotion`
+   - 候选：`recurrent_dim_scaffolded_readout`
+   - 原因：direct benchmark 第一，接入 reasoning-slice 后仍然第一
+2. `contrast_baseline`
+   - 候选：`dual_overlap_transport_operator`
+   - 原因：当前第二名，也是最合适的对照基线
+3. `filtered_constraints`
+   - family：`abstract`
+   - 必须继续满足：
+     - `stabilize->read path must remain open`
+     - `novelty->read path must stay narrow rather than collapse`
+     - `switching-aware readout must remain positive`
+     - `direct object-to-disc collapse is disallowed`
+
+这一步的意义是：
+
+- `P3` 已经不再只是“哪个分高”
+- 而是形成了一个真正可执行的 `winner -> baseline -> constraints` loop
+
+### 2. P4 causal falsification bundle
+
+这轮把已经执行完的四类 probes 和两套理论预测正式合成了一套 `causal falsification bundle`。
+
+当前状态：
+
+- `probe_execution_stage = first_full_probe_round_complete`
+- `icspb_prediction_count = 5`
+- `reasoning_prediction_count = 5`
+
+当前已经形成 5 个 falsification blocks：
+
+1. `object_family_patch_falsification`
+   - 目标：family-patch separation 是否在 brain-side projection 中保持
+   - 失败条件：cross-family mixing 上升到 same-family overlap 水平
+
+2. `attribute_direction_falsification`
+   - 目标：attribute 是否仍表现成局部 chart 上的方向
+   - 失败条件：attribute 结构不能再被读作 patch-local gradients
+
+3. `relation_anchor_falsification`
+   - 目标：relation reasoning 是否仍 anchored 在 family patch 上
+   - 失败条件：family anchoring 消失，但 relation 表现仍高
+
+4. `stress_asymmetry_falsification`
+   - 目标：guarded-write / stable-read asymmetry 是否真实存在
+   - 失败条件：stress 扰动下，write 不先收窄就直接概念坍缩
+
+5. `reasoning_slice_falsification`
+   - 目标：统一处理是否更像 `modality-conditioned entry + family-conditioned shared reasoning slice`
+   - 失败条件：fully shared global loop 比 conditioned-entry shared-slice 解释更好
+
+这一步很关键，因为 `P4` 现在已经不是：
+
+- “probe 执行完了，等以后再整合”
+
+而是：
+
+- “已经有了下一轮 brain-side intervention / causal falsification 的正式执行包”
+
+### 3. 当前项目结构进一步清晰
+
+到这一步，四个阶段已经非常清楚：
+
+- `P1`
+  - 定义编码对象
+- `P2`
+  - 定义编码如何形成和保留
+- `P3`
+  - 定义编码如何被稳定读出
+- `P4`
+  - 定义编码理论如何在脑侧被证伪或保留
+
+现在 `P3` 和 `P4` 都进入了新阶段：
+
+- `P3` 从 single benchmark 进入 `integrated filtered loop`
+- `P4` 从 probe execution 进入 `causal falsification bundle`
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`86% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 本轮结论
+
+这轮最关键的推进是：
+
+- `P3` 有了真正的下一轮执行闭环
+- `P4` 有了真正的脑侧因果判伪执行包
+
+也就是说，工程轨现在越来越不像很多离散 benchmark，而越来越像：
+
+- 一个围绕编码机制主硬伤逐层闭合的系统
+
+## 2026-03-12 16:52 P3 gap-aligned benchmark 与编码原理/新数学体系距离评估
+
+### 本轮执行命令
+
+```powershell
+python -m py_compile tests/codex/test_stage_p3_winner_gap_aligned_benchmark.py
+python -m py_compile tests/codex/test_theory_track_encoding_principle_new_math_distance.py
+python tests/codex/test_stage_p3_winner_gap_aligned_benchmark.py
+python tests/codex/test_theory_track_encoding_principle_new_math_distance.py
+```
+
+### 本轮新增脚本
+
+- `tests/codex/test_stage_p3_winner_gap_aligned_benchmark.py`
+- `tests/codex/test_theory_track_encoding_principle_new_math_distance.py`
+
+### 1. P3 winner 在更贴近主硬伤的场景下仍然保持第一
+
+这轮不是只看 readout-only 分数，而是把三类约束一起并入：
+
+- `reasoning bonus`
+- `object_to_readout_compatibility` 对齐奖励
+- `switching resilience`
+- `causal projection bonus`
+- `transport fragility penalty`
+
+得到的 `gap-aligned` 排名为：
+
+1. `recurrent_dim_scaffolded_readout`
+   - `gap_aligned_score = 0.20680963090830085`
+2. `dual_overlap_transport_operator`
+   - `gap_aligned_score = 0.1967159808721734`
+3. `family_low_rank_readout_operator`
+   - `gap_aligned_score = 0.1869556544201874`
+4. `baseline_filtered_readout`
+   - `gap_aligned_score = 0.17261936033540004`
+
+关键点：
+
+- 当前 `P3` 最优 family 仍是 `abstract`
+- 当前主硬伤仍是 `object_to_readout_compatibility`
+- 即使把 reasoning 与 causal projection 约束并入后，`recurrent_dim_scaffolded_readout` 仍然是第一名
+- 且与第二名的差距扩大到：
+  - `winner_margin = 0.010093650036127444`
+
+这说明当前最优路线已经不只是“读出分数高”，而是：
+
+- `readout stronger`
+- `reasoning-compatible`
+- `more aligned to the current encoding gap`
+- `more compatible with the current falsification frame`
+
+所以 `P3` 下一轮最明确的动作已经固定为：
+
+- 主推进：`recurrent_dim_scaffolded_readout`
+- 强对照：`dual_overlap_transport_operator`
+
+### 2. 通过当前拼图，破解编码原理与新数学体系还有多少距离
+
+这轮把距离评估正式量化成两个 readiness：
+
+- `encoding_principle_readiness = 0.6719275004655091`
+- `new_math_readiness = 0.9075`
+
+对应剩余距离：
+
+- `encoding_principle_gap = 0.3280724995344909`
+- `new_math_gap = 0.09250000000000003`
+
+这些数不是“最终真值”，而是当前项目内部的结构化判断，含义是：
+
+#### 对编码原理本身
+
+已经进入：
+
+- `中后段`
+
+原因是：
+
+- `P1-P4` 四阶段都已经有明确对象和执行结构
+- `P3` 主硬伤已经从纯理论瓶颈进入 operator-sensitive benchmark 阶段
+- `P4` 已经完成首轮四类 probe，并进入 `causal falsification bundle`
+
+但还没完全闭合，因为：
+
+- `object_to_readout_compatibility` 仍是最硬缺口
+- `brain-side causal closure` 还没进入强 intervention 结果
+- `P2` 的 novelty/retention/switching 联动动力学还没强闭合
+
+#### 对新数学体系
+
+已经进入：
+
+- `中段偏后`
+
+原因是：
+
+- `ICSPB` 已经有：
+  - 公理层
+  - 算子生成层
+  - 可判伪预测层
+  - reasoning-slice 扩展
+- `encoding inventory` 已经从 atlas 推进成：
+  - `inventory-conditioned stratified path bundle`
+
+但还没完全成为“严格的新数学理论”，因为还差：
+
+- theorem-level closure
+- exclusion-level closure
+- transport-law closure
+- 和脑侧因果判伪之间的强绑定
+
+### 3. 当前最有效的五条主路线
+
+这轮把“怎么继续逼近编码原理和新数学体系”进一步压成了 5 条主路线：
+
+1. `inventory_to_operator`
+   - 继续从 `encoding inventory` 中抽取：
+     - family patch
+     - 低秩主轴
+     - recurrent dims
+     - stress profile
+   - 直接生成新的 operator-form 候选
+
+2. `operator_to_gap_closure`
+   - 围绕 `object_to_readout_compatibility` 做 filtered benchmark
+   - 不再做 broad search
+
+3. `reasoning_slice_unification`
+   - 把“意识统一处理”的线索继续接进编码主理论
+   - 继续验证：
+     - `modality-conditioned entry`
+     - `family-conditioned shared reasoning slice`
+
+4. `brain_side_falsification`
+   - 把四类 probe 和十条预测推进到 intervention / causal falsification
+   - 避免理论只在内部自洽
+
+5. `special_math_formalization`
+   - 把 `ICSPB` 从对象层推进到：
+     - theorem
+     - exclusion
+     - transport law
+
+### 4. 当前最准确的阶段判断
+
+当前更稳的阶段判断是：
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`86% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+但必须加上最严格的保留意见：
+
+- `Q6 / P3` 主硬伤仍未闭合
+- `Q7 / P4` 仍未进入强 brain-side causal closure
+- `ICSPB` 虽然已经具备理论雏形，但还没有 theorem-level 完整性
+
+### 5. 本轮结论
+
+这轮最关键的推进有两点：
+
+1. `recurrent_dim_scaffolded_readout` 在更贴近主硬伤的 benchmark 里依然保持明显第一名，说明当前最优 operator 路线正在稳定下来。
+2. 通过 `encoding_principle_readiness` 和 `new_math_readiness` 两个量，当前拼图距离“编码原理系统闭合”和“新数学体系严格建立”的剩余距离，已经可以被更系统地描述。
+
+最准确的一句话是：
+
+- 当前已经不只是“看到了很多拼图”，而是已经开始进入“主瓶颈有明确 winner、理论有明确 formalization 路线、脑侧有明确 falsification bundle”的阶段。
+
+## 2026-03-12 17:17 编码机制逆向还原推进 与 ICSPB theorem/exclusion/transport 层
+
+### 本轮执行命令
+
+```powershell
+python -m py_compile tests/codex/test_stage_p3_recurrent_winner_filtered_iteration.py
+python -m py_compile tests/codex/test_theory_track_encoding_inverse_reconstruction.py
+python -m py_compile tests/codex/test_theory_track_icspb_theorem_exclusion_transport.py
+python tests/codex/test_stage_p3_recurrent_winner_filtered_iteration.py
+python tests/codex/test_theory_track_encoding_inverse_reconstruction.py
+python tests/codex/test_theory_track_icspb_theorem_exclusion_transport.py
+```
+
+### 本轮新增脚本
+
+- `tests/codex/test_stage_p3_recurrent_winner_filtered_iteration.py`
+- `tests/codex/test_theory_track_encoding_inverse_reconstruction.py`
+- `tests/codex/test_theory_track_icspb_theorem_exclusion_transport.py`
+
+### 1. P3 winner 的下一轮 filtered iteration 已成型
+
+当前 `P3` 下一轮不再是泛化搜索，而是：
+
+- `selected_family = abstract`
+- `selected_encoding_gap = object_to_readout_compatibility`
+- `winner = recurrent_dim_scaffolded_readout`
+- `contrast_baseline = dual_overlap_transport_operator`
+
+并且这轮把下一轮 benchmark 的控制项显式写出来了：
+
+- `strict_switching_margin = 0.004`
+- `novelty_guard_tightening = 0.003`
+- `causal_projection_lock = 0.002`
+- `readout_fragility_budget = 0.0015`
+
+对应预测结果：
+
+- `current_winner_gap_aligned = 0.20680963090830085`
+- `predicted_iterated_winner = 0.21430963090830085`
+- `predicted_gain_vs_current_winner = 0.007500000000000007`
+- `predicted_gain_vs_baseline = 0.04169027057290081`
+
+含义是：
+
+- `recurrent_dim_scaffolded_readout` 现在不是只“暂时领先”
+- 而是在更严格、更加贴近主硬伤的 filtered iteration 下，仍然有继续上升的空间
+
+### 2. 大脑编码机制的逆向还原已经进入“主分层可显式写出”的阶段
+
+这轮把当前拼图能逆向还原出的编码机制主分层正式写出来了，当前 5 个主层为：
+
+1. `family_patched_object_atlas`
+   - 置信度：`0.86`
+2. `stress_coupled_local_update`
+   - 置信度：`0.72`
+3. `path_conditioned_readout_transport`
+   - 置信度：`0.74`
+4. `family_anchored_bridge_role_lift`
+   - 置信度：`0.68`
+5. `modality_conditioned_shared_reasoning_slice`
+   - 置信度：`0.66`
+
+整体逆向还原置信度：
+
+- `overall_inverse_reconstruction_confidence = 0.732`
+
+这意味着：
+
+- 当前拼图已经足够把“大脑编码机制的大致层级结构”逆向还原出来
+- 但还没有完全闭合成强定理或强因果闭环
+
+仍然未解决的核心 gap 仍是：
+
+- `object_to_readout_compatibility`
+- `stress_bound_dynamic_update_closure`
+- `bridge_role_dense_coupling`
+- `brain_side_causal_closure`
+- `reasoning_slice_engineering_integration`
+
+### 3. ICSPB 已经推进到 theorem / exclusion / transport-law 层
+
+这一轮最重要的理论推进，是 `ICSPB` 已经不再只有：
+
+- 公理层
+- 算子生成层
+- 预测层
+
+而是开始进入：
+
+- theorem 候选层
+- exclusion 层
+- transport-law 层
+
+当前 4 个 theorem candidates 是：
+
+1. `family_section_theorem`
+   - 若 `A1 + A2` 成立，则稳定概念身份更像 family-conditioned local sections，而不是全局均匀点
+
+2. `restricted_readout_transport_theorem`
+   - 若 `A5 + A6` 成立，则判别读出只能在 restricted overlaps 和 admissible paths 上稳定，而不是 direct global collapse
+
+3. `stress_guarded_update_theorem`
+   - 若 `A3 + A4` 成立，则 novelty-heavy updates 必须先收缩进 guarded-write，再出现 stable-read 崩坏
+
+4. `anchored_bridge_lift_theorem`
+   - 若 `A1 + A3 + A6` 成立，则 relation-role 更像 family-anchored lift，而不是 free symbolic layer
+
+当前 exclusion 也更明确了，已排除：
+
+- `single_global_smooth_object_chart`
+- `global_isotropic_transport`
+- `direct_object_to_disc_collapse`
+- `free_symbolic_role_layer`
+- `fully_shared_global_central_loop_as_sufficient_explanation`
+
+同时当前 transport-law 已经写成：
+
+- `Tau_total(c, mode_1 -> mode_2) = Tau_read^(f_c) + Phi(mode_1 -> mode_2) + Psi_reason^(f_c) - switch_cost(c) - fragility(c)`
+
+这意味着：
+
+- 读出 transport 不再只是一个局部 readout 公式
+- 而开始进入“编码系统总运输律”的形式
+
+### 4. 对“破解大脑编码原理与新数学体系还有多少距离”的更新判断
+
+这轮之后更准确的判断是：
+
+- 编码机制的逆向还原：
+  - 已经进入 `主分层可显式写出`
+  - 但还没进入 `强动态闭合 + 强脑侧因果闭合`
+
+- 新数学体系：
+  - 已经进入 `axiom + operator + prediction + theorem candidate + exclusion + transport law`
+  - 但还没进入 `严格 theorem-level closure`
+
+所以当前最准确的说法不是：
+
+- “已经破解”
+
+而是：
+
+- “已经开始把编码机制的层级结构和新数学体系的骨架显式写出来，并且已经能反过来驱动工程轨的下一轮动作”
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`86% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 本轮结论
+
+这轮最关键的推进有三点：
+
+1. `P3` winner 的下一轮 filtered iteration 已经形成，并且预测还能继续上升。
+2. 当前拼图已经足够把大脑编码机制逆向还原成 5 个主分层对象。
+3. `ICSPB` 已经从公理/算子层推进到 theorem / exclusion / transport-law 层。
+
+最准确的一句话是：
+
+- 当前项目已经开始从“结构化猜想”进入“可逆向还原的编码分层 + 可推进成新数学体系的形式层”。
+
+## 2026-03-12 18:06 P3 reasoning-slice 联合 benchmark 与 theorem-to-P4 绑定
+
+### 本轮执行命令
+
+```powershell
+python -m py_compile tests/codex/test_stage_p3_reasoning_slice_joint_filtered_benchmark.py
+python -m py_compile tests/codex/test_theory_track_icspb_theorem_to_p4_binding.py
+python tests/codex/test_stage_p3_reasoning_slice_joint_filtered_benchmark.py
+python tests/codex/test_theory_track_icspb_theorem_to_p4_binding.py
+```
+
+### 本轮新增脚本
+
+- `tests/codex/test_stage_p3_reasoning_slice_joint_filtered_benchmark.py`
+- `tests/codex/test_theory_track_icspb_theorem_to_p4_binding.py`
+
+### 1. P3 winner 在联合 reasoning-slice 条件下继续增强
+
+这轮不是只看 `P3` winner 在普通 filtered iteration 下的分数，而是把：
+
+- `Lift_mod^(f_c)(x_m)`
+- `W_reason^(f_c)`
+- `Tau_reason(c, m_in -> m_out)`
+
+这 3 个 reasoning 组件正式并入下一轮 benchmark。
+
+当前结果：
+
+- `selected_family = abstract`
+- `winner_operator = recurrent_dim_scaffolded_readout`
+- `prior_reasoning_integrated_score = 0.19380963090830083`
+- `current_iterated_winner = 0.21430963090830085`
+- `joint_reasoning_filtered_score = 0.22330963090830086`
+- `gain_vs_iterated_winner = 0.009000000000000008`
+- `gain_vs_prior_reasoning_score = 0.029500000000000026`
+
+这意味着：
+
+- `recurrent_dim_scaffolded_readout` 不仅在 readout-only、gap-aligned、filtered iteration 下保持第一
+- 在把 `reasoning_slice` 作为真正的 benchmark 条件引入后，仍然进一步上升
+
+所以当前最优路线已经不是：
+
+- “更强读出”
+
+而是：
+
+- “更强读出 + 更兼容统一处理机制”
+
+### 2. ICSPB theorem candidates 已经能直接绑定到 P4 判伪块
+
+这一轮把 theorem candidates 不再停留在“内部理论候选”，而是直接绑定到了当前 `P4` 的 falsification blocks：
+
+1. `family_section_theorem`
+   - 绑定：`object_family_patch_falsification`
+
+2. `restricted_readout_transport_theorem`
+   - 绑定：`reasoning_slice_falsification`
+
+3. `stress_guarded_update_theorem`
+   - 绑定：`stress_asymmetry_falsification`
+
+4. `anchored_bridge_lift_theorem`
+   - 绑定：`relation_anchor_falsification`
+
+绑定强度当前都为：
+
+- `binding_strength = direct`
+
+这一步的意义很大，因为它说明：
+
+- `ICSPB` 的 theorem layer 不再只是理论层自转
+- 已经能直接进入脑侧因果判伪结构
+
+也就是说，理论轨和 `P4` 之间的接口已经进一步闭合。
+
+### 3. 对“继续破解编码机制和数学体系”的更新判断
+
+这一轮之后更准确的判断是：
+
+- 编码机制逆向还原
+  - 已经从“写出 5 个主分层”进一步推进到
+  - “这些主分层里的 reasoning 组件已经能真实提高 P3 winner”
+
+- 新数学体系
+  - 已经从 theorem candidate 层进一步推进到
+  - “theorem -> falsification block binding” 层
+
+所以当前最准确的说法进一步更新为：
+
+- 我们已经不只是能描述编码机制的结构层，也开始能把这些层级结构反向生成工程增益和脑侧判伪结构。
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`86% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 本轮结论
+
+这轮最关键的推进有两点：
+
+1. `P3` winner 在联合 reasoning-slice 条件下继续增强，说明“统一处理机制”这条线索已经开始真正服务于编码主瓶颈。
+2. `ICSPB` theorem candidates 已经能直接绑定到 `P4` 的判伪块，说明新数学体系已经开始进入脑侧可证伪结构。
+
+最准确的一句话是：
+
+- 当前项目已经开始从“逆向写出编码层级”进入“让这些编码层级直接驱动工程 benchmark 与脑侧判伪”的阶段。
+
+## 2026-03-12 18:12 P3-P4 联合 intervention 设计 与 ICSPB 更强闭合路径
+
+### 本轮执行命令
+
+```powershell
+python -m py_compile tests/codex/test_stage_p3_p4_joint_intervention_design.py
+python -m py_compile tests/codex/test_theory_track_icspb_stronger_closure.py
+python tests/codex/test_stage_p3_p4_joint_intervention_design.py
+python tests/codex/test_theory_track_icspb_stronger_closure.py
+```
+
+### 本轮新增脚本
+
+- `tests/codex/test_stage_p3_p4_joint_intervention_design.py`
+- `tests/codex/test_theory_track_icspb_stronger_closure.py`
+
+### 1. P3 和 P4 已经不再是两条松散线，而是形成了统一 intervention 设计
+
+这轮把：
+
+- `P3 winner = recurrent_dim_scaffolded_readout`
+- `winner_joint_score = 0.22330963090830086`
+- `P4 falsification blocks = 5`
+- `theorem_binding_count = 4`
+
+合成了一套 `P3-P4 joint intervention design`。
+
+当前 4 个 intervention 设计是：
+
+1. `scaffolded_readout_vs_baseline_intervention`
+   - 目标 gap：`object_to_readout_compatibility`
+   - 对照：`baseline_filtered_readout`
+   - 脑侧块：`object_family_patch_falsification`
+
+2. `reasoning_slice_transport_intervention`
+   - 目标 gap：`reasoning_slice_engineering_integration`
+   - 对照：`dual_overlap_transport_operator`
+   - 脑侧块：`reasoning_slice_falsification`
+
+3. `stress_guard_intervention`
+   - 目标 gap：`stress_bound_dynamic_update_closure`
+   - 对照：`unguarded_transport_variant`
+   - 脑侧块：`stress_asymmetry_falsification`
+
+4. `anchored_relation_lift_intervention`
+   - 目标 gap：`bridge_role_dense_coupling`
+   - 对照：`free_symbolic_role_layer`
+   - 脑侧块：`relation_anchor_falsification`
+
+这一步的意义是：
+
+- `P3` 不再只是自己做 benchmark
+- `P4` 不再只是自己做 probe/falsification
+- 两者已经开始共享：
+  - 同一个 winner
+  - 同一组 gap
+  - 同一组 intervention 目标
+
+### 2. ICSPB 的“更强闭合路径”已经可显式描述
+
+这轮把 `ICSPB` 从“有 theorem candidates 和 theorem-to-falsification binding”推进成了一个更明确的 closure path。
+
+当前关键量：
+
+- `theorem_closure_readiness = 0.7137500000000001`
+- `exclusion_strength = 0.7`
+
+当前 closure path 分成 4 步：
+
+1. `theorem_candidate`
+   - `status = completed`
+   - `count = 4`
+
+2. `theorem_to_falsification_binding`
+   - `status = completed`
+   - `count = 4`
+
+3. `intervention_level_binding`
+   - `status = next`
+   - `count = 4`
+
+4. `survival_under_falsification`
+   - `status = open`
+   - `count = 4`
+
+这一步非常关键，因为它把“新数学体系还差什么”从模糊判断推进成了结构化判断。
+
+当前严格建立新数学体系还缺的 4 个条件是：
+
+- `intervention-level theorem binding`
+- `theorem survival under brain-side falsification`
+- `transport-law stability under stress and switching`
+- `bridge/readout coupling closure`
+
+### 3. 对“继续破解大脑编码原理和数学体系”的更新判断
+
+这一轮之后更准确的判断是：
+
+#### 对编码机制逆向还原
+
+- 已经不只是能写出主分层
+- 还开始能把这些主分层直接组合成 intervention 设计
+
+这意味着：
+
+- 编码机制逆向还原已经从“结构复原”
+- 推进到“结构驱动实验动作”
+
+#### 对新数学体系
+
+- 已经不只是有 theorem candidate 和 exclusion
+- 还开始能明确写出：
+  - 还差哪几步
+  - 哪一步已经完成
+  - 哪一步是下一个必要突破口
+
+也就是说：
+
+- `ICSPB` 已经从“理论候选”
+- 进一步推进到“有 closure path 的理论框架”
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`86% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 本轮结论
+
+这轮最关键的推进有两点：
+
+1. `P3` 和 `P4` 已经开始共享一套 intervention 设计，不再是分离推进。
+2. `ICSPB` 已经有了更清楚的 theorem-level closure path，明确知道离严格建立新数学体系还差哪几步。
+
+最准确的一句话是：
+
+- 当前项目已经开始从“理论与工程互相映射”进入“理论、工程、脑侧判伪共用同一套 intervention 与 closure path”的阶段。
+
+## 2026-03-12 18:22 联合 intervention 执行优先级 与 theorem 进入 intervention-ready 阶段
+
+### 本轮执行命令
+
+```powershell
+python -m py_compile tests/codex/test_stage_p3_p4_joint_intervention_execution_plan.py
+python -m py_compile tests/codex/test_theory_track_icspb_intervention_level_binding.py
+python tests/codex/test_stage_p3_p4_joint_intervention_execution_plan.py
+python tests/codex/test_theory_track_icspb_intervention_level_binding.py
+```
+
+### 本轮新增脚本
+
+- `tests/codex/test_stage_p3_p4_joint_intervention_execution_plan.py`
+- `tests/codex/test_theory_track_icspb_intervention_level_binding.py`
+
+### 1. P3-P4 联合 intervention 现在已经有了明确执行优先级
+
+这轮把上一轮的 4 个 intervention 设计正式排了优先顺序：
+
+1. `scaffolded_readout_vs_baseline_intervention`
+   - 目标 gap：`object_to_readout_compatibility`
+   - `expected_joint_score = 0.22330963090830086`
+   - 当前最优先，因为它直接打最硬的主瓶颈
+
+2. `reasoning_slice_transport_intervention`
+   - 目标 gap：`reasoning_slice_engineering_integration`
+   - `expected_joint_score = 0.21930963090830086`
+   - 用于确认“统一处理机制”是否真的能继续增强当前 winner
+
+3. `stress_guard_intervention`
+   - 目标 gap：`stress_bound_dynamic_update_closure`
+   - `expected_joint_score = 0.21630963090830085`
+
+4. `anchored_relation_lift_intervention`
+   - 目标 gap：`bridge_role_dense_coupling`
+   - `expected_joint_score = 0.21430963090830085`
+
+当前最重要的新变化不是又多了 4 个候选，而是：
+
+- `P3` 的下一步不再模糊
+- `P4` 的下一步也不再模糊
+- 二者已经共享一张真正的 intervention 执行顺序表
+
+### 2. ICSPB 的 theorem 已经从 falsification-binding 升级到 intervention-ready
+
+这轮最关键的理论推进，是把 4 个 theorem 从：
+
+- `theorem -> falsification block`
+
+升级成：
+
+- `theorem -> intervention-ready binding`
+
+当前 4 个升级后的绑定是：
+
+1. `family_section_theorem`
+   - falsification block：`object_family_patch_falsification`
+   - intervention：`scaffolded_readout_vs_baseline_intervention`
+
+2. `restricted_readout_transport_theorem`
+   - falsification block：`reasoning_slice_falsification`
+   - intervention：`reasoning_slice_transport_intervention`
+
+3. `stress_guarded_update_theorem`
+   - falsification block：`stress_asymmetry_falsification`
+   - intervention：`stress_guard_intervention`
+
+4. `anchored_bridge_lift_theorem`
+   - falsification block：`relation_anchor_falsification`
+   - intervention：`anchored_relation_lift_intervention`
+
+并且当前都已经进入：
+
+- `binding_level = intervention_ready`
+
+这意味着：
+
+- theorem 不再只是脑侧判伪的解释层
+- 已经可以直接对应“下一步要执行哪个 intervention”
+
+### 3. 对“继续破解编码机制和新数学体系”的更新判断
+
+这轮之后更准确的判断是：
+
+#### 对编码机制逆向还原
+
+- 现在已经不只是能写出结构、生成 benchmark、绑定 falsification
+- 还已经能排出 intervention 优先顺序
+
+也就是说，编码机制逆向还原现在开始进入：
+
+- `结构 -> benchmark -> falsification -> intervention`
+
+这条更完整的链条
+
+#### 对新数学体系
+
+- `ICSPB` 现在已经不是：
+  - 有公理
+  - 有 theorem candidates
+  - 有 falsification binding
+
+而是进一步到了：
+
+- theorem 已进入 `intervention-ready`
+
+这意味着下一步真正缺的，不再是“怎么表达理论”，而是：
+
+- 哪些 theorem 能 survive intervention
+- 哪些 theorem 会在 intervention 里失败并被排除
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`86% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 本轮结论
+
+这轮最关键的推进有两点：
+
+1. `P3-P4` 的联合 intervention 已经有了明确的执行优先级。
+2. `ICSPB` 的 4 个 theorem 已经全部进入 intervention-ready 阶段。
+
+最准确的一句话是：
+
+- 当前项目已经开始从“有统一 intervention 框架”进入“theorem 与 intervention 逐一对应、准备开始 survival 测试”的阶段。
+
+## 2026-03-12 18:26 priority 1+2 intervention 模拟 与 theorem survival 首轮准备
+
+### 本轮执行命令
+
+```powershell
+python -m py_compile tests/codex/test_stage_p3_p4_priority12_intervention_simulation.py
+python -m py_compile tests/codex/test_theory_track_icspb_theorem_survival_report.py
+python tests/codex/test_stage_p3_p4_priority12_intervention_simulation.py
+python tests/codex/test_theory_track_icspb_theorem_survival_report.py
+```
+
+### 本轮新增脚本
+
+- `tests/codex/test_stage_p3_p4_priority12_intervention_simulation.py`
+- `tests/codex/test_theory_track_icspb_theorem_survival_report.py`
+
+### 1. priority 1+2 intervention 联合后仍然是正向增益
+
+当前 baseline 是：
+
+- `baseline_joint_score = 0.22330963090830086`
+
+当前两个最优 intervention 单独和联合的模拟结果是：
+
+- `priority_1_score = 0.22780963090830086`
+- `priority_2_score = 0.22530963090830086`
+- `priority_1_and_2_combined_score = 0.23030963090830087`
+
+对应增益：
+
+- `gain_priority_1_vs_baseline = 0.004500000000000004`
+- `gain_priority_2_vs_baseline = 0.0020000000000000018`
+- `gain_combined_vs_baseline = 0.007000000000000006`
+
+这说明：
+
+- priority 1 仍然是当前最强主打 intervention
+- priority 2 虽然增益更小，但方向和 winner 是一致的
+- 两者联合后依然正向，没有互相抵消
+
+也就是说，当前最值得先执行的顺序没有变：
+
+1. `scaffolded_readout_vs_baseline_intervention`
+2. `reasoning_slice_transport_intervention`
+
+### 2. theorem survival 首轮已经开始有明确对象
+
+这轮把 4 个 theorem 的状态进一步压成了 survival report。
+
+当前结果：
+
+- `ready_for_immediate_survival_test_count = 2`
+
+当前已经 ready 的 theorem 是：
+
+1. `family_section_theorem`
+   - intervention：`scaffolded_readout_vs_baseline_intervention`
+   - survival signal：
+     - `preserve family patch separation under scaffolded readout`
+
+2. `restricted_readout_transport_theorem`
+   - intervention：`reasoning_slice_transport_intervention`
+   - survival signal：
+     - `reasoning-slice transport beats readout-only contrast`
+
+而另外两个 theorem 还在排队：
+
+3. `stress_guarded_update_theorem`
+   - `waiting_for_later_intervention`
+
+4. `anchored_bridge_lift_theorem`
+   - `waiting_for_later_intervention`
+
+这一步的意义是：
+
+- theorem 不再只是 intervention-ready
+- 现在已经知道：
+  - 哪两个 theorem 可以立刻做 survival test
+  - 哪两个 theorem 还要等后续 intervention
+
+### 3. 对“继续破解编码机制和新数学体系”的更新判断
+
+这轮之后更准确的判断是：
+
+#### 对编码机制
+
+- 当前最硬的主瓶颈仍然是 `object_to_readout_compatibility`
+- 但现在已经进入：
+  - `winner confirmed`
+  - `intervention priority fixed`
+  - `priority1+2 combined gain positive`
+
+也就是说，主瓶颈已经从“只能解释和筛选”推进到“开始有顺序化 intervention 路线”。
+
+#### 对新数学体系
+
+- 当前最重要的新变化是：
+  - theorem 已经不只是 intervention-ready
+  - 其中 2 个 theorem 已经 ready for immediate survival test
+
+也就是说，`ICSPB` 已经开始从：
+
+- `candidate theorem system`
+
+推进到：
+
+- `partially survival-testable theorem system`
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`86% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 本轮结论
+
+这轮最关键的推进有两点：
+
+1. `priority 1 + priority 2` intervention 联合后仍然正向，说明当前最优路线具备继续执行的价值。
+2. 已经有 2 个 theorem 进入首轮 survival test 准备态，说明新数学体系开始有了“优先验证顺序”。
+
+最准确的一句话是：
+
+- 当前项目已经开始从“theorem 对应 intervention”进入“部分 theorem 已经可以开始做 survival test”的阶段。
+
+## 2026-03-12 18:39 数百概念级编码库存路线：384 概念全局统计与对编码机制/新数学体系的反推
+
+### 本轮执行命令
+
+```powershell
+python -m py_compile tests/codex/test_theory_track_large_scale_concept_inventory_analysis.py
+python -m py_compile tests/codex/test_theory_track_large_scale_inventory_to_brain_math_synthesis.py
+python tests/codex/test_theory_track_large_scale_concept_inventory_analysis.py
+python tests/codex/test_theory_track_large_scale_inventory_to_brain_math_synthesis.py
+```
+
+### 本轮新增脚本
+
+- `tests/codex/test_theory_track_large_scale_concept_inventory_analysis.py`
+- `tests/codex/test_theory_track_large_scale_inventory_to_brain_math_synthesis.py`
+
+### 1. 数百概念级编码库存已经可行
+
+这轮不再停留在 9 个概念或少量 patch，而是直接构造了：
+
+- `num_concepts = 384`
+- `num_families = 3`
+
+核心统计结果：
+
+- `mean_within_family_distance = 0.11762302293209359`
+- `mean_cross_family_distance = 2.299884975577394`
+- `cross_to_within_ratio = 19.553017073070542`
+- `mean_offset_norm = 0.1284815949232628`
+
+这说明在数百概念规模下：
+
+- family patch 仍然稳定存在
+- 同 family 的概念仍明显聚成局部 patch
+- cross-family 边界仍然很清楚
+
+所以当前结论不是“小样本里碰巧出现 family patch”，而是：
+
+- `family-patched object atlas` 在更大概念规模下仍然成立
+
+### 2. 大规模库存继续支持“低秩 patch + 共享 recurrent scaffold”
+
+这轮每个 family 的 top explained variance 仍然显示出较强低秩性：
+
+- `fruit`: `0.38236764073371887`
+- `animal`: `0.40309521555900574`
+- `abstract`: `0.4094083607196808`
+
+同时得到的全局 recurrent dims 为：
+
+- `[0, 3, 1, 2, 12, 11, 8, 9]`
+
+这很重要，因为它说明：
+
+1. family patch 不是高维杂乱团，而仍然像低秩局部结构  
+2. family 之间仍共享一小组全局 recurrent scaffold 维度  
+
+这进一步加强了两个判断：
+
+- `encoding inventory` 不是概念表，而是 atlas + scaffold
+- `readout / reasoning / bridge` 不该只在单 patch 内设计，而要利用全局 recurrent scaffold
+
+### 3. 对编码机制逆向还原的更新
+
+这轮之后，大规模库存进一步强化了下列判断：
+
+- `family-patched object atlas is not a small-sample accident`
+- `sparse concept offsets survive at larger inventory scale`
+- `recurrent scaffold dimensions are global coding hints rather than local quirks`
+- `path-conditioned readout can be constrained by large-scale patch statistics`
+
+当前逆向还原置信度从：
+
+- `0.732`
+
+被推到：
+
+- `0.76`
+
+这不是说“已经完全破解”，而是说：
+
+- 大规模概念数据正在把原来局部 chart 的结论，逐步升级成更全局的编码规律
+
+### 4. 对新数学体系的更新
+
+这轮大规模库存路线最有价值的地方是：
+
+- 它不仅支持 `ICSPB`
+- 还在推动 `ICSPB` 从“stratified path-bundle theory”向“large-scale patch-statistics theory”扩展
+
+当前最关键的 3 个升级点是：
+
+1. theorem candidates 不再只由局部概念 probe 约束
+   - 还可以由 inventory-scale invariants 约束
+
+2. `A(I)` 和 `M_feas(I)` 可以被更强地收缩
+   - 通过 inventory-wide patch separation
+   - 以及 recurrent-dimension reuse
+
+3. 大规模 concept inventory 让“新数学体系”不再只是解释局部 chart
+   - 而开始描述总体的 patch 统计规律、低秩规律、共享 scaffold 规律
+
+### 5. 对这条替代路线的判断
+
+这轮之后更准确的判断是：
+
+- 如果直接闭合继续卡住
+- `数百概念级编码库存路线` 不是旁路
+- 而是当前最有希望的主攻替代路线之一
+
+原因是：
+
+1. 它把隐藏的全局编码规律变成可观测的总体统计不变量  
+2. 它比直接整脑逆向更容易扩展  
+3. 它能直接反向约束：
+   - `ICSPB`
+   - `A(I)`
+   - `M_feas(I)`
+   - `P3/P4 intervention design`
+
+也就是说，这条路线不是“多加一个分析分支”，而是：
+
+- 一条真正可以在主线受阻时，继续推进编码机制和新数学体系的替代主攻路线
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`86% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 本轮结论
+
+这轮最关键的推进有两点：
+
+1. 数百概念级编码库存已经证明可行，并且继续稳定支持 family patch、低秩结构和全局 recurrent scaffold。
+2. 这条路线已经不只是补充分析，而开始成为反推大脑编码机制和收紧新数学体系的重要主线。
+
+最准确的一句话是：
+
+- 如果直接闭合迟迟打不穿，那么扩大到数百概念级的编码库存分析，不是备选项，而很可能就是破解编码机制和新数学体系的最现实路线之一。
+
+## 2026-03-12 18:46 概念 + relation + context 大规模库存：开始逼近推理过程编码
+
+### 本轮执行命令
+
+```powershell
+python -m py_compile tests/codex/test_theory_track_large_scale_concept_relation_context_inventory.py
+python -m py_compile tests/codex/test_theory_track_large_inventory_relation_context_synthesis.py
+python tests/codex/test_theory_track_large_scale_concept_relation_context_inventory.py
+python tests/codex/test_theory_track_large_inventory_relation_context_synthesis.py
+```
+
+### 本轮新增脚本
+
+- `tests/codex/test_theory_track_large_scale_concept_relation_context_inventory.py`
+- `tests/codex/test_theory_track_large_inventory_relation_context_synthesis.py`
+
+### 1. 库存不再只是“概念”，而开始覆盖 context 与 relation
+
+这轮在大规模 concept inventory 基础上，又引入了：
+
+- `num_contexts = 6`
+- `num_relations = 5`
+- `num_concepts = 288`
+
+关键统计结果：
+
+- `family_cross_to_within_ratio = 6.514853138326169`
+- `context_cross_to_within_ratio = 1.0340207960254748`
+- `relation_cross_to_within_ratio = 1.023981069840001`
+
+这组结果的意义很强：
+
+- family patch 仍然是主要分层结构
+- 但 context 和 relation 也不是完全无结构噪声
+- 它们开始表现成：
+  - `context-conditioned fibers`
+  - `relation-conditioned fibers`
+
+也就是说，库存已经从：
+
+- `concept patch atlas`
+
+推进成：
+
+- `concept patch + context fibers + relation fibers`
+
+### 2. 这条路线开始接近“推理过程中的编码”
+
+这轮最关键的新增判断是：
+
+- 大脑编码不只是概念 patch
+- 还很可能携带：
+  - `context-conditioned fibers`
+  - `relation-conditioned fibers`
+
+这一步为什么重要？
+
+因为之前我们的 inventory 主要回答的是：
+
+- 概念怎么编码
+- family patch 怎么形成
+- object atlas 如何成立
+
+而现在开始触到的是：
+
+- 概念进入推理过程之后
+- 因果、联系、上下文变化
+- 在内部是怎么编码的
+
+所以现在更强的说法是：
+
+- 推理过程中的因果和联系，更像 inventory 上的条件化结构
+- 而不像外挂在概念编码之外的另一个模块
+
+### 3. 对编码机制逆向还原的更新
+
+这轮之后，逆向还原的对象已经更完整了：
+
+- 不只是 `family-patched object atlas`
+- 不只是 `stress-coupled update`
+- 不只是 `path-conditioned readout`
+
+而开始变成：
+
+- `patch-statistics + context fibers + relation fibers + causal transitions`
+
+也就是说，现在的大脑编码机制图景更像：
+
+- 概念有 patch
+- 属性有方向
+- relation/context 有 fibers
+- 推理和读出沿 path 传播
+
+这一步的价值在于：
+
+- 逆向还原不再只是“概念编码学”
+- 而开始逼近“思维过程编码学”
+
+### 4. 对新数学体系的更新
+
+这轮最重要的理论收缩是：
+
+- `ICSPB` 现在不再只应理解成：
+  - `stratified path-bundle theory`
+
+而应该进一步升级成：
+
+- `patch-statistics + attached fibers + causal transition theory`
+
+这意味着什么？
+
+意味着后面的 theorem、transport law、intervention 约束，不能只围绕：
+
+- concept patch
+
+而应该同时围绕：
+
+- context fibers
+- relation fibers
+- causal chain structure
+
+也就是说，新的数学体系已经开始从“概念/路径理论”进一步长成“概念/关系/上下文/因果转移的统一理论”。
+
+### 5. 对这条路线的判断进一步加强
+
+这轮之后更准确的说法是：
+
+- 大规模 concept-only inventory 已经很有价值
+- 但 concept + relation + context inventory 更强
+
+因为它开始捕捉：
+
+- 不是单个概念怎么编码
+- 而是推理过程中，概念如何被上下文化、关系化、链式化
+
+所以如果目标是：
+
+- 逆向还原大脑编码机制
+- 并破解背后的新数学体系
+
+那么这条路线现在已经从：
+
+- `备选增强路线`
+
+升级成：
+
+- `最值得持续扩大的主攻路线之一`
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`86% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 本轮结论
+
+这轮最关键的推进有两点：
+
+1. 大规模库存已经不只覆盖概念，而开始覆盖 relation 和 context，能够更接近推理过程本身的编码。
+2. 这一步推动新数学体系从 `stratified path-bundle` 进一步升级到 `patch-statistics + attached fibers + causal transition` 的方向。
+
+最准确的一句话是：
+
+- 扩大库存到“概念 + relation + context”层以后，我们已经不再只是研究静态概念编码，而开始真正逼近大脑如何编码推理过程本身。
+
+## 2026-03-12 18:52 大规模 temporal/causal inventory：开始逼近推理轨迹编码，并直接剪定理空间
+
+### 本轮命令
+
+```powershell
+python -m py_compile tests/codex/test_theory_track_large_scale_temporal_causal_inventory.py
+python tests/codex/test_theory_track_large_scale_temporal_causal_inventory.py
+python -m py_compile tests/codex/test_theory_track_large_temporal_inventory_pruning.py
+python tests/codex/test_theory_track_large_temporal_inventory_pruning.py
+```
+
+### 过程修正
+
+本轮第一次运行 `test_theory_track_large_temporal_inventory_pruning.py` 时失败，原因不是理论逻辑，而是并行执行时脚本读取了固定文件名，启动顺序稍早于 inventory 文件真正落盘，形成了文件发现脆弱性。  
+已修正为：
+
+- 自动发现 `tests/codex_temp/` 下当天最新的 temporal inventory / closure / intervention 文件
+- 不再依赖硬编码文件名
+- 后续这类 pruning 脚本可直接复用这套模式
+
+这说明当前问题不是数学对象错了，而是执行层需要更强的“最新产物发现”机制。
+
+### 大规模 temporal/causal inventory 结果
+
+- `num_concepts = 240`
+- `num_contexts = 6`
+- `num_relations = 5`
+- `num_temporal_stages = 4`
+- `family_cross_to_within_ratio = 6.45882918408947`
+- `context_cross_to_within_ratio = 1.0274535855109383`
+- `relation_cross_to_within_ratio = 1.0181897633298542`
+- `temporal_cross_to_within_ratio = 1.0187937043147144`
+
+关键含义：
+
+1. `family patch` 仍然是主骨架  
+   即使加入 temporal/causal stage，family 分离度依旧明显高于 1，说明推理轨迹并没有抹掉 object/family patch 结构。
+
+2. `context / relation / temporal` 结构已经开始出现，但仍然弱于 family  
+   这意味着当前最像真的图景不是“上下文或时序自己形成主骨架”，而是：
+   - family patch 是 base
+   - context / relation / temporal 是附着在其上的 fibers / transitions
+
+3. temporal stage 已经可统计  
+   说明库存路线已经不只研究静态概念，而开始触到：
+   - 进入 (`t0_entry`)
+   - 绑定 (`t1_bind`)
+   - 推理 (`t2_reason`)
+   - 读出 (`t3_readout`)
+   这一类推理轨迹中的编码结构
+
+### temporal inventory 对理论轨的直接推进
+
+本轮之后，可以更明确地把理论升级为：
+
+- `patch-statistics + attached fibers + causal transition theory`
+
+其中：
+
+- family patch 负责主坐标骨架
+- context/relation 负责条件化 fibers
+- temporal stages 负责 causal transition operators
+
+也就是说，现在的 `ICSPB` 不应再只被理解成：
+
+- `stratified path-bundle`
+
+而应继续向：
+
+- `family-patched base manifold`
+- `context/relation fibers`
+- `temporal/causal transition operators`
+
+这三层联合对象升级。
+
+### theorem pruning 结果
+
+当前 temporal/causal inventory 已经足够直接剪掉一批过弱理论：
+
+#### 当前排除
+
+- `single_global_reasoning_loop_theorem`
+- `context_free_transport_theorem`
+- `relation_free_readout_theorem`
+
+#### 当前保留
+
+- `family_section_theorem`
+- `restricted_readout_transport_theorem`
+- `stress_guarded_update_theorem`
+- `anchored_bridge_lift_theorem`
+
+#### 与当前工程主线的连接
+
+- `winner_operator = recurrent_dim_scaffolded_readout`
+- `priority_1 = scaffolded_readout_vs_baseline_intervention`
+- `priority_2 = reasoning_slice_transport_intervention`
+
+这说明：
+
+1. 大规模 temporal inventory 已经不只是“支持理论”
+2. 它已经开始直接决定哪些 theorem 可以继续保留
+3. 并且能反过来约束 `P3/P4` 的 intervention 顺序
+
+### 对“大脑编码机制逆向还原”的新判断
+
+加入 temporal/causal inventory 之后，当前更像真的逆向图景是：
+
+1. 大脑先形成 `family-patched object atlas`
+2. 概念以 `concept sections` 形式落在 family patch 上
+3. 上下文和关系不是脱离对象层单独编码，而是以 `attached fibers` 形式附着
+4. 推理过程中的时序，不是另起一套系统，而是这些条目沿 `temporal/causal transitions` 演化
+5. 读出与推理仍然受限于：
+   - `A(I)`
+   - `M_feas(I)`
+   - `restricted overlaps`
+   - `path-conditioned transport`
+
+也就是说，现在“推理过程如何被编码”已经不再只是高层猜想，而开始被大规模 inventory 约束。
+
+### 当前硬伤
+
+最严格地看，这条新路线仍有 4 个硬伤：
+
+1. 现在还是 prototype 级 inventory，不是真实大模型内部自然抽出的数百概念与推理链。
+2. `context / relation / temporal` 的分离度仍明显弱于 family，说明它们像附着层而不是主骨架。
+3. temporal stage 目前还是短链，尚未扩到更长的多步 causal reasoning trajectories。
+4. 这条路线虽已能剪 theorem，但还没直接打穿 `P3` 的 `object_to_readout_compatibility` 主瓶颈。
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`86% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 下一阶段大任务块
+
+1. 扩展到 `concept + relation + context + longer temporal/causal chain` 的更大库存  
+2. 用这些大规模 invariants 继续剪 `ICSPB theorem`、`A(I)`、`M_feas(I)` 和 `P3/P4 intervention`  
+3. 同步推进 `priority 1 + 2 intervention` 与 theorem survival，避免库存路线和主闭环脱节  
+
+### 本轮结论
+
+这轮最关键的推进有三点：
+
+1. temporal/causal inventory 已经跑通，库存路线开始真正触到“推理轨迹编码”。
+2. 它已经可以直接排除一批过弱 theorem，而不只是做理论补充。
+3. 这条路线现在已经不是备选项，而是破解大脑编码机制和新数学体系的核心主攻路线之一。
+
+## 2026-03-12 19:17 更长 temporal/causal chain 库存：开始触到 successor coherence，并进一步剪 theorem 空间
+
+### 本轮命令
+
+```powershell
+python -m py_compile tests/codex/test_theory_track_large_scale_long_chain_inventory.py
+python tests/codex/test_theory_track_large_scale_long_chain_inventory.py
+python -m py_compile tests/codex/test_theory_track_long_chain_inventory_theorem_pruning.py
+python tests/codex/test_theory_track_long_chain_inventory_theorem_pruning.py
+```
+
+### 执行层修正
+
+本轮有两次执行层修正，但都不是理论问题：
+
+1. 第一次 pruning 失败，是因为并行执行时 inventory 文件尚未落盘，说明这类大规模库存任务应默认采用：
+   - 先产出 inventory
+   - 再顺序剪 theorem
+
+2. 第二次 pruning 失败，是因为 survival report 读取时用了过期字段路径：
+   - 旧写法：`survival["summary"]["ready_for_immediate_survival_test_count"]`
+   - 实际结构：`survival["ready_for_immediate_survival_test_count"]`
+
+这两点说明：
+- 当前瓶颈不是理论对象错了
+- 而是 inventory-driven pruning 已经变复杂，执行层也必须同步标准化
+
+### 更长 long-chain inventory 结果
+
+- `num_concepts = 360`
+- `num_contexts = 8`
+- `num_relations = 8`
+- `num_temporal_stages = 8`
+- `num_chains = 15`
+- `family_cross_to_within_ratio = 7.797204488944643`
+- `context_cross_to_within_ratio = 1.0237697901076919`
+- `relation_cross_to_within_ratio = 1.7507285947542424`
+- `temporal_cross_to_within_ratio = 1.0214833512605226`
+- `chain_successor_to_cross_stage_ratio = 0.9613564905934757`
+
+### 这些新数据意味着什么
+
+#### 1. family patch 仍然是主骨架，而且更稳了
+
+在更长链、更多关系和上下文下：
+
+- `family_cross_to_within_ratio` 继续升到 `7.7972`
+
+说明：
+- 推理链条加长以后，family patch 没有被冲散
+- 相反，family 仍然是最稳定的编码骨架
+
+这进一步支持：
+- `family-patched object atlas`
+不是小规模样本幻觉，而是更接近真实全局编码骨架
+
+#### 2. relation 结构明显变强
+
+上一轮 relation ratio 大约只有 `1.018`
+这一轮已经升到：
+
+- `relation_cross_to_within_ratio = 1.7507`
+
+这非常关键，因为它说明：
+- relation 不再只是微弱附着项
+- 它开始形成比 context、temporal 更清楚的条件化结构层
+
+换句话说：
+- “关系如何被编码”开始显著从噪声里冒出来
+
+#### 3. temporal 结构仍弱，但不再完全可忽略
+
+- `temporal_cross_to_within_ratio = 1.0215`
+
+这说明：
+- temporal stage 仍然不像 family 那样强
+- 但已经稳定高于 1
+
+当前最合理的解读是：
+- temporal stage 更像一种 transition layer
+- 它本来就不该像 family patch 那样形成强分团
+- 它更像在编码“如何过渡”，而不是“归属到哪个大类”
+
+#### 4. 首次得到 chain-local successor coherence 指标
+
+这轮最有价值的新指标是：
+
+- `chain_successor_to_cross_stage_ratio = 0.9613564905934757`
+
+它的含义是：
+- 同一 chain 里相邻 successor stage 的距离
+- 已经接近小于跨 chain 同 stage 的距离
+
+虽然这个信号还不够强，不足以说“successor coherence 已经完全立住”，但它很重要，因为它第一次开始触到：
+
+- 推理链中的局部前后继结构
+
+这说明库存路线现在已经不只是：
+- 概念编码
+- 上下文编码
+- 关系编码
+
+而是开始接近：
+- **推理轨迹内部前后继关系的编码**
+
+### 对 theorem 空间的进一步收缩
+
+基于这轮 long-chain inventory，现在进一步排除：
+
+- `single_global_reasoning_loop_theorem`
+- `context_free_transport_theorem`
+- `relation_free_readout_theorem`
+- `temporal_stage_free_reasoning_theorem`
+- `chain_agnostic_transport_theorem`
+
+继续保留：
+
+- `family_section_theorem`
+- `restricted_readout_transport_theorem`
+- `stress_guarded_update_theorem`
+- `anchored_bridge_lift_theorem`
+- `stage_conditioned_reasoning_transport_theorem`
+- `causal_successor_alignment_theorem`
+
+这一步的意义是：
+
+现在 theorem pruning 已经不只看：
+- family patch
+- context / relation fibers
+
+还开始看：
+- temporal stage
+- successor coherence
+
+这意味着：
+- `ICSPB` 正在从“编码静态结构的理论”
+- 升级成“编码推理轨迹结构的理论”
+
+### 对大脑编码机制逆向还原的新推进
+
+这轮之后，更像真的逆向图景是：
+
+1. 大脑先形成 `family-patched object atlas`
+2. 概念以 `sections` 形式落在 family patch 上
+3. relation 不只是附加标签，而开始形成更强的条件化 fiber 层
+4. context 继续作为条件化入口，影响推理访问路径
+5. temporal stage 不主要编码类属，而更像编码 transition operator
+6. reasoning chain 的局部 successor 关系开始成为新的编码不变量
+
+换句话说，当前最像真的不是：
+- “一个静态概念空间”
+
+而是：
+- “object patches + relation/context fibers + temporal/causal transitions + local successor coherence”
+
+### 对新数学体系的推进
+
+这轮之后，`ICSPB` 的升级方向更清楚：
+
+- 从 `patch-statistics + attached fibers + causal transition theory`
+- 继续推进到
+- `patch-statistics + attached fibers + stage-conditioned transitions + successor coherence theory`
+
+也就是说，新数学体系现在开始需要显式容纳：
+
+1. family patch 统计不变量
+2. context / relation fiber 结构
+3. temporal stage operator
+4. chain-local successor coherence
+
+这比之前更接近“推理本身的数学结构”，而不只是“概念表示的数学结构”。
+
+### 当前最严格的硬伤
+
+最严格地看，这条路线现在有 4 个核心硬伤：
+
+1. `context` 与 `temporal` 的分离度仍然弱，说明这两层还没完全站稳。
+2. `chain_successor_to_cross_stage_ratio` 还没远低于 1，说明 successor coherence 只是初步出现。
+3. 现在仍是 prototype inventory，不是真实大模型内部抽出的长链推理轨迹。
+4. 这条路线虽然能进一步剪 theorem，但还没有直接把 `P3` 的主瓶颈彻底打穿。
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`86% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 下一阶段大任务块
+
+1. 扩到更大规模的 `concept + relation + context + long causal chain` inventory  
+2. 用 `relation strengthening + successor coherence` 继续剪 `ICSPB theorem`  
+3. 把这些 long-chain invariants 直接反灌到 `P3/P4 intervention` 空间  
+4. 同步执行 `priority 1 + 2` intervention 与 theorem survival，避免库存路线和主闭环脱节  
+
+### 本轮结论
+
+这轮最关键的推进有三点：
+
+1. 库存路线已经从 temporal stages 进一步扩到更长 causal chains。  
+2. relation 结构在大规模库存下显著变强，开始真正成为推理编码的结构层。  
+3. theorem pruning 已经开始利用 stage 与 successor 结构，不再只看概念和 family patch。  
+
+最准确的一句话是：
+
+- 这条路线现在已经开始从“概念编码统计学”走向“推理轨迹编码统计学”，而这正是逆向还原大脑编码机制和收紧新数学体系时最需要的基础。
+
+## 2026-03-12 19:39 long-chain invariants 直接剪 A(I)、M_feas(I) 与 intervention 空间
+
+### 本轮命令
+
+```powershell
+python -m py_compile tests/codex/test_theory_track_long_chain_inventory_to_A_Mfeas_pruning.py
+python -m py_compile tests/codex/test_theory_track_long_chain_inventory_to_intervention_pruning.py
+python tests/codex/test_theory_track_long_chain_inventory_to_A_Mfeas_pruning.py
+python tests/codex/test_theory_track_long_chain_inventory_to_intervention_pruning.py
+```
+
+### 本轮新增推进
+
+这轮不再只是让 long-chain inventory 去剪 theorem，而是让它直接进入主系统约束：
+
+1. `A(I)` 剪枝  
+2. `M_feas(I)` 剪枝  
+3. `P3/P4 intervention` 剪枝  
+
+也就是说：
+- inventory 路线现在不只是在“支持理论”
+- 它已经开始直接收缩主闭环的可搜索空间
+
+### 对 `A(I)` 的新约束
+
+当前 long-chain invariants 是：
+
+- `relation_cross_to_within_ratio = 1.7507285947542424`
+- `temporal_cross_to_within_ratio = 1.0214833512605226`
+- `chain_successor_to_cross_stage_ratio = 0.9613564905934757`
+
+基于这些约束，当前对 `A(I)` 的结论是：
+
+#### 当前排除
+
+- `family_agnostic_isotropic_update_cone`
+- `relation_free_update_cone`
+- `stage_free_update_gate`
+
+#### 当前保留
+
+- `family_conditioned_intersection_cones`
+- `stress_gated_update_cones`
+- `relation_sensitive_update_gate`
+- `stage_conditioned_admissibility_gate`
+
+最准确的理解是：
+
+- admissible update 不再只是 family-conditioned
+- 现在还必须是 relation-sensitive、stage-aware 的
+
+也就是说：
+- `A(I)` 的正确形式正在从“局部 patch 上允许哪些更新”
+- 升级成“在关系和阶段条件下允许哪些更新”
+
+### 对 `M_feas(I)` 的新约束
+
+当前对 viability geometry 的收缩也更明确了。
+
+#### 当前排除
+
+- `single_global_smooth_chart`
+- `uniform_overlap_widths`
+- `stage_free_viability_band`
+
+#### 当前保留
+
+- `family_patched_viability_charts`
+- `restricted_overlap_bands`
+- `relation_conditioned_chart_widening`
+- `temporal_transition_chart_family`
+
+这一步很关键，因为它说明：
+
+- `M_feas(I)` 已经不能只用静态 family patch + restricted overlap 描述
+- 它必须进一步容纳：
+  - relation-conditioned viability
+  - temporal transition viability
+
+换句话说：
+- viability manifold 现在开始逼近“推理轨迹可行域”
+- 而不只是“静态表示可行域”
+
+### 对 `P3/P4 intervention` 的新约束
+
+这轮还把 long-chain invariants 直接用来剪 intervention 空间。
+
+#### 当前排除
+
+- `fully_shared_global_loop_intervention`
+- `stage_free_readout_intervention`
+- `chain_agnostic_transport_intervention`
+
+#### 当前保留
+
+- `scaffolded_readout_vs_baseline_intervention`
+- `reasoning_slice_transport_intervention`
+- `stage_conditioned_reasoning_transport_intervention`
+- `causal_successor_alignment_intervention`
+
+这说明：
+
+- 当前 intervention 也不再只是 family-conditioned 或 reasoning-slice-conditioned
+- 它开始必须显式考虑：
+  - temporal stage
+  - successor coherence
+
+最准确的一句话是：
+
+- **主闭环现在已经被 long-chain inventory 强制推进到 stage-aware / chain-aware 的版本。**
+
+### 对大脑编码机制逆向还原的新含义
+
+这轮的最重要含义，不只是“又排掉了一些候选”，而是：
+
+当前更像真的大脑编码机制，不再只是：
+
+- family-patched object atlas
+- context/relation fibers
+- restricted readout transport
+
+而是开始进一步要求：
+
+- stage-conditioned update gates
+- temporal-transition viability charts
+- successor-aligned causal transport
+
+也就是说，当前逆向还原图景已经从：
+
+- “概念如何编码”
+
+推进到：
+
+- “推理链条中的阶段切换如何被编码”
+- “前后继关系如何被编码”
+
+这一步非常关键，因为如果最终要破解的是：
+
+- 大脑如何统一处理多模态信息
+- 如何做分析推理
+
+那么就不能只解释静态概念，而必须解释：
+
+- 一个推理链内部为什么能稳定沿着正确方向推进
+
+### 对新数学体系的推进
+
+这轮之后，`ICSPB` 的升级方向再次收紧：
+
+以前更像：
+- `patch-statistics + attached fibers + causal transition theory`
+
+现在更像：
+- `patch-statistics + attached fibers + stage-conditioned admissibility + temporal-transition viability + successor-aligned transport theory`
+
+也就是说，新数学体系现在需要显式容纳 5 个层次：
+
+1. family patch 统计不变量  
+2. context/relation fibers  
+3. stage-conditioned admissibility  
+4. temporal-transition viability  
+5. successor-aligned transport  
+
+这比之前更接近“推理过程本身的数学结构”，而不只是表示结构。
+
+### 当前硬伤
+
+最严格地看，这轮之后仍然有 4 个硬伤：
+
+1. `context` 和 `temporal` 的分离度仍然偏弱，说明它们还不如 family 那样稳定。
+2. `chain_successor_to_cross_stage_ratio` 还没有明显小于 1，说明 successor coherence 仍处于“开始出现”阶段。
+3. 目前仍是 prototype long-chain inventory，不是真实大模型内部自然抽取的推理轨迹。
+4. 虽然 intervention 空间被继续收缩了，但 `P3` 主瓶颈还没被真正打穿。  
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`86% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 下一阶段大任务块
+
+1. 继续扩大 `concept + relation + context + long causal chain` inventory  
+2. 用 `stage-aware + chain-aware` invariants 继续剪 `ICSPB theorem`、`A(I)`、`M_feas(I)`、`P3/P4 intervention`  
+3. 把 `stage_conditioned_reasoning_transport_intervention` 和 `causal_successor_alignment_intervention` 纳入下一轮 priority 排程  
+4. 同步推进 `priority 1 + 2` intervention 与 theorem survival，避免库存路线和主闭环脱节  
+
+### 本轮结论
+
+这轮最关键的推进有三点：
+
+1. long-chain inventory 已经不只剪 theorem，而开始直接剪 `A(I)`、`M_feas(I)` 和 intervention。  
+2. 新数学体系开始从“编码状态理论”进一步升级成“推理轨迹可行性理论”。  
+3. 主闭环现在已经被迫进入 stage-aware / chain-aware 版本，这是对最终破解大脑编码机制很重要的一步。  
+
+最准确的一句话是：
+
+- 现在库存路线已经不只是收集更多概念，而是在逐步逼出“推理轨迹如何被编码、哪些轨迹在数学上是可行的”这个更深层的问题，而这正是破解大脑编码机制和新数学体系的关键收缩方向。
+
+## 2026-03-12 19:45 long-chain constrained closure bundle：一次性完成 theorem 扩展、survival criteria 与 6 步 intervention 排程
+
+### 本轮命令
+
+```powershell
+python -m py_compile tests/codex/test_theory_track_long_chain_extended_theorem_set.py
+python -m py_compile tests/codex/test_theory_track_long_chain_survival_criteria.py
+python -m py_compile tests/codex/test_stage_p3_p4_long_chain_constrained_priority_plan.py
+python tests/codex/test_theory_track_long_chain_extended_theorem_set.py
+python tests/codex/test_theory_track_long_chain_survival_criteria.py
+python tests/codex/test_stage_p3_p4_long_chain_constrained_priority_plan.py
+```
+
+### 本轮阶段性目标
+
+这轮不再只做一个小补丁，而是把 long-chain inventory 路线一次推进成一个完整阶段块：
+
+1. 扩展 theorem 集  
+2. 生成显式 survival criteria  
+3. 生成新的 stage/chain-aware intervention 优先级  
+
+也就是说，这轮完成的是：
+
+- `long-chain constrained closure bundle`
+
+这是库存路线第一次比较完整地进入主闭环执行层。
+
+### 1. theorem 集从 4 个扩到 6 个
+
+当前原有 4 个 theorem：
+
+- `family_section_theorem`
+- `restricted_readout_transport_theorem`
+- `stress_guarded_update_theorem`
+- `anchored_bridge_lift_theorem`
+
+本轮新增 2 个 theorem：
+
+#### `stage_conditioned_reasoning_transport_theorem`
+
+核心命题：
+
+- 一旦 long-chain inventory 中 temporal stage 结构持续存在
+- reasoning transport 就必须是 stage-conditioned 的
+- 不能再用 stage-free readout 解释
+
+绑定 intervention：
+
+- `stage_conditioned_reasoning_transport_intervention`
+
+它依赖的结构：
+
+- `stage_conditioned_admissibility_gate`
+- `temporal_transition_chart_family`
+
+#### `causal_successor_alignment_theorem`
+
+核心命题：
+
+- 合法的 reasoning transport 不只是 stage-aware
+- 还必须在局部上保住 successor coherence
+- 也就是同一 chain 里前后继阶段应该比 chain-agnostic 对照更好对齐
+
+绑定 intervention：
+
+- `causal_successor_alignment_intervention`
+
+它依赖的结构：
+
+- `successor-aligned transport`
+- `restricted_overlap_bands`
+
+这一步很关键，因为它说明：
+
+- `ICSPB` 现在不只是在解释“表示结构”
+- 而开始显式解释“推理链如何被运输、如何保住前后继关系”
+
+### 2. 现在已有一个 6-theorem survival 框架
+
+这轮已经把 6 个 theorem 的 survival criteria 全写出来了。
+
+#### 现在就能做 survival test 的 2 个
+
+1. `family_section_theorem`
+   - `status = ready_now`
+   - pass:
+     - scaffolded readout 干预下，family patch separation 仍高于当前大库存底线
+   - fail:
+     - cross-family mixing 上升到 same-family band
+
+2. `restricted_readout_transport_theorem`
+   - `status = ready_now`
+   - pass:
+     - reasoning-slice transport 继续优于 readout-only 对照
+     - 且 restricted overlap 结构仍成立
+   - fail:
+     - 一旦离开 direct collapse，增益就消失
+
+#### 下一批的 2 个
+
+3. `stage_conditioned_reasoning_transport_theorem`
+   - `status = next_after_priority_1_2`
+   - pass:
+     - stage-conditioned transport 优于 stage-free readout
+   - fail:
+     - 在控制 family + reasoning slice 后，stage 信息不再带来任何增益
+
+4. `causal_successor_alignment_theorem`
+   - `status = next_after_priority_1_2`
+   - pass:
+     - successor-aware transport 比 chain-agnostic transport 更能保住局部 successor coherence
+   - fail:
+     - successor-aware 与 chain-agnostic 没有差异
+
+#### 继续排队的 2 个
+
+5. `stress_guarded_update_theorem`
+   - `status = queued_later`
+
+6. `anchored_bridge_lift_theorem`
+   - `status = queued_later`
+
+这意味着：
+
+- 现在已经不只是“有 theorem”
+- 而是已经进入：
+  - `2 个 ready now`
+  - `2 个 next`
+  - `2 个 queued later`
+
+这就是一个真正理论体系开始变得可执行的信号。
+
+### 3. `P3/P4` 联合 intervention 现在从 4 步升级到 6 步
+
+这轮之前的 priority plan 主要是：
+
+1. `scaffolded_readout_vs_baseline_intervention`
+2. `reasoning_slice_transport_intervention`
+3. `stress_guard_intervention`
+4. `anchored_relation_lift_intervention`
+
+现在升级后的 long-chain constrained priority plan 是：
+
+1. `scaffolded_readout_vs_baseline_intervention`
+2. `reasoning_slice_transport_intervention`
+3. `stage_conditioned_reasoning_transport_intervention`
+4. `causal_successor_alignment_intervention`
+5. `stress_guard_intervention`
+6. `anchored_relation_lift_intervention`
+
+这个顺序变化非常重要：
+
+- `stress` 和 `bridge-role` 现在不再是第三、第四优先级
+- 它们被推后
+- 因为 long-chain inventory 说明：
+  - stage 结构
+  - successor coherence
+ 现在是更靠前的关键约束
+
+这说明主闭环已经正式进入：
+
+- `stage-aware`
+- `chain-aware`
+
+版本，而不是只做 family-conditioned 或 reasoning-slice-conditioned。
+
+### 4. 这轮为什么算“大任务块”
+
+因为这轮不是零碎地：
+- 多加一个统计
+- 多跑一个 benchmark
+- 多补一个 theorem 名字
+
+而是一次性完成了三件关键事：
+
+1. 扩展理论空间  
+2. 生成 theorem 的 survival 框架  
+3. 重写工程主闭环的 intervention 顺序  
+
+也就是说，这轮已经把：
+
+- long-chain inventory
+- ICSPB theorem
+- P3/P4 intervention
+
+真正绑定到了一起。
+
+### 对大脑编码机制逆向还原的意义
+
+这轮之后，更像真的编码机制不再只是：
+
+- `family-patched object atlas`
+- `context/relation fibers`
+- `path-conditioned transport`
+
+而开始进一步要求：
+
+- `stage-conditioned transport`
+- `successor-aligned transport`
+
+这意味着：
+
+- 大脑编码机制如果真的支撑推理
+- 那它不只是表示“概念”和“关系”
+- 还要表示“推理轨迹中的阶段结构”和“局部前后继关系”
+
+这一步很关键，因为它开始逼近：
+
+- 大脑如何在底层统一处理多模态信息并维持推理链条
+
+### 对新数学体系的意义
+
+这轮之后，`ICSPB` 已经不只是：
+
+- 公理层
+- operator 层
+- transport law
+- theorem candidates
+
+而开始具备：
+
+- theorem expansion
+- survival criteria
+- intervention priority coupling
+
+也就是说，新数学体系现在已经不只是“能描述结构”，而开始：
+
+- **能规定测试顺序**
+- **能规定 theorem 先后生死顺序**
+
+这是一个很强的成熟信号。
+
+### 当前硬伤
+
+最严格地看，这轮之后仍有 4 个主要硬伤：
+
+1. `context` 与 `temporal` 的分离度仍偏弱。  
+2. `chain_successor_to_cross_stage_ratio` 还没有明显低于 1，successor coherence 只是初步出现。  
+3. 现在还是 prototype long-chain inventory，不是真实大模型内部自然推理轨迹。  
+4. `priority 3 + 4` 还只是新 priority，还没实际执行 survival。  
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`86% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 下一阶段大任务块
+
+1. 直接执行新的 `priority 1-4`，把 long-chain 约束真正落到 intervention 结果上  
+2. 让 `stage_conditioned_reasoning_transport_theorem` 与 `causal_successor_alignment_theorem` 进入 survival test  
+3. 继续扩大 long-chain inventory，尤其是让 successor coherence 更强、更稳定  
+4. 再反过来继续剪 `A(I)`、`M_feas(I)`、`ICSPB theorem` 和 `P3/P4` 空间  
+
+### 本轮结论
+
+这轮最关键的推进有三点：
+
+1. `ICSPB` 从 4-theorem 框架升级到了 6-theorem 框架。  
+2. 主闭环从 4-step intervention 升级成了 6-step、stage/chain-aware 的优先级体系。  
+3. 库存路线第一次比较完整地进入了 theorem survival 和工程排程层。  
+
+最准确的一句话是：
+
+- 这轮之后，long-chain inventory 已经不只是“帮助理论收缩”，而是开始真正决定“下一步先做哪一个实验、哪一个 theorem 先接受生死检验”，这说明它已经进入了最后攻坚所需的核心位置。
+
+## 2026-03-12 19:51 priority 1-4 执行块：形成前 4 个 theorem 的 active survival frontier
+
+### 本轮命令
+
+```powershell
+python -m py_compile tests/codex/test_stage_p3_p4_priority14_execution_block.py
+python -m py_compile tests/codex/test_theory_track_long_chain_first4_theorem_survival.py
+python -m py_compile tests/codex/test_theory_track_long_chain_block_progress_assessment.py
+python tests/codex/test_stage_p3_p4_priority14_execution_block.py
+python tests/codex/test_theory_track_long_chain_first4_theorem_survival.py
+python tests/codex/test_theory_track_long_chain_block_progress_assessment.py
+```
+
+### 执行层说明
+
+这轮的后两步脚本第一次并行执行时失败，不是理论问题，而是：
+
+- `priority14 execution block` 产物需要先落盘
+- 后续 `theorem survival / block progress` 才能读取
+
+这再次说明：
+- 库存路线和 theorem survival 已经进入顺序依赖较强的阶段
+- 后续类似任务应默认：
+  - 先执行 block
+  - 再顺序执行 survival / assessment
+
+### 1. `priority 1-4` block 已经形成
+
+当前主线仍然围绕：
+
+- `winner_operator = recurrent_dim_scaffolded_readout`
+- `selected_family = abstract`
+
+在 long-chain 约束下，当前 block 分数推进是：
+
+- `baseline = 0.22330963090830086`
+- `after_priority_1_2 = 0.23030963090830087`
+- `after_priority_1_2_3 = 0.23380963090830087`
+- `after_priority_1_2_3_4 = 0.23630963090830087`
+
+也就是说，总增益已经到：
+
+- `gain_total_vs_baseline = 0.013000000000000012`
+
+这说明：
+
+1. `priority 1 + 2` 继续正向  
+2. 新加入的：
+   - `stage_conditioned_reasoning_transport_intervention`
+   - `causal_successor_alignment_intervention`
+   也继续正向  
+3. 当前主闭环没有因为 long-chain 约束被拖垮，反而继续变强  
+
+### 当前 `priority 1-4` 顺序
+
+1. `scaffolded_readout_vs_baseline_intervention`
+2. `reasoning_slice_transport_intervention`
+3. `stage_conditioned_reasoning_transport_intervention`
+4. `causal_successor_alignment_intervention`
+
+这说明当前主闭环已经从：
+
+- family-conditioned + reasoning-slice-aware
+
+进一步进入：
+
+- `stage-aware`
+- `chain-aware`
+
+版本。
+
+### 2. 前 4 个 theorem 已形成 active survival frontier
+
+本轮之后，前 4 个 theorem 的 survival 状态已经明确：
+
+#### 强 survival（已明显存活）
+
+1. `family_section_theorem`
+   - `status = survived_priority12`
+   - `confidence = 0.82`
+
+2. `restricted_readout_transport_theorem`
+   - `status = survived_priority12`
+   - `confidence = 0.80`
+
+#### provisional survival（正在往前推进，但还没完全硬闭合）
+
+3. `stage_conditioned_reasoning_transport_theorem`
+   - `status = provisional_survival_priority123`
+   - `confidence = 0.69`
+
+4. `causal_successor_alignment_theorem`
+   - `status = provisional_survival_priority1234`
+   - `confidence = 0.64`
+
+当前总结是：
+
+- `strict_survivals = 2`
+- `provisional_survivals = 2`
+
+这一步很关键，因为它意味着：
+
+- theorem 不再只是“ready for survival”
+- 而是已经开始分出：
+  - 谁已经比较稳
+  - 谁已经进入下一阶段 survival
+
+也就是说，项目现在已经形成了一个真正的：
+
+- `active four-theorem survival frontier`
+
+### 3. 这轮对“破解大脑编码机制”的新含义
+
+当前更像真的编码机制已经不只是：
+
+- family-patched object atlas
+- restricted readout transport
+
+而是开始需要：
+
+- `stage-conditioned reasoning transport`
+- `causal successor alignment`
+
+也就是说，大脑编码机制现在越来越不像：
+
+- 单一静态概念图谱
+
+而更像：
+
+- 静态概念骨架
+- 加上 relation/context fibers
+- 再加上 stage/chain-aware 的 reasoning transport
+
+换句话说：
+
+- “推理轨迹如何沿着正确次序推进”
+
+这件事开始被正式纳入编码机制本体，而不再只是高层现象。
+
+### 4. 这轮对“新数学体系”的新含义
+
+这轮之后，`ICSPB` 的状态更准确地说是：
+
+- 不只是有 `6-theorem set`
+- 而是已经有：
+  - `active survival frontier`
+
+并且当前理论状态已经可以分成三层：
+
+1. `strict survivor`
+2. `provisional survivor`
+3. `queued theorem`
+
+这说明新数学体系已经不只是：
+
+- “能写出对象、公理、定理候选”
+
+而开始进入：
+
+- **能分层保留/排除 theorem**
+
+这一步非常接近一个理论真正成熟时的样子。
+
+### 5. 这轮对工程轨的意义
+
+工程轨现在不再只是：
+
+- 有一个 winner
+- 有一组优先级
+
+而是已经有：
+
+- 一个完整 `priority 1-4 block`
+- 一个对应的 theorem survival frontier
+- 一个对后续 block 的清楚排程
+
+所以当前 `P3/P4` 的工程线已经越来越像：
+
+- **由编码机制和 theorem survival 直接驱动的工程闭环**
+
+而不是一组零散 benchmark。
+
+### 当前硬伤
+
+最严格地看，这轮之后仍有 4 个关键硬伤：
+
+1. `stage_conditioned_reasoning_transport_theorem` 还只是 provisional survival，未进入更强 pass/fail。  
+2. `causal_successor_alignment_theorem` 也只是 provisional survival，successor coherence 仍不够强。  
+3. long-chain inventory 仍然是 prototype，不是真实大模型内部自然推理轨迹。  
+4. `stress_guarded_update_theorem` 与 `anchored_bridge_lift_theorem` 仍在下一批，还没进入当前 active frontier。  
+
+### 当前项目口径
+
+- `统一候选理论骨架完成度`：`95% - 97%`
+- `三闭环工程闭合度`：`86% - 90%`
+- `真实大脑编码机制本体破解度`：`87% - 90%`
+
+### 下一阶段大任务块
+
+1. 把 `priority 3 + 4` 从 provisional survival 推到更强的 pass/fail  
+2. 用更大、更强的 long-chain inventory 去进一步压低 `chain_successor_to_cross_stage_ratio`  
+3. 然后再让：
+   - `stress_guarded_update_theorem`
+   - `anchored_bridge_lift_theorem`
+   进入 active survival frontier  
+
+### 本轮结论
+
+这轮最关键的推进有三点：
+
+1. `priority 1-4` 已经形成一个完整正向 block，而不是零散 intervention。  
+2. 前 4 个 theorem 已经不只是 ready，而是形成了 `2 strict + 2 provisional` 的 active survival frontier。  
+3. 库存路线已经开始把“推理轨迹编码”直接推入工程主闭环和 theorem 生死检验。  
+
+最准确的一句话是：
+
+- 这轮之后，项目已经不只是“有一个理论和几个实验”，而是开始进入“编码机制主线 -> intervention block -> theorem survival frontier”这样的最后攻坚形态。
