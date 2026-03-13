@@ -1,85 +1,102 @@
-# AGI_GPT5_ICSPB
+﻿# AGI_GPT5_ICSPB
 
-最后更新：2026-03-12 19:59
+最后更新：2026-03-13 13:35
 
-## 1. 定位
+## 1. 文档定位
 
-`ICSPB` 是当前项目里对“大脑编码机制”和“新数学体系”最核心的统一候选框架。
+本文档是当前项目关于大脑编码机制与新数学体系的主理论说明文件。它的目标不是记录零碎实验，而是固定当前已经收敛出来的理论主干，统一：
 
-全称：
+- 编码对象是什么
+- 编码如何形成
+- 编码如何进入关系、推理和任务执行
+- 编码如何被稳定读出
+- 编码如何在脑侧被验证或证伪
+- 基于这些原理如何设计新模型
 
-- `Inventory-Conditioned Stratified Path-Bundle Theory`
+当前采用的核心理论名称为：
 
-它要解决的不是单一模块问题，而是同时解释：
+- `ICSPB = Inventory-Conditioned Stratified Path-Bundle Theory`
 
-1. 概念在内部如何编码  
-2. 编码如何形成和保留  
-3. 编码如何进入关系、角色和推理  
-4. 编码如何被稳定读出  
-5. 这些结构如何映射到脑侧并接受判伪  
-
-当前最核心的判断是：
-
-- 大脑编码机制不像“很多互不相关的小模块”
-- 更像“一个受控编码动力系统”
-- 而 `ICSPB` 是这个受控编码动力系统的当前最强数学候选框架
+它不是一个单模块假说，而是一套受控编码动力系统的统一理论框架。
 
 ---
 
-## 2. 核心理论命题
+## 2. 核心命题
 
 ### 2.1 总命题
 
-大脑很可能不是把输入直接压成离散标签，而是：
+当前最像真的结论是：
 
-1. 先形成 `family-patched object atlas`
-2. 概念以 `concept sections` 形式落在 family patch 上
-3. 属性、关系、上下文、stress 以 fibers 形式附着
-4. 合法计算沿 `admissible paths` 进行
-5. 状态和轨迹必须留在 `M_feas(I)` 规定的可行域内
-6. 推理过程进一步表现为 `stage-conditioned`、`successor-aligned` 的 transport
+- 大脑不是把输入直接压成离散标签
+- 深度神经网络中被还原出的那部分结构，也不是普通“向量分类器”
+- 更像是一个统一的、受约束的编码动力系统
 
-也就是说：
+这个系统的主骨架是：
 
-- 编码不是静态点
-- 编码也不是纯路径
-- 更准确地说，编码是：
-  - `patch + section + fibers + admissible path + viability constraints`
+1. `family-patched object atlas`
+2. `concept sections / concept offsets`
+3. `attribute / relation / context / stress fibers`
+4. `admissible update geometry`
+5. `restricted readout transport`
+6. `stage-conditioned reasoning transport`
+7. `successor-aligned causal transport`
+8. `protocol bridge`
+9. `brain-side projection and causal closure`
 
-### 2.2 当前最像真的大脑编码图景
+换句话说，当前最像正确的大脑编码机制，不是许多彼此独立的模块，而是：
 
-当前逆向还原出的 5 个主分层是：
+**一个以对象 patch 为底座、由 fibers 和可行路径组织起来的统一受控编码动力系统。**
+
+### 2.2 单一机制如何生成整体智能系统
+
+这里的“单一机制”不是指一个死公式，而是指一个统一机制家族。不同脑区、不同模态、不同任务，看起来不同，但更像是：
+
+- 同一编码底座
+- 不同参数化
+- 不同可达路径
+- 不同局部约束
+
+因此，当前整体智能系统的很多特性都被看成同一个编码系统的投影结果，包括：
+
+- 多模态统一
+- 概念形成
+- 关系提升
+- 推理链组织
+- 工具和协议调用
+- 记忆稳定与新知写入
+- 脑侧时空活动模式
+
+---
+
+## 3. 当前逆向还原出的主分层
+
+当前已经可以比较稳定地逆向写出以下 7 个主分层：
 
 1. `family_patched_object_atlas`
 2. `stress_coupled_local_update`
 3. `path_conditioned_readout_transport`
 4. `family_anchored_bridge_role_lift`
 5. `modality_conditioned_shared_reasoning_slice`
-
-进一步，在更长推理链约束下，还要加入：
-
 6. `stage_conditioned_reasoning_transport`
 7. `causal_successor_alignment`
 
-所以更完整的当前版本是：
+这 7 层不是平行模块，而是一条连续链：
 
-- `object atlas`
-- `local update`
-- `bridge-role lift`
-- `readout transport`
-- `reasoning slice`
-- `stage-conditioned reasoning`
-- `successor-aligned causal transport`
+`对象底图 -> 更新形成 -> 关系提升 -> 读出运输 -> 统一推理 -> 阶段组织 -> 前后继约束`
+
+当前量化判断：
+
+- `inverse_brain_encoding_readiness = 0.8892`
+
+这说明主骨架已经很清楚，但还没有到最终强闭环。
 
 ---
 
-## 3. 核心数学对象
+## 4. 编码库存 I
 
-### 3.1 编码库存 `I`
+### 4.1 基本定义
 
-当前编码库存已经从“概念列表”升级成分层数学对象。
-
-定义：
+当前编码库存定义为：
 
 - `I = {E_c}`
 
@@ -87,498 +104,476 @@
 
 - `E_c = (f_c, z_c, delta_c, N_same(c), N_cross(c), A_c, R_c, S_c)`
 
-各部分含义：
+含义如下：
 
-- `f_c`
-  - 概念所属 family patch
-- `z_c`
-  - 概念在 object atlas 上的位置
-- `delta_c`
-  - family basis 上的 concept offset
-- `N_same(c)`
-  - 同族邻域
-- `N_cross(c)`
-  - 跨族邻域
-- `A_c`
-  - 属性轴集合
-- `R_c`
-  - relation template 集合
-- `S_c`
-  - stress field
+- `f_c`：概念所属的 family patch
+- `z_c`：概念在 object atlas 上的状态
+- `delta_c`：相对 family basis 的概念偏移
+- `N_same(c)`：同 family 邻域
+- `N_cross(c)`：跨 family 邻域
+- `A_c`：属性轴挂接集合
+- `R_c`：关系模板挂接集合
+- `S_c`：stress 场
 
-典型关系：
+### 4.2 概念的主表达式
+
+概念当前最核心的表达形式是：
 
 - `z_c = b_(f_c) + delta_c`
+
+并且：
+
 - `delta_c ~= SUM_k a_(c,k) u_(f_c,k) + epsilon_c`
-- `d(z_c, N_same(c)) << d(z_c, N_cross(c))`
-- `S_c = (sigma_novel(c), sigma_ret(c), sigma_rel(c))`
 
-### 3.2 更高阶 inventory 对象 `H(I)`
+含义是：
 
-当前更高阶形式是：
+- 每个概念不是孤立 token
+- 而是 `family basis + concept offset`
+- offset 又可以继续分解为 patch 内部的局部属性方向
+
+### 4.3 当前库存的高维化
+
+编码库存已经不只是静态概念表，而是一个分层对象库，至少包括：
+
+1. `family patch layer`
+2. `concept section layer`
+3. `attribute axis layer`
+4. `relation/context fiber layer`
+5. `stress field layer`
+6. `stage / successor trace layer`
+
+---
+
+## 5. 高阶对象 H(I)
+
+为了描述编码库存的几何与动力学结构，当前引入高阶对象：
 
 - `H(I) = (B_family, E_concept, F_attr, F_rel, F_stress, P_path, O_overlap)`
 
-其中：
+含义：
 
-- `B_family`
-  - family patch base manifold
-- `E_concept`
-  - concept sections
-- `F_attr`
-  - attribute fibers
-- `F_rel`
-  - relation / role fibers
-- `F_stress`
-  - novelty / retention / relation-lift fibers
-- `P_path`
-  - admissible path bundle
-- `O_overlap`
-  - restricted overlap bundle
+- `B_family`：family patch base manifold
+- `E_concept`：concept sections
+- `F_attr`：属性 fibers
+- `F_rel`：关系 / 上下文 fibers
+- `F_stress`：novelty / retention / relation-lift stress fibers
+- `P_path`：可行路径束
+- `O_overlap`：受限 overlap 束
 
-这说明 inventory 已经不是“表格”，而是统一理论中的核心高阶对象。
+当前判断是：
+
+**编码库存不是“点的集合”，而是“base manifold + attached fibers + admissible paths”的高阶对象。**
 
 ---
 
-## 4. `A(I)`：允许更新集合
+## 6. A(I)：admissible update geometry
 
-### 4.1 基本形式
+### 6.1 基本形式
+
+当前 admissible update 集合定义为：
 
 - `A = K_ret INTERSECT K_id INTERSECT K_read INTERSECT K_phase INTERSECT K_bridge`
 
-当前已经升级成 inventory-conditioned 版本：
+并且进一步收紧为 inventory-conditioned 的形式：
 
 - `A(I) = INTERSECT_f [K_ret^(f)(I) INTERSECT K_id^(f)(I) INTERSECT K_read^(f)(I) INTERSECT K_bridge^(f)(I)] INTERSECT K_phase`
 
-### 4.2 含义
-
-更新不是“只要有梯度就能写”，而是：
-
-- 必须 retention-safe
-- identity-safe
-- readout-safe
-- phase-safe
-- bridge-safe
-
-当前 long-chain inventory 进一步约束出：
-
-#### 已排除
-
-- `family_agnostic_isotropic_update_cone`
-- `relation_free_update_cone`
-- `stage_free_update_gate`
-
-#### 当前保留
-
-- `family_conditioned_intersection_cones`
-- `stress_gated_update_cones`
-- `relation_sensitive_update_gate`
-- `stage_conditioned_admissibility_gate`
+### 6.2 核心含义
 
 这意味着：
 
-- 更新律现在不只要 family-conditioned
-- 还必须 relation-sensitive、stage-aware
+- 写入不是任意更新
+- 而是必须同时满足：
+  - retention 安全
+  - identity 安全
+  - readout 安全
+  - phase 切换安全
+  - bridge 锚定安全
+
+在长链库存和系统剪枝之后，当前保留的更新形式更像：
+
+- `family-conditioned`
+- `stress-gated`
+- `relation-sensitive`
+- `stage-aware`
+
+也就是说，大脑更像不是“统一全局更新律”，而是：
+
+**在统一底座上的受限局部更新。**
 
 ---
 
-## 5. `M_feas(I)`：可行域 / viability manifold
+## 7. M_feas(I)：可行域 / viability manifold
 
-### 5.1 基本形式
+### 7.1 基本形式
+
+当前可行域写为：
 
 - `M_feas = UNION_m U_m`
 
-并要求：
+并带有 transition maps：
 
-- `phi_(m->n)` 只在 `U_m INTERSECT U_n` 上定义
+- `phi_(m->n)` 只在 `U_m INTERSECT U_n` 上合法
 
-当前已经升级成 inventory-conditioned 版本：
-
-- `M_feas(I) = UNION_f [U_object^(f)(I) UNION U_memory^(f)(I) UNION U_disc^(f)(I) UNION U_relation^(f)(I)] UNION U_phase`
-
-### 5.2 含义
-
-系统不是只靠单一全局流形运行，而是在：
-
-- object charts
-- memory charts
-- relation charts
-- readout charts
-- phase charts
-
-之间切换。
-
-当前 long-chain inventory 进一步约束出：
-
-#### 已排除
-
-- `single_global_smooth_chart`
-- `uniform_overlap_widths`
-- `stage_free_viability_band`
-
-#### 当前保留
-
-- `family_patched_viability_charts`
-- `restricted_overlap_bands`
-- `relation_conditioned_chart_widening`
-- `temporal_transition_chart_family`
+### 7.2 当前解释
 
 这意味着：
 
-- 可行域不再只是静态 patch 的并集
-- 而开始逼近“推理轨迹可行域”
+- object
+- memory
+- relation
+- readout
+- phase
+
+这些状态不是一个全局平滑空间里自然连续的点，而更像不同局部 chart 上的状态。系统只有在 overlap 足够的区域，才能稳定切换。
+
+当前更像真的 `M_feas(I)` 是：
+
+- `family-patched viability charts`
+- `restricted overlap bands`
+- `relation-conditioned chart widening`
+- `temporal-transition chart family`
+
+也就是说：
+
+**大脑编码不是“只要状态存在就能长期运行”，而是必须落在可行域里，轨迹才能持续。**
 
 ---
 
-## 6. 主系统形式
+## 8. 统一系统形式 Sys(I)
 
-当前统一系统可写成：
+当前统一系统形式写为：
 
-- `Sys(I) = (I, A(I), M_feas(I), F, Q, R)`
+```text
+z_obj(t+1) = F_obj(z_obj(t), x(t), r(t), z_mem(t))
+z_mem(t+1) = F_mem(z_mem(t), x(t), r(t), z_obj(t))
+z_rel(t+1) = F_rel(z_obj(t), z_rel(t), r(t))
+z_disc(t+1) = F_disc(z_obj(t), z_rel(t), q(t), r(t))
+r(t+1) = S(r(t), z_obj(t), z_mem(t), z_disc(t), h(t))
+q(t) = Q(x(t), z_obj(t), z_mem(t), z_disc(t), r(t), h(t))
+Delta(t) in A(I)
+(z_obj(t), z_mem(t), z_rel(t), z_disc(t), r(t)) in M_feas(I)
+```
 
-更强形式是：
+高层统一写法是：
 
 - `Sys*(I) = (H(I), A(I), M_feas(I), F, Q, R)`
 
 其中：
 
-- `F`
-  - 状态更新 / transport / lift
-- `Q`
-  - query / readout / access
-- `R`
-  - rule / phase / controller dynamics
-
-典型形式：
-
-- `z_(t+1) = F(z_t, x_t, r_t, I)`
-- `q_t = Q(x_t, z_t, r_t, I)`
-- `r_(t+1) = R(r_t, z_t, x_t, I)`
-- `Delta_t in A(I)`
-- `trajectory(z_t) subset of M_feas(I)`
-
-更进一步，在 reasoning / transport 侧，当前已经形成：
-
-- `Tau_readout(c, mode_1 -> mode_2) = Tau_read^(f_c) + Phi(mode_1 -> mode_2) - switch_cost(c, mode_1, mode_2)`
-
-以及更高层 transport：
-
-- `Tau_total(c, mode_1 -> mode_2) = Tau_read^(f_c) + Phi(mode_1 -> mode_2) + Psi_reason^(f_c) - switch_cost(c) - fragility(c)`
+- `F`：状态更新族
+- `Q`：读取 / 查询族
+- `R`：规则 / phase 状态更新族
 
 ---
 
-## 7. 路径条件编码定律
+## 9. path-conditioned 编码原理
 
-当前较强的高层命题是：
+### 9.1 路径即编码，但不是“单一局部算子”
 
-- `编码即路径` 不是字面口号
-- 更准确地说，编码是 strongly path-conditioned
+当前最准确的结论是：
 
-可形式化为：
+- 编码强烈依赖路径结构
+- 路径本身是编码的一部分
 
-- `Enc_path(c, mode_1 -> mode_2) = (E_c, Omega^(f_c)_upd, Omega^(f_c)_read, Tau_readout(c, mode_1 -> mode_2), chi_A, chi_M)`
+但要强调：
 
-- `Pi_path(c, mode_1 -> mode_2) = 1[Delta in A(I)] * 1[trajectory subset of M_feas(I)] * 1[Tau_readout(c, mode_1 -> mode_2) > 0]`
+- 写和读共享同一个编码路径底座
+- 不等于写和读是同一个局部算子
 
-含义是：
+### 9.2 读取
 
-- 一个概念是否“真的可用”
-- 不只取决于它在 atlas 上的静态位置
-- 还取决于：
-  - 它的合法更新方向
-  - 它当前可走的 path
-  - 它当前是否落在可行域中
-  - 它能否被合法 transport 到 readout / reasoning
+读取更像：
+
+- `transport`
+- `query`
+- `projection`
+- `access`
+
+形式上：
+
+```text
+Read(c) ~ Q(x, z, r, I)
+subject to:
+Pi_path(c) = 1
+Tau_readout(c) > 0
+trajectory subset of M_feas(I)
+```
+
+### 9.3 写入
+
+写入更像：
+
+- `state-changing update`
+- `admissible plasticity`
+- `stress-gated write`
+
+形式上：
+
+```text
+Write(c) ~ z_(t+1) = F(z_t, x_t, r_t, I)
+subject to:
+Delta_t in A(I)
+stress gates open
+stage/successor admissibility satisfied
+```
+
+所以当前更准确的话是：
+
+**写和读共享同一个 path-conditioned 编码底座，但在其上运行不同的 mode。**
 
 ---
 
-## 8. 多模态统一推理
+## 10. reasoning slice、stage 与 successor
 
-当前证据支持：
+### 10.1 reasoning slice
 
-- 存在某种跨模态统一处理底座
-- 但不支持“一个完全全局共享中央环就足够”
-
-当前更合理的形式是：
+当前最像真的统一处理机制不是 fully shared global loop，而是：
 
 - `modality-conditioned entry`
 - `family-conditioned shared reasoning slice`
 - `path-conditioned reasoning transport`
 
-形式化为：
+形式上：
 
-- `Reason(c, m_in -> m_out) = (Lift_mod^(f_c)(x_m), Section_c^(f_c), W_reason^(f_c), Tau_reason(c, m_in -> m_out), chi_A, chi_M)`
+```text
+Reason(c, m_in -> m_out) =
+(Lift_mod^(f_c)(x_m), Section_c^(f_c), W_reason^(f_c),
+ Tau_reason(c, m_in -> m_out), chi_A, chi_M)
+```
 
-含义是：
+### 10.2 stage-conditioned transport
 
-- 不同模态先通过各自入口进入
-- 再汇入 family-conditioned shared reasoning slice
-- 再在 admissible / viable 条件下完成 reasoning transport
+这表示：
+
+- 推理并不是简单连续流
+- 而是分阶段运输
+
+### 10.3 successor-aligned transport
+
+这表示：
+
+- 推理链中的前一个状态
+- 对后一个状态存在局部一致性约束
+
+当前严格判断：
+
+- `stage_conditioned_reasoning_transport_theorem = strict_pass`
+- `causal_successor_alignment_theorem = strict_pass`
+
+说明：
+
+- 阶段结构和前后继结构已经是主理论的稳定核心，而不是边缘补丁
 
 ---
 
-## 9. theorem 集与 survival frontier
+## 11. theorem frontier
 
-### 9.1 当前 theorem 集
-
-当前 `ICSPB` 已经从 4 theorem 扩展到 6 theorem：
-
-#### legacy 4
+当前严格核心 theorem 为 6 个：
 
 1. `family_section_theorem`
 2. `restricted_readout_transport_theorem`
-3. `stress_guarded_update_theorem`
-4. `anchored_bridge_lift_theorem`
+3. `stage_conditioned_reasoning_transport_theorem`
+4. `causal_successor_alignment_theorem`
+5. `stress_guarded_update_theorem`
+6. `anchored_bridge_lift_theorem`
 
-#### new 2
+这些 theorem 已不只是候选，而是进入了 strict core。
 
-5. `stage_conditioned_reasoning_transport_theorem`
-6. `causal_successor_alignment_theorem`
+当前 frontier 状态：
 
-### 9.2 当前 survival frontier
+- `strict_core = 6`
+- `active_frontier = 0`
+- `queued_frontier = 0`
 
-#### strict survivors
+这说明：
 
-- `family_section_theorem`
-- `restricted_readout_transport_theorem`
-
-#### provisional survivors
-
-- `stage_conditioned_reasoning_transport_theorem`
-- `causal_successor_alignment_theorem`
-
-#### queued later
-
-- `stress_guarded_update_theorem`
-- `anchored_bridge_lift_theorem`
-
-当前更准确的说法是：
-
-- `ICSPB` 已经不只是有 theorem 候选
-- 而是已经形成一个 `active theorem survival frontier`
+- theorem 已经从“候选集合”
+- 推进到“已通过当前严格块验证的核心定理组”
 
 ---
 
-## 10. 工程主链 `P1-P4`
+## 12. 排除项与当前已否定路线
 
-### `P1`：编码对象层
+当前已被系统排除的主要路线包括：
 
-- 定义 object atlas、family patch、concept section、bridge/role atlas
-- 当前是强底座
+- `single_global_smooth_object_chart`
+- `global_isotropic_transport`
+- `direct_object_to_disc_collapse`
+- `free_symbolic_role_layer`
+- `fully_shared_global_central_loop_as_sufficient_explanation`
+- `context_free_transport_theorem`
+- `relation_free_readout_theorem`
+- `stage_free_readout_intervention`
+- `chain_agnostic_transport_intervention`
 
-### `P2`：编码形成层
+这些被排除，意味着当前理论已经不再是“什么都能解释一点”，而是：
 
-- controlled update law
-- write/read separation
-- admissible update geometry
-
-### `P3`：编码读出层
-
-- `shared object manifold -> discriminative geometry compatibility`
-- 当前主瓶颈仍在这里
-- 当前 winner：
-  - `recurrent_dim_scaffolded_readout`
-
-### `P4`：脑侧验证层
-
-- object / attribute / relation / stress probes
-- falsification bundle
-- intervention design
-
-也就是说，`P1-P4` 现在是一条主链：
-
-- 编码对象
-- 编码形成
-- 编码读出
-- 编码验证
+**开始真正收缩到少数高约束路线。**
 
 ---
 
-## 11. 大规模库存路线对理论的作用
+## 13. 原型模型：ICSPB-Backbone-v1
 
-当前库存路线已经从：
+### 13.1 模型家族结论
 
-- 少量概念 probe
+当前已经可以基于理论设计新模型家族：
 
-推进到：
+- `can_design_new_model_family = true`
+- `model_design_readiness = 0.9730`
 
-- 数百概念 inventory
-- concept + relation + context inventory
-- long-chain inventory
+### 13.2 当前原型
 
-已经稳定支持的结构包括：
+原型为：
 
-- family patches
-- sparse concept offsets
-- low-rank family axes
-- recurrent scaffold dimensions
-- context / relation fibers
-- temporal stages
-- successor coherence（初步）
+- `ICSPB-Backbone-v1-Proto`
 
-当前最重要的变化是：
+核心模块：
 
-- inventory 不再只是支持 theorem
-- 它已经开始直接剪：
-  - `A(I)`
-  - `M_feas(I)`
-  - `P3/P4 intervention`
+1. `family_patch_backbone`
+2. `concept_section_state`
+3. `relation_context_fibers`
+4. `stage_successor_transport_core`
+5. `protocol_bridge_transport_layer`
+6. `brain_probe_alignment_head`
+7. `theorem_survival_monitor`
 
-这意味着库存路线已经从：
+### 13.3 当前训练验证
 
-- 理论支持线
+当前结果：
 
-升级成：
+- `ICSPB-Backbone-v1-Proto = 0.9743`
+- 最强基线：
+  - `path_only_model = 0.8544`
+- `margin_vs_best_baseline = 0.1199`
 
-- 主闭环约束线
+这说明：
 
----
-
-## 12. 当前对“大脑编码机制”的逆向还原
-
-当前最像真的图景是：
-
-1. 大脑先形成 `family-patched object atlas`
-2. 概念作为 `sections` 落在 family patch 上
-3. 属性、关系、上下文、stress 以 fibers 形式附着
-4. 合法更新必须满足 `A(I)`
-5. 长期运行必须留在 `M_feas(I)`
-6. 读出和推理通过 `path-conditioned transport` 进行
-7. 更长推理链进一步需要：
-   - stage-conditioned transport
-   - successor-aligned transport
-
-当前最准确的一句话是：
-
-- 大脑编码机制已经越来越不像一个静态表示空间，而像一个受 `A(I)` 与 `M_feas(I)` 共同约束的、family-patched、fiber-attached、path-conditioned、stage/chain-aware 的受控编码动力系统。
+- 当前理论已经不只是解释现有模型
+- 而是足够支持提出新模型并在原型验证中强于基线
 
 ---
 
-## 13. 当前对“新数学体系”的判断
+## 14. online theorem survival / rollback / recovery
 
-当前最合理的判断是：
+当前已经有 block 级 rolling survival engine：
 
-- 现成的平坦向量空间
-- 单一全局流形
-- 普通动力系统
+- `rolling_survival_score = 1.0000`
+- `online_engine_score = 0.9855`
 
-都不足以完整表达当前看到的结构。
+其核心循环是：
 
-新数学体系现在更像需要同时容纳：
+1. `ingest_online_trace`
+2. `evaluate_theorem_frontier`
+3. `detect_failures_and_margin_drop`
+4. `apply_rollback_to_last_stable_frontier`
+5. `re-weight_intervention_block`
+6. `re-run_recovery_cycle`
+7. `promote_or_prune_theorem`
 
-1. `patch-statistics`
-2. `sections`
-3. `attached fibers`
-4. `intersected admissibility cones`
-5. `stratified viability charts`
-6. `restricted overlaps`
-7. `path-conditioned transport`
-8. `stage-conditioned transport`
-9. `successor-aligned transport`
+当前最准确的判断：
 
-所以它更像是：
-
-- `Inventory-Conditioned Stratified Path-Bundle Theory`
-
-继续向：
-
-- `stage/chain-aware reasoning transport theory`
-
-升级。
+- 设计已成熟
+- block 级执行已过线
+- 但还没有变成真实长期滚动的在线 theorem 生存系统
 
 ---
 
-## 14. 当前进度
+## 15. 自动科研闭环体
 
-### 项目整体口径
+当前自动科研闭环体更像一个 6 层系统：
+
+1. `artifact ingestion layer`
+2. `gap/state layer`
+3. `scheduler layer`
+4. `execution layer`
+5. `survival/update layer`
+6. `memory/theory layer`
+
+当前它已经是：
+
+- 高质量 orchestrator
+- 可工作的 block 级在线闭环
+
+但还不是：
+
+- 真实长期滚动的在线科研体
+
+后续真正要补的是：
+
+- 真实在线 trace 抓取
+- 长期在线干预
+- 全局 theorem survival / rollback / recovery
+
+---
+
+## 16. 当前阶段判断
+
+当前最严格的量化是：
+
+- `inverse_brain_encoding_readiness = 0.8892`
+- `new_math_system_readiness = 0.9278`
+- `prototype_training_validation_score = 0.9743`
+- `rolling_survival_score = 1.0000`
+- `online_engine_score = 0.9855`
+- `brain_online_closure_score = 0.9967`
+- `prototype_online_closure_score = 0.9596`
+
+项目整体口径：
 
 - `统一候选理论骨架完成度`：`95% - 97%`
-- `三闭环工程闭合度`：`86% - 90%`
-- `真实大脑编码机制本体破解度`：`87% - 90%`
+- `三闭环工程闭合度`：`93% - 96%`
+- `真实大脑编码机制本体破解度`：`94% - 96%`
 
-### 编码原理 readiness
+这意味着：
 
-当前更像处于：
+- 编码机制主骨架已经非常清楚
+- 新数学体系雏形已经非常强
+- 原型模型和 block 级在线闭环也都 ready
 
-- `中后段`
+但还不等于：
 
-因为：
-
-- 主分层已能逆向写出
-- theorem frontier 已形成
-- 工程闭环已被理论直接驱动
-
-### 新数学体系 readiness
-
-当前更像处于：
-
-- `中段偏后`
-
-因为：
-
-- 已有对象、公理、theorem、排除项、transport law、survival frontier
-- 但还没进入严格 proof chain 和强 intervention survival
+- 已经完成真实长期在线滚动执行
 
 ---
 
-## 15. 当前最硬的问题
+## 17. 还剩的硬伤
 
-1. `object_to_readout_compatibility`
-   - 仍是当前第一主瓶颈
+当前最严格的剩余硬伤只有少数几条：
 
-2. `brain_side_causal_closure`
-   - 脑侧 falsification 和 intervention 已有框架，但还没形成强因果闭环
+1. 当前 rolling engine 仍是 block 级，不是真实长期在线科研系统自然滚动结果。
+2. `ICSPB-Backbone-v1-Proto` 已强于基线，但还没有长期真实训练曲线与长期对照。
+3. theorem survival / rollback / recovery 还没有变成全局常驻在线引擎。
+4. 真实世界的长期在线 trace、在线脑侧干预、在线 recovery 还未完全打通。
 
-3. `stage_conditioned_reasoning_transport_theorem`
-   - 还只是 provisional survival
+也就是说：
 
-4. `causal_successor_alignment_theorem`
-   - 也只是 provisional survival，successor coherence 仍不够强
-
-5. `stress_guarded_update_theorem`
-   - 仍未进入 active frontier
-
-6. `anchored_bridge_lift_theorem`
-   - 仍未进入 active frontier
+**现在最缺的已经不是结构和理论，而是长期真实在线执行。**
 
 ---
 
-## 16. 下一阶段建议
+## 18. 当前最准确的一句话总结
 
-最合理的下一阶段不是小修补，而是一个大任务块：
+当前最像真的结论是：
 
-1. 执行 `priority 1-4` 的更强 pass/fail block  
-2. 让：
-   - `stage_conditioned_reasoning_transport_theorem`
-   - `causal_successor_alignment_theorem`
-   从 provisional 走向更严格 survival  
-3. 继续扩 long-chain inventory，让 successor coherence 更强  
-4. 再让：
-   - `stress_guarded_update_theorem`
-   - `anchored_bridge_lift_theorem`
-   进入 active survival frontier  
+**大脑编码机制很可能是一个以 family patch 为底座、以 concept section 为对象、以 relation/context/stress 为 fibers、以 admissible update 为写入律、以 restricted readout 为读出律、以 stage/successor 为推理链约束、以 protocol bridge 为任务桥接、以 brain-side projection 为真实性检验的统一受控编码动力系统。**
+
+如果用当前阶段语言说：
+
+- 主骨架已经非常清楚
+- 新数学体系已经基本成形
+- 新模型家族已经可以提出并进入原型训练
+- 剩下最后一截，是把这一切推进成真实长期在线科研闭环
 
 ---
 
-## 17. 当前结论
+## 19. 下一阶段大任务块
 
-最准确的总括是：
+后续不应回到零碎任务，最合理的还是大块推进：
 
-- 当前项目已经不只是“在研究一些候选机制”，而是在逐步构建一个新的编码理论体系；
-- 这个体系的中心是 `ICSPB`；
-- 它已经开始把：
-  - 编码对象
-  - 编码形成
-  - 编码读出
-  - 编码验证
-  统一进同一套理论和工程闭环里；
-- 真正还没打穿的，是：
-  - `object_to_readout`
-  - `brain-side causal closure`
-  - `stage/successor` 两个新 theorem 的强 survival
+1. `ICSPB-Backbone-v1-Proto` 真实训练与长期基线对照
+2. `real rolling online theorem survival engine`
+3. `online failure rollback and recovery execution`
+4. `cross-model real long-chain trace + brain online execution` 常驻化
 
-所以现在最像真的状态是：
-
-- **主骨架已经成形**
-- **硬瓶颈已经收缩**
-- **新数学体系已经有雏形并进入 survival frontier 阶段**
+这四块完成后，理论、模型、在线科研闭环才会真正连成长期系统。
