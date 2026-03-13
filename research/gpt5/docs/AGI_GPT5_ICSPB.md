@@ -842,3 +842,69 @@ R_roll(t+1) = Rollback(R_roll(t), S_th(t), failure_t)
 2. 还缺真实长期训练曲线和长期外部对照
 3. theorem survival / rollback / recovery 还没真正嵌成全局常驻在线引擎
 4. 真实外部自然 trace 与真实在线干预事件流还没完全接入训练过程
+
+### 25.7 原型实现状态
+
+当前已经有一个真实的 PyTorch 实现文件：
+
+- [icspb_backbone_v2_large_online.py](/d:/develop/TransformerLens-main/research/gpt5/code/icspb_backbone_v2_large_online.py)
+
+它已经覆盖了下面这些核心接口：
+
+1. `forward`
+   - 输出：
+     - `task_logits`
+     - `brain_probe`
+     - `successor_state`
+     - `protocol_state`
+     - `write_gate`
+     - `read_gate`
+     - `theorem_logits`
+
+2. `compute_loss`
+   - 统一计算：
+     - 任务损失
+     - 脑侧对齐损失
+     - theorem survival 损失
+
+3. `train_step`
+   - 标准离线训练步
+
+4. `online_update_step`
+   - 受约束的在线局部更新
+   - 当前只允许更新：
+     - `concept_section_memory_bank`
+     - `protocol_bridge`
+     - `protocol_field_bridge_bus`
+     - `stage_successor_transport_engine`
+
+5. `snapshot / rollback`
+   - 支持 theorem survival / recovery 所需的最小回退闭环
+
+6. `make_synthetic_batch`
+   - 支持快速原型验证与小规模训练烟雾测试
+
+当前代码级验证状态：
+
+- `smoke_pass = true`
+- `training_pass = true`
+- `online_update_pass = true`
+- `rollback_pass = true`
+- `implementation_ready = true`
+
+这意味着：
+
+- `ICSPB-Backbone-v2-LargeOnline`
+  已经不只是架构说明
+- 而是已经有一个可训练、可在线更新、可回退的原型实现基座
+
+更准确地说：
+
+- 现在已经从“理论足够支持设计”
+- 推进到“理论已经有可执行原型实现”
+
+但还没有推进到：
+
+- 长期真实训练曲线
+- 长期真实外部对照
+- 全局常驻 theorem survival 服务

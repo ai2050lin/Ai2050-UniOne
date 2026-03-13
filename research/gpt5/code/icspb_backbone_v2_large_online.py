@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, Tuple
+from typing import Dict, Tuple
 
 import torch
 import torch.nn as nn
@@ -84,8 +84,8 @@ class ICSPBBackboneV2LargeOnline(nn.Module):
     """
     基于 ICSPB + UCESD 的大型可训练/可持续学习原型。
 
-    这个原型不是完整工业模型，而是将当前理论落成一个可训练、可在线更新、
-    可做 theorem survival 监控的统一骨架。
+    这个原型不是完整工业模型，而是将当前理论落成一个
+    可训练、可在线更新、可做 theorem survival 监控的统一骨架。
     """
 
     def __init__(self, config: ICSPBLargeOnlineConfig):
@@ -140,8 +140,14 @@ class ICSPBBackboneV2LargeOnline(nn.Module):
         routed = self.relation_context_fiber_router(
             torch.cat([family, concept, relation, context], dim=-1)
         )
-        novelty = batch.get("novelty", torch.zeros_like(batch["family_ids"], dtype=family.dtype).unsqueeze(-1))
-        retention = batch.get("retention", torch.zeros_like(batch["family_ids"], dtype=family.dtype).unsqueeze(-1))
+        novelty = batch.get(
+            "novelty",
+            torch.zeros_like(batch["family_ids"], dtype=family.dtype).unsqueeze(-1),
+        )
+        retention = batch.get(
+            "retention",
+            torch.zeros_like(batch["family_ids"], dtype=family.dtype).unsqueeze(-1),
+        )
         if novelty.dim() == 1:
             novelty = novelty.unsqueeze(-1)
         if retention.dim() == 1:
@@ -162,7 +168,14 @@ class ICSPBBackboneV2LargeOnline(nn.Module):
         )
 
         theorem_input = torch.cat(
-            [protocol_state, successor, novelty, retention, gate_metrics["write_gate"], gate_metrics["read_gate"]],
+            [
+                protocol_state,
+                successor,
+                novelty,
+                retention,
+                gate_metrics["write_gate"],
+                gate_metrics["read_gate"],
+            ],
             dim=-1,
         )
         theorem_logits = self.theorem_survival_monitor(theorem_input)
@@ -261,10 +274,7 @@ class ICSPBBackboneV2LargeOnline(nn.Module):
         }
 
     def snapshot(self) -> None:
-        self._rollback_snapshot = {
-            k: v.detach().clone()
-            for k, v in self.state_dict().items()
-        }
+        self._rollback_snapshot = {k: v.detach().clone() for k, v in self.state_dict().items()}
 
     def rollback(self) -> bool:
         if self._rollback_snapshot is None:
@@ -280,7 +290,6 @@ class ICSPBBackboneV2LargeOnline(nn.Module):
         optimizer.step()
         return metrics
 
-    @torch.no_grad()
     def online_update_step(
         self,
         batch: Dict[str, torch.Tensor],
@@ -288,7 +297,7 @@ class ICSPBBackboneV2LargeOnline(nn.Module):
     ) -> Dict[str, float]:
         """
         持续学习更新：
-        - 只对概念 memory bank 与 protocol bridge 做小步受限更新
+        - 只对概念 memory bank、protocol bridge 和 stage-successor 核做小步受限更新
         - stress 高时自动收缩写入幅度
         """
         self.train()
@@ -297,7 +306,8 @@ class ICSPBBackboneV2LargeOnline(nn.Module):
         loss, metrics = self.compute_loss(batch)
         loss.backward()
 
-        write_gate = float(self.forward(batch)["write_gate"].mean().detach())
+        out = self.forward(batch)
+        write_gate = float(out["write_gate"].mean().detach())
         write_scale = max(self.config.guarded_write_floor, write_gate)
 
         allowed_prefixes = (
@@ -324,7 +334,10 @@ def make_synthetic_batch(
     g = torch.Generator().manual_seed(seed)
     family_ids = torch.randint(0, config.family_vocab_size, (batch_size,), generator=g)
     concept_ids = family_ids * (config.concept_vocab_size // config.family_vocab_size) + torch.randint(
-        0, max(1, config.concept_vocab_size // config.family_vocab_size), (batch_size,), generator=g
+        0,
+        max(1, config.concept_vocab_size // config.family_vocab_size),
+        (batch_size,),
+        generator=g,
     )
     relation_ids = torch.randint(0, config.relation_vocab_size, (batch_size,), generator=g)
     context_ids = torch.randint(0, config.context_vocab_size, (batch_size,), generator=g)
