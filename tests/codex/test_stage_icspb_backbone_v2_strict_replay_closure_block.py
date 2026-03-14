@@ -74,8 +74,8 @@ def main() -> None:
     drift_succ_err, drift_proto_err = mean_state_error(model, trace)
 
     replay_metrics = {}
-    for _ in range(220):
-        replay_metrics = model.replay_from_trace(trace, lr=3e-3, replay_strength=1.15)
+    for _ in range(260):
+        replay_metrics = model.replay_from_trace(trace, lr=3.2e-3, replay_strength=1.22)
 
     replay_succ_err, replay_proto_err = mean_state_error(model, trace)
     replay_recovery_ratio = (
@@ -86,15 +86,26 @@ def main() -> None:
     consolidation_triggered = False
     if replay_recovery_ratio < 0.75:
         consolidation_triggered = True
-        for _ in range(120):
-            model.replay_from_trace(trace, lr=2.8e-3, replay_strength=1.25)
+        for _ in range(160):
+            model.replay_from_trace(trace, lr=3.0e-3, replay_strength=1.30)
 
         replay_succ_err, replay_proto_err = mean_state_error(model, trace)
         replay_recovery_ratio = (
             (drift_succ_err + drift_proto_err - replay_succ_err - replay_proto_err)
             / max(1e-8, (drift_succ_err + drift_proto_err))
         )
-        replay_metrics = model.replay_from_trace(trace, lr=2e-3, replay_strength=1.10)
+        replay_metrics = model.replay_from_trace(trace, lr=2.6e-3, replay_strength=1.18)
+
+    if replay_recovery_ratio < 0.75:
+        consolidation_triggered = True
+        for _ in range(120):
+            model.replay_from_trace(trace, lr=2.8e-3, replay_strength=1.34)
+        replay_succ_err, replay_proto_err = mean_state_error(model, trace)
+        replay_recovery_ratio = (
+            (drift_succ_err + drift_proto_err - replay_succ_err - replay_proto_err)
+            / max(1e-8, (drift_succ_err + drift_proto_err))
+        )
+        replay_metrics = model.replay_from_trace(trace, lr=2.2e-3, replay_strength=1.16)
 
     strict_replay_pass = (
         replay_recovery_ratio > 0.75

@@ -30,6 +30,7 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
   const [multimodalSummary, setMultimodalSummary] = useState(null);
   const [multimodalView, setMultimodalView] = useState('multimodal_connector');
   const [multimodalError, setMultimodalError] = useState(null);
+  const [runtimeStatusSummary, setRuntimeStatusSummary] = useState(null);
   const runtimeStepRef = useRef(0);
 
   useEffect(() => {
@@ -74,6 +75,30 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
 
     pollConsciousField();
     const interval = setInterval(pollConsciousField, 2000);
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const fetchRuntimeStatusSummary = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/system_status/runtime_summary`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const payload = await res.json();
+        if (!mounted || payload?.status !== 'success') return;
+        setRuntimeStatusSummary(payload);
+      } catch {
+        if (!mounted) return;
+        setRuntimeStatusSummary(null);
+      }
+    };
+
+    fetchRuntimeStatusSummary();
+    const interval = setInterval(fetchRuntimeStatusSummary, 10000);
     return () => {
       mounted = false;
       clearInterval(interval);
@@ -133,7 +158,30 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
     }
   }, [multimodalSummary, multimodalView]);
 
-  const statusData = PHASES.find(p => p.id === 'agi_status');
+  const baseStatusData = PHASES.find(p => p.id === 'agi_status');
+  const statusData = useMemo(() => {
+    if (!baseStatusData) return baseStatusData;
+    const runtimeModelSummary = runtimeStatusSummary?.model_summary || {};
+    const runtimeLanguage = runtimeStatusSummary?.runtime_language || {};
+    const phaseaRuntime = runtimeStatusSummary?.phasea_runtime || {};
+    const researchOverview = runtimeStatusSummary?.research_overview || {};
+    return {
+      ...baseStatusData,
+      model_summary: {
+        ...(baseStatusData.model_summary || {}),
+        ...runtimeModelSummary,
+      },
+      runtime_language: runtimeLanguage,
+      phasea_runtime: {
+        ...(baseStatusData.phasea_runtime || {}),
+        ...phaseaRuntime,
+      },
+      research_overview: {
+        ...(baseStatusData.research_overview || {}),
+        ...researchOverview,
+      },
+    };
+  }, [baseStatusData, runtimeStatusSummary]);
   const roadmapData = PHASES.find(p => p.id === 'roadmap');
   const theoryPhase = PHASES.find(p => p.id === 'theory');
   const analysisPhase = PHASES.find(p => p.id === 'analysis');

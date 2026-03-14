@@ -480,6 +480,9 @@ class ICSPBBackboneV2LargeOnline(nn.Module):
                 "stage_successor_transport_engine": self._clone_module_state(self.stage_successor_transport_engine),
                 "protocol_field_bridge_bus": self._clone_module_state(self.protocol_field_bridge_bus),
                 "global_workspace": self._clone_module_state(self.global_workspace),
+                "consciousness_head": self._clone_module_state(self.consciousness_head),
+                "brain_probe_alignment_head": self._clone_module_state(self.brain_probe_alignment_head),
+                "task_head": self._clone_module_state(self.task_head),
                 "theorem_survival_monitor": self._clone_module_state(self.theorem_survival_monitor),
             },
         }
@@ -507,6 +510,7 @@ class ICSPBBackboneV2LargeOnline(nn.Module):
         out = self.forward(batch)
         targets = trace["targets"]
 
+        family_loss = F.mse_loss(out["family_state"], targets["family_state"])
         concept_loss = F.mse_loss(out["concept_state"], targets["concept_state"])
         relation_loss = F.mse_loss(out["relation_state"], targets["relation_state"])
         context_loss = F.mse_loss(out["context_state"], targets["context_state"])
@@ -543,21 +547,22 @@ class ICSPBBackboneV2LargeOnline(nn.Module):
         write_reg = F.mse_loss(out["write_gate"], write_target)
 
         total_loss = replay_strength * (
-            0.16 * concept_loss
+            0.10 * family_loss
+            + 0.16 * concept_loss
             + 0.10 * relation_loss
             + 0.10 * context_loss
-            + 0.12 * stage_seed_loss
-            + 0.12 * protocol_seed_loss
-            + 0.12 * routed_loss
+            + 0.14 * stage_seed_loss
+            + 0.14 * protocol_seed_loss
+            + 0.14 * routed_loss
             + 0.05 * visual_loss
             + 0.05 * audio_loss
             + 0.14 * fast_loss
             + 0.14 * slow_loss
-            + 0.24 * successor_loss
-            + 0.24 * protocol_loss
-            + 0.06 * consciousness_loss
-            + 0.05 * brain_loss
-            + 0.03 * task_loss
+            + 0.30 * successor_loss
+            + 0.30 * protocol_loss
+            + 0.08 * consciousness_loss
+            + 0.06 * brain_loss
+            + 0.05 * task_loss
             + 0.10 * theorem_loss
             + 0.08 * read_reg
             + 0.06 * write_reg
@@ -577,6 +582,8 @@ class ICSPBBackboneV2LargeOnline(nn.Module):
             "audio_encoder",
             "global_workspace",
             "consciousness_head",
+            "brain_probe_alignment_head",
+            "task_head",
             "theorem_survival_monitor",
         )
         with torch.no_grad():
@@ -687,7 +694,22 @@ class ICSPBBackboneV2LargeOnline(nn.Module):
                 self._blend_module_state(
                     self.global_workspace,
                     operator_state.get("global_workspace", {}),
-                    alpha=0.45,
+                    alpha=0.55,
+                )
+                self._blend_module_state(
+                    self.consciousness_head,
+                    operator_state.get("consciousness_head", {}),
+                    alpha=0.40,
+                )
+                self._blend_module_state(
+                    self.brain_probe_alignment_head,
+                    operator_state.get("brain_probe_alignment_head", {}),
+                    alpha=0.40,
+                )
+                self._blend_module_state(
+                    self.task_head,
+                    operator_state.get("task_head", {}),
+                    alpha=0.35,
                 )
                 self._blend_module_state(
                     self.theorem_survival_monitor,
@@ -725,6 +747,7 @@ class ICSPBBackboneV2LargeOnline(nn.Module):
         metrics.update(
             {
                 "replay_total_loss": float(total_loss.detach()),
+                "replay_family_loss": float(family_loss.detach()),
                 "replay_concept_loss": float(concept_loss.detach()),
                 "replay_relation_loss": float(relation_loss.detach()),
                 "replay_context_loss": float(context_loss.detach()),

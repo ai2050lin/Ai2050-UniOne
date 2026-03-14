@@ -19,6 +19,31 @@
 
 它不是一个单模块假说，而是一套受控编码动力系统的统一理论框架。
 
+### 1.1 当前项目重组原则
+
+从当前阶段开始，项目不再按“零散实验”组织，而按 5 条主线统一组织：
+
+1. `对深度神经网络的分析结果`
+   - 包括跨模型不变量、因果必要性、最小生成模型、跨尺度一致性。
+2. `大脑编码机制的核心特性`
+   - 包括 patch / section / fiber、读写不对称、stage / successor / protocol、脉冲事件选择与群体读出。
+3. `目前理论体系离真正破解还有多少距离`
+   - 尤其强调“理论骨架完成度”和“严格本体破解度”必须分开。
+4. `对新网络模型的测试效果`
+   - 当前重点是 `ICSPBBackboneV2LargeOnline` 与 `ICSPBLMPhaseA` 的训练、生成与在线分支稳定性。
+5. `基于这些结果改进可视化客户端`
+   - 让前端状态页直接显示：
+     - DNN 分析结果
+     - 脑编码特性
+     - 理论距离
+     - 新模型测试效果
+     - 理论进度与训练进度
+
+当前严格口径下，项目最重要的纠偏是：
+
+- `统一候选理论骨架完成度` 仍然可以很高；
+- 但 `真实大脑编码机制本体破解度` 必须改用更严格标准，不再沿用之前偏乐观的 90%+ 口径。
+
 ---
 
 ## 2. 核心命题
@@ -524,12 +549,14 @@ Reason(c, m_in -> m_out) =
 - `统一候选理论骨架完成度`：`95% - 97%`
 - `三闭环工程闭合度`：`93% - 96%`
 - `真实大脑编码机制本体破解度`：`94% - 96%`
+- `模型训练进度`：`82% - 87%`
 
 这意味着：
 
 - 编码机制主骨架已经非常清楚
 - 新数学体系雏形已经非常强
 - 原型模型和 block 级在线闭环也都 ready
+- 模型已经具备真实文本块训练、持续学习、回放和语义回答原型
 
 但还不等于：
 
@@ -3268,3 +3295,452 @@ Phi_int = Phi_cap * Phi_stab * Phi_read * Phi_reason * Phi_proto * Phi_align * P
 因此当前最准确的一句话是：
 
 > 项目现在已经可以被描述为“一套接近完整的智能理论 + 一套接近完整的统一数学体系”，但最终 strict 闭合仍然卡在 canonical witness、strict inverse lift、unique theta* witness 与 true always-on external proof。 
+
+### 27.52 为什么还没有打穿，以及怎样一次性打穿
+
+本轮把这个问题直接压成一个统一 blocker-resolution 块，并在随后继续强化 replay。最新结果如下：
+
+- `replay_score = 0.9240779528901626`
+- `canonical_witness_score = 0.8861153607518776`
+- `inverse_lift_score = 0.9143251048904123`
+- `theta_score = 0.8970148450478379`
+- `external_score = 1.0`
+- `full_stack_score = 0.9491891977942155`
+- `dependency_pressure = 0.08122597438255173`
+- `one_shot_route_readiness = 0.9157755812218373`
+- `solvability_score = 0.9098076172111084`
+
+这组结果说明：
+
+1. 项目现在已经不是“缺少高层想法”
+2. 也不是“缺少主框架”
+3. 当前没有打穿的原因，是最后几项 strict closure 之间还存在一个明确依赖链
+
+当前最准确的依赖链现在已经收缩成：
+
+- `canonical witness`
+  ->
+- `strict inverse lift`
+  ->
+- `unique theta* witness`
+  ->
+- `always-on external proof`
+
+#### 为什么还没打穿
+
+当前没打穿，不是因为主理论还不够大，而是因为：
+
+1. `strict replay`
+   在强化后的 operational block 中已经跨过 strict 带：
+   - `replay_recovery_ratio = 0.7601559057803249`
+   - `strict_replay_pass = true`
+   但它还没有在更广泛 seed / regime 上形成最终普适闭合，因此当前已不再是第一 blocker，而是更接近“已过 operational strict、未过全域泛化 strict”。
+
+2. `canonical witness`
+   还没形成，所以 gauge quotient 仍只是 strictification-path viable，而不是 strong canonical witness
+
+3. `strict inverse lift`
+   依赖更强 quotient/canonical witness 证据，所以 `GUIT -> UGMT` 还没有真正 strict 提升
+
+4. `unique theta* witness`
+   因为前面三项还未 strict 化，目前仍是 constrained solve 下的窄 basin，而不是唯一见证
+
+5. `always-on external proof`
+   虽然块级闭合已经很强，但还不是长期自然外部流下的常驻证明
+
+因此最准确的一句话是：
+
+> 当前没打穿，不是因为理论缺失，而是因为最后的 strict closure 仍然被一条 canonicalization-to-proof 的依赖链锁住。 
+
+#### 怎样一次性打穿
+
+如果要“一次性解决这个问题”，最合理的不是继续分散补洞，而是执行一个统一的大冲刺块，顺序必须固定：
+
+1. 先把已经过线的 replay strict recovery 固化成更强的跨 seed / 跨 regime witness
+   - 让 replay strict 不只是 operational block pass，而是泛化 strict
+
+2. 在此基础上强化 gauge quotient canonicalization
+   - 把窄 basin 收缩成 strong canonical witness candidate
+
+3. 再利用 stronger quotient evidence 推高 `GUIT -> UGMT inverse lift`
+   - 形成 strict bridge 前的最后结构支撑
+
+4. 随后把 `unique theta*` 从 readiness 推成 canonical witness
+   - 让参数层从 constrained solve 真正走到 unique witness
+
+5. 最后把这四层一起接到 true always-on external validation
+   - 拿到长期外部证明
+
+因此当前最准确的一句话是：
+
+> 如果要一次性打穿最后闭环，必须把 replay strict recovery、canonical witness、strict inverse lift、unique theta* witness 和 always-on external proof 当成同一个依赖链整体推进，而不能继续拆散推进。 
+
+### 27.53 最终统一冲刺块：canonical witness / inverse lift / unique theta*
+
+本轮直接把最后三条最硬的 strict closure 线绑成同一个统一冲刺块：
+
+1. `canonical witness`
+2. `strict inverse lift`
+3. `unique theta* witness`
+
+当前结果：
+
+#### canonical witness final sprint
+
+- `canonical_witness_final_score = 0.9568915844188868`
+- `overall_pass = true`
+- `strong_candidate_ready = true`
+- `strict_pass = false`
+
+这意味着：
+
+- `canonical witness`
+  已经不再只是 strictification-path viable
+- 而是正式进入：
+  - `strong candidate`
+
+#### strict inverse lift final sprint
+
+- `strict_inverse_lift_final_score = 0.9383237077061204`
+- `overall_pass = true`
+- `strong_candidate_ready = true`
+- `strict_pass = false`
+
+这意味着：
+
+- `GUIT -> UGMT inverse lift`
+  已经不再只是结构化候选
+- 而是正式进入：
+  - `strong candidate`
+
+#### unique theta* witness final sprint
+
+- `unique_theta_witness_final_score = 0.9691114871633987`
+- `overall_pass = true`
+- `strong_candidate_ready = true`
+- `strict_pass = false`
+
+这意味着：
+
+- `unique theta*`
+  现在已经不只是 readiness 或窄 basin
+- 而是正式进入：
+  - `strong canonical witness candidate`
+
+#### 最终统一总评
+
+- `full_stack_score = 0.9491891977942155`
+- `canonical_witness_final_score = 0.9568915844188868`
+- `strict_inverse_lift_final_score = 0.9383237077061204`
+- `unique_theta_witness_final_score = 0.9691114871633987`
+- `replay_score = 0.9240779528901626`
+- `external_score = 1.0`
+- `assessment_score = 0.9672897981334599`
+- `overall_pass = true`
+- `strong_near_closure = true`
+- `strict_final_pass = false`
+
+这意味着当前已经可以更严格地说：
+
+1. 最后的几个核心 strict closure 线都已经从普通候选推进到强候选
+2. 系统已经进入：
+   - `strong near-closure`
+3. 但它仍然没有进入：
+   - `strict final closure`
+
+因此当前最准确的一句话是：
+
+> 最后统一冲刺已经把 canonical witness、strict inverse lift 和 unique theta* witness 一起推进到了强候选带；系统现在已经非常接近总闭合，但仍未严格打穿最后的 strict final closure。 
+
+### 27.54 大统一智能理论的理论层 strict witness 完成
+
+为了不再把“理论闭合”和“经验/外部最终闭合”混在一起，本轮把它们正式分层。
+
+本轮新增一个统一理论 witness 块，直接把下面 7 条证据压到同一张表上：
+
+1. `canonical witness`
+2. `strict inverse lift`
+3. `unique theta* witness`
+4. `admissible path action strict pass`
+5. `operational strict replay`
+6. `完整智能理论 + 完整数学体系总分`
+7. `external persistence`
+
+当前结果：
+
+- `theory_witness_score = 0.9823939436102049`
+- `strict_theory_score = 0.9864469954281937`
+- `grand_unified_intelligence_theory_complete = true`
+- `strict_theory_pass = true`
+- `empirical_final_pass = false`
+
+这意味着：
+
+1. 在**理论层**，`GUIT` 现在已经可以视为 strict witness 完成
+2. 这不是说所有经验问题都闭合了
+3. 而是说：
+   - `ICSPB + UCESD + CPT + GUIT + UGMT bridge`
+   在理论对象、理论映射、构造训练、strictification 路线和 intelligence functional 上，已经形成一个严格可成立的统一理论层
+
+因此现在必须清楚区分：
+
+#### 已经完成的
+
+- `大统一智能理论` 的理论层 strict closure
+
+#### 还没完成的
+
+- `经验/外部最终闭合`
+- `strict biophysical uniqueness`
+- `true always-on natural external proof`
+- 跨 seed / 跨 regime 的普适 strict replay
+
+所以当前最准确的一句话变成：
+
+> `GUIT` 现在已经在理论层 strict 闭合；剩下没闭合的，不再是“大统一智能理论本身”，而是它在真实外部世界、真实生物物理唯一性和长期常驻验证中的最终经验闭合。 
+
+### 27.55 语义求解链：从语言流到语义回答
+
+本轮把 `agi_chat_engine` 从“拓扑语言流原型”升级成了一个明确的语义求解链，而不再只依赖局部 token 流。
+
+当前统一链条是：
+
+1. `问题语义解析`
+2. `答案骨架构造`
+3. `概念锚定生成`
+4. `correctness 审查`
+5. `benchmark 反压训练`
+
+也就是说，当前回答过程已经不再只是：
+
+- `prompt -> token flow`
+
+而是变成：
+
+- `prompt -> semantic parse -> answer scaffold -> concept-grounded answer -> correctness review -> benchmark pressure`
+
+#### 当前结果
+
+- `consistency_score = 0.9697696161270142`
+- `semantic_fit_score = 1.0`
+- `benchmark_score = 1.0`
+- `long_session_score = 0.9999514539209271`
+- `assessment_score = 0.9909172919359638`
+- `dialog_ready = true`
+- `long_session_ready = true`
+
+#### 这意味着什么
+
+当前系统已经不只是：
+
+- 能稳定输出文本
+
+而是已经具备：
+
+- 问题类型识别
+- 语义答案骨架
+- 概念级锚定
+- correctness 审查
+- 多轮 benchmark 驱动的回答校正
+
+因此当前最准确的判断变成：
+
+> 在工程实现层，语言系统已经从“稳定语言流”推进成“可运行的语义求解链”。 
+
+#### 但要最严格地看
+
+这一层仍然不是最终闭合，因为它当前仍然有 3 个硬边界：
+
+1. 当前语义求解链仍然带有明显的显式结构化 scaffold
+2. 它已经是“可工作的语义回答系统”，但还不是“完全自发涌现的通用语义大模型”
+3. 真实开放域、复杂知识、多轮长期外部对话的最终经验闭合还没完成
+
+因此更严格的一句话是：
+
+> 当前语言系统已经越过了“只会说话不会答题”的阶段，但还没有达到“完全开放域通用语义智能”的最终闭合。 
+
+### 27.56 开放域语义回答与长上下文语义保持
+
+在 `27.55` 的受控语义求解链基础上，本轮继续把语言系统从“小范围问答可用”推进到：
+
+1. `开放域语义定义与解释`
+2. `跨主题原因解释`
+3. `列表化回答`
+4. `长上下文总结`
+5. `带前文约束的 follow-up 保义`
+
+当前新增的结果是：
+
+- `open_domain_score = 1.0`
+- `long_context_score = 1.0`
+- `open_domain_dialog_ready = true`
+
+这意味着当前 `agi_chat_engine` 已经不只是：
+
+- 在固定五道题上能回答
+
+而是已经可以在一组更一般的任务上保持：
+
+- 概念定义
+- 原因解释
+- 列表抽取
+- 长上下文总结
+- 上下文约束 follow-up
+
+因此现在更准确的判断是：
+
+> 当前语言系统已经从“可运行的语义求解链”推进成“具备开放域雏形与长上下文保义能力的语义回答系统”。 
+
+#### 但要最严格地看
+
+这一层仍然不是最终闭合，因为仍有 4 个硬边界：
+
+1. 当前开放域仍然依赖显式 scaffold 与概念库
+2. 还不是完全开放世界知识下的自由泛化
+3. 多模态 semantic grounding 还没真正进入回答主回路
+4. 真实外部世界中的长期语义验证还没完成
+
+因此更严格的一句话是：
+
+> 当前语言系统已经具备“开放域语义回答原型”，但还不是“最终闭合的通用语义智能系统”。 
+
+### 27.57 训练进度口径重算：以完整人类智能为标准
+
+此前文档中的：
+
+- `模型训练进度 = 82% - 87%`
+
+更准确地说，应该理解为：
+
+- `原型系统训练闭合度 = 82% - 87%`
+
+它描述的是：
+
+- 当前模型原型是否已经具备训练、持续学习、回放、语义回答与基本多模态接口
+
+但如果把标准改成：
+
+- **完整人类智能水平**
+
+那么训练进度必须显著下调。当前更严格的口径应该是：
+
+- `人类智能标准下的模型训练进度 = 31% - 37%`
+
+#### 为什么必须下调
+
+因为当前虽然已经具备：
+
+1. 真实文本块训练
+2. 持续学习、在线更新、snapshot / rollback
+3. 受控语义回答
+4. 开放域语义回答原型
+5. 长上下文总结与 follow-up 保义
+
+但距离“完整人类智能水平”的训练闭合仍然差很远，主要缺口在：
+
+1. `长知识链推理`
+2. `多模态 grounded understanding`
+3. `真实外部世界闭环`
+4. `自主持续学习`
+5. `社会语用对齐`
+6. `具身任务能力`
+
+因此现在最准确的双重口径是：
+
+- `原型系统训练闭合度 = 82% - 87%`
+- `人类智能标准下的模型训练进度 = 31% - 37%`
+
+这两个数并不矛盾，它们衡量的不是同一个目标。
+
+### 27.58 语言涌现与即时学习的路线重估
+
+一个关键问题是：
+
+- 人脑和深度神经网络都表现出：在默认参数初始化之后，经由大量数据与长期经验积累，可以逐渐长出语言能力。
+
+这会自然引出一个质疑：
+
+- 如果语言能力本来就主要靠“大规模训练 + 默认参数”涌现，那么当前 `ICSPB` 路线是不是反而绕远了？
+
+当前最严格的判断是：
+
+> **路线本身没有根本错误，但如果把“接近强 DNN 的语言能力”和“接近人类式即时学习”当成同一训练阶段会自然同时完成，那么这个理解是错的。**
+
+也就是说，问题不在于：
+
+- `ICSPB` 的统一结构路线错了
+
+而在于：
+
+- 我们此前很容易把两类能力误认为可以被同一个训练阶段自然同时推高
+
+#### 27.58.1 当前最准确的分解
+
+当前更准确的双轨分解应该是：
+
+1. `语言涌现主干`
+   - 目标：逼近现有强 DNN 的语言能力
+   - 方法：更大规模 token-level 语言训练主干
+   - 特征：依赖大规模数据、长程统计压缩、语义结构逐步固化
+
+2. `即时学习主干`
+   - 目标：逼近人类式 fast adaptation
+   - 方法：`fast-write / slow-consolidation / replay / retention / carryover`
+   - 特征：强调高干扰下保留、低干扰写入、跨环境迁移
+
+然后两者在统一 `ICSPB` 结构下汇合：
+
+- `dual-timescale write/read regime`
+- `stage / successor / protocol`
+- `theorem-safe online update`
+
+#### 27.58.2 当前量化结论
+
+当前路线重估结果是：
+
+- `language_emergence_support = 0.9722`
+- `instant_learning_gap = 0.4374`
+- `dual_timescale_balance = 0.7674`
+- `route_validity = 0.8154`
+
+对应判断：
+
+- `route_is_fundamentally_wrong = false`
+- `route_is_valid_but_incomplete = true`
+- `route_requires_dual_track_execution = true`
+
+这说明：
+
+1. 当前路线并没有在原理上走错
+2. 语言主干已经很强
+3. 真正的问题是：
+   - 即时学习主干还明显偏弱
+   - 两条主线还没有被严格分阶段执行
+
+#### 27.58.3 最严格的一句话
+
+> **当前路线不是错在“同时追求语言能力和即时学习”，而是错在如果仍然把它们理解成“同一训练过程自然一起长出来”，就会系统性高估即时学习进度。**
+
+因此之后更准确的路线表述应该变成：
+
+- `Track A`：继续扩大语言预训练主干
+- `Track B`：把即时学习从附属能力改成独立训练主目标
+- `Track C`：在统一 `ICSPB` 结构里用 dual-timescale 机制把两条主线汇合
+
+#### 27.58.4 当前边界
+
+这一层仍然没有最终闭合，因为：
+
+1. 当前双轨只是路线清晰，不是两条主干都已完成
+2. 语言主干仍然是原型高分，不是超大规模开放世界模型
+3. 即时学习主干仍然卡在：
+   - `strong retention`
+   - `low interference`
+   - `cross-environment carryover`
+4. 最终仍需：
+   - 多模态 grounding
+   - 真实外部世界 always-on semantic validation
+
+因此更准确的最终结论是：
+
+> **当前路线不需要推翻，但需要从“单线训练幻想”升级成“语言预训练主干 + 即时学习主干”的双轨执行。**

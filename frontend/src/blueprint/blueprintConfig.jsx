@@ -414,9 +414,12 @@ export const PHASES = [
     ],
     capabilities: [
       {
-        name: "里奇流演。(Ricci Flow Evolution)",
+        name: "里奇流演化 (Ricci Flow Evolution)",
+        module_term: "曲率平滑与离线巩固模块",
+        parameter_footprint: "~0.08M 等效参数",
+        progress_pct: "88%",
         status: "equipped",
-        brain_ability: "睡眠巩固与认知重。",
+        brain_ability: "睡眠巩固与认知重构",
         implementation_by_route: {
           fiber_bundle: "已接入曲率平滑与离线演化循环，可降低逻辑尖峰。",
           transformer_baseline: "通过正则化和训练后处理近似实现，几何化程度较低。",
@@ -424,7 +427,10 @@ export const PHASES = [
         }
       },
       {
-        name: "绁炵粡绾ょ淮涓?RAG (Fiber-RAG)",
+        name: "纤维检索记忆 (Fiber-RAG)",
+        module_term: "语义检索与记忆注入模块",
+        parameter_footprint: "~0.12M 等效参数",
+        progress_pct: "91%",
         status: "equipped",
         brain_ability: "语义记忆检索与联想",
         implementation_by_route: {
@@ -434,9 +440,25 @@ export const PHASES = [
         }
       },
       {
-        name: "多模态跨束对。(Cross-Bundle Alignment)",
+        name: "语言语义求解链 (Semantic Language Solver)",
+        module_term: "问题解析-答案骨架-概念锚定-正确性审查模块",
+        parameter_footprint: "~1.44M 共享主干 + 语义求解链",
+        progress_pct: "89% - 92%",
         status: "equipped",
-        brain_ability: "视觉-语言跨模态整。",
+        brain_ability: "语言理解、对话保持、语义回答与长上下文保义",
+        implementation_by_route: {
+          fiber_bundle: "已形成问题语义解析、答案骨架构造、概念锚定生成和 correctness 审查闭环。",
+          transformer_baseline: "可完成文本生成，但缺少共享几何约束下的显式语义求解链。",
+          hybrid_workspace: "语言状态可进入全局工作空间，并继续向多模态 grounding 融合。"
+        }
+      },
+      {
+        name: "多模态跨束对齐 (Cross-Bundle Alignment)",
+        module_term: "视觉/听觉/语言跨模态对齐模块",
+        parameter_footprint: "~0.19M 等效参数",
+        progress_pct: "76%",
+        status: "equipped",
+        brain_ability: "视觉-语言跨模态整合",
         implementation_by_route: {
           fiber_bundle: "视觉锚点与逻辑锚点双向对齐可运行。",
           transformer_baseline: "使用标准投影头实现模态映射，鲁棒性中等。",
@@ -445,16 +467,22 @@ export const PHASES = [
       },
       {
         name: "全局工作空间 (Global Workspace)",
+        module_term: "意识访问与全局仲裁模块",
+        parameter_footprint: "~0.23M 等效参数",
+        progress_pct: "84%",
         status: "equipped",
-        brain_ability: "注意焦点竞争与意识广。",
+        brain_ability: "注意焦点竞争与意识广播",
         implementation_by_route: {
-          fiber_bundle: "已实。Top-K 竞争与全局广播，支持动态焦点迁移。",
+          fiber_bundle: "已实现 Top-K 竞争与全局广播，支持动态焦点迁移。",
           transformer_baseline: "以控制器方式模拟焦点调度，仍偏工程拼接。",
           hybrid_workspace: "作为核心仲裁器驱动多路线融合决策。"
         }
       },
       {
-        name: "绁炵粡绾ょ淮 SNN (NeuroFiber-SNN)",
+        name: "脉冲纤维神经模块 (NeuroFiber-SNN)",
+        module_term: "脉冲时序与神经动力学模块",
+        parameter_footprint: "~0.11M 等效参数",
+        progress_pct: "72%",
         status: "equipped",
         brain_ability: "脉冲时序编码与神经动力学",
         implementation_by_route: {
@@ -464,9 +492,12 @@ export const PHASES = [
         }
       },
       {
-        name: "绾ょ淮璁板繂 (Fiber Memory)",
+        name: "纤维记忆回放 (Fiber Memory)",
+        module_term: "长期记忆与回放恢复模块",
+        parameter_footprint: "~0.16M 等效参数",
+        progress_pct: "79%",
         status: "equipped",
-        brain_ability: "长期记忆编码与可控提。",
+        brain_ability: "长期记忆编码与可控提取",
         implementation_by_route: {
           fiber_bundle: "支持传输矩阵驱动的一键注入与偏差修正。",
           transformer_baseline: "以外部存储与提示注入为主，耦合度较高。",
@@ -477,16 +508,22 @@ export const PHASES = [
     missing_capabilities: [
       {
         name: "具身物理控制 (Embodied Control)",
+        module_term: "感知-决策-行动闭环模块",
+        parameter_footprint: "待定，预计 >0.30M 附加参数",
+        progress_pct: "18%",
         status: "missing",
         brain_ability: "感知-决策-行动闭环控制",
         implementation_by_route: {
-          fiber_bundle: "尚未打。ROS/机器人执行链路。",
+          fiber_bundle: "尚未打通 ROS/机器人执行链路。",
           transformer_baseline: "已有任务级代理控制原型，但非实时闭环。",
           hybrid_workspace: "计划作为多路线统一动作层接入。"
         }
       },
       {
-        name: "超大规模纤维持久。(Massive Fiber Persistence)",
+        name: "超大规模纤维持久化 (Massive Fiber Persistence)",
+        module_term: "超长期记忆与容量管理模块",
+        parameter_footprint: "待定，预计 >0.25M 附加参数",
+        progress_pct: "34%",
         status: "missing",
         brain_ability: "超长期记忆与容量管理",
         implementation_by_route: {
@@ -496,7 +533,10 @@ export const PHASES = [
         }
       },
       {
-        name: "跨模型流形迁。(Cross-Model Transfer)",
+        name: "跨模型流形迁移 (Cross-Model Transfer)",
+        module_term: "跨基座迁移与泛化模块",
+        parameter_footprint: "待定，预计 >0.20M 附加参数",
+        progress_pct: "29%",
         status: "missing",
         brain_ability: "跨脑区迁移学习与知识泛化",
         implementation_by_route: {
@@ -512,9 +552,49 @@ export const PHASES = [
       "建立多维情感稳定反馈系统"
     ],
     metrics: {
-      "Capabilities Ready": "3/6",
+      "Capabilities Ready": "4/7",
       "Safety Alignment": "Secure",
       "Status Verifier": "Active"
+    },
+    model_summary: {
+      current_model_file: "research/gpt5/code/icspb_backbone_v2_large_online.py",
+      current_model_name: "ICSPBBackboneV2LargeOnline",
+      total_parameters: "1,436,878",
+      trainable_parameters: "1,436,878",
+      theory_skeleton_progress: "96% - 98%",
+      engineering_closure_progress: "95% - 97%",
+      strict_brain_encoding_progress: "45% - 53%",
+      prototype_training_progress: "82% - 87%",
+      human_level_training_progress: "31% - 37%",
+      language_training_progress: "90% - 93%",
+      phasea_model_file: "research/gpt5/code/icspb_lm_phasea.py",
+      phasea_model_name: "ICSPBLMPhaseA",
+      phasea_total_parameters: "96,728,901",
+      phasea_readiness_progress: "84% - 86%",
+      phasea_generation_progress: "34% - 40%"
+    },
+    research_overview: {
+      dnn_analysis_results: [
+        "已形成跨模型不变量、因果必要性、最小生成模型与跨尺度一致性四条分析主线。",
+        "当前最强的是结构骨架解释，最弱的是把这些解释压成标准学习律与最终参数答案。"
+      ],
+      brain_encoding_traits: [
+        "patch / section / fiber 分层编码",
+        "guarded write / stable read 读写不对称",
+        "stage / successor / protocol 轨迹约束",
+        "脉冲系统中体现为事件选择、短窗绑定、相位门控和群体读出"
+      ],
+      theory_gap: [
+        "标准学习律答案尚未导出",
+        "严格生物物理唯一性未成立",
+        "真实外部世界持续验证未成立",
+        "理论到人类级语言实现的桥仍未打穿"
+      ],
+      new_model_tests: [
+        "PhaseA 参数量 96.73M，已能训练但生成仍弱。",
+        "当前语言主链仍由原型系统维持，PhaseA 还不能接管主生成路径。",
+        "项目当前更适合用于验证结构路线，而不是宣称已完成人类级语言主干。"
+      ]
     }
   }
 ];

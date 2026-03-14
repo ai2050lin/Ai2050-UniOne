@@ -119,7 +119,7 @@ const FiberNetPanel = ({ lang = 'zh' }) => {
     const msg = chatInput.trim(); setChatInput('');
     setMessages(prev => [...prev, { role: 'user', content: msg }]); setIsTyping(true);
     try {
-      const r = await axios.post(`${API_BASE}/api/agi_chat/generate`, { prompt: msg, max_tokens: 30 });
+      const r = await axios.post(`${API_BASE}/api/agi_chat/generate`, { prompt: msg, max_new_tokens: 30 });
       if (r.data?.generated_text) setMessages(prev => [...prev, { role: 'agi', content: r.data.generated_text }]);
     } catch (e) { setMessages(prev => [...prev, { role: 'sys', content: `Error: ${e.message}` }]); }
     finally { setIsTyping(false); }

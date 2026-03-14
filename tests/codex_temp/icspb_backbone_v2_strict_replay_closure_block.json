@@ -1,7 +1,7 @@
 {
   "meta": {
-    "timestamp": "2026-03-14 10:56:15",
-    "runtime_sec": 6.897603750228882,
+    "timestamp": "2026-03-14 14:02:14",
+    "runtime_sec": 17.029003143310547,
     "task_block": "Stage_ICSPB_Backbone_V2_Strict_Replay_Closure_Block"
   },
   "results": {
@@ -9,20 +9,20 @@
     "pre_interference_protocol_error": 0.0,
     "drift_successor_error": 6.041615962982178,
     "drift_protocol_error": 6.862056255340576,
-    "replay_successor_error": 2.1420278549194336,
-    "replay_protocol_error": 2.8774526119232178,
-    "replay_recovery_ratio": 0.6110037218928137,
+    "replay_successor_error": 3.0027363300323486,
+    "replay_protocol_error": 0.4067601263523102,
+    "replay_recovery_ratio": 0.735773166064828,
     "stable_read": 1.0,
     "guarded_write": 1.0,
     "theorem_survival": 1.0,
-    "replay_total_loss": 2.569857358932495,
-    "replay_read_gate_mean": 0.5903506875038147,
-    "replay_write_gate_mean": 0.15735627710819244,
-    "replay_theorem_prob": 0.7564077973365784,
+    "replay_total_loss": 3.952066421508789,
+    "replay_read_gate_mean": 0.6045908331871033,
+    "replay_write_gate_mean": 0.2083795666694641,
+    "replay_theorem_prob": 0.5743997693061829,
     "consolidation_triggered": true
   },
   "verdict": {
-    "strict_replay_ready": false,
+    "strict_replay_ready": true,
     "strict_replay_pass": false,
     "core_answer": "The replay mechanism now attempts to restore both latent structure and the gating regime, so that replay becomes closer to a strict legal operating mode rather than a loose structural recovery."
   }

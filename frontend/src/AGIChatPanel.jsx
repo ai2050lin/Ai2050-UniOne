@@ -10,7 +10,9 @@ export function AGIChatPanel({ onClose }) {
   const [input, setInput] = useState('');
   const [status, setStatus] = useState({
     is_ready: false,
-    status_msg: '正在检查语言能力服务...'
+    status_msg: '正在检查语言能力服务...',
+    model_family: '',
+    consistency_mode: '',
   });
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
@@ -18,12 +20,19 @@ export function AGIChatPanel({ onClose }) {
   const checkStatus = async () => {
     try {
       const res = await axios.get(`${API_BASE}/api/agi_chat/status`);
-      setStatus(res.data);
+      setStatus({
+        is_ready: !!res.data?.is_ready,
+        status_msg: res.data?.status_msg || '服务状态未知',
+        model_family: res.data?.model_family || '',
+        consistency_mode: res.data?.consistency_mode || '',
+      });
     } catch (error) {
       console.error(error);
       setStatus({
         is_ready: false,
-        status_msg: '语言能力服务离线'
+        status_msg: '语言能力服务离线',
+        model_family: '',
+        consistency_mode: '',
       });
     }
   };
@@ -51,11 +60,18 @@ export function AGIChatPanel({ onClose }) {
     try {
       const res = await axios.post(`${API_BASE}/api/agi_chat/generate`, {
         prompt: userMsg,
-        max_tokens: 64
+        max_new_tokens: 64,
       });
 
       if (res.data?.generated_text) {
-        setMessages(prev => [...prev, { role: 'agi', content: res.data.generated_text }]);
+        setMessages(prev => [
+          ...prev,
+          {
+            role: 'agi',
+            content: res.data.generated_text,
+            meta: res.data?.icspb_metrics || null,
+          },
+        ]);
       } else {
         setMessages(prev => [...prev, { role: 'sys', content: '模型没有返回有效内容。' }]);
       }
@@ -86,10 +102,10 @@ export function AGIChatPanel({ onClose }) {
         top: 80,
         right: 350,
         zIndex: 100,
-        width: '420px',
-        height: '540px',
+        width: '440px',
+        height: '560px',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
       }}
     >
       <div
@@ -100,19 +116,28 @@ export function AGIChatPanel({ onClose }) {
           fontSize: '12px',
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            color: status.is_ready ? '#10b981' : '#f59e0b'
-          }}
-        >
-          <Activity size={14} />
-          {status.status_msg}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              color: status.is_ready ? '#10b981' : '#f59e0b',
+            }}
+          >
+            <Activity size={14} />
+            {status.status_msg}
+          </div>
+          {(status.model_family || status.consistency_mode) && (
+            <div style={{ color: '#9ca3af', fontSize: '11px' }}>
+              {status.model_family}
+              {status.model_family && status.consistency_mode ? ' · ' : ''}
+              {status.consistency_mode}
+            </div>
+          )}
         </div>
         <button
           onClick={handleReset}
@@ -130,7 +155,7 @@ export function AGIChatPanel({ onClose }) {
           padding: '12px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '8px'
+          gap: '8px',
         }}
       >
         {messages.length === 0 && (
@@ -160,7 +185,7 @@ export function AGIChatPanel({ onClose }) {
               fontSize: '13px',
               lineHeight: '1.5',
               whiteSpace: 'pre-wrap',
-              wordBreak: 'break-word'
+              wordBreak: 'break-word',
             }}
           >
             <div
@@ -170,13 +195,18 @@ export function AGIChatPanel({ onClose }) {
                 marginBottom: '4px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '4px'
+                gap: '4px',
               }}
             >
               {message.role === 'user' ? <User size={10} /> : message.role === 'agi' ? <Bot size={10} /> : <Activity size={10} />}
               {message.role === 'user' ? '用户' : message.role === 'agi' ? '模型' : '系统'}
             </div>
             {message.content}
+            {message.meta && (
+              <div style={{ marginTop: '6px', fontSize: '10px', color: '#9ca3af' }}>
+                CA={Number(message.meta.conscious_access || 0).toFixed(3)} · TS={Number(message.meta.theorem_survival || 0).toFixed(3)}
+              </div>
+            )}
           </div>
         ))}
 
@@ -188,7 +218,7 @@ export function AGIChatPanel({ onClose }) {
               fontSize: '12px',
               display: 'flex',
               alignItems: 'center',
-              gap: '4px'
+              gap: '4px',
             }}
           >
             <Loader2 size={12} className="animate-spin" />
@@ -214,7 +244,7 @@ export function AGIChatPanel({ onClose }) {
             padding: '8px 12px',
             borderRadius: '4px',
             outline: 'none',
-            fontSize: '13px'
+            fontSize: '13px',
           }}
         />
         <button
@@ -229,7 +259,7 @@ export function AGIChatPanel({ onClose }) {
             cursor: status.is_ready && input.trim() && !isTyping ? 'pointer' : 'not-allowed',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}
         >
           <Send size={16} />
