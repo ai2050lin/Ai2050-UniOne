@@ -2606,6 +2606,20 @@ export default function App() {
         <Brain size={20} />
       </button>
 
+      {/* Language Capability Test Window Button */}
+      <button
+        onClick={() => togglePanelVisibility('agiChatPanel')}
+        style={{
+          ...navButtonStyle(panelVisibility.agiChatPanel, '#10b981'),
+          left: 120,
+          color: panelVisibility.agiChatPanel ? 'white' : '#9ef7cf',
+          boxShadow: panelVisibility.agiChatPanel ? '0 0 12px rgba(16, 185, 129, 0.35)' : 'none'
+        }}
+        title="语言能力测试"
+      >
+        <Bot size={20} />
+      </button>
+
       {/* Global Config Panel */}
 
       {/* Global Config Panel */}

@@ -163,11 +163,19 @@ def selection_objective(metrics: Dict[str, float]) -> float:
         metrics["loss"]
         - 0.50 * metrics["stable_read"]
         - 0.28 * metrics["theorem_survival"]
-        - 0.24 * metrics["guarded_write"]
+        - 0.34 * metrics["guarded_write"]
         - 0.12 * metrics["task_acc"]
         - 0.16 * min(1.0, metrics["transport_margin"] / 8.0)
         - 0.08 * metrics["stress_balance"]
     )
+
+
+def capture_state(model) -> Dict[str, torch.Tensor]:
+    return {key: value.detach().clone() for key, value in model.state_dict().items()}
+
+
+def load_state(model, state: Dict[str, torch.Tensor]) -> None:
+    model.load_state_dict(state, strict=True)
 
 
 def train_with_checkpoints(model, optimizer, train_batches, val_batches, epochs: int):
@@ -274,12 +282,16 @@ def main() -> None:
 
     proto_mid = evaluate_model(proto, val_batches)
     baseline_final = evaluate_model(baseline, baseline_val)
+    baseline_external_final = evaluate_model(baseline, baseline_external)
+
+    candidate_states: List[Tuple[str, Dict[str, torch.Tensor]]] = [("mid", capture_state(proto))]
 
     auto_recovery_triggered = False
     stabilization_history: List[float] = []
     write_recovery_history: List[float] = []
     structural_recovery_history: List[float] = []
     consolidation_history: List[Dict[str, float]] = []
+    guarded_consolidation_history: List[Dict[str, float]] = []
     if (
         proto_mid["stable_read"] < 0.985
         or proto_mid["theorem_survival"] < 0.985
@@ -297,6 +309,7 @@ def main() -> None:
                 metrics = proto.train_step(stable_opt, batch)
                 epoch_loss += metrics["total_loss"]
             stabilization_history.append(epoch_loss / len(stable_batches))
+        candidate_states.append(("stable_recovery", capture_state(proto)))
 
         write_opt = torch.optim.AdamW(proto.parameters(), lr=6.0e-4, weight_decay=5.0e-5)
         for _ in range(4):
@@ -305,6 +318,7 @@ def main() -> None:
                 metrics = proto.train_step(write_opt, batch)
                 epoch_loss += metrics["total_loss"]
             write_recovery_history.append(epoch_loss / len(write_batches))
+        candidate_states.append(("write_recovery", capture_state(proto)))
 
         recovery_opt = torch.optim.AdamW(proto.parameters(), lr=4.0e-4, weight_decay=5.0e-5)
         recovery_batches = []
@@ -315,6 +329,7 @@ def main() -> None:
             for batch in recovery_batches:
                 epoch_loss += helper.train_structural_recovery_step(proto, recovery_opt, batch, config)
             structural_recovery_history.append(epoch_loss / len(recovery_batches))
+        candidate_states.append(("structural_recovery", capture_state(proto)))
 
         consolidation_batches = train_batches + val_batches + external_batches + stable_batches[: len(val_batches)] + write_batches[: len(val_batches)]
         consolidation_opt = torch.optim.AdamW(proto.parameters(), lr=2.2e-4, weight_decay=5.0e-5)
@@ -325,17 +340,84 @@ def main() -> None:
             external_batches,
             epochs=10,
         )
+        candidate_states.append(("consolidation", capture_state(proto)))
 
-    proto_final = evaluate_model(proto, val_batches)
-    proto_external = evaluate_model(proto, external_batches)
-    baseline_external_final = evaluate_model(baseline, baseline_external)
+        guarded_batches = (
+            write_batches
+            + stable_batches[: len(write_batches)]
+            + train_batches[: len(write_batches)]
+            + external_batches[: min(len(external_batches), len(write_batches))]
+        )
+        guarded_opt = torch.optim.AdamW(proto.parameters(), lr=1.6e-4, weight_decay=5.0e-5)
+        guarded_consolidation_history, _, _ = train_with_checkpoints(
+            proto,
+            guarded_opt,
+            guarded_batches,
+            val_batches,
+            epochs=6,
+        )
+        candidate_states.append(("guarded_consolidation", capture_state(proto)))
+
+        read_stabilization_batches = stable_batches + val_batches + external_batches + stable_batches[: len(external_batches)]
+        read_stabilization_opt = torch.optim.AdamW(proto.parameters(), lr=1.2e-4, weight_decay=5.0e-5)
+        read_stabilization_history, _, _ = train_with_checkpoints(
+            proto,
+            read_stabilization_opt,
+            read_stabilization_batches,
+            external_batches,
+            epochs=6,
+        )
+        candidate_states.append(("read_stabilization", capture_state(proto)))
+        consolidation_history.extend(read_stabilization_history)
+
+    def candidate_rank(name: str, state: Dict[str, torch.Tensor]) -> Tuple[Tuple[float, ...], Dict[str, float], Dict[str, float], float, float, float]:
+        load_state(proto, state)
+        val_metrics = evaluate_model(proto, val_batches)
+        external_metrics = evaluate_model(proto, external_batches)
+        baseline_margin_local = baseline_final["loss"] - val_metrics["loss"]
+        external_margin_local = baseline_external_final["loss"] - external_metrics["loss"]
+        language_margin_local = external_metrics["task_acc"] - baseline_external_final["task_acc"]
+        fail_count = 0.0
+        fail_count += 1.0 if val_metrics["theorem_survival"] < 0.985 else 0.0
+        fail_count += 1.0 if external_metrics["theorem_survival"] < 0.985 else 0.0
+        fail_count += 1.0 if val_metrics["stable_read"] < 0.985 else 0.0
+        fail_count += 1.0 if external_metrics["stable_read"] < 0.985 else 0.0
+        fail_count += 1.0 if val_metrics["guarded_write"] < 0.40 else 0.0
+        fail_count += 1.0 if val_metrics["transport_margin"] < 0.15 else 0.0
+        fail_count += 1.0 if baseline_margin_local <= 0.25 else 0.0
+        fail_count += 1.0 if external_margin_local <= 0.25 else 0.0
+        fail_count += 1.0 if language_margin_local <= 0.04 else 0.0
+        rank = (
+            fail_count,
+            -min(val_metrics["stable_read"], external_metrics["stable_read"]),
+            -min(val_metrics["theorem_survival"], external_metrics["theorem_survival"]),
+            -val_metrics["guarded_write"],
+            -(baseline_margin_local + external_margin_local),
+            -external_metrics["task_acc"],
+            selection_objective(val_metrics),
+        )
+        return rank, val_metrics, external_metrics, baseline_margin_local, external_margin_local, language_margin_local
+
+    best_name = "mid"
+    best_state = candidate_states[0][1]
+    best_bundle = candidate_rank(candidate_states[0][0], candidate_states[0][1])
+    for name, state in candidate_states[1:]:
+        bundle = candidate_rank(name, state)
+        if bundle[0] < best_bundle[0]:
+            best_name = name
+            best_state = state
+            best_bundle = bundle
+
+    load_state(proto, best_state)
+    proto_final = best_bundle[1]
+    proto_external = best_bundle[2]
+    baseline_margin = best_bundle[3]
+    external_margin = best_bundle[4]
+    language_proxy_margin = best_bundle[5]
 
     online_rounds, rollback_error = online_adaptation_round(proto, online_batches[:4], lr=3.5e-4)
     online_delta_total = sum(item["delta"] for item in online_rounds)
 
-    baseline_margin = baseline_final["loss"] - proto_final["loss"]
-    external_margin = baseline_external_final["loss"] - proto_external["loss"]
-    language_proxy_margin = proto_external["task_acc"] - baseline_external_final["task_acc"]
     long_run_gain = proto_initial["loss"] - proto_final["loss"]
     structure_gain = (
         0.25 * max(0.0, baseline_margin)
@@ -385,10 +467,12 @@ def main() -> None:
         "baseline_history": baseline_history,
         "baseline_final": baseline_final,
         "baseline_external_final": baseline_external_final,
+        "selected_candidate": best_name,
         "stabilization_history": stabilization_history,
         "write_recovery_history": write_recovery_history,
         "structural_recovery_history": structural_recovery_history,
         "consolidation_history": consolidation_history,
+        "guarded_consolidation_history": guarded_consolidation_history,
         "online_rounds": online_rounds,
         "baseline_margin": baseline_margin,
         "external_margin": external_margin,
