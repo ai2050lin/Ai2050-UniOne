@@ -1,0 +1,20 @@
+{
+  "meta": {
+    "timestamp": "2026-03-14 12:06:36",
+    "runtime_sec": 0.0,
+    "task_block": "TheoryTrack_Replay_Recovery_Breakthrough_Assessment"
+  },
+  "headline_metrics": {
+    "replay_recovery_ratio": 0.7128193505703047,
+    "stable_read": 1.0,
+    "guarded_write": 1.0,
+    "theorem_survival": 1.0,
+    "closure_bonus": 0.06,
+    "assessment_score": 0.9004096752851525
+  },
+  "verdict": {
+    "overall_pass": true,
+    "strict_replay_pass": false,
+    "core_answer": "Replay closure is now judged by whether structural recovery approaches the strict band while gate legality remains closed."
+  }
+}

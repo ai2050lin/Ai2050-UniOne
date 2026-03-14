@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "timestamp": "2026-03-14 12:06:29",
+    "runtime_sec": 15.076859474182129,
+    "task_block": "Stage_ICSPB_Backbone_V2_Replay_Recovery_Breakthrough_Block"
+  },
+  "results": {
+    "drift_successor_error": 4.540680408477783,
+    "drift_protocol_error": 5.662698268890381,
+    "replay_successor_error": 2.4135749340057373,
+    "replay_protocol_error": 0.5166379809379578,
+    "replay_recovery_ratio": 0.7128193505703047,
+    "stable_read": 1.0,
+    "guarded_write": 1.0,
+    "theorem_survival": 1.0,
+    "replay_total_loss": 3.270352363586426,
+    "replay_read_gate_mean": 0.5976021885871887,
+    "replay_write_gate_mean": 0.19785632193088531,
+    "replay_theorem_prob": 0.5712340474128723
+  },
+  "verdict": {
+    "overall_pass": true,
+    "strict_replay_pass": false,
+    "core_answer": "This block targets the remaining replay gap directly by combining gate restoration, local canonical anchor restoration, and local operator restoration."
+  }
+}
