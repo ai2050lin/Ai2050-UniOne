@@ -8796,3 +8796,18 @@ ICSPB 意味着 AGI 的突破不再取决于“多试几个网络层”，而取
 **定义**：全系统范围内，每一个因果节点都能在**无摘要损失**的前提下，实现 100% 的**因果闭环**。
 - **为何混合导致失败**：当前的 Successor 是一边靠 Summary 指路（寻找大方向），一边靠 Direct Hook 补丁（填补细节）。这种两张皮的结构导致因果链条在交接处存在非连续性。
 - **结论**：只要系统还需要依赖摘要路径来辅助定位，或者还需要依赖直接钩子来强行纠偏，它就不是一个天然的、自洽的 **Dense Exact Closure**。真正的闭合要求系统在全稠密状态下，依然能像机械时钟一样发生完美的、可预测的因果啮合。
+
+---
+# Successor 路径混合与因果一致性深度剖析 (2026-03-14 15:45)
+
+## 1. 核心发现：Successor 的 不纯粹性
+目前 Successor 结构虽然在局部已可编排，但其执行路径仍混合了 **Direct Hook**（权重直接干预）和 **Summary/Inventory**（摘要/记录）路径。
+- **弊端**：这种混合导致它无法实现 **Dense Exact Closure**（稠密精确闭合）。
+- **因果风险**：在跨族（Cross-Family）传输时，非精确的摘要路径会引入累积误差，导致 amily_basis_prediction_score 在长程推理中发生崩塌。
+
+## 2. 改进方向：从 Support-Remap 转向连续算子
+- **跨族传输**：必须用真正的连续跨族算子替换当前的 support-remap。
+- **几何保持**：升级 concept_local_residual_auto_factorization，强制保留真实的 pairwise concept geometry，而非仅追求可解释性。
+
+## 3. 系统维护记录
+- **修复**：解决了可视化界面 AppleNeuron3DTab.jsx 中的变量引用硬伤，恢复了 AGI 深度分析仪表盘的完整性。

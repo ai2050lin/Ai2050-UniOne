@@ -77,6 +77,14 @@ def build_payload() -> Dict[str, Any]:
             "successor_parametric_score": float(successor_parametric),
             "full_restoration_score": float(full_restoration_score),
         },
+        "metric_lines_cn": [
+            f"（family基底参数恢复）family_basis_parametric_score = {family_basis_parametric:.4f}",
+            f"（concept offset参数恢复）concept_offset_parametric_score = {offset_parametric:.4f}",
+            f"（protocol场参数恢复）protocol_field_parametric_score = {protocol_parametric:.4f}",
+            f"（topology参数恢复）topology_parametric_score = {topology_parametric:.4f}",
+            f"（successor参数恢复）successor_parametric_score = {successor_parametric:.4f}",
+            f"（完整数学还原）full_restoration_score = {full_restoration_score:.4f}",
+        ],
         "strict_verdict": {
             "math_restoration_report_present": True,
             "final_math_restoration_closed": bool(
@@ -116,6 +124,8 @@ def test_dnn_math_restoration_status_block() -> None:
     assert metrics["full_restoration_score"] > 0.72
     assert verdict["math_restoration_report_present"] is True
     assert verdict["final_math_restoration_closed"] is False
+    assert len(payload["metric_lines_cn"]) >= 6
+    assert payload["metric_lines_cn"][0].startswith("（")
 
 
 def main() -> None:
@@ -131,7 +141,7 @@ def main() -> None:
     out_path = ROOT / args.json_out
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(json.dumps(payload["restoration_terms"], ensure_ascii=False, indent=2))
+    print("\n".join(payload["metric_lines_cn"]))
 
 
 if __name__ == "__main__":

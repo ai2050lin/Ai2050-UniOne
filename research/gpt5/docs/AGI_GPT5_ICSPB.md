@@ -1,6 +1,6 @@
 ﻿# AGI_GPT5_ICSPB
 
-最后更新：2026-03-14
+最后更新：2026-03-15
 
 ## 1. 文档定位
 
@@ -128,6 +128,45 @@
 - 高效即时学习是否会在同一结构里自然强出现。
 - 大模型尺度上的 canonical witness。
 
+### 3.4 当前 DNN 数学提取的真实进度
+
+到 `2026-03-15` 为止，DNN 侧已经不再只是“有一些分析结论”，而是形成了较明确的系统化提取与数学还原链。
+
+当前最重要的 DNN 侧量化是：
+
+- `systematic_mass_extraction_percent`：`78%`
+- `specific_math_bridge_percent`：`71%`
+- `exact_encoding_system_percent`：`68%`
+- `system_parametric_principle_percent`：`73%`
+- `exact_system_closure_percent`：`34%`
+
+这组数必须严格理解：
+
+1. `systematic_mass_extraction = 78%`
+   - 说明 DNN 侧结构提取已经从零散实验变成统一语料库；
+   - 但仍然没有到 dense exact neuron-level extraction。
+
+2. `specific_math_bridge = 71%`
+   - 说明具体概念细节的数学桥已经较强；
+   - 也就是 `family basis + bounded concept offset + contextual / protocol corrections` 这条桥已经成立为强候选；
+   - 但 `family -> specific exact closure` 仍然没有打穿。
+
+3. `exact_encoding_system = 68%`
+   - 说明系统级精确编码原理已经浮现为候选定理；
+   - 但还没有达到精确定理闭合。
+
+4. `system_parametric_principle = 73%`
+   - 说明“系统级参数原理”已经成形；
+   - 当前不是“完全不知道编码原理”，而是“已经知道大部分参数结构，但 exactness 还不足”。
+
+5. `exact_system_closure = 34%`
+   - 说明真正的“精确定理闭合”还很远；
+   - 当前最主要的系统短板已经不是 `basis / offset / contextual / protocol`，
+   - 而是：
+     - `dense exact evidence`
+     - `family-to-specific exact closure`
+     - `successor exact closure`
+
 ---
 
 ## 4. 大脑编码机制的核心特性
@@ -248,6 +287,60 @@
 - 不是任意状态都能稳定切换；
 - 只有在 restricted overlap 区域，系统才允许安全过渡。
 
+### 5.5 当前系统级精确编码候选定理
+
+到当前阶段，DNN 侧最准确的系统候选式已经不能再只写成：
+
+- `z_c = b_(f_c) + delta_c`
+
+这仍然是必要核心，但已经不足以描述“精确编码原理”的全貌。
+
+当前更准确的系统级候选式是：
+
+- `h(c, ctx, stage) ~= B_f + Delta_c + C_ctx(c, ctx) + P_proto(c, ctx, stage) + T_succ(c, ctx, stage) + epsilon`
+
+其中：
+
+- `B_f`
+  - `family basis / family patch`
+- `Delta_c`
+  - `bounded concept-specific offset`
+- `C_ctx`
+  - `contextual / relation-conditioned correction`
+- `P_proto`
+  - `protocol / task / bridge correction`
+- `T_succ`
+  - `stage-conditioned successor transport and continuation term`
+
+这条式子的严格含义是：
+
+1. `basis + offset` 是必要核心；
+2. 但真正的精确编码并不只靠 `basis + offset`；
+3. 还必须引入：
+   - `contextual correction`
+   - `protocol correction`
+   - `successor transport`
+
+当前系统级量化是：
+
+- `basis_offset_core_score = 0.8983`
+- `contextual_protocol_score = 0.9301`
+- `successor_system_score = 0.5024`
+- `evidence_exactness_score = 0.3238`
+- `system_parametric_score = 0.7282`
+- `exact_system_closure_score = 0.3424`
+
+最严格的解释是：
+
+- `basis / offset / contextual / protocol` 已经较强；
+- 当前真正拖后腿的是：
+  - `successor`
+  - `evidence exactness`
+
+因此，现在最准确的判断不是“编码原理已经闭合”，而是：
+
+**系统级参数原理已经浮现，但系统级精确定理闭合仍然明显不足。**
+
 ---
 
 ## 6. UCESD、CPT、GUIT、UGMT
@@ -334,6 +427,17 @@
 - `统一候选理论骨架完成度`：`96% - 98%`
 - `三闭环工程闭合度`：`95% - 97%`
 - `真实大脑编码机制本体破解度（严格口径）`：`45% - 53%`
+
+必须补充一个新的口径分离：
+
+- 上面的 `45% - 53%` 仍然是 **真实大脑编码机制本体破解度**；
+- 不能因为 DNN 侧的系统参数原理、specific 数学桥和系统候选定理变强，就把这个严格口径直接抬成接近完成。
+
+到当前阶段，更准确的并列口径应该是：
+
+- `DNN 侧系统级参数原理理解度`：`68% - 73%`
+- `DNN 侧系统级精确闭合度`：`34%`
+- `真实大脑编码机制本体破解度（严格口径）`：仍应保持 `45% - 53%`
 
 ### 7.3 当前还没闭合的核心问题
 
@@ -458,6 +562,9 @@
 3. `UCESD + CPT + GUIT + UGMT` 已经形成明确的理论分层。
 4. 新模型设计不再是拍脑袋，而是有统一理论约束。
 5. `BP 主干 + 受控在线分支` 是当前最合理路线。
+6. DNN 侧已经出现了系统级精确编码候选定理，而不再只是零散结构对象。
+7. `concept-specific` 数学桥已经较强成立：
+   - `specific concept structure ~= family basis + bounded offset + contextual / protocol corrections`
 
 ### 9.2 当前最大的硬伤
 
@@ -466,14 +573,17 @@
 1. 严格本体破解度远低于理论骨架完成度。
 2. 还没有“如果真的破解了就应自然导出的标准学习律答案”。
 3. `PhaseA` 规模虽已提升到近亿参数，但仍未形成可用语言生成。
-4. 即时学习还没有证明会在同一结构里自然强出现。
-5. 真实外部世界的长期验证没有完成。
+4. `family -> specific exact closure` 仍未打穿。
+5. `successor exact closure` 仍然是系统级最弱项。
+6. dense neuron-level exact evidence 仍显著落后于 row/signature-level 参数证据。
+7. 即时学习还没有证明会在同一结构里自然强出现。
+8. 真实外部世界的长期验证没有完成。
 
 ### 9.3 当前最准确的一句话
 
 当前项目最准确的一句话是：
 
-**我们已经得到了一套很强的统一理论骨架，足以解释 DNN 中的关键结构、较强地解释大脑编码的主特性，并指导新模型设计；但离“真正破解大脑编码机制并导出标准答案”仍有明显距离。**
+**我们已经得到了一套很强的统一理论骨架，并在 DNN 侧看到系统级精确编码候选定理；但 dense exact evidence、family-to-specific exact closure 和 successor exact closure 仍然不足，所以离“真正破解大脑编码机制并导出标准答案”仍有明显距离。**
 
 ---
 
@@ -482,10 +592,12 @@
 当前最值得继续的不是扩新概念，而是完成以下几个大任务块：
 
 1. `PhaseA` 正式 tokenizer + 更长程 token-level 预训练
-2. `标准学习律 / canonical answer` 强化块
-3. `language compression regime -> instant-learning efficiency regime` 统一验证块
-4. `strict biophysical uniqueness + always-on external validation` 统一冲刺块
-5. `DNN 分析 -> 脑编码特性 -> 理论距离 -> 新模型测试` 的研究汇总自动化
+2. `dense neuron-level exact evidence` 强化块
+3. `family-to-specific exact closure + successor exact closure` 统一冲刺块
+4. `标准学习律 / canonical answer` 强化块
+5. `language compression regime -> instant-learning efficiency regime` 统一验证块
+6. `strict biophysical uniqueness + always-on external validation` 统一冲刺块
+7. `DNN 分析 -> 脑编码特性 -> 理论距离 -> 新模型测试` 的研究汇总自动化
 
 ### 当前路线的最终判断
 
@@ -498,4 +610,3 @@
 - 剩下的关键是：
   - 把更大语言主干真正训起来；
   - 再验证高效即时学习是否会在同一结构里自然强出现。
-

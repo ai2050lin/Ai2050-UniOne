@@ -1,4 +1,4 @@
-﻿import { Html, Line, OrbitControls, PerspectiveCamera, Text } from '@react-three/drei';
+import { Html, Line, OrbitControls, PerspectiveCamera, Text } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Activity, ArrowRightLeft, BarChart2, CheckCircle, GitBranch, Network, Scale, Search, Sparkles, Target } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -206,6 +206,115 @@ const THEORY_OBJECT_MODE_MAP = {
 };
 const FEATURE_AXES = ['color', 'taste', 'shape', 'category'];
 
+const DNN_RESEARCH_SNAPSHOT = {
+  standardizedUnits: 1722,
+  exactRealFraction: 0.4884,
+  signatureRows: 194,
+  uniqueConcepts: 158,
+  fullRestorationScore: 0.8704,
+  successorTotalUnits: 687,
+  successorExactDenseUnits: 96,
+  successorProxyUnits: 558,
+  successorExactnessFraction: 0.3699,
+};
+
+const THEORY_OBJECT_RESEARCH_MAP = {
+  family_patch: {
+    summary: '当前主看 family patch 是否形成稳定局部图册，而不是松散聚类。',
+    metrics: [
+      { label: 'family fit strength', value: '0.7846' },
+      { label: 'wrong family margin', value: '0.7152' },
+      { label: '对应恢复项', value: 'family basis = 75.34%' },
+    ],
+    sceneHint: '3D 里重点看族群核心团块、共享底座和类别比较面板。',
+  },
+  concept_section: {
+    summary: '当前主看 concept section / offset 是否表现成局部连续偏移，而不是全空间乱跳。',
+    metrics: [
+      { label: 'concept offset', value: '98.77%' },
+      { label: 'specific rows', value: '194' },
+      { label: 'unique concepts', value: '158' },
+    ],
+    sceneHint: '3D 里重点看概念节点相对 family 核心的局部偏移和选中态明细。',
+  },
+  attribute_fiber: {
+    summary: '当前主看属性纤维是否沿稳定方向展开，并能支持组合性与维度切换。',
+    metrics: [
+      { label: 'topology score', value: '97.32%' },
+      { label: 'protocol rows', value: '24' },
+      { label: 'topology rows', value: '170' },
+    ],
+    sceneHint: '3D 里重点看 style / logic / syntax 节点簇和多维探针开关。',
+  },
+  relation_context_fiber: {
+    summary: '当前主看关系与语境纤维如何沿层间路径传播，并在上下文中重组。',
+    metrics: [
+      { label: 'context operator', value: '87.10%' },
+      { label: 'relation topology', value: '已进入真实语料库' },
+      { label: 'transport focus', value: 'cross-layer / counterfactual' },
+    ],
+    sceneHint: '3D 里重点看跨层链路、关系节点和 modeMetrics 中的传输指标。',
+  },
+  admissible_update: {
+    summary: '当前主看哪些局部更新是可容许的，既能写入又不破坏旧结构。',
+    metrics: [
+      { label: 'hard problem imports', value: '局部信用 / 变量绑定 / 最小回路' },
+      { label: '核心风险', value: '局部更新律尚未闭合' },
+      { label: '对应动作', value: 'causal / robustness / minimal circuit' },
+    ],
+    sceneHint: '3D 里重点看硬伤实验节点和因果干预后的局部热点。',
+  },
+  restricted_readout: {
+    summary: '当前主看输出是否主要依赖少数关键读出热点，而不是平均全网读出。',
+    metrics: [
+      { label: 'minimal circuit', value: '当前系统动作入口' },
+      { label: '读出热点', value: 'selected + route 节点' },
+      { label: '对应恢复项', value: 'protocol / readout 仍非最终定理' },
+    ],
+    sceneHint: '3D 里重点看 route 节点、选中热点和最小子回路切换。',
+  },
+  stage_conditioned_transport: {
+    summary: '当前主看不同阶段是否切换不同运输主路，而不是一路直推。',
+    metrics: [
+      { label: 'transport focus', value: 'dynamic prediction / cross-layer' },
+      { label: 'stage rows', value: '20' },
+      { label: 'episode-step rows', value: '1920' },
+    ],
+    sceneHint: '3D 里重点看动态预测和跨层传输下的层级进度与轨迹变化。',
+  },
+  successor_aligned_transport: {
+    summary: '当前主看 successor 是否已经 dense exact 闭合，这也是当前最大硬伤。',
+    metrics: [
+      { label: 'successor parametric', value: '70.22%' },
+      { label: 'exact dense', value: '96 / 687' },
+      { label: 'proxy units', value: '558' },
+    ],
+    sceneHint: '3D 里重点看动态预测链路；后续最值得做 exact vs proxy 双轨迹对照。',
+  },
+  protocol_bridge: {
+    summary: '当前主看内部编码如何进入 protocol field / bridge，而不是停在内部表征。',
+    metrics: [
+      { label: 'protocol field', value: '95.43%' },
+      { label: 'full restoration', value: '87.04%' },
+      { label: '主瓶颈', value: 'successor exactness 仍不足' },
+    ],
+    sceneHint: '3D 里重点看统一解码节点、route 节点与任务闭环线索。',
+  },
+};
+
+const ANALYSIS_MODE_RESEARCH_NOTES = {
+  static: '静态模式适合看 family patch、category compare 和全局编码骨架。',
+  dynamic_prediction: '动态预测模式最贴近 successor 与 stage-conditioned transport，是当前最值得盯的缺口。',
+  causal_intervention: '因果干预模式适合看 admissible update 与 restricted readout 的真实必要性。',
+  subspace_geometry: '子空间编码模式适合看 family basis、concept section 和 attribute fiber 的几何结构。',
+  feature_decomposition: '特征分解模式适合看 concept offset、属性轴和有效层的局部解释。',
+  cross_layer_transport: '跨层传输模式适合看 relation/context fiber 与 stage-conditioned transport。',
+  compositionality: '组合性模式适合看属性纤维是否真能稳定叠加。',
+  counterfactual: '反事实模式适合看 concept section 和 successor-aligned transport 的最小改动差分。',
+  robustness: '鲁棒模式适合看 admissible update 是否维持稳态。',
+  minimal_circuit: '最小子回路模式适合看 restricted readout 与 protocol bridge 的闭环依赖。',
+};
+
 const HARD_PROBLEM_EXPERIMENT_LABELS = {
   hard_problem_dynamic_binding_v1: '动态绑定',
   hard_problem_long_horizon_trace_v1: '长程因果链路',
@@ -243,6 +352,319 @@ function isBundleManifestPayload(data) {
 
 function isFourTasksManifestPayload(data) {
   return Boolean(data && data.suite_id === 'agi_four_tasks_suite_v1');
+}
+
+function formatPreviewValue(value) {
+  if (typeof value === 'number') {
+    if (!Number.isFinite(value)) {
+      return '-';
+    }
+    const abs = Math.abs(value);
+    if (abs >= 1000) {
+      return value.toFixed(0);
+    }
+    if (abs >= 1) {
+      return value.toFixed(4).replace(/\.?0+$/, '');
+    }
+    if (abs === 0) {
+      return '0';
+    }
+    return value.toExponential(3);
+  }
+  if (typeof value === 'boolean') {
+    return value ? 'true' : 'false';
+  }
+  if (value === null || value === undefined || value === '') {
+    return '-';
+  }
+  return String(value);
+}
+
+function safeJsonStringify(value) {
+  try {
+    return JSON.stringify(value, null, 2);
+  } catch (_err) {
+    return String(value ?? '');
+  }
+}
+
+function buildMetricRowsFromPaths(metrics, paths = [], fallbackLimit = 6) {
+  const resolved = paths
+    .map((path) => ({ path, raw: getMetricByPath(metrics, path) }))
+    .filter((item) => item.raw !== undefined);
+  if (resolved.length > 0) {
+    return resolved.slice(0, fallbackLimit).map((item) => ({
+      label: item.path,
+      value: formatPreviewValue(extractMetricScalar(item.raw)),
+    }));
+  }
+  return Object.entries(metrics || {})
+    .slice(0, fallbackLimit)
+    .map(([key, raw]) => ({
+      label: key,
+      value: formatPreviewValue(extractMetricScalar(raw)),
+    }));
+}
+
+function buildArtifactPreview(data, sourcePath = '') {
+  const rawJson = safeJsonStringify(data);
+  const lowerPath = String(sourcePath || '').toLowerCase();
+  const theoryFallback = 'family_patch';
+  const base = {
+    typeLabel: '未识别研究数据',
+    title: String(sourcePath || '未选择文件').replace(/\\/g, '/').split('/').pop() || '未选择文件',
+    subtitle: '当前文件没有命中既有 schema，保留原始 JSON 供直接检查。',
+    theoryObject: theoryFallback,
+    metricRows: [],
+    analysisLines: ['直接查看下方原始 JSON，确认字段结构后再决定如何映射到 3D 与理论层。'],
+    rawJson,
+  };
+
+  if (!data || typeof data !== 'object') {
+    return {
+      ...base,
+      subtitle: '尚未加载到可分析的数据对象。',
+      analysisLines: ['当前没有可展示的数据。'],
+    };
+  }
+
+  const hasMultidimProbe = Boolean(
+    data?.dimensions?.style
+    && data?.dimensions?.logic
+    && data?.dimensions?.syntax
+    && data?.cross_dimension
+  );
+  const hasMultidimCausal = Boolean(data?.suppression_matrix_mean && data?.diagonal_advantage);
+  const hasMultidimStability = Boolean(data?.aggregate?.diag_adv_style && data?.aggregate?.specificity_margin_style);
+
+  if (isUnifiedDecodePayload(data) || lowerPath.includes('unified_math_structure_decode')) {
+    const dims = ['style', 'logic', 'syntax'];
+    const metricRows = [
+      {
+        label: '假设通过率',
+        value: `${(toSafeNumber(data?.hypothesis_test?.pass_ratio, 0) * 100).toFixed(1)}%`,
+      },
+      {
+        label: '探针文件数',
+        value: formatPreviewValue(toSafeNumber(data?.axis_stability?.n_probe_files, 0)),
+      },
+      ...dims.map((dim) => ({
+        label: `${DIMENSION_LABELS[dim] || dim} profile cosine`,
+        value: formatPreviewValue(toSafeNumber(data?.axis_stability?.dimensions?.[dim]?.profile_cosine_mean, 0)),
+      })),
+    ];
+    return {
+      typeLabel: '统一解码',
+      title: '统一数学结构解码',
+      subtitle: '把 style / logic / syntax 的轴稳定性、因果分离和层级结构压成一个统一研究对象。',
+      theoryObject: 'protocol_bridge',
+      metricRows,
+      analysisLines: [
+        '数学重点是看三个维度是否能被同一组稳定坐标和层模式统一解释，而不是各自孤立成立。',
+        '如果 profile cosine 和 diagonal advantage 同时较高，说明统一坐标系不仅可读，而且具备真实因果分离。',
+        '它直接服务于 protocol bridge，因为这里讨论的是内部表征如何收束成统一、可读、可桥接的数学接口。',
+      ],
+      rawJson,
+    };
+  }
+
+  if (isBundleManifestPayload(data)) {
+    const snap = data?.metrics_snapshot || {};
+    return {
+      typeLabel: '阶段实验总清单',
+      title: 'AGI 阶段实验 bundle',
+      subtitle: '这是多项硬伤实验与统一解码的总入口，适合看阶段性闭环是否成立。',
+      theoryObject: 'stage_conditioned_transport',
+      metricRows: [
+        { label: 'seed', value: formatPreviewValue(toSafeNumber(data?.config?.seed, 0)) },
+        { label: '动态绑定稳定度', value: formatPreviewValue(toSafeNumber(snap?.dynamic_binding?.binding_stability_index, 0)) },
+        { label: '长程衰减', value: formatPreviewValue(toSafeNumber(snap?.long_horizon?.long_horizon_decay, 0)) },
+        { label: '局部信用选择性', value: formatPreviewValue(toSafeNumber(snap?.local_credit?.local_selectivity_mean, 0)) },
+        { label: '统一解码', value: formatPreviewValue(Boolean(data?.config?.run_unified_decoder)) },
+      ],
+      analysisLines: [
+        '这类清单不是单个现象，而是阶段运输链路是否能同时维持绑定、长程依赖、局部信用和统一解码。',
+        '若某个 snapshot 指标明显掉队，说明 stage-conditioned transport 还没有形成稳定主路，理论闭合仍然断裂。',
+        '它适合作为“阶段任务是否真正打通”的门槛数据，而不是只看单项实验高分。',
+      ],
+      rawJson,
+    };
+  }
+
+  if (isFourTasksManifestPayload(data)) {
+    return {
+      typeLabel: '四任务套件',
+      title: 'AGI 四任务验证',
+      subtitle: '变量绑定、最小回路、统一坐标、概念族并行四个任务共同约束内部编码是否可桥接。',
+      theoryObject: 'protocol_bridge',
+      metricRows: [
+        { label: 'all_success', value: formatPreviewValue(Boolean(data?.all_success)) },
+        { label: '任务数', value: formatPreviewValue(Object.keys(data?.return_codes || {}).length) },
+        { label: 'task1', value: formatPreviewValue(data?.return_codes?.task1) },
+        { label: 'task2', value: formatPreviewValue(data?.return_codes?.task2) },
+        { label: 'task3', value: formatPreviewValue(data?.return_codes?.task3) },
+        { label: 'task4', value: formatPreviewValue(data?.return_codes?.task4) },
+      ],
+      analysisLines: [
+        '四任务同时成功，才说明内部表征不只是局部可解释，而是能穿过多个验证面保持结构一致。',
+        '变量绑定和最小回路约束读出必要性，统一坐标和概念族并行约束表征是否可组合、可扩展。',
+        '它对应 protocol bridge，因为这里要回答的是“内部结构能否稳定投射到外部任务接口”。',
+      ],
+      rawJson,
+    };
+  }
+
+  if (isHardProblemResultPayload(data)) {
+    const expId = data?.experiment_id;
+    const expLabel = HARD_PROBLEM_EXPERIMENT_LABELS[expId] || expId;
+    const theoryObjectMap = {
+      hard_problem_dynamic_binding_v1: 'admissible_update',
+      hard_problem_long_horizon_trace_v1: 'stage_conditioned_transport',
+      hard_problem_local_credit_assignment_v1: 'admissible_update',
+      triplet_targeted_causal_scan_v1: 'relation_context_fiber',
+      triplet_targeted_multiseed_stability_v1: 'relation_context_fiber',
+      hard_problem_variable_binding_verification_v1: 'protocol_bridge',
+      minimal_causal_circuit_search_v1: 'restricted_readout',
+      unified_coordinate_system_test_v1: 'protocol_bridge',
+      concept_family_parallel_scale_v1: 'family_patch',
+    };
+    const preferredMetricPaths = {
+      hard_problem_dynamic_binding_v1: ['binding_stability_index', 'slot_collision_rate', 'binding_gap'],
+      hard_problem_long_horizon_trace_v1: ['long_horizon_decay', 'trace_recovery_ratio', 'path_consistency'],
+      hard_problem_local_credit_assignment_v1: ['local_selectivity_mean', 'credit_localization_score', 'credit_spread_ratio'],
+      triplet_targeted_causal_scan_v1: ['target_hit_rate', 'triplet_margin', 'causal_precision'],
+      triplet_targeted_multiseed_stability_v1: ['aggregate.target_hit_rate.mean', 'aggregate.triplet_margin.mean', 'aggregate.causal_precision.mean'],
+      hard_problem_variable_binding_verification_v1: ['binding_success_rate', 'swap_error_rate', 'role_consistency'],
+      minimal_causal_circuit_search_v1: ['summary.best_fidelity_ratio', 'summary.min_subset_size', 'summary.coverage_ratio'],
+      unified_coordinate_system_test_v1: ['alignment_score', 'axis_consistency', 'transfer_success_rate'],
+      concept_family_parallel_scale_v1: ['parallel_scale_score', 'family_margin', 'concept_separation'],
+    };
+    return {
+      typeLabel: '硬伤实验',
+      title: expLabel,
+      subtitle: '这是直接检验编码机制硬伤的实验结果，不是装饰性统计。',
+      theoryObject: theoryObjectMap[expId] || 'admissible_update',
+      metricRows: buildMetricRowsFromPaths(data?.metrics || {}, preferredMetricPaths[expId] || []),
+      analysisLines: [
+        '硬伤实验的意义在于强行追问当前编码机制在哪一步会断，而不是只展示已有结构。',
+        `当前文件对应实验：${expLabel}。如果关键指标不稳，说明相关理论对象还没有得到足够严格的神经级闭包。`,
+        '这类数据优先用于决定下一步补哪条数学机制链路，而不是直接当作最终证明。',
+      ],
+      rawJson,
+    };
+  }
+
+  if (hasMultidimProbe) {
+    return {
+      typeLabel: '多维编码探针',
+      title: 'Style / Logic / Syntax 探针',
+      subtitle: '用于观察三个维度是否形成稳定分离的子空间结构。',
+      theoryObject: 'attribute_fiber',
+      metricRows: [
+        { label: 'style top_k', value: formatPreviewValue(toSafeNumber(data?.dimensions?.style?.top_neurons?.length, 0)) },
+        { label: 'logic top_k', value: formatPreviewValue(toSafeNumber(data?.dimensions?.logic?.top_neurons?.length, 0)) },
+        { label: 'syntax top_k', value: formatPreviewValue(toSafeNumber(data?.dimensions?.syntax?.top_neurons?.length, 0)) },
+        { label: 'cross margin', value: formatPreviewValue(toSafeNumber(data?.cross_dimension?.margin_mean, 0)) },
+        { label: 'probe top_k', value: formatPreviewValue(toSafeNumber(data?.runtime_config?.top_k, 0)) },
+      ],
+      analysisLines: [
+        '数学上看的是属性纤维是否真沿相对稳定的方向展开，而不是把不同维度混进一个不可分的团块。',
+        '如果 cross-dimension margin、各维 top neurons 和后续因果消融结果能互相支持，说明子空间结构更接近真实机制。',
+        '这类数据优先服务 attribute fiber，也会影响 relation/context fiber 的后续解释。',
+      ],
+      rawJson,
+    };
+  }
+
+  if (hasMultidimCausal) {
+    return {
+      typeLabel: '多维因果消融',
+      title: '多维因果分离',
+      subtitle: '不是只看探针可分，而是看因果消融后对角优势是否成立。',
+      theoryObject: 'attribute_fiber',
+      metricRows: ['style', 'logic', 'syntax'].map((dim) => ({
+        label: `${DIMENSION_LABELS[dim] || dim} diagonal advantage`,
+        value: formatPreviewValue(toSafeNumber(data?.diagonal_advantage?.[dim], 0)),
+      })),
+      analysisLines: [
+        '对角优势高，意味着干预某个维度主要影响自身，而不是把全部维度一起打散。',
+        '这类结果比纯探针更接近真实数学结构，因为它包含因果必要性的信息。',
+        '它仍然属于 attribute fiber，但比普通探针更接近可用于证明的证据层。',
+      ],
+      rawJson,
+    };
+  }
+
+  if (hasMultidimStability) {
+    return {
+      typeLabel: '多 seed 稳定性',
+      title: '多维编码稳定性',
+      subtitle: '用于检验同一结构是否能跨 seed 稳定复现，而不是一次性偶然现象。',
+      theoryObject: 'attribute_fiber',
+      metricRows: [
+        { label: 'runs', value: formatPreviewValue(toSafeNumber(data?.n_runs, 0)) },
+        { label: 'style specificity', value: formatPreviewValue(toSafeNumber(data?.aggregate?.specificity_margin_style?.mean, 0)) },
+        { label: 'logic specificity', value: formatPreviewValue(toSafeNumber(data?.aggregate?.specificity_margin_logic?.mean, 0)) },
+        { label: 'syntax specificity', value: formatPreviewValue(toSafeNumber(data?.aggregate?.specificity_margin_syntax?.mean, 0)) },
+      ],
+      analysisLines: [
+        '稳定性是把“看起来成立”推进到“重复实验仍成立”的关键一步。',
+        '如果多 seed specificity 波动很大，说明当前提取到的维度可能还只是局部表象，不足以支持通用数学恢复。',
+        '这类数据适合作为 attribute fiber 与 protocol bridge 之间的中间证据层。',
+      ],
+      rawJson,
+    };
+  }
+
+  const nounRecords = Array.isArray(data?.noun_records) ? data.noun_records : [];
+  if (nounRecords.length > 0) {
+    const minimalRecords = Array.isArray(data?.causal_ablation?.minimal_circuit?.records)
+      ? data.causal_ablation.minimal_circuit.records
+      : [];
+    const counterfactualRecords = Array.isArray(data?.causal_ablation?.counterfactual_validation?.records)
+      ? data.causal_ablation.counterfactual_validation.records
+      : [];
+    const categoryCount = new Set(nounRecords.map((row) => String(row?.category || '未分类'))).size;
+    return {
+      typeLabel: '名词扫描',
+      title: '名词编码扫描',
+      subtitle: '直接展开名词、类别、共享神经元和最小回路，是手动查看 3D 映射最直观的入口。',
+      theoryObject: 'family_patch',
+      metricRows: [
+        { label: '名词总数', value: formatPreviewValue(nounRecords.length) },
+        { label: '类别数', value: formatPreviewValue(categoryCount) },
+        { label: '共享神经元', value: formatPreviewValue(toSafeNumber(data?.top_reused_neurons?.length, 0)) },
+        { label: '最小回路记录', value: formatPreviewValue(minimalRecords.length) },
+        { label: '反事实对', value: formatPreviewValue(counterfactualRecords.length) },
+        { label: 'd_ff', value: formatPreviewValue(toSafeNumber(data?.config?.d_ff, DFF)) },
+      ],
+      analysisLines: [
+        '名词扫描直接回答 family patch 和 concept section 是否已经形成稳定局部图册，而不是散点式相关性。',
+        '最小回路和反事实对把“哪些神经元在表示”推进到“哪些神经元是必要的”。',
+        '这类数据最适合和手动输入的 3D 概念观察联动，用来检验局部几何与因果必要性是否一致。',
+      ],
+      rawJson,
+    };
+  }
+
+  return base;
+}
+
+function shouldShowResearchAssetInTopRight(scanPreview, selectedScanPath = '') {
+  const normalizedPath = String(selectedScanPath || '').toLowerCase();
+  if (
+    normalizedPath.includes('multidim_encoding_probe')
+    || normalizedPath.includes('mass_noun')
+    || normalizedPath.includes('noun_scan')
+    || normalizedPath.includes('encoding_scan')
+  ) {
+    return true;
+  }
+
+  return scanPreview?.title === '名词编码扫描'
+    || scanPreview?.title === 'Style / Logic / Syntax 探针'
+    || scanPreview?.typeLabel === '名词扫描'
+    || scanPreview?.typeLabel === '多维编码探针';
 }
 
 const MODE_VISUALS = {
@@ -1638,6 +2060,10 @@ export function useAppleNeuronWorkspace() {
   const [scanImportLimit, setScanImportLimit] = useState(20);
   const [scanImportTopK, setScanImportTopK] = useState(IMPORTED_QUERY_NODE_MAX);
   const [scanImportSummary, setScanImportSummary] = useState(null);
+  const [selectedScanPath, setSelectedScanPath] = useState('');
+  const [scanPreviewData, setScanPreviewData] = useState(null);
+  const [scanPreviewLoading, setScanPreviewLoading] = useState(false);
+  const [scanPreviewError, setScanPreviewError] = useState('');
   const [scanMechanismData, setScanMechanismData] = useState(null);
   const [multidimProbeData, setMultidimProbeData] = useState(null);
   const [multidimCausalData, setMultidimCausalData] = useState(null);
@@ -1755,12 +2181,6 @@ export function useAppleNeuronWorkspace() {
     });
     return map;
   }, [analysisMode, currentTheoryObject, displayStrategy, manualDisplayGroups, nodes, selected?.id]);
-
-  useEffect(() => {
-    if (!availableModesForTheoryObject.includes(analysisMode)) {
-      setAnalysisMode(availableModesForTheoryObject[0] || 'static');
-    }
-  }, [analysisMode, availableModesForTheoryObject]);
 
   useEffect(() => {
     if (analysisMode !== 'dynamic_prediction') {
@@ -2492,6 +2912,43 @@ export function useAppleNeuronWorkspace() {
     return Array.isArray(arr) ? arr : [];
   }, [multidimActiveDimension, multidimProbeData]);
 
+  useEffect(() => {
+    let cancelled = false;
+    if (!selectedScanPath) {
+      setScanPreviewData(null);
+      setScanPreviewError('');
+      setScanPreviewLoading(false);
+      return undefined;
+    }
+    const loadPreview = async () => {
+      setScanPreviewLoading(true);
+      setScanPreviewError('');
+      try {
+        const res = await fetch(`${MAIN_API_BASE}/api/main/scan_file?path=${encodeURIComponent(selectedScanPath)}`);
+        const payload = await res.json();
+        if (!res.ok) {
+          throw new Error(payload?.detail || '读取研究资产失败');
+        }
+        if (!cancelled) {
+          setScanPreviewData(payload?.data || null);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setScanPreviewData(null);
+          setScanPreviewError(`研究资产预览失败: ${err?.message || err}`);
+        }
+      } finally {
+        if (!cancelled) {
+          setScanPreviewLoading(false);
+        }
+      }
+    };
+    loadPreview();
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedScanPath]);
+
   const summary = useMemo(() => {
     const fruitSpecific = keyNodes.filter((n) => n.role === 'fruitSpecific');
     const perFruit = Object.keys(FRUIT_COLORS).reduce((acc, fruit) => {
@@ -2581,6 +3038,11 @@ export function useAppleNeuronWorkspace() {
     scanImportTopK,
     setScanImportTopK,
     scanImportSummary,
+    selectedScanPath,
+    setSelectedScanPath,
+    scanPreviewData,
+    scanPreviewLoading,
+    scanPreviewError,
     multidimProbeData,
     multidimCausalData,
     hardProblemResults,
@@ -2731,11 +3193,68 @@ const textAreaStyle = {
 };
 
 const fixedFileControlWidth = 240;
-const formatScanOptionLabel = (fileMeta) => {
-  const rawName = String(fileMeta?.name || 'scan.json');
-  const shortName = rawName.length > 24 ? `${rawName.slice(0, 12)}...${rawName.slice(-9)}` : rawName;
+const inferScanOptionConcept = (fileMeta) => {
+  const lower = String(fileMeta?.name || fileMeta?.path || '').toLowerCase();
+  if (lower.includes('unified_math_structure_decode')) return '统一解码';
+  if (lower.includes('agi_research_stage_bundle_manifest')) return '阶段实验总清单';
+  if (lower.includes('agi_four_tasks_suite_manifest')) return '四任务总清单';
+  if (lower.includes('multidim_encoding_probe')) return '三维编码探针';
+  if (lower.includes('multidim_causal_ablation')) return '三维因果消融';
+  if (lower.includes('multidim_multiseed_stability')) return '三维多 Seed 稳定性';
+  if (lower.includes('minimal_causal_circuit_search')) return '最小因果子回路';
+  if (lower.includes('variable_binding_hard_verification')) return '变量绑定验证';
+  if (lower.includes('unified_coordinate_system_test')) return '统一坐标测试';
+  if (lower.includes('concept_family_parallel_scale')) return '概念族并行尺度';
+  if (lower.includes('dynamic_binding_stress_test')) return '动态绑定压力测试';
+  if (lower.includes('long_horizon_causal_trace_test')) return '长程因果链路';
+  if (lower.includes('local_credit_assignment_proxy_test')) return '局部信用代理测试';
+  if (lower.includes('triplet_targeted_causal_scan')) return '三元组定向因果';
+  if (lower.includes('triplet_targeted_multiseed_stability')) return '三元组多 Seed 稳定性';
+  if (lower.includes('mass_noun') || lower.includes('noun_scan') || lower.includes('encoding_scan')) return '名词编码扫描';
+  return String(fileMeta?.name || '研究资产');
+};
+
+const buildScanContentLabel = (data, fileMeta) => {
+  const nounRecords = Array.isArray(data?.noun_records) ? data.noun_records : [];
+  if (nounRecords.length > 0) {
+    const pairs = nounRecords
+      .slice(0, 2)
+      .map((row) => {
+        const noun = String(row?.noun || '').trim();
+        const category = String(row?.category || '未分类').trim() || '未分类';
+        if (!noun) {
+          return null;
+        }
+        return `${noun}-${category}`;
+      })
+      .filter(Boolean);
+    if (pairs.length > 0) {
+      return pairs.join(' / ');
+    }
+  }
+
+  if (data?.experiment_id && HARD_PROBLEM_EXPERIMENT_LABELS[data.experiment_id]) {
+    return HARD_PROBLEM_EXPERIMENT_LABELS[data.experiment_id];
+  }
+  if (data?.suite_id === 'agi_four_tasks_suite_v1') {
+    return '四任务验证';
+  }
+  if (data?.bundle_id === 'agi_research_stage_bundle_v1') {
+    return '阶段实验总清单';
+  }
+  if (isUnifiedDecodePayload(data)) {
+    return '风格-逻辑-语法';
+  }
+  if (data?.dimensions?.style && data?.dimensions?.logic && data?.dimensions?.syntax) {
+    return '风格-逻辑-语法';
+  }
+  return inferScanOptionConcept(fileMeta);
+};
+
+const formatScanOptionLabel = (fileMeta, contentLabel = '') => {
+  const conceptLabel = contentLabel || inferScanOptionConcept(fileMeta);
   const mtime = String(fileMeta?.mtime_iso || '').slice(0, 19).replace('T', ' ');
-  return mtime ? `${shortName} | ${mtime}` : shortName;
+  return mtime ? `${conceptLabel} | ${mtime}` : conceptLabel;
 };
 
 export function AppleNeuronEncodingInfoPanels({ workspace, compact = false }) {
@@ -2949,9 +3468,93 @@ export function AppleNeuronEncodingInfoPanels({ workspace, compact = false }) {
   );
 }
 
+export function AppleNeuronResearchAssetInfoPanel({ workspace, compact = false }) {
+  const selectedScanPath = workspace?.selectedScanPath || '';
+  const scanPreviewData = workspace?.scanPreviewData || null;
+  const scanPreviewLoading = workspace?.scanPreviewLoading || false;
+  const scanPreviewError = workspace?.scanPreviewError || '';
+  const analysisMode = workspace?.analysisMode || 'static';
+  const scanPreview = useMemo(
+    () => buildArtifactPreview(scanPreviewData, selectedScanPath),
+    [scanPreviewData, selectedScanPath]
+  );
+  const scanPreviewTheory = useMemo(
+    () => THEORY_OBJECT_RESEARCH_MAP[scanPreview?.theoryObject] || THEORY_OBJECT_RESEARCH_MAP.family_patch,
+    [scanPreview?.theoryObject]
+  );
+  const showInTopRight = shouldShowResearchAssetInTopRight(scanPreview, selectedScanPath);
+  const cardStyle = compact ? { ...panelCardStyle, padding: 10 } : panelCardStyle;
+
+  if (!showInTopRight) {
+    return null;
+  }
+
+  return (
+    <div style={cardStyle}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'baseline', marginBottom: 8 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff' }}>{`${scanPreview.typeLabel} | ${scanPreview.title}`}</div>
+        <div style={{ fontSize: 10, color: '#7ea2c9' }}>{scanPreviewLoading ? '预览加载中...' : '预览就绪'}</div>
+      </div>
+      <div style={{ fontSize: 11, color: '#9bb3de', lineHeight: 1.7 }}>{scanPreview.subtitle}</div>
+      {scanPreviewError ? (
+        <div style={{ marginTop: 8, fontSize: 11, color: '#ff9fb0' }}>{scanPreviewError}</div>
+      ) : null}
+
+      <div style={{ marginTop: 10, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 10, display: 'grid', gap: 6 }}>
+        <div style={{ fontSize: 12, color: '#e4f0ff', fontWeight: 700 }}>对应数学分析与理论</div>
+        <div style={{ fontSize: 11, color: '#9bb3de', lineHeight: 1.7 }}>
+          <div>{scanPreviewTheory.summary}</div>
+          <div>{`3D 关注点：${scanPreviewTheory.sceneHint}`}</div>
+          <div>{`当前动作说明：${ANALYSIS_MODE_RESEARCH_NOTES[analysisMode] || '暂无说明'}`}</div>
+        </div>
+        <div style={{ display: 'grid', gap: 4 }}>
+          {scanPreviewTheory.metrics.map((item) => (
+            <div key={`topright-theory-${item.label}`} style={{ display: 'grid', gridTemplateColumns: '110px 1fr', gap: 8, fontSize: 11, color: '#9bb3de' }}>
+              <span>{item.label}</span>
+              <span style={{ color: '#dbe9ff', fontWeight: 700 }}>{item.value}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: 'grid', gap: 4 }}>
+          {scanPreview.analysisLines.map((line) => (
+            <div key={`topright-line-${line}`} style={{ fontSize: 11, color: '#8fd4ff', lineHeight: 1.6 }}>
+              {`• ${line}`}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ marginTop: 10, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 10, display: 'grid', gap: 6 }}>
+        <div style={{ fontSize: 12, color: '#e4f0ff', fontWeight: 700 }}>原始数据</div>
+        <pre
+          style={{
+            margin: 0,
+            maxHeight: compact ? 220 : 320,
+            overflow: 'auto',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            fontSize: 11,
+            color: '#cfe2ff',
+            background: 'rgba(7, 12, 25, 0.82)',
+            border: '1px solid rgba(122, 162, 255, 0.22)',
+            borderRadius: 10,
+            padding: 10,
+          }}
+        >
+          {scanPreview?.rawJson || '暂无原始数据'}
+        </pre>
+      </div>
+    </div>
+  );
+}
+
 export function AppleNeuronSelectedLegendPanels({ workspace, compact = false }) {
   const selected = workspace?.selected || null;
   const summary = workspace?.summary || {};
+  const displayStrategy = workspace?.displayStrategy || 'auto';
+  const setDisplayStrategy = workspace?.setDisplayStrategy || (() => {});
+  const manualDisplayGroups = workspace?.manualDisplayGroups || {};
+  const setManualDisplayGroups = workspace?.setManualDisplayGroups || (() => {});
   const cardStyle = compact ? { ...panelCardStyle, padding: 10 } : panelCardStyle;
 
   return (
@@ -2973,6 +3576,64 @@ export function AppleNeuronSelectedLegendPanels({ workspace, compact = false }) 
         ) : (
           <div style={{ fontSize: 12, color: '#7d93bd' }}>请在 3D 场景中点击高亮神经元。</div>
         )}
+      </div>
+
+      <div style={{ ...cardStyle, fontSize: 12, color: '#9eb4dd', lineHeight: 1.7 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>显示与降噪策略</div>
+        <div style={{ display: 'grid', gridTemplateColumns: compact ? '1fr' : 'repeat(3, 1fr)', gap: 6 }}>
+          {[
+            { id: 'auto', label: '自动聚焦', desc: '随分析类型切换重点' },
+            { id: 'all', label: '全部显示', desc: '不过滤任何节点' },
+            { id: 'manual', label: '手动筛选', desc: '按类别开关显示' },
+          ].map((opt) => (
+            <button
+              key={`legend-display-${opt.id}`}
+              type="button"
+              onClick={() => setDisplayStrategy(opt.id)}
+              title={opt.desc}
+              style={{
+                borderRadius: 8,
+                border: `1px solid ${displayStrategy === opt.id ? 'rgba(126, 224, 255, 0.75)' : 'rgba(122, 162, 255, 0.35)'}`,
+                background: displayStrategy === opt.id ? 'rgba(24, 101, 134, 0.38)' : 'rgba(7, 12, 25, 0.82)',
+                color: '#dbe9ff',
+                fontSize: 11,
+                padding: '7px 8px',
+                cursor: 'pointer',
+                textAlign: 'left',
+              }}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+        {displayStrategy === 'manual' ? (
+          <div style={{ marginTop: 8, display: 'grid', gap: 6 }}>
+            {[
+              { id: 'core', label: '核心/基础节点' },
+              { id: 'query', label: '输入概念节点' },
+              { id: 'multidim', label: '多维编码节点' },
+              { id: 'hard', label: '硬伤实验节点' },
+              { id: 'unified', label: '统一解码节点' },
+              { id: 'background', label: '背景网络节点' },
+            ].map((item) => (
+              <label key={`legend-manual-group-${item.id}`} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, color: '#9eb4dd' }}>
+                <input
+                  type="checkbox"
+                  checked={manualDisplayGroups[item.id] !== false}
+                  onChange={(e) => setManualDisplayGroups((prev) => ({ ...prev, [item.id]: e.target.checked }))}
+                />
+                <span>{item.label}</span>
+              </label>
+            ))}
+          </div>
+        ) : null}
+        <div style={{ marginTop: 8, fontSize: 11, color: '#7ea2c9' }}>
+          {displayStrategy === 'auto'
+            ? '自动模式：因果类分析突出硬伤实验，结构类分析突出统一编码与多维节点。'
+            : displayStrategy === 'all'
+              ? '全部模式：所有节点同等显示，不做降噪。'
+              : '手动模式：按勾选结果控制各类节点显示。'}
+        </div>
       </div>
 
       <div style={{ ...cardStyle, fontSize: 12, color: '#9eb4dd', lineHeight: 1.7 }}>
@@ -3077,6 +3738,133 @@ export function AppleNeuronCompareFilterPanel({ workspace, compact = false }) {
   );
 }
 
+export function AppleNeuronGeneratedConceptSetsPanel({ workspace, compact = false }) {
+  const querySets = workspace?.querySets || [];
+  const queryVisibility = workspace?.queryVisibility || {};
+  const setQuerySetVisible = workspace?.setQuerySetVisible;
+  const setAllQuerySetVisible = workspace?.setAllQuerySetVisible;
+  const removeQuerySet = workspace?.removeQuerySet;
+  const visibleCount = querySets.filter((set) => queryVisibility[set.id] !== false).length;
+  const cardStyle = compact ? { ...panelCardStyle, padding: 10 } : panelCardStyle;
+
+  return (
+    <div style={cardStyle}>
+      <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>已生成概念集</div>
+      <div style={{ fontSize: 11, color: '#92a6cc', lineHeight: 1.6 }}>
+        {`当前共 ${querySets.length} 组概念，其中显示 ${visibleCount} 组。这里统一处理显隐和清理。`}
+      </div>
+      <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
+        <button type="button" onClick={() => setAllQuerySetVisible?.(true)} style={smallActionButtonStyle}>全显示</button>
+        <button type="button" onClick={() => setAllQuerySetVisible?.(false)} style={smallActionButtonStyle}>全隐藏</button>
+      </div>
+      <div style={{ marginTop: 10, display: 'grid', gap: 8, maxHeight: compact ? 220 : 280, overflowY: 'auto' }}>
+        {querySets.length === 0 ? (
+          <div style={{ fontSize: 11, color: '#6f84ad' }}>暂未生成概念集，请先在左侧输入名词和类别。</div>
+        ) : (
+          querySets.map((set) => (
+            <div key={`generated-set-${set.id}`} style={{ display: 'grid', gridTemplateColumns: '20px 1fr auto', gap: 8, alignItems: 'center', fontSize: 12, color: '#9eb4dd' }}>
+              <input
+                type="checkbox"
+                checked={queryVisibility[set.id] !== false}
+                onChange={(e) => setQuerySetVisible?.(set.id, e.target.checked)}
+              />
+              <span style={{ overflowWrap: 'anywhere' }}>
+                <span style={{ color: set.color }}>●</span>
+                {` ${set.name} [${set.category}] (${set.nodes.length})`}
+              </span>
+              <button
+                type="button"
+                onClick={() => removeQuerySet?.(set.id)}
+                style={{ ...smallActionButtonStyle, padding: '2px 8px', fontSize: 11 }}
+              >
+                删除
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+export function AppleNeuronMultidimSettingsPanel({ workspace, compact = false }) {
+  const multidimProbeData = workspace?.multidimProbeData || null;
+  const multidimCausalData = workspace?.multidimCausalData || null;
+  const multidimTopN = workspace?.multidimTopN ?? 96;
+  const setMultidimTopN = workspace?.setMultidimTopN;
+  const multidimVisible = workspace?.multidimVisible || { style: true, logic: true, syntax: true };
+  const setMultidimVisible = workspace?.setMultidimVisible;
+  const multidimActiveDimension = workspace?.multidimActiveDimension || 'style';
+  const setMultidimActiveDimension = workspace?.setMultidimActiveDimension;
+  const multidimLayerProfile = workspace?.multidimLayerProfile || [];
+  const cardStyle = compact ? { ...panelCardStyle, padding: 10 } : panelCardStyle;
+
+  return (
+    <div style={cardStyle}>
+      <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>三维编码设置</div>
+      <div style={{ fontSize: 11, color: '#7f95bb', lineHeight: 1.6, marginBottom: 10 }}>
+        管理 `style / logic / syntax` 三维探针的可见性、TopN 和当前显示维度。
+      </div>
+      <div style={{ display: 'grid', gap: 8 }}>
+        <div style={{ fontSize: 11, color: '#7ea2c9' }}>
+          {multidimProbeData
+            ? `已导入探针，当前显示维度: ${DIMENSION_LABELS[multidimActiveDimension] || multidimActiveDimension}，层谱点数: ${multidimLayerProfile?.length || 0}`
+            : '未导入三维探针 JSON（multidim_encoding_probe.json）'}
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
+          <div style={{ fontSize: 12, color: '#9eb4dd' }}>TopN</div>
+          <input
+            type="number"
+            min={16}
+            max={256}
+            value={multidimTopN}
+            onChange={(e) => setMultidimTopN?.(Number(e.target.value))}
+            style={inputStyle}
+          />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+          {['style', 'logic', 'syntax'].map((dim) => (
+            <button
+              key={`multidim-panel-${dim}`}
+              type="button"
+              onClick={() => setMultidimActiveDimension?.(dim)}
+              style={{
+                borderRadius: 8,
+                border: `1px solid ${multidimActiveDimension === dim ? ROLE_COLORS[dim] : 'rgba(122,162,255,0.35)'}`,
+                background: multidimActiveDimension === dim ? 'rgba(42,71,132,0.82)' : 'rgba(7, 12, 25, 0.82)',
+                color: '#dbe9ff',
+                fontSize: 11,
+                padding: '6px 8px',
+                cursor: 'pointer',
+              }}
+            >
+              {DIMENSION_LABELS[dim]}
+            </button>
+          ))}
+        </div>
+        <div style={{ display: 'grid', gap: 6 }}>
+          {['style', 'logic', 'syntax'].map((dim) => (
+            <label key={`multidim-vis-${dim}`} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#9eb4dd' }}>
+              <input
+                type="checkbox"
+                checked={multidimVisible[dim] !== false}
+                onChange={(e) => setMultidimVisible?.((prev) => ({ ...prev, [dim]: e.target.checked }))}
+              />
+              <span style={{ color: ROLE_COLORS[dim] }}>●</span>
+              <span>{`${DIMENSION_LABELS[dim]}神经元`}</span>
+            </label>
+          ))}
+        </div>
+        <div style={{ fontSize: 11, color: '#7ea2c9', lineHeight: 1.6 }}>
+          {multidimCausalData
+            ? `对角优势 style=${toSafeNumber(multidimCausalData?.diagonal_advantage?.style, 0).toFixed(4)} / logic=${toSafeNumber(multidimCausalData?.diagonal_advantage?.logic, 0).toFixed(4)} / syntax=${toSafeNumber(multidimCausalData?.diagonal_advantage?.syntax, 0).toFixed(4)}`
+            : '未导入三维因果消融 JSON（multidim_causal_ablation.json）'}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function AppleNeuronControlPanels({ workspace }) {
   const {
     analysisMode,
@@ -3088,6 +3876,7 @@ export function AppleNeuronControlPanels({ workspace }) {
     currentTheoryObject,
     availableModesForTheoryObject,
     summary,
+    selected,
     queryInput,
     setQueryInput,
     queryCategoryInput,
@@ -3100,6 +3889,11 @@ export function AppleNeuronControlPanels({ workspace }) {
     scanImportTopK,
     setScanImportTopK,
     scanImportSummary,
+    selectedScanPath,
+    setSelectedScanPath,
+    scanPreviewData,
+    scanPreviewLoading,
+    scanPreviewError,
     multidimProbeData,
     multidimCausalData,
     multidimTopN,
@@ -3146,13 +3940,16 @@ export function AppleNeuronControlPanels({ workspace }) {
     manualDisplayGroups,
     setManualDisplayGroups,
     modeMetrics,
+    hardProblemResults,
+    unifiedDecodeResult,
   } = workspace;
   const [scanFileOptions, setScanFileOptions] = useState([]);
-  const [selectedScanPath, setSelectedScanPath] = useState('');
   const [scanFileLoading, setScanFileLoading] = useState(false);
   const [scanFileImporting, setScanFileImporting] = useState(false);
   const [scanFileError, setScanFileError] = useState('');
-  const [scanFileFilter, setScanFileFilter] = useState('multidim');
+  const [scanFileFilter, setScanFileFilter] = useState('all');
+  const [scanOptionContentLabels, setScanOptionContentLabels] = useState({});
+  const [assetPanelTab, setAssetPanelTab] = useState('manual');
   const modeMetaById = Object.fromEntries(analysisModes.map((mode) => [mode.id, mode]));
   const filteredStageGroups = useMemo(
     () => ANALYSIS_MODE_STAGE_GROUPS
@@ -3171,6 +3968,125 @@ export function AppleNeuronControlPanels({ workspace }) {
     unified_decode: '统一解码',
     all: '全部',
   };
+
+  const researchSnapshotRows = useMemo(() => ([
+    { label: '标准化单位', value: `${DNN_RESEARCH_SNAPSHOT.standardizedUnits}` },
+    { label: '真实精确占比', value: `${(DNN_RESEARCH_SNAPSHOT.exactRealFraction * 100).toFixed(2)}%` },
+    { label: '概念签名', value: `${DNN_RESEARCH_SNAPSHOT.signatureRows} / ${DNN_RESEARCH_SNAPSHOT.uniqueConcepts}` },
+    { label: '完整还原', value: `${(DNN_RESEARCH_SNAPSHOT.fullRestorationScore * 100).toFixed(2)}%` },
+  ]), []);
+
+  const currentTheoryResearch = useMemo(
+    () => THEORY_OBJECT_RESEARCH_MAP[theoryObject] || THEORY_OBJECT_RESEARCH_MAP.family_patch,
+    [theoryObject]
+  );
+
+  const importStatusRows = useMemo(() => ([
+    { label: '多维探针', value: multidimProbeData ? '已导入' : '未导入' },
+    { label: '硬伤实验', value: `${Object.keys(hardProblemResults || {}).length} 项` },
+    { label: '统一解码', value: unifiedDecodeResult ? '已导入' : '未导入' },
+    { label: '概念集', value: `${querySets.length}` },
+  ]), [hardProblemResults, multidimProbeData, querySets.length, unifiedDecodeResult]);
+
+  const researchRiskRows = useMemo(() => {
+    const rows = [
+      `当前对象: ${currentTheoryObject?.labelZh || '-'}，当前动作: ${modeMetaById[analysisMode]?.label || '-'}`,
+      ANALYSIS_MODE_RESEARCH_NOTES[analysisMode] || '当前动作暂无附加说明。',
+    ];
+    if (theoryObject === 'successor_aligned_transport' || analysisMode === 'dynamic_prediction') {
+      rows.push(`successor exact dense 仅 ${DNN_RESEARCH_SNAPSHOT.successorExactDenseUnits} / ${DNN_RESEARCH_SNAPSHOT.successorTotalUnits}`);
+      rows.push(`proxy 单位仍有 ${DNN_RESEARCH_SNAPSHOT.successorProxyUnits}，当前 exactness ${(DNN_RESEARCH_SNAPSHOT.successorExactnessFraction * 100).toFixed(2)}%`);
+    } else if (theoryObject === 'protocol_bridge') {
+      rows.push('protocol field 已接近强候选恢复，但 successor -> protocol 的 exact 闭合仍不足。');
+    } else if (theoryObject === 'family_patch' || theoryObject === 'concept_section') {
+      rows.push('family basis / concept offset 已较强，但还不是最终唯一数学定理。');
+    } else {
+      rows.push('当前对象的可视化证据已进入 DNN 主流程，但 dense neuron-level exact closure 仍未完成。');
+    }
+    return rows;
+  }, [analysisMode, currentTheoryObject?.labelZh, modeMetaById, theoryObject]);
+
+  const selectedResearchDetails = useMemo(() => {
+    if (!selected) {
+      return null;
+    }
+    const sourceTier = selected.source === 'textbox-query-generator'
+      ? '交互生成'
+      : selected.source === 'multidim_encoding_probe'
+        ? '真实探针'
+        : selected.source === 'agi_research_result_v1'
+          ? '硬伤实验'
+          : selected.source === 'unified_math_structure_decode'
+            ? '统一解码'
+            : selected.source === 'mass_noun_encoding_scan_import'
+              ? '名词扫描导入'
+              : '其他';
+    const dataGroup = nodeDisplayGroup(selected.role);
+    return {
+      sourceTier,
+      dataGroup,
+      exactness:
+        selected.source === 'multidim_encoding_probe' || selected.source === 'unified_math_structure_decode'
+          ? '较强真实证据'
+          : selected.source === 'agi_research_result_v1' || selected.source === 'mass_noun_encoding_scan_import'
+            ? '研究资产证据'
+            : '交互或背景证据',
+      detailRows: [
+        { label: '对象', value: selected.label },
+        { label: '层 / 神经元', value: `L${selected.layer} / N${selected.neuron}` },
+        { label: '来源层级', value: sourceTier },
+        { label: '数据分组', value: dataGroup },
+        { label: '指标', value: `${selected.metric}: ${selected.value.toExponential(3)}` },
+      ],
+    };
+  }, [selected]);
+
+  const selectedNodeDetails = useMemo(() => {
+    if (!selected) {
+      return null;
+    }
+    const sourceTier = selected.source === 'textbox-query-generator'
+      ? '手动输入'
+      : selected.source === 'multidim_encoding_probe'
+        ? '多维探针'
+        : selected.source === 'agi_research_result_v1'
+          ? '硬伤实验'
+          : selected.source === 'unified_math_structure_decode'
+            ? '统一解码'
+            : selected.source === 'mass_noun_encoding_scan_import'
+              ? '名词扫描导入'
+              : '其他';
+    return {
+      detailRows: [
+        { label: '对象', value: selected.label },
+        { label: '层 / 神经元', value: `L${selected.layer} / N${selected.neuron}` },
+        { label: '来源', value: sourceTier },
+        { label: '分组', value: nodeDisplayGroup(selected.role) },
+        { label: '指标', value: `${selected.metric}: ${selected.value.toExponential(3)}` },
+      ],
+    };
+  }, [selected]);
+
+  const currentScanMeta = useMemo(
+    () => scanFileOptions.find((f) => f.path === selectedScanPath) || null,
+    [scanFileOptions, selectedScanPath]
+  );
+
+  const scanPreview = useMemo(
+    () => buildArtifactPreview(scanPreviewData, selectedScanPath),
+    [scanPreviewData, selectedScanPath]
+  );
+
+  const scanPreviewTheory = useMemo(
+    () => THEORY_OBJECT_RESEARCH_MAP[scanPreview?.theoryObject] || currentTheoryResearch,
+    [currentTheoryResearch, scanPreview?.theoryObject]
+  );
+
+  const scanPreviewJson = useMemo(
+    () => scanPreview?.rawJson || '',
+    [scanPreview]
+  );
+  const showScanPreviewInTopRight = shouldShowResearchAssetInTopRight(scanPreview, selectedScanPath);
 
   const filteredScanFileOptions = useMemo(() => {
     const rows = Array.isArray(scanFileOptions) ? scanFileOptions : [];
@@ -3266,6 +4182,42 @@ export function AppleNeuronControlPanels({ workspace }) {
       return filteredScanFileOptions[0]?.path || '';
     });
   }, [filteredScanFileOptions]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const candidates = filteredScanFileOptions
+      .map((fileMeta) => ({ path: fileMeta.path, fileMeta }))
+      .filter((item) => item.path && !scanOptionContentLabels[item.path])
+      .slice(0, 24);
+
+    if (candidates.length === 0) {
+      return undefined;
+    }
+
+    const loadOptionLabels = async () => {
+      const updates = {};
+      await Promise.allSettled(candidates.map(async ({ path, fileMeta }) => {
+        try {
+          const res = await fetch(`${MAIN_API_BASE}/api/main/scan_file?path=${encodeURIComponent(path)}`);
+          const payload = await res.json();
+          if (!res.ok) {
+            throw new Error(payload?.detail || '读取研究资产失败');
+          }
+          updates[path] = buildScanContentLabel(payload?.data, fileMeta);
+        } catch (_err) {
+          updates[path] = inferScanOptionConcept(fileMeta);
+        }
+      }));
+      if (!cancelled && Object.keys(updates).length > 0) {
+        setScanOptionContentLabels((prev) => ({ ...prev, ...updates }));
+      }
+    };
+
+    loadOptionLabels();
+    return () => {
+      cancelled = true;
+    };
+  }, [filteredScanFileOptions, scanOptionContentLabels]);
 
   const handleImportSelectedScanFile = async () => {
     if (!selectedScanPath) {
@@ -3386,10 +4338,7 @@ export function AppleNeuronControlPanels({ workspace }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       <div style={panelCardStyle}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 6 }}>ICSPB 对象层（第一层）</div>
-        <div style={{ fontSize: 11, color: '#7f95bb', lineHeight: 1.6, marginBottom: 10 }}>
-          先选当前要还原的理论对象，再在第二层选择观测/提取/验证/系统动作。这样保留实验流程，同时把 ICSPB 理论对象抬到主入口。
-        </div>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 6 }}>ICSPB 对象层</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 8 }}>
           {theoryObjects.map((item) => {
             const active = theoryObject === item.id;
@@ -3425,6 +4374,7 @@ export function AppleNeuronControlPanels({ workspace }) {
         </div>
       </div>
 
+      {false ? (
       <div style={panelCardStyle}>
         <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 6 }}>实验动作层（第二层）</div>
         <div style={{ fontSize: 11, color: '#7f95bb', lineHeight: 1.6, marginBottom: 10 }}>
@@ -3507,8 +4457,9 @@ export function AppleNeuronControlPanels({ workspace }) {
           </div>
         )}
       </div>
+      ) : null}
 
-      {analysisMode === 'dynamic_prediction' && (
+      {false && analysisMode === 'dynamic_prediction' && (
         <div style={panelCardStyle}>
           <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>当前模式参数 · 动态预测</div>
           <textarea
@@ -3534,7 +4485,7 @@ export function AppleNeuronControlPanels({ workspace }) {
         </div>
       )}
 
-      {analysisMode !== 'dynamic_prediction' && analysisMode !== 'static' && (
+      {false && analysisMode !== 'dynamic_prediction' && analysisMode !== 'static' && (
         <div style={panelCardStyle}>
           <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>当前模式参数 · 机制实验</div>
           <div style={{ display: 'flex', gap: 8 }}>
@@ -3623,61 +4574,387 @@ export function AppleNeuronControlPanels({ workspace }) {
       )}
 
       <div style={panelCardStyle}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>显示与降噪策略</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>研究资产与 3D 映射</div>
+        <div style={{ fontSize: 11, color: '#7f95bb', lineHeight: 1.6, marginBottom: 10 }}>
+          用两个入口处理研究数据：手动输入名词与类别，直接观察 3D 模型；或选择测试中的研究资产，直接展开具体数据、数学分析和对应理论。
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 8, marginBottom: 10 }}>
           {[
-            { id: 'auto', label: '自动聚焦', desc: '随分析类型切换重点' },
-            { id: 'all', label: '全部显示', desc: '不过滤任何节点' },
-            { id: 'manual', label: '手动筛选', desc: '按类别开关显示' },
-          ].map((opt) => (
+            { id: 'manual', label: '手动输入', desc: '输入名词与类别，查看对应 3D 节点' },
+            { id: 'artifact', label: '测试数据', desc: '选择实验文件，完整查看数据和理论' },
+          ].map((tab) => (
             <button
-              key={`display-${opt.id}`}
+              key={tab.id}
               type="button"
-              onClick={() => setDisplayStrategy(opt.id)}
-              title={opt.desc}
+              onClick={() => setAssetPanelTab(tab.id)}
+              title={tab.desc}
               style={{
-                borderRadius: 8,
-                border: `1px solid ${displayStrategy === opt.id ? 'rgba(126, 224, 255, 0.75)' : 'rgba(122, 162, 255, 0.35)'}`,
-                background: displayStrategy === opt.id ? 'rgba(24, 101, 134, 0.38)' : 'rgba(7, 12, 25, 0.82)',
+                borderRadius: 10,
+                border: `1px solid ${assetPanelTab === tab.id ? 'rgba(126, 224, 255, 0.75)' : 'rgba(122, 162, 255, 0.28)'}`,
+                background: assetPanelTab === tab.id ? 'rgba(24, 101, 134, 0.36)' : 'rgba(7, 12, 25, 0.82)',
                 color: '#dbe9ff',
-                fontSize: 11,
-                padding: '7px 8px',
+                padding: '8px 10px',
                 cursor: 'pointer',
+                textAlign: 'left',
               }}
             >
-              {opt.label}
+              <div style={{ fontSize: 12, fontWeight: 700 }}>{tab.label}</div>
+              <div style={{ fontSize: 10, color: '#88a6cf', marginTop: 2 }}>{tab.desc}</div>
             </button>
           ))}
         </div>
-        {displayStrategy === 'manual' ? (
-          <div style={{ marginTop: 8, display: 'grid', gap: 6 }}>
-            {[
-              { id: 'core', label: '核心/基础节点' },
-              { id: 'query', label: '输入概念节点' },
-              { id: 'multidim', label: '多维编码节点' },
-              { id: 'hard', label: '硬伤实验节点' },
-              { id: 'unified', label: '统一解码节点' },
-              { id: 'background', label: '背景网络节点' },
-            ].map((item) => (
-              <label key={`manual-group-${item.id}`} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#9eb4dd' }}>
+
+        {assetPanelTab === 'manual' ? (
+          <div style={{ display: 'grid', gap: 10 }}>
+            <div style={{ display: 'grid', gap: 8 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
+                <div style={{ fontSize: 12, color: '#9eb4dd' }}>名称</div>
                 <input
-                  type="checkbox"
-                  checked={manualDisplayGroups[item.id] !== false}
-                  onChange={(e) => setManualDisplayGroups((prev) => ({ ...prev, [item.id]: e.target.checked }))}
+                  value={queryInput}
+                  onChange={(e) => setQueryInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleGenerateQuery();
+                    }
+                  }}
+                  placeholder="例如：苹果 / 太阳 / 量子"
+                  style={inputStyle}
                 />
-                <span>{item.label}</span>
-              </label>
-            ))}
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
+                <div style={{ fontSize: 12, color: '#9eb4dd' }}>类别</div>
+                <input
+                  value={queryCategoryInput}
+                  onChange={(e) => setQueryCategoryInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleGenerateQuery();
+                    }
+                  }}
+                  placeholder="例如：水果 / 天体 / 抽象概念"
+                  style={inputStyle}
+                />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                <div style={{ fontSize: 11, color: '#7ea2c9' }}>{`已生成概念集 ${querySets.length} 个`}</div>
+                <button type="button" onClick={handleGenerateQuery} style={smallActionButtonStyle}>
+                  生成 3D 模型
+                </button>
+              </div>
+            </div>
+
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 10, display: 'grid', gap: 8 }}>
+              <div style={{ fontSize: 12, color: '#e4f0ff', fontWeight: 700 }}>当前理论对象</div>
+              <div style={{ fontSize: 11, color: '#9bb3de', lineHeight: 1.7 }}>
+                <div>{currentTheoryObject?.labelZh || '-'}</div>
+                <div>{currentTheoryResearch.summary}</div>
+                <div>{`当前动作：${modeMetaById[analysisMode]?.label || '-'} | ${ANALYSIS_MODE_RESEARCH_NOTES[analysisMode] || '暂无说明'}`}</div>
+              </div>
+            </div>
+
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 10, display: 'grid', gap: 6 }}>
+              <div style={{ fontSize: 12, color: '#e4f0ff', fontWeight: 700 }}>当前选中的 3D 节点</div>
+              {selectedNodeDetails ? (
+                selectedNodeDetails.detailRows.map((item) => (
+                  <div key={`manual-selected-${item.label}`} style={{ display: 'grid', gridTemplateColumns: '92px 1fr', gap: 8, fontSize: 11, color: '#9bb3de' }}>
+                    <span>{item.label}</span>
+                    <span style={{ color: '#dbe9ff', fontWeight: 700, overflowWrap: 'anywhere' }}>{item.value}</span>
+                  </div>
+                ))
+              ) : (
+                <div style={{ fontSize: 11, color: '#9bb3de' }}>
+                  先生成一个概念集，或者在 3D 场景中点选节点，这里就会显示对应的具体数据。
+                </div>
+              )}
+            </div>
+
+            {queryFeedback ? (
+              <div style={{ fontSize: 11, color: '#8fd4ff', lineHeight: 1.6 }}>{queryFeedback}</div>
+            ) : null}
           </div>
-        ) : null}
-        <div style={{ marginTop: 8, fontSize: 11, color: '#7ea2c9' }}>
-          {displayStrategy === 'auto'
-            ? '自动模式：因果类分析突出硬伤实验，结构类分析突出统一编码与多维节点。'
-            : displayStrategy === 'all'
-              ? '全部模式：所有节点同等显示，不做降噪。'
-              : '手动模式：按勾选结果控制各类节点显示。'}
-        </div>
+        ) : (
+          <div style={{ display: 'grid', gap: 10 }}>
+            <div style={{ display: 'grid', gap: 8 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
+                <div style={{ fontSize: 12, color: '#9eb4dd' }}>导入数</div>
+                <input
+                  type="number"
+                  min={1}
+                  max={120}
+                  value={scanImportLimit}
+                  onChange={(e) => setScanImportLimit(Number(e.target.value))}
+                  style={inputStyle}
+                />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
+                <div style={{ fontSize: 12, color: '#9eb4dd' }}>TopK</div>
+                <input
+                  type="number"
+                  min={4}
+                  max={64}
+                  value={scanImportTopK}
+                  onChange={(e) => setScanImportTopK(Number(e.target.value))}
+                  style={inputStyle}
+                />
+              </div>
+              <div style={{ display: 'grid', gap: 6 }}>
+                <div style={{ fontSize: 12, color: '#9eb4dd' }}>测试数据类型</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+                  {[
+                    { id: 'multidim', label: '多维编码' },
+                    { id: 'mass_noun', label: '名词扫描' },
+                    { id: 'hard_problem', label: '硬伤实验' },
+                    { id: 'four_tasks', label: '四任务' },
+                    { id: 'unified_decode', label: '统一解码' },
+                    { id: 'all', label: '全部' },
+                  ].map((opt) => (
+                    <button
+                      key={`scan-filter-${opt.id}`}
+                      type="button"
+                      onClick={() => setScanFileFilter(opt.id)}
+                      style={{
+                        borderRadius: 8,
+                        border: `1px solid ${scanFileFilter === opt.id ? 'rgba(126, 224, 255, 0.75)' : 'rgba(122, 162, 255, 0.35)'}`,
+                        background: scanFileFilter === opt.id ? 'rgba(24, 101, 134, 0.38)' : 'rgba(7, 12, 25, 0.82)',
+                        color: '#dbe9ff',
+                        fontSize: 11,
+                        padding: '6px 8px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
+                <div style={{ fontSize: 12, color: '#9eb4dd' }}>文件</div>
+                <select
+                  value={selectedScanPath}
+                  onChange={(e) => setSelectedScanPath(e.target.value)}
+                  style={inputStyle}
+                  disabled={scanFileLoading || filteredScanFileOptions.length === 0}
+                >
+                  {filteredScanFileOptions.length === 0 ? (
+                    <option value="">
+                      {scanFileLoading
+                        ? '扫描中...'
+                        : scanFileOptions.length > 0
+                          ? '当前筛选下无文件'
+                          : '未发现可导入文件'}
+                    </option>
+                  ) : (
+                    filteredScanFileOptions.map((f) => (
+                      <option key={f.path} value={f.path}>
+                        {formatScanOptionLabel(f, scanOptionContentLabels[f.path])}
+                      </option>
+                    ))
+                  )}
+                </select>
+              </div>
+              <div style={{ fontSize: 11, color: '#7ea2c9' }}>
+                {`候选文件 ${filteredScanFileOptions.length}/${scanFileOptions.length}，当前筛选：${scanFileFilterLabelMap[scanFileFilter] || scanFileFilter}`}
+              </div>
+              {!scanFileLoading && scanFileOptions.length > 0 && filteredScanFileOptions.length === 0 ? (
+                <div style={{ fontSize: 11, color: '#9bb3de', lineHeight: 1.6 }}>
+                  当前目录里有研究资产，但没有命中这个筛选条件。可以切到“全部”或其它类型查看。
+                </div>
+              ) : null}
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  onClick={refreshScanFileOptions}
+                  style={{ ...smallActionButtonStyle, flex: '1 1 120px', minWidth: 120 }}
+                  disabled={scanFileLoading}
+                >
+                  {scanFileLoading ? '刷新中...' : '刷新列表'}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleImportSelectedScanFile}
+                  style={{ ...smallActionButtonStyle, flex: '1 1 120px', minWidth: 120 }}
+                  disabled={scanFileImporting || !selectedScanPath}
+                >
+                  {scanFileImporting ? '导入中...' : '导入并映射到 3D'}
+                </button>
+              </div>
+            </div>
+
+            {currentScanMeta ? (
+              <div style={{ fontSize: 11, color: '#7ea2c9', lineHeight: 1.6, overflowWrap: 'anywhere' }}>
+                {`文件：${currentScanMeta.name} | ${(Number(currentScanMeta.size_bytes || 0) / 1024).toFixed(1)} KB | ${currentScanMeta.mtime_iso || ''}`}
+              </div>
+            ) : selectedScanPath ? (
+              <div style={{ fontSize: 11, color: '#7ea2c9', lineHeight: 1.6, overflowWrap: 'anywhere' }}>
+                {selectedScanPath}
+              </div>
+            ) : null}
+
+            {scanFileError ? (
+              <div style={{ fontSize: 11, color: '#ff9fb0' }}>{scanFileError}</div>
+            ) : null}
+            {scanPreviewError ? (
+              <div style={{ fontSize: 11, color: '#ff9fb0' }}>{scanPreviewError}</div>
+            ) : null}
+            {queryFeedback ? (
+              <div style={{ fontSize: 11, color: '#8fd4ff', lineHeight: 1.6 }}>{queryFeedback}</div>
+            ) : null}
+            {scanImportSummary ? (
+              <div style={{ fontSize: 11, color: '#7eb8ff', lineHeight: 1.6 }}>
+                {`来源：${scanImportSummary.source} | 导入概念集：${scanImportSummary.importedConcepts} | 类别：${scanImportSummary.importedCategories} | 扫描名词总数：${scanImportSummary.totalNouns} | 最小回路名词：${scanImportSummary.minimalCircuitNouns || 0} | 反事实对：${scanImportSummary.counterfactualPairs || 0}`}
+              </div>
+            ) : null}
+
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 10, display: 'grid', gap: 10 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'baseline' }}>
+                <div style={{ fontSize: 12, color: '#e4f0ff', fontWeight: 700 }}>{`${scanPreview.typeLabel} | ${scanPreview.title}`}</div>
+                <div style={{ fontSize: 10, color: '#7ea2c9' }}>{scanPreviewLoading ? '预览加载中...' : '预览就绪'}</div>
+              </div>
+              <div style={{ fontSize: 11, color: '#9bb3de', lineHeight: 1.7 }}>{scanPreview.subtitle}</div>
+
+              {scanPreview.metricRows.length > 0 ? (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 8 }}>
+                  {scanPreview.metricRows.map((item) => (
+                    <div key={`artifact-metric-${item.label}`} style={{ borderRadius: 10, padding: 10, border: '1px solid rgba(122, 162, 255, 0.24)', background: 'rgba(7, 12, 25, 0.78)' }}>
+                      <div style={{ fontSize: 10, color: '#7ea2c9', marginBottom: 3 }}>{item.label}</div>
+                      <div style={{ fontSize: 14, fontWeight: 800, color: '#e4f0ff', overflowWrap: 'anywhere' }}>{item.value}</div>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
+              {!showScanPreviewInTopRight ? (
+                <>
+                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 10, display: 'grid', gap: 6 }}>
+                    <div style={{ fontSize: 12, color: '#e4f0ff', fontWeight: 700 }}>对应数学分析与理论</div>
+                    <div style={{ fontSize: 11, color: '#9bb3de', lineHeight: 1.7 }}>
+                      <div>{scanPreviewTheory.summary}</div>
+                      <div>{`3D 关注点：${scanPreviewTheory.sceneHint}`}</div>
+                      <div>{`当前动作说明：${ANALYSIS_MODE_RESEARCH_NOTES[analysisMode] || '暂无说明'}`}</div>
+                    </div>
+                    <div style={{ display: 'grid', gap: 4 }}>
+                      {scanPreviewTheory.metrics.map((item) => (
+                        <div key={`artifact-theory-${item.label}`} style={{ display: 'grid', gridTemplateColumns: '110px 1fr', gap: 8, fontSize: 11, color: '#9bb3de' }}>
+                          <span>{item.label}</span>
+                          <span style={{ color: '#dbe9ff', fontWeight: 700 }}>{item.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ display: 'grid', gap: 4 }}>
+                      {scanPreview.analysisLines.map((line) => (
+                        <div key={line} style={{ fontSize: 11, color: '#8fd4ff', lineHeight: 1.6 }}>
+                          {`• ${line}`}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 10, display: 'grid', gap: 6 }}>
+                    <div style={{ fontSize: 12, color: '#e4f0ff', fontWeight: 700 }}>原始数据</div>
+                    <pre
+                      style={{
+                        margin: 0,
+                        maxHeight: 320,
+                        overflow: 'auto',
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'break-word',
+                        fontSize: 11,
+                        color: '#cfe2ff',
+                        background: 'rgba(7, 12, 25, 0.82)',
+                        border: '1px solid rgba(122, 162, 255, 0.22)',
+                        borderRadius: 10,
+                        padding: 10,
+                      }}
+                    >
+                      {scanPreviewJson || '暂无原始数据'}
+                    </pre>
+                  </div>
+                </>
+              ) : null}
+            </div>
+          </div>
+        )}
       </div>
+
+      {false ? (
+        <>
+      <details style={panelCardStyle} open>
+        <summary style={{ cursor: 'pointer', listStyle: 'none', fontSize: 14, fontWeight: 700, color: '#d4e3ff' }}>
+          提取语料摘要
+        </summary>
+        <div style={{ fontSize: 11, color: '#7f95bb', lineHeight: 1.6, marginTop: 10, marginBottom: 10 }}>
+          这里不是单独研究页，而是把当前 DNN 提取总量和导入状态直接压进控制面板，避免脱离主流程。
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 8 }}>
+          {researchSnapshotRows.map((item) => (
+            <div key={`research-snapshot-${item.label}`} style={{ borderRadius: 10, padding: 10, border: '1px solid rgba(122, 162, 255, 0.24)', background: 'rgba(7, 12, 25, 0.78)' }}>
+              <div style={{ fontSize: 10, color: '#7ea2c9', marginBottom: 3 }}>{item.label}</div>
+              <div style={{ fontSize: 16, fontWeight: 800, color: '#e4f0ff' }}>{item.value}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop: 10, display: 'grid', gap: 4 }}>
+          {importStatusRows.map((item) => (
+            <div key={`import-status-${item.label}`} style={{ display: 'flex', justifyContent: 'space-between', gap: 8, fontSize: 11, color: '#9bb3de' }}>
+              <span>{item.label}</span>
+              <span style={{ color: '#dbe9ff', fontWeight: 700 }}>{item.value}</span>
+            </div>
+          ))}
+        </div>
+      </details>
+
+      <details style={panelCardStyle} open>
+        <summary style={{ cursor: 'pointer', listStyle: 'none', fontSize: 14, fontWeight: 700, color: '#d4e3ff' }}>
+          当前对象的数据映射
+        </summary>
+        <div style={{ fontSize: 11, color: '#7f95bb', lineHeight: 1.6, marginTop: 10, marginBottom: 10 }}>
+          只显示当前理论对象和当前动作最相关的研究数据，避免把所有提取结果一起堆进界面。
+        </div>
+        <div style={{ fontSize: 12, color: '#e4f0ff', fontWeight: 700, marginBottom: 6 }}>{currentTheoryResearch.summary}</div>
+        <div style={{ display: 'grid', gap: 6 }}>
+          {currentTheoryResearch.metrics.map((item) => (
+            <div key={`theory-metric-${item.label}`} style={{ display: 'grid', gridTemplateColumns: '110px 1fr', gap: 8, fontSize: 11, color: '#9bb3de' }}>
+              <span>{item.label}</span>
+              <span style={{ color: '#dbe9ff', fontWeight: 700 }}>{item.value}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop: 10, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 10, fontSize: 11, color: '#8fd4ff', lineHeight: 1.7 }}>
+          <div>{`当前动作说明：${ANALYSIS_MODE_RESEARCH_NOTES[analysisMode] || '暂无说明'}`}</div>
+          <div>{`3D 关注点：${currentTheoryResearch.sceneHint}`}</div>
+        </div>
+      </details>
+
+      <details style={panelCardStyle} open>
+        <summary style={{ cursor: 'pointer', listStyle: 'none', fontSize: 14, fontWeight: 700, color: '#d4e3ff' }}>
+          3D 明细与硬伤
+        </summary>
+        <div style={{ fontSize: 11, color: '#7f95bb', lineHeight: 1.6, marginTop: 10, marginBottom: 10 }}>
+          这里把当前选中 3D 节点的研究明细和当前对象的主硬伤放在一起，减少“看数据要切页”的成本。
+        </div>
+        {selectedResearchDetails ? (
+          <div style={{ display: 'grid', gap: 5, marginBottom: 10 }}>
+            {selectedResearchDetails.detailRows.map((item) => (
+              <div key={`selected-detail-${item.label}`} style={{ display: 'grid', gridTemplateColumns: '90px 1fr', gap: 8, fontSize: 11, color: '#9bb3de' }}>
+                <span>{item.label}</span>
+                <span style={{ color: '#dbe9ff', fontWeight: 700, overflowWrap: 'anywhere' }}>{item.value}</span>
+              </div>
+            ))}
+            <div style={{ fontSize: 11, color: '#8fd4ff' }}>{`证据强度：${selectedResearchDetails.exactness}`}</div>
+          </div>
+        ) : (
+          <div style={{ fontSize: 11, color: '#9bb3de', marginBottom: 10 }}>
+            请先在 3D 场景中选中一个节点，这里会同步显示它的研究明细、来源层级和数据分组。
+          </div>
+        )}
+        <div style={{ display: 'grid', gap: 6, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 10 }}>
+          {researchRiskRows.map((item) => (
+            <div key={item} style={{ fontSize: 11, color: '#ffcf91', lineHeight: 1.6 }}>
+              {`• ${item}`}
+            </div>
+          ))}
+        </div>
+      </details>
 
       <div style={panelCardStyle}>
         <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>概念生成</div>
@@ -3876,7 +5153,10 @@ export function AppleNeuronControlPanels({ workspace }) {
           ) : null}
         </div>
       </div>
+        </>
+      ) : null}
 
+      {false ? (
       <div style={panelCardStyle}>
         <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>三维编码设置</div>
         <div style={{ fontSize: 11, color: '#7f95bb', lineHeight: 1.6, marginBottom: 10 }}>
@@ -3939,7 +5219,9 @@ export function AppleNeuronControlPanels({ workspace }) {
           </div>
         </div>
       </div>
+      ) : null}
 
+      {false ? (
       <div style={panelCardStyle}>
         <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>已生成概念集</div>
         <div style={{ fontSize: 11, color: '#7f95bb', lineHeight: 1.6, marginBottom: 10 }}>
@@ -3958,6 +5240,7 @@ export function AppleNeuronControlPanels({ workspace }) {
           )}
         </div>
       </div>
+      ) : null}
 
     </div>
   );

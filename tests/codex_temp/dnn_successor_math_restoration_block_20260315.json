@@ -1,7 +1,7 @@
 {
   "meta": {
-    "timestamp": "2026-03-15 11:46:02",
-    "runtime_sec": 0.000565,
+    "timestamp": "2026-03-15 16:52:23",
+    "runtime_sec": 0.001188,
     "task_block": "DNN_successor_math_restoration_block"
   },
   "strict_goal": {
@@ -17,6 +17,15 @@
     "successor_base_parametric_score": 0.7022048919573661,
     "successor_restoration_score": 0.49283770681279176
   },
+  "metric_lines_cn": [
+    "（successor结构项）successor_structure_score = 0.3305",
+    "（successor传输项）successor_transport_score = 0.5144",
+    "（successor精确证据）successor_exactness_score = 0.5137",
+    "（successor闭合惩罚项）successor_closure_penalty_term = 0.3333",
+    "（successor升级准备度）successor_upgrade_score = 0.8057",
+    "（successor基础参数项）successor_base_parametric_score = 0.7022",
+    "（successor数学还原）successor_restoration_score = 0.4928"
+  ],
   "strict_verdict": {
     "successor_restoration_report_present": true,
     "successor_final_theorem_closed": false,

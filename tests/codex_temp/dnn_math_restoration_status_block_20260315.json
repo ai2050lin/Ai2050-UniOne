@@ -1,7 +1,7 @@
 {
   "meta": {
-    "timestamp": "2026-03-15 09:53:25",
-    "runtime_sec": 0.006197,
+    "timestamp": "2026-03-15 16:50:13",
+    "runtime_sec": 0.007041,
     "task_block": "DNN_math_restoration_status_block"
   },
   "strict_goal": {
@@ -16,6 +16,14 @@
     "successor_parametric_score": 0.7022048919573661,
     "full_restoration_score": 0.8704166486789244
   },
+  "metric_lines_cn": [
+    "（family基底参数恢复）family_basis_parametric_score = 0.7534",
+    "（concept offset参数恢复）concept_offset_parametric_score = 0.9877",
+    "（protocol场参数恢复）protocol_field_parametric_score = 0.9543",
+    "（topology参数恢复）topology_parametric_score = 0.9732",
+    "（successor参数恢复）successor_parametric_score = 0.7022",
+    "（完整数学还原）full_restoration_score = 0.8704"
+  ],
   "strict_verdict": {
     "math_restoration_report_present": true,
     "final_math_restoration_closed": false,

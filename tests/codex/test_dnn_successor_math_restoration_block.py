@@ -66,6 +66,15 @@ def build_payload() -> Dict[str, Any]:
             "successor_base_parametric_score": base_parametric,
             "successor_restoration_score": float(restoration_score),
         },
+        "metric_lines_cn": [
+            f"（successor结构项）successor_structure_score = {structure_score:.4f}",
+            f"（successor传输项）successor_transport_score = {transport_score:.4f}",
+            f"（successor精确证据）successor_exactness_score = {exactness_score:.4f}",
+            f"（successor闭合惩罚项）successor_closure_penalty_term = {closure_penalty:.4f}",
+            f"（successor升级准备度）successor_upgrade_score = {upgrade_score:.4f}",
+            f"（successor基础参数项）successor_base_parametric_score = {base_parametric:.4f}",
+            f"（successor数学还原）successor_restoration_score = {restoration_score:.4f}",
+        ],
         "strict_verdict": {
             "successor_restoration_report_present": True,
             "successor_final_theorem_closed": bool(restoration_score > 0.88 and closure_penalty > 0.75),
@@ -105,6 +114,8 @@ def test_dnn_successor_math_restoration_block() -> None:
     assert terms["successor_restoration_score"] > 0.45
     assert verdict["successor_restoration_report_present"] is True
     assert verdict["successor_final_theorem_closed"] is False
+    assert len(payload["metric_lines_cn"]) >= 7
+    assert payload["metric_lines_cn"][0].startswith("（")
 
 
 def main() -> None:
@@ -119,7 +130,7 @@ def main() -> None:
     out_path = ROOT / args.json_out
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(json.dumps(payload["restoration_terms"], ensure_ascii=False, indent=2))
+    print("\n".join(payload["metric_lines_cn"]))
 
 
 if __name__ == "__main__":

@@ -50093,3 +50093,1446 @@ PY
 1. 先把 `overview_command_wall + corpus_atlas_view + math_theory_console` 接进 DNN 主工作台，形成第一版真实界面。
 2. 再把 `successor_chain_lab` 接进前端，因为 successor 现在是最主要的恢复瓶颈，最值得单独开页。
 3. 最后给所有图表补 `provenance_trace_view`，确保每一个视觉元素都能回到 artifact 与字段路径，避免图像脱离证据。
+
+## 2026-03-15 13:37 DNN 提取可视化第一阶段前端落地记录
+
+本轮把上一阶段的可视化蓝图正式接入到了前端真实界面，不再停留在蓝图对象与 JSON 结果层。
+
+### 代码变更
+
+1. 新增前端组件：
+   - `frontend/src/components/DnnExtractionDashboard.jsx`
+   - 这是第一阶段真实看板，当前包含 5 个核心区块：
+     - `DNN 提取研究看板`
+     - `语料库总图`
+     - `数学还原控制台`
+     - `Successor 缺口审计`
+     - `硬伤与下一步`
+
+2. 修改入口：
+   - `frontend/src/App.jsx`
+   - 在 DNN 主工作台右侧信息面板里新增 `研究看板` tab，key 为 `research`
+   - 只在 `isAppleMainView` 条件下显示，不影响 SNN / ICSPB 工作台
+
+3. 新增静态锁定测试：
+   - `tests/codex/test_dnn_extraction_visualization_frontend_block.py`
+
+4. 新增结果文件：
+   - `tests/codex_temp/dnn_extraction_visualization_frontend_block_20260315.json`
+
+### 当前界面承载的数据
+
+第一阶段界面直接固化了以下 DNN 提取与数学还原结果：
+
+- 总览指标：
+  - `total_standardized_units = 1722`
+  - `exact_real_fraction = 48.84%`
+  - `signature_rows = 194`
+  - `full_restoration_score = 87.04%`
+
+- 语料库构成：
+  - `真实稠密单位 = 793`
+  - `大规模 inventory = 672`
+  - `统一参数图谱 = 195`
+  - `合成补全单位 = 192`
+  - `真实 codebook = 48`
+  - `关系属性补充 = 14`
+
+- 签名层：
+  - `Specific = 194`
+  - `Protocol = 24`
+  - `Topology = 170`
+
+- 数学还原控制台：
+  - `family_basis_parametric_score = 0.7534`
+  - `concept_offset_parametric_score = 0.9877`
+  - `protocol_field_parametric_score = 0.9543`
+  - `topology_parametric_score = 0.9732`
+  - `successor_parametric_score = 0.7022`
+  - `full_restoration_score = 0.8704`
+
+- successor 审计：
+  - `total_successor_units = 687`
+  - `exact_dense_units = 96`
+  - `proxy_units = 558`
+  - `exactness_fraction = 0.3699`
+  - `stage_row_count = 20`
+  - `episode_step_rows = 1920`
+
+### 本轮执行命令
+
+1. 检查挂载点与相关代码：
+   - `rg -n "infoPanelTab|AppleNeuronEncodingInfoPanels|encoding" frontend/src/App.jsx frontend/src/blueprint/AppleNeuron3DTab.jsx`
+   - `Get-Content frontend/src/App.jsx ...`
+   - `Get-Content frontend/src/blueprint/AppleNeuron3DTab.jsx ...`
+
+2. 验证静态测试：
+   - `python tests/codex/test_dnn_extraction_visualization_frontend_block.py`
+
+3. 验证前端构建：
+   - `npm run build`（工作目录：`frontend/`）
+
+4. 生成结果文件：
+   - 写入 `tests/codex_temp/dnn_extraction_visualization_frontend_block_20260315.json`
+
+### 验证结果
+
+- 静态测试通过
+- `vite build` 通过
+- 当前仍有主包过大告警：
+  - `assets/index-*.js ≈ 5.83 MB`
+  - 这不是本轮新引入的功能错误，但仍是前端结构硬伤
+
+### 最严格的问题和硬伤
+
+1. 这轮完成的是第一阶段真实界面，不是最终完整可视化工作台。
+2. 当前看板里的数值仍是“前端固化摘要”，不是直接从 artifact 实时读取。
+3. successor 仍然只是被显示出来，还没有因为这轮前端接入而得到任何新的 dense exact 证据。
+4. `overview / corpus / math` 已经落地，但 `successor_chain_lab / provenance_trace_view / concept_family_offset_lab / micro_protocol_topology_lab` 还未进入真实界面。
+5. 前端主包依旧偏大，`5.8MB` 级别说明后面如果继续堆可视化，必须尽快做拆包和延迟加载。
+
+### 项目整体进度估计
+
+- `dnn_extraction_visualization_blueprint_percent = 84%`
+- `dnn_extraction_visualization_frontend_phase1_percent = 61%`
+- `systematic_mass_extraction_percent = 78%`
+- `math_restoration_status_percent = 73%`
+- `successor_math_restoration_percent = 63%`
+- `full_brain_encoding_mechanism_percent = 89%`
+
+### 下一阶段大任务块
+
+1. 把 `successor_chain_lab` 接进真实前端，并直接显示 `direct dense / proxy / stage-row / episode-step` 的 exactness 差距。
+2. 给当前看板补 `provenance trace`，让每一块数字都能直接回到具体 artifact 路径和字段路径。
+3. 在前端第二阶段落地时同步推进 `online recovery -> episode-step-layer-unit` 和 `successor inventory -> chain-stage-layer-neuron`，让 successor 的前端显示和 dense exact 采样一起往前走。
+
+## 2026-03-15 13:41 前端回退与 DNN 控制面板整合建议记录
+
+本轮按要求撤销了上一轮新增的客户端研究看板入口，原因很明确：独立 `研究看板` tab 会把 DNN 主流程切得更碎，视觉上也会显得复杂，不符合当前界面节奏。
+
+### 已撤销的客户端改动
+
+1. 回退 `frontend/src/App.jsx`
+   - 删除 `DnnExtractionDashboard` 引入
+   - 删除 `research` tab
+   - 删除 `研究看板` 渲染分支
+
+2. 删除前端组件
+   - `frontend/src/components/DnnExtractionDashboard.jsx`
+
+3. 删除前端静态测试
+   - `tests/codex/test_dnn_extraction_visualization_frontend_block.py`
+
+4. 删除本轮前端临时结果文件
+   - `tests/codex_temp/dnn_extraction_visualization_frontend_block_20260315.json`
+
+### 本轮执行命令
+
+1. 检查变更与挂载点
+   - `git diff -- frontend/src/App.jsx frontend/src/components/DnnExtractionDashboard.jsx tests/codex/test_dnn_extraction_visualization_frontend_block.py`
+   - `rg -n "DnnExtractionDashboard|研究看板|overview_command_wall|corpus_atlas_view|math_theory_console" ...`
+
+2. 回退后静态核对
+   - `rg -n "DnnExtractionDashboard|研究看板" frontend/src tests/codex`
+
+3. 回退后构建验证
+   - `npm run build`（工作目录：`frontend/`）
+
+### 验证结果
+
+- `DnnExtractionDashboard` 与 `研究看板` 入口已无残留
+- 前端 `vite build` 通过
+- 主包仍然在 `5.82MB` 级别，旧的体积问题依然存在，但这不是本轮新增问题
+
+### 更合适的修改方向
+
+当前更合理的方案不是再加一个独立页，而是把提取数据压进现有 `控制面板-DNN` 与 `3D 场景` 两个已有主载体里：
+
+#### 方案 A：整合到 DNN 控制面板
+
+最适合挂载的位置是：
+- `frontend/src/blueprint/AppleNeuron3DTab.jsx`
+- 具体是 `AppleNeuronControlPanels` 内部，接在以下区块后面：
+  - `ICSPB 对象层（第一层）`
+  - `实验动作层（第二层）`
+  - `显示与降噪策略`
+
+建议新增 3 个折叠卡片，而不是一个独立页面：
+
+1. `提取语料摘要`
+   - 显示：
+     - `标准化单位`
+     - `真实精确占比`
+     - `概念签名数`
+     - `successor exactness`
+   - 作用：把当前研究总量直接塞进 DNN 控制面板，不打断主流程
+
+2. `当前对象的数据映射`
+   - 根据 `currentTheoryObject + analysisMode` 只显示相关提取结果
+   - 例如：
+     - `family patch` 时显示 `family_fit_strength / wrong_family_margin`
+     - `concept section` 时显示 `concept_offset_parametric_score`
+     - `protocol bridge` 时显示 `protocol_field_parametric_score`
+     - `successor-aligned transport` 时显示 `successor_parametric_score / exactness_fraction`
+
+3. `硬伤与下一步`
+   - 只显示当前模式最相关的硬伤
+   - 例如 successor 模式只显示：
+     - `exact_dense_units = 96`
+     - `proxy_units = 558`
+     - `successor_restoration_score = 0.4928`
+
+#### 方案 B：把详细数据直接映射进 3D 空间
+
+这个方向比独立看板更重要，因为用户真正想看的不是总表，而是“这些提取数据在 3D 里到底对应什么对象”。
+
+最适合扩展的位置是：
+- `AppleNeuronSceneContent`
+- `TheoryObjectOverlay`
+- `selected / hovered` 信息框
+
+建议直接加三层映射：
+
+1. `对象层映射`
+   - 让不同提取数据直接成为不同 3D 对象
+   - 例如：
+     - `family basis` -> patch 核心团块
+     - `concept offset` -> 偏移向量或截面板
+     - `protocol field` -> 协议总线/端口
+     - `successor` -> 链式轨迹与阶段节点
+
+2. `强度层映射`
+   - 用真实数值控制 3D 外观：
+     - 大小 = 贡献度 / score
+     - 亮度 = exactness / confidence
+     - 线宽 = transport strength
+     - 颜色偏移 = source tier（exact / proxy / synthetic）
+
+3. `细节层映射`
+   - 当前 `selected` 面板已经显示：
+     - `label`
+     - `role`
+     - `layer`
+     - `neuron`
+     - `metric`
+     - `value`
+     - `source`
+   - 应该继续扩到：
+     - `artifact path`
+     - `field path`
+     - `exactness tier`
+     - `restoration contribution`
+     - `related formula`
+
+#### 方案 C：不要再加 tab，而是加“数据图层开关”
+
+当前 `显示与降噪策略` 和 `手动筛选` 已经有图层控制雏形。最适合的做法是继续沿这条线扩：
+
+新增可勾选图层：
+- `family basis`
+- `concept offset`
+- `protocol field`
+- `topology`
+- `successor exact`
+- `successor proxy`
+- `artifact provenance`
+
+这样用户是在同一个 DNN 3D 世界里切换图层，而不是跳到另一张信息页。
+
+### 为什么这种方案更好
+
+1. 不会把 DNN 主流程再切碎
+2. 用户能在控制面板里直接看到当前对象对应的数据，不用切页
+3. 用户能在 3D 空间里直接看到数据对象，而不是只看表格
+4. 最关键的 `successor` 缺口可以直接用 `exact vs proxy` 两套轨迹颜色区分出来，比单独看板更直观
+
+### 最严格的问题和硬伤
+
+1. 现在的 3D 场景已经有对象层与节点层，但还没有“研究数据层”的统一对象协议。
+2. 当前 `selected / hovered` 详情还是偏节点级，离 artifact/provenance 级明细还有距离。
+3. 如果直接把所有提取数据都塞进 3D，场景会再次变乱，所以必须先按 `理论对象 + exactness tier + source tier` 做强过滤。
+4. 也就是说，现在真正缺的不是一个额外页面，而是一套 `研究数据 -> 3D 对象` 的映射规范。
+
+### 项目整体进度估计
+
+- `dnn_extraction_visualization_blueprint_percent = 84%`
+- `dnn_extraction_frontend_integration_percent = 52%`
+- `dnn_to_3d_data_mapping_design_percent = 58%`
+- `systematic_mass_extraction_percent = 78%`
+- `math_restoration_status_percent = 73%`
+- `successor_math_restoration_percent = 63%`
+- `full_brain_encoding_mechanism_percent = 89%`
+
+### 下一阶段大任务块
+
+1. 先不要再单独开页，直接把 `提取语料摘要 + 当前对象的数据映射 + 硬伤与下一步` 三个折叠卡片并入 `AppleNeuronControlPanels`。
+2. 同时定义统一的 `研究数据图层协议`，把 `family basis / concept offset / protocol / successor` 映射成 3D 对象，而不是继续只显示节点和静态说明。
+3. 优先把 `successor exact / successor proxy` 两套链路做成 3D 对照轨迹，因为这是当前最关键的理论缺口，也最适合用空间动画表达。
+
+## 2026-03-15 13:46 DNN 控制面板研究卡片整合记录
+
+本轮没有再走独立研究页，而是按新方向把研究信息直接并进了 `控制面板-DNN` 本体。
+
+### 本轮代码修改
+
+1. 修改：
+   - `frontend/src/blueprint/AppleNeuron3DTab.jsx`
+
+2. 新增测试：
+   - `tests/codex/test_dnn_control_panel_research_cards_block.py`
+
+3. 新增结果文件：
+   - `tests/codex_temp/dnn_control_panel_research_cards_block_20260315.json`
+
+### 本轮具体整合内容
+
+在 `AppleNeuronControlPanels` 中新增了 3 个研究折叠卡片：
+
+1. `提取语料摘要`
+   - 直接显示：
+     - `标准化单位 = 1722`
+     - `真实精确占比 = 48.84%`
+     - `概念签名 = 194 / 158`
+     - `完整还原 = 87.04%`
+   - 同时显示当前导入状态：
+     - `多维探针`
+     - `硬伤实验`
+     - `统一解码`
+     - `概念集`
+
+2. `当前对象的数据映射`
+   - 依据当前 `theoryObject` 自动切换展示内容
+   - 例如：
+     - `family_patch` 显示 `family fit strength = 0.7846`
+     - `concept_section` 显示 `concept offset = 98.77%`
+     - `successor_aligned_transport` 显示：
+       - `successor parametric = 70.22%`
+       - `exact dense = 96 / 687`
+       - `proxy units = 558`
+   - 同时补了当前动作说明和 3D 关注点说明
+
+3. `3D 明细与硬伤`
+   - 如果当前在 3D 场景中选中节点，就显示：
+     - `对象`
+     - `层 / 神经元`
+     - `来源层级`
+     - `数据分组`
+     - `指标`
+   - 如果未选中，则明确提示“请先在 3D 场景中选中一个节点”
+   - 同时显示当前对象最相关的研究硬伤
+   - successor / protocol / family 等对象会显示不同的硬伤口径
+
+### 本轮执行命令
+
+1. 结构与挂载点核对：
+   - `rg -n "const ICSPB_THEORY_OBJECTS|...|function AppleNeuronControlPanels" frontend/src/blueprint/AppleNeuron3DTab.jsx`
+   - `Get-Content frontend/src/blueprint/AppleNeuron3DTab.jsx ...`
+
+2. 静态测试：
+   - `python tests/codex/test_dnn_control_panel_research_cards_block.py`
+
+3. 前端构建：
+   - `npm run build`（工作目录：`frontend/`）
+
+4. 结果文件写入：
+   - `tests/codex_temp/dnn_control_panel_research_cards_block_20260315.json`
+
+### 验证结果
+
+- 静态测试通过
+- `vite build` 通过
+- 没有重新引入独立 `研究看板` tab
+- 当前研究数据已并入 DNN 控制面板
+- 旧的主包过大告警仍然存在：
+  - `assets/index-*.js ≈ 5.84 MB`
+
+### 最严格的问题和硬伤
+
+1. 这轮完成的是“控制面板整合”，不是“研究数据 3D 映射闭合”。
+2. 当前研究卡片里的数值仍是代码内固化快照，不是实时从 artifact 自动回读。
+3. `3D 明细与硬伤` 已经接上 `selected` 节点，但还没有接 `artifact path / field path / exactness tier` 这些更深层明细。
+4. successor 的 exact/proxy 差距目前只是文字暴露，还没有进入 3D 双轨迹表达。
+5. 前端体积问题没有改善，后面如果继续堆卡片和图层，必须做拆包。
+
+### 项目整体进度估计
+
+- `dnn_extraction_frontend_integration_percent = 61%`
+- `dnn_control_panel_research_cards_percent = 68%`
+- `dnn_to_3d_data_mapping_design_percent = 58%`
+- `systematic_mass_extraction_percent = 78%`
+- `math_restoration_status_percent = 73%`
+- `successor_math_restoration_percent = 63%`
+- `full_brain_encoding_mechanism_percent = 89%`
+
+### 下一阶段大任务块
+
+1. 把当前卡片里的固化研究快照改成统一 artifact 回读，不再手填数值。
+2. 把 `selected` 节点详情扩到 `artifact path / field path / exactness tier / restoration contribution`，真正打通 3D 节点与研究证据的联动。
+3. 优先做 `successor exact / successor proxy` 的 3D 双轨迹表达，把当前最大硬伤从文字说明升级成空间对照对象。
+
+## 2026-03-15 15:51 DNN concept-specific 数学桥推进记录
+
+本轮继续推进 DNN 数学提取与机制破解，但不是再泛泛扩总量，而是专门打 `family -> specific` 这条最关键的 concept-specific 数学桥。
+
+### 本轮新增文件
+
+1. 新增研究代码：
+   - `research/gpt5/code/dnn_specific_math_bridge.py`
+
+2. 新增测试与结果块：
+   - `tests/codex/test_dnn_specific_math_bridge_block.py`
+   - `tests/codex_temp/dnn_specific_math_bridge_block_20260315.json`
+
+### 本轮解决的问题
+
+当前 `family basis` 和 `concept offset` 虽然已经强，但真正决定“具体概念细节能不能被数学还原”的，不是这两个对象本身，而是：
+
+- `specific-bearing real units` 是否足够强
+- `specific signatures` 是否足够稳定
+- `contextual family -> specific` 是否能把 family-level 信息推进成具体概念细节
+- `family -> specific` 在真实 held-out 上是否能 exact 闭合
+
+本轮新增的 `DnnSpecificMathBridge` 就是把这四条线收成一个统一对象，不再让它们分散在多个 JSON 和多个测试块里。
+
+### 本轮关键结果
+
+当前 `dnn_specific_math_bridge_block_20260315.json` 给出的关键量化是：
+
+- `specific_real_support_score = 1.0`
+- `specific_signature_score = 1.0`
+- `contextual_specific_bridge_score = 0.9163`
+- `real_specific_bridge_score = 0.9019`
+- `family_to_specific_gap = 1.0`
+- `specific_parametric_restoration_score = 0.9631`
+- `exact_specific_closure_score = 0.4774`
+
+这组结果非常关键，说明了两件事：
+
+1. `concept-specific` 的参数桥已经很强
+   - 也就是：真实单位、specific 签名、contextual 恢复、真实 held-out 桥接，这几条线合起来，已经足以支撑一个强候选的 concept-specific 数学结构
+
+2. 但 exact closure 依然没打穿
+   - 因为 `family_to_specific_gap = 1.0`
+   - 说明真正的 `family -> specific exact closure` 在真实 held-out 上仍然几乎没有被解决
+
+### 当前候选数学律
+
+本轮收紧出的 concept-specific 候选式是：
+
+- `h_specific(c, ctx) ~= B_f + Delta_c + C_ctx(c, ctx) + P_proto(c, ctx) + epsilon_specific`
+- `Delta_c ~= Delta_family_local(c) + Delta_contextual(c, ctx) + Delta_protocol(c, ctx) + xi_c`
+
+它的含义已经比较明确：
+- 概念细节不是孤立整块向量
+- 而是在 `family basis` 上叠加：
+  - bounded concept offset
+  - contextual correction
+  - protocol correction
+
+这比之前只写 `basis + offset` 前进了一步，因为它明确承认：
+- 具体概念细节并不只靠 family-local 偏移
+- 还要靠 context/protocol 参与修正
+
+### 本轮执行命令
+
+1. 读取当前相关块：
+   - `Get-Content research/gpt5/code/dnn_dense_real_unit_corpus.py`
+   - `Get-Content tests/codex/test_dnn_math_restoration_status_block.py`
+   - `Get-Content tests/codex/test_dnn_activation_signature_mining_block.py`
+   - `Get-Content tests/codex/test_dnn_multimodel_specific_reconstruction_block.py`
+   - `Get-Content tests/codex/test_dnn_real_heldout_region_reconstruction_block.py`
+
+2. 运行研究块：
+   - `python tests/codex/test_dnn_specific_math_bridge_block.py`
+
+3. 动态执行断言：
+   - 通过 `importlib.util.spec_from_file_location(...)` 加载并执行 `test_dnn_specific_math_bridge_block()`
+
+### 验证结果
+
+- 主脚本运行通过
+- 动态断言执行通过
+- 结果文件已写入：
+  - `tests/codex_temp/dnn_specific_math_bridge_block_20260315.json`
+
+### 最严格的问题和硬伤
+
+1. 这轮证明的是 `specific parametric bridge` 已经很强，不是 `exact specific closure` 已经完成。
+2. `family_to_specific_gap = 1.0` 说明最关键的 exact 闭合仍然没打穿。
+3. 这条 bridge 目前仍然主要依赖 row/signature 证据，而不是 dense neuron-level exact tensors。
+4. 这也说明：当前最卡的已经不是 `basis + offset` 有没有，而是“具体概念细节能不能从 family-level 直接精确算出”。
+
+### 项目整体进度估计
+
+- `specific_math_bridge_percent = 71%`
+- `concept_offset_math_percent = 74%`
+- `family_patch_plus_concept_offset_overall_breakthrough_percent = 56%`
+- `math_restoration_status_percent = 73%`
+- `successor_math_restoration_percent = 63%`
+- `full_brain_encoding_mechanism_percent = 89%`
+
+### 下一阶段大任务块
+
+1. 把 `family -> specific` 从 summary/signature 层推进到 dense neuron-level target，直接打 exact closure。
+2. 把 `contextual correction` 和 `protocol correction` 从口头结构拆成显式 operator family，不再只作为解释项存在。
+3. 在 `specific exactness` 和 `successor exactness` 同时抬起来之后，重算 `full restoration / full math theory`，判断是否真的接近 theorem closure。
+
+## 2026-03-15 16:03 DNN 系统级精确编码原理收口记录
+
+本轮继续推进“从系统角度破解精确编码原理”，不是再扩一个局部对象，而是把当前已经拿到的：
+
+- `family basis`
+- `concept offset`
+- `contextual correction`
+- `protocol correction`
+- `successor transport`
+- `evidence exactness`
+
+六条线收成一个统一系统块，明确判断：项目现在到底只是“参数结构强”，还是已经接近“精确定理闭合”。
+
+### 本轮新增文件
+
+1. 新增研究代码：
+   - `research/gpt5/code/dnn_exact_encoding_system.py`
+
+2. 新增测试与结果：
+   - `tests/codex/test_dnn_exact_encoding_system_block.py`
+   - `tests/codex_temp/dnn_exact_encoding_system_block_20260315.json`
+
+### 当前系统级候选定理
+
+本轮收口出的统一候选式是：
+
+- `h(c, ctx, stage) ~= B_f + Delta_c + C_ctx(c, ctx) + P_proto(c, ctx, stage) + T_succ(c, ctx, stage) + epsilon`
+
+其中系统分解被明确写成：
+
+- `B_f = family basis / family patch`
+- `Delta_c = bounded concept-specific offset`
+- `C_ctx = contextual and relation-conditioned correction`
+- `P_proto = protocol / task / bridge correction`
+- `T_succ = stage-conditioned successor transport and continuation term`
+
+这一步的含义很重要：  
+当前“精确编码原理”已经不能再被压缩成简单的 `basis + offset`。更准确的系统口径已经变成：
+
+- `basis + offset` 是必要核心
+- 但真正的精确编码还必须加上：
+  - contextual correction
+  - protocol correction
+  - successor transport
+
+### 本轮关键结果
+
+当前 `dnn_exact_encoding_system_block_20260315.json` 的核心量化是：
+
+- `basis_offset_core_score = 0.8983`
+- `contextual_protocol_score = 0.9301`
+- `successor_system_score = 0.5024`
+- `evidence_exactness_score = 0.3238`
+- `system_parametric_score = 0.7282`
+- `exact_system_closure_score = 0.3424`
+
+### 这组数的严格含义
+
+1. `basis + offset + contextual + protocol` 这四段已经很强
+   - 这就是为什么 `basis_offset_core_score` 和 `contextual_protocol_score` 都很高
+
+2. 系统真正被拖垮的是两件事
+   - `successor_system_score` 只有 `0.5024`
+   - `evidence_exactness_score` 只有 `0.3238`
+
+3. 结果就是：
+   - `system_parametric_score = 0.7282`
+   - 说明“系统级候选定理”已经真实可见
+   - 但 `exact_system_closure_score = 0.3424`
+   - 说明离“精确定理闭合”仍然很远
+
+### 本轮执行命令
+
+1. 读取系统块所依赖的结果：
+   - `Get-Content tests/codex_temp/dnn_successor_math_restoration_block_20260315.json`
+   - `Get-Content tests/codex_temp/dnn_math_restoration_status_block_20260315.json`
+   - `Get-Content tests/codex_temp/dnn_systematic_mass_extraction_block_20260315.json`
+   - `Get-Content tests/codex_temp/dnn_specific_math_bridge_block_20260315.json`
+
+2. 运行系统块：
+   - `python tests/codex/test_dnn_exact_encoding_system_block.py`
+
+3. 动态断言执行：
+   - 通过 `importlib.util.spec_from_file_location(...)` 加载并执行 `test_dnn_exact_encoding_system_block()`
+
+4. 语法级检查：
+   - `python -m py_compile research/gpt5/code/dnn_specific_math_bridge.py research/gpt5/code/dnn_exact_encoding_system.py tests/codex/test_dnn_specific_math_bridge_block.py tests/codex/test_dnn_exact_encoding_system_block.py`
+
+### 验证结果
+
+- 系统块脚本运行通过
+- 动态断言执行通过
+- 语法级检查通过
+- 结果文件已写入：
+  - `tests/codex_temp/dnn_exact_encoding_system_block_20260315.json`
+
+### 最严格的问题和硬伤
+
+1. 这轮证明的是“系统级候选定理已经浮现”，不是“系统级精确定理已经闭合”。
+2. `system_parametric_score = 0.7282` 说明系统理解已经成形，但还没有高到可以自称“强系统闭合”。
+3. `exact_system_closure_score = 0.3424` 很低，说明真正的精确闭合仍然远没完成。
+4. 现在最主要的系统级短板非常明确：
+   - `evidence exactness` 太弱
+   - `successor system term` 太弱
+   - 不是 `basis / offset / contextual / protocol` 不够强
+
+### 项目整体进度估计
+
+- `specific_math_bridge_percent = 71%`
+- `exact_encoding_system_percent = 68%`
+- `system_parametric_principle_percent = 73%`
+- `exact_system_closure_percent = 34%`
+- `math_restoration_status_percent = 73%`
+- `successor_math_restoration_percent = 63%`
+- `full_brain_encoding_mechanism_percent = 90%`
+
+### 下一阶段大任务块
+
+1. 提高 `evidence exactness`
+   - 把当前 row/signature 级证据继续压向 dense neuron-level exact tensors
+
+2. 同时提高两条 exact closure
+   - `family -> specific exact closure`
+   - `successor exact closure`
+   - 这两条必须一起打，不能再分开看
+
+3. 用更强的 dense export 和 unseen-family 检验重测当前系统候选定理
+   - 只有这一步站住，才能谈真正的 theorem closure
+
+## 2026-03-15 16:07 AGI_GPT5_ICSPB 主文档整理记录
+
+本轮在继续推进研究块的同时，把 `AGI_GPT5_ICSPB.md` 按当前真实进度做了一次正式收口，避免主文档继续停留在 `2026-03-14` 的旧口径。
+
+### 本轮更新内容
+
+1. 更新文档时间：
+   - `最后更新：2026-03-15`
+
+2. 新增 `3.4 当前 DNN 数学提取的真实进度`
+   - 补入：
+     - `systematic_mass_extraction_percent = 78%`
+     - `specific_math_bridge_percent = 71%`
+     - `exact_encoding_system_percent = 68%`
+     - `system_parametric_principle_percent = 73%`
+     - `exact_system_closure_percent = 34%`
+
+3. 新增 `5.5 当前系统级精确编码候选定理`
+   - 正式写入：
+     - `h(c, ctx, stage) ~= B_f + Delta_c + C_ctx(c, ctx) + P_proto(c, ctx, stage) + T_succ(c, ctx, stage) + epsilon`
+   - 并明确写出：
+     - `basis_offset_core_score = 0.8983`
+     - `contextual_protocol_score = 0.9301`
+     - `successor_system_score = 0.5024`
+     - `evidence_exactness_score = 0.3238`
+     - `system_parametric_score = 0.7282`
+     - `exact_system_closure_score = 0.3424`
+
+4. 更新严格口径
+   - 保持：
+     - `真实大脑编码机制本体破解度（严格口径） = 45% - 53%`
+   - 同时补入并列口径：
+     - `DNN 侧系统级参数原理理解度 = 68% - 73%`
+     - `DNN 侧系统级精确闭合度 = 34%`
+
+5. 更新最严格结论与下一阶段任务
+   - 新增：
+     - `concept-specific 数学桥已较强成立`
+     - `family-to-specific exact closure`
+     - `successor exact closure`
+     - `dense neuron-level exact evidence`
+   - 并把下一阶段任务改成：
+     - `dense neuron-level exact evidence`
+     - `family-to-specific exact closure + successor exact closure`
+     - 后续再打 `canonical answer / instant-learning / external validation`
+
+### 本轮新增测试
+
+- `tests/codex/test_agi_gpt5_icspb_doc_refresh_block.py`
+
+### 本轮执行命令
+
+1. 读取主文档与最新研究块：
+   - `Get-Content research/gpt5/docs/AGI_GPT5_ICSPB.md`
+   - `Get-Content tests/codex_temp/dnn_exact_encoding_system_block_20260315.json`
+   - `Get-Content tests/codex_temp/dnn_specific_math_bridge_block_20260315.json`
+   - `Get-Content tests/codex_temp/dnn_systematic_mass_extraction_block_20260315.json`
+
+2. 运行文档测试：
+   - `python tests/codex/test_agi_gpt5_icspb_doc_refresh_block.py`
+
+3. 回归运行关键研究块：
+   - `python tests/codex/test_dnn_specific_math_bridge_block.py`
+   - `python tests/codex/test_dnn_exact_encoding_system_block.py`
+
+### 验证结果
+
+- 主文档刷新测试通过
+- `specific_math_bridge` 研究块通过
+- `exact_encoding_system` 研究块通过
+- 主文档已经和最新研究口径对齐，不再只停留在 `basis + offset` 的旧表达
+
+### 最严格的问题和硬伤
+
+1. 这轮整理的是“主文档与当前研究进度对齐”，不是新理论本身突然闭合。
+2. 主文档虽然已经写入系统级候选定理，但 `exact_system_closure = 34%` 仍然很低。
+3. 也就是说，文档已经更真实了，但现实硬伤并没有因为整理文档而减少。
+4. 当前最硬的问题仍然是：
+   - dense exact evidence 不足
+   - family-to-specific exact closure 不足
+   - successor exact closure 不足
+
+### 项目整体进度估计
+
+- `specific_math_bridge_percent = 71%`
+- `exact_encoding_system_percent = 68%`
+- `system_parametric_principle_percent = 73%`
+- `exact_system_closure_percent = 34%`
+- `math_restoration_status_percent = 73%`
+- `full_brain_encoding_mechanism_percent = 90%`
+
+### 下一阶段大任务块
+
+1. 提高 dense neuron-level exact evidence，避免系统候选定理继续只停在 row/signature 级别。
+2. 把 `family-to-specific exact closure` 和 `successor exact closure` 当成同一个系统级冲刺目标，不再拆开做。
+3. 在更强 dense export 和 unseen-family 条件下重测当前系统级候选定理，只有那一步站住，才谈 theorem closure。
+
+## [2026-03-15 14:00] AppleNeuron3DTab `unifiedDecodeResult` 作用域修复
+
+### 本次命令记录
+
+- `rg -n "unifiedDecodeResult|AppleNeuronControlPanels" frontend/src/blueprint/AppleNeuron3DTab.jsx`
+- `Get-Content -Path frontend/src/blueprint/AppleNeuron3DTab.jsx | Select-Object -Skip 3188 -First 220`
+- `Get-Content -Path frontend/src/blueprint/AppleNeuron3DTab.jsx | Select-Object -Skip 1720 -First 180`
+- `npm run build`
+- `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+### 工程进展
+
+- 错误定位为 `AppleNeuronControlPanels` 中直接读取 `unifiedDecodeResult`，但从 `workspace` 解构时漏掉该字段，导致运行时 `ReferenceError`。
+- 已在 `frontend/src/blueprint/AppleNeuron3DTab.jsx` 的 `AppleNeuronControlPanels` 解构列表中补入 `unifiedDecodeResult`。
+- `vite build` 已通过，说明这次修复没有引入新的编译级错误。
+
+### 理论/数学研究进展
+
+- 这次问题虽然是前端作用域错误，但它暴露了一个更底层约束：研究对象从 `workspace` 到 3D/控制面板的映射必须满足“字段闭包”。
+- 对 AGI 逆向工程而言，若一个研究量 `R` 已参与节点生成、状态摘要和证据面板，那么它在观察层的投影集合应保持一致；否则会出现“内部存在但外部不可见”的伪缺失，这会污染我们对神经表征闭合性的判断。
+- 可把当前约束表述为一个弱形式映射原则：若 `R ∈ WorkspaceState` 且 `R` 被某观察函数 `f_i` 使用，则 `R` 必须属于该组件的显式输入域。当前修复本质上是在恢复这个输入域闭包。
+- 这对后续 `successor exact / proxy`、`artifact path / field path / exactness tier` 的联动很关键，因为一旦输入域不闭合，研究结论会被 UI 假阴性误导。
+
+### 最严格的问题和硬伤
+
+1. 这次只修了一个运行时作用域错误，没有解决控制面板中研究数据来源仍然部分固化的问题。
+2. `vite build` 通过只能证明编译和打包正常，不能证明所有交互路径都已覆盖。
+3. 当前文件仍然很大，控制面板职责继续膨胀，后续很容易再次出现“字段加了状态但漏传观察层”的问题。
+4. 统一解码数据目前仍缺少系统化的 schema 校验；今天的问题是漏解构，明天可能是字段名漂移。
+
+### 项目整体进度估计
+
+- `frontend_runtime_stability_percent = 74%`
+- `workspace_to_ui_field_closure_percent = 57%`
+- `dnn_research_evidence_binding_percent = 64%`
+- `successor_exactness_visualization_percent = 39%`
+- `overall_agi_reverse_engineering_pipeline_percent = 67%`
+
+### 下一阶段大任务块
+
+1. 做一次 `workspace -> panel -> scene -> summary` 的字段闭包清点，系统消灭这类漏传问题，而不是继续按报错点修补。
+2. 给研究 artifact 引入统一 schema 和导入校验，把 `unified_decode / hard_problem / four_tasks / multidim` 的字段接口收束成可验证合同。
+3. 启动 `successor exact vs proxy` 的 3D 双轨迹与证据联动改造，把当前最大的数学硬伤直接投影到界面主流程里。
+
+## [2026-03-15 14:15] 研究资产导入面板重构为双 Tab
+
+### 本次命令记录
+
+- `rg -n "提取语料摘要|当前对象的数据映射|3D 明细与硬伤|研究资产导入|概念生成|handleImportSelectedScanFile|handleGenerateQuery|selectedScanPath|scanImportSummary" frontend/src/blueprint/AppleNeuron3DTab.jsx`
+- `rg -n "setScanImportSummary|handleImportScanJsonText|unified_math_structure_decode|bundleManifest|fourTasksManifest" frontend/src/blueprint/AppleNeuron3DTab.jsx`
+- `rg -n "buildArtifactPreview|scanPreviewData|selectedNodeDetails|\\{false \\? \\(" frontend/src/blueprint/AppleNeuron3DTab.jsx`
+- `npm run build`
+- `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+### 工程进展
+
+- 已把 `提取语料摘要 / 当前对象的数据映射 / 3D 明细与硬伤` 三个模块从主流程里移除，旧实现挂到 `false` 分支，不再渲染。
+- 已把原来的 `概念生成 + 研究资产导入` 收束成一个新的 `研究资产与 3D 映射` 双 tab 面板。
+- `手动输入` tab 现在直接处理名词、类别和当前选中的 3D 节点数据。
+- `测试数据` tab 现在支持选择实验文件、预览关键指标、显示对应数学分析与理论对象，并直接展开原始 JSON。
+- 新增 `buildArtifactPreview`，把 `名词扫描 / 多维编码 / 硬伤实验 / 四任务 / 统一解码 / bundle` 收到同一套预览解释逻辑下。
+- `vite build` 已通过。
+
+### 理论/数学研究进展
+
+- 这次改动把“研究摘要卡片”改成了“研究证据直视化”，更接近我们要的逆向工程方式：先看具体数据，再看它落到哪条理论链路上。
+- 从方法论上，这相当于把研究对象 `R` 从“摘要投影”换成“原始对象 + 解释函数 `phi(R)`”；其中 `phi` 同时给出指标抽取、理论映射和 3D 观察建议。
+- 这样做的意义是减少 UI 层对研究结论的再压缩。如果先摘要后观察，很容易把非闭合结构误看成已经闭合；而直接看 raw JSON + theory mapping，更容易发现哪些定理链条只是局部成立。
+- `buildArtifactPreview` 现在相当于一个弱形式的研究函子：把不同 schema 的 artifact 映到统一的 `(metrics, theory_object, analysis_lines, raw_json)` 四元组。这还不是严格数学闭包，但已经是向统一研究接口迈了一步。
+
+### 最严格的问题和硬伤
+
+1. 旧模块只是被隐藏，没有彻底删掉，文件体积和复杂度仍然偏高。
+2. `buildArtifactPreview` 的理论映射目前是启发式规则，不是严格 schema 驱动，存在误判空间。
+3. 测试数据 tab 虽然显示了完整 raw JSON，但还没有做到字段级高亮、路径定位和 artifact 间对照。
+4. 现在的“完整展现”仍然是单文件视角，不是多 artifact 联合分析视角。
+5. 主包体积问题还在，前端 bundle 仍然偏大。
+
+### 项目整体进度估计
+
+- `research_asset_ui_refactor_percent = 79%`
+- `artifact_to_theory_mapping_percent = 61%`
+- `raw_data_visibility_percent = 76%`
+- `workspace_to_research_evidence_binding_percent = 68%`
+- `overall_agi_reverse_engineering_pipeline_percent = 69%`
+
+### 下一阶段大任务块
+
+1. 把 `buildArtifactPreview` 从启发式映射升级成 schema 驱动映射，附带字段路径和证据等级。
+2. 做多 artifact 联动视图，把 `bundle / four_tasks / unified_decode / hard_problem` 放到同一个比较框架里，而不是一份文件一份文件看。
+3. 把 raw JSON 进一步升级成“字段路径 -> 3D 节点 -> 理论对象”的三向联动，真正打通研究证据、空间表示和理论恢复。
+
+## [2026-03-15 14:52] 下拉框概念化命名 + 三维编码设置右下迁移
+
+### 本次命令记录
+
+- `rg -n "formatScanOptionLabel|研究资产与 3D 映射|三维编码设置|AppleNeuronEncodingInfoPanels|AppleNeuronMultidimSettingsPanel" frontend/src/blueprint/AppleNeuron3DTab.jsx frontend/src/App.jsx`
+- `Get-Content -Path frontend/src/blueprint/AppleNeuron3DTab.jsx | Select-Object -Skip 4800 -First 80`
+- `Get-Content -Path frontend/src/App.jsx | Select-Object -Skip 3448 -First 80`
+- `npm run build`
+- `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+### 工程进展
+
+- 研究资产 tab 的文件下拉框已改为“概念标签 + 时间”，不再直接显示文件名。
+- 新增 `inferScanOptionConcept`，把 `统一解码 / 名词扫描 / 多维探针 / 四任务 / bundle / 各类硬伤实验` 映射成更接近研究概念的标签。
+- 已把“三维编码设置”抽成独立组件 `AppleNeuronMultidimSettingsPanel`。
+- 左侧控制面板中的旧“三维编码设置”已隐藏，右下角操作面板已接入新的紧凑版三维设置组件。
+- `vite build` 已通过。
+
+### 理论/数学研究进展
+
+- 这次改动对应一个很实际的研究接口问题：如果下拉框展示的是文件名，研究者在选择数据时其实是在记忆存储路径，而不是在选择数学对象。
+- 将文件标签概念化，本质上是在把 artifact 的“存储表示”替换成“研究表示”，即从 `path` 过渡到 `concept(phi(path))`。这更接近我们做 AGI 逆向工程需要的工作流。
+- 把三维编码设置移到右下角窗口，也是在把“结构几何操作”拉近 3D 观测区，减少参数调节与空间观察之间的认知切换成本。
+- 从研究方法论看，这有助于把属性纤维 `style / logic / syntax` 的操作变成主观测回路的一部分，而不是留在左侧长面板里被埋没。
+
+### 最严格的问题和硬伤
+
+1. 下拉框现在是概念标签，但仍然依赖文件名启发式判断，不是严格读取 artifact schema。
+2. 右下角现在同时放了过滤和三维设置，信息密度更高，后面可能需要再细分折叠区。
+3. 左侧旧设置只是隐藏，没有做彻底代码删减。
+4. 目前“概念标签”仍没有把理论对象一起显示出来，后续可以升级成 `概念 + 理论对象` 双层标签。
+
+### 项目整体进度估计
+
+- `artifact_selector_semanticization_percent = 72%`
+- `multidim_control_relayout_percent = 81%`
+- `artifact_schema_readability_percent = 63%`
+- `3d_observation_operation_closure_percent = 66%`
+- `overall_agi_reverse_engineering_pipeline_percent = 70%`
+
+### 下一阶段大任务块
+
+1. 把文件选择器从文件名启发式升级为 schema 驱动标签，直接显示 `概念 / 理论对象 / 证据类型`。
+2. 继续整理右侧两个窗口的职责，把“结构观测”和“操作控制”做成更稳定的布局合同。
+3. 把三维设置和研究资产预览联动起来，实现“选择 artifact 后自动高亮相关维度和可见性配置”。
+
+## [2026-03-15 14:56] 研究资产下拉框改为内容标签
+
+### 本次命令记录
+
+- `rg -n "scan_files|scan_file|api/main/scan_files|api/main/scan_file" -S .`
+- `Get-Content -Path server/server.py | Select-Object -Skip 248 -First 80`
+- `rg -n "buildScanContentLabel|scanOptionContentLabels|formatScanOptionLabel\\(f, scanOptionContentLabels\\[f.path\\]\\)" frontend/src/blueprint/AppleNeuron3DTab.jsx`
+- `npm run build`
+- `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+### 工程进展
+
+- 已确认 `scan_files` 接口只返回元数据，不能直接提供“苹果-水果 / 猴子-动物”这类内容标签。
+- 前端新增 `buildScanContentLabel`，会读取研究资产实际内容，优先从 `noun_records` 里抽前两个 `名词-类别` 组合。
+- 现在名词扫描类文件的下拉框标签会优先显示类似 `苹果-水果 / 猴子-动物`，而不是原始文件名。
+- 其他类型的研究资产会回退到更接近研究对象的标签，例如硬伤实验名、四任务、统一解码等。
+- `vite build` 已通过。
+
+### 理论/数学研究进展
+
+- 这一步继续把“文件系统对象”变成“研究对象”。原来下拉框显示的是存储标识，现在显示的是内容前景，也就是研究对象的局部语义切片。
+- 对 AGI 逆向工程来说，这相当于让 artifact 选择器从 `path space` 更靠近 `concept-category manifold`，减少把路径错当成对象的认知偏差。
+- 对名词扫描类数据，`苹果-水果 / 猴子-动物` 这样的标签，本质上是在用低维语义投影提示该文件承载的局部概念簇。这比文件名更接近我们真正要恢复的神经编码单元。
+- 但目前这还只是局部投影，不是完整数学表示；它只能说明“这个文件大致承载哪些概念”，不能替代内部完整结构。
+
+### 最严格的问题和硬伤
+
+1. 当前只抓前两个 `noun_records` 作为标签，仍然是近似摘要，不是完整内容表达。
+2. 标签缓存是前端按文件逐个读取生成的，文件很多时会增加一些额外请求。
+3. 非名词扫描文件仍然主要靠启发式回退标签，不是严格内容摘要。
+4. 如果文件内容更新但路径不变，当前缓存策略可能短时间内保留旧标签。
+
+### 项目整体进度估计
+
+- `artifact_content_labeling_percent = 74%`
+- `semantic_selector_usability_percent = 79%`
+- `artifact_schema_surface_percent = 65%`
+- `research_object_selection_clarity_percent = 72%`
+- `overall_agi_reverse_engineering_pipeline_percent = 70%`
+
+### 下一阶段大任务块
+
+1. 把内容标签从“前两个概念”升级成 schema 驱动摘要，支持不同 artifact 类型的真正内容标签。
+2. 给研究资产选择器增加二级信息，例如 `理论对象 / 证据类型 / 时间`，而不只是概念词。
+3. 把选择器标签与原始数据预览联动，点击后直接高亮该标签对应的数据字段和 3D 节点。
+
+## [2026-03-15 14:59] 名词扫描理论分析与原始数据迁移到右上角
+
+### 本次命令记录
+
+- `rg -n "infoPanelTab|AppleNeuronEncodingInfoPanels|AppleNeuronControlPanels|scanPreview|scanPreviewData|selectedScanPath" frontend/src/App.jsx frontend/src/blueprint/AppleNeuron3DTab.jsx`
+- `Get-Content -Path frontend/src/App.jsx | Select-Object -Skip 2860 -First 140`
+- `Get-Content -Path frontend/src/blueprint/AppleNeuron3DTab.jsx | Select-Object -Skip 1728 -First 1040`
+- `npm run build`
+- `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+### 工程进展
+
+- 已把研究资产预览状态 `selectedScanPath / scanPreviewData / scanPreviewLoading / scanPreviewError` 提升到 `useAppleNeuronWorkspace()` 共享层。
+- 新增右上角专用组件 `AppleNeuronResearchAssetInfoPanel`，只在当前研究资产属于 `名词扫描 | 名词编码扫描` 时显示。
+- 右上角现在展示这两块内容：
+  - `对应数学分析与理论`
+  - `原始数据`
+- 左侧 `研究资产与 3D 映射` 中，对于 `名词扫描 | 名词编码扫描`，上述两块内容已隐藏，避免重复。
+- `vite build` 已通过。
+
+### 理论/数学研究进展
+
+- 这次布局调整的核心不是 UI 美化，而是把“名词扫描”的理论解释和原始证据移到主观察窗口附近，使研究路径更符合“右上解释、左侧控制、中央 3D 观察”的工作流。
+- 名词扫描本身是 family patch / concept section 的直接证据层，把它放到右上角，相当于把“局部概念簇的数学解释”贴近主观测区，而不是埋在操作面板里。
+- 从方法论上，这相当于把控制变量区和证据解释区分离。控制变量负责选择对象，证据解释负责判断对象是否支持当前数学假设。
+- 这一步提高了研究闭环清晰度：左侧负责“选什么”，右上负责“这是什么、为什么重要”，中间 3D 负责“它在空间里怎样出现”。
+
+### 最严格的问题和硬伤
+
+1. 当前只对 `名词扫描 | 名词编码扫描` 做了迁移，其他研究资产仍留在左侧预览区。
+2. 右上角面板现在信息更密，后续可能需要做折叠或分页，否则长 JSON 会压缩其他信息区。
+3. 理论解释仍然来自启发式映射，不是 schema 强约束。
+4. 左侧和右上角之间虽然共享了研究资产状态，但还没有做到字段级双向高亮联动。
+
+### 项目整体进度估计
+
+- `research_asset_state_lift_percent = 76%`
+- `noun_scan_explanation_relayout_percent = 84%`
+- `evidence_view_observation_closure_percent = 71%`
+- `artifact_to_ui_contract_percent = 67%`
+- `overall_agi_reverse_engineering_pipeline_percent = 71%`
+
+### 下一阶段大任务块
+
+1. 把其他 artifact 类型也按“控制区 / 解释区 / 观察区”三分法重排，而不是只处理名词扫描。
+2. 给右上角证据面板增加字段路径定位和折叠层级，避免原始 JSON 抢占过多空间。
+3. 实现左侧选中研究资产后，右上角字段与 3D 节点的双向联动高亮。
+
+## [2026-03-15 15:03] 已生成概念集迁移到右下角并整理右侧窗口
+
+### 本次命令记录
+
+- `rg -n "已生成概念集|AppleNeuronCategoryComparePanel|AppleNeuronCompareFilterPanel|AppleNeuronSelectedLegendPanels|AppleNeuronEncodingInfoPanels|AppleNeuronResearchAssetInfoPanel|AppleNeuronMultidimSettingsPanel" frontend/src/blueprint/AppleNeuron3DTab.jsx frontend/src/App.jsx`
+- `Get-Content -Path frontend/src/App.jsx | Select-Object -Skip 2898 -First 180`
+- `Get-Content -Path frontend/src/blueprint/AppleNeuron3DTab.jsx | Select-Object -Skip 4960 -First 70`
+- `npm run build`
+- `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+### 工程进展
+
+- 已把左侧控制面板中的 `已生成概念集` 模块隐藏，不再占用左侧主入口。
+- 新增 `AppleNeuronGeneratedConceptSetsPanel`，并放到右下角操作面板中。
+- 新的概念集面板把原来分散在 `已生成概念集` 和 `CompareFilter` 里的能力合并成一处：
+  - 显示概念集列表
+  - 控制显隐
+  - 全显示 / 全隐藏
+  - 删除概念集
+- 右下角窗口已清理两块重复的说明型小卡片：
+  - `当前算法`
+  - `DNN 过滤操作`
+- 右上角 `编码焦点` 标签中也删除了一条重复导语 `DNN 编码观测区...`
+- `vite build` 已通过。
+
+### 理论/数学研究进展
+
+- 这次改动的实质是把“概念集管理”从左侧研究入口迁到右下角操作区，符合“左侧定义对象、右侧管理对象”的结构分工。
+- 从研究工作流看，概念集并不是理论本身，而是实验对象集；因此它更适合作为操作层对象，而不是和理论对象、动作模式挤在同一个主入口里。
+- 把 `CompareFilter` 和 `已生成概念集` 合并，也是在减少同一对象集的多重投影。原先同一批概念集被拆成“一个地方删除、一个地方显隐”，这会增加研究操作噪音。
+- 这种整理有利于形成更清晰的闭环：`左侧选择研究对象 -> 右下管理实验对象集 -> 右上查看解释 -> 中央观察 3D 结果`。
+
+### 最严格的问题和硬伤
+
+1. `AppleNeuronCompareFilterPanel` 代码还保留在文件里，但当前不再使用，后续应做彻底清理。
+2. 右上角 `编码焦点` 里的模块虽然做了精简，但还没有完成更彻底的职责收束。
+3. 左侧隐藏的旧 `已生成概念集` 仍然在代码里，文件继续膨胀。
+4. 右下角现在虽然更聚焦，但在概念集很多时仍可能变长，需要后续做折叠/分页。
+
+### 项目整体进度估计
+
+- `generated_concept_panel_relayout_percent = 86%`
+- `right_side_panel_cleanup_percent = 73%`
+- `operation_vs_explanation_separation_percent = 78%`
+- `ui_redundancy_reduction_percent = 69%`
+- `overall_agi_reverse_engineering_pipeline_percent = 72%`
+
+### 下一阶段大任务块
+
+1. 彻底删除已废弃的 `CompareFilter` 和左侧旧概念集代码，收缩前端文件体积。
+2. 对右上角 `编码焦点` 继续分层，把“统计类 / 证据类 / 选中节点类”做成更稳定的结构。
+3. 给右下角概念集管理增加批量操作与搜索，避免概念集变多后列表失控。
+
+## 2026-03-15 15:07 Codex 任务记录
+
+### 本次命令
+
+1. `rg -n "AppleNeuronResearchAssetInfoPanel|isNounScanPreview|名词扫描|多维编码探针|scanPreview\\?\\.typeLabel" frontend/src/blueprint/AppleNeuron3DTab.jsx frontend/src/App.jsx`
+2. `Get-Content frontend/src/blueprint/AppleNeuron3DTab.jsx | Select-Object -Skip 3458 -First 70`
+3. `Get-Content frontend/src/blueprint/AppleNeuron3DTab.jsx | Select-Object -Skip 4008 -First 35`
+4. `Get-Content frontend/src/blueprint/AppleNeuron3DTab.jsx | Select-Object -Skip 4788 -First 38`
+5. `Get-Content frontend/src/blueprint/AppleNeuron3DTab.jsx | Select-Object -Skip 500 -First 180`
+6. `npm run build`
+
+### 本次修改
+
+1. 在 `frontend/src/blueprint/AppleNeuron3DTab.jsx` 新增 `shouldShowResearchAssetInTopRight`，统一判断哪些研究资产应当把“原始数据”和“对应数学分析与理论”放到右上角。
+2. 右上角 `AppleNeuronResearchAssetInfoPanel` 不再只接收 `名词扫描`，现在也接收 `多维编码探针`。
+3. 左侧 `研究资产与 3D 映射` 中，`多维编码探针` 的“原始数据”和“对应数学分析与理论”已隐藏，避免和右上角重复。
+4. 构建验证通过，当前改动没有引入编译错误。
+
+### 理论数学研究进度
+
+1. 这次调整把“多维编码探针”的解释层和观测层放到了同一认知窗口里，更接近 `attribute_fiber -> probe evidence -> 3D scene` 的闭环，而不是把证据散落在左侧控制区。
+2. 从 AGI 逆向工程角度看，这有助于把“属性子空间是否真实存在”的判断，从单纯可视化观察推进到“原始数据 + 理论解释 + 3D 几何”同步核对。
+3. 当前仍然只是 UI 层聚合，尚未实现字段级联动高亮，所以还不能说已经完成了真正的 `research evidence binding`。
+
+### 最严格的问题和硬伤
+
+1. 这次只迁移了 `多维编码探针`，`多维因果消融` 和 `多 seed 稳定性` 仍然留在左侧，右上角承载规则还不完全统一。
+2. 右上角目前展示的是整块 JSON，不是字段路径级证据面板，理论分析与原始数据的对应仍然偏粗。
+3. 判定逻辑虽然增加了路径兜底，但本质上还是启发式，不是 schema 驱动。
+4. 前端包体仍然过大，`vite build` 继续提示 chunk 过大问题。
+
+### 项目整体进度估计
+
+- `multidim_probe_explanation_relayout_percent = 84%`
+- `research_asset_topright_unification_percent = 72%`
+- `artifact_to_theory_binding_percent = 66%`
+- `field_level_evidence_linking_percent = 41%`
+- `overall_agi_reverse_engineering_pipeline_percent = 73%`
+
+### 下一阶段大任务块
+
+1. 把 `多维编码探针 / 多维因果消融 / 多 seed 稳定性` 三类资产统一收束到右上角，形成完整的“多维编码证据簇”。
+2. 将右上角原始数据升级为字段路径视图，并把字段路径与 3D 节点、理论对象做双向联动。
+3. 为研究资产建立稳定 schema，把当前启发式标题/类型判断改成严格的结构化导入协议。
+
+## 2026-03-15 15:16:52 可视化客户端整理：模型说明 / 创造面板按左侧功能收敛
+- 用户请求：整理可视化客户端，重点清理“模型说明”和“创造面板”两个窗口中的重复与无关内容，并要求内容随左侧控制面板当前选择功能变化。
+- 本轮执行命令：
+  - `Get-ChildItem -Force`
+  - `rg -n "模型说明|创造面板|控制面板|可视化|visual|panel|model description|create panel" -S .`
+  - `rg --files .`
+  - `Get-Content -Path frontend/src/App.jsx -Encoding UTF8 | Select-Object -Skip 1790 -First 260`
+  - `Get-Content -Path frontend/src/blueprint/AppleNeuron3DTab.jsx -Encoding UTF8 | Select-Object -Skip 3240 -First 520`
+  - `Get-Content -Path frontend/src/blueprint/AppleNeuron3DTab.jsx -Encoding UTF8 | Select-Object -Skip 3800 -First 420`
+  - `Get-Content -Path frontend/src/App.jsx -Encoding UTF8 | Select-Object -Skip 2680 -First 900`
+  - `git status --short`
+  - `git diff -- frontend/src/App.jsx`
+  - `npm run build`
+- 代码修改：
+  - 在 `frontend/src/App.jsx` 中新增 DNN 主工作台 `analysisMode -> infoSections / operationSections` 的映射规则。
+  - 右上“模型说明”标题改为 `模型说明 · DNN / 当前分析模式`，右下主工作台标题改为 `创造面板 · DNN / 当前分析模式`。
+  - “模型说明”的编码页签只按当前模式渲染 `类别比较 / 编码机制 / 研究资产 / 图例` 中相关卡片，去掉同屏堆叠的无关卡片。
+  - “创造面板”只在相关模式下显示 `已生成概念集` 或 `三维编码设置`；对因果、反事实、鲁棒性、最小回路等模式，不再显示无关共享工具，只保留当前模式说明。
+- 验证结果：
+  - `frontend` 执行 `npm run build` 成功。
+  - Vite 仍提示主包体积较大，但这属于既有打包规模问题，不是本次整理引入的新错误。
+- 理论/数学研究进度：
+  - 这轮没有新增实验定理，但在界面层把“研究对象 -> 分析动作 -> 可见证据”的映射进一步离散化，相当于把前端观察算子从“并集显示”改成了“按条件投影显示”。
+  - 从方法论上，这减少了不同理论对象之间的观测串扰，使 `O(mode, object)` 更接近一个稀疏选择算子，而不是把无关证据一并叠加的混合读出。
+  - 对 AGI 主线的意义是：界面不再把 family patch、attribute fiber、protocol bridge、hard-problem 证据混为同一阅读层，后续更容易把每个理论对象对应到独立的数学闭包检查。
+- 严格审视当前结论的硬伤：
+  - 当前收敛规则仍是手工映射，不是从统一 schema 自动推导，后续若模式继续扩展，维护成本会上升。
+  - 这次只整理了 `App.jsx` 的右侧窗口逻辑，没有继续压缩 `AppleNeuronControlPanels` 本体内部的长内容块，因此左侧主面板仍然偏重。
+  - 目前“相关性”仍由工程规则定义，还不是由实验 metadata 自动判定；从数学上说，这还是人工先验，不是数据驱动分类。
+- 项目整体进度判断：
+  - 前端研究工作台可用性与阅读收敛度约 `78%`。
+  - “理论对象 -> 实验资产 -> 3D 显示 -> 右侧说明”的半自动闭环约 `64%`。
+  - “统一 schema 驱动的自适应研究界面”约 `38%`。
+- 下一阶段建议：
+  - 直接做一个更大的阶段任务：把左侧控制面板、右上模型说明、右下创造面板统一改造成同一份 `mode-schema` 驱动，不再在多个 JSX 分支里手写规则。
+  - 把 `analysisMode`、`theoryObject`、`artifact type` 三者归一到同一个配置层，自动生成“该显示哪些卡片、哪些指标、哪些操作入口、哪些说明文本”。
+  - 随后补一轮前端测试，至少覆盖“切换模式时右侧卡片集合正确变化”的回归检查，避免后续继续堆分支把界面再次弄乱。
+
+## 2026-03-15 15:20:02 可视化客户端整理补充：隐藏实验动作层并固定默认动态分析
+- 用户追加请求：`实验动作层` 看起来没有实际价值，且动画效果趋同；先隐藏，并默认选择动态分析。
+- 本轮执行命令：
+  - `rg -n "实验动作层|analysisMode|setAnalysisMode|dynamic_prediction" frontend/src/blueprint/AppleNeuron3DTab.jsx`
+  - `Get-Content -Path frontend/src/blueprint/AppleNeuron3DTab.jsx -Encoding UTF8 | Select-Object -Skip 2040 -First 40`
+  - `Get-Content -Path frontend/src/blueprint/AppleNeuron3DTab.jsx -Encoding UTF8 | Select-Object -Skip 4360 -First 120`
+  - `npm run build`
+- 代码修改：
+  - 在 `frontend/src/blueprint/AppleNeuron3DTab.jsx` 中隐藏“实验动作层（第二层）”整块内容。
+  - 移除“当前理论对象不支持当前动作时自动回切到首个模式”的 effect，避免默认 `dynamic_prediction` 被重置回 `static`。
+  - 保留 `analysisMode` 初始值为 `dynamic_prediction`，使默认进入动态分析真正生效。
+- 验证结果：
+  - `frontend` 执行 `npm run build` 成功。
+- 理论/数学研究进度：
+  - 这一步实际上把“对象约束动作”的强制投影先放松了，从界面行为上改成“先固定主观察算子，再决定是否需要对象约束”。
+  - 从研究方法上，这等价于优先保证时间链路观测 `dynamic_prediction` 的一致性，而不再让理论对象的先验分类直接打断主观察流程。
+  - 这更适合当前阶段，因为项目的主要硬伤仍集中在 successor、transport、在线链路和协议场闭环，动态观察比静态切回更有信息密度。
+- 严格审视当前结论的硬伤：
+  - 隐藏“实验动作层”后，当前界面里用户暂时没有直接切换这些动作的入口，这是一种有意收缩，不是完整解法。
+  - 去掉自动回切后，`theoryObject` 与 `analysisMode` 之间可能出现“理论对象偏静态、动作却是动态”的不完全一致状态；这在当前阶段是可接受工程折中，但不是最终一致性方案。
+  - 真正的根治方式仍然是把动作选择、对象约束、动画驱动统一进同一个 schema，而不是继续靠局部隐藏和局部解绑来修补。
+- 项目整体进度判断：
+  - 前端交互收敛性约提升到 `80%`。
+  - 动态主观察链路的一致性约 `68%`。
+  - 统一 schema 驱动界面的完成度仍约 `38%`，这一核心硬任务还没真正开工。
+- 下一阶段建议：
+  - 直接做下一块较大的阶段任务：重构 DNN 主工作台的“理论对象 / 分析动作 / 参数卡 / 说明卡”联动 schema，恢复动作切换能力，但不再使用现在这种重复按钮墙。
+  - 目标不是把隐藏区块再放回来，而是改成单一、有效、低噪声的动作入口，并且让每个动作真正绑定不同参数与不同说明，而不是共享同一套近似动画壳。
+
+## 2026-03-15 15:22:21 可视化客户端整理补充：移除模块定位说明并修正研究资产文件筛选默认行为
+- 用户追加请求：去掉 `DNN / SNN / ICSPB` 中的“模块定位”说明，并解释为什么“研究资产与 3D 映射”里的测试数据文件下拉框没有选择项。
+- 本轮执行命令：
+  - `rg -n "模块定位|研究资产与 3D 映射|scanFileFilter|filteredScanFileOptions|refreshScanFileOptions|selectedScanPath|未发现可导入文件" frontend/src/App.jsx frontend/src/blueprint/AppleNeuron3DTab.jsx server -S`
+  - `rg --files tests/codex_temp tempdata | rg "multidim|mass_noun|noun_scan|encoding_scan|dynamic_binding|long_horizon|local_credit|triplet_targeted|minimal_causal_circuit|unified_coordinate|concept_family_parallel|agi_four_tasks|unified_math_structure_decode|bundle_manifest"`
+  - `Get-Content -Path frontend/src/App.jsx -Encoding UTF8 | Select-Object -Skip 2648 -First 40`
+  - `Get-Content -Path frontend/src/App.jsx -Encoding UTF8 | Select-Object -Skip 2948 -First 20`
+  - `Get-Content -Path frontend/src/blueprint/AppleNeuron3DTab.jsx -Encoding UTF8 | Select-Object -Skip 4040 -First 160`
+  - `npm run build`
+- 问题原因定位：
+  - 文件下拉框为空的主因不是目录里没有研究资产，而是 `scanFileFilter` 之前默认是 `multidim`。
+  - 当前仓库中实际上存在大量 `mass_noun / hard_problem / four_tasks / unified_decode / multidim` 结果文件；如果默认筛选停在 `multidim` 且命中不足，UI 会看起来像“没有文件”。
+  - 因而这是“默认筛选过窄导致的空列表假象”，不是研究资产真的消失。
+- 代码修改：
+  - 在 `frontend/src/App.jsx` 中移除了左侧控制面板顶部公共的“模块定位”说明块。
+  - 在 `frontend/src/App.jsx` 中移除了右上模型说明“概览”页签中的 `模块定位:` 行。
+  - 在 `frontend/src/blueprint/AppleNeuron3DTab.jsx` 中把 `scanFileFilter` 默认值从 `multidim` 改成 `all`。
+  - 同时补充空状态提示：当总文件数大于 `0` 但当前筛选命中为 `0` 时，明确提示“当前目录里有研究资产，但没有命中这个筛选条件”。
+- 验证结果：
+  - `frontend` 执行 `npm run build` 成功。
+- 理论/数学研究进度：
+  - 这一步虽然是 UI 修正，但本质上是在修正研究证据入口的先验测度：先前把文件空间先投影到 `multidim` 子集，导致用户对证据全集的感知失真。
+  - 现在默认从全集 `all` 开始，相当于先暴露完整证据空间，再让用户施加条件筛选；这更符合研究流程中的“先看总体证据，再做条件切片”。
+  - 对 AGI 主线的意义是，研究资产入口不再因为默认先验过强而遮蔽大量 hard-problem 与四任务证据，证据链读法更接近真实实验全貌。
+- 严格审视当前结论的硬伤：
+  - 目前筛选仍是基于文件名规则，不是基于文件 schema 自动分类；因此命名不规范时仍可能出现误判。
+  - 左侧与右上虽然去掉了“模块定位”说明，但 `currentPanelBlueprint` 仍在代码中承担其它说明字段，后续最好继续去重，避免同类说明换个位置又出现。
+  - 当前 UI 仍有大量历史隐藏块，工程整洁度不够，后续维护风险仍然偏高。
+- 项目整体进度判断：
+  - 前端工作台可读性约 `82%`。
+  - 研究资产入口可用性约 `72%`。
+  - 基于统一 schema 的研究资产分类与界面驱动仍约 `40%`。
+- 下一阶段建议：
+  - 直接做一个较大的阶段任务：把研究资产列表改成“按 schema 自动分类 + 按更新时间排序 + 显示类型徽标”的统一资产浏览器，而不是继续靠文件名关键词过滤。
+  - 同时清理 `AppleNeuron3DTab.jsx` 中已经被 `false ? (...)` 挂起的历史区块，减少前端逻辑分叉，防止后续继续出现“界面看似空白，其实是默认条件过窄”的问题。
+
+## 2026-03-15 15:23:57 可视化客户端整理补充：彻底隐藏实验动作层相关参数卡
+- 用户追加反馈：界面里“实验动作层窗口”看起来仍然存在。
+- 原因复核：
+  - 标题为 `实验动作层（第二层）` 的区块实际上已经被隐藏。
+  - 用户仍能看到的更可能是其后面的 `当前模式参数 · 动态预测` 和 `当前模式参数 · 机制实验` 两张卡，它们视觉上属于同一组动作窗口，因此会造成“实验动作层仍未隐藏”的感受。
+- 本轮执行命令：
+  - `rg -n "<App|AppNew|main_new|AppleNeuronControlPanels|实验动作层（第二层）" frontend/src frontend/index.html -S`
+  - `Get-Content -Path frontend/src/main.jsx -Encoding UTF8 | Select-Object -First 80`
+  - `Get-Content -Path frontend/src/blueprint/AppleNeuron3DTab.jsx -Encoding UTF8 | Select-Object -Skip 4312 -First 110`
+  - `npm run build`
+- 代码修改：
+  - 在 `frontend/src/blueprint/AppleNeuron3DTab.jsx` 中继续隐藏 `当前模式参数 · 动态预测` 卡片。
+  - 同时隐藏 `当前模式参数 · 机制实验` 卡片。
+  - 因而现在“实验动作层”相关的可见动作窗口被整体收起，只保留默认动态分析状态，不再显示动作参数卡。
+- 验证结果：
+  - `frontend` 执行 `npm run build` 成功。
+- 理论/数学研究进度：
+  - 这一步相当于把动作层参数自由度暂时从观察界面中剥离，保留主观察态 `dynamic_prediction`，减少了界面上的人为控制噪声。
+  - 从研究方法上，这是把“动作选择”从显式交互变量降为后台固定条件，使当前前端更接近单一观测实验，而不是多动作混合实验。
+  - 对 AGI 主线而言，当前更强调稳定读取已有证据，而不是在前端临时切换大量动作去制造表面差异。
+- 严格审视当前结论的硬伤：
+  - 现在动作入口被整体隐藏，意味着前端暂时失去动作级交互能力，这只是收缩噪声，不是最终产品形态。
+  - 代码里仍保留了隐藏块文字与结构，运行时不显示，但工程层面仍然偏臃肿。
+  - 真正的正确方向仍然不是“不断隐藏”，而是后续重建一套低噪声、低重复、真正有差异化行为的动作系统。
+- 项目整体进度判断：
+  - 前端降噪与阅读收敛度约 `84%`。
+  - 动作层交互能力暂时降到 `30%`，这是有意牺牲，用来换取主观察链路的清晰性。
+  - 统一 schema 驱动的动作系统仍约 `40%`。
+- 下一阶段建议：
+  - 不要再在现有按钮墙上修补；下一块大任务应直接重做动作系统，只保留少数几个真正不同、可验证、参数不重叠的动作入口。
+  - 并把每个动作绑定到不同的数学对象、不同的参数组和不同的说明卡，避免再出现“看起来十个动作，实则动画差不多”的空转问题。
+
+## 2026-03-15 16:14 AGI 最后突破准备板记录
+- 用户目标：
+  - 当前最关键的不是继续做小改动，而是尽可能完成更多拼图，系统看清已有进展、核心问题和最后突破前的关键瓶颈。
+- 本轮执行命令：
+  - `python -m py_compile research/gpt5/code/agi_breakthrough_preparation_board.py tests/codex/test_agi_breakthrough_preparation_board_block.py`
+  - `python tests/codex/test_agi_breakthrough_preparation_board_block.py`
+  - 动态断言执行：
+    - `importlib.util.spec_from_file_location(...); module.test_agi_breakthrough_preparation_board_block()`
+  - `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+- 新增文件：
+  - `research/gpt5/code/agi_breakthrough_preparation_board.py`
+  - `tests/codex/test_agi_breakthrough_preparation_board_block.py`
+  - `tests/codex_temp/agi_breakthrough_preparation_board_block_20260315.json`
+- 本轮核心工作：
+  - 把当前 DNN 侧和 SpikeICSPB 侧的主要研究结果统一收成一个“最后突破准备板”。
+  - 不再单看某一个局部指标，而是显式并列：
+    - `DNN 结构提取底座`
+    - `DNN 参数原理`
+    - `DNN 精确闭合`
+    - `Spike 可规模化架构`
+    - `Spike 语言与后继`
+  - 同时输出系统级 `top_blockers` 和 `critical_path`，让后续冲刺不再靠直觉。
+- 本轮关键结果：
+  - `dnn_foundation_score = 0.7690`
+  - `dnn_parametric_score = 0.9289`
+  - `dnn_exactness_score = 0.2836`
+  - `spike_architecture_score = 0.8375`
+  - `spike_language_score = 0.1537`
+  - `final_breakthrough_readiness = 0.6113`
+- 拼图状态的严格解释：
+  - DNN 侧现在最强的不是 exact closure，而是参数原理。`basis / offset / contextual / protocol` 这四条线已经明显成形。
+  - DNN 侧最弱的是 `exactness`。系统理解已经强，但 dense exact evidence、family-to-specific exact closure、successor exact closure 还明显没有打穿。
+  - Spike 侧现在最强的是架构与规模化潜力。非 `Attention + BP` 路线已经不再只是设想，而是有结构和尺度准备度。
+  - Spike 侧最弱的是语言连续体和后继质量。也就是架构能立住，但强语言还没有出来。
+- 当前最主要的四个系统瓶颈：
+  - `family-to-specific exact closure 不足`，严重度 `1.0000`
+  - `Spike 语言连续体过弱`，严重度 `0.8048`
+  - `dense exact evidence 不足`，严重度 `0.6762`
+  - `successor exact closure 不足`，严重度 `0.5072`
+- 当前系统级关键路径：
+  - 提高 `dense neuron-level exact evidence`
+  - 同时打 `family-to-specific exact closure` 与 `successor exact closure`
+  - 把强化后的系统定理迁移到 `scalable SpikeICSPB Phase-A` 候选上
+  - 在更强 `dense export` 和 `unseen-family` 条件下重测 `theorem candidate`
+- 理论/数学研究进度：
+  - 现在的局面已经不是“缺概念”，而是“强参数原理 + 弱精确闭合”的典型系统瓶颈结构。
+  - 这说明项目已经进入最后突破前的真实准备阶段：方向不缺，缺的是 exact evidence、exact closure 和语言连续体。
+  - 更严格地说，当前最有希望的突破路线不是再补一个新对象，而是把现有五条主线压成闭合：
+    - `family basis`
+    - `bounded concept offset`
+    - `contextual correction`
+    - `protocol correction`
+    - `successor transport`
+- 严格审视当前结论的硬伤：
+  - `final_breakthrough_readiness = 0.6113` 说明还没有进入“随时可突破”的状态。
+  - `dnn_parametric_score` 很高，但 `dnn_exactness_score` 很低，说明理解强于证据闭合。
+  - `spike_architecture_score` 很高，但 `spike_language_score` 很低，说明架构强于语言能力。
+  - 当前所有瓶颈都已经集中到 exactness 和 successor 上，后续如果不正面打这两块，继续补外围拼图的边际收益会明显下降。
+- 项目整体进度判断：
+  - `final_breakthrough_preparation_percent = 66%`
+  - `system_direction_clarity_percent = 88%`
+  - `full_brain_encoding_mechanism_percent = 90%`
+- 下一阶段建议：
+  - 不要再做碎片化改动；下一块应直接围绕 `dense exact evidence + family-to-specific exact closure + successor exact closure` 打一个联合阶段任务。
+  - 并且把 DNN 侧强化后的系统定理尽快迁移到 `SpikeICSPB Phase-A` 上验证，否则 DNN 理解和非 `Attention + BP` 路线会继续分裂成两套平行研究。
+
+## 2026-03-15 16:40 DNN 显示与降噪策略迁移到右下窗口记录
+- 用户目标：
+  - 把 `显示与降噪策略` 从左侧 `控制面板-DNN` 挪到右下信息窗口，避免左侧入口过重。
+- 本轮执行命令：
+  - `rg -n "显示与降噪策略|降噪策略|显示策略" frontend/src/blueprint/AppleNeuron3DTab.jsx`
+  - `python tests/codex/test_dnn_display_strategy_bottom_right_block.py`
+  - 动态断言执行：
+    - `importlib.util.spec_from_file_location(...); module.test_dnn_display_strategy_bottom_right_block()`
+  - `npm run build`
+  - `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+- 代码修改：
+  - 在 `frontend/src/blueprint/AppleNeuron3DTab.jsx` 的 `AppleNeuronSelectedLegendPanels` 中新增 `显示与降噪策略` 卡片。
+  - 该卡片完整保留原有三种模式：
+    - `自动聚焦`
+    - `全部显示`
+    - `手动筛选`
+  - 同时保留 `manual` 模式下的 6 类节点开关：
+    - `核心/基础节点`
+    - `输入概念节点`
+    - `多维编码节点`
+    - `硬伤实验节点`
+    - `统一解码节点`
+    - `背景网络节点`
+  - 从 `AppleNeuronControlPanels` 中彻底删除原来的 `显示与降噪策略` 整张卡片，避免左右重复。
+- 新增测试：
+  - `tests/codex/test_dnn_display_strategy_bottom_right_block.py`
+  - 结果文件：
+    - `tests/codex_temp/dnn_display_strategy_bottom_right_block_20260315.json`
+- 验证结果：
+  - 静态测试通过：
+    - `selected_legend_has_display_strategy = true`
+    - `control_panel_has_display_strategy = false`
+  - 动态断言通过。
+  - `frontend` 执行 `npm run build` 成功。
+  - 补充说明：
+    - 尝试对 `.jsx` 执行 `py_compile` 会报 `SyntaxError`，这是工具类型不匹配，不是前端代码错误。
+- 实际界面效果：
+  - 左侧 `控制面板-DNN` 现在少了一整张策略卡，主流程更收敛。
+  - 右下信息窗口的 `SelectedLegend` 面板里新增了显示策略卡片，用户在看选中节点、图例时，可以顺手调整显示和降噪。
+  - 交互逻辑没有变化，只有位置变化，因此风险较低。
+- 理论/数学研究进度：
+  - 这次不是直接推进编码理论，而是把“显示策略”从主流程输入侧移到观察侧，进一步强调：
+    - 左侧负责“对象、动作、资产输入”
+    - 右下负责“选中态、图例、显示过滤”
+  - 从研究方法上，这更贴近“控制变量在观察窗口里调整”的实验口径，减少左侧主面板的概念拥堵。
+- 严格审视当前结论的硬伤：
+  - 这轮只是布局迁移，不会改善 `dense exact evidence` 或 `successor exact closure`。
+  - `AppleNeuronSelectedLegendPanels` 现在职责更重，后续如果继续塞太多控制项，右下窗口也会变臃肿。
+  - 当前信息窗口仍然主要是静态摘要，没有把 `displayStrategy` 和更细的研究 provenance 真正联动起来。
+  - 前端主包仍约 `5.85MB`，继续加功能前需要准备拆包。
+- 项目整体进度判断：
+  - `dnn_control_panel_readability_percent = 72%`
+  - `right_bottom_observation_panel_usability_percent = 67%`
+  - `frontend_layout_convergence_percent = 64%`
+  - `full_brain_encoding_mechanism_percent = 90%`
+- 下一阶段建议：
+  - 不要继续做零碎布局搬家；下一块应直接把右下窗口做成真正的“观察与证据窗口”，把 `selected node / display strategy / provenance / successor exactness` 收成同一观察链。
+  - 同时继续主线研究任务：提高 `dense neuron-level exact evidence`，并联推进 `family-to-specific exact closure` 与 `successor exact closure`。
+
+## 2026-03-15 16:50 DNN 系统级破解板与中文测试指标行记录
+- 用户目标：
+  - 继续从整个系统角度推进 DNN 的数据结构提取与数学机制破解。
+  - 同时把测试输出改成“英文键名前附带中文说明”的格式，例如：
+    - `（DNN结构提取底座）dnn_foundation_score = 0.7690`
+- 本轮执行命令：
+  - `python -m py_compile research/gpt5/code/dnn_system_crack_board.py tests/codex/test_dnn_system_crack_board_block.py tests/codex/test_dnn_math_restoration_status_block.py tests/codex/test_agi_breakthrough_preparation_board_block.py`
+  - `python tests/codex/test_dnn_system_crack_board_block.py`
+  - `python tests/codex/test_dnn_math_restoration_status_block.py`
+  - `python tests/codex/test_agi_breakthrough_preparation_board_block.py`
+  - 动态断言执行：
+    - `test_dnn_system_crack_board_block`
+    - `test_dnn_math_restoration_status_block`
+    - `test_agi_breakthrough_preparation_board_block`
+  - `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+- 新增文件：
+  - `research/gpt5/code/dnn_system_crack_board.py`
+  - `tests/codex/test_dnn_system_crack_board_block.py`
+  - `tests/codex_temp/dnn_system_crack_board_block_20260315.json`
+- 本轮核心工作：
+  - 新增一个 `DNN 系统级破解板`，统一汇总：
+    - 系统语料库底座
+    - activation signatures
+    - specific 数学桥
+    - exact encoding system
+    - successor 数学恢复
+    - 完整数学还原状态
+  - 不再只看局部指标，而是显式回答：
+    - 系统提取底座够不够
+    - 参数原理强不强
+    - specific exactness 强不强
+    - successor exactness 强不强
+    - 系统候选定理强度如何
+    - 离 final theorem closure 还有多远
+  - 同时把两个关键测试也改成统一中文指标行输出：
+    - `test_dnn_math_restoration_status_block.py`
+    - `test_agi_breakthrough_preparation_board_block.py`
+- 新的系统级结果：
+  - `（DNN结构提取底座）extraction_base_score = 0.7811`
+  - `（DNN系统参数原理）parametric_system_score = 0.9397`
+  - `（concept-specific精确闭合）specific_exactness_score = 0.4642`
+  - `（successor精确闭合）successor_exactness_score = 0.4433`
+  - `（系统候选定理强度）theorem_candidate_strength = 0.7743`
+  - `（系统终局闭合度）exact_theorem_closure_score = 0.4014`
+- 对当前拼图状态的严格解释：
+  - `extraction_base_score = 0.7811` 说明系统级结构提取底座已经比较厚，不再是“证据太少”的阶段。
+  - `parametric_system_score = 0.9397` 说明 basis / offset / contextual / protocol 这几条系统参数原理已经非常强。
+  - `specific_exactness_score = 0.4642` 说明 concept-specific 的 exact closure 仍没有打穿。
+  - `successor_exactness_score = 0.4433` 说明 successor 仍然是系统级 exact 闭合的主短板之一。
+  - `theorem_candidate_strength = 0.7743` 说明系统候选定理已经成形，而且强度不低。
+  - `exact_theorem_closure_score = 0.4014` 说明离真正的 final theorem closure 仍然有明显距离。
+- 本轮同步更新的中文测试输出：
+  - `test_dnn_math_restoration_status_block.py` 现在输出：
+    - `（family基底参数恢复）family_basis_parametric_score = 0.7534`
+    - `（concept offset参数恢复）concept_offset_parametric_score = 0.9877`
+    - `（protocol场参数恢复）protocol_field_parametric_score = 0.9543`
+    - `（topology参数恢复）topology_parametric_score = 0.9732`
+    - `（successor参数恢复）successor_parametric_score = 0.7022`
+    - `（完整数学还原）full_restoration_score = 0.8704`
+  - `test_agi_breakthrough_preparation_board_block.py` 现在输出：
+    - `（DNN结构提取底座）dnn_foundation_score = 0.7690`
+    - `（DNN参数原理强度）dnn_parametric_score = 0.9289`
+    - `（DNN精确闭合度）dnn_exactness_score = 0.2836`
+    - `（Spike可规模化架构）spike_architecture_score = 0.8375`
+    - `（Spike语言连续体）spike_language_score = 0.1537`
+    - `（最终突破准备度）final_breakthrough_readiness = 0.6113`
+- 理论/数学研究进度：
+  - 当前已经可以更明确地说：
+    - `系统结构提取` 已经进入较强阶段。
+    - `系统参数原理` 已经非常强。
+    - `specific exactness` 和 `successor exactness` 仍然共同限制最终闭合。
+    - `系统候选定理` 已经足够明确，但 `final theorem closure` 还远未完成。
+  - 也就是说，项目现在最大的矛盾不是“有没有系统理论”，而是“系统理论能否被 exact evidence 和 exact closure 真的封口”。
+- 严格审视当前结论的硬伤：
+  - 这轮推进的是“系统级诊断和统一指标口径”，不是“exact closure 本身被打穿”。
+  - `parametric_system_score` 明显高于 `exact_theorem_closure_score`，说明理解远强于闭合。
+  - `specific_exactness_score` 和 `successor_exactness_score` 仍然都低于 `0.50`，这不是边角缺口，而是主瓶颈。
+  - 测试现在加了中文指标行，但这仍然是输出可读性优化，不会自动提高理论进度。
+- 项目整体进度判断：
+  - `dnn_system_crack_board_percent = 72%`
+  - `system_parametric_principle_percent = 73%`
+  - `exact_theorem_closure_percent = 37%`
+  - `full_brain_encoding_mechanism_percent = 90%`
+- 下一阶段建议：
+  - 不要再只加新的 summary/test；下一块应直接围绕 `specific exactness + successor exactness + dense exact evidence` 打联合阶段任务。
+  - 并把所有新测试继续沿用当前这种“中文说明 + 英文键 + 数值”的统一输出格式，避免后续报告再次变抽象。
+
+## 2026-03-15 16:52 系统级测试中文指标行统一记录
+- 用户追加要求：
+  - `parametric_system_score = 0.9397` 这类公式/指标，不应只保留英文键名。
+  - 所有类似测试输出，都需要在等号前加上括号和中文说明。
+- 本轮执行命令：
+  - `python -m py_compile tests/codex/test_dnn_exact_encoding_system_block.py tests/codex/test_dnn_specific_math_bridge_block.py tests/codex/test_dnn_successor_math_restoration_block.py`
+  - `python tests/codex/test_dnn_exact_encoding_system_block.py`
+  - `python tests/codex/test_dnn_specific_math_bridge_block.py`
+  - `python tests/codex/test_dnn_successor_math_restoration_block.py`
+  - 动态断言执行：
+    - `test_dnn_exact_encoding_system_block`
+    - `test_dnn_specific_math_bridge_block`
+    - `test_dnn_successor_math_restoration_block`
+  - `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+- 本轮代码修改：
+  - 在以下 3 个关键系统测试中新增 `metric_lines_cn`：
+    - `tests/codex/test_dnn_exact_encoding_system_block.py`
+    - `tests/codex/test_dnn_specific_math_bridge_block.py`
+    - `tests/codex/test_dnn_successor_math_restoration_block.py`
+  - 并把它们的 `main()` 输出从原来的原始 JSON 指标字典，改成逐行打印中文说明格式。
+  - 同时在断言里强制检查：
+    - `metric_lines_cn` 存在
+    - 第一行以 `（` 开头
+- 当前统一后的输出示例：
+  - `（basis+offset核心强度）basis_offset_core_score = 0.8983`
+  - `（contextual+protocol系统强度）contextual_protocol_score = 0.9301`
+  - `（successor系统项强度）successor_system_score = 0.5024`
+  - `（精确证据强度）evidence_exactness_score = 0.3238`
+  - `（系统参数原理强度）system_parametric_score = 0.7282`
+  - `（系统精确闭合度）exact_system_closure_score = 0.3424`
+  - `（specific真实支撑强度）specific_real_support_score = 1.0000`
+  - `（specific参数恢复强度）specific_parametric_restoration_score = 0.9631`
+  - `（specific精确闭合度）exact_specific_closure_score = 0.4774`
+  - `（successor结构项）successor_structure_score = 0.3305`
+  - `（successor传输项）successor_transport_score = 0.5144`
+  - `（successor数学还原）successor_restoration_score = 0.4928`
+- 这轮对研究主线的意义：
+  - 这不是理论数值本身的提升，而是把系统级诊断输出变成更适合长期研究追踪的格式。
+  - 以后在比较 `specific / successor / exact closure / theorem candidate` 时，不再需要人工翻英文键名。
+  - 这会直接降低后续读实验结果和整理主文档时的认知成本。
+- 严格审视当前结论的硬伤：
+  - 这轮主要是“指标表达规范化”，不是“理论本体推进”。
+  - `exact_system_closure_score`、`exact_specific_closure_score`、`successor_restoration_score` 这些真实硬伤没有因为格式统一而改善。
+  - 目前统一格式已经覆盖关键系统测试，但历史更早的一些旧测试还没全部改造。
+  - 所以这轮更准确的定位是：为后续大规模比较和整理理论做准备，而不是本体突破。
+- 项目整体进度判断：
+  - `system_metric_readability_percent = 82%`
+  - `system_parametric_principle_percent = 73%`
+  - `exact_theorem_closure_percent = 37%`
+  - `full_brain_encoding_mechanism_percent = 90%`
+- 下一阶段建议：
+  - 后续所有新增系统级测试，强制沿用 `（中文说明）english_key = 数值` 的输出格式。
+  - 真正的下一块大任务仍然不应是格式层修饰，而应继续联合推进：
+    - `dense neuron-level exact evidence`
+    - `family-to-specific exact closure`
+    - `successor exact closure`

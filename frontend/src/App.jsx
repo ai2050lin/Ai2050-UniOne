@@ -13,7 +13,7 @@ import FlowTubesVisualizer from './FlowTubesVisualizer';
 import GlassMatrix3D from './GlassMatrix3D';
 import { GlobalTopologyDashboard } from './GlobalTopologyDashboard';
 import { HLAIBlueprint } from './HLAIBlueprint';
-import { AppleNeuronCategoryComparePanel, AppleNeuronCompareFilterPanel, AppleNeuronControlPanels, AppleNeuronEncodingInfoPanels, AppleNeuronSceneContent, AppleNeuronSelectedLegendPanels, useAppleNeuronWorkspace } from './blueprint/AppleNeuron3DTab';
+import { AppleNeuronCategoryComparePanel, AppleNeuronControlPanels, AppleNeuronEncodingInfoPanels, AppleNeuronGeneratedConceptSetsPanel, AppleNeuronMultidimSettingsPanel, AppleNeuronResearchAssetInfoPanel, AppleNeuronSceneContent, AppleNeuronSelectedLegendPanels, useAppleNeuronWorkspace } from './blueprint/AppleNeuron3DTab';
 import ResonanceField3D from './ResonanceField3D';
 import { SimplePanel } from './SimplePanel';
 import { CompositionalVisualization3D, CurvatureField3D, FeatureVisualization3D, FiberBundleVisualization3D, LayerDetail3D, ManifoldVisualization3D, NetworkGraph3D, RPTVisualization3D, SNNVisualization3D, StructureAnalysisControls, ValidityVisualization3D } from './StructureAnalysisPanel';
@@ -2445,6 +2445,63 @@ export default function App() {
     }
   })();
 
+  const appleMainPanelConfig = (() => {
+    switch (appleNeuronWorkspace.analysisMode) {
+      case 'static':
+        return {
+          infoSections: ['category', 'encoding'],
+          operationSections: ['conceptSets'],
+          operationHint: '当前模式以结构总览为主，只保留概念集管理。',
+        };
+      case 'dynamic_prediction':
+        return {
+          infoSections: ['encoding', 'research', 'legend'],
+          operationSections: ['conceptSets'],
+          operationHint: '当前模式以序列推进和链路观察为主，只保留概念集管理。',
+        };
+      case 'subspace_geometry':
+      case 'feature_decomposition':
+        return {
+          infoSections: ['encoding', 'legend'],
+          operationSections: ['multidim'],
+          operationHint: '当前模式聚焦子空间与轴向分解，只保留三维编码设置。',
+        };
+      case 'compositionality':
+        return {
+          infoSections: ['category', 'encoding', 'legend'],
+          operationSections: ['multidim'],
+          operationHint: '当前模式聚焦组合性验证，只保留与维度组合相关的设置。',
+        };
+      case 'cross_layer_transport':
+        return {
+          infoSections: ['encoding', 'research', 'legend'],
+          operationSections: ['conceptSets'],
+          operationHint: '当前模式聚焦跨层传输，只保留概念集与链路观察相关内容。',
+        };
+      case 'causal_intervention':
+      case 'counterfactual':
+      case 'robustness':
+      case 'minimal_circuit':
+        return {
+          infoSections: ['research', 'legend', 'encoding'],
+          operationSections: [],
+          operationHint: '当前模式参数已集中在左侧控制面板，右侧不再显示无关的概念集或多维设置。',
+        };
+      default:
+        return {
+          infoSections: ['encoding', 'legend'],
+          operationSections: ['conceptSets'],
+          operationHint: '当前模式仅显示与当前动作直接相关的共享工具。',
+        };
+    }
+  })();
+  const showAppleCategoryCompare = appleMainPanelConfig.infoSections.includes('category');
+  const showAppleEncodingInfo = appleMainPanelConfig.infoSections.includes('encoding');
+  const showAppleResearchAsset = appleMainPanelConfig.infoSections.includes('research');
+  const showAppleLegend = appleMainPanelConfig.infoSections.includes('legend');
+  const showAppleConceptSets = appleMainPanelConfig.operationSections.includes('conceptSets');
+  const showAppleMultidimSettings = appleMainPanelConfig.operationSections.includes('multidim');
+
   const structureGuideItems = STRUCTURE_TABS_V2.groups.flatMap((group, groupIdx) => ([
     ...(groupIdx === 0 ? [] : [{ type: 'sep' }]),
     ...group.items.map(item => ({
@@ -2467,9 +2524,11 @@ export default function App() {
     ...structureGuideItems
   ];
   const showGlobalResonanceField = inputPanelTab !== 'dnn' && inputPanelTab !== 'snn';
-  const infoPanelTitle = `${t('panels.modelInfo')} · ${activeFunctionPanel.label}`;
+  const infoPanelTitle = isAppleMainView
+    ? `${t('panels.modelInfo')} · DNN / ${currentAlgorithmInfo.name}`
+    : `${t('panels.modelInfo')} · ${activeFunctionPanel.label}`;
   const operationPanelTitle = isAppleMainView
-    ? `操作面板 · DNN / ${currentAlgorithmInfo.name}`
+    ? `创造面板 · DNN / ${currentAlgorithmInfo.name}`
     : isICSPBFunctionType
     ? `操作面板 · ICSPB / ${currentAlgorithmInfo.name}`
     : hasOperationPanelContent
@@ -2593,24 +2652,6 @@ export default function App() {
 
           {/* Content Container with Scroll */}
           <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
-            <div style={{
-              marginBottom: '12px',
-              padding: '10px',
-              background: 'rgba(255,255,255,0.03)',
-              borderRadius: '8px',
-              border: '1px solid rgba(255,255,255,0.08)',
-              fontSize: '11px',
-              color: '#bfc8d8',
-              lineHeight: '1.6'
-            }}>
-              <div style={{ color: '#fff', fontWeight: '600', marginBottom: '4px' }}>
-                {`模块定位 · ${currentPanelBlueprint.label}`}
-              </div>
-              <div>{currentPanelBlueprint.mission}</div>
-              <div style={{ marginTop: '4px', color: '#9ea7b7' }}>{`当前算法: ${currentAlgorithmInfo.name}`}</div>
-              <div style={{ color: '#8ea5c5' }}>{`操作重点: ${currentPanelBlueprint.operationFocus}`}</div>
-            </div>
-
             {/* Main Content: Apple Neuron control cards */}
             {inputPanelTab === 'main' && (
               <div className="animate-fade-in">
@@ -2896,21 +2937,29 @@ export default function App() {
                           <div style={{ color: '#9ea7b7', fontSize: '11px' }}>{currentAlgorithmInfo.focus}</div>
                         </div>
                         <div style={{ marginBottom: '8px' }}>{analysisSummaryText}</div>
-                        <div style={{ fontSize: '11px', color: '#8ea5c5' }}>
-                          {`模块定位: ${currentPanelBlueprint.mission}`}
-                        </div>
                       </div>
                     )}
 
                     {infoPanelTab === 'encoding' && (
                       isAppleMainView ? (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                          <div style={{ fontSize: '11px', color: '#9ea7b7', lineHeight: '1.6' }}>
-                            DNN 编码观测区：类别比较、层级编码签名与机制指标已移动到此处。
-                          </div>
-                          <AppleNeuronCategoryComparePanel workspace={appleNeuronWorkspace} compact />
-                          <AppleNeuronEncodingInfoPanels workspace={appleNeuronWorkspace} compact />
-                          <AppleNeuronSelectedLegendPanels workspace={appleNeuronWorkspace} compact />
+                          {showAppleCategoryCompare && <AppleNeuronCategoryComparePanel workspace={appleNeuronWorkspace} compact />}
+                          {showAppleEncodingInfo && <AppleNeuronEncodingInfoPanels workspace={appleNeuronWorkspace} compact />}
+                          {showAppleResearchAsset && <AppleNeuronResearchAssetInfoPanel workspace={appleNeuronWorkspace} compact />}
+                          {showAppleLegend && <AppleNeuronSelectedLegendPanels workspace={appleNeuronWorkspace} compact />}
+                          {!showAppleCategoryCompare && !showAppleEncodingInfo && !showAppleResearchAsset && !showAppleLegend && (
+                            <div style={{
+                              padding: '10px',
+                              borderRadius: '6px',
+                              background: 'rgba(255,255,255,0.03)',
+                              border: '1px solid rgba(255,255,255,0.08)',
+                              fontSize: '11px',
+                              color: '#9ea7b7',
+                              lineHeight: '1.6'
+                            }}>
+                              当前模式没有额外编码说明卡片，右侧只保留与左侧当前动作直接相关的内容。
+                            </div>
+                          )}
                         </div>
                       ) : (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -3487,34 +3536,22 @@ export default function App() {
             hasOperationPanelContent ? (
               isAppleMainView ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <div style={{
-                    padding: '8px',
-                    borderRadius: '6px',
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    fontSize: '11px',
-                    color: '#bbb'
-                  }}>
-                    <div style={{ color: '#fff', fontWeight: '600', marginBottom: '2px' }}>
-                      {`当前算法: ${currentAlgorithmInfo.name}`}
+                  {showAppleConceptSets && <AppleNeuronGeneratedConceptSetsPanel workspace={appleNeuronWorkspace} compact />}
+                  {showAppleMultidimSettings && <AppleNeuronMultidimSettingsPanel workspace={appleNeuronWorkspace} compact />}
+                  {!showAppleConceptSets && !showAppleMultidimSettings && (
+                    <div style={{
+                      padding: '10px',
+                      borderRadius: '6px',
+                      background: 'rgba(255,255,255,0.03)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      fontSize: '12px',
+                      color: '#bbb',
+                      lineHeight: '1.6'
+                    }}>
+                      <div style={{ color: '#fff', marginBottom: '4px', fontWeight: '600' }}>{currentAlgorithmInfo.name}</div>
+                      <div>{appleMainPanelConfig.operationHint}</div>
                     </div>
-                    <div>{currentAlgorithmInfo.focus}</div>
-                    <div style={{ color: '#8ea5c5', marginTop: '4px' }}>{`参数重点: ${currentPanelBlueprint.operationFocus}`}</div>
-                  </div>
-                  <div style={{
-                    padding: '8px',
-                    borderRadius: '6px',
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    fontSize: '11px',
-                    color: '#bbb'
-                  }}>
-                    <div style={{ color: '#fff', fontWeight: '600', marginBottom: '2px' }}>
-                      DNN 过滤操作
-                    </div>
-                    <div>根据左侧输入名称（概念）勾选显示/隐藏对应神经元集合。</div>
-                  </div>
-                  <AppleNeuronCompareFilterPanel workspace={appleNeuronWorkspace} compact />
+                  )}
                 </div>
               ) : isICSPBFunctionType ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
