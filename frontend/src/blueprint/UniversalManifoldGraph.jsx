@@ -6,7 +6,7 @@ const MODES = [
   { id: 'main', label: 'MAIN', icon: Sparkles, color: '#38bdf8' },
   { id: 'dnn', label: 'DNN', icon: Cpu, color: '#22c55e' },
   { id: 'snn', label: 'SNN', icon: Brain, color: '#f59e0b' },
-  { id: 'fibernet', label: 'FIBERNET', icon: Network, color: '#a855f7' },
+  { id: 'icspb', label: 'ICSPB', icon: Network, color: '#a855f7' },
 ];
 
 const MODE_SUMMARY = {
@@ -26,11 +26,11 @@ const MODE_SUMMARY = {
       'Use MAIN mode for full layer + neuron visualization workspace.',
     ],
   },
-  fibernet: {
-    title: 'FiberNet View',
+  icspb: {
+    title: 'ICSPB View',
     points: [
-      'Manifold + fiber transport geometric route.',
-      'Focus: base manifold, connection transport, global arbitration.',
+      'Current language backbone + controlled online branch route.',
+      'Focus: semantic inference, replay, consolidation, global arbitration.',
       'Use MAIN mode for apple neuron compare controls and 3D space.',
     ],
   },

@@ -134,7 +134,7 @@ const IMPLEMENTED_TOOLS = [
     location: 'models/',
   },
   {
-    name: 'fibernet_service.py',
+    name: 'agi_chat_service.py',
     function: '纤维丛分析',
     status: 'done',
     location: 'server/',

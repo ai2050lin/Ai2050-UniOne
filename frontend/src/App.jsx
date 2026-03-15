@@ -8,7 +8,6 @@ import {
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import FiberNetV2Demo from './components/FiberNetV2Demo';
 import ErrorBoundary from './ErrorBoundary';
 import FlowTubesVisualizer from './FlowTubesVisualizer';
 import GlassMatrix3D from './GlassMatrix3D';
@@ -20,8 +19,7 @@ import { SimplePanel } from './SimplePanel';
 import { CompositionalVisualization3D, CurvatureField3D, FeatureVisualization3D, FiberBundleVisualization3D, LayerDetail3D, ManifoldVisualization3D, NetworkGraph3D, RPTVisualization3D, SNNVisualization3D, StructureAnalysisControls, ValidityVisualization3D } from './StructureAnalysisPanel';
 import TDAVisualization3D from './TDAVisualization3D';
 import { AGIChatPanel } from './AGIChatPanel';
-import { MotherEnginePanel } from './components/MotherEnginePanel';
-import FiberNetPanel from './components/FiberNetPanel';
+import ICSPBPanel from './components/FiberNetPanel';
 
 import { locales } from './locales';
 import { INPUT_PANEL_TABS, STRUCTURE_TABS_V2, COLORS } from './config/panels';
@@ -33,7 +31,7 @@ const API_BASE = (import.meta.env.VITE_API_BASE || 'http://localhost:5001').repl
 
 const CONTROL_PANEL_BLUEPRINT = {
   main: {
-    label: 'Main',
+    label: 'DNN',
     mission: '分析深度神经网络中的语言数学结构，还原大脑的数学原理。',
     operationFocus: '按阶段观测、提取、验证、系统归纳，构建编码证据链。',
     formula: 'E = {Layer Signature, FS, PI, HI, Δ-neuron}',
@@ -53,12 +51,12 @@ const CONTROL_PANEL_BLUEPRINT = {
     formula: 'τ dV/dt = -(V - V_rest) + I(t), spike when V > θ',
     model3d: '脉冲活动热区 + 层间传播轨迹。',
   },
-  fibernet: {
-    label: 'FiberNet',
-    mission: '作为纤维丛神经网络工具，研究底流形-纤维解耦与快速写入。',
-    operationFocus: '围绕快慢权重协作、注入策略和稳定性做参数探索。',
+  icspb: {
+    label: 'ICSPB',
+    mission: '作为当前模型工作台，聚焦语言主干、在线写读、回放与固化的统一验证。',
+    operationFocus: '围绕语言训练、语义推演、记忆回放、在线学习与稳定性做参数探索。',
     formula: 'y = SlowLogic(x) + Σ α_i · FastFiber_i(x)',
-    model3d: '底流形承载通用结构，纤维方向承载快速语义写入。',
+    model3d: '主干承载语言压缩，受控分支承载快速写入、回放与固化。',
   },
 };
 
@@ -499,10 +497,10 @@ const ALGO_DOCS = {
     }
   },
   'main_workspace': {
-    title: 'Main 控制面板 (Main Workspace)',
+    title: 'DNN 控制面板',
     simple: {
-      title: '如何用 Main 面板做“编码拼图”',
-      desc: 'Main 面板不是单一图表，而是一条从宏观到微观的证据链。',
+      title: '如何用 DNN 主工作台做“编码拼图”',
+      desc: '这个 DNN 主工作台不是单一图表，而是一条从宏观到微观的证据链。',
       points: [
         '拼图管理器：设置实验标签、样本规模、稳定性探针，保存当前证据快照。',
         '层级编码签名：看每层“编码变化强度”和“稀疏度”，再看层间 Drift。',
@@ -512,8 +510,8 @@ const ALGO_DOCS = {
       ]
     },
     pro: {
-      title: 'Main as Evidence Pipeline',
-      desc: 'Main 将机制分析拆成“版本化证据管理 + 层级结构指标 + 机制指标 + 微观差分定位”。',
+      title: 'DNN 主工作台作为证据链管线',
+      desc: '这个 DNN 主工作台将机制分析拆成“版本化证据管理 + 层级结构指标 + 机制指标 + 微观差分定位”。',
       points: [
         'Evidence Versioning: 通过 experimentTag / sampleScale / stabilityProbeCount 固化实验上下文并可回放对比。',
         'Layer Signature: 以 meanAbsDelta / sparsity / drift 衡量编码在层内与层间的重排强度。',
@@ -525,9 +523,9 @@ const ALGO_DOCS = {
     }
   },
   'main_system': {
-    title: 'Main 模块定位',
+    title: 'DNN 主工作台定位',
     simple: {
-      title: 'Main 是“编码还原主工作台”',
+      title: 'DNN 主工作台是“编码还原主工作台”',
       desc: '目标是沿着证据链还原语言能力背后的数学结构。',
       points: [
         '先观测：看层间和神经元随时间如何变化。',
@@ -537,8 +535,8 @@ const ALGO_DOCS = {
       ]
     },
     pro: {
-      title: 'Main = 编码证据链引擎',
-      desc: 'Main 将研究流程组织为观测-提取-验证-系统四阶段闭环，避免只看单帧现象。',
+      title: 'DNN 主工作台 = 编码证据链引擎',
+      desc: '这个 DNN 主工作台将研究流程组织为观测-提取-验证-系统四阶段闭环，避免只看单帧现象。',
       points: [
         '从 Layer Signature 到神经元 Δ 的多尺度联动。',
         '将可视化结果绑定到可复现指标（FS/PI/HI/Drift）。',
@@ -551,16 +549,16 @@ const ALGO_DOCS = {
     title: 'DNN 模块定位',
     simple: {
       title: 'DNN 是“多算法观察台”',
-      desc: '用于从不同角度观察深度网络行为，不直接替代 Main 的编码还原主线。',
+      desc: '用于从不同角度观察深度网络行为，不直接替代 DNN 主工作台的编码还原主线。',
       points: [
         '可切换回路、特征、因果、流形、拓扑等算法。',
         '用于发现异常层、关键路径和候选规律。',
-        '输出可作为 Main 证据链的输入。'
+        '输出可作为 DNN 主工作台证据链的输入。'
       ]
     },
     pro: {
       title: 'DNN = 结构分析与观测工具集',
-      desc: '以多算法横向观察构建候选假设，再进入 Main 做纵向验证。',
+      desc: '以多算法横向观察构建候选假设，再进入 DNN 主工作台做纵向验证。',
       points: [
         '结构分析强调“多视角覆盖率”。',
         '参数面板强调“可控实验变量”。',
@@ -586,25 +584,25 @@ const ALGO_DOCS = {
       points: [
         '时间步进与刺激实验是关键操作。',
         '有效性指标用于验证动态行为可靠性。',
-        '可与 DNN/Main 的结构结论做映射对照。'
+        '可与 DNN 主工作台的结构结论做映射对照。'
       ],
       formula: 'Spike(t) = 1[V(t) > θ],  Δw ∝ STDP(Δt)'
     }
   },
-  'fibernet_system': {
-    title: 'FiberNet 模块定位',
+  'icspb_system': {
+    title: 'ICSPB 模块定位',
     simple: {
-      title: 'FiberNet 是“纤维丛网络实验台”',
-      desc: '核心是把通用结构和快速写入解耦，提高效率与可控性。',
+      title: 'ICSPB 是“当前模型工作台”',
+      desc: '核心是把语言主干与快速写入分支解耦，提高效率、稳定性与可控性。',
       points: [
-        '底流形负责稳定推理骨架。',
-        '纤维负责快速注入任务知识。',
-        '关注快速学习与全局稳态平衡。'
+        '语言主干负责稳定语义压缩。',
+        '受控分支负责快速写入、回放与固化。',
+        '关注即时学习与全局稳态平衡。'
       ]
     },
     pro: {
-      title: 'FiberNet = 底流形-纤维双尺度机制',
-      desc: '通过快慢权重协同，把即时学习与长期稳定统一到同一框架。',
+      title: 'ICSPB = 语言主干 + 受控在线分支',
+      desc: '通过快慢权重协同，把语言能力、即时学习与长期稳定统一到同一框架。',
       points: [
         '慢权重保持全局一致性。',
         '快权重承载局部任务适配。',
@@ -1005,27 +1003,27 @@ const ALGO_DOCS = {
       formula: 'Hₖ(X) = ker(∂ₖ) / im(∂ₖ₊₁), βₖ = dim(Hₖ)'
     }
   },
-  // --- FiberNet V2 ---
-  'fibernet_v2': {
-    title: 'FiberNet V2 (即时学习)',
+  // --- ICSPB Current Model ---
+  'icspb': {
+    title: 'ICSPB 当前模型',
     simple: {
-      title: '思维的“插件系统”',
-      desc: '传统的 AI 需要通过长时间的训练才能记住新知识，而 FiberNet V2 就像插拔式硬盘，能让 AI 秒懂。',
+      title: '受控在线写读系统',
+      desc: '当前模型把语言主干、受控写入、回放与固化统一到同一个 ICSPB 结构里，用于验证语言能力和即时学习能否兼容。',
       points: [
-        '慢逻辑 (Manifold): 负责理解句法和逻辑规则，这是“出厂配置”。',
-        '快记忆 (Fast Weights): 直接在“纤维空间”写入新事实，实现即时记忆升级。',
-        '解耦: 逻辑和内容是分开的。学会了说话方式（逻辑），就能随时换上各种“知识芯片”。'
+        '语言主干: 负责大规模语言压缩与生成能力。',
+        '受控在线分支: 负责写入、回放、固化和回滚，不直接替代语言主干。',
+        '统一口径: 当前界面中的语义推演和回放固化都应走 ICSPB 当前模型链。'
       ]
     },
     pro: {
-      title: 'FiberNet Architecture',
-      desc: '通过解耦底流形 (Base Manifold) 与语义纤维 (Fibers)，实现非梯度更新的单次学习 (One-shot Learning)。',
+      title: 'ICSPB Runtime Architecture',
+      desc: '用语言主干承载统计压缩，用受控在线分支承载 guarded write / stable read / replay / consolidation，形成统一的当前模型工作台。',
       points: [
-        'Slow Weights: 处理逻辑骨架 $M$，捕获通用的推理模式。',
-        'Fast Weights: 直接作用于纤维空间 $F$，通过动态权重注入实现即时介入。',
-        'Linear Injection: 相比 RAG，FiberNet 直接在激活层介入，实现更深层的“理解”。'
+        'Language Backbone: 承载 token-level 语言建模与长程压缩。',
+        'Online Branch: 承载 replay、rollback、guarded write、stable read。',
+        'Current Goal: 先验证语言能力与即时学习能否在同一结构中兼容。'
       ],
-      formula: 'y = SlowLogic(x) + \\sum \\alpha_i \\cdot FastContent(k_i)'
+      formula: 'y = Backbone(x) + ControlledOnlineWriteReadReplay(x, m)'
     }
   }
 };
@@ -1088,7 +1086,7 @@ const GUIDE_STRUCTURED = {
   },
   main_workspace: {
     pro: {
-      goal: '把 Main 面板用于系统化编码还原，而不是只看单次动画现象。',
+      goal: '把 DNN 主工作台用于系统化编码还原，而不是只看单次动画现象。',
       approach: ['先定义实验上下文并存证', '再看层级签名与机制指标', '最后下钻到受影响神经元做核验'],
       model3d: '3D 主空间展示节点与层，控制面板提供同一时刻的统计证据与微观差分读数。',
       algorithm: '基于 activationMap 与 baseline 计算 Δ，结合 FS/PI/HI/Drift 形成多尺度证据链。',
@@ -1104,14 +1102,14 @@ const GUIDE_STRUCTURED = {
   },
   main_system: {
     pro: {
-      goal: '将 Main 明确为“语言编码数学结构还原”的主流程。',
+      goal: '将 DNN 主工作台明确为“语言编码数学结构还原”的主流程。',
       approach: ['按四阶段推进实验', '建立指标与3D联动证据', '沉淀可复现结论'],
       model3d: '通过层级与节点联动展示编码形成过程，支持从宏观到微观追踪。',
       algorithm: '四阶段流程管理 + 多尺度指标（层、机制、神经元）统一。',
       metricRanges: ['FS高=稳定', 'PI高=可塑', 'HI高=稳态', 'Δ稳定重现=高可信']
     },
     simple: {
-      goal: '把 Main 当作“还原语言机制”的主战场。',
+      goal: '把 DNN 主工作台当作“还原语言机制”的主战场。',
       approach: ['先观察', '再提取', '再验证', '最后总结规律'],
       model3d: '3D里看到的变化要和指标同步变化。',
       algorithm: '用同一条证据链反复验证，不靠直觉下结论。',
@@ -1121,14 +1119,14 @@ const GUIDE_STRUCTURED = {
   dnn_system: {
     pro: {
       goal: '将 DNN 定位为“多算法观测工具箱”。',
-      approach: ['横向跑多算法', '提取候选规律', '回流 Main 做系统验证'],
+      approach: ['横向跑多算法', '提取候选规律', '回流 DNN 主工作台做系统验证'],
       model3d: '不同分析图层并置对照，突出结构与行为差异。',
       algorithm: '以结构分析算法族构建候选假设空间。',
       metricRanges: ['覆盖算法越全，漏检风险越低', '跨算法一致性高=置信提升']
     },
     simple: {
       goal: '用 DNN 找线索，而不是直接下最终结论。',
-      approach: ['多看几种分析', '记下重复出现现象', '交给Main做深挖'],
+      approach: ['多看几种分析', '记下重复出现现象', '交给 DNN 主工作台做深挖'],
       model3d: '不同图层像不同镜头，合起来更完整。',
       algorithm: '先广泛观察，再聚焦验证。',
       metricRanges: ['重复出现=重点', '偶发现象=待验证', '冲突结果=继续查']
@@ -1150,9 +1148,9 @@ const GUIDE_STRUCTURED = {
       metricRanges: ['重复放电路径=可解释', '到处随机放电=不稳定', '延迟规律=可建模']
     }
   },
-  fibernet_system: {
+  icspb_system: {
     pro: {
-      goal: '将 FiberNet 定位为“纤维丛快慢权重协同实验工具”。',
+      goal: '将 ICSPB 定位为“当前模型的语言与在线学习工作台”。',
       approach: ['分离底流形与纤维更新', '比较注入前后性能', '验证全局稳态'],
       model3d: '底流形与纤维轨迹分层渲染，展示结构稳定与快速适配并存。',
       algorithm: 'Base manifold + fiber injection + fast/slow coupling。',
@@ -1294,7 +1292,7 @@ const GUIDE_STRUCTURED = {
       metricRanges: ['R²越高越好', '中等说明部分可组合', '低分说明泛化不足']
     }
   },
-  fibernet_v2: {
+  icspb: {
     pro: {
       goal: '评估慢逻辑与快记忆解耦后的即时学习效果。',
       approach: ['固定慢权重', '注入快权重', '测单次学习后性能变化'],
@@ -1483,7 +1481,7 @@ const buildGuideConclusion = ({ tab, activeTab, analysisResult, topologyResults,
 
   if (tab === 'main_workspace') {
     return make(true, '当前结论', [
-      'Main 面板用于做“编码证据链”管理：先存证，再看层级，再看微观节点。',
+      'DNN 主工作台用于做“编码证据链”管理：先存证，再看层级，再看微观节点。',
       '建议每次切换分析类型后保存快照，比较 FS/PI/HI 与 Top-K 神经元是否稳定。'
     ], [
       { label: '工作流', value: '拼图 -> 层级 -> 机制 -> 神经元' },
@@ -1491,13 +1489,13 @@ const buildGuideConclusion = ({ tab, activeTab, analysisResult, topologyResults,
     ]);
   }
 
-  if (tab === 'main_system' || tab === 'dnn_system' || tab === 'snn_system' || tab === 'fibernet_system') {
+  if (tab === 'main_system' || tab === 'dnn_system' || tab === 'snn_system' || tab === 'icspb_system') {
     const mapping = {
       main_system: {
-        title: 'Main 模块结论',
+        title: 'DNN 主工作台结论',
         lines: [
-          'Main 应作为“编码结构还原主线”统一入口，强调证据链闭环。',
-          '建议将 DNN/SNN/FiberNet 结果回流到 Main 做统一验证。',
+          'DNN 主工作台应作为“编码结构还原主线”统一入口，强调证据链闭环。',
+          '建议将 SNN/ICSPB 结果回流到 DNN 主工作台做统一验证。',
         ],
         metrics: [
           { label: '定位', value: '主研究流程' },
@@ -1508,7 +1506,7 @@ const buildGuideConclusion = ({ tab, activeTab, analysisResult, topologyResults,
         title: 'DNN 模块结论',
         lines: [
           'DNN 适合做多算法横向观测与假设发现。',
-          '应避免仅凭单一算法结果下结论，需与 Main 交叉验证。',
+          '应避免仅凭单一算法结果下结论，需与 DNN 主工作台交叉验证。',
         ],
         metrics: [
           { label: '定位', value: '结构观测工具箱' },
@@ -1526,14 +1524,14 @@ const buildGuideConclusion = ({ tab, activeTab, analysisResult, topologyResults,
           { label: '关键', value: '时序/可塑性/稳定性' },
         ],
       },
-      fibernet_system: {
-        title: 'FiberNet 模块结论',
+      icspb_system: {
+        title: 'ICSPB 模块结论',
         lines: [
-          'FiberNet 用于快慢权重协同实验，评估局部可塑与全局稳态平衡。',
+          'ICSPB 当前用于语言主干、在线写读、回放与固化的联合验证。',
           '重点验证“快速收益是否伴随旧能力退化”。'
         ],
         metrics: [
-          { label: '定位', value: '纤维丛实验平台' },
+          { label: '定位', value: '当前模型工作台' },
           { label: '关键', value: '快写入+稳主干' },
         ],
       },
@@ -1631,47 +1629,6 @@ const buildGuideConclusion = ({ tab, activeTab, analysisResult, topologyResults,
   }
 };
 
-const EvolutionMonitor = ({ data, onStartSleep }) => {
-  if (!data) return null;
-  return (
-    <div style={{
-      background: 'rgba(0,210,255,0.05)', padding: '15px', color: '#00ffcc',
-      border: '1px solid rgba(0,210,255,0.2)', borderRadius: '12px', marginBottom: '20px',
-      fontFamily: 'monospace'
-    }}>
-      <h3 style={{ margin: '0 0 10px 0', borderBottom: '1px solid rgba(0,210,255,0.2)', fontSize: '14px' }}>演化监视器</h3>
-      <div style={{ marginBottom: '8px', fontSize: '12px' }}>
-        状态: <span style={{ color: data.is_evolving ? '#ff00ff' : '#00ffcc' }}>
-          {data.is_evolving ? '休眠中（演化进行中）' : '唤醒（可分析）'}
-        </span>
-      </div>
-      <div style={{ marginBottom: '8px', fontSize: '12px' }}>
-        曲率 (Ω): {data.curvature?.toFixed(6) || '无数据'}
-      </div>
-      <div style={{ marginBottom: '15px', width: '100%', background: 'rgba(255,255,255,0.05)', height: '4px', borderRadius: '2px', overflow: 'hidden' }}>
-        <div style={{
-          width: `${data.progress}%`, height: '100%', background: '#ff00ff',
-          transition: 'width 0.3s ease', boxShadow: '0 0 10px #ff00ff'
-        }} />
-      </div>
-      {!data.is_evolving && (
-        <button
-          onClick={onStartSleep}
-          style={{
-            width: '100%', padding: '8px', background: 'transparent',
-            border: '1px solid #ff00ff', color: '#ff00ff', cursor: 'pointer',
-            fontWeight: 'bold', borderRadius: '6px', fontSize: '11px'
-          }}
-          onMouseOver={e => e.target.style.background = 'rgba(255,0,255,0.1)'}
-          onMouseOut={e => e.target.style.background = 'transparent'}
-        >
-          进入休眠演化周期
-        </button>
-      )}
-    </div>
-  );
-};
-
 export default function App() {
   const [lang, setLang] = useState('zh');
   const [helpTab, setHelpTab] = useState('outline'); // Selected tab in Help Modal
@@ -1711,45 +1668,6 @@ export default function App() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [activeLayer, setActiveLayer] = useState(null);
   const [activeTab, setActiveTab] = useState('glass_matrix');
-  const [evolutionData, setEvolutionData] = useState(null);
-
-  useEffect(() => {
-    let isUnmounted = false;
-    let hasLoggedDisconnected = false;
-
-    const pollEvolutionStatus = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/nfb/evolution/status`);
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-        const status = await res.json();
-        if (!isUnmounted) {
-          setEvolutionData(status);
-        }
-        hasLoggedDisconnected = false;
-      } catch {
-        // Avoid flooding console when backend is down/restarting.
-        if (!hasLoggedDisconnected) {
-          console.warn(`Evolution monitor unavailable: ${API_BASE}/nfb/evolution/status`);
-          hasLoggedDisconnected = true;
-        }
-      }
-    };
-
-    pollEvolutionStatus();
-    const timer = setInterval(pollEvolutionStatus, 1000);
-
-    return () => {
-      isUnmounted = true;
-      clearInterval(timer);
-    };
-  }, []);
-
-  const handleStartSleep = () => {
-    fetch(`${API_BASE}/nfb/evolution/ricci?iterations=100`, { method: 'POST' })
-      .catch(err => console.error("Start evolution error:", err));
-  };
 
   const [computationPhase, setComputationPhase] = useState(null); // 'attention' | 'mlp' | 'output'
   const [activeLayerInfo, setActiveLayerInfo] = useState(null);
@@ -1887,14 +1805,13 @@ export default function App() {
   const [topologyResults, setTopologyResults] = useState(null); // Global Scan Data
 
   // UI Tabs State
-  const [inputPanelTab, setInputPanelTab] = useState('main'); // 'main' | 'dnn' | 'snn' | 'fibernet'
+  const [inputPanelTab, setInputPanelTab] = useState('main'); // 'main' | 'snn' | 'icspb'
   const appleNeuronWorkspace = useAppleNeuronWorkspace();
   const isAppleMainView = inputPanelTab === 'main';
   const functionTypePanelMap = {
-    main: { label: 'Main', hasInfo: true, hasOperation: true },
-    dnn: { label: 'DNN', hasInfo: true, hasOperation: true },
+    main: { label: 'DNN', hasInfo: true, hasOperation: true },
     snn: { label: 'SNN', hasInfo: true, hasOperation: true },
-    fibernet: { label: 'FiberNet', hasInfo: true, hasOperation: true }
+    icspb: { label: 'ICSPB', hasInfo: true, hasOperation: true }
   };
   const activeFunctionPanel = functionTypePanelMap[inputPanelTab] || {
     label: inputPanelTab,
@@ -1904,8 +1821,7 @@ export default function App() {
   const hasInfoPanelContent = activeFunctionPanel.hasInfo;
   const hasOperationPanelContent = activeFunctionPanel.hasOperation;
   const isSnnFunctionType = inputPanelTab === 'snn';
-  const isFiberNetFunctionType = inputPanelTab === 'fibernet';
-  const showEvolutionMonitor = inputPanelTab === 'dnn';
+  const isICSPBFunctionType = inputPanelTab === 'icspb';
 
   // Auto-switch Info Panel tab on hover and persist info
   // Main 视图下保留“编码焦点”阅读，不强制跳到“细节”。
@@ -1918,7 +1834,7 @@ export default function App() {
     }
   }, [hoveredInfo, isAppleMainView]);
 
-  // 切换到 Main 时，默认进入“编码焦点”页签，便于查看编码模块。
+  // 切换到 DNN 主工作台时，默认进入“编码焦点”页签，便于查看编码模块。
   useEffect(() => {
     if (inputPanelTab === 'main') {
       setInfoPanelTab('encoding');
@@ -2366,7 +2282,7 @@ export default function App() {
     glass_matrix: { name: '玻璃矩阵', category: 'observation', focus: '关注激活强度分布与亮点聚集' },
     flow_tubes: { name: '信息流', category: 'observation', focus: '关注语义流动轨迹与分叉' },
     global_topology: { name: '全局拓扑', category: 'topology', focus: '关注语义场之间的一致性' },
-    fibernet_v2: { name: 'FiberNet V2', category: 'system', focus: '关注即时学习与快慢权重协作' },
+    icspb: { name: 'ICSPB 当前模型', category: 'system', focus: '关注语言主干、在线写读、回放与即时学习' },
     holonomy: { name: '全纯扫描', category: 'topology', focus: '关注闭环偏差与几何扭转' },
     debias: { name: '几何去偏', category: 'system', focus: '关注偏置方向与去偏效果' },
     validity: { name: '有效性检验', category: 'system', focus: '关注指标稳定性与可复现性' },
@@ -2385,14 +2301,14 @@ export default function App() {
   const currentAlgorithmInfo = (() => {
     if (isAppleMainView) {
       return {
-        name: currentMainMode?.label || 'Main 分析',
-        focus: currentMainMode?.desc || 'Main 四阶段编码分析',
+        name: currentMainMode?.label || 'DNN 分析',
+        focus: currentMainMode?.desc || 'DNN 四阶段编码分析',
       };
     }
-    if (isFiberNetFunctionType) {
+    if (isICSPBFunctionType) {
       return {
-        name: 'FiberNet 实验流程',
-        focus: '在左侧 FiberNet 面板中配置实验，并在 3D 空间观察结构变化。',
+        name: 'ICSPB 工作流程',
+        focus: '在左侧 ICSPB 面板中配置实验，并在 3D 空间观察结构变化。',
       };
     }
     return {
@@ -2503,10 +2419,10 @@ export default function App() {
 
   const analysisSummaryText = (() => {
     if (isAppleMainView) {
-      return `Main 当前处于“${currentAlgorithmInfo.name}”：${currentAlgorithmInfo.focus}`;
+      return `DNN 主工作台当前处于“${currentAlgorithmInfo.name}”：${currentAlgorithmInfo.focus}`;
     }
-    if (isFiberNetFunctionType) {
-      return `FiberNet 当前聚焦：${currentPanelBlueprint.operationFocus}`;
+    if (isICSPBFunctionType) {
+      return `ICSPB 当前聚焦：${currentPanelBlueprint.operationFocus}`;
     }
     if (!analysisResult) return '尚未生成分析结果。可先在左侧控制面板运行一次分析。';
     switch (structureTab) {
@@ -2542,20 +2458,20 @@ export default function App() {
     { id: 'outline', label: '大纲 (Overview)', iconName: 'Settings' },
     { type: 'sep' },
     { id: 'architect', label: '模型架构 (Architecture)', iconName: 'Settings' },
-    { id: 'main_workspace', label: 'Main 控制面板', iconName: 'Brain' },
-    { id: 'main_system', label: 'Main 模块定位', iconName: 'Brain' },
+    { id: 'main_workspace', label: 'DNN 控制面板', iconName: 'Brain' },
+    { id: 'main_system', label: 'DNN 主工作台定位', iconName: 'Brain' },
     { id: 'dnn_system', label: 'DNN 模块定位', iconName: 'Grid3x3' },
     { id: 'snn_system', label: 'SNN 模块定位', iconName: 'Activity' },
-    { id: 'fibernet_system', label: 'FiberNet 模块定位', iconName: 'Network' },
+    { id: 'icspb_system', label: 'ICSPB 模块定位', iconName: 'Network' },
     { type: 'sep' },
     ...structureGuideItems
   ];
   const showGlobalResonanceField = inputPanelTab !== 'dnn' && inputPanelTab !== 'snn';
   const infoPanelTitle = `${t('panels.modelInfo')} · ${activeFunctionPanel.label}`;
   const operationPanelTitle = isAppleMainView
-    ? `操作面板 · Main / ${currentAlgorithmInfo.name}`
-    : isFiberNetFunctionType
-    ? `操作面板 · FiberNet / ${currentAlgorithmInfo.name}`
+    ? `操作面板 · DNN / ${currentAlgorithmInfo.name}`
+    : isICSPBFunctionType
+    ? `操作面板 · ICSPB / ${currentAlgorithmInfo.name}`
     : hasOperationPanelContent
     ? `操作面板 · ${currentStructureUI.name}`
     : `操作面板 · ${activeFunctionPanel.label}`;
@@ -2702,138 +2618,6 @@ export default function App() {
               </div>
             )}
 
-            {/* DNN Content: Generation + Structure Analysis */}
-            {inputPanelTab === 'dnn' && (
-              <div className="animate-fade-in">
-                {/* Generation Section */}
-                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '8px', marginBottom: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <div style={{ fontSize: '12px', color: '#aaa', marginBottom: '8px', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
-                    <span>文本生成与提示词</span>
-                    {generating && <span style={{ color: '#5ec962' }}>Generating...</span>}
-                  </div>
-
-                  <textarea
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="输入提示词..."
-                    rows={3}
-                    style={{
-                      width: '100%', background: '#1a1a1f', border: '1px solid #333',
-                      color: 'white', padding: '10px', borderRadius: '6px', outline: 'none',
-                      resize: 'vertical', fontSize: '13px', fontFamily: 'sans-serif'
-                    }}
-                  />
-
-                  <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
-                    <button
-                      onClick={analyze}
-                      disabled={loading || !prompt}
-                      style={{
-                        flex: 1, background: '#333', border: '1px solid #444', color: 'white',
-                        padding: '8px', borderRadius: '6px', cursor: 'pointer',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                        fontSize: '12px'
-                      }}
-                      title="仅分析当前提示词"
-                    >
-                      {loading ? <Loader2 className="animate-spin" size={14} /> : <Search size={14} />} 分析
-                    </button>
-
-                    <button
-                      onClick={generateNext}
-                      disabled={generating || !prompt}
-                      style={{
-                        flex: 2,
-                        background: generating ? '#888' : 'linear-gradient(45deg, #5ec962, #96c93d)',
-                        border: 'none',
-                        color: 'white',
-                        padding: '8px',
-                        borderRadius: '6px',
-                        cursor: generating || !prompt ? 'not-allowed' : 'pointer',
-                        fontSize: '12px',
-                        fontWeight: '600',
-                        opacity: generating || !prompt ? 0.7 : 1,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
-                      }}
-                    >
-                      {generating ? '生成中...' : 'Generate Next Token'}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Structure Analysis Section */}
-                <div style={{ marginBottom: '10px' }}>
-                  {/* Pass systemType='dnn' expressly */}
-                  <StructureAnalysisControls
-                    autoResult={autoAnalysisResult}
-                    systemType={systemType}
-                    setSystemType={setSystemType}
-                    circuitForm={circuitForm} setCircuitForm={setCircuitForm}
-                    featureForm={featureForm} setFeatureForm={setFeatureForm}
-                    causalForm={causalForm} setCausalForm={setCausalForm}
-                    manifoldForm={manifoldForm} setManifoldForm={setManifoldForm}
-                    compForm={compForm} setCompForm={setCompForm}
-                    agiForm={agiForm} setAgiForm={setAgiForm}
-                    rptForm={rptForm} setRptForm={setRptForm}
-                    topologyResults={topologyResults}
-                    setTopologyResults={setTopologyResults}
-                    onResultUpdate={setAnalysisResult}
-                    activeTab={structureTab}
-                    setActiveTab={setStructureTab}
-                    t={t}
-                    // SNN Props
-                    snnState={snnState}
-                    onInitializeSNN={initializeSNN}
-                    onToggleSNNPlay={() => setSnnState(s => ({ ...s, isPlaying: !s.isPlaying }))}
-                    onStepSNN={stepSNN}
-                    onInjectStimulus={injectSNNStimulus}
-                    containerStyle={{
-                      background: 'transparent',
-                      borderLeft: 'none',
-                      backdropFilter: 'none',
-                      padding: 0
-                    }}
-                  />
-                </div>
-
-                {/* Step Execution Controls */}
-                <div style={{ marginTop: '12px', padding: '12px', background: 'rgba(0,0,0,0.2)', borderRadius: '8px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '11px', color: '#aaa', fontWeight: 'bold' }}>单步调试 (Step-by-Step)</span>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10px', color: '#888', cursor: 'pointer' }}>
-                      <input
-                        type="checkbox"
-                        checked={stepAnalysisMode !== 'none'}
-                        onChange={(e) => setStepAnalysisMode(e.target.checked ? structureTab : 'none')}
-                        style={{ accentColor: '#4ecdc4' }}
-                      />
-                      启用分析
-                    </label>
-                  </div>
-
-                  <button
-                    onClick={stepToNextLayer}
-                    disabled={isAnimating || !data}
-                    style={{
-                      width: '100%',
-                      background: isAnimating || !data ? '#444' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      border: 'none',
-                      color: 'white',
-                      padding: '8px',
-                      borderRadius: '6px',
-                      cursor: isAnimating || !data ? 'not-allowed' : 'pointer',
-                      fontSize: '12px',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                      opacity: isAnimating || !data ? 0.6 : 1
-                    }}
-                  >
-                    {isAnimating ? <Loader2 className="animate-spin" size={14} /> : '▶️'}
-                    执行单层步进 {activeLayer !== null ? `(当前: L${activeLayer})` : '(从 L0 开始)'}
-                  </button>
-                </div>
-              </div>
-            )}
-
             {/* SNN Content */}
             {inputPanelTab === 'snn' && (
               <div className="animate-fade-in">
@@ -2883,10 +2667,10 @@ export default function App() {
               </div>
             )}
 
-            {/* FiberNet Lab Content - Phase XXXIV Unified Lab */}
-            {inputPanelTab === 'fibernet' && (
+            {/* ICSPB Lab Content - Phase XXXIV Unified Lab */}
+            {inputPanelTab === 'icspb' && (
               <div className="animate-fade-in" style={{ height: '100%', overflowY: 'auto' }}>
-                <FiberNetPanel lang={lang} />
+                <ICSPBPanel lang={lang} />
               </div>
             )}
 
@@ -2939,12 +2723,8 @@ export default function App() {
               <div style={{ padding: '0', height: '100%', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div style={{ flex: '0 0 auto' }}>
                 <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#888', marginBottom: '8px', textTransform: 'uppercase' }}>
-                  {isSnnFunctionType ? '系统概览' : isFiberNetFunctionType ? 'FiberNet 概览' : '模型概览'}
+                  {isSnnFunctionType ? '系统概览' : isICSPBFunctionType ? 'ICSPB 概览' : '模型概览'}
                 </div>
-
-                {showEvolutionMonitor && (
-                  <EvolutionMonitor data={evolutionData} onStartSleep={handleStartSleep} />
-                )}
 
                 <div style={{ fontSize: '12px', lineHeight: '1.6', background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '6px', marginBottom: '8px' }}>
                   <div style={{ color: '#fff', fontWeight: '600', marginBottom: '4px' }}>{`${currentPanelBlueprint.label} · ${currentAlgorithmInfo.name}`}</div>
@@ -2967,10 +2747,31 @@ export default function App() {
                       <span style={{ color: '#fff' }}>{snnState.structure?.neurons?.length || 0}</span>
                     </div>
                   </div>
-                ) : isFiberNetFunctionType ? (
+                ) : isICSPBFunctionType ? (
                   <div style={{ fontSize: '12px', lineHeight: '1.6', background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '6px' }}>
-                    <div style={{ color: '#fff', fontWeight: '600', marginBottom: '4px' }}>FiberNet 模型说明</div>
-                    <div style={{ color: '#aaa' }}>该模块专注“底流形 + 纤维”双尺度机制，参数入口位于左侧 FiberNet 控制区。</div>
+                    <div style={{ color: '#fff', fontWeight: '600', marginBottom: '4px' }}>ICSPB 模型说明</div>
+                    <div style={{ color: '#aaa' }}>该模块现在只保留当前模型相关内容，聚焦语言主干、语义推演、记忆回放与在线学习。</div>
+                  </div>
+                ) : isAppleMainView ? (
+                  <div style={{ fontSize: '12px', lineHeight: '1.6', background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '6px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '110px 1fr', gap: '4px', color: '#aaa' }}>
+                      <span>分析模式</span>
+                      <span style={{ color: '#fff', fontWeight: 'bold' }}>{currentAlgorithmInfo.name}</span>
+                      <span>当前词元</span>
+                      <span style={{ color: '#fff' }}>{appleNeuronWorkspace.summary?.currentToken || '-'}</span>
+                      <span>核心节点</span>
+                      <span style={{ color: '#fff' }}>{(appleNeuronWorkspace.summary?.micro || 0) + (appleNeuronWorkspace.summary?.macro || 0) + (appleNeuronWorkspace.summary?.route || 0)}</span>
+                      <span>概念集</span>
+                      <span style={{ color: '#fff' }}>{appleNeuronWorkspace.querySets?.length || 0}</span>
+                      <span>显示策略</span>
+                      <span style={{ color: '#fff' }}>
+                        {appleNeuronWorkspace.summary?.displayStrategy === 'auto'
+                          ? '自动聚焦'
+                          : appleNeuronWorkspace.summary?.displayStrategy === 'all'
+                          ? '全部显示'
+                          : '手动筛选'}
+                      </span>
+                    </div>
                   </div>
                 ) : (
                   data?.model_config ? (
@@ -2992,7 +2793,7 @@ export default function App() {
                 )}
               </div>
 
-              {!isSnnFunctionType && !isFiberNetFunctionType && (
+              {!isSnnFunctionType && !isICSPBFunctionType && (
                 <div style={{
                   display: 'flex',
                   gap: '6px',
@@ -3040,7 +2841,7 @@ export default function App() {
                       })}
                     </div>
                   </div>
-                ) : isFiberNetFunctionType ? (
+                ) : isICSPBFunctionType ? (
                   <div style={{ fontSize: '12px', color: '#c8d1df', lineHeight: '1.6', display: 'grid', gap: '8px' }}>
                     <div style={{
                       background: 'rgba(255,255,255,0.03)',
@@ -3048,11 +2849,11 @@ export default function App() {
                       borderRadius: '6px',
                       padding: '8px'
                     }}>
-                      <div style={{ color: '#fff', fontWeight: 600, marginBottom: '3px' }}>FiberNet 当前目标</div>
+                      <div style={{ color: '#fff', fontWeight: 600, marginBottom: '3px' }}>ICSPB 当前目标</div>
                       <div style={{ color: '#9ea7b7', fontSize: '11px' }}>{currentPanelBlueprint.operationFocus}</div>
                     </div>
                     <div style={{ fontSize: '11px', color: '#8ea5c5' }}>
-                      建议流程：先在左侧配置 FiberNet 实验参数，再在 3D 主空间检查结构变化与稳定性。
+                      建议流程：先在左侧配置 ICSPB 实验参数，再在 3D 主空间检查结构变化与稳定性。
                     </div>
                   </div>
                 ) : (
@@ -3105,7 +2906,7 @@ export default function App() {
                       isAppleMainView ? (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                           <div style={{ fontSize: '11px', color: '#9ea7b7', lineHeight: '1.6' }}>
-                            Main 编码观测区：类别比较、层级编码签名与机制指标已移动到此处。
+                            DNN 编码观测区：类别比较、层级编码签名与机制指标已移动到此处。
                           </div>
                           <AppleNeuronCategoryComparePanel workspace={appleNeuronWorkspace} compact />
                           <AppleNeuronEncodingInfoPanels workspace={appleNeuronWorkspace} compact />
@@ -3709,13 +3510,13 @@ export default function App() {
                     color: '#bbb'
                   }}>
                     <div style={{ color: '#fff', fontWeight: '600', marginBottom: '2px' }}>
-                      Main 过滤操作
+                      DNN 过滤操作
                     </div>
                     <div>根据左侧输入名称（概念）勾选显示/隐藏对应神经元集合。</div>
                   </div>
                   <AppleNeuronCompareFilterPanel workspace={appleNeuronWorkspace} compact />
                 </div>
-              ) : isFiberNetFunctionType ? (
+              ) : isICSPBFunctionType ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   <div style={{
                     padding: '8px',
@@ -3741,8 +3542,8 @@ export default function App() {
                     color: '#bbb',
                     lineHeight: '1.6'
                   }}>
-                    <div style={{ color: '#fff', marginBottom: '4px', fontWeight: '600' }}>FiberNet 参数入口</div>
-                    <div>1. 在左侧 FiberNet 面板设置结构/注入/训练参数。</div>
+                    <div style={{ color: '#fff', marginBottom: '4px', fontWeight: '600' }}>ICSPB 参数入口</div>
+                    <div>1. 在左侧 ICSPB 面板设置语言、回放、在线学习相关参数。</div>
                     <div>2. 在主 3D 空间观察底流形与纤维变化。</div>
                     <div>3. 在模型说明中对照核心公式与过程解释。</div>
                   </div>
@@ -3954,13 +3755,7 @@ export default function App() {
         </SimplePanel>
       )}
 
-      {/* 3D Canvas - Conditionally Render FiberNetV2Demo */}
-      {!isAppleMainView && structureTab === 'fibernet_v2' ? (
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
-          <FiberNetV2Demo t={t} />
-        </div>
-      ) : (
-        <Canvas shadows>
+      <Canvas shadows>
           {isAppleMainView && <color attach="background" args={['#090b15']} />}
           {isAppleMainView && <fog attach="fog" args={['#090b15', 14, 42]} />}
 
@@ -4123,7 +3918,6 @@ export default function App() {
             </>
           )}
         </Canvas>
-      )}
 
       {/* GlassMatrix3D - Has its own Canvas, must be rendered outside main Canvas */}
       {!isAppleMainView && structureTab === 'glass_matrix' && (
@@ -4160,14 +3954,6 @@ export default function App() {
       {/* AGIChatPanel Terminal */}
       {panelVisibility.agiChatPanel && (
         <AGIChatPanel onClose={() => setPanelVisibility(prev => ({ ...prev, agiChatPanel: false }))} t={t} />
-      )}
-
-      {/* MotherEnginePanel */}
-      {panelVisibility.motherEnginePanel && (
-        <MotherEnginePanel
-          onClose={() => setPanelVisibility(prev => ({ ...prev, motherEnginePanel: false }))}
-          t={t}
-        />
       )}
 
       {/* Project Genesis Blueprint Overlay */}

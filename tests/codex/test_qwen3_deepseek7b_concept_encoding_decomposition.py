@@ -275,6 +275,12 @@ def main() -> None:
     ap.add_argument("--dtype-deepseek", type=str, default="bfloat16")
     ap.add_argument("--cpu-only", action="store_true")
     ap.add_argument(
+        "--models",
+        type=str,
+        default="qwen3_4b,deepseek_7b",
+        help="Comma-separated subset of models to run. Supported: qwen3_4b, deepseek_7b",
+    )
+    ap.add_argument(
         "--json-out",
         type=str,
         default="tests/codex_temp/qwen3_deepseek7b_concept_encoding_decomposition_20260309.json",
@@ -282,7 +288,10 @@ def main() -> None:
     args = ap.parse_args()
 
     results = {"meta": {"timestamp": time.strftime("%Y-%m-%d %H:%M:%S")}, "models": {}}
+    requested = {part.strip() for part in args.models.split(",") if part.strip()}
     for model_name, model_path in default_model_specs():
+        if model_name not in requested:
+            continue
         dtype_name = args.dtype_qwen if model_name == "qwen3_4b" else args.dtype_deepseek
         print(f"[run] {model_name} from {model_path}")
         row = analyze_model(model_name, model_path, dtype_name, not args.cpu_only)

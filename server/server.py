@@ -46,17 +46,14 @@ from scripts.agi_core_engine import AGICoreEngine
 from scripts.rlmf_manager import RLMFManager
 from server.api_v1_runs import create_runs_router
 from server.cross_bundle_service import cross_bundle_aligner
-from server.fibernet_service import fibernet_service
 from server.global_workspace_service import global_workspace_controller
 from server.rag_fiber_service import rag_fiber_manager
 from server.ricci_flow_service import ricci_flow_service
-from server.evolution_service import evolution_service
 from server.runtime.run_service import RunService
 from server.vision_service import vision_service
 from server.agi_chat_service import agi_chat_engine
 
 # --- Global Model State ---
-from server.mother_engine_service import mother_engine_service
 model = None
 surgeon = None 
 interceptor = None 
@@ -354,6 +351,79 @@ async def start_agi_wash(request: WashRequest):
     return agi_chat_engine.start_background_wash(request.max_files)
 
 
+class ICSPBSemanticRequest(BaseModel):
+    text: str
+    lang: str = "zh"
+
+
+class ICSPBTrainRequest(BaseModel):
+    steps: int = 4
+    batch_size: int = 1
+    lr: float = 1e-4
+    max_texts: int = 16
+
+
+class ICSPBTrainPlanRequest(BaseModel):
+    rounds: int = 4
+    steps_per_round: int = 4
+    batch_size: int = 1
+    lr: float = 1e-4
+    max_texts: int = 16
+
+
+@app.post("/api/icspb/semantic")
+async def run_icspb_semantic(request: ICSPBSemanticRequest):
+    return agi_chat_engine.semantic_inference(request.text, request.lang)
+
+
+@app.post("/api/icspb/train")
+async def run_icspb_training(request: ICSPBTrainRequest):
+    return agi_chat_engine.train_language_model(
+        steps=request.steps,
+        batch_size=request.batch_size,
+        lr=request.lr,
+        max_texts=request.max_texts,
+        save_checkpoint=True,
+    )
+
+
+@app.post("/api/icspb/train/plan")
+async def run_icspb_training_plan(request: ICSPBTrainPlanRequest):
+    return agi_chat_engine.run_training_plan(
+        rounds=request.rounds,
+        steps_per_round=request.steps_per_round,
+        batch_size=request.batch_size,
+        lr=request.lr,
+        max_texts=request.max_texts,
+        save_checkpoint=True,
+    )
+
+
+@app.get("/api/icspb/train/status")
+async def get_icspb_training_status():
+    return agi_chat_engine.get_training_status()
+
+
+@app.post("/api/icspb/train/benchmark")
+async def run_icspb_training_benchmark():
+    return agi_chat_engine.run_generation_benchmark()
+
+
+@app.post("/api/icspb/memory/consolidate")
+async def run_icspb_memory_consolidation(iterations: int = 20, mode: str = "adaptive"):
+    return agi_chat_engine.run_memory_consolidation(iterations=iterations, mode=mode)
+
+
+@app.get("/api/icspb/memory/status")
+async def get_icspb_memory_status():
+    return agi_chat_engine.get_memory_consolidation_status()
+
+
+@app.get("/api/icspb/memory/chart")
+async def get_icspb_memory_chart():
+    return agi_chat_engine.get_memory_chart_data()
+
+
 @app.get("/api/system_status/runtime_summary")
 async def get_system_status_runtime_summary():
     """
@@ -364,12 +434,13 @@ async def get_system_status_runtime_summary():
     """
     try:
         chat_status = agi_chat_engine.get_status()
+        language_model = getattr(agi_chat_engine, "language_model", None)
         icspb_model = getattr(agi_chat_engine, "icspb_model", None)
         total_parameters = 0
         trainable_parameters = 0
-        if icspb_model is not None:
-            total_parameters = sum(int(p.numel()) for p in icspb_model.parameters())
-            trainable_parameters = sum(int(p.numel()) for p in icspb_model.parameters() if p.requires_grad)
+        if language_model is not None:
+            total_parameters = sum(int(p.numel()) for p in language_model.parameters())
+            trainable_parameters = sum(int(p.numel()) for p in language_model.parameters() if p.requires_grad)
 
         root = Path(root_dir).resolve()
         temp_dir = root / "tests" / "codex_temp"
@@ -416,8 +487,8 @@ async def get_system_status_runtime_summary():
         return {
             "status": "success",
             "model_summary": {
-                "current_model_file": "research/gpt5/code/icspb_backbone_v2_large_online.py",
-                "current_model_name": "ICSPBBackboneV2LargeOnline",
+                "current_model_file": "research/gpt5/code/icspb_lm_phasea.py",
+                "current_model_name": "ICSPBLMPhaseA",
                 "total_parameters": f"{total_parameters:,}",
                 "trainable_parameters": f"{trainable_parameters:,}",
                 "prototype_training_progress": "82% - 87%",
@@ -436,10 +507,15 @@ async def get_system_status_runtime_summary():
                 "semantic_pipeline_ready": bool(chat_status.get("semantic_pipeline_ready", False)),
                 "semantic_benchmark_score": float(chat_status.get("semantic_benchmark_score", 0.0)),
                 "semantic_training_rounds": int(getattr(agi_chat_engine, "semantic_training_rounds", 0)),
+                "language_training_steps": int(chat_status.get("language_training_steps", 0)),
+                "phasea_last_train_loss": chat_status.get("phasea_last_train_loss"),
+                "phasea_last_eval_loss": chat_status.get("phasea_last_eval_loss"),
+                "phasea_generation_benchmark": chat_status.get("generation_benchmark", {}),
                 "memory_trace_depth": int(chat_status.get("memory_trace_depth", 0)),
                 "language_training_closure_score": language_training_score,
                 "open_domain_assessment_score": open_domain_score,
                 "scaleup_training_score": scaleup_score,
+                "current_checkpoint": chat_status.get("checkpoint_path"),
                 "dialog_ready": bool(language_training.get("verdict", {}).get("overall_pass", False)),
                 "open_domain_ready": bool(open_domain.get("verdict", {}).get("overall_pass", False)),
                 "scaleup_ready": bool(scaleup_assessment.get("verdict", {}).get("overall_pass", False)),
@@ -713,25 +789,6 @@ async def cross_bundle_sync(modality: str, layer_idx: int, x: float, y: float, z
     global_workspace_controller.update_locus(layer_idx, source_pos, 1.2)
     
     return sync_result
-
-@app.post("/nfb/evolution/ricci")
-async def start_ricci_evolution(iterations: int = 20, mode: str = "adaptive"):
-    """Phase XXXIII: 启动 Ricci 睡眠演化"""
-    return await evolution_service.enter_sleep(
-        mother_engine=mother_engine_service,
-        iterations=iterations,
-        mode=mode
-    )
-
-@app.get("/nfb/evolution/status")
-async def get_evolution_status():
-    """Phase XXXIII: 获取演化/睡眠进度"""
-    return evolution_service.get_status()
-
-@app.get("/api/evolution/chart")
-async def get_evolution_chart():
-    """Phase XXXIII: 获取演化曲率图表数据"""
-    return evolution_service.get_curvature_chart_data()
 
 class FiberRegisterRequest(BaseModel):
     key: str
@@ -1063,17 +1120,6 @@ async def tda_api():
 async def fiber_bundle_analysis_api(request: Dict[str, Any]):
     if model is None: raise HTTPException(status_code=503, detail="Model not loaded yet")
     return run_agi_verification(model)
-
-@app.post('/fibernet/inference')
-async def fibernet_inference(request: Dict[str, Any]):
-    try:
-        text = request.get('text', '')
-        lang = request.get('lang', 'en')
-        result = fibernet_service.inference(text, lang)
-        return result
-    except Exception as e:
-         print(f"Error in fibernet_inference: {e}")
-         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/nfb_ra/rpt")
 async def rpt_analysis_api(request: Dict[str, Any]):
@@ -1436,67 +1482,6 @@ async def get_nfb_flux(model: str = "gpt2"):
         return {"status": "success", "flux": flux_data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/fibernet_v2/demo")
-async def fibernet_v2_demo():
-    """Returns demo data for the FiberNet V2 3D visualization"""
-    import random
-    random.seed(42)
-    
-    # Generate manifold nodes (base space grid)
-    manifold_nodes = []
-    for i in range(9):
-        row, col = divmod(i, 3)
-        manifold_nodes.append({
-            "id": str(i),
-            "pos": [(col - 1) * 2.5, 0, (row - 1) * 2.5]
-        })
-    
-    # Generate concept points on the manifold
-    concepts = ["Doctor", "Nurse", "Engineer", "Teacher", "Artist", "Judge"]
-    manifold_points = []
-    for j, c in enumerate(concepts):
-        angle = j * (3.14159 * 2 / len(concepts))
-        manifold_points.append({
-            "pos": [2.0 * np.cos(angle), 0.3 * random.random(), 2.0 * np.sin(angle)],
-            "type": "concept",
-            "text": c
-        })
-    # Add background scatter points
-    for _ in range(30):
-        manifold_points.append({
-            "pos": [random.uniform(-3, 3), random.uniform(-0.2, 0.2), random.uniform(-3, 3)],
-            "type": "scatter",
-            "text": ""
-        })
-    
-    # Generate fibers (vertical vectors at each node)
-    fibers = []
-    for node in manifold_nodes:
-        fibers.append({
-            "parent_id": node["id"],
-            "height": random.uniform(1.0, 3.0),
-            "color_intensity": random.random()
-        })
-    
-    # Generate transport connections
-    connections = [
-        {"source": "0", "target": "1", "weight": 0.8},
-        {"source": "1", "target": "2", "weight": 0.6},
-        {"source": "3", "target": "4", "weight": 0.9},
-        {"source": "4", "target": "5", "weight": 0.7},
-        {"source": "6", "target": "7", "weight": 0.5},
-        {"source": "0", "target": "3", "weight": 0.4},
-        {"source": "1", "target": "4", "weight": 0.85},
-        {"source": "4", "target": "7", "weight": 0.65}
-    ]
-    
-    return {
-        "manifold_nodes": manifold_nodes,
-        "manifold_points": manifold_points,
-        "fibers": fibers,
-        "connections": connections
-    }
 
 @app.get("/agi/progress")
 async def get_agi_progress():
@@ -2085,27 +2070,6 @@ async def get_multimodal_summary():
 async def process_agi_chat_status():
     st = agi_chat_engine.get_status()
     return {"status": "success", "engine_status": st}
-
-# ==============================================================================
-# 物理宇宙：Mother Engine (Phase XXX) 端点挂载
-# ==============================================================================
-class MotherEngineRequest(BaseModel):
-    prompt: str = "The artificial"
-    steps: int = 15
-
-@app.post("/api/mother-engine/generate")
-async def generate_from_mother_engine(req: MotherEngineRequest):
-    """
-    纯物理态的图谱势能冲刷推导
-    完全放弃矩阵乘加，只执行自然法则 4 计算流
-    """
-    try:
-        report = mother_engine_service.generate_energy_spikes(req.prompt, req.steps)
-        if "error" in report:
-             raise HTTPException(status_code=500, detail=report["error"])
-        return report
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn

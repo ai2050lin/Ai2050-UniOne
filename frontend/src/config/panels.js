@@ -116,10 +116,9 @@ export const STRUCTURE_TABS = {
 
 // 输入面板标签
 export const INPUT_PANEL_TABS = [
-  { id: 'main', label: 'Main', color: '#38bdf8', description: 'Apple Neuron 3D Main' },
-  { id: 'dnn', label: 'DNN', color: '#3a7bd5', description: '深度神经网络' },
+  { id: 'main', label: 'DNN', color: '#38bdf8', description: 'DNN 主工作台' },
   { id: 'snn', label: 'SNN', color: '#4ecdc4', description: '脉冲神经网络' },
-  { id: 'fibernet', label: 'FiberNet', color: '#6c5ce7', description: '纤维丛实验室' },
+  { id: 'icspb', label: 'ICSPB', color: '#6c5ce7', description: '当前模型工作台' },
 ];
 
 // 数据展示模板
@@ -177,12 +176,12 @@ export const ANALYSIS_DATA_TEMPLATES = {
     ],
     sections: [],
   },
-  fibernet_v2: {
-    title: 'FiberNet V2',
+  icspb: {
+    title: 'ICSPB 当前模型',
     color: '#6c5ce7',
     metrics: [
-      { key: 'base_dim', label: '底流形维度', format: 'number' },
-      { key: 'fiber_dim', label: '纤维维度', format: 'number' },
+      { key: 'stable_read', label: '稳定读取', format: 'decimal' },
+      { key: 'guarded_write', label: '受控写入', format: 'decimal' },
     ],
     sections: [],
   },

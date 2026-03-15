@@ -3,7 +3,6 @@ from typing import Any, Dict, List, Optional
 import numpy as np
 import torch
 
-from .fibernet_service import fibernet_service
 from .vision_service import vision_service
 
 

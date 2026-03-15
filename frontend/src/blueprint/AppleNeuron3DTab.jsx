@@ -117,6 +117,93 @@ const ANALYSIS_MODE_STAGE_GROUPS = [
     items: ['minimal_circuit'],
   },
 ];
+
+const ICSPB_THEORY_OBJECTS = [
+  {
+    id: 'family_patch',
+    label: 'family patch',
+    labelZh: '族群底座',
+    desc: '看同一概念族是否形成稳定 patch 底座与共享群落。',
+    color: '#7dd3fc',
+    roleWeights: { macro: 1, fruitGeneral: 0.95, query: 0.82, micro: 0.72, route: 0.68, style: 0.35, logic: 0.35, syntax: 0.35, unifiedDecode: 0.38, hardBinding: 0.28, hardLong: 0.25, hardLocal: 0.25, hardTriplet: 0.25, background: 0.06 },
+  },
+  {
+    id: 'concept_section',
+    label: 'concept section',
+    labelZh: '概念截面',
+    desc: '看概念截面、局部偏移与最小语义改动是否保持局部连续。',
+    color: '#c084fc',
+    roleWeights: { micro: 1, query: 0.94, macro: 0.82, route: 0.72, fruitGeneral: 0.58, style: 0.52, logic: 0.52, syntax: 0.52, unifiedDecode: 0.4, hardBinding: 0.3, hardLong: 0.3, hardLocal: 0.28, hardTriplet: 0.3, background: 0.06 },
+  },
+  {
+    id: 'attribute_fiber',
+    label: 'attribute fiber',
+    labelZh: '属性纤维',
+    desc: '看颜色、形状、甜度等属性是否沿可组合纤维方向分离。',
+    color: '#34d399',
+    roleWeights: { style: 1, logic: 0.82, syntax: 0.7, micro: 0.8, query: 0.68, macro: 0.6, route: 0.56, unifiedDecode: 0.56, hardBinding: 0.25, hardLong: 0.24, hardLocal: 0.24, hardTriplet: 0.26, background: 0.05 },
+  },
+  {
+    id: 'relation_context_fiber',
+    label: 'relation-context fiber',
+    labelZh: '关系/语境纤维',
+    desc: '看关系和语境如何沿层间路径传播并重组。',
+    color: '#22d3ee',
+    roleWeights: { route: 1, query: 0.88, macro: 0.76, micro: 0.64, logic: 0.62, syntax: 0.58, style: 0.42, unifiedDecode: 0.54, hardLong: 0.42, hardTriplet: 0.48, hardBinding: 0.3, hardLocal: 0.3, background: 0.05 },
+  },
+  {
+    id: 'admissible_update',
+    label: 'admissible update',
+    labelZh: '可容许更新',
+    desc: '看什么样的局部改动既能更新知识，又不冲垮旧结构。',
+    color: '#a3e635',
+    roleWeights: { hardLocal: 1, hardBinding: 0.92, hardLong: 0.84, hardTriplet: 0.84, unifiedDecode: 0.72, route: 0.66, micro: 0.62, macro: 0.58, query: 0.52, style: 0.5, logic: 0.5, syntax: 0.5, background: 0.04 },
+  },
+  {
+    id: 'restricted_readout',
+    label: 'restricted readout',
+    labelZh: '受限读出',
+    desc: '看输出是否主要依赖少数关键节点、局部子回路和读出热点。',
+    color: '#fb7185',
+    roleWeights: { route: 1, micro: 0.92, macro: 0.84, query: 0.82, hardTriplet: 0.74, hardBinding: 0.62, unifiedDecode: 0.58, logic: 0.46, syntax: 0.46, style: 0.38, background: 0.04 },
+  },
+  {
+    id: 'stage_conditioned_transport',
+    label: 'stage-conditioned transport',
+    labelZh: '阶段条件运输',
+    desc: '看不同计算阶段是否切换不同的运输主路和层间热点。',
+    color: '#38bdf8',
+    roleWeights: { route: 1, macro: 0.86, micro: 0.78, query: 0.74, hardLong: 0.62, hardBinding: 0.46, unifiedDecode: 0.48, style: 0.34, logic: 0.34, syntax: 0.34, background: 0.04 },
+  },
+  {
+    id: 'successor_aligned_transport',
+    label: 'successor-aligned transport',
+    labelZh: '后继对齐运输',
+    desc: '看后继 token/状态是否沿稳定对齐路径产生，而不是随机跳变。',
+    color: '#f59e0b',
+    roleWeights: { route: 1, query: 0.9, micro: 0.74, macro: 0.7, hardLong: 0.68, hardTriplet: 0.52, unifiedDecode: 0.5, style: 0.32, logic: 0.38, syntax: 0.38, background: 0.04 },
+  },
+  {
+    id: 'protocol_bridge',
+    label: 'protocol bridge',
+    labelZh: '协议桥',
+    desc: '看内部编码如何进入任务接口、统一解码和最小可用闭环。',
+    color: '#f97316',
+    roleWeights: { unifiedDecode: 1, hardTriplet: 0.86, route: 0.84, query: 0.78, macro: 0.68, micro: 0.58, style: 0.54, logic: 0.54, syntax: 0.54, hardBinding: 0.48, hardLong: 0.48, hardLocal: 0.48, background: 0.04 },
+  },
+];
+
+const THEORY_OBJECT_MODE_MAP = {
+  family_patch: ['static', 'subspace_geometry', 'feature_decomposition'],
+  concept_section: ['static', 'subspace_geometry', 'feature_decomposition', 'counterfactual'],
+  attribute_fiber: ['subspace_geometry', 'feature_decomposition', 'compositionality'],
+  relation_context_fiber: ['dynamic_prediction', 'cross_layer_transport', 'counterfactual', 'compositionality'],
+  admissible_update: ['causal_intervention', 'robustness', 'minimal_circuit'],
+  restricted_readout: ['dynamic_prediction', 'causal_intervention', 'minimal_circuit'],
+  stage_conditioned_transport: ['dynamic_prediction', 'cross_layer_transport'],
+  successor_aligned_transport: ['dynamic_prediction', 'counterfactual', 'causal_intervention'],
+  protocol_bridge: ['cross_layer_transport', 'minimal_circuit', 'robustness'],
+};
 const FEATURE_AXES = ['color', 'taste', 'shape', 'category'];
 
 const HARD_PROBLEM_EXPERIMENT_LABELS = {
@@ -1047,6 +1134,308 @@ function ModeVisualOverlay({ mode = 'static', prediction = null }) {
   );
 }
 
+function averagePosition(nodes, fallback = [0, 0, 0]) {
+  if (!Array.isArray(nodes) || nodes.length === 0) {
+    return fallback;
+  }
+  const sum = nodes.reduce((acc, node) => {
+    const pos = Array.isArray(node?.position) ? node.position : fallback;
+    return [
+      acc[0] + toSafeNumber(pos[0], 0),
+      acc[1] + toSafeNumber(pos[1], 0),
+      acc[2] + toSafeNumber(pos[2], 0),
+    ];
+  }, [0, 0, 0]);
+  return sum.map((value) => value / nodes.length);
+}
+
+function blendPosition(a, b, t) {
+  return [
+    a[0] + (b[0] - a[0]) * t,
+    a[1] + (b[1] - a[1]) * t,
+    a[2] + (b[2] - a[2]) * t,
+  ];
+}
+
+function shiftPosition(a, dx = 0, dy = 0, dz = 0) {
+  return [a[0] + dx, a[1] + dy, a[2] + dz];
+}
+
+function normalizeVector(vec, scale = 1) {
+  const norm = Math.sqrt(vec[0] ** 2 + vec[1] ** 2 + vec[2] ** 2) || 1;
+  return vec.map((value) => (value / norm) * scale);
+}
+
+function TheoryBeacon({
+  position = [0, 0, 0],
+  color = '#ffffff',
+  size = 0.14,
+  pulse = 0.18,
+  speed = 1.2,
+  phase = 0,
+  opacity = 0.94,
+}) {
+  const ref = useRef(null);
+  useFrame((state) => {
+    if (!ref.current) {
+      return;
+    }
+    const s = 1 + Math.sin(state.clock.elapsedTime * speed + phase) * pulse;
+    ref.current.scale.set(size * s, size * s, size * s);
+  });
+  return (
+    <mesh ref={ref} position={position}>
+      <sphereGeometry args={[1, 14, 14]} />
+      <meshStandardMaterial color={color} emissive={color} emissiveIntensity={1.1} transparent opacity={opacity} />
+    </mesh>
+  );
+}
+
+function TheoryRunner({
+  path = [],
+  color = '#ffffff',
+  size = 0.12,
+  speed = 0.28,
+  phase = 0,
+}) {
+  const ref = useRef(null);
+  useFrame((state) => {
+    if (!ref.current || path.length < 2) {
+      return;
+    }
+    const t = (state.clock.elapsedTime * speed + phase) % 1;
+    const scaled = t * (path.length - 1);
+    const idx = Math.min(path.length - 2, Math.floor(scaled));
+    const frac = scaled - idx;
+    const pos = blendPosition(path[idx], path[idx + 1], frac);
+    ref.current.position.set(pos[0], pos[1], pos[2]);
+    const s = 1 + Math.sin(state.clock.elapsedTime * 3.2 + phase * 4) * 0.16;
+    ref.current.scale.set(size * s, size * s, size * s);
+  });
+  return (
+    <mesh ref={ref}>
+      <sphereGeometry args={[1, 12, 12]} />
+      <meshStandardMaterial color={color} emissive={color} emissiveIntensity={1.2} />
+    </mesh>
+  );
+}
+
+function TheoryObjectOverlay({ theoryObjectMeta = null, prediction = null, nodes = [], selected = null }) {
+  const ref = useRef(null);
+  const accent = theoryObjectMeta?.color || '#7dd3fc';
+  const label = theoryObjectMeta?.labelZh || '理论对象';
+  const z = ((prediction?.layerProgress ?? 0.5) - 0.5) * (LAYER_COUNT - 1) * 0.92;
+  const focusNodeSet = useMemo(() => new Set(prediction?.focusNodeIds || []), [prediction?.focusNodeIds]);
+  const coreNodes = useMemo(() => nodes.filter((node) => node.role !== 'background'), [nodes]);
+  const focusNodes = useMemo(() => coreNodes.filter((node) => focusNodeSet.has(node.id)), [coreNodes, focusNodeSet]);
+  const familyNodes = useMemo(() => coreNodes.filter((node) => ['macro', 'fruitGeneral', 'query'].includes(node.role)), [coreNodes]);
+  const sectionNodes = useMemo(() => coreNodes.filter((node) => ['micro', 'query', 'macro'].includes(node.role)), [coreNodes]);
+  const routeNodes = useMemo(() => coreNodes.filter((node) => node.role === 'route'), [coreNodes]);
+  const attributeNodes = useMemo(() => coreNodes.filter((node) => ['style', 'logic', 'syntax'].includes(node.role)), [coreNodes]);
+  const protocolNodes = useMemo(() => coreNodes.filter((node) => ['unifiedDecode', 'route', 'query'].includes(node.role)), [coreNodes]);
+
+  const fallbackCenter = useMemo(() => [0, -2.6, z], [z]);
+  const familyCenter = useMemo(() => averagePosition(familyNodes, fallbackCenter), [familyNodes, fallbackCenter]);
+  const sectionCenter = useMemo(() => averagePosition(focusNodes.length > 0 ? focusNodes : sectionNodes, familyCenter), [focusNodes, sectionNodes, familyCenter]);
+  const routeCenter = useMemo(() => averagePosition(routeNodes, shiftPosition(sectionCenter, 0, 0, 1.2)), [routeNodes, sectionCenter]);
+  const attributeCenter = useMemo(() => averagePosition(attributeNodes, shiftPosition(sectionCenter, 0, 0.4, 0)), [attributeNodes, sectionCenter]);
+  const protocolCenter = useMemo(() => averagePosition(protocolNodes, shiftPosition(routeCenter, 0.8, 0, 0)), [protocolNodes, routeCenter]);
+  const selectedCenter = Array.isArray(selected?.position) ? selected.position : sectionCenter;
+  const offsetVector = useMemo(() => {
+    const raw = [
+      selectedCenter[0] - familyCenter[0] + 0.2,
+      selectedCenter[1] - familyCenter[1] + 0.1,
+      selectedCenter[2] - familyCenter[2],
+    ];
+    return normalizeVector(raw, 1.45);
+  }, [familyCenter, selectedCenter]);
+  const offsetTarget = useMemo(
+    () => shiftPosition(sectionCenter, offsetVector[0], offsetVector[1], offsetVector[2]),
+    [offsetVector, sectionCenter]
+  );
+  const readoutPort = useMemo(() => shiftPosition(protocolCenter, 5.4, 1.2, 0), [protocolCenter]);
+  const bridgePorts = useMemo(
+    () => [
+      shiftPosition(protocolCenter, 5.2, 2.2, -1.2),
+      shiftPosition(protocolCenter, 5.5, 0, 0),
+      shiftPosition(protocolCenter, 5.2, -2.2, 1.2),
+    ],
+    [protocolCenter]
+  );
+  const stagePath = useMemo(
+    () => [
+      shiftPosition(familyCenter, -1.5, -0.9, -2.8),
+      shiftPosition(sectionCenter, -0.4, 0.15, -0.9),
+      shiftPosition(routeCenter, 0.4, -0.1, 1.1),
+      shiftPosition(protocolCenter, 1.4, 0.8, 2.8),
+    ],
+    [familyCenter, protocolCenter, routeCenter, sectionCenter]
+  );
+  const successorPath = useMemo(
+    () => [
+      shiftPosition(sectionCenter, -1.25, -0.75, -0.8),
+      sectionCenter,
+      offsetTarget,
+      shiftPosition(offsetTarget, 1.35, 0.82, 0.9),
+    ],
+    [offsetTarget, sectionCenter]
+  );
+
+  useFrame((state) => {
+    if (!ref.current) {
+      return;
+    }
+    ref.current.rotation.z = state.clock.elapsedTime * 0.12;
+    ref.current.rotation.y = state.clock.elapsedTime * 0.16;
+  });
+
+  if (!theoryObjectMeta?.id) {
+    return null;
+  }
+
+  return (
+    <group ref={ref}>
+      {theoryObjectMeta.id === 'family_patch' && (
+        <>
+          <mesh position={familyCenter}>
+            <ringGeometry args={[0.95, 1.45, 40]} />
+            <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={0.8} transparent opacity={0.3} side={2} />
+          </mesh>
+          <mesh position={familyCenter} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[1.18, 0.06, 12, 48]} />
+            <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={0.7} transparent opacity={0.24} />
+          </mesh>
+          <mesh position={shiftPosition(familyCenter, 0, 0, 0.08)}>
+            <circleGeometry args={[0.72, 30]} />
+            <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={0.4} transparent opacity={0.14} side={2} />
+          </mesh>
+          <Line points={[familyCenter, sectionCenter]} color={accent} transparent opacity={0.62} lineWidth={1.8} />
+          <TheoryBeacon position={familyCenter} color={accent} size={0.18} pulse={0.24} speed={1.1} phase={0.2} />
+          <TheoryBeacon position={shiftPosition(familyCenter, 1.25, 0.3, 0.2)} color="#dff6ff" size={0.08} phase={0.7} />
+          <TheoryBeacon position={shiftPosition(familyCenter, -1.1, -0.4, -0.1)} color="#dff6ff" size={0.08} phase={1.2} />
+        </>
+      )}
+      {theoryObjectMeta.id === 'concept_section' && (
+        <>
+          <mesh position={sectionCenter} rotation={[0.4, 0.2, 0.1]}>
+            <boxGeometry args={[2.7, 0.08, 1.15]} />
+            <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={0.78} transparent opacity={0.28} />
+          </mesh>
+          <mesh position={offsetTarget} rotation={[0.4, -0.16, -0.12]}>
+            <boxGeometry args={[1.25, 0.06, 0.76]} />
+            <meshStandardMaterial color="#f8b4ff" emissive="#f8b4ff" emissiveIntensity={0.92} transparent opacity={0.42} />
+          </mesh>
+          <Line points={[sectionCenter, offsetTarget]} color={accent} transparent opacity={0.88} lineWidth={2} />
+          <TheoryBeacon position={sectionCenter} color={accent} size={0.14} phase={0.3} />
+          <TheoryBeacon position={offsetTarget} color="#f8b4ff" size={0.12} phase={0.9} />
+          <TheoryRunner path={[sectionCenter, offsetTarget]} color="#ffffff" size={0.08} speed={0.45} phase={0.18} />
+        </>
+      )}
+      {theoryObjectMeta.id === 'attribute_fiber' && (
+        <>
+          <Line points={[shiftPosition(attributeCenter, -1.45, -0.72, 0), shiftPosition(attributeCenter, 1.45, 0.72, 0)]} color="#34d399" transparent opacity={0.88} lineWidth={2} />
+          <Line points={[shiftPosition(attributeCenter, -1.42, 0.72, 0), shiftPosition(attributeCenter, 1.42, -0.72, 0)]} color="#60a5fa" transparent opacity={0.76} lineWidth={2} />
+          <Line points={[shiftPosition(attributeCenter, 0, -1.0, -0.5), shiftPosition(attributeCenter, 0, 1.0, 0.5)]} color={accent} transparent opacity={0.74} lineWidth={2} />
+          <TheoryBeacon position={attributeCenter} color={accent} size={0.12} phase={0.2} />
+          <TheoryRunner path={[shiftPosition(attributeCenter, -1.45, -0.72, 0), attributeCenter, shiftPosition(attributeCenter, 1.45, 0.72, 0)]} color="#34d399" size={0.07} speed={0.34} phase={0.12} />
+          <TheoryRunner path={[shiftPosition(attributeCenter, -1.42, 0.72, 0), attributeCenter, shiftPosition(attributeCenter, 1.42, -0.72, 0)]} color="#60a5fa" size={0.07} speed={0.32} phase={0.48} />
+        </>
+      )}
+      {theoryObjectMeta.id === 'relation_context_fiber' && (
+        <>
+          <mesh position={routeCenter} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[1.25, 0.08, 12, 48]} />
+            <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={0.88} transparent opacity={0.36} />
+          </mesh>
+          <Line points={[sectionCenter, routeCenter, protocolCenter]} color={accent} transparent opacity={0.9} lineWidth={2} />
+          <TheoryBeacon position={routeCenter} color={accent} size={0.15} phase={0.4} />
+          <TheoryRunner path={[sectionCenter, routeCenter, protocolCenter]} color="#dff6ff" size={0.08} speed={0.38} phase={0.16} />
+          <TheoryRunner path={[protocolCenter, routeCenter, sectionCenter]} color="#8be9ff" size={0.07} speed={0.24} phase={0.56} />
+        </>
+      )}
+      {theoryObjectMeta.id === 'admissible_update' && (
+        <>
+          <mesh position={sectionCenter}>
+            <sphereGeometry args={[1.2, 22, 22]} />
+            <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={0.65} transparent opacity={0.12} wireframe />
+          </mesh>
+          <mesh position={sectionCenter}>
+            <sphereGeometry args={[0.78, 18, 18]} />
+            <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={0.42} transparent opacity={0.08} />
+          </mesh>
+          <Line points={[shiftPosition(sectionCenter, -0.8, 0, 0), sectionCenter, offsetTarget]} color={accent} transparent opacity={0.88} lineWidth={2} />
+          <TheoryBeacon position={sectionCenter} color={accent} size={0.12} phase={0.22} />
+          <TheoryBeacon position={offsetTarget} color="#ffffff" size={0.08} phase={0.84} />
+          <TheoryRunner path={[sectionCenter, offsetTarget]} color={accent} size={0.07} speed={0.42} phase={0.28} />
+        </>
+      )}
+      {theoryObjectMeta.id === 'restricted_readout' && (
+        <>
+          {focusNodes.slice(0, 6).map((node, idx) => (
+            <Line key={`readout-line-${node.id}`} points={[node.position, readoutPort]} color={idx < 2 ? '#ffffff' : accent} transparent opacity={0.72} lineWidth={idx < 2 ? 2.2 : 1.6} />
+          ))}
+          <mesh position={readoutPort} rotation={[0, 0, -Math.PI / 2]}>
+            <coneGeometry args={[0.85, 1.8, 4]} />
+            <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={0.92} transparent opacity={0.24} wireframe />
+          </mesh>
+          <mesh position={shiftPosition(readoutPort, 0.72, 0, 0)}>
+            <sphereGeometry args={[0.18, 12, 12]} />
+            <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={1.2} />
+          </mesh>
+          <TheoryRunner path={[sectionCenter, readoutPort]} color="#ffffff" size={0.08} speed={0.54} phase={0.26} />
+        </>
+      )}
+      {theoryObjectMeta.id === 'stage_conditioned_transport' && (
+        <>
+          {stagePath.map((pos, idx) => (
+            <mesh key={`stage-gate-${idx}`} position={pos} rotation={[Math.PI / 2, 0, 0]}>
+              <torusGeometry args={[0.55 + idx * 0.08, 0.04, 12, 36]} />
+              <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={0.9} transparent opacity={0.34} />
+            </mesh>
+          ))}
+          <Line points={stagePath} color={accent} transparent opacity={0.88} lineWidth={2} />
+          <TheoryRunner path={stagePath} color="#dff6ff" size={0.08} speed={0.36} phase={0.12} />
+          <TheoryRunner path={stagePath} color={accent} size={0.07} speed={0.26} phase={0.62} />
+        </>
+      )}
+      {theoryObjectMeta.id === 'successor_aligned_transport' && (
+        <>
+          <Line points={successorPath} color={accent} transparent opacity={0.9} lineWidth={2.2} />
+          <mesh position={successorPath[successorPath.length - 1]} rotation={[0, 0, -Math.PI / 3]}>
+            <coneGeometry args={[0.18, 0.42, 12]} />
+            <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={1.1} />
+          </mesh>
+          <TheoryRunner path={successorPath} color="#fff7d6" size={0.08} speed={0.48} phase={0.14} />
+          <TheoryRunner path={successorPath} color={accent} size={0.07} speed={0.28} phase={0.52} />
+        </>
+      )}
+      {theoryObjectMeta.id === 'protocol_bridge' && (
+        <>
+          <mesh position={protocolCenter}>
+            <cylinderGeometry args={[1.1, 1.1, 0.26, 6]} />
+            <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={0.82} transparent opacity={0.26} wireframe />
+          </mesh>
+          <Line points={[protocolCenter, readoutPort]} color="#fde68a" transparent opacity={0.88} lineWidth={2} />
+          {bridgePorts.map((port, idx) => (
+            <group key={`bridge-port-${idx}`}>
+              <mesh position={port}>
+                <boxGeometry args={[0.36, 0.36, 0.36]} />
+                <meshStandardMaterial color="#fde68a" emissive="#fde68a" emissiveIntensity={0.92} transparent opacity={0.78} />
+              </mesh>
+              <Line points={[protocolCenter, port]} color={accent} transparent opacity={0.82} lineWidth={1.8} />
+            </group>
+          ))}
+          <TheoryRunner path={[sectionCenter, protocolCenter, readoutPort]} color="#ffffff" size={0.08} speed={0.42} phase={0.18} />
+          <TheoryRunner path={[protocolCenter, bridgePorts[0], bridgePorts[1], bridgePorts[2]]} color={accent} size={0.07} speed={0.26} phase={0.66} />
+        </>
+      )}
+      <Text position={shiftPosition(protocolCenter, 0, -2.1, 0)} color="#dff6ff" fontSize={0.26} anchorX="center" anchorY="middle">
+        {label}
+      </Text>
+    </group>
+  );
+}
+
 export function AppleNeuronSceneContent({
   nodes,
   links,
@@ -1054,6 +1443,7 @@ export function AppleNeuronSceneContent({
   onSelect,
   prediction = null,
   mode = 'static',
+  theoryObjectMeta = null,
   dimensionLayerProfile = [],
   activeDimension = 'style',
   dimensionCausal = null,
@@ -1106,6 +1496,7 @@ export function AppleNeuronSceneContent({
       ))}
 
       <ModeVisualOverlay mode={mode} prediction={prediction} />
+      <TheoryObjectOverlay theoryObjectMeta={theoryObjectMeta} prediction={prediction} nodes={visibleNodes} selected={selected} />
       <TokenPredictionCarrier prediction={prediction} mode={mode} />
       <LayerEffectiveNeuronOverlay prediction={prediction} mode={mode} />
       <DimensionLayerImpactGraph profile={dimensionLayerProfile} dimension={activeDimension} suppression={dimensionCausal} />
@@ -1139,6 +1530,7 @@ function AppleNeuronScene({
   onSelect,
   prediction,
   mode = 'static',
+  theoryObjectMeta = null,
   dimensionLayerProfile = [],
   activeDimension = 'style',
   dimensionCausal = null,
@@ -1163,6 +1555,7 @@ function AppleNeuronScene({
         onSelect={onSelect}
         prediction={prediction}
         mode={mode}
+        theoryObjectMeta={theoryObjectMeta}
         dimensionLayerProfile={dimensionLayerProfile}
         activeDimension={activeDimension}
         dimensionCausal={dimensionCausal}
@@ -1234,6 +1627,7 @@ function buildBackgroundNodes() {
 
 export function useAppleNeuronWorkspace() {
   const [analysisMode, setAnalysisMode] = useState('dynamic_prediction');
+  const [theoryObject, setTheoryObject] = useState('family_patch');
   const [showFruitGeneral, setShowFruitGeneral] = useState(true);
   const [showFruit, setShowFruit] = useState(() => Object.fromEntries(Object.keys(FRUIT_COLORS).map((k) => [k, true])));
   const [queryInput, setQueryInput] = useState('');
@@ -1301,6 +1695,15 @@ export function useAppleNeuronWorkspace() {
   const predictChain = useMemo(() => generatePredictChain(predictPrompt), [predictPrompt]);
   const dynamicEnabled = analysisMode === 'dynamic_prediction';
   const mechanismEnabled = !['static', 'dynamic_prediction'].includes(analysisMode);
+  const theoryObjectMetaById = useMemo(
+    () => Object.fromEntries(ICSPB_THEORY_OBJECTS.map((item) => [item.id, item])),
+    []
+  );
+  const currentTheoryObject = theoryObjectMetaById[theoryObject] || ICSPB_THEORY_OBJECTS[0];
+  const availableModesForTheoryObject = useMemo(
+    () => THEORY_OBJECT_MODE_MAP[theoryObject] || THEORY_OBJECT_MODE_MAP.family_patch,
+    [theoryObject]
+  );
 
   const nodes = useMemo(() => {
     const visibleFruitSpecific = fruitSpecificNodes.filter((n) => showFruit[n.fruit]);
@@ -1333,6 +1736,7 @@ export function useAppleNeuronWorkspace() {
   const nodeDisplayEmphasis = useMemo(() => {
     const map = {};
     const autoProfile = buildAutoDisplayProfile(analysisMode);
+    const theoryWeights = currentTheoryObject?.roleWeights || {};
     nodes.forEach((node) => {
       const group = nodeDisplayGroup(node.role);
       let emphasis = 1;
@@ -1343,13 +1747,20 @@ export function useAppleNeuronWorkspace() {
       } else {
         emphasis = toSafeNumber(autoProfile[group], 0.8);
       }
+      emphasis *= toSafeNumber(theoryWeights[node.role], toSafeNumber(theoryWeights[group], 0.72));
       if (selected?.id === node.id) {
         emphasis = Math.max(emphasis, 0.95);
       }
       map[node.id] = Math.max(0, Math.min(1, emphasis));
     });
     return map;
-  }, [analysisMode, displayStrategy, manualDisplayGroups, nodes, selected?.id]);
+  }, [analysisMode, currentTheoryObject, displayStrategy, manualDisplayGroups, nodes, selected?.id]);
+
+  useEffect(() => {
+    if (!availableModesForTheoryObject.includes(analysisMode)) {
+      setAnalysisMode(availableModesForTheoryObject[0] || 'static');
+    }
+  }, [analysisMode, availableModesForTheoryObject]);
 
   useEffect(() => {
     if (analysisMode !== 'dynamic_prediction') {
@@ -2122,12 +2533,16 @@ export function useAppleNeuronWorkspace() {
       currentToken: modeOverlay.currentToken?.token || '-',
       currentTokenProb: modeOverlay.currentToken?.prob || 0,
       analysisMode,
+      theoryObject,
+      theoryObjectLabel: currentTheoryObject?.labelZh || '',
+      theoryObjectDesc: currentTheoryObject?.desc || '',
       displayStrategy,
       statusText: modeOverlay.statusText || '',
     };
   }, [
     analysisMode,
     bundleManifest,
+    currentTheoryObject,
     displayStrategy,
     fourTasksManifest,
     hardProblemResults,
@@ -2137,6 +2552,7 @@ export function useAppleNeuronWorkspace() {
     multidimActiveDimension,
     querySets,
     queryVisibility,
+    theoryObject,
     unifiedDecodeResult,
   ]);
 
@@ -2144,6 +2560,11 @@ export function useAppleNeuronWorkspace() {
     analysisMode,
     setAnalysisMode,
     analysisModes: ANALYSIS_MODE_OPTIONS,
+    theoryObject,
+    setTheoryObject,
+    theoryObjects: ICSPB_THEORY_OBJECTS,
+    currentTheoryObject,
+    availableModesForTheoryObject,
     showFruitGeneral,
     setShowFruitGeneral,
     showFruit,
@@ -2257,6 +2678,7 @@ export function AppleNeuronMainScene({ workspace, sceneHeight = '74vh' }) {
         onSelect={workspace.setSelected}
         prediction={workspace.prediction}
         mode={workspace.analysisMode}
+        theoryObjectMeta={workspace.currentTheoryObject}
         dimensionLayerProfile={workspace.multidimLayerProfile}
         activeDimension={workspace.multidimActiveDimension}
         dimensionCausal={workspace.multidimCausalData}
@@ -2327,6 +2749,7 @@ export function AppleNeuronEncodingInfoPanels({ workspace, compact = false }) {
   const bundleManifest = workspace?.bundleManifest || null;
   const fourTasksManifest = workspace?.fourTasksManifest || null;
   const activeDim = workspace?.multidimActiveDimension || 'style';
+  const currentTheoryObject = workspace?.currentTheoryObject || null;
 
   const layerRows = useMemo(() => {
     const map = new Map();
@@ -2373,10 +2796,14 @@ export function AppleNeuronEncodingInfoPanels({ workspace, compact = false }) {
       <div style={cardStyle}>
         <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>编码机制指标</div>
         <div style={{ fontSize: 11, color: '#9bb3de', lineHeight: 1.7 }}>
+          <div>{`ICSPB 对象: ${currentTheoryObject?.labelZh || '-'}`}</div>
           <div>{`核心神经元: ${(summary.micro || 0) + (summary.macro || 0) + (summary.route || 0)}`}</div>
           <div>{`当前词元: ${summary.currentToken || '-'} (${((summary.currentTokenProb || 0) * 100).toFixed(1)}%)`}</div>
           <div>{`显示策略: ${summary.displayStrategy === 'auto' ? '自动聚焦' : summary.displayStrategy === 'all' ? '全部显示' : '手动筛选'}`}</div>
         </div>
+        {currentTheoryObject?.desc ? (
+          <div style={{ marginTop: 8, fontSize: 11, color: '#7f95bb', lineHeight: 1.6 }}>{currentTheoryObject.desc}</div>
+        ) : null}
         {metrics.length > 0 ? (
           <div style={{ marginTop: 8, display: 'grid', gap: 4 }}>
             {metrics.map((metric, idx) => (
@@ -2655,6 +3082,11 @@ export function AppleNeuronControlPanels({ workspace }) {
     analysisMode,
     setAnalysisMode,
     analysisModes,
+    theoryObject,
+    setTheoryObject,
+    theoryObjects,
+    currentTheoryObject,
+    availableModesForTheoryObject,
     summary,
     queryInput,
     setQueryInput,
@@ -2722,6 +3154,15 @@ export function AppleNeuronControlPanels({ workspace }) {
   const [scanFileError, setScanFileError] = useState('');
   const [scanFileFilter, setScanFileFilter] = useState('multidim');
   const modeMetaById = Object.fromEntries(analysisModes.map((mode) => [mode.id, mode]));
+  const filteredStageGroups = useMemo(
+    () => ANALYSIS_MODE_STAGE_GROUPS
+      .map((group) => ({
+        ...group,
+        items: group.items.filter((id) => availableModesForTheoryObject.includes(id)),
+      }))
+      .filter((group) => group.items.length > 0),
+    [availableModesForTheoryObject]
+  );
   const scanFileFilterLabelMap = {
     multidim: '多维编码',
     mass_noun: '名词扫描',
@@ -2945,9 +3386,52 @@ export function AppleNeuronControlPanels({ workspace }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       <div style={panelCardStyle}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>分析类型（四阶段）</div>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 6 }}>ICSPB 对象层（第一层）</div>
+        <div style={{ fontSize: 11, color: '#7f95bb', lineHeight: 1.6, marginBottom: 10 }}>
+          先选当前要还原的理论对象，再在第二层选择观测/提取/验证/系统动作。这样保留实验流程，同时把 ICSPB 理论对象抬到主入口。
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 8 }}>
+          {theoryObjects.map((item) => {
+            const active = theoryObject === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setTheoryObject(item.id)}
+                style={{
+                  textAlign: 'left',
+                  borderRadius: 10,
+                  border: `1px solid ${active ? item.color : 'rgba(122, 162, 255, 0.22)'}`,
+                  background: active ? `${item.color}16` : 'rgba(6, 10, 22, 0.78)',
+                  color: '#dbe9ff',
+                  padding: '10px 10px 9px',
+                  cursor: 'pointer',
+                  display: 'grid',
+                  gap: 4,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: item.color, boxShadow: `0 0 12px ${item.color}` }} />
+                  <span style={{ fontSize: 11, fontWeight: 700 }}>{item.labelZh}</span>
+                </div>
+                <div style={{ fontSize: 10, color: '#8fb0da' }}>{item.label}</div>
+              </button>
+            );
+          })}
+        </div>
+        <div style={{ marginTop: 10, fontSize: 11, color: '#9bb3de', lineHeight: 1.7 }}>
+          <div>{`当前对象: ${currentTheoryObject?.labelZh || '-'}`}</div>
+          <div>{currentTheoryObject?.desc || ''}</div>
+        </div>
+      </div>
+
+      <div style={panelCardStyle}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 6 }}>实验动作层（第二层）</div>
+        <div style={{ fontSize: 11, color: '#7f95bb', lineHeight: 1.6, marginBottom: 10 }}>
+          当前对象下只显示相关的观测/提取/验证/系统动作，避免 10 个模式一起堆出相同动画。
+        </div>
         <div style={{ padding: 12, border: '1px solid rgba(255,255,255,0.05)', borderRadius: 8 }}>
-          {ANALYSIS_MODE_STAGE_GROUPS.map((group) => {
+          {filteredStageGroups.map((group) => {
             const GroupIcon = group.icon || Activity;
             const stageModes = group.items
               .map((id) => modeMetaById[id])
@@ -3007,6 +3491,9 @@ export function AppleNeuronControlPanels({ workspace }) {
         <div style={{ fontSize: 11, color: '#7f95bb', marginTop: 8, lineHeight: 1.6 }}>
           {modeMetaById[analysisMode]?.desc || ''}
         </div>
+        <div style={{ fontSize: 11, color: '#9bb3de', marginTop: 6, lineHeight: 1.6 }}>
+          {`对象 -> 动作：${currentTheoryObject?.labelZh || '-'} -> ${modeMetaById[analysisMode]?.label || '-'}`}
+        </div>
         {summary.statusText ? (
           <div style={{ fontSize: 11, color: '#9bb3de', marginTop: 6 }}>{summary.statusText}</div>
         ) : null}
@@ -3023,7 +3510,7 @@ export function AppleNeuronControlPanels({ workspace }) {
 
       {analysisMode === 'dynamic_prediction' && (
         <div style={panelCardStyle}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>Next-Token Prediction Animation</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>当前模式参数 · 动态预测</div>
           <textarea
             value={predictPrompt}
             onChange={(e) => setPredictPrompt(e.target.value)}
@@ -3049,7 +3536,7 @@ export function AppleNeuronControlPanels({ workspace }) {
 
       {analysisMode !== 'dynamic_prediction' && analysisMode !== 'static' && (
         <div style={panelCardStyle}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>机制控制</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>当前模式参数 · 机制实验</div>
           <div style={{ display: 'flex', gap: 8 }}>
             <button type="button" onClick={() => setMechanismPlaying((v) => !v)} style={smallActionButtonStyle}>{mechanismPlaying ? 'Pause' : 'Play'}</button>
             <button type="button" onClick={handleMechanismStepForward} style={smallActionButtonStyle}>Step</button>
@@ -3136,7 +3623,7 @@ export function AppleNeuronControlPanels({ workspace }) {
       )}
 
       <div style={panelCardStyle}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>显示策略</div>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>显示与降噪策略</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
           {[
             { id: 'auto', label: '自动聚焦', desc: '随分析类型切换重点' },
@@ -3193,7 +3680,10 @@ export function AppleNeuronControlPanels({ workspace }) {
       </div>
 
       <div style={panelCardStyle}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>Quick Concept Generator</div>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>概念生成</div>
+        <div style={{ fontSize: 11, color: '#7f95bb', lineHeight: 1.6, marginBottom: 10 }}>
+          在主工作台里快速注入一个概念与类别，用来观察编码分布、类别比较和 3D 节点变化。
+        </div>
         <div style={{ display: 'grid', gap: 8 }}>
           <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
             <div style={{ fontSize: 12, color: '#9eb4dd' }}>名称</div>
@@ -3229,8 +3719,17 @@ export function AppleNeuronControlPanels({ workspace }) {
             </button>
           </div>
         </div>
-        <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid rgba(122, 162, 255, 0.2)', display: 'grid', gap: 8 }}>
-          <div style={{ fontSize: 12, color: '#9eb4dd' }}>批量导入扫描结果</div>
+        {queryFeedback ? (
+          <div style={{ marginTop: 8, fontSize: 11, color: '#8fd4ff' }}>{queryFeedback}</div>
+        ) : null}
+      </div>
+
+      <div style={panelCardStyle}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>研究资产导入</div>
+        <div style={{ fontSize: 11, color: '#7f95bb', lineHeight: 1.6, marginBottom: 10 }}>
+          把 mass noun、多维编码、硬伤实验、四任务和统一解码结果当作研究资产单独管理，不和主流程参数混在一起。
+        </div>
+        <div style={{ display: 'grid', gap: 8 }}>
           <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
             <div style={{ fontSize: 12, color: '#9eb4dd' }}>导入数</div>
             <input
@@ -3375,69 +3874,78 @@ export function AppleNeuronControlPanels({ workspace }) {
               {`来源: ${scanImportSummary.source} | 导入概念集: ${scanImportSummary.importedConcepts} | 类别: ${scanImportSummary.importedCategories} | 扫描名词总数: ${scanImportSummary.totalNouns} | 最小回路名词: ${scanImportSummary.minimalCircuitNouns || 0} | 反事实对: ${scanImportSummary.counterfactualPairs || 0}`}
             </div>
           ) : null}
+        </div>
+      </div>
 
-          <div style={{ marginTop: 6, paddingTop: 8, borderTop: '1px solid rgba(122, 162, 255, 0.2)', display: 'grid', gap: 8 }}>
-            <div style={{ fontSize: 12, color: '#9eb4dd' }}>三维编码（Style / Logic / Syntax）</div>
-            <div style={{ fontSize: 11, color: '#7ea2c9' }}>
-              {multidimProbeData
-                ? `已导入探针，当前显示维度: ${DIMENSION_LABELS[multidimActiveDimension] || multidimActiveDimension}，层谱点数: ${multidimLayerProfile?.length || 0}`
-                : '未导入三维探针 JSON（multidim_encoding_probe.json）'}
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
-              <div style={{ fontSize: 12, color: '#9eb4dd' }}>TopN</div>
-              <input
-                type="number"
-                min={16}
-                max={256}
-                value={multidimTopN}
-                onChange={(e) => setMultidimTopN(Number(e.target.value))}
-                style={inputStyle}
-              />
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
-              {['style', 'logic', 'syntax'].map((dim) => (
-                <button
-                  key={`dim-active-${dim}`}
-                  type="button"
-                  onClick={() => setMultidimActiveDimension(dim)}
-                  style={{
-                    borderRadius: 8,
-                    border: `1px solid ${multidimActiveDimension === dim ? ROLE_COLORS[dim] : 'rgba(122,162,255,0.35)'}`,
-                    background: multidimActiveDimension === dim ? 'rgba(42,71,132,0.82)' : 'rgba(7, 12, 25, 0.82)',
-                    color: '#dbe9ff',
-                    fontSize: 11,
-                    padding: '6px 8px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {DIMENSION_LABELS[dim]}
-                </button>
-              ))}
-            </div>
-            <div style={{ display: 'grid', gap: 6 }}>
-              {['style', 'logic', 'syntax'].map((dim) => (
-                <label key={`dim-vis-${dim}`} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#9eb4dd' }}>
-                  <input
-                    type="checkbox"
-                    checked={multidimVisible[dim] !== false}
-                    onChange={(e) => setMultidimVisible((prev) => ({ ...prev, [dim]: e.target.checked }))}
-                  />
-                  <span style={{ color: ROLE_COLORS[dim] }}>●</span>
-                  <span>{`${DIMENSION_LABELS[dim]}神经元`}</span>
-                </label>
-              ))}
-            </div>
-            <div style={{ fontSize: 11, color: '#7ea2c9', lineHeight: 1.6 }}>
-              {multidimCausalData
-                ? `对角优势 style=${toSafeNumber(multidimCausalData?.diagonal_advantage?.style, 0).toFixed(4)} / logic=${toSafeNumber(multidimCausalData?.diagonal_advantage?.logic, 0).toFixed(4)} / syntax=${toSafeNumber(multidimCausalData?.diagonal_advantage?.syntax, 0).toFixed(4)}`
-                : '未导入三维因果消融 JSON（multidim_causal_ablation.json）'}
-            </div>
+      <div style={panelCardStyle}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>三维编码设置</div>
+        <div style={{ fontSize: 11, color: '#7f95bb', lineHeight: 1.6, marginBottom: 10 }}>
+          管理 `style / logic / syntax` 三维探针的可见性、TopN 和当前显示维度。
+        </div>
+        <div style={{ display: 'grid', gap: 8 }}>
+          <div style={{ fontSize: 11, color: '#7ea2c9' }}>
+            {multidimProbeData
+              ? `已导入探针，当前显示维度: ${DIMENSION_LABELS[multidimActiveDimension] || multidimActiveDimension}，层谱点数: ${multidimLayerProfile?.length || 0}`
+              : '未导入三维探针 JSON（multidim_encoding_probe.json）'}
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
+            <div style={{ fontSize: 12, color: '#9eb4dd' }}>TopN</div>
+            <input
+              type="number"
+              min={16}
+              max={256}
+              value={multidimTopN}
+              onChange={(e) => setMultidimTopN(Number(e.target.value))}
+              style={inputStyle}
+            />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+            {['style', 'logic', 'syntax'].map((dim) => (
+              <button
+                key={`dim-active-${dim}`}
+                type="button"
+                onClick={() => setMultidimActiveDimension(dim)}
+                style={{
+                  borderRadius: 8,
+                  border: `1px solid ${multidimActiveDimension === dim ? ROLE_COLORS[dim] : 'rgba(122,162,255,0.35)'}`,
+                  background: multidimActiveDimension === dim ? 'rgba(42,71,132,0.82)' : 'rgba(7, 12, 25, 0.82)',
+                  color: '#dbe9ff',
+                  fontSize: 11,
+                  padding: '6px 8px',
+                  cursor: 'pointer',
+                }}
+              >
+                {DIMENSION_LABELS[dim]}
+              </button>
+            ))}
+          </div>
+          <div style={{ display: 'grid', gap: 6 }}>
+            {['style', 'logic', 'syntax'].map((dim) => (
+              <label key={`dim-vis-${dim}`} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#9eb4dd' }}>
+                <input
+                  type="checkbox"
+                  checked={multidimVisible[dim] !== false}
+                  onChange={(e) => setMultidimVisible((prev) => ({ ...prev, [dim]: e.target.checked }))}
+                />
+                <span style={{ color: ROLE_COLORS[dim] }}>●</span>
+                <span>{`${DIMENSION_LABELS[dim]}神经元`}</span>
+              </label>
+            ))}
+          </div>
+          <div style={{ fontSize: 11, color: '#7ea2c9', lineHeight: 1.6 }}>
+            {multidimCausalData
+              ? `对角优势 style=${toSafeNumber(multidimCausalData?.diagonal_advantage?.style, 0).toFixed(4)} / logic=${toSafeNumber(multidimCausalData?.diagonal_advantage?.logic, 0).toFixed(4)} / syntax=${toSafeNumber(multidimCausalData?.diagonal_advantage?.syntax, 0).toFixed(4)}`
+              : '未导入三维因果消融 JSON（multidim_causal_ablation.json）'}
           </div>
         </div>
-        {queryFeedback ? (
-          <div style={{ marginTop: 8, fontSize: 11, color: '#8fd4ff' }}>{queryFeedback}</div>
-        ) : null}
-        <div style={{ marginTop: 10, display: 'grid', gap: 6 }}>
+      </div>
+
+      <div style={panelCardStyle}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>已生成概念集</div>
+        <div style={{ fontSize: 11, color: '#7f95bb', lineHeight: 1.6, marginBottom: 10 }}>
+          这里保留当前已经生成并注入到 3D 场景中的概念集合，便于清理、比较和重复实验。
+        </div>
+        <div style={{ display: 'grid', gap: 6 }}>
           {querySets.length === 0 ? (
             <div style={{ fontSize: 11, color: '#6f84ad' }}>尚未生成概念神经元。</div>
           ) : (

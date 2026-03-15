@@ -884,14 +884,14 @@ class CompositionalAnalysis:
 
 class FiberNetAnalyzer:
     """
-    Analyzes neural manifold structure for FiberNet visualization.
+    Analyzes neural manifold structure for ICSPB visualization.
     Generates Nodes (Base Manifold) and Fibers (Local Sections).
     """
     def __init__(self, model):
         self.model = model
         
     def generate_data(self, n_samples=50):
-        """Generates the JSON structure expected by FiberNetV2Demo."""
+        """Generates the JSON structure expected by the ICSPB manifold view."""
         import random
 
         from sklearn.decomposition import PCA

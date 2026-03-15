@@ -2013,11 +2013,11 @@ export function StructureAnalysisControls({
                         </div>
                     )}
 
-                    {activeTab === 'fibernet_v2' && (
+                    {activeTab === 'icspb' && (
                         <div style={{ width: '100%', padding: '20px', textAlign: 'center', color: '#888', fontStyle: 'italic' }}>
-                            3D 演示已在主屏幕背景中显示。
+                            ICSPB 当前模型工作台已经迁到左侧专用面板。
                             <br /><br />
-                            请使用主屏幕交互。
+                            语义推演、语言对话、回放与固化请直接使用 ICSPB 面板。
                         </div>
                     )}
 

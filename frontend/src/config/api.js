@@ -31,7 +31,7 @@ export const API_ENDPOINTS = {
     flux: `${API_CONFIG.main}/nfb/flux`,
     alignment: `${API_CONFIG.main}/nfb/alignment`,
     gwtStatus: `${API_CONFIG.main}/nfb/gwt/status`,
-    evolutionStatus: `${API_CONFIG.main}/nfb/evolution/status`,
+    icspbMemoryStatus: `${API_CONFIG.main}/api/icspb/memory/status`,
     multimodalAlign: `${API_CONFIG.main}/nfb/multimodal/align`,
     multimodalSummary: `${API_CONFIG.main}/nfb/multimodal/summary`,
   },
