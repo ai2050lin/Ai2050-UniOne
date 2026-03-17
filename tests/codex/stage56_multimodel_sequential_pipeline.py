@@ -21,6 +21,7 @@ MODEL_TAGS = {
     "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": "deepseek_7b",
     "Qwen/Qwen3-4B": "qwen3_4b",
     "Qwen/Qwen2.5-7B": "qwen2p5_7b",
+    "zai-org/GLM-4-9B-Chat-HF": "glm4_9b_chat_hf",
 }
 STEP_SUCCESS_FILES = {
     "stage1_three_pool": "summary.json",
@@ -272,13 +273,20 @@ def build_command_plan(args: argparse.Namespace, model_id: str, stage_dirs: Dict
                 str(args.candidate_overlap_penalty),
                 "--max-candidate-overlap",
                 str(args.max_candidate_overlap),
+                "--margin-adv-threshold",
+                str(args.stage5_margin_adv_threshold),
+                "--margin-adv-penalty",
+                str(args.stage5_margin_adv_penalty),
                 "--lane-mode",
                 "prototype",
+                "--prototype-term-mode",
+                args.stage5_prototype_term_mode,
                 "--seed",
                 str(args.seed),
                 "--output-dir",
                 str(stage_dirs["stage5_prototype"]),
             ]
+            + (["--disable-prototype-proxy"] if args.stage5_disable_prototype_proxy else [])
             + (["--require-category-coverage"] if args.require_category_coverage else []),
             stage_dirs["stage5_prototype"],
         ),
@@ -317,6 +325,10 @@ def build_command_plan(args: argparse.Namespace, model_id: str, stage_dirs: Dict
                 str(args.candidate_overlap_penalty),
                 "--max-candidate-overlap",
                 str(args.max_candidate_overlap),
+                "--margin-adv-threshold",
+                str(args.stage5_margin_adv_threshold),
+                "--margin-adv-penalty",
+                str(args.stage5_margin_adv_penalty),
                 "--lane-mode",
                 "instance",
                 "--seed",
@@ -354,6 +366,8 @@ def build_command_plan(args: argparse.Namespace, model_id: str, stage_dirs: Dict
                 str(args.signature_top_k),
                 "--score-alpha",
                 str(args.score_alpha),
+                "--strict-synergy-threshold",
+                str(args.stage6_strict_synergy_threshold),
                 "--seed",
                 str(args.seed),
                 "--output-dir",
@@ -470,7 +484,12 @@ def main() -> None:
     ap.add_argument("--stage5-per-category-limit", type=int, default=2)
     ap.add_argument("--stage5-max-neurons-per-candidate", type=int, default=12)
     ap.add_argument("--stage5-max-neurons-per-layer", type=int, default=4)
+    ap.add_argument("--stage5-prototype-term-mode", choices=["any", "category_only"], default="any")
+    ap.add_argument("--stage5-disable-prototype-proxy", action="store_true")
+    ap.add_argument("--stage5-margin-adv-threshold", type=float, default=0.0)
+    ap.add_argument("--stage5-margin-adv-penalty", type=float, default=0.0)
     ap.add_argument("--stage6-max-instance-terms-per-category", type=int, default=2)
+    ap.add_argument("--stage6-strict-synergy-threshold", type=float, default=0.0)
     ap.add_argument("--score-alpha", type=float, default=256.0)
     ap.add_argument("--candidate-overlap-penalty", type=float, default=0.15)
     ap.add_argument("--max-candidate-overlap", type=float, default=0.80)

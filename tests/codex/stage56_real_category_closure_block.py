@@ -4,13 +4,41 @@ import argparse
 import subprocess
 import sys
 from pathlib import Path
-from typing import List
+from typing import Dict, List
 
 
 ROOT = Path(__file__).resolve().parents[2]
 PIPELINE = ROOT / "tests" / "codex" / "stage56_multimodel_sequential_pipeline.py"
 DEFAULT_ITEMS_FILE = ROOT / "tests" / "codex" / "stage56_real_category_closure_items.csv"
 DEFAULT_OUTPUT_ROOT = ROOT / "tempdata" / "stage56_real_category_closure_block"
+
+
+def load_real_category_items(items_file: Path) -> Dict[str, List[str]]:
+    categories: Dict[str, List[str]] = {}
+    for line in items_file.read_text(encoding="utf-8").splitlines():
+        s = line.strip()
+        if not s or s.startswith("#"):
+            continue
+        term, category = [x.strip() for x in s.split(",", 1)]
+        categories.setdefault(category, []).append(term)
+    return categories
+
+
+def validate_real_category_items_file(items_file: Path) -> Dict[str, List[str]]:
+    categories = load_real_category_items(items_file)
+    if not categories:
+        raise ValueError(f"items file is empty: {items_file}")
+    for category, terms in categories.items():
+        if len(terms) != 3:
+            raise ValueError(f"category {category} must contain exactly 3 terms, got {len(terms)}")
+        if len(set(terms)) != len(terms):
+            raise ValueError(f"category {category} contains duplicated terms")
+        if category not in terms:
+            raise ValueError(f"category {category} is missing its real category word")
+        instance_terms = [term for term in terms if term != category]
+        if len(instance_terms) != 2:
+            raise ValueError(f"category {category} must contain exactly 2 instance terms")
+    return categories
 
 
 def build_command(args: argparse.Namespace) -> List[str]:
@@ -56,8 +84,17 @@ def build_command(args: argparse.Namespace) -> List[str]:
         "6",
         "--stage5-max-neurons-per-layer",
         "3",
+        "--stage5-prototype-term-mode",
+        "category_only",
+        "--stage5-disable-prototype-proxy",
+        "--stage5-margin-adv-threshold",
+        "0.0",
+        "--stage5-margin-adv-penalty",
+        "0.05",
         "--stage6-max-instance-terms-per-category",
         "2",
+        "--stage6-strict-synergy-threshold",
+        "0.0",
         "--score-alpha",
         "256.0",
         "--candidate-overlap-penalty",
@@ -100,6 +137,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    validate_real_category_items_file(Path(args.items_file))
     command = build_command(args)
     raise SystemExit(subprocess.run(command, cwd=ROOT, check=False).returncode)
 

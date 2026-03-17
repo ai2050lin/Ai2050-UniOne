@@ -47,7 +47,12 @@ def make_args(**overrides):
         "stage5_per_category_limit": 1,
         "stage5_max_neurons_per_candidate": 6,
         "stage5_max_neurons_per_layer": 3,
+        "stage5_prototype_term_mode": "any",
+        "stage5_disable_prototype_proxy": False,
+        "stage5_margin_adv_threshold": 0.0,
+        "stage5_margin_adv_penalty": 0.0,
         "stage6_max_instance_terms_per_category": 1,
+        "stage6_strict_synergy_threshold": 0.0,
         "score_alpha": 256.0,
         "candidate_overlap_penalty": 0.15,
         "max_candidate_overlap": 0.80,
@@ -92,6 +97,26 @@ def test_build_command_plan_orders_stage5_before_stage6():
     assert "--prototype-candidates" in stage6_cmd
     assert str(dirs["stage5_prototype"] / "candidates.jsonl") in stage6_cmd
     assert str(dirs["stage5_instance"] / "candidates.jsonl") in stage6_cmd
+
+
+def test_build_command_plan_passes_real_category_prototype_constraints():
+    args = make_args(
+        models=["Qwen/Qwen3-4B"],
+        stage5_prototype_term_mode="category_only",
+        stage5_disable_prototype_proxy=True,
+        stage5_margin_adv_penalty=0.05,
+        stage6_strict_synergy_threshold=0.0,
+    )
+    dirs = build_stage_dirs(Path(args.output_root), "Qwen/Qwen3-4B")
+    plan = build_command_plan(args, "Qwen/Qwen3-4B", dirs)
+    stage5_proto_cmd = next(step["command"] for step in plan if step["name"] == "stage5_prototype")
+    assert "--prototype-term-mode" in stage5_proto_cmd
+    assert "category_only" in stage5_proto_cmd
+    assert "--disable-prototype-proxy" in stage5_proto_cmd
+    assert "--margin-adv-penalty" in stage5_proto_cmd
+    assert "0.05" in stage5_proto_cmd
+    stage6_cmd = next(step["command"] for step in plan if step["name"] == "stage6_prototype_instance_decomposition")
+    assert "--strict-synergy-threshold" in stage6_cmd
 
 
 def test_build_command_plan_includes_cleanup_when_enabled():

@@ -33,15 +33,29 @@ from deepseek7b_three_pool_structure_scan import (  # noqa: E402
 def top_rows_by_category(
     rows: Sequence[Dict[str, object]],
     per_category_limit: int,
+    distinct_terms: bool = True,
 ) -> Dict[str, List[Dict[str, object]]]:
     out: Dict[str, List[Dict[str, object]]] = {}
-    ordered = sorted(rows, key=lambda row: float(row.get("full_joint_adv_score", 0.0)), reverse=True)
+    seen_terms: Dict[str, set[str]] = {}
+    ordered = sorted(
+        rows,
+        key=lambda row: (
+            float(row.get("full_strict_joint_adv_score", row.get("full_joint_adv_score", 0.0))),
+            float(row.get("full_joint_adv_score", 0.0)),
+        ),
+        reverse=True,
+    )
     for row in ordered:
         category = str(row["item"]["category"])
         bucket = out.setdefault(category, [])
+        category_seen_terms = seen_terms.setdefault(category, set())
         if len(bucket) >= per_category_limit:
             continue
+        term = str(row["item"]["term"])
+        if distinct_terms and term in category_seen_terms:
+            continue
         bucket.append(row)
+        category_seen_terms.add(term)
     return out
 
 
@@ -64,6 +78,17 @@ def paired_categories(
     return sorted(set(prototype_by_category) & set(instance_by_category))
 
 
+def is_strict_positive_synergy(
+    row: Dict[str, object],
+    synergy_threshold: float = 0.0,
+) -> bool:
+    return (
+        float(row["union_joint_adv"]) > float(row["proto_joint_adv"])
+        and float(row["union_joint_adv"]) > float(row["instance_joint_adv"])
+        and float(row["union_synergy_joint"]) > float(synergy_threshold)
+    )
+
+
 def write_json(path: Path, payload: Dict[str, object]) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -84,10 +109,18 @@ def write_report(path: Path, summary: Dict[str, object], rows: Sequence[Dict[str
         f"- Mean instance joint adv: {summary['mean_instance_joint_adv']:.6f}",
         f"- Mean union joint adv: {summary['mean_union_joint_adv']:.6f}",
         f"- Mean union synergy joint: {summary['mean_union_synergy_joint']:.6f}",
+        f"- Strict positive synergy pairs: {summary['strict_positive_synergy_pair_count']}",
         "",
         "## Top Pair Rows",
     ]
-    top_rows = sorted(rows, key=lambda row: float(row["union_joint_adv"]), reverse=True)[:20]
+    top_rows = sorted(
+        rows,
+        key=lambda row: (
+            1 if bool(row.get("strict_positive_synergy")) else 0,
+            float(row["union_joint_adv"]),
+        ),
+        reverse=True,
+    )[:20]
     for row in top_rows:
         lines.append(
             "- "
@@ -96,6 +129,7 @@ def write_report(path: Path, summary: Dict[str, object], rows: Sequence[Dict[str
             f" / inst_joint={row['instance_joint_adv']:.6f}"
             f" / union_joint={row['union_joint_adv']:.6f}"
             f" / union_synergy={row['union_synergy_joint']:.6f}"
+            f" / strict_positive={bool(row.get('strict_positive_synergy'))}"
         )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -114,6 +148,7 @@ def main() -> None:
     ap.add_argument("--max-instance-terms-per-category", type=int, default=2)
     ap.add_argument("--signature-top-k", type=int, default=256)
     ap.add_argument("--score-alpha", type=float, default=256.0)
+    ap.add_argument("--strict-synergy-threshold", type=float, default=0.0)
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--output-dir", default="tempdata/deepseek7b_stage6_prototype_instance_decomposition_1504_20260317")
     args = ap.parse_args()
@@ -291,6 +326,15 @@ def main() -> None:
                     )
                 )
                 union_synergy_joint = effect_score(synergy_margin, synergy_category, args.score_alpha)
+                strict_positive_synergy = is_strict_positive_synergy(
+                    {
+                        "proto_joint_adv": proto_joint_adv,
+                        "instance_joint_adv": instance_joint_adv,
+                        "union_joint_adv": union_joint_adv,
+                        "union_synergy_joint": union_synergy_joint,
+                    },
+                    synergy_threshold=args.strict_synergy_threshold,
+                )
 
                 result_rows.append(
                     {
@@ -306,6 +350,7 @@ def main() -> None:
                         "instance_joint_adv": instance_joint_adv,
                         "union_joint_adv": union_joint_adv,
                         "union_synergy_joint": union_synergy_joint,
+                        "strict_positive_synergy": strict_positive_synergy,
                         "proto_margin_adv": proto_margin_adv,
                         "instance_margin_adv": instance_margin_adv,
                         "union_margin_adv": union_margin_adv,
@@ -333,6 +378,11 @@ def main() -> None:
         "mean_instance_joint_adv": float(np.mean([row["instance_joint_adv"] for row in result_rows]) if result_rows else 0.0),
         "mean_union_joint_adv": float(np.mean([row["union_joint_adv"] for row in result_rows]) if result_rows else 0.0),
         "mean_union_synergy_joint": float(np.mean([row["union_synergy_joint"] for row in result_rows]) if result_rows else 0.0),
+        "strict_synergy_threshold": args.strict_synergy_threshold,
+        "strict_positive_synergy_pair_count": int(sum(1 for row in result_rows if bool(row["strict_positive_synergy"]))),
+        "strict_positive_synergy_categories": sorted(
+            {str(row["category"]) for row in result_rows if bool(row["strict_positive_synergy"])}
+        ),
         "top_pairs": [
             {
                 "category": row["category"],
@@ -342,8 +392,16 @@ def main() -> None:
                 "instance_joint_adv": row["instance_joint_adv"],
                 "union_joint_adv": row["union_joint_adv"],
                 "union_synergy_joint": row["union_synergy_joint"],
+                "strict_positive_synergy": row["strict_positive_synergy"],
             }
-            for row in sorted(result_rows, key=lambda row: row["union_joint_adv"], reverse=True)[:20]
+            for row in sorted(
+                result_rows,
+                key=lambda row: (
+                    1 if bool(row["strict_positive_synergy"]) else 0,
+                    row["union_joint_adv"],
+                ),
+                reverse=True,
+            )[:20]
         ],
     }
 

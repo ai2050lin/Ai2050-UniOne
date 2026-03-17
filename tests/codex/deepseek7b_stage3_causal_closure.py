@@ -22,12 +22,14 @@ from deepseek7b_three_pool_structure_scan import (  # noqa: E402
     GateCollector,
     LexemeItem,
     finite_stats,
+    gate_spec_for_layer,
     jaccard,
     layer_distribution,
     load_model,
     prompts_for_item,
     run_prompt,
     topk_with_values,
+    zero_gate_indices,
 )
 
 
@@ -106,17 +108,15 @@ def register_ablation(model, flat_indices: Sequence[int], d_ff: int):
     device = next(model.parameters()).device
     for layer_idx, idxs in by_layer.items():
         idx_tensor = torch.tensor(sorted(set(idxs)), dtype=torch.long, device=device)
-        module = model.model.layers[layer_idx].mlp.gate_proj
+        spec = gate_spec_for_layer(model.model.layers[layer_idx])
 
-        def _make_hook(local_idxs: torch.Tensor):
+        def _make_hook(local_idxs: torch.Tensor, local_spec):
             def _hook(_module, _inputs, output):
-                out = output.clone()
-                out[..., local_idxs] = 0.0
-                return out
+                return zero_gate_indices(output, local_spec, local_idxs)
 
             return _hook
 
-        handles.append(module.register_forward_hook(_make_hook(idx_tensor)))
+        handles.append(spec.module.register_forward_hook(_make_hook(idx_tensor, spec)))
     return handles
 
 

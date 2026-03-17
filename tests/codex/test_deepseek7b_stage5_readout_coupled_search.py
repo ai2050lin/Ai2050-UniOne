@@ -10,6 +10,7 @@ if str(MODULE_DIR) not in sys.path:
 
 from deepseek7b_stage5_readout_coupled_search import (  # noqa: E402
     build_prototype_proxy_rows,
+    candidate_allowed_in_lane,
     choose_representative_baselines,
     effect_score,
     is_category_word,
@@ -19,6 +20,7 @@ from deepseek7b_stage5_readout_coupled_search import (  # noqa: E402
     normalize_lexeme,
     selection_score,
     select_stage4_candidates,
+    strict_effect_score,
     subset_overlap_ratio,
 )
 
@@ -154,6 +156,32 @@ def test_selection_score_penalizes_category_words():
     assert penalized == plain - 0.3
 
 
+def test_selection_score_penalizes_zero_margin_adv_rows():
+    row = {
+        "item": {"term": "animal", "category": "animal"},
+        "pair_metrics": {
+            "joint_adv_score": 0.5,
+            "margin_adv_vs_random": 0.0,
+            "joint_binding_hit": True,
+        },
+    }
+    plain = selection_score(row, [], overlap_penalty=0.15, margin_adv_penalty=0.0)
+    penalized = selection_score(
+        row,
+        [],
+        overlap_penalty=0.15,
+        margin_adv_threshold=0.0,
+        margin_adv_penalty=0.05,
+    )
+    assert penalized == plain - 0.05
+
+
+def test_strict_effect_score_penalizes_weak_margin_adv():
+    plain = strict_effect_score(0.0, 0.001, 256.0, margin_adv_penalty=0.0)
+    penalized = strict_effect_score(0.0, 0.001, 256.0, margin_adv_penalty=0.05)
+    assert penalized == plain - 0.05
+
+
 def test_lane_matches_splits_prototype_and_instance():
     proto = {"term": "animal", "category": "animal"}
     inst = {"term": "kangaroo", "category": "animal"}
@@ -168,6 +196,33 @@ def test_lane_matches_accepts_family_prototype_proxy():
     inst = {"term": "kangaroo", "category": "animal"}
     assert lane_matches(inst, "prototype", source_kind="family_prototype") is True
     assert lane_matches(inst, "instance", source_kind="family_prototype") is False
+
+
+def test_candidate_allowed_in_lane_can_forbid_prototype_proxy():
+    inst = {"term": "kangaroo", "category": "animal"}
+    assert candidate_allowed_in_lane(
+        inst,
+        "prototype",
+        source_kind="family_prototype",
+        allow_prototype_proxy=False,
+    ) is False
+
+
+def test_candidate_allowed_in_lane_can_require_real_category_words():
+    proto = {"term": "animal", "category": "animal"}
+    inst = {"term": "kangaroo", "category": "animal"}
+    assert candidate_allowed_in_lane(
+        proto,
+        "prototype",
+        source_kind="combined",
+        prototype_term_mode="category_only",
+    ) is True
+    assert candidate_allowed_in_lane(
+        inst,
+        "prototype",
+        source_kind="combined",
+        prototype_term_mode="category_only",
+    ) is False
 
 
 def test_choose_representative_baselines_prefers_stronger_category_margin():

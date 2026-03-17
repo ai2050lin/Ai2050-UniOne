@@ -86,6 +86,24 @@ def lane_matches(
     return True
 
 
+def candidate_allowed_in_lane(
+    item: Dict[str, object],
+    lane_mode: str,
+    source_kind: str = "",
+    prototype_term_mode: str = "any",
+    allow_prototype_proxy: bool = True,
+) -> bool:
+    if not lane_matches(item, lane_mode, source_kind=source_kind):
+        return False
+    if lane_mode != "prototype":
+        return True
+    if source_kind == "family_prototype" and not allow_prototype_proxy:
+        return False
+    if prototype_term_mode == "category_only" and not is_category_word(item):
+        return False
+    return True
+
+
 def subset_overlap_ratio(left: Dict[str, object], right: Dict[str, object]) -> float:
     left_ids = set(int(x) for x in left.get("subset_flat_indices", []))
     right_ids = set(int(x) for x in right.get("subset_flat_indices", []))
@@ -101,6 +119,8 @@ def selection_score(
     chosen: Sequence[Dict[str, object]],
     overlap_penalty: float,
     category_word_penalty: float = 0.0,
+    margin_adv_threshold: float = 0.0,
+    margin_adv_penalty: float = 0.0,
 ) -> float:
     pair = row["pair_metrics"]
     base = (
@@ -110,6 +130,8 @@ def selection_score(
     )
     if category_word_penalty > 0.0 and is_category_word(row.get("item", {})):
         base -= float(category_word_penalty)
+    if margin_adv_penalty > 0.0 and float(pair["margin_adv_vs_random"]) <= margin_adv_threshold:
+        base -= float(margin_adv_penalty)
     if not chosen:
         return base
     max_overlap = max(subset_overlap_ratio(row, prev) for prev in chosen)
@@ -124,6 +146,8 @@ def select_stage4_candidates(
     max_overlap: float = 0.80,
     require_category_coverage: bool = False,
     category_word_penalty: float = 0.0,
+    margin_adv_threshold: float = 0.0,
+    margin_adv_penalty: float = 0.0,
 ) -> List[Dict[str, object]]:
     ordered = sort_stage4_rows(rows)
     chosen: List[Dict[str, object]] = []
@@ -150,6 +174,8 @@ def select_stage4_candidates(
                 chosen,
                 overlap_penalty=overlap_penalty,
                 category_word_penalty=category_word_penalty,
+                margin_adv_threshold=margin_adv_threshold,
+                margin_adv_penalty=margin_adv_penalty,
             )
             if best_score is None or score > best_score:
                 best_score = score
@@ -226,6 +252,19 @@ def limit_candidate_indices(
 
 def effect_score(margin_value: float, category_value: float, alpha: float) -> float:
     return float(margin_value + alpha * category_value)
+
+
+def strict_effect_score(
+    margin_value: float,
+    category_value: float,
+    alpha: float,
+    margin_adv_threshold: float = 0.0,
+    margin_adv_penalty: float = 0.0,
+) -> float:
+    score = effect_score(margin_value, category_value, alpha)
+    if margin_adv_penalty > 0.0 and float(margin_value) <= margin_adv_threshold:
+        score -= float(margin_adv_penalty)
+    return float(score)
 
 
 def choose_representative_baselines(
@@ -358,7 +397,10 @@ def write_report(path: Path, summary: Dict[str, object], circuits: Sequence[Dict
     ]
     top_rows = sorted(
         circuits,
-        key=lambda row: float(row["adv_metrics"]["joint_adv_score"]),
+        key=lambda row: (
+            float(row["adv_metrics"].get("strict_joint_adv_score", row["adv_metrics"]["joint_adv_score"])),
+            float(row["adv_metrics"]["joint_adv_score"]),
+        ),
         reverse=True,
     )[:20]
     for row in top_rows:
@@ -366,6 +408,7 @@ def write_report(path: Path, summary: Dict[str, object], circuits: Sequence[Dict
             "- "
             f"{row['item']['category']} / {row['item']['term']} / {row['source_kind']} / {row['circuit_kind']} "
             f"/ size={row['neuron_count']} / joint_adv={row['adv_metrics']['joint_adv_score']:.6f} "
+            f"/ strict_joint_adv={row['adv_metrics'].get('strict_joint_adv_score', row['adv_metrics']['joint_adv_score']):.6f} "
             f"/ margin_adv={row['adv_metrics']['margin_adv_vs_random']:.6f} "
             f"/ category_adv={row['adv_metrics']['category_adv_vs_random']:.6f}"
         )
@@ -392,7 +435,11 @@ def main() -> None:
     ap.add_argument("--max-candidate-overlap", type=float, default=0.80)
     ap.add_argument("--require-category-coverage", action="store_true")
     ap.add_argument("--category-word-penalty", type=float, default=0.0)
+    ap.add_argument("--margin-adv-threshold", type=float, default=0.0)
+    ap.add_argument("--margin-adv-penalty", type=float, default=0.0)
     ap.add_argument("--lane-mode", choices=["mixed", "prototype", "instance"], default="mixed")
+    ap.add_argument("--prototype-term-mode", choices=["any", "category_only"], default="any")
+    ap.add_argument("--disable-prototype-proxy", action="store_true")
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--output-dir", default="tempdata/deepseek7b_stage5_readout_coupled_520_20260316")
     args = ap.parse_args()
@@ -425,15 +472,17 @@ def main() -> None:
         selected_categories=selected_categories,
     )
     candidate_source_rows = list(stage4_subset_rows)
-    if args.lane_mode in {"mixed", "prototype"}:
+    if args.lane_mode in {"mixed", "prototype"} and not bool(args.disable_prototype_proxy):
         candidate_source_rows.extend(prototype_proxy_rows)
     subset_rows = [
         row
         for row in candidate_source_rows
-        if lane_matches(
+        if candidate_allowed_in_lane(
             row.get("item", {}),
             args.lane_mode,
             source_kind=str(row.get("source_kind", "")),
+            prototype_term_mode=args.prototype_term_mode,
+            allow_prototype_proxy=not bool(args.disable_prototype_proxy),
         )
     ]
     candidates = select_stage4_candidates(
@@ -444,6 +493,8 @@ def main() -> None:
         max_overlap=args.max_candidate_overlap,
         require_category_coverage=args.require_category_coverage,
         category_word_penalty=args.category_word_penalty,
+        margin_adv_threshold=args.margin_adv_threshold,
+        margin_adv_penalty=args.margin_adv_penalty,
     )
 
     model, tok, model_ref = load_model(
@@ -509,6 +560,17 @@ def main() -> None:
                 float(full_eval["effects"]["category_margin_drop"] - full_random_eval["effects"]["category_margin_drop"]),
                 args.score_alpha,
             )
+            full_margin_adv = float(full_eval["effects"]["margin_drop"] - full_random_eval["effects"]["margin_drop"])
+            full_category_adv = float(
+                full_eval["effects"]["category_margin_drop"] - full_random_eval["effects"]["category_margin_drop"]
+            )
+            full_strict_joint_adv = strict_effect_score(
+                full_margin_adv,
+                full_category_adv,
+                args.score_alpha,
+                margin_adv_threshold=args.margin_adv_threshold,
+                margin_adv_penalty=args.margin_adv_penalty,
+            )
             candidate_rows.append(
                 {
                     "record_type": "stage5_candidate",
@@ -522,7 +584,10 @@ def main() -> None:
                     "candidate_layer_distribution": layer_distribution(candidate_indices, collector.d_ff),
                     "full_subset_effects": full_eval["effects"],
                     "full_random_effects": full_random_eval["effects"],
+                    "full_margin_adv_vs_random": full_margin_adv,
+                    "full_category_adv_vs_random": full_category_adv,
                     "full_joint_adv_score": full_joint_adv,
+                    "full_strict_joint_adv_score": full_strict_joint_adv,
                 }
             )
 
@@ -654,6 +719,13 @@ def main() -> None:
                     - circuit_random_eval["effects"]["category_margin_drop"]
                 )
                 joint_adv = effect_score(margin_adv, category_adv, args.score_alpha)
+                strict_joint_adv = strict_effect_score(
+                    margin_adv,
+                    category_adv,
+                    args.score_alpha,
+                    margin_adv_threshold=args.margin_adv_threshold,
+                    margin_adv_penalty=args.margin_adv_penalty,
+                )
                 circuit_rows.append(
                     {
                         "record_type": "stage5_micro_circuit",
@@ -669,6 +741,7 @@ def main() -> None:
                             "margin_adv_vs_random": margin_adv,
                             "category_adv_vs_random": category_adv,
                             "joint_adv_score": joint_adv,
+                            "strict_joint_adv_score": strict_joint_adv,
                         },
                     }
                 )
@@ -679,6 +752,12 @@ def main() -> None:
         row
         for row in circuit_rows
         if float(row["adv_metrics"]["margin_adv_vs_random"]) > 0.0
+        and float(row["adv_metrics"]["category_adv_vs_random"]) > 0.0
+    ]
+    strict_positive_circuits = [
+        row
+        for row in circuit_rows
+        if float(row["adv_metrics"]["margin_adv_vs_random"]) > args.margin_adv_threshold
         and float(row["adv_metrics"]["category_adv_vs_random"]) > 0.0
     ]
     summary = {
@@ -698,12 +777,26 @@ def main() -> None:
         "max_candidate_overlap": args.max_candidate_overlap,
         "require_category_coverage": bool(args.require_category_coverage),
         "category_word_penalty": args.category_word_penalty,
+        "margin_adv_threshold": args.margin_adv_threshold,
+        "margin_adv_penalty": args.margin_adv_penalty,
         "lane_mode": args.lane_mode,
+        "prototype_term_mode": args.prototype_term_mode,
+        "disable_prototype_proxy": bool(args.disable_prototype_proxy),
         "lane_pool_row_count": len(subset_rows),
         "category_word_candidate_count": int(sum(1 for row in candidate_rows if bool(row["is_category_word"]))),
         "prototype_proxy_candidate_count": int(sum(1 for row in candidate_rows if bool(row.get("is_prototype_proxy")))),
+        "strict_real_category_candidate_count": int(
+            sum(
+                1
+                for row in candidate_rows
+                if bool(row["is_category_word"]) and not bool(row.get("is_prototype_proxy"))
+            )
+        ),
         "mean_candidate_full_joint_adv": float(
             np.mean([row["full_joint_adv_score"] for row in candidate_rows]) if candidate_rows else 0.0
+        ),
+        "mean_candidate_full_strict_joint_adv": float(
+            np.mean([row["full_strict_joint_adv_score"] for row in candidate_rows]) if candidate_rows else 0.0
         ),
         "mean_neuron_rescue_joint_score": float(
             np.mean([row["rescue_joint_score"] for row in neuron_rows]) if neuron_rows else 0.0
@@ -714,6 +807,10 @@ def main() -> None:
         "mean_micro_circuit_joint_adv": float(
             np.mean([row["adv_metrics"]["joint_adv_score"] for row in circuit_rows]) if circuit_rows else 0.0
         ),
+        "mean_micro_circuit_strict_joint_adv": float(
+            np.mean([row["adv_metrics"]["strict_joint_adv_score"] for row in circuit_rows]) if circuit_rows else 0.0
+        ),
+        "strict_positive_micro_circuit_count": len(strict_positive_circuits),
         "top_micro_circuits": [
             {
                 "term": row["item"]["term"],
@@ -724,8 +821,16 @@ def main() -> None:
                 "margin_adv_vs_random": row["adv_metrics"]["margin_adv_vs_random"],
                 "category_adv_vs_random": row["adv_metrics"]["category_adv_vs_random"],
                 "joint_adv_score": row["adv_metrics"]["joint_adv_score"],
+                "strict_joint_adv_score": row["adv_metrics"]["strict_joint_adv_score"],
             }
-            for row in sorted(circuit_rows, key=lambda x: float(x["adv_metrics"]["joint_adv_score"]), reverse=True)[:20]
+            for row in sorted(
+                circuit_rows,
+                key=lambda x: (
+                    float(x["adv_metrics"]["strict_joint_adv_score"]),
+                    float(x["adv_metrics"]["joint_adv_score"]),
+                ),
+                reverse=True,
+            )[:20]
         ],
     }
 

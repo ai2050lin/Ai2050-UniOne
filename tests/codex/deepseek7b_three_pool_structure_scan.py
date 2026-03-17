@@ -39,6 +39,7 @@ KNOWN_MODEL_REPOS = {
     "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": "models--deepseek-ai--DeepSeek-R1-Distill-Qwen-7B",
     "Qwen/Qwen3-4B": "models--Qwen--Qwen3-4B",
     "Qwen/Qwen2.5-7B": "models--Qwen--Qwen2.5-7B",
+    "zai-org/GLM-4-9B-Chat-HF": "models--zai-org--GLM-4-9B-Chat-HF",
 }
 
 
@@ -53,6 +54,14 @@ class LexemeItem:
 class PoolTask:
     item: LexemeItem
     pool: str
+
+
+@dataclass(frozen=True)
+class GateSpec:
+    module: torch.nn.Module
+    d_ff: int
+    gate_start: int
+    gate_end: int
 
 
 def detect_language(term: str) -> str:
@@ -193,17 +202,49 @@ def load_model(model_id: str, dtype_name: str, local_files_only: bool, device: s
     return model, tok, model_ref
 
 
+def gate_spec_for_layer(layer) -> GateSpec:
+    mlp = layer.mlp
+    if hasattr(mlp, "gate_proj"):
+        module = mlp.gate_proj
+        d_ff = int(module.out_features)
+        return GateSpec(module=module, d_ff=d_ff, gate_start=0, gate_end=d_ff)
+    if hasattr(mlp, "gate_up_proj"):
+        module = mlp.gate_up_proj
+        d_ff = int(module.out_features // 2)
+        return GateSpec(module=module, d_ff=d_ff, gate_start=0, gate_end=d_ff)
+    raise AttributeError(f"unsupported MLP gate structure: {type(mlp).__name__}")
+
+
+def slice_gate_output(output, spec: GateSpec) -> torch.Tensor:
+    tensor = output[0] if isinstance(output, tuple) else output
+    return tensor[..., spec.gate_start : spec.gate_end]
+
+
+def zero_gate_indices(output, spec: GateSpec, indices: torch.Tensor):
+    if indices.numel() <= 0:
+        return output
+    if isinstance(output, tuple):
+        tensor = output[0].clone()
+        tensor[..., spec.gate_start + indices] = 0.0
+        return (tensor,) + output[1:]
+    tensor = output.clone()
+    tensor[..., spec.gate_start + indices] = 0.0
+    return tensor
+
+
 class GateCollector:
     def __init__(self, model):
         self.layers = list(model.model.layers)
         self.buffers: List[torch.Tensor | None] = [None for _ in self.layers]
+        self.specs = [gate_spec_for_layer(layer) for layer in self.layers]
         self.handles = []
-        for li, layer in enumerate(self.layers):
-            self.handles.append(layer.mlp.gate_proj.register_forward_hook(self._mk_hook(li)))
+        for li, spec in enumerate(self.specs):
+            self.handles.append(spec.module.register_forward_hook(self._mk_hook(li)))
 
     def _mk_hook(self, layer_idx: int):
         def _hook(_module, _inputs, output):
-            self.buffers[layer_idx] = output[0, -1, :].detach().float().cpu()
+            gate = slice_gate_output(output, self.specs[layer_idx])
+            self.buffers[layer_idx] = gate[0, -1, :].detach().float().cpu()
             return output
 
         return _hook
@@ -214,7 +255,7 @@ class GateCollector:
 
     @property
     def d_ff(self) -> int:
-        return int(self.layers[0].mlp.gate_proj.out_features)
+        return int(self.specs[0].d_ff)
 
     @property
     def total_neurons(self) -> int:
