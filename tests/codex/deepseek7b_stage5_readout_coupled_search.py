@@ -69,8 +69,16 @@ def is_category_word(item: Dict[str, object]) -> bool:
     return term == category or term.rstrip("s") == category
 
 
-def lane_matches(item: Dict[str, object], lane_mode: str) -> bool:
-    is_proto = is_category_word(item)
+def is_prototype_proxy_row(row: Dict[str, object]) -> bool:
+    return str(row.get("source_kind", "")) == "family_prototype"
+
+
+def lane_matches(
+    item: Dict[str, object],
+    lane_mode: str,
+    source_kind: str = "",
+) -> bool:
+    is_proto = is_category_word(item) or source_kind == "family_prototype"
     if lane_mode == "prototype":
         return is_proto
     if lane_mode == "instance":
@@ -220,6 +228,71 @@ def effect_score(margin_value: float, category_value: float, alpha: float) -> fl
     return float(margin_value + alpha * category_value)
 
 
+def choose_representative_baselines(
+    baselines: Sequence[Dict[str, object]],
+    selected_categories: Sequence[str],
+) -> Dict[str, Dict[str, object]]:
+    grouped: Dict[str, List[Dict[str, object]]] = {}
+    wanted = {str(category) for category in selected_categories}
+    for row in baselines:
+        category = str(row["item"]["category"])
+        if category not in wanted:
+            continue
+        grouped.setdefault(category, []).append(row)
+    return {
+        category: max(
+            rows,
+            key=lambda row: (
+                float(row["baseline_readout"].get("category_margin", 0.0)),
+                float(row["baseline_readout"].get("correct_prob", 0.0)),
+                str(row["item"]["term"]),
+            ),
+        )
+        for category, rows in grouped.items()
+    }
+
+
+def build_prototype_proxy_rows(
+    families: Sequence[Dict[str, object]],
+    baselines: Sequence[Dict[str, object]],
+    selected_categories: Sequence[str],
+) -> List[Dict[str, object]]:
+    representative_map = choose_representative_baselines(baselines, selected_categories)
+    rows: List[Dict[str, object]] = []
+    for family in families:
+        if str(family.get("record_type")) != "family_prototype":
+            continue
+        if str(family.get("pool")) != "closure":
+            continue
+        category = str(family.get("category"))
+        if category not in representative_map:
+            continue
+        prototype_indices = [int(x) for x in family.get("prototype_top_indices", [])]
+        if not prototype_indices:
+            continue
+        stability = float(family.get("mean_prompt_stability", 0.0))
+        representative = representative_map[category]
+        rows.append(
+            {
+                "record_type": "stage5_prototype_proxy",
+                "item": dict(representative["item"]),
+                "source_kind": "family_prototype",
+                "variant": "subset",
+                "subset_size": len(prototype_indices),
+                "subset_flat_indices": prototype_indices,
+                "pair_metrics": {
+                    "joint_binding_hit": False,
+                    "joint_adv_score": stability * 0.01,
+                    "margin_adv_vs_random": 0.0,
+                    "category_adv_vs_random": 0.0,
+                },
+                "prototype_category": category,
+                "prototype_mean_prompt_stability": stability,
+            }
+        )
+    return rows
+
+
 def evaluate_ablation(
     model,
     tok,
@@ -341,11 +414,27 @@ def main() -> None:
         (str(row["item"]["term"]), str(row["item"]["category"])): row
         for row in baselines
     }
-    subset_rows = [
+    stage4_subset_rows = [
         row
         for row in stage4_rows
         if str(row.get("variant")) == "subset"
-        if lane_matches(row.get("item", {}), args.lane_mode)
+    ]
+    prototype_proxy_rows = build_prototype_proxy_rows(
+        families=families,
+        baselines=baselines,
+        selected_categories=selected_categories,
+    )
+    candidate_source_rows = list(stage4_subset_rows)
+    if args.lane_mode in {"mixed", "prototype"}:
+        candidate_source_rows.extend(prototype_proxy_rows)
+    subset_rows = [
+        row
+        for row in candidate_source_rows
+        if lane_matches(
+            row.get("item", {}),
+            args.lane_mode,
+            source_kind=str(row.get("source_kind", "")),
+        )
     ]
     candidates = select_stage4_candidates(
         rows=subset_rows,
@@ -426,6 +515,7 @@ def main() -> None:
                     "item": cand["item"],
                     "source_kind": cand["source_kind"],
                     "is_category_word": is_category_word(cand["item"]),
+                    "is_prototype_proxy": is_prototype_proxy_row(cand),
                     "original_subset_size": int(cand["subset_size"]),
                     "candidate_neuron_count": len(candidate_indices),
                     "candidate_indices": [int(x) for x in candidate_indices],
@@ -611,6 +701,7 @@ def main() -> None:
         "lane_mode": args.lane_mode,
         "lane_pool_row_count": len(subset_rows),
         "category_word_candidate_count": int(sum(1 for row in candidate_rows if bool(row["is_category_word"]))),
+        "prototype_proxy_candidate_count": int(sum(1 for row in candidate_rows if bool(row.get("is_prototype_proxy")))),
         "mean_candidate_full_joint_adv": float(
             np.mean([row["full_joint_adv_score"] for row in candidate_rows]) if candidate_rows else 0.0
         ),

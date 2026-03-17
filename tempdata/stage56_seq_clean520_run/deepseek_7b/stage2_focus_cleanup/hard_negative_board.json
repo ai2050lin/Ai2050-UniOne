@@ -1,0 +1,15 @@
+{
+  "record_type": "stage2_focus_hard_negative_board",
+  "categories": {
+    "abstract": [],
+    "animal": [],
+    "celestial": [],
+    "food": [],
+    "fruit": [],
+    "human": [],
+    "nature": [],
+    "object": [],
+    "tech": [],
+    "vehicle": []
+  }
+}

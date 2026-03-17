@@ -10,6 +10,7 @@ if str(MODULE_DIR) not in sys.path:
     sys.path.insert(0, str(MODULE_DIR))
 
 from deepseek7b_three_pool_structure_scan import (  # noqa: E402
+    KNOWN_MODEL_REPOS,
     SCHEMA_VERSION,
     LexemeItem,
     PoolTask,
@@ -21,6 +22,11 @@ from deepseek7b_three_pool_structure_scan import (  # noqa: E402
     finite_stats,
     load_items,
 )
+
+
+def test_known_model_repo_map_covers_qwen3_and_deepseek7b():
+    assert KNOWN_MODEL_REPOS["deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"] == "models--deepseek-ai--DeepSeek-R1-Distill-Qwen-7B"
+    assert KNOWN_MODEL_REPOS["Qwen/Qwen3-4B"] == "models--Qwen--Qwen3-4B"
 
 
 def test_build_pool_tasks_nested_membership(tmp_path):

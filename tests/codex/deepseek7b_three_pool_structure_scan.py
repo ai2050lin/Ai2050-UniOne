@@ -35,6 +35,11 @@ POOL_TOPK = {
     "deep": 160,
     "closure": 256,
 }
+KNOWN_MODEL_REPOS = {
+    "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": "models--deepseek-ai--DeepSeek-R1-Distill-Qwen-7B",
+    "Qwen/Qwen3-4B": "models--Qwen--Qwen3-4B",
+    "Qwen/Qwen2.5-7B": "models--Qwen--Qwen2.5-7B",
+}
 
 
 @dataclass(frozen=True)
@@ -139,8 +144,8 @@ def resolve_model_path(model_id: str) -> str:
         Path(r"D:\develop\model\hub"),
         Path.home() / ".cache" / "huggingface" / "hub",
     ]
-    if model_id == "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B":
-        repo_dir_name = "models--deepseek-ai--DeepSeek-R1-Distill-Qwen-7B"
+    repo_dir_name = KNOWN_MODEL_REPOS.get(model_id)
+    if repo_dir_name is not None:
         for root in local_roots:
             snap_root = root / repo_dir_name / "snapshots"
             if not snap_root.exists():

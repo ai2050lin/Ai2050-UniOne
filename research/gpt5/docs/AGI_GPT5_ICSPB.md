@@ -1,6 +1,6 @@
 ﻿# AGI_GPT5_ICSPB
 
-最后更新：2026-03-15
+最后更新：2026-03-17
 
 ## 1. 文档定位
 
@@ -130,7 +130,7 @@
 
 ### 3.4 当前 DNN 数学提取的真实进度
 
-到 `2026-03-15` 为止，DNN 侧已经不再只是“有一些分析结论”，而是形成了较明确的系统化提取与数学还原链。
+到 `2026-03-17` 为止，DNN 侧已经不再只是“有一些分析结论”，而是形成了较明确的系统化提取与数学还原链。
 
 当前最重要的 DNN 侧量化是：
 
@@ -166,6 +166,69 @@
      - `dense exact evidence`
      - `family-to-specific exact closure`
      - `successor exact closure`
+
+### 3.5 第五阶段双通道与第六阶段联合分解的最新进展
+
+到 `2026-03-17`，DNN 侧最重要的新变化是：
+
+1. 第五阶段读出耦合搜索已经不再把 `category word` 和 `instance word` 混在同一条候选流水线里；
+2. 而是正式拆成：
+   - `mixed`
+   - `prototype`
+   - `instance`
+   三种通道。
+
+当前最关键的真实结果是：
+
+1. 在先前 `DeepSeek 7B` 定向实验里：
+   - `prototype lane`
+     - `candidate_count = 2`
+     - `mean_candidate_full_joint_adv = 0.1763`
+     - 候选几乎全部被 `animal` 类占据
+   - `instance lane`
+     - `candidate_count = 6`
+     - `mean_candidate_full_joint_adv = 0.0539`
+     - 覆盖 `abstract / animal / tech / human`
+     - 代表词包括：
+       - `symmetry`
+       - `buffer`
+       - `kangaroo`
+       - `filmmaker`
+       - `librarian`
+2. 在本轮更严格的 `clean520 + 双模型顺序 CUDA 复核` 里：
+   - `DeepSeek 7B`
+     - `prototype lane` 原始定义一度归零，说明单靠 `category word` 过滤并不稳；
+     - 引入 `family_prototype proxy row` 后，`prototype lane` 恢复到：
+       - `candidate_count = 1`
+       - `prototype_proxy_candidate_count = 1`
+       - `mean_candidate_full_joint_adv = 0.0078`
+     - `instance lane` 为：
+       - `candidate_count = 2`
+       - `mean_candidate_full_joint_adv = 0.0142`
+   - `Qwen3 4B`
+     - `prototype lane` 在代理原型后恢复到：
+       - `candidate_count = 2`
+       - `prototype_proxy_candidate_count = 2`
+       - `mean_candidate_full_joint_adv = 0.00147`
+     - `instance lane` 为：
+       - `candidate_count = 1`
+       - `mean_candidate_full_joint_adv = 0.0107`
+3. 第六阶段“原型核/实例偏移核联合分解”在严格复核下仍未闭合：
+   - `DeepSeek 7B`
+     - `pair_count = 1`
+     - 类别只落在 `vehicle`
+     - 配对是 `car + cart`
+     - 但 `mean_union_synergy_joint = -0.00749`
+   - `Qwen3 4B`
+     - `pair_count = 0`
+
+这组结果当前最严格的解释是：
+
+1. 双通道制度层已经成立，但强度稳定性远没有先前看起来那么高；
+2. `prototype lane` 当前在严格词表下仍需要 `family prototype proxy` 才能维持非空，说明类别词本体闭合没有打穿；
+3. 先前“类别级更强、更集中”的判断，在定向实验里成立，但在双模型严格复核里还没有稳定复现；
+4. `instance lane` 仍然偏弱，但跨类覆盖相对更自然；
+5. 第六阶段虽然首次在严格顺序流程里得到 `DeepSeek 7B` 的单类配对，但联合优势仍为负，不能算联合闭合成立。
 
 ---
 
@@ -341,6 +404,43 @@
 
 **系统级参数原理已经浮现，但系统级精确定理闭合仍然明显不足。**
 
+### 5.6 双核分解候选式
+
+第五阶段双通道结果表明，先前的
+
+- `z_c = b_(f_c) + delta_c`
+
+仍然是必要核心，但 `delta_c` 现在更适合继续拆成：
+
+- `delta_c ~= K_f^proto + D_(i|f)^inst`
+
+其中：
+
+- `K_f^proto`
+  - 类别级原型核
+  - 对应更强、更集中的家族读出
+- `D_(i|f)^inst`
+  - 同类条件下的实例偏移核
+  - 对应更弱、更分散的具体词差异
+
+因此，当前更贴近最新实验的候选式可写为：
+
+- `h(f, i, ctx, stage) ~= B_f + K_f^proto + D_(i|f)^inst + C_ctx(i, ctx) + P_task(i, ctx, stage) + T_succ(i, ctx, stage) + epsilon`
+
+这里最重要的不是把旧式子推翻，而是把它细化为：
+
+1. `family basis`
+2. `prototype kernel`
+3. `instance offset kernel`
+4. `context / protocol / successor` 修正
+
+当前必须强调：
+
+1. 这条双核式子是强候选，不是最终闭式定理；
+2. 现在只证明了“可分流”；
+3. 当前很多 `prototype` 证据仍要借助 `family_prototype proxy` 代理行；
+4. 还没有证明“跨类联合闭合”。
+
 ---
 
 ## 6. UCESD、CPT、GUIT、UGMT
@@ -437,6 +537,9 @@
 
 - `DNN 侧系统级参数原理理解度`：`68% - 73%`
 - `DNN 侧系统级精确闭合度`：`34%`
+- `DNN 侧原型/实例双通道分流完成度`：`76% - 82%`
+  - `prototype lane`：`68% - 76%`
+  - `instance lane`：`62% - 70%`
 - `真实大脑编码机制本体破解度（严格口径）`：仍应保持 `45% - 53%`
 
 ### 7.3 当前还没闭合的核心问题
@@ -565,6 +668,9 @@
 6. DNN 侧已经出现了系统级精确编码候选定理，而不再只是零散结构对象。
 7. `concept-specific` 数学桥已经较强成立：
    - `specific concept structure ~= family basis + bounded offset + contextual / protocol corrections`
+8. 第五阶段已经把 `prototype` 与 `instance` 两种读出显式拆开；
+   - 并且已经看到定向实验里的强原型信号；
+   - 但在更严格的双模型顺序复核里，这个强弱差还没有稳定复现。
 
 ### 9.2 当前最大的硬伤
 
@@ -578,12 +684,15 @@
 6. dense neuron-level exact evidence 仍显著落后于 row/signature-level 参数证据。
 7. 即时学习还没有证明会在同一结构里自然强出现。
 8. 真实外部世界的长期验证没有完成。
+9. `prototype lane` 在严格词表下甚至会直接归零，当前还需要 `family_prototype proxy` 才能恢复，说明类别词本体闭合仍未建立。
+10. `instance lane` 虽然覆盖更广，但强度仍偏弱，说明实例偏移核还没有被真正抽干净。
+11. 第六阶段联合分解在 `DeepSeek 7B` 上只形成了 `vehicle : car + cart` 的单类配对，而且联合优势仍为负；`Qwen3 4B` 仍然是零配对。
 
 ### 9.3 当前最准确的一句话
 
 当前项目最准确的一句话是：
 
-**我们已经得到了一套很强的统一理论骨架，并在 DNN 侧看到系统级精确编码候选定理；但 dense exact evidence、family-to-specific exact closure 和 successor exact closure 仍然不足，所以离“真正破解大脑编码机制并导出标准答案”仍有明显距离。**
+**我们已经得到了一套很强的统一理论骨架，并在 DNN 侧把类别级原型读出与实例级偏移读出显式拆开；但在更严格的双模型顺序复核下，prototype 通道仍需代理原型支撑、instance 通道仍偏弱、第六阶段联合优势仍未转正，所以离“真正破解大脑编码机制并导出标准答案”仍有明显距离。**
 
 ---
 
@@ -593,11 +702,23 @@
 
 1. `PhaseA` 正式 tokenizer + 更长程 token-level 预训练
 2. `dense neuron-level exact evidence` 强化块
-3. `family-to-specific exact closure + successor exact closure` 统一冲刺块
-4. `标准学习律 / canonical answer` 强化块
-5. `language compression regime -> instant-learning efficiency regime` 统一验证块
-6. `strict biophysical uniqueness + always-on external validation` 统一冲刺块
-7. `DNN 分析 -> 脑编码特性 -> 理论距离 -> 新模型测试` 的研究汇总自动化
+3. `prototype kernel / instance offset kernel` 联合分解块
+4. `family-to-specific exact closure + successor exact closure` 统一冲刺块
+5. `标准学习律 / canonical answer` 强化块
+6. `language compression regime -> instant-learning efficiency regime` 统一验证块
+7. `strict biophysical uniqueness + always-on external validation` 统一冲刺块
+8. `DNN 分析 -> 脑编码特性 -> 理论距离 -> 新模型测试` 的研究汇总自动化
+
+其中当前最优先的大任务块，应直接定义为：
+
+1. 每个类别固定 `1` 个类别词和 `2` 个实例词；
+2. 先抽真实 `prototype kernel`，尽量不再依赖 `proxy`；
+3. 再抽 `instance offset kernel`；
+4. 再做联合消融和反事实替换；
+5. 同时在 `DeepSeek 7B` 与 `Qwen3 4B` 上顺序复核；
+6. 验证两条是否同时成立：
+   - 去掉原型核会系统性损伤同类家族读出；
+   - 去掉实例偏移核只会选择性损伤具体实例词排异。
 
 ### 当前路线的最终判断
 

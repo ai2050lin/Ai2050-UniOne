@@ -9,8 +9,11 @@ if str(MODULE_DIR) not in sys.path:
     sys.path.insert(0, str(MODULE_DIR))
 
 from deepseek7b_stage5_readout_coupled_search import (  # noqa: E402
+    build_prototype_proxy_rows,
+    choose_representative_baselines,
     effect_score,
     is_category_word,
+    is_prototype_proxy_row,
     lane_matches,
     limit_candidate_indices,
     normalize_lexeme,
@@ -159,3 +162,49 @@ def test_lane_matches_splits_prototype_and_instance():
     assert lane_matches(inst, "prototype") is False
     assert lane_matches(inst, "instance") is True
     assert lane_matches(inst, "mixed") is True
+
+
+def test_lane_matches_accepts_family_prototype_proxy():
+    inst = {"term": "kangaroo", "category": "animal"}
+    assert lane_matches(inst, "prototype", source_kind="family_prototype") is True
+    assert lane_matches(inst, "instance", source_kind="family_prototype") is False
+
+
+def test_choose_representative_baselines_prefers_stronger_category_margin():
+    baselines = [
+        {
+            "item": {"term": "clerk", "category": "human"},
+            "baseline_readout": {"category_margin": 0.01, "correct_prob": 0.10},
+        },
+        {
+            "item": {"term": "programmer", "category": "human"},
+            "baseline_readout": {"category_margin": 0.03, "correct_prob": 0.05},
+        },
+    ]
+    chosen = choose_representative_baselines(baselines, ["human"])
+    assert chosen["human"]["item"]["term"] == "programmer"
+
+
+def test_build_prototype_proxy_rows_uses_closure_family_and_marks_proxy():
+    families = [
+        {
+            "record_type": "family_prototype",
+            "pool": "closure",
+            "category": "human",
+            "prototype_top_indices": [9, 8, 7, 6],
+            "mean_prompt_stability": 0.72,
+        }
+    ]
+    baselines = [
+        {
+            "item": {"term": "programmer", "category": "human", "role": "anchor"},
+            "baseline_readout": {"category_margin": 0.03, "correct_prob": 0.05},
+        }
+    ]
+    rows = build_prototype_proxy_rows(families, baselines, ["human"])
+    assert len(rows) == 1
+    row = rows[0]
+    assert row["item"]["term"] == "programmer"
+    assert row["source_kind"] == "family_prototype"
+    assert row["subset_flat_indices"] == [9, 8, 7, 6]
+    assert is_prototype_proxy_row(row) is True
