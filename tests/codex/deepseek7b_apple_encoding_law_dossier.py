@@ -17,6 +17,8 @@ import time
 from pathlib import Path
 from typing import Dict, List
 
+from stage56_mass_scan_io import row_term, scan_term_rows
+
 
 def read_json(path: Path) -> Dict:
     with path.open("r", encoding="utf-8-sig") as f:
@@ -104,8 +106,8 @@ def main() -> None:
     kq_j = float(tm.get("king_queen_jaccard", 0.0))
     ak_j = float(tm.get("apple_king_jaccard", 0.0))
 
-    noun_records = mass.get("noun_records", [])
-    apple_rec = next((x for x in noun_records if str(x.get("noun", "")).lower() == "apple"), None)
+    noun_records = scan_term_rows(mass)
+    apple_rec = next((x for x in noun_records if row_term(x).lower() == "apple"), None)
     apple_layer_profile = normalize_layer_profile((apple_rec or {}).get("signature_layer_distribution") or {}, n_layers=mass.get("config", {}).get("n_layers", 28))
     apple_peak_band = layer_peak_band(apple_layer_profile)
 

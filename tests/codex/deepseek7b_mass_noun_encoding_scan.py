@@ -15,77 +15,13 @@ import json
 import random
 import time
 from collections import Counter, defaultdict
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Sequence, Tuple
 
 import numpy as np
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
-
-
-@dataclass
-class NounItem:
-    noun: str
-    category: str
-
-
-def default_noun_catalog() -> List[NounItem]:
-    rows = [
-        ("apple", "fruit"), ("banana", "fruit"), ("orange", "fruit"), ("grape", "fruit"), ("pear", "fruit"),
-        ("peach", "fruit"), ("mango", "fruit"), ("lemon", "fruit"), ("strawberry", "fruit"), ("watermelon", "fruit"),
-        ("pineapple", "fruit"), ("cherry", "fruit"), ("plum", "fruit"), ("kiwi", "fruit"), ("coconut", "fruit"),
-        ("rabbit", "animal"), ("cat", "animal"), ("dog", "animal"), ("horse", "animal"), ("tiger", "animal"),
-        ("lion", "animal"), ("bird", "animal"), ("fish", "animal"), ("elephant", "animal"), ("monkey", "animal"),
-        ("wolf", "animal"), ("bear", "animal"), ("deer", "animal"), ("goat", "animal"), ("zebra", "animal"),
-        ("sun", "celestial"), ("moon", "celestial"), ("star", "celestial"), ("planet", "celestial"), ("comet", "celestial"),
-        ("galaxy", "celestial"), ("asteroid", "celestial"), ("meteor", "celestial"), ("satellite", "celestial"), ("nebula", "celestial"),
-        ("cloud", "weather"), ("rain", "weather"), ("snow", "weather"), ("wind", "weather"), ("storm", "weather"),
-        ("thunder", "weather"), ("lightning", "weather"), ("fog", "weather"), ("humidity", "weather"), ("temperature", "weather"),
-        ("car", "vehicle"), ("bus", "vehicle"), ("train", "vehicle"), ("bicycle", "vehicle"), ("airplane", "vehicle"),
-        ("ship", "vehicle"), ("truck", "vehicle"), ("motorcycle", "vehicle"), ("subway", "vehicle"), ("boat", "vehicle"),
-        ("chair", "object"), ("table", "object"), ("bed", "object"), ("lamp", "object"), ("door", "object"),
-        ("window", "object"), ("bottle", "object"), ("cup", "object"), ("spoon", "object"), ("knife", "object"),
-        ("clock", "object"), ("mirror", "object"), ("phone", "object"), ("computer", "object"), ("keyboard", "object"),
-        ("bread", "food"), ("rice", "food"), ("meat", "food"), ("soup", "food"), ("pizza", "food"),
-        ("cake", "food"), ("coffee", "food"), ("tea", "food"), ("milk", "food"), ("cheese", "food"),
-        ("noodle", "food"), ("egg", "food"), ("salad", "food"), ("butter", "food"), ("chocolate", "food"),
-        ("tree", "nature"), ("flower", "nature"), ("grass", "nature"), ("forest", "nature"), ("river", "nature"),
-        ("mountain", "nature"), ("ocean", "nature"), ("desert", "nature"), ("leaf", "nature"), ("seed", "nature"),
-        ("child", "human"), ("teacher", "human"), ("doctor", "human"), ("student", "human"), ("parent", "human"),
-        ("friend", "human"), ("king", "human"), ("queen", "human"), ("artist", "human"), ("worker", "human"),
-        ("lawyer", "human"), ("pilot", "human"), ("engineer", "human"), ("farmer", "human"), ("nurse", "human"),
-        ("algorithm", "tech"), ("data", "tech"), ("number", "tech"), ("equation", "tech"), ("database", "tech"),
-        ("network", "tech"), ("software", "tech"), ("hardware", "tech"), ("robot", "tech"), ("chip", "tech"),
-        ("love", "abstract"), ("hate", "abstract"), ("justice", "abstract"), ("peace", "abstract"), ("war", "abstract"),
-        ("music", "abstract"), ("art", "abstract"), ("history", "abstract"), ("future", "abstract"), ("memory", "abstract"),
-    ]
-    return [NounItem(noun=n, category=c) for n, c in rows]
-
-
-def load_nouns(path: str | None, max_nouns: int | None) -> List[NounItem]:
-    if not path:
-        rows = default_noun_catalog()
-        return rows[:max_nouns] if max_nouns else rows
-
-    out: List[NounItem] = []
-    p = Path(path)
-    if not p.exists():
-        raise FileNotFoundError(f"nouns file not found: {path}")
-
-    for line in p.read_text(encoding="utf-8").splitlines():
-        s = line.strip()
-        if not s or s.startswith("#"):
-            continue
-        if "," in s:
-            noun, cat = [x.strip() for x in s.split(",", 1)]
-            out.append(NounItem(noun=noun, category=cat or "uncategorized"))
-        else:
-            out.append(NounItem(noun=s, category="uncategorized"))
-
-    if max_nouns:
-        out = out[:max_nouns]
-    return out
+from stage56_mass_term_catalog import TermItem, load_terms, term_prompts
 
 
 class GateCollector:
@@ -142,16 +78,6 @@ def run_prompt(model, tok, text: str):
     inp = {k: v.to(device) for k, v in inp.items()}
     with torch.inference_mode():
         return model(**inp, use_cache=False, return_dict=True)
-
-
-def noun_prompts(noun: str) -> List[str]:
-    return [
-        f"This is a {noun}",
-        f"I saw a {noun}",
-        f"People discuss {noun}",
-        f"The {noun} is often",
-        f"A {noun} can be",
-    ]
 
 
 def topk_indices(vec: np.ndarray, k: int) -> np.ndarray:
@@ -1207,6 +1133,7 @@ def main():
     parser.add_argument("--dtype", default="float16")
     parser.add_argument("--local-files-only", action="store_true", default=True)
     parser.add_argument("--nouns-file", default="", help="Optional CSV-like lines: noun,category")
+    parser.add_argument("--terms-file", default="", help="Optional CSV-like lines: term,category")
     parser.add_argument("--max-nouns", type=int, default=0)
     parser.add_argument("--top-signature-k", type=int, default=120)
     parser.add_argument("--reuse-threshold", type=int, default=5)
@@ -1234,9 +1161,9 @@ def main():
     out_dir = Path(args.output_dir) if args.output_dir else Path(f"tempdata/deepseek7b_noun_scan_{ts}")
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    nouns = load_nouns(args.nouns_file or None, args.max_nouns if args.max_nouns > 0 else None)
-    if len(nouns) < 2:
-        raise ValueError("Need at least 2 nouns to run comparison.")
+    terms: List[TermItem] = load_terms(args.terms_file or args.nouns_file or None, args.max_nouns if args.max_nouns > 0 else None)
+    if len(terms) < 2:
+        raise ValueError("Need at least 2 terms to run comparison.")
 
     t0 = time.time()
     model, tok = load_model(args.model_id, args.dtype, args.local_files_only)
@@ -1246,21 +1173,21 @@ def main():
         d_ff = model.model.layers[0].mlp.gate_proj.out_features
         total_neurons = n_layers * d_ff
 
-        sums = {x.noun: np.zeros(total_neurons, dtype=np.float64) for x in nouns}
-        counts = {x.noun: 0 for x in nouns}
-        categories = {x.noun: x.category for x in nouns}
+        sums = {x.term: np.zeros(total_neurons, dtype=np.float64) for x in terms}
+        counts = {x.term: 0 for x in terms}
+        categories = {x.term: x.category for x in terms}
 
-        for it in nouns:
-            for p in noun_prompts(it.noun):
+        for it in terms:
+            for p in term_prompts(it.term, it.category):
                 collector.reset()
                 _ = run_prompt(model, tok, p)
                 flat = collector.get_flat()
-                sums[it.noun] += flat
-                counts[it.noun] += 1
+                sums[it.term] += flat
+                counts[it.term] += 1
 
-        noun_names = [x.noun for x in nouns]
-        noun_categories = [x.category for x in nouns]
-        mat = np.zeros((len(nouns), total_neurons), dtype=np.float32)
+        noun_names = [x.term for x in terms]
+        noun_categories = [x.category for x in terms]
+        mat = np.zeros((len(terms), total_neurons), dtype=np.float32)
         for i, nm in enumerate(noun_names):
             mat[i] = (sums[nm] / max(counts[nm], 1)).astype(np.float32)
 
@@ -1270,6 +1197,7 @@ def main():
 
         signatures: List[np.ndarray] = []
         noun_records = []
+        term_records = []
         layer_usage = np.zeros(n_layers, dtype=np.int64)
         all_signature_indices: List[int] = []
 
@@ -1284,6 +1212,18 @@ def main():
             noun_records.append(
                 {
                     "noun": nm,
+                    "category": categories[nm],
+                    "signature_size": int(len(sig)),
+                    "signature_top_indices": [int(x) for x in sig.tolist()],
+                    "signature_layer_distribution": ld,
+                    "signature_layer_centroid": centroid,
+                    "mean_activation": float(mat[i].mean()),
+                    "l2_norm": float(np.linalg.norm(mat[i])),
+                }
+            )
+            term_records.append(
+                {
+                    "term": nm,
                     "category": categories[nm],
                     "signature_size": int(len(sig)),
                     "signature_top_indices": [int(x) for x in sig.tolist()],
@@ -1367,21 +1307,24 @@ def main():
                 seed=args.seed,
             )
 
-        mechanism_scorecard = build_mechanism_scorecard(regularity=regularity, causal_ablation=causal_ablation, n_nouns=len(nouns))
+        mechanism_scorecard = build_mechanism_scorecard(regularity=regularity, causal_ablation=causal_ablation, n_nouns=len(terms))
 
         result = {
             "model_id": args.model_id,
             "device": str(next(model.parameters()).device),
             "runtime_sec": float(time.time() - t0),
             "config": {
-                "n_nouns": len(nouns),
+                "n_nouns": len(terms),
+                "n_terms": len(terms),
                 "n_layers": n_layers,
                 "d_ff": d_ff,
                 "total_neurons": total_neurons,
                 "top_signature_k": args.top_signature_k,
                 "reuse_threshold": args.reuse_threshold,
+                "input_mode": "term",
             },
             "noun_records": noun_records,
+            "term_records": term_records,
             "category_prototypes": dict(sorted(category_prototypes.items())),
             "top_reused_neurons": top_reused_records,
             "regularity": regularity,
@@ -1397,7 +1340,7 @@ def main():
             "# Mass Noun Encoding Scan Report",
             "",
             "## Core Findings",
-            f"- Nouns scanned: {len(nouns)}",
+            f"- Terms scanned: {len(terms)}",
             f"- Neuron space: {total_neurons} ({n_layers} layers x {d_ff} d_ff)",
             f"- Reused neurons (>= {args.reuse_threshold} nouns): {regularity['reused_neuron_count']} ({regularity['reused_neuron_ratio']:.6f})",
             f"- Layer usage entropy (normalized): {regularity['layer_usage_entropy_norm']:.4f}",

@@ -21,6 +21,7 @@ from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 import numpy as np
 
 from agi_research_result_schema import build_result_payload, write_result_bundle
+from stage56_mass_scan_io import row_term, scan_term_rows
 
 
 def jaccard(a: Iterable[int], b: Iterable[int]) -> float:
@@ -87,10 +88,10 @@ def load_scan(path: Path) -> Dict:
 
 def run_probe(scan_json: Path) -> Dict:
     scan = load_scan(scan_json)
-    rows = scan.get("noun_records") or []
+    rows = scan_term_rows(scan)
     noun_map = {}
     for r in rows:
-        key = normalize_key(r.get("noun", ""))
+        key = normalize_key(row_term(r))
         if key:
             noun_map[key] = r
 

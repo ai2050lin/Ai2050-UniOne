@@ -61,6 +61,46 @@ CASE_GROUPS = [
     },
 ]
 
+OPTIONAL_CASE_GROUPS = [
+    {
+        "label": "glm_real",
+        "model_id": "zai-org/GLM-4-9B-Chat-HF",
+        "model_root": ROOT / "tempdata" / "stage56_real_category_closure_block_glm_real_20260318" / "glm4_9b_chat_hf",
+    },
+]
+
+
+def parse_case_group_spec(text: str) -> Dict[str, object]:
+    parts = [part.strip() for part in text.split("|")]
+    if len(parts) != 3 or not all(parts):
+        raise ValueError(
+            "case group spec must use 'label|model_id|model_root' format"
+        )
+    return {
+        "label": parts[0],
+        "model_id": parts[1],
+        "model_root": Path(parts[2]),
+    }
+
+
+def build_case_groups(extra_specs: Sequence[str], include_defaults: bool = True) -> List[Dict[str, object]]:
+    groups = list(CASE_GROUPS) if include_defaults else []
+    present_labels = {str(group["label"]) for group in groups}
+    if include_defaults:
+        for group in OPTIONAL_CASE_GROUPS:
+            model_root = Path(group["model_root"])
+            if model_root.exists() and str(group["label"]) not in present_labels:
+                groups.append(group)
+                present_labels.add(str(group["label"]))
+    for text in extra_specs:
+        group = parse_case_group_spec(text)
+        label = str(group["label"])
+        if label in present_labels:
+            continue
+        groups.append(group)
+        present_labels.add(label)
+    return groups
+
 
 def write_json(path: Path, payload: Dict[str, object]) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -141,6 +181,8 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--random-repeats", type=int, default=2)
     ap.add_argument("--score-alpha", type=float, default=256.0)
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--skip-default-groups", action="store_true")
+    ap.add_argument("--extra-case-groups", nargs="*", default=[])
     ap.add_argument(
         "--output-dir",
         default=str(ROOT / "tests" / "codex_temp" / "stage56_multicategory_strong_weak_taxonomy_20260318"),
@@ -155,7 +197,7 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     groups_by_model: Dict[str, List[Dict[str, object]]] = defaultdict(list)
-    for group in CASE_GROUPS:
+    for group in build_case_groups(args.extra_case_groups, include_defaults=not args.skip_default_groups):
         groups_by_model[str(group["model_id"])].append(group)
 
     case_rows: List[Dict[str, object]] = []

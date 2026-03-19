@@ -28,6 +28,8 @@ import numpy as np
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
+from stage56_mass_term_catalog import pool_term_prompts
+
 SCHEMA_VERSION = "agi.deepseek.structure_scan.v1"
 POOL_ORDER = ("survey", "deep", "closure")
 POOL_TOPK = {
@@ -285,37 +287,7 @@ def run_prompt(model, tok, text: str):
 
 
 def prompts_for_item(item: LexemeItem, pool: str) -> List[str]:
-    term = item.term
-    if pool == "survey":
-        return [
-            f"This is {term}.",
-            f"People often discuss {term}.",
-            f"The concept {term} belongs to",
-        ]
-    if pool == "deep":
-        return [
-            f"This is {term}.",
-            f"I saw {term} yesterday.",
-            f"The concept {term} is related to",
-            f"When experts discuss {term}, they often mention",
-            f"The role of {term} in a larger system is",
-            f"Compared with similar concepts, {term} is",
-            f"A definition of {term} is",
-        ]
-    if pool == "closure":
-        return [
-            f"This is {term}.",
-            f"A precise definition of {term} is",
-            f"The family of {term} can be described as",
-            f"The key attribute of {term} is",
-            f"The relation between {term} and nearby concepts is",
-            f"In a reasoning chain, {term} usually leads to",
-            f"The stage-conditioned continuation of {term} is",
-            f"An incorrect family assignment for {term} would be",
-            f"Under a protocol change, {term} should still preserve",
-            f"The minimal explanation for {term} is",
-        ]
-    raise ValueError(f"unknown pool: {pool}")
+    return pool_term_prompts(item.term, item.category, pool)
 
 
 def topk_with_values(vec: np.ndarray, k: int) -> Tuple[np.ndarray, np.ndarray]:

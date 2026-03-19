@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import Dict, Iterable, List, Sequence, Set, Tuple
 
 from agi_research_result_schema import build_result_payload, write_result_bundle
+from stage56_mass_scan_io import row_term, scan_term_rows
 
 
 def read_json(path: Path) -> Dict:
@@ -54,8 +55,8 @@ def discover_mass_files(root: Path, filename: str) -> List[Path]:
 def build_maps(mass_obj: Dict, top_k: int) -> Tuple[Dict[str, Set[int]], Dict[str, Set[int]], Dict[str, str]]:
     noun_map: Dict[str, Set[int]] = {}
     noun_cat_map: Dict[str, str] = {}
-    for row in (mass_obj.get("noun_records") or []):
-        noun = str(row.get("noun", "")).strip().lower()
+    for row in scan_term_rows(mass_obj):
+        noun = row_term(row).strip().lower()
         cat = str(row.get("category", "")).strip().lower()
         sig = [int(x) for x in (row.get("signature_top_indices") or [])[:top_k]]
         if noun and sig:
@@ -204,7 +205,7 @@ def main() -> None:
     for p in files:
         try:
             obj = read_json(p)
-            noun_records = obj.get("noun_records") or []
+            noun_records = scan_term_rows(obj)
             if len(noun_records) < max(1, args.min_nouns):
                 continue
             noun_map, cat_map, noun_cat_map = build_maps(obj, top_k=args.top_k)

@@ -23,6 +23,12 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
+FRONTIER_MASS_RATIOS = tuple(
+    [round(i / 100.0, 2) for i in range(1, 51)]
+    + [0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95]
+)
+
+
 def build_contrast_pairs() -> Dict[str, List[Dict[str, str]]]:
     style_subjects = [
         ("apple", "an apple"),
@@ -141,6 +147,28 @@ def build_contrast_pairs() -> Dict[str, List[Dict[str, str]]]:
     return {"style": style_pairs, "logic": logic_pairs, "syntax": syntax_pairs}
 
 
+def load_pairs_from_json(path: str) -> Dict[str, List[Dict[str, str]]]:
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    source = payload.get("pairs") if isinstance(payload.get("pairs"), dict) else payload
+    out: Dict[str, List[Dict[str, str]]] = {}
+    for dim in ("style", "logic", "syntax"):
+        rows = list(source.get(dim) or [])
+        cleaned: List[Dict[str, str]] = []
+        for idx, row in enumerate(rows):
+            if not isinstance(row, dict):
+                continue
+            a = str(row.get("a", "")).strip()
+            b = str(row.get("b", "")).strip()
+            if not a or not b:
+                continue
+            pair_id = str(row.get("id", f"{dim}_pair_{idx:04d}")).strip() or f"{dim}_pair_{idx:04d}"
+            cleaned.append({"id": pair_id, "a": a, "b": b})
+        if not cleaned:
+            raise ValueError(f"pairs json missing valid rows for dimension: {dim}")
+        out[dim] = cleaned
+    return out
+
+
 def sample_pairs(pairs: List[Dict[str, str]], max_pairs: int, seed: int, dim_name: str) -> List[Dict[str, str]]:
     if max_pairs <= 0 or max_pairs >= len(pairs):
         return pairs
@@ -158,11 +186,15 @@ class GateCollector:
         self.buffers: List[torch.Tensor | None] = [None for _ in self.layers]
         self.handles = []
         for li, layer in enumerate(self.layers):
-            self.handles.append(layer.mlp.gate_proj.register_forward_hook(self._mk_hook(li)))
+            gate_module, gate_width = resolve_gate_module_and_width(layer)
+            self.handles.append(gate_module.register_forward_hook(self._mk_hook(li, gate_width)))
 
-    def _mk_hook(self, layer_idx: int):
+    def _mk_hook(self, layer_idx: int, gate_width: int):
         def _hook(_module, _inputs, output):
-            self.buffers[layer_idx] = output[0, -1, :].detach().float().cpu()
+            vec = output[0, -1, :].detach().float().cpu()
+            if gate_width > 0 and vec.shape[-1] != gate_width:
+                vec = vec[:gate_width]
+            self.buffers[layer_idx] = vec
             return output
 
         return _hook
@@ -199,6 +231,23 @@ def load_model(model_id: str, dtype_name: str, local_files_only: bool):
     return model, tok
 
 
+def resolve_gate_module_and_width(layer) -> Tuple[torch.nn.Module, int]:
+    mlp = layer.mlp
+    if hasattr(mlp, "gate_proj"):
+        gate_module = mlp.gate_proj
+        gate_width = int(getattr(gate_module, "out_features", 0))
+        return gate_module, gate_width
+    if hasattr(mlp, "gate_up_proj"):
+        gate_module = mlp.gate_up_proj
+        down_proj = getattr(mlp, "down_proj", None)
+        gate_width = int(getattr(down_proj, "in_features", 0))
+        if gate_width <= 0:
+            out_features = int(getattr(gate_module, "out_features", 0))
+            gate_width = out_features // 2 if out_features > 0 else 0
+        return gate_module, gate_width
+    raise AttributeError(f"Unsupported MLP gate module layout: {type(mlp).__name__}")
+
+
 def run_prompt(model, tok, text: str):
     device = next(model.parameters()).device
     inp = tok(text, return_tensors="pt")
@@ -214,6 +263,118 @@ def topk_indices(vec: np.ndarray, k: int) -> np.ndarray:
     idx = np.argpartition(vec, -k)[-k:]
     idx = idx[np.argsort(vec[idx])[::-1]]
     return idx
+
+
+def select_desc_indices(vec: np.ndarray, k: int, positive_only: bool = False) -> np.ndarray:
+    arr = np.asarray(vec, dtype=np.float64)
+    mask = np.isfinite(arr)
+    if positive_only:
+        mask &= arr > 0.0
+    idx = np.flatnonzero(mask)
+    if idx.size == 0:
+        return np.array([], dtype=np.int64)
+    order = np.argsort(arr[idx])[::-1]
+    if int(k) > 0:
+        order = order[: min(int(k), order.size)]
+    return idx[order].astype(np.int64)
+
+
+def cumulative_mass_indices(vec: np.ndarray, mass_ratio: float) -> np.ndarray:
+    arr = np.asarray(vec, dtype=np.float64)
+    idx = select_desc_indices(arr, 0, positive_only=True)
+    if idx.size == 0:
+        return np.array([], dtype=np.int64)
+    target = float(np.clip(mass_ratio, 0.0, 1.0))
+    if target <= 0.0:
+        return np.array([], dtype=np.int64)
+    total = float(arr[idx].sum())
+    if total <= 1e-12:
+        return np.array([], dtype=np.int64)
+    csum = np.cumsum(arr[idx], dtype=np.float64)
+    cutoff = int(np.searchsorted(csum, target * total, side="left")) + 1
+    return idx[:cutoff].astype(np.int64)
+
+
+def layer_coverage_stats(indices: np.ndarray, d_ff: int, n_layers: int) -> Dict[str, object]:
+    if indices.size == 0:
+        return {"covered_layers": [], "covered_layer_count": 0, "covered_layer_ratio": 0.0}
+    layers = sorted({int(i // d_ff) for i in indices.tolist() if 0 <= int(i // d_ff) < n_layers})
+    return {
+        "covered_layers": layers,
+        "covered_layer_count": len(layers),
+        "covered_layer_ratio": float(len(layers) / max(1, n_layers)),
+    }
+
+
+def build_frontier_curve(
+    mean_abs: np.ndarray,
+    selected_idx: np.ndarray,
+    d_ff: int,
+    n_layers: int,
+    mass_ratios: Sequence[float],
+) -> Tuple[List[Dict[str, object]], Dict[str, np.ndarray]]:
+    curve: List[Dict[str, object]] = []
+    curve_indices: Dict[str, np.ndarray] = {}
+    selected_count = max(1, int(selected_idx.size))
+    for raw_ratio in mass_ratios:
+        ratio = float(np.clip(raw_ratio, 0.0, 1.0))
+        key = f"{int(round(ratio * 100.0)):02d}"
+        idx = cumulative_mass_indices(mean_abs, ratio)
+        curve_indices[key] = idx
+        coverage = layer_coverage_stats(idx, d_ff, n_layers)
+        curve.append(
+            {
+                "mass_ratio": ratio,
+                "neuron_count": int(idx.size),
+                "compaction_ratio": float(idx.size / selected_count),
+                "layer_coverage_ratio": float(coverage["covered_layer_ratio"]),
+            }
+        )
+    return curve, curve_indices
+
+
+def summarize_pair_frontier(
+    abs_delta: np.ndarray,
+    top_k: int,
+    d_ff: int,
+    n_layers: int,
+) -> Dict[str, object]:
+    selected_idx = select_desc_indices(abs_delta, top_k, positive_only=True)
+    curve, _ = build_frontier_curve(abs_delta, selected_idx, d_ff, n_layers, FRONTIER_MASS_RATIOS)
+    return {
+        "selected_neuron_count": int(selected_idx.size),
+        "frontier_curve": curve,
+    }
+
+
+def support_profile(mean_abs: np.ndarray, selected_idx: np.ndarray, d_ff: int, n_layers: int) -> Dict[str, object]:
+    mass10 = cumulative_mass_indices(mean_abs, 0.10)
+    mass25 = cumulative_mass_indices(mean_abs, 0.25)
+    mass50 = cumulative_mass_indices(mean_abs, 0.50)
+    mass80 = cumulative_mass_indices(mean_abs, 0.80)
+    mass95 = cumulative_mass_indices(mean_abs, 0.95)
+    frontier_curve, frontier_indices = build_frontier_curve(mean_abs, selected_idx, d_ff, n_layers, FRONTIER_MASS_RATIOS)
+    return {
+        "selected_neuron_count": int(selected_idx.size),
+        "selected_neuron_ratio": float(selected_idx.size / max(1, mean_abs.shape[0])),
+        "mass10_neuron_count": int(mass10.size),
+        "mass25_neuron_count": int(mass25.size),
+        "mass50_neuron_count": int(mass50.size),
+        "mass80_neuron_count": int(mass80.size),
+        "mass95_neuron_count": int(mass95.size),
+        "mass10_layer_coverage": layer_coverage_stats(mass10, d_ff, n_layers),
+        "mass25_layer_coverage": layer_coverage_stats(mass25, d_ff, n_layers),
+        "mass50_layer_coverage": layer_coverage_stats(mass50, d_ff, n_layers),
+        "mass80_layer_coverage": layer_coverage_stats(mass80, d_ff, n_layers),
+        "mass95_layer_coverage": layer_coverage_stats(mass95, d_ff, n_layers),
+        "_mass10_indices": mass10,
+        "_mass25_indices": mass25,
+        "_mass50_indices": mass50,
+        "_mass80_indices": mass80,
+        "_mass95_indices": mass95,
+        "frontier_curve": frontier_curve,
+        "_frontier_curve_indices": frontier_indices,
+    }
 
 
 def split_layer_profile(flat_vec: np.ndarray, d_ff: int, n_layers: int) -> List[float]:
@@ -280,6 +441,8 @@ def analyze_dimension(
     top_k: int,
     d_ff: int,
     n_layers: int,
+    preview_limit: int,
+    emit_pair_frontier: bool,
 ) -> Dict[str, object]:
     pair_rows = []
     deltas = []
@@ -301,15 +464,22 @@ def analyze_dimension(
                 "b": p["b"],
                 "delta_l2": float(np.linalg.norm(delta)),
                 "delta_mean_abs": float(np.mean(np.abs(delta))),
+                **(
+                    summarize_pair_frontier(np.abs(delta), top_k, d_ff, n_layers)
+                    if emit_pair_frontier
+                    else {}
+                ),
             }
         )
 
     delta_mat = np.stack(deltas, axis=0) if deltas else np.zeros((0, d_ff * n_layers), dtype=np.float32)
     abs_mat = np.stack(abs_deltas, axis=0) if abs_deltas else np.zeros((0, d_ff * n_layers), dtype=np.float32)
     mean_abs = np.mean(abs_mat, axis=0) if abs_mat.size else np.zeros((d_ff * n_layers,), dtype=np.float32)
-    top_idx = topk_indices(mean_abs, top_k)
+    selection_mode = "top_k" if int(top_k) > 0 else "all_effective"
+    selected_idx = select_desc_indices(mean_abs, top_k, positive_only=True)
+    preview_idx = selected_idx[: max(1, int(preview_limit))]
     top_rows = []
-    for idx in top_idx.tolist():
+    for idx in preview_idx.tolist():
         li = int(idx // d_ff)
         ni = int(idx % d_ff)
         top_rows.append({"flat_index": int(idx), "layer": li, "neuron": ni, "mean_abs_delta": float(mean_abs[idx])})
@@ -324,9 +494,11 @@ def analyze_dimension(
             pair_cos.append(cosine(delta_mat[i], delta_mat[j]))
 
     rank_stats = energy_rank_stats(delta_mat) if delta_mat.shape[0] > 0 else {}
+    support = support_profile(mean_abs, selected_idx, d_ff, n_layers)
 
     return {
         "dimension": dim_name,
+        "selection_mode": selection_mode,
         "n_pairs": len(pairs),
         "pairs": pair_rows,
         "mean_pair_delta_l2": float(np.mean([x["delta_l2"] for x in pair_rows])) if pair_rows else 0.0,
@@ -336,9 +508,29 @@ def analyze_dimension(
         "layer_profile_abs_delta_norm": layer_profile_norm,
         "generic_top_neurons": top_rows,
         "top_neuron_indices": [int(x["flat_index"]) for x in top_rows],
+        "selected_neuron_count": int(support["selected_neuron_count"]),
+        "selected_neuron_ratio": float(support["selected_neuron_ratio"]),
+        "mass10_neuron_count": int(support["mass10_neuron_count"]),
+        "mass25_neuron_count": int(support["mass25_neuron_count"]),
+        "mass50_neuron_count": int(support["mass50_neuron_count"]),
+        "mass80_neuron_count": int(support["mass80_neuron_count"]),
+        "mass95_neuron_count": int(support["mass95_neuron_count"]),
+        "mass10_layer_coverage": support["mass10_layer_coverage"],
+        "mass25_layer_coverage": support["mass25_layer_coverage"],
+        "mass50_layer_coverage": support["mass50_layer_coverage"],
+        "mass80_layer_coverage": support["mass80_layer_coverage"],
+        "mass95_layer_coverage": support["mass95_layer_coverage"],
+        "frontier_curve": support["frontier_curve"],
         "rank_stats": rank_stats,
+        "selected_indices": selected_idx,
         "delta_mat": delta_mat,
         "mean_abs_vec": mean_abs,
+        "mass10_indices": support["_mass10_indices"],
+        "mass25_indices": support["_mass25_indices"],
+        "mass50_indices": support["_mass50_indices"],
+        "mass80_indices": support["_mass80_indices"],
+        "mass95_indices": support["_mass95_indices"],
+        "frontier_curve_indices": support["_frontier_curve_indices"],
     }
 
 
@@ -395,15 +587,17 @@ def build_specific_top_neurons(
     top_k: int,
     d_ff: int,
     dim_names: Sequence[str],
+    preview_limit: int,
 ) -> None:
     vecs = {d: np.asarray(dims_out[d]["mean_abs_vec"], dtype=np.float32) for d in dim_names}
     for dim in dim_names:
         others = [vecs[x] for x in dim_names if x != dim]
         other_mean = np.mean(np.stack(others, axis=0), axis=0) if others else np.zeros_like(vecs[dim])
         spec_vec = vecs[dim] - other_mean
-        idx = topk_indices(spec_vec, top_k)
+        idx = select_desc_indices(spec_vec, top_k, positive_only=True)
+        preview_idx = idx[: max(1, int(preview_limit))]
         rows = []
-        for i in idx.tolist():
+        for i in preview_idx.tolist():
             li = int(i // d_ff)
             ni = int(i % d_ff)
             rows.append(
@@ -418,16 +612,22 @@ def build_specific_top_neurons(
             )
         dims_out[dim]["specific_top_neurons"] = rows
         dims_out[dim]["top_neuron_indices"] = [int(x["flat_index"]) for x in rows]
+        dims_out[dim]["specific_selected_count"] = int(idx.size)
+        dims_out[dim]["specific_selected_ratio"] = float(idx.size / max(1, spec_vec.shape[0]))
+        dims_out[dim]["specific_indices"] = idx
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model-id", default="deepseek-ai/DeepSeek-R1-Distill-Qwen-7B")
+    parser.add_argument("--pairs-json", default="")
     parser.add_argument("--dtype", default="float16")
     parser.add_argument("--local-files-only", action="store_true", default=True)
     parser.add_argument("--top-k", type=int, default=160)
     parser.add_argument("--max-pairs-per-dim", type=int, default=10)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--preview-limit", type=int, default=256)
+    parser.add_argument("--emit-pair-frontier", action="store_true")
     parser.add_argument("--output-dir", default="")
     args = parser.parse_args()
 
@@ -435,7 +635,7 @@ def main():
     out_dir = Path(args.output_dir) if args.output_dir else Path(f"tempdata/deepseek7b_multidim_encoding_probe_{ts}")
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    all_pairs = build_contrast_pairs()
+    all_pairs = load_pairs_from_json(args.pairs_json) if str(args.pairs_json).strip() else build_contrast_pairs()
     for k in list(all_pairs.keys()):
         all_pairs[k] = sample_pairs(all_pairs[k], max(1, int(args.max_pairs_per_dim)), int(args.seed), k)
 
@@ -443,7 +643,7 @@ def main():
     collector = GateCollector(model)
     try:
         n_layers = len(model.model.layers)
-        d_ff = int(model.model.layers[0].mlp.gate_proj.out_features)
+        _, d_ff = resolve_gate_module_and_width(model.model.layers[0])
 
         dims_out = {}
         dim_names = ["style", "logic", "syntax"]
@@ -457,27 +657,59 @@ def main():
                 top_k=args.top_k,
                 d_ff=d_ff,
                 n_layers=n_layers,
+                preview_limit=args.preview_limit,
+                emit_pair_frontier=bool(args.emit_pair_frontier),
             )
 
-        build_specific_top_neurons(dims_out, int(args.top_k), d_ff, dim_names)
+        build_specific_top_neurons(dims_out, int(args.top_k), d_ff, dim_names, int(args.preview_limit))
 
         cross = {}
         for i in range(len(dim_names)):
             for j in range(i + 1, len(dim_names)):
                 a = dim_names[i]
                 b = dim_names[j]
-                ka = dims_out[a]["top_neuron_indices"]
-                kb = dims_out[b]["top_neuron_indices"]
+                ka_preview = dims_out[a]["top_neuron_indices"]
+                kb_preview = dims_out[b]["top_neuron_indices"]
+                ka_full = dims_out[a]["selected_indices"]
+                kb_full = dims_out[b]["selected_indices"]
                 pa = dims_out[a]["layer_profile_abs_delta_norm"]
                 pb = dims_out[b]["layer_profile_abs_delta_norm"]
+                ta = dims_out[a]["mass10_indices"]
+                tb = dims_out[b]["mass10_indices"]
+                qa = dims_out[a]["mass25_indices"]
+                qb = dims_out[b]["mass25_indices"]
+                ma = dims_out[a]["mass50_indices"]
+                mb = dims_out[b]["mass50_indices"]
+                ea = dims_out[a]["mass80_indices"]
+                eb = dims_out[b]["mass80_indices"]
+                curve_a = dims_out[a]["frontier_curve"]
+                curve_b = dims_out[b]["frontier_curve"]
+                curve_idx_a = dims_out[a]["frontier_curve_indices"]
+                curve_idx_b = dims_out[b]["frontier_curve_indices"]
+                curve_jaccard = []
+                for point_a, point_b in zip(curve_a, curve_b):
+                    ratio = float(point_a["mass_ratio"])
+                    key = f"{int(round(ratio * 100.0)):02d}"
+                    curve_jaccard.append(
+                        {
+                            "mass_ratio": ratio,
+                            "jaccard": jaccard(curve_idx_a[key], curve_idx_b[key]),
+                        }
+                    )
                 cross[f"{a}__{b}"] = {
-                    "top_neuron_jaccard": jaccard(ka, kb),
+                    "top_neuron_jaccard": jaccard(ka_preview, kb_preview),
+                    "effective_support_jaccard": jaccard(ka_full, kb_full),
+                    "mass10_jaccard": jaccard(ta, tb),
+                    "mass25_jaccard": jaccard(qa, qb),
+                    "mass50_jaccard": jaccard(ma, mb),
+                    "mass80_jaccard": jaccard(ea, eb),
                     "layer_profile_corr": pearson(pa, pb),
+                    "frontier_curve_jaccard": curve_jaccard,
                 }
 
         specificity = {}
         for dim in dim_names:
-            sel = np.asarray(dims_out[dim]["top_neuron_indices"], dtype=np.int64)
+            sel = np.asarray(dims_out[dim]["specific_indices"], dtype=np.int64)
             own_vals = []
             other_vals = []
             for d2 in dim_names:
@@ -501,8 +733,11 @@ def main():
             "model_id": args.model_id,
             "runtime_config": {
                 "top_k": int(args.top_k),
+                "selection_mode": "top_k" if int(args.top_k) > 0 else "all_effective",
                 "max_pairs_per_dim": int(args.max_pairs_per_dim),
                 "seed": int(args.seed),
+                "preview_limit": int(args.preview_limit),
+                "pairs_source": str(args.pairs_json).strip() if str(args.pairs_json).strip() else "built_in",
                 "n_layers": n_layers,
                 "d_ff": d_ff,
                 "total_neurons": int(n_layers * d_ff),
@@ -511,7 +746,19 @@ def main():
                 k: {
                     kk: vv
                     for kk, vv in dims_out[k].items()
-                    if kk not in {"delta_mat", "mean_abs_vec"}
+                    if kk
+                    not in {
+                        "delta_mat",
+                        "mean_abs_vec",
+                        "selected_indices",
+                        "specific_indices",
+                        "mass10_indices",
+                        "mass25_indices",
+                        "mass50_indices",
+                        "mass80_indices",
+                        "mass95_indices",
+                        "frontier_curve_indices",
+                    }
                 }
                 for k in dim_names
             },

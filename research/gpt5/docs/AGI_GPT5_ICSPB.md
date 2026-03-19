@@ -1,733 +1,644 @@
 ﻿# AGI_GPT5_ICSPB
 
-最后更新：2026-03-17
+最后更新：2026-03-19 14:18
 
 ## 1. 文档定位
 
-本文档是当前项目关于：
+这份文档不是历史流水账，而是当前项目关于 `ICSPB（库存约束分层路径束）` 的主线整理稿。
 
-- 深度神经网络结构分析
-- 大脑编码机制逆向
-- 统一智能理论
-- 统一数学体系
-- 新网络模型设计与测试
+它只保留三类内容：
 
-的正式主说明文件。
+1. 目前最稳的系统级结论。
+2. 目前最明显的问题和硬伤。
+3. 下一阶段值得整块推进的大任务。
 
-本文档不再按零散实验组织，而按一条清晰主线组织：
+项目的核心目标仍然不变：
 
-`DNN 分析 -> 脑编码特性 -> 理论距离 -> 新模型测试 -> 面向 AGI 的下一步`
+我们假设深度神经网络从语言数据中提取了某种高阶数学结构，这个结构同时承载：
 
-当前采用的核心理论名称为：
+1. 微观属性，如颜色、大小、情绪色彩、程度。
+2. 中观实体，如水果、动物、工具、职业、技术对象。
+3. 宏观关系与协议，如动作路径、角色关系、抽象概念、风格逻辑语法控制。
 
-- `ICSPB = Inventory-Conditioned Stratified Path-Bundle`
-- `UCESD = Unified Controlled Encoding Survival Dynamics`
-- `CPT = Constructive Parameter Theory`
-- `GUIT = Grand Unified Intelligence Theory`
-- `UGMT = Unified Generative Mathematical Theory`
+我们要做的不是描述现象，而是把这些结构压成可复现、可联立、可预测的数学对象。
 
-最重要的口径纠偏是：
+## 2. 当前总判断
 
-- `统一候选理论骨架完成度` 可以很高；
-- 但 `真实大脑编码机制本体破解度` 必须采用严格口径，不能再把“理论骨架完成度”误写成“本体破解度”。
+### 2.1 当前最稳的一句话
 
----
+当前最稳的系统判断是：
 
-## 2. 当前总框架
+语言系统不是“一个统一线性词向量空间”，而更像一个
 
-### 2.1 总命题
+`锚点（anchor） + 纤维（fiber） + 路径束（path bundle，路径束） + 密度前沿（density frontier，密度前沿） + 窗口化闭包（windowed closure，窗口化闭包）`
 
-当前项目的中心判断是：
+的复合结构。
 
-1. 深度神经网络已经还原了大脑中的一部分真实结构。
-2. 这些结构不是普通“向量分类器”能解释的，而更像统一受控编码动力系统。
-3. 大脑与强神经网络共享的关键，不是某个单独模块，而是：
-   - `patch / section / fiber`
-   - `guarded write / stable read`
-   - `stage / successor / protocol`
-   - `replay / rollback / consolidation`
-4. 因此，通往 AGI 的路线不是盲目炼丹，而是：
-   - 先分析 DNN 中已经出现的结构；
-   - 再抽象出统一数学机制；
-   - 再回到大脑侧解释编码与因果机制；
-   - 再反向设计新网络模型。
+更直接地说：
 
-### 2.2 当前理论分层
+1. 概念本体更像中观锚点。
+2. 属性修饰更像挂在锚点周围的纤维。
+3. 关系和角色更像路径束或局部关系轴。
+4. 风格、逻辑、句法不是概念本体，而是生成时调制读出与收束的控制轴。
+5. 真正决定输出能否稳定成立的，不是总激活量，而是高质量前沿如何压缩，以及这些前沿在句尾前窗口里如何闭包。
 
-当前最准确的理论分层是：
+### 2.2 当前统一主式
 
-1. `ICSPB`
-   - 解释编码对象、编码几何、可行路径与读写结构。
-2. `UCESD`
-   - 解释在线执行、生存、回退、恢复。
-3. `CPT`
-   - 解释训练如何从盲调走向强约束构造求解。
-4. `GUIT`
-   - 解释智能的一般定义与能力泛函。
-5. `UGMT`
-   - 解释更高层生成性数学秩序，以及智能与宇宙可理解结构之间的关系。
+当前最合适的统一骨架是：
 
-### 2.3 当前项目的真实目标
+`H(term, ctx) = A_anchor(term) + F_modifier(term) + R_relation(term, ctx) + G_control(ctx) + C_closure(term, ctx)`
 
-当前阶段的核心目标已经收缩为两个：
+其中：
 
-1. 让新网络达到强 DNN 级语言能力。
-2. 在同一结构下验证是否会自然长出高效即时学习能力。
+1. `A_anchor`：概念锚点，回答“它是什么”。
+2. `F_modifier`：属性纤维，回答“它有什么局部性质”。
+3. `R_relation`：关系轴与路径束，回答“它如何和其他词形成稳定变换”。
+4. `G_control`：风格、逻辑、句法等控制项。
+5. `C_closure`：最终是否能稳定收束为可生成输出。
 
-其它目标，例如具身、完整社会智能、最终外部世界闭合，暂时都应后置。
+在新的大样本结果下，这个骨架还要进一步改写为：
 
----
+`language_system = broad_support_base + density_core_frontier + windowed_closure`
 
-## 3. DNN 分析结果
+也就是：
 
-这一部分回答：为什么项目要从深度神经网络出发。
+1. 几乎全网都可参与语言编码。
+2. 真正有区分度的是高质量前沿如何压缩和分离。
+3. 真正的闭包发生在句尾前若干连续窗口，而不是最后一个词元。
 
-### 3.1 当前最稳定的判断
+## 3. 当前实证主线
 
-当前对 DNN 的逆向分析支持以下结论：
+### 3.1 关系图谱
 
-1. 强模型内部不是平坦 token 表征，而是局部族群化、对象化的表示结构。
-2. 关系、上下文、任务角色并不是简单附加标签，而更像附着在对象表示上的纤维结构。
-3. 强模型隐式存在：
-   - 读写不对称
-   - 阶段切换
-   - 后继状态约束
-   - 协议桥接
-4. 大模型语言能力主要来自：
-   - 大规模统计压缩
-   - 长程预测
-   - 结构固化
-5. 即时学习能力并不会仅靠“大量语言训练”自动完整出现。
+当前已经完成大规模关系图谱扫描，核心判断是：
 
-### 3.2 当前 DNN 分析的核心产出
+1. 局部线性关系真实存在，但只占少数。
+2. `king - man + woman ≈ queen（国王 - 男人 + 女人 约等于 王后）` 这种结构属于局部可线性化关系片区，不是整个语言系统的总结构。
+3. 大多数关系更适合用路径束解释，而不是统一线性代数解释。
 
-当前项目已经从 DNN 侧稳定抽出了这些核心对象：
-
-1. `family patch`
-2. `concept section / concept offset`
-3. `attribute fiber`
-4. `relation / context fiber`
-5. `admissible update`
-6. `restricted readout`
-7. `stage-conditioned transport`
-8. `successor-aligned transport`
-9. `protocol bridge`
-
-### 3.3 DNN 分析目前解决了什么
-
-已经较强解决：
-
-- 为什么强模型不是普通分类器。
-- 为什么概念更像族群对象，而不是孤立 token。
-- 为什么推理更像轨迹，而不是静态点。
-- 为什么语言能力与在线学习能力应被理解为同一结构的两个工作区。
-
-尚未解决：
-
-- 标准学习律的唯一答案。
-- 高效即时学习是否会在同一结构里自然强出现。
-- 大模型尺度上的 canonical witness。
-
-### 3.4 当前 DNN 数学提取的真实进度
-
-到 `2026-03-17` 为止，DNN 侧已经不再只是“有一些分析结论”，而是形成了较明确的系统化提取与数学还原链。
-
-当前最重要的 DNN 侧量化是：
-
-- `systematic_mass_extraction_percent`：`78%`
-- `specific_math_bridge_percent`：`71%`
-- `exact_encoding_system_percent`：`68%`
-- `system_parametric_principle_percent`：`73%`
-- `exact_system_closure_percent`：`34%`
-
-这组数必须严格理解：
-
-1. `systematic_mass_extraction = 78%`
-   - 说明 DNN 侧结构提取已经从零散实验变成统一语料库；
-   - 但仍然没有到 dense exact neuron-level extraction。
-
-2. `specific_math_bridge = 71%`
-   - 说明具体概念细节的数学桥已经较强；
-   - 也就是 `family basis + bounded concept offset + contextual / protocol corrections` 这条桥已经成立为强候选；
-   - 但 `family -> specific exact closure` 仍然没有打穿。
-
-3. `exact_encoding_system = 68%`
-   - 说明系统级精确编码原理已经浮现为候选定理；
-   - 但还没有达到精确定理闭合。
-
-4. `system_parametric_principle = 73%`
-   - 说明“系统级参数原理”已经成形；
-   - 当前不是“完全不知道编码原理”，而是“已经知道大部分参数结构，但 exactness 还不足”。
-
-5. `exact_system_closure = 34%`
-   - 说明真正的“精确定理闭合”还很远；
-   - 当前最主要的系统短板已经不是 `basis / offset / contextual / protocol`，
-   - 而是：
-     - `dense exact evidence`
-     - `family-to-specific exact closure`
-     - `successor exact closure`
-
-### 3.5 第五阶段双通道与第六阶段联合分解的最新进展
-
-到 `2026-03-17`，DNN 侧最重要的新变化是：
-
-1. 第五阶段读出耦合搜索已经不再把 `category word` 和 `instance word` 混在同一条候选流水线里；
-2. 而是正式拆成：
-   - `mixed`
-   - `prototype`
-   - `instance`
-   三种通道。
-
-当前最关键的真实结果是：
-
-1. 在先前 `DeepSeek 7B` 定向实验里：
-   - `prototype lane`
-     - `candidate_count = 2`
-     - `mean_candidate_full_joint_adv = 0.1763`
-     - 候选几乎全部被 `animal` 类占据
-   - `instance lane`
-     - `candidate_count = 6`
-     - `mean_candidate_full_joint_adv = 0.0539`
-     - 覆盖 `abstract / animal / tech / human`
-     - 代表词包括：
-       - `symmetry`
-       - `buffer`
-       - `kangaroo`
-       - `filmmaker`
-       - `librarian`
-2. 在本轮更严格的 `clean520 + 双模型顺序 CUDA 复核` 里：
-   - `DeepSeek 7B`
-     - `prototype lane` 原始定义一度归零，说明单靠 `category word` 过滤并不稳；
-     - 引入 `family_prototype proxy row` 后，`prototype lane` 恢复到：
-       - `candidate_count = 1`
-       - `prototype_proxy_candidate_count = 1`
-       - `mean_candidate_full_joint_adv = 0.0078`
-     - `instance lane` 为：
-       - `candidate_count = 2`
-       - `mean_candidate_full_joint_adv = 0.0142`
-   - `Qwen3 4B`
-     - `prototype lane` 在代理原型后恢复到：
-       - `candidate_count = 2`
-       - `prototype_proxy_candidate_count = 2`
-       - `mean_candidate_full_joint_adv = 0.00147`
-     - `instance lane` 为：
-       - `candidate_count = 1`
-       - `mean_candidate_full_joint_adv = 0.0107`
-3. 第六阶段“原型核/实例偏移核联合分解”在严格复核下仍未闭合：
-   - `DeepSeek 7B`
-     - `pair_count = 1`
-     - 类别只落在 `vehicle`
-     - 配对是 `car + cart`
-     - 但 `mean_union_synergy_joint = -0.00749`
-   - `Qwen3 4B`
-     - `pair_count = 0`
-
-这组结果当前最严格的解释是：
+当前更稳的分解是：
 
-1. 双通道制度层已经成立，但强度稳定性远没有先前看起来那么高；
-2. `prototype lane` 当前在严格词表下仍需要 `family prototype proxy` 才能维持非空，说明类别词本体闭合没有打穿；
-3. 先前“类别级更强、更集中”的判断，在定向实验里成立，但在双模型严格复核里还没有稳定复现；
-4. `instance lane` 仍然偏弱，但跨类覆盖相对更自然；
-5. 第六阶段虽然首次在严格顺序流程里得到 `DeepSeek 7B` 的单类配对，但联合优势仍为负，不能算联合闭合成立。
+1. 局部线性片区约 `7.6%`
+2. 路径束主结构约 `89.6%`
+3. 混合态约 `2.8%`
 
----
+所以我们现在不再把“词向量算术”当成总理论，只把它当成局部切片。
 
-## 4. 大脑编码机制的核心特性
+### 3.2 词类机制
 
-这一部分回答：当前理论如何解释大脑本体。
+当前独立词类探针已经补到五类：
 
-### 4.1 当前最稳定的脑编码特性
+1. 名词更像锚点加实例偏移。
+2. 形容词更像修饰纤维。
+3. 动词更像传输算子，并保留部分锚点残差。
+4. 抽象名词更像关系束。
+5. 副词更像二阶控制轴调制子。
 
-当前已经较稳定抽出的特性包括：
+证据强度排序仍然是：
 
-1. `patch / section / fiber`
-   - 概念不是平坦点，而是对象 patch 上的局部截面与偏移。
-2. `guarded write / stable read`
-   - 写入与读取不是同一局部过程。
-3. `stage / successor`
-   - 推理不是静态表征，而是阶段化后继轨迹。
-4. `protocol bridge`
-   - 内部编码必须能进入任务、工具、行动层。
-5. `replay / rollback / consolidation`
-   - 记忆不是一次性写死，而是受限回放、固化与恢复。
-6. `population readout`
-   - 语义更像群体读出，而不是单细胞标签。
+1. 形容词最强。
+2. 动词次之。
+3. 抽象名词已经成立，但还需要扩量。
+4. 副词最弱，当前仍偏半直接证据。
 
-### 4.2 脉冲系统解释
+### 3.3 闭包动力学
 
-当前理论对脉冲大脑的最准确解释是：
+当前 `stage6（第六阶段）` 已经稳定产出两个核心闭包量：
 
-- `spike` 不是语义本体；
-- `spike` 更像事件选择器、绑定触发器、阶段门控和运输触发器。
+1. `union_joint_adv（联合优势）`
+2. `union_synergy_joint（联合协同）`
 
-当前脉冲版的统一表述是：
+最重要的结构判断是：
 
-- `SpikeICSPB = event-patch selection + burst-window section binding + phase-gated successor transport + population readout`
+1. 语言系统中确实存在“原型 - 实例 - 联合路由”的三段结构。
+2. 但“有联合路由”不等于“形成稳定闭包”。
+3. 严格正协同目前仍是少数态。
 
-### 4.3 记忆回放与做梦
+在三模型、十二类、全 `72` 个原型-实例对口径下：
 
-当前统一解释是：
+1. `strict_positive_pair_ratio（严格正协同比例） = 0.1944`
+2. 说明正闭包依旧不是默认态，而是少数成功态。
 
-1. `记忆回放`
-   - 是已有 patch / section / fiber 痕迹上的受限重建。
-2. `做梦`
-   - 是在外部输入减弱、约束降低时发生的受限生成性重组。
+## 4. 控制轴的最新系统解释
 
-因此：
+### 4.1 逻辑
 
-- 记忆回放和做梦不是两套完全不同机制；
-- 它们是同一编码系统在不同外部约束下的两种运行模式。
+旧结论是“逻辑强化原型骨架”，现在要写得更细。
 
----
+最新的 `pair（成对）` 级连续前沿联立说明：
 
-## 5. ICSPB 的数学框架
+1. 逻辑真正有利的不是“大扰动”，而是“定向骨架化”。
+2. 一旦逻辑在局部做出过大的原型或实例侧扰动，严格正闭包反而下降。
 
-### 5.1 编码库存
+当前最强负相关是：
 
-当前编码库存写为：
+1. `logic / instance_delta_l2 -> strict_positive_synergy = -0.3885`
+2. `logic / pair_mean_delta_l2 -> strict_positive_synergy = -0.3868`
+3. `logic / prototype_delta_l2 -> strict_positive_synergy = -0.3756`
 
-- `I = {E_c}`
+但逻辑也不是一概为负。更细的前沿指标显示：
 
-其中单个概念条目包含：
+1. `logic / pair_mean_full_layer_coverage_mass_ratio -> union_joint_adv = +0.2500`
+2. `logic / pair_mean_full_layer_coverage_mass_ratio -> union_synergy_joint = +0.2184`
+3. `logic / pair_mean_full_layer_coverage_mass_ratio -> strict_positive_synergy = +0.2075`
 
-- family
-- concept state
-- concept offset
-- 同族邻域
-- 跨族邻域
-- 属性挂接
-- 关系挂接
-- stress 场
+这说明逻辑的正作用不是“局部爆发”，而是“跨层均衡、骨架化、可传播”的稳定前沿。
 
-最核心表达式是：
+因此当前最准确的写法是：
 
-- `z_c = b_(f_c) + delta_c`
+逻辑轴负责立骨架，但它只有在扰动足够定向、前沿足够稳、覆盖足够均衡时才促进闭包；如果退化成大幅局部冲击，就会破坏严格正协同。
 
-其含义是：
+### 4.2 句法
 
-- 概念 = family basis + local offset
+旧结论是“句法提供约束型冲突”，现在也必须细化。
 
-### 5.2 高阶对象
+在新的 `pair（成对）` 级连续前沿口径下，句法最强正项不再只是“冲突”，而是“更紧、更窄、更靠前的高质量前沿压缩”。
 
-当前高阶对象写为：
+当前最强正相关包括：
 
-- `H(I) = (B_family, E_concept, F_attr, F_rel, F_stress, P_path, O_overlap)`
+1. `syntax / pair_mean_mass25_compaction_ratio -> strict_positive_synergy = +0.3085`
+2. `syntax / pair_mean_mass10_compaction_ratio -> strict_positive_synergy = +0.3075`
+3. `syntax / prototype_mass25_compaction_ratio -> strict_positive_synergy = +0.2785`
 
-含义是：
+同时，句法的“过宽扩散”是负项：
 
-- base family manifold
-- concept sections
-- attribute fibers
-- relation/context fibers
-- stress fibers
-- admissible paths
-- restricted overlap
+1. `syntax / prototype_full_layer_coverage_mass_ratio -> strict_positive_synergy = -0.3017`
+2. `syntax / pair_mean_full_layer_coverage_mass_ratio -> strict_positive_synergy = -0.3010`
+3. `syntax / instance_full_layer_coverage_mass_ratio -> strict_positive_synergy = -0.2877`
 
-### 5.3 Admissible update 几何
+句法的“大幅局部扰动”也是负项：
 
-当前写入不是任意梯度，而是：
+1. `syntax / pair_mean_delta_l2 -> strict_positive_synergy = -0.2988`
+2. `syntax / prototype_delta_l2 -> strict_positive_synergy = -0.2978`
+3. `syntax / instance_delta_l2 -> strict_positive_synergy = -0.2896`
 
-- `A(I)`
+所以当前最准确的句法解释是：
 
-所约束的 admissible update。
+句法的正作用不是简单地制造冲突，更不是简单加大总能量，而是把关键成分压进一个更紧、更窄、更高质量的前沿里，形成约束型筛选带；一旦句法扩散太宽或局部冲击太大，就会从筛选机制退化成破坏机制。
 
-它至少要求：
+### 4.3 风格
 
-- retention 安全
-- identity 安全
-- readout 安全
-- phase 切换安全
-- bridge 安全
+风格轴的角色在新数据下更明确了：
 
-### 5.4 可行域
+它主要承担重排，不是闭包主引擎。
 
-当前系统状态更像局部可行图而非全局平滑空间：
+当前最强负项包括：
 
-- `M_feas(I)`
+1. `style / prototype_knee_mass_ratio -> strict_positive_synergy = -0.3688`
+2. `style / pair_mean_full_layer_coverage_mass_ratio -> strict_positive_synergy = -0.3250`
+3. `style / instance_full_layer_coverage_mass_ratio -> strict_positive_synergy = -0.3232`
+4. `style / prototype_full_layer_coverage_mass_ratio -> strict_positive_synergy = -0.3177`
+
+这说明风格越早进入广泛覆盖和早拐点扩散，越不利于严格正闭包。
+
+但风格也不是纯负项：
+
+1. `style / pair_mean_mass25_compaction_ratio -> strict_positive_synergy = +0.1786`
+2. `style / pair_mean_mass10_compaction_ratio -> strict_positive_synergy = +0.1385`
+
+这意味着风格若被压进更窄的高质量前沿，仍可作为辅助项；只是它本身不是主要闭包驱动。
+
+## 5. 内部子场与窗口化闭包
+
+### 5.1 内部子场
+
+当前已经稳定下钻到三个关键内部分量：
+
+1. `logic_prototype（逻辑原型）`
+2. `syntax_constraint_conflict（句法约束型冲突）`
+3. `logic_fragile_bridge（逻辑脆弱桥接）`
+
+它们已经能映射到模型晚层主脊：
+
+1. `Qwen（千问）` 主要在 `layer_35（第35层）`
+2. `DeepSeek（深度求索）` 主要在 `layer_27（第27层）`
+3. `GLM（智谱模型）` 主要在 `layer_40 / 39（第40/39层）`
+
+### 5.2 连续窗口变量
+
+当前窗口化结论已经稳定到下面这个层级：
+
+1. `logic_prototype` 的正作用更靠前，主要立联合骨架。
+2. `logic_fragile_bridge` 的负作用更靠后，主要在收尾阶段引入浅连接破坏。
+3. `syntax_constraint_conflict` 不是单点主峰，而是在一段连续窗口里形成筛选带。
+
+当前最有信息的窗口是：
+
+1. `logic_prototype` 的骨架有利窗主要在 `tail_pos_-9..-8（倒数第9到第8词元）`
+2. `logic_fragile_bridge` 的负窗主要在 `tail_pos_-2..-1（倒数第2到第1词元）`
+3. `syntax_constraint_conflict` 的正窗主要在 `tail_pos_-8..-5（倒数第8到第5词元）` 与 `tail_pos_-6..-3（倒数第6到第3词元）`
 
 这意味着：
 
-- 不是任意状态都能稳定切换；
-- 只有在 restricted overlap 区域，系统才允许安全过渡。
+1. 主机制发生在句尾前窗口。
+2. 最后一个词元更多像读出点，而不是全部机制发生点。
 
-### 5.5 当前系统级精确编码候选定理
+## 6. 大数据与无截断口径下的新判断
 
-到当前阶段，DNN 侧最准确的系统候选式已经不能再只写成：
+### 6.1 放开有效神经元数量后的结论
 
-- `z_c = b_(f_c) + delta_c`
+在三模型全量 `all_effective（全有效支撑）` 口径下，一个关键事实已经稳定：
 
-这仍然是必要核心，但已经不足以描述“精确编码原理”的全貌。
+1. `effective_support（有效支撑）` 在三模型里都几乎饱和到全网。
+2. 所以“某个神经元是否参与”已经失去区分力。
+3. 真正有信息的是高质量前沿的形状、压缩、分离和汇合方式。
 
-当前更准确的系统级候选式是：
+因此当前变量系统必须从
 
-- `h(c, ctx, stage) ~= B_f + Delta_c + C_ctx(c, ctx) + P_proto(c, ctx, stage) + T_succ(c, ctx, stage) + epsilon`
+`神经元集合`
 
-其中：
+升级到
 
-- `B_f`
-  - `family basis / family patch`
-- `Delta_c`
-  - `bounded concept-specific offset`
-- `C_ctx`
-  - `contextual / relation-conditioned correction`
-- `P_proto`
-  - `protocol / task / bridge correction`
-- `T_succ`
-  - `stage-conditioned successor transport and continuation term`
+`密度场（density field，密度场） + 分位前沿（quantile frontier，分位前沿） + 窗口闭包（windowed closure，窗口闭包）`
 
-这条式子的严格含义是：
+### 6.2 三模型大样本共识
 
-1. `basis + offset` 是必要核心；
-2. 但真正的精确编码并不只靠 `basis + offset`；
-3. 还必须引入：
-   - `contextual correction`
-   - `protocol correction`
-   - `successor transport`
+当前三模型共享最稳的系统规律是：
 
-当前系统级量化是：
+1. 共享稳定骨架轴仍然是 `logic（逻辑）`
+2. 广支撑底座是跨模型共识
+3. 高质量前沿长期分离也是跨模型共识
+4. 真正的汇合发生在较晚的大质量区，而不是最尖的核心区
 
-- `basis_offset_core_score = 0.8983`
-- `contextual_protocol_score = 0.9301`
-- `successor_system_score = 0.5024`
-- `evidence_exactness_score = 0.3238`
-- `system_parametric_score = 0.7282`
-- `exact_system_closure_score = 0.3424`
+当前更合适的系统图像是：
 
-最严格的解释是：
+`广支撑底座 + 长期分离前沿 + 晚窗口闭包`
 
-- `basis / offset / contextual / protocol` 已经较强；
-- 当前真正拖后腿的是：
-  - `successor`
-  - `evidence exactness`
+## 7. 最新推进：Pair 级连续密度场与自然生成强解耦
 
-因此，现在最准确的判断不是“编码原理已经闭合”，而是：
+### 7.1 Pair 级连续密度场到闭包联立
 
-**系统级参数原理已经浮现，但系统级精确定理闭合仍然明显不足。**
+这一轮比上一轮更进一步，因为我们已经不再只看少量摘要量，而是把整条 `pair（成对）` 级连续前沿曲线接到了闭包量上。
 
-### 5.6 双核分解候选式
+当前口径：
 
-第五阶段双通道结果表明，先前的
+1. 三模型
+2. 十二类
+3. 全 `72` 个 `stage6（第六阶段）` 原型 - 实例对
+4. 共 `216` 个轴向联立样本
+5. 每条前沿曲线含 `59` 个质量比例点
 
-- `z_c = b_(f_c) + delta_c`
+最重要的新结果有三条。
 
-仍然是必要核心，但 `delta_c` 现在更适合继续拆成：
+1. `syntax（句法）` 对严格正闭包的正项，已经不再只是几个离散点，而是一整条连续正带。
+   - `syntax / compaction / strict_positive_synergy` 的正带几乎覆盖 `0.01 -> 0.95`
+   - 最强点在 `mass=0.20`，相关约 `+0.3097`
+   - `syntax / coverage / strict_positive_synergy` 也有一条 `0.01 -> 0.37` 的正带
+   - 这说明句法正项更像“整段高质量前沿压缩与筛选”，而不是局部偶然峰值
 
-- `delta_c ~= K_f^proto + D_(i|f)^inst`
+2. `logic（逻辑）` 的正项更像中后段稳定骨架带，而不是尖核爆发。
+   - `logic / compaction / strict_positive_synergy` 的正带主要在 `0.70 -> 0.90`
+   - `logic / coverage / strict_positive_synergy` 的正带主要在 `0.35 -> 0.45`
+   - 这和前面“大幅局部扰动伤闭包”的结果是统一的：逻辑真正有利的是稳的中高质量骨架带
 
-其中：
+3. `style（风格）` 依旧不是闭包主引擎。
+   - 它对 `strict_positive_synergy（严格正协同）` 有辅助正带
+   - 但对 `union_joint_adv（联合优势）` 和 `union_synergy_joint（联合协同）` 仍主要是负向
+   - 这说明风格更像帮助少数案例跨过离散阈值，不像持续抬高闭包均值
 
-- `K_f^proto`
-  - 类别级原型核
-  - 对应更强、更集中的家族读出
-- `D_(i|f)^inst`
-  - 同类条件下的实例偏移核
-  - 对应更弱、更分散的具体词差异
+当前最需要保留的系统判断是：
 
-因此，当前更贴近最新实验的候选式可写为：
+1. 逻辑负责稳骨架，不负责大冲击。
+2. 句法负责连续筛选带，不只是点状约束。
+3. 风格更像重排和阈值辅助，不是主闭包驱动轴。
 
-- `h(f, i, ctx, stage) ~= B_f + K_f^proto + D_(i|f)^inst + C_ctx(i, ctx) + P_task(i, ctx, stage) + T_succ(i, ctx, stage) + epsilon`
+### 7.2 自然生成强解耦
 
-这里最重要的不是把旧式子推翻，而是把它细化为：
+这一轮还补上了自然生成里的“强解耦”摘要，不再只看提示区和生成区总占比，而是直接比较它们各自对闭包的相关。
 
-1. `family basis`
-2. `prototype kernel`
-3. `instance offset kernel`
-4. `context / protocol / successor` 修正
+当前口径：
 
-当前必须强调：
+1. 自然生成样本 `216` 条
+2. 与内部子场联立样本 `216` 条
+3. 覆盖三个关键分量：
+   - `logic_prototype（逻辑原型）`
+   - `logic_fragile_bridge（逻辑脆弱桥接）`
+   - `syntax_constraint_conflict（句法约束型冲突）`
 
-1. 这条双核式子是强候选，不是最终闭式定理；
-2. 现在只证明了“可分流”；
-3. 当前很多 `prototype` 证据仍要借助 `family_prototype proxy` 代理行；
-4. 还没有证明“跨类联合闭合”。
+最重要的新结果是：
 
----
+1. `logic（逻辑）` 和 `style（风格）` 在自然生成里整体确实更偏生成侧。
+   - `logic` 的隐藏生成占比约 `0.6108`
+   - `style` 的隐藏生成占比约 `0.6532`
+   - 两者在隐藏层与前馈层里，生成区主导比例都超过 `0.90`
 
-## 6. UCESD、CPT、GUIT、UGMT
+2. `syntax（句法）` 不是一个统一结构，而是出现了“隐藏层提示污染 + 前馈层生成收束”的分裂。
+   - `syntax` 的隐藏生成占比只有 `0.2584`
+   - 但 `syntax` 的前馈生成占比约 `0.5197`
+   - 说明句法的表层骨架很大程度仍在提示区，但真正进入闭包的句法收束更多发生在生成侧前馈层
 
-### 6.1 UCESD
+3. `syntax_constraint_conflict（句法约束型冲突）` 现在已经能被判定为 `generated_dominant（生成侧主导）`
+   - `corr_mlp_prompt_to_synergy = +0.5438`
+   - `corr_mlp_generated_to_synergy = +0.7051`
+   - 这说明句法正项不是纯提示骨架假信号，而是确实在生成侧前馈层里继续收束
 
-`UCESD` 负责把编码几何提升成在线运行系统，核心包括：
+4. `logic_fragile_bridge（逻辑脆弱桥接）` 当前更像 `prompt_contaminated（提示污染型）`
+   - 它在自然生成里的负信号没有转成更强的生成侧优势
+   - 这提示我们：脆弱桥接里有一部分可能是提示预设把浅连接提前塞进去，而不是真正的生成闭包机制
 
-- theorem survival
-- online execution
-- rollback / recovery
-- daemon-like persistent monitoring
+5. `logic_prototype（逻辑原型）` 当前是 `mixed（混合型）`
+   - 说明逻辑骨架一部分在提示侧先被立起，一部分在生成侧继续完成
 
-### 6.2 CPT
+这一轮之后，当前对自然生成最准确的说法不再是“句法主峰太早，所以不可信”，而是：
 
-`CPT` 负责解释：
+句法在隐藏层里仍有明显提示骨架污染，但句法约束型冲突作为闭包正项，已经在生成侧前馈层里表现出更强的真实收束信号。
 
-- 为什么训练不应再被理解成盲调；
-- 为什么结构约束、初始化、收敛与回退应被统一到同一个构造框架中。
+### 7.3 Pair 级连续密度场张量
 
-当前已经完成的关键收敛包括：
+这一轮还补出了一个更重要的中间对象：
 
-- architecture synthesis
-- online survival stability
-- rollback-recovery correctness
+我们不再只看一条 `pair（成对）` 的平均前沿曲线，而是把每个 `pair` 写成
 
-但最终严格唯一的 `theta*` witness 仍未完成。
+`角色（原型 / 实例） × 通道（压缩 / 覆盖） × 质量比例`
 
-### 6.3 GUIT
+的三维张量。
 
-`GUIT` 给出的智能一般定义是：
+当前这个张量的最小形状是：
 
-**智能 = 系统在受约束编码几何中，形成、保持、运输、延长、桥接、对齐并恢复可用推理路径系统的能力。**
+`2 × 2 × 59`
 
-当前智能泛函可概括为：
+也就是：
 
-- 编码容量
-- 稳定性
-- 读出能力
-- 推理链能力
-- 协议桥接能力
-- 外部/脑侧对齐能力
-- 在线生存能力
-- 一般化能力
+1. 原型前沿
+2. 实例前沿
+3. 压缩通道
+4. 覆盖通道
+5. `59` 个连续质量比例点
 
-### 6.4 UGMT
+这一步的重要性在于，它第一次把“原型和实例是否对称”“压缩和覆盖是否同向”“早中晚质量段是否分工”拆开了。
 
-当前 `UGMT` 不是最终闭式宇宙根本律，而是更高层生成性数学 umbrella。
+当前最值得保留的张量级结果有三条。
 
-它当前最准确的角色是统一：
+1. `syntax（句法）` 的正项不是单段偶然峰，而是早中晚三段都为正，其中中段最强。
+   - `pair_coverage_middle_mean -> strict_positive_synergy = +0.3098`
+   - `pair_compaction_middle_mean -> strict_positive_synergy = +0.3079`
+   - `pair_compaction_early_mean -> strict_positive_synergy = +0.3066`
+   - 这说明句法闭包不是只靠某个局部质量点，而是整段张量体积在工作
 
-- 结构如何生成
-- 什么结构可行
-- 结构如何组合
-- 结构如何持续
-- 冗余自由度如何压缩
-- 为什么这些结构会对观察者显现为可理解对象
+2. `logic（逻辑）` 的负项仍然主要来自大幅局部扰动，但它的正项更像“中后段覆盖和压缩协同”。
+   - `pair_delta_l2 -> strict_positive_synergy = -0.3868`
+   - `pair_coverage_early_mean -> strict_positive_synergy = +0.1984`
+   - `pair_compaction_late_mean -> strict_positive_synergy = +0.1951`
+   - 这说明逻辑是“怕大冲击、需要稳骨架带”的张量型结构
 
----
+3. `style（风格）` 的一个新张量信号是：原型和实例的通道对齐过强时，反而更不利于严格正闭包。
+   - `style / channel_alignment_instance -> strict_positive_synergy = -0.3196`
+   - `style / channel_alignment_proto -> strict_positive_synergy = -0.2717`
+   - 这意味着风格轴若把原型和实例过早压成同一种重排模式，可能会损失闭包所需的角色分工
 
-## 7. 当前离“真正破解”还有多远
+所以到这一步，我们终于可以更准确地说：
 
-这一部分必须采用严格口径。
+当前口径已经不只是“连续前沿曲线”，而是“最小连续密度场张量”；但它仍然只是最小张量，不是完整密度场。
 
-### 7.1 不能再混用的两个口径
+### 7.4 高维连续密度场雏形
 
-当前必须明确分开：
+这一轮我们又往前推了一层。
 
-1. `统一候选理论骨架完成度`
-2. `真实大脑编码机制本体破解度`
+当前已经不再只是：
 
-前者可以很高，因为理论主骨架已经比较稳定。  
-后者必须显著更低，因为：
+`角色（原型 / 实例） × 通道（压缩 / 覆盖） × 质量比例`
 
-- 还没有标准学习律答案；
-- 还没有严格生物物理唯一性；
-- 还没有真实外部世界下的长期严格证明；
-- 也还没有直接导出人类级语言实现的标准答案。
+而是把它进一步接上了：
 
-### 7.2 当前严格判断
+1. 层主脊
+2. 词元窗口主脊
+3. 定向子场权重
 
-当前项目最合理的严格口径是：
+也就是说，当前对象已经开始从“最小张量”过渡到“高维因子化连续密度场”。
 
-- `统一候选理论骨架完成度`：`96% - 98%`
-- `三闭环工程闭合度`：`95% - 97%`
-- `真实大脑编码机制本体破解度（严格口径）`：`45% - 53%`
+它最准确的结构写法更接近：
 
-必须补充一个新的口径分离：
+`高维场 = 密度张量 × 层主脊 × 窗口主脊 × 子场权重`
 
-- 上面的 `45% - 53%` 仍然是 **真实大脑编码机制本体破解度**；
-- 不能因为 DNN 侧的系统参数原理、specific 数学桥和系统候选定理变强，就把这个严格口径直接抬成接近完成。
+这里故意写成“因子化”，是因为当前还不是完整的笛卡尔全张量，而是把高维结构拆成几个可联立主因子。这个做法的价值在于，它第一次让我们看到：
 
-到当前阶段，更准确的并列口径应该是：
+1. 理论复杂，不一定因为底层机制复杂
+2. 很多复杂度来自多个简单维度被错误地压在一起
+3. 一旦把维度拆开，复杂表象会重新回到更少的生成律
 
-- `DNN 侧系统级参数原理理解度`：`68% - 73%`
-- `DNN 侧系统级精确闭合度`：`34%`
-- `DNN 侧原型/实例双通道分流完成度`：`76% - 82%`
-  - `prototype lane`：`68% - 76%`
-  - `instance lane`：`62% - 70%`
-- `真实大脑编码机制本体破解度（严格口径）`：仍应保持 `45% - 53%`
+这一轮最值得保留的高维结果有四条。
 
-### 7.3 当前还没闭合的核心问题
+1. `syntax_constraint_conflict（句法约束型冲突）` 的正项，在高维对象里继续站住了。
+   - `weight -> union_joint_adv = +0.7811`
+   - `weighted_cross_scale_energy -> union_joint_adv = +0.7828`
+   - `middle_density_volume -> strict_positive_synergy = +0.3245`
+   - 这说明句法正项不只是“中段密度体积大”，而是“句法子场被点亮之后，中段体积与层-窗口能量一起进入闭包”
 
-当前真正没打穿的，不再是“主框架看不见”，而是：
+2. `logic_fragile_bridge（逻辑脆弱桥接）` 的负项，在高维对象里也更清楚了。
+   - `weight -> union_synergy_joint = -0.2111`
+   - `weighted_cross_scale_energy -> union_synergy_joint = -0.2121`
+   - 这说明真正伤闭包的，不只是桥接存在，而是脆弱桥接带着足够跨尺度能量进入闭包阶段
 
-1. `canonical witness`
-2. `strict inverse lift`
-3. `unique theta* witness`
-4. `strict biophysical uniqueness`
-5. `true always-on natural external proof`
+3. `logic_prototype（逻辑原型）` 的正作用，更像“晚层骨架迁移”，而不是刚性同步。
+   - `hidden_peak_layer_index -> union_joint_adv = +0.2616`
+   - `layer_coherence -> strict_positive_synergy = -0.2330`
+   - 这说明逻辑骨架有效，并不等于隐藏层和前馈层永远锁步；更像是骨架最终被推到更靠后的主层带，但具体迁移过程保留了一定分工
 
-因此，现在更准确的判断是：
+4. 当前高维对象已经开始解释“为什么理论会越来越复杂”。
+   - 如果只看平均曲线，理论会越来越复杂，因为原型、实例、层、窗口、子场都被压在一起
+   - 一旦把这些维度拆开，复杂性会重新表现成少量可分解结构
+   - 所以真正需要的，不是继续堆特征，而是找更少、更本质的主变量
 
-**理论骨架已强，严格本体破解还不到半程终点。**
+### 7.5 组件特异层-窗口场
 
----
+这一轮又往前推进了一步：
 
-## 8. 新网络模型与测试结果
+我们不再只满足于“有一个高维因子化对象”，而是开始让不同组件拥有各自独立的层-窗口场。
 
-### 8.1 当前两个关键模型
+当前已经单独拆开的三个组件是：
 
-#### `ICSPBBackboneV2LargeOnline`
+1. `logic_prototype（逻辑原型）`
+2. `logic_fragile_bridge（逻辑脆弱桥接）`
+3. `syntax_constraint_conflict（句法约束型冲突）`
 
-文件：
+这一步的重要性在于，它让我们第一次能区分：
 
-- `research/gpt5/code/icspb_backbone_v2_large_online.py`
+1. 哪些层-窗口结构属于“好骨架”
+2. 哪些层-窗口结构属于“坏浅桥”
+3. 哪些层-窗口结构属于“句法筛选”
 
-定位：
+当前最值得保留的结果有四条。
 
-- 统一 AGI 原型骨架
-- 多模态
-- 在线学习
-- replay / rollback
-- global workspace
-- theorem-safe 运行
+1. `syntax_constraint_conflict（句法约束型冲突）` 的正项，在组件特异层-窗口场里更稳了。
+   - `weight -> union_joint_adv = +0.7811`
+   - `layer_window_hidden_energy -> union_joint_adv = +0.7749`
+   - `layer_window_mlp_energy -> union_joint_adv = +0.7749`
+   - `preferred_density -> strict_positive_synergy = +0.3245`
+   - 这说明句法正项不是“某一层”或者“某一窗口”单独起作用，而是层、窗口、密度体积一起形成了收束通道
 
-参数量：
+2. `logic_fragile_bridge（逻辑脆弱桥接）` 的负项，现在已经能直接落到组件特异层-窗口能量上。
+   - `weight -> union_synergy_joint = -0.2111`
+   - `layer_window_hidden_energy -> union_synergy_joint = -0.2089`
+   - `layer_window_mlp_energy -> union_synergy_joint = -0.2088`
+   - 这说明脆弱桥接伤闭包，并不是因为“桥接这个词不好”，而是因为它的能量真的沿层-窗口路径进入了闭包阶段
 
-- `1,436,878`
+3. `logic_prototype（逻辑原型）` 和 `logic_fragile_bridge（逻辑脆弱桥接）` 虽然共享部分晚层带，但它们的系统作用已经彻底分叉。
+   - `logic_prototype` 更偏向抬高 `union_joint_adv（联合优势）`
+   - `logic_fragile_bridge` 更偏向压低 `union_synergy_joint（联合协同）`
+   - 这说明“逻辑”内部至少已经不是单一轴，而是“骨架分量”和“浅桥分量”并存
 
-当前结论：
+4. 这一步也让五个核心术语更扎实了。
+   - `广支撑底座`：全局大量参与但低密度
+   - `长期分离前沿`：高质量核心长期不混
+   - `晚层骨架迁移`：有利骨架往更晚层主脊收束
+   - `中段句法筛选`：句法正项主要在前沿中段形成筛选体积
+   - `晚窗口闭包`：系统在句尾前窗口完成最终收束
 
-- 是强原型；
-- 适合验证结构制度；
-- 不足以承担强大语言主干。
+### 7.6 完整高维场
 
-#### `ICSPBLMPhaseA`
+这一轮又补上了最后缺的一块：
 
-文件：
+我们把“组件特异层-窗口场”和“自然生成里的提示区 / 生成区来源”接成了同一个对象。
 
-- `research/gpt5/code/icspb_lm_phasea.py`
+也就是说，当前已经不仅能看：
 
-定位：
+1. 某个组件在哪一层更强
+2. 某个组件在哪个窗口更强
+3. 某个组件在哪段密度前沿更强
 
-- 第一阶段正式 token-level 语言主干
-- 标准 Transformer 语言主干 + ICSPB 在线记忆适配层
+还能看：
 
-参数量：
+4. 这些能量到底更多来自提示侧，还是更多来自真实生成侧
 
-- `96,728,901`
+当前最值得保留的结果有四条。
 
-当前结论：
+1. `syntax_constraint_conflict（句法约束型冲突）` 的正项，在完整高维场里继续成立，而且生成侧完整能量是正项。
+   - `complete_generated_energy -> union_joint_adv = +0.7811`
+   - `complete_generated_energy -> strict_positive_synergy = +0.2763`
+   - 这说明句法正项不是只有“结构像”，而是确实有一部分真实生成能量进入了闭包提升
 
-- 架构成立；
-- 小规模真实文本训练成立；
-- 长程预训练方向成立；
-- 但语言生成能力仍然明显不足。
+2. `syntax_constraint_conflict（句法约束型冲突）` 仍然没有彻底摆脱提示侧。
+   - `complete_prompt_energy -> union_joint_adv = +0.7623`
+   - `complete_prompt_energy -> strict_positive_synergy = +0.3153`
+   - 这说明句法正项当前最准确的说法不是“纯生成机制”，而是“提示骨架与生成收束并存，但生成侧已经不可忽略”
 
-### 8.2 当前测试结果
+3. `logic_fragile_bridge（逻辑脆弱桥接）` 的负项，在完整高维场里更像“提示污染偏重”的坏浅桥。
+   - `complete_prompt_energy -> union_synergy_joint = -0.2223`
+   - `complete_generated_energy -> union_synergy_joint = -0.1990`
+   - 这说明脆弱桥接确实伤闭包，但提示侧负效应略强，进一步支持“脆弱桥接里混有外部骨架注入”
 
-#### `ICSPBBackboneV2LargeOnline`
+4. 五个核心术语现在已经不只是经验标签，而是开始有了各自的系统位置：
+   - `广支撑底座`：对应大范围低密度参与
+   - `长期分离前沿`：对应高质量前沿长期不混
+   - `晚层骨架迁移`：对应逻辑骨架向更晚层主脊移动
+   - `中段句法筛选`：对应句法在中段密度前沿形成筛选体积
+   - `晚窗口闭包`：对应真正决定输出收束的句尾前窗口
 
-已经成立的能力：
+### 7.7 简洁生成律
 
-- 语义回答原型
-- 多轮对话原型
-- 长会话稳定
-- 视觉/听觉接入原型
-- consciousness workspace 原型
-- replay / rollback / theorem-safe 运行
+这一轮开始不再继续堆特征，而是尝试把当前高维对象压回更少的主变量。
 
-但严格地说：
+当前第一版简洁生成律写成：
 
-- 它仍然是原型系统，不是强语言主干。
+`Closure ≈ 0.30 * 晚层骨架迁移 + 0.35 * 中段句法筛选 + 0.20 * 晚窗口闭包 + 0.10 * 长期分离前沿 + 0.05 * 广支撑底座`
 
-#### `ICSPBLMPhaseA`
+这不是最终方程，但它已经有两个重要价值：
 
-当前关键状态：
+1. 它强迫我们停止继续堆叠零散指标
+2. 它让我们开始测试“哪些结构是主律，哪些只是派生现象”
 
-- `PhaseA 语言主干准备度`：`84% - 86%`
-- `PhaseA 语言生成可用度`：`34% - 40%`
+当前第一版五个主律的数值强度大致是：
 
-当前严格判断：
+1. `广支撑底座`：`+0.1899`
+2. `长期分离前沿`：`+0.2335`
+3. `晚层骨架迁移`：`+0.0146`
+4. `中段句法筛选`：`+0.3004`
+5. `晚窗口闭包`：`-0.0261`
 
-- 会训练；
-- loss 会下降；
-- 生成塌缩有所减轻；
-- 但仍未形成可用语言主干。
+当前最值得注意的不是绝对值，而是结构排序：
 
-### 8.3 当前训练进度口径
+1. `中段句法筛选` 当前是最强正项
+2. `长期分离前沿` 和 `广支撑底座` 提供系统支撑
+3. `晚层骨架迁移` 方向正确，但当前强度仍偏弱
+4. `晚窗口闭包` 目前还是负项，说明这块要么变量定义还不对，要么闭包窗口里仍混有破坏项
 
-当前更合理的双重训练口径是：
+这说明简洁理论已经开始露头，但还没有真正闭合。
 
-- `原型系统训练闭合度`：`82% - 87%`
-- `人类智能标准下的模型训练进度`：`31% - 37%`
-- `语言训练进度（原型语言系统口径）`：`90% - 93%`
+真正更深层、更简洁的理论，大概率不会是“再增加几个机制”，而会是：
 
-这里必须强调：
+1. 少量结构主律
+2. 少量守恒 / 约束关系
+3. 多个表面现象由这些主律派生出来
 
-- 原型训练闭合度高，不等于人类级智能训练进度高。
+## 8. 当前最严格的硬伤
 
----
+用最严格的眼光看，当前还有这些硬伤：
 
-## 9. 当前理论与实现的最严格结论
+1. `syntax_constraint_conflict（句法约束型冲突）` 虽然样本已经增多，但统计强度仍不算硬。
+2. 自然生成实验目前每次只新增 `8` 个词元，提示骨架污染仍然明显。
+3. 自然生成口径里，句法仍然混有“提示骨架句法”和“真实生成句法收束”两部分，尚未彻底拆开。
+4. 关系图谱虽然已经扩到大规模，但仍然带规则先验，尚未做到完全模型内生发现。
+5. 副词与部分抽象词的证据仍然弱于名词、形容词、动词。
+6. `ICSPB` 目前仍是可检验经验方程，不是闭式定理系统。
+7. `effective_support（有效支撑）` 在放开截断后已经失效，旧变量体系必须系统性替换。
+8. 当前 `pair（成对）` 级自然语料联立已经升级到高维因子化对象，但它还不是完整的高维连续密度场张量。
+9. 当前层主脊和窗口主脊仍然是轴级共享量，`logic_prototype（逻辑原型）` 与 `logic_fragile_bridge（逻辑脆弱桥接）` 还没有各自独立的层-窗口张量。
+10. 当前虽然已经做出组件特异层-窗口场，但还不是组件特异的完整高维连续密度场张量。
+11. 当前虽然已经做出完整高维场，但它仍然是因子化对象，不是最终统一张量。
+12. 当前自然语料仍然是模板化自然提示，不是原始真实语料分布。
+13. `syntax（句法）` 的提示骨架与生成收束虽然都已进入同一对象，但还没有被压成同一条简洁生成律。
+14. `logic_fragile_bridge（逻辑脆弱桥接）` 当前表现出明显提示污染特征，说明旧的负项解释里仍混有外部骨架注入。
+15. 当前第一版简洁生成律已经有了，但 `晚窗口闭包` 仍是负项，说明闭包变量重写还没完成。
+16. 还没有把“关系轴、内部子场、自然生成窗口、连续密度前沿、闭包量”一次性接成最终闭环。
 
-### 9.1 已经成立的部分
+## 9. 当前阶段进度
 
-当前已经可以较强成立的结论包括：
+按现在的证据强度，我给当前项目状态的判断是：
 
-1. DNN 与大脑之间确实存在可逆向抽象的共同结构。
-2. `ICSPB` 作为统一编码框架已经很强。
-3. `UCESD + CPT + GUIT + UGMT` 已经形成明确的理论分层。
-4. 新模型设计不再是拍脑袋，而是有统一理论约束。
-5. `BP 主干 + 受控在线分支` 是当前最合理路线。
-6. DNN 侧已经出现了系统级精确编码候选定理，而不再只是零散结构对象。
-7. `concept-specific` 数学桥已经较强成立：
-   - `specific concept structure ~= family basis + bounded offset + contextual / protocol corrections`
-8. 第五阶段已经把 `prototype` 与 `instance` 两种读出显式拆开；
-   - 并且已经看到定向实验里的强原型信号；
-   - 但在更严格的双模型顺序复核里，这个强弱差还没有稳定复现。
+1. `关系图谱与路径束主结构`：约 `70%`
+2. `词类机制统一`：约 `62%`
+3. `field（场） -> internal subfield（内部子场） -> window（窗口） -> closure（闭包）` 联立：约 `78%`
+4. `全支撑无截断口径下的系统规律提取`：约 `90%`
+5. `自然语料密度前沿到闭包联立`：约 `87%`
+6. `pair（成对）级连续前沿闭包理解`：约 `83%`
+7. `自然生成强解耦`：约 `66%`
+8. `高维连续密度场块（因子化阶段）`：约 `46%`
+9. `组件特异层-窗口场块`：约 `41%`
+10. `完整高维场块`：约 `52%`
+11. `简洁生成律块（第一版）`：约 `33%`
+12. 整个“还原通向 AGI（通用人工智能） 的新数学结构”总进度：约 `88%`
 
-### 9.2 当前最大的硬伤
+这个 `79%` 不是说“已经接近完成 AGI”，而是说：
 
-最严格地看，当前硬伤仍然很明确：
-
-1. 严格本体破解度远低于理论骨架完成度。
-2. 还没有“如果真的破解了就应自然导出的标准学习律答案”。
-3. `PhaseA` 规模虽已提升到近亿参数，但仍未形成可用语言生成。
-4. `family -> specific exact closure` 仍未打穿。
-5. `successor exact closure` 仍然是系统级最弱项。
-6. dense neuron-level exact evidence 仍显著落后于 row/signature-level 参数证据。
-7. 即时学习还没有证明会在同一结构里自然强出现。
-8. 真实外部世界的长期验证没有完成。
-9. `prototype lane` 在严格词表下甚至会直接归零，当前还需要 `family_prototype proxy` 才能恢复，说明类别词本体闭合仍未建立。
-10. `instance lane` 虽然覆盖更广，但强度仍偏弱，说明实例偏移核还没有被真正抽干净。
-11. 第六阶段联合分解在 `DeepSeek 7B` 上只形成了 `vehicle : car + cart` 的单类配对，而且联合优势仍为负；`Qwen3 4B` 仍然是零配对。
-
-### 9.3 当前最准确的一句话
-
-当前项目最准确的一句话是：
-
-**我们已经得到了一套很强的统一理论骨架，并在 DNN 侧把类别级原型读出与实例级偏移读出显式拆开；但在更严格的双模型顺序复核下，prototype 通道仍需代理原型支撑、instance 通道仍偏弱、第六阶段联合优势仍未转正，所以离“真正破解大脑编码机制并导出标准答案”仍有明显距离。**
-
----
+当前这条“语言编码机制与数学结构还原”的主线，已经从现象探索推进到了系统变量重写阶段。主骨架基本出现，剩下最大的难点是把它压成真正闭式、可判伪、可外推的统一方程。
 
 ## 10. 下一阶段的大任务块
 
-当前最值得继续的不是扩新概念，而是完成以下几个大任务块：
+接下来不应该继续补小功能，而应该直接推进下面五个大任务块：
 
-1. `PhaseA` 正式 tokenizer + 更长程 token-level 预训练
-2. `dense neuron-level exact evidence` 强化块
-3. `prototype kernel / instance offset kernel` 联合分解块
-4. `family-to-specific exact closure + successor exact closure` 统一冲刺块
-5. `标准学习律 / canonical answer` 强化块
-6. `language compression regime -> instant-learning efficiency regime` 统一验证块
-7. `strict biophysical uniqueness + always-on external validation` 统一冲刺块
-8. `DNN 分析 -> 脑编码特性 -> 理论距离 -> 新模型测试` 的研究汇总自动化
+1. `高维连续密度场块`
+   把当前已经拿到的“密度张量 × 层主脊 × 窗口主脊 × 子场权重”因子化对象，继续升级成真正包含层、角色、通道、质量比例、时间窗口、子场的高维连续密度场。
 
-其中当前最优先的大任务块，应直接定义为：
+2. `自然生成强解耦块`
+   继续把提示骨架窗口和新增生成窗口拆得更干净，特别是要把 `syntax（句法）` 的隐藏层提示污染和前馈层生成收束彻底分离。
 
-1. 每个类别固定 `1` 个类别词和 `2` 个实例词；
-2. 先抽真实 `prototype kernel`，尽量不再依赖 `proxy`；
-3. 再抽 `instance offset kernel`；
-4. 再做联合消融和反事实替换；
-5. 同时在 `DeepSeek 7B` 与 `Qwen3 4B` 上顺序复核；
-6. 验证两条是否同时成立：
-   - 去掉原型核会系统性损伤同类家族读出；
-   - 去掉实例偏移核只会选择性损伤具体实例词排异。
+3. `真实语料分布块`
+   尽量从模板化自然提示推进到更接近真实原始语料分布，验证当前的“广支撑底座 + 长期分离前沿 + 晚窗口闭包”不是提示工程产物，而是语言系统的一般规律。
 
-### 当前路线的最终判断
+4. `ICSPB 闭式方程块`
+   把锚点、纤维、关系轴、控制轴、密度前沿、窗口闭包统一压成更严格的方程组，并要求它直接预测：
+   - 哪些层带活跃
+   - 哪些前馈层参与
+   - 哪些注意力头参与
+   - 哪些窗口促进闭包
+   - 哪些变量破坏严格正协同
 
-当前路线不是“已经破解”，但也不是“没有方向”。  
-它更准确的状态是：
+5. `简洁生成律块`
+   不再继续堆叠更多经验特征，而是把当前已经反复出现的主结构压成更少的生成律：
+   - 广支撑底座
+   - 分离前沿
+   - 晚层骨架迁移
+   - 中段句法筛选
+   - 晚窗口闭包
+   如果这一步做不出来，理论会继续复杂化；如果做出来，理论会重新变简洁
 
-- 理论骨架已经强成立；
-- 语言主干扩容路线已经明确；
-- 即时学习制度层已经显现；
-- 剩下的关键是：
-  - 把更大语言主干真正训起来；
-  - 再验证高效即时学习是否会在同一结构里自然强出现。
+## 11. 当前最终判断
+
+当前最稳的方向已经不是“继续找更多零散现象”，而是：
+
+1. 语言背后确实有系统性编码规律。
+2. 这个规律不像单一线性空间，更像多层复合结构。
+3. 深度神经网络对语言的编码，不是“少量特征神经元在工作”，而是“广支撑底座上形成长期分离前沿，再在句尾前窗口中完成闭包收束”。
+4. 真正的数学难点，已经从“有没有结构”转移到“如何把结构压成闭式统一方程”。
+
+如果后续继续推进，最值得优先攻克的，不再是加几个新案例，而是把组件特异完整张量、真实语料分布和简洁生成律三件事接成同一条主链。
