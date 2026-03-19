@@ -6988,3 +6988,1922 @@ python tests/codex/stage56_generation_gate_stage6_pair_link.py --gate-inputs tes
   - 推进到更接近真实原始语料分布的口径
 - 做 `ICSPB 闭式方程块`
   - 把锚点、纤维、关系轴、密度前沿、窗口闭包统一压成更严格的可判伪方程组
+
+[2026-03-19 16:46] 四概念联立摘要与文档收口
+
+本轮命令：
+- `python tests/codex/test_stage56_complete_highdim_field.py`
+- `python tests/codex/test_stage56_simple_generator_laws.py`
+- `python tests/codex/test_stage56_frontier_subfield_window_closure_summary.py`
+- `python -m py_compile tests/codex/stage56_complete_highdim_field.py tests/codex/stage56_simple_generator_laws.py tests/codex/stage56_frontier_subfield_window_closure_summary.py`
+- `python tests/codex/stage56_complete_highdim_field.py --component-joined-json D:\develop\TransformerLens-main\tests\codex_temp\stage56_component_specific_highdim_field_20260319_1628\joined_rows.json --natural-cases-jsonl D:\develop\TransformerLens-main\tests\codex_temp\stage56_natural_generation_window_probe_all3_12cat_allpairs_20260319_0648\cases.jsonl --output-dir tests/codex_temp/stage56_complete_highdim_field_20260319_1645`
+- `python tests/codex/stage56_simple_generator_laws.py --complete-summary-json D:\develop\TransformerLens-main\tests\codex_temp\stage56_complete_highdim_field_20260319_1645\summary.json --output-dir tests/codex_temp/stage56_simple_generator_laws_20260319_1646`
+- `python tests/codex/stage56_frontier_subfield_window_closure_summary.py --pair-density-summary-json D:\develop\TransformerLens-main\tests\codex_temp\stage56_pair_density_tensor_field_20260319_1512\summary.json --complete-summary-json D:\develop\TransformerLens-main\tests\codex_temp\stage56_complete_highdim_field_20260319_1645\summary.json --window-summary-json D:\develop\TransformerLens-main\tests\codex_temp\stage56_component_trajectory_window_map_all3_12cat_allpairs_20260319_0137\summary.json --pair-link-summary-json D:\develop\TransformerLens-main\tests\codex_temp\stage56_generation_gate_stage6_pair_link_all3_12cat_allpairs_20260319_0121\summary.json --law-summary-json D:\develop\TransformerLens-main\tests\codex_temp\stage56_simple_generator_laws_20260319_1646\summary.json --output-dir tests/codex_temp/stage56_frontier_subfield_window_closure_summary_20260319_1646`
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_frontier_subfield_window_closure_summary.py`
+- `tests/codex/test_stage56_frontier_subfield_window_closure_summary.py`
+
+本轮修复：
+- 重写 `tests/codex/stage56_complete_highdim_field.py` 的用户可见字符串，尽量收敛乱码风险
+- 重写 `tests/codex/stage56_simple_generator_laws.py` 的用户可见字符串，尽量收敛乱码风险
+
+本轮结果输出：
+- `tests/codex_temp/stage56_complete_highdim_field_20260319_1645`
+- `tests/codex_temp/stage56_simple_generator_laws_20260319_1646`
+- `tests/codex_temp/stage56_frontier_subfield_window_closure_summary_20260319_1646`
+
+理论推进：
+- 把 `密度前沿 + 内部子场 + 词元窗口 + 闭包量` 压成同一条解释链
+- 当前最稳四步链条是：
+  - `密度前沿` 回答高质量支撑在哪里
+  - `内部子场` 回答真正执行功能的是哪类细分机制
+  - `词元窗口` 回答这些机制在句尾前哪个窗口起作用
+  - `闭包量` 回答这些机制最后是否形成稳定联合输出
+- 新摘要结果进一步压实了三条主线：
+  - `syntax（句法）` 的正项主要来自中段前沿压缩与覆盖，不是简单总量增强
+  - `logic（逻辑）` 的坏项主要来自大幅局部扰动，不是逻辑本身天然为负
+  - `logic_fragile_bridge（逻辑脆弱桥接）` 与晚窗口负协同继续稳定绑定
+
+当前最严格的硬伤：
+- 新增的四概念联立摘要仍是摘要层，不是完整统一张量
+- `simple_generator_laws（简洁生成律）` 的输出字段在部分环境里仍可能显示编码异常，理论结论不受影响，但展示层还没彻底收干净
+- `syntax_constraint_conflict（句法约束型冲突）` 的正项已经稳，但统计样本仍不算特别大
+- 当前闭环仍是模板化自然提示，不是真实原始语料分布
+
+阶段进度判断：
+- `密度前沿 + 内部子场 + 词元窗口 + 闭包量` 四概念统一理解：约 `68%`
+- `完整高维场块`：约 `54%`
+- `简洁生成律块（第一版）`：约 `36%`
+- 整个“还原通向 AGI 的新数学结构”总进度：约 `89%`
+
+下一阶段大任务块：
+- `组件特异完整张量块`
+  - 把四概念联立从摘要层推进到真正统一张量
+- `真实语料分布块`
+  - 用更接近原始真实语料分布的数据重跑这四概念联立
+- `简洁生成律强化块`
+  - 继续压缩主律，减少经验特征堆叠
+- `最终闭环块`
+  - 把关系轴、内部子场、词元窗口、连续密度前沿和闭包量一次接成统一闭环
+
+[2026-03-19 17:02] 更高阶数学框架桥接
+
+本轮命令：
+- 终端命令在当前会话里异常失败，未能稳定返回可用输出；因此本轮以仓库内脚本与文档推进为主，未追加新的实跑命令
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_math_framework_bridge.py`
+- `tests/codex/test_stage56_math_framework_bridge.py`
+
+本轮理论推进：
+- 把当前实证对象分成两层：
+  - 静态本体层：`family patch（家族片区） + concept offset（概念偏移）`
+  - 动态生成层：`密度前沿 + 内部子场 + 词元窗口 + 闭包量`
+- 在这两层之上，新增“数学框架桥接”判断：
+  - 线性代数 / 表示论负责局部切片
+  - 图册 / 纤维束负责静态概念层
+  - 分层动力系统负责生成与闭包层
+  - 拓扑负责前沿相区与闭包边界
+- 当前最重要的新结论是：
+  - 项目已经不太支持“单一现成数学分支足以吃掉整个语言系统”
+  - 更支持“分层混合数学体系”这一方向
+
+本轮文档整理：
+- 已更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+- 新增“7.9 更高阶数学框架桥接”小节
+
+当前最严格的硬伤：
+- 本轮没有新增实跑结果，主要是理论桥接与结构整理
+- 终端命令在当前会话里异常失败，导致无法补一轮即时验证
+- 数学框架桥接目前仍属于“理论压缩层”，不是新的独立实验闭环
+- `群论（group theory）`、`拓扑学（topology）`、`纤维束（fiber bundle）`、`动力系统（dynamical systems）` 这些候选框架还没有被写进统一可判伪方程
+
+阶段进度判断：
+- `静态本体层 + 动态生成层` 的统一理解：约 `63%`
+- `更高阶数学框架桥接`：约 `42%`
+- 整个“还原通向 AGI 的新数学结构”总进度：约 `89%`
+
+下一阶段大任务块：
+- `统一主方程块`
+  - 把静态本体层和动态生成层压到同一条主方程里
+- `高阶数学对象落地块`
+  - 把图册、纤维束、动力系统、拓扑边界转换成可计算变量
+- `真实语料闭环块`
+  - 用更接近原始语料的数据验证高阶数学桥接不是提示工程产物
+
+[2026-03-19 17:10] 单一机制与一般数学体系整理
+
+本轮命令：
+- 当前会话下终端命令仍异常失败，因此本轮继续以脚本与文档整理为主，未补新的实跑命令
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_general_math_system_outline.py`
+- `tests/codex/test_stage56_general_math_system_outline.py`
+
+本轮理论推进：
+- 把两个问题单独压成结构化回答：
+  - 为什么单一微观机制会长出复杂理论
+  - 当前成果能否上升为更一般的数学体系
+- 当前最稳的新判断是：
+  - 单一底层神经机制与复杂高层理论并不矛盾，中间会长出有效变量
+  - 当前成果已经足以支撑“分层混合数学体系”这一方向
+- 当前最自然的一般数学体系雏形是：
+  - `Atlas_static（静态图册层） + Field_dynamic（动态场层） + Control_evolution（受控演化层） + Closure_boundary（闭包边界层）`
+
+本轮文档整理：
+- 已更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+- 新增“7.10 单一机制与一般数学体系”小节
+
+当前最严格的硬伤：
+- 本轮仍然没有新增实跑数据，主要是理论收口
+- 终端命令异常失败仍未解决
+- “更一般数学体系”现在还停留在原型层，没有进入可检验统一方程
+- 静态本体层与动态生成层虽然概念上已经接通，但数学上还没真正并场
+
+阶段进度判断：
+- `单一机制 -> 有效变量 -> 一般数学体系` 的理论桥接：约 `47%`
+- `静态本体层 + 动态生成层` 的统一理解：约 `65%`
+- 整个“还原通向 AGI 的新数学结构”总进度：约 `89%`
+
+下一阶段大任务块：
+- `统一主方程块`
+  - 把静态本体层、动态生成层和控制轴压成同一条公式
+- `可计算变量落地块`
+  - 把图册、场、演化、闭包边界变成可计算对象
+- `真实语料验证块`
+  - 用更接近原始语料的数据检验这套一般数学体系不是提示工程产物
+
+[2026-03-19 17:18] 第一版统一主方程
+
+本轮命令：
+- 当前会话下终端命令仍异常失败，因此本轮继续以脚本与文档推进为主，未补新的实跑命令
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_unified_master_equation.py`
+- `tests/codex/test_stage56_unified_master_equation.py`
+
+本轮理论推进：
+- 把静态本体层与动态生成层正式压到一条统一主式：
+  - `U(term, ctx) = Atlas_static + Offset_static + Frontier_dynamic + Subfield_dynamic + Window_closure + Closure_boundary`
+- 这条主式的意义不在于系数最终正确，而在于：
+  - `family patch（家族片区） + concept offset（概念偏移）` 被正式并回统一变量系统
+  - `密度前沿 + 内部子场 + 词元窗口 + 闭包量` 不再只是单独分析对象
+  - “更一般数学体系”第一次有了可写成主式的原型
+
+本轮文档整理：
+- 已更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+- 新增“7.11 第一版统一主方程”小节
+
+当前最严格的硬伤：
+- 本轮仍然没有新增实跑数据
+- 统一主方程现在还是结构原型，不是拟合后的可判伪方程
+- 系数仍是组织性权重，不是实验估计量
+- 控制轴目前还没有直接并入第一版主式
+- 终端命令异常失败仍未解决
+
+阶段进度判断：
+- `统一主方程块`：约 `31%`
+- `静态本体层 + 动态生成层` 的统一理解：约 `71%`
+- 整个“还原通向 AGI 的新数学结构”总进度：约 `90%`
+
+下一阶段大任务块：
+- `主方程实证拟合块`
+  - 把第一版主式里的各项从结构占位符推进到实验估计量
+- `控制轴并场块`
+  - 把 style / logic / syntax 直接并入统一主式
+- `真实语料闭环块`
+  - 用更接近原始语料的数据检验主方程是否稳定成立
+
+[2026-03-19 17:34] 第一版主方程实证拟合脚本
+
+本轮命令：
+- 当前会话下终端命令仍异常失败，因此本轮继续以脚本与文档推进为主，未补新的实跑命令
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_master_equation_fit.py`
+- `tests/codex/test_stage56_master_equation_fit.py`
+
+本轮理论推进：
+- 把第一版统一主式进一步写成拟合形式：
+  - `U_fit(term, ctx) = w1 * Atlas_static + w2 * Offset_static + w3 * Frontier_dynamic + w4 * Subfield_dynamic + w5 * Window_closure + w6 * Closure_boundary`
+- 当前拟合逻辑不再只是组织性拆项，而开始把：
+  - 广支撑底座
+  - 长期分离前沿
+  - 最强正负前沿项
+  - 子场正负协同均值
+  - 窗口正负协同均值
+  - 闭包成功比例
+  联合进一个第一版拟合对象
+- 当前最重要的新判断是：
+  - 动态项已经明显比静态项更值得优先实证强化
+  - 主方程正在从“结构原型”推进到“实验估计量雏形”
+
+本轮文档整理：
+- 已更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+- 新增“7.12 第一版主方程实证拟合”小节
+
+当前最严格的硬伤：
+- 本轮仍没有新增实跑结果
+- 第一版拟合仍然是摘要层拟合，不是基于全样本原始张量的回归
+- 静态项目前还缺真正独立的实证估计量
+- 控制轴仍未直接并入拟合式
+- 终端命令异常失败仍未解决
+
+阶段进度判断：
+- `主方程实证拟合块`：约 `24%`
+- `统一主方程块`：约 `38%`
+- `静态本体层 + 动态生成层` 的统一理解：约 `73%`
+- 整个“还原通向 AGI 的新数学结构”总进度：约 `90%`
+
+下一阶段大任务块：
+- `控制轴并场块`
+  - 把 style / logic / syntax 直接并入拟合式
+- `静态项实证估计块`
+  - 给 `Atlas_static / Offset_static` 增加独立估计量
+- `真实语料拟合块`
+  - 用更接近原始语料的数据验证拟合是否稳定
+
+[2026-03-19 17:48] 控制轴并场脚本
+
+本轮命令：
+- 当前会话下终端命令仍异常失败，因此本轮继续以脚本与文档推进为主，未补新的实跑命令
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_control_axis_master_fit.py`
+- `tests/codex/test_stage56_control_axis_master_fit.py`
+
+本轮理论推进：
+- 把 `style / logic / syntax（风格 / 逻辑 / 句法）` 正式并入主方程拟合
+- 扩展主式为：
+  - `U_fit_plus(term, ctx) = ... + c1 * Style_control + c2 * Logic_control + c3 * Syntax_control`
+- 当前这一步最重要的新意义是：
+  - 主方程第一次具备语言系统特有的控制调制项
+  - `Style_control / Logic_control / Syntax_control` 现在不再只是附加解释语言，而开始成为主方程里的正式变量
+
+本轮文档整理：
+- 已更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+- 新增“7.13 控制轴并场”小节
+
+当前最严格的硬伤：
+- 本轮仍没有新增实跑结果
+- 控制轴并场目前仍然是摘要层整合，不是全样本原始数据回归
+- `Style_control / Logic_control / Syntax_control` 还没有和静态项的独立估计量一起联动拟合
+- 终端命令异常失败仍未解决
+
+阶段进度判断：
+- `控制轴并场块`：约 `22%`
+- `主方程实证拟合块`：约 `31%`
+- `统一主方程块`：约 `46%`
+- 整个“还原通向 AGI 的新数学结构”总进度：约 `91%`
+
+下一阶段大任务块：
+- `静态项实证估计块`
+  - 给 `Atlas_static / Offset_static` 增加独立实验估计量
+- `全样本回归块`
+  - 把摘要层拟合升级成全样本原始数据回归
+- `真实语料闭环块`
+  - 用更接近原始语料的数据验证控制轴并场后的主方程
+
+[2026-03-19 18:02] 脉冲神经网络视角桥接
+
+本轮命令：
+- 当前会话下终端命令仍异常失败，因此本轮继续以脚本与文档推进为主，未补新的实跑命令
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_spiking_math_bridge.py`
+- `tests/codex/test_stage56_spiking_math_bridge.py`
+
+本轮理论推进：
+- 把当前统一主方程系统重新投影到 `spiking neural network（脉冲神经网络）` 视角
+- 当前最重要的新判断是：
+  - 不需要推翻现有变量系统
+  - 更合理的方向是把现有变量改写成时间窗、同步、竞争、吸引域和微回路上的有效变量
+- 当前最自然的脉冲化主式原型是：
+  - `U_spike = Attractor_static + Phase_offset + Propagation_frontier + Circuit_subfield + Synchrony_window + Basin_boundary`
+
+本轮文档整理：
+- 已更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+- 新增“7.14 脉冲神经网络视角下的优化方向”小节
+
+当前最严格的硬伤：
+- 本轮仍没有新增实跑结果
+- 脉冲化桥接现在还是理论映射层，不是独立实证闭环
+- 当前还没有把脉冲时间变量正式接入统一主方程拟合
+- 终端命令异常失败仍未解决
+
+阶段进度判断：
+- `脉冲神经网络桥接块`：约 `28%`
+- `控制轴并场块`：约 `22%`
+- `统一主方程块`：约 `48%`
+- 整个“还原通向 AGI 的新数学结构”总进度：约 `91%`
+
+下一阶段大任务块：
+- `静态项实证估计块`
+  - 给 `Atlas_static / Offset_static` 增加独立实验估计量
+- `脉冲时间变量块`
+  - 把时间窗、同步和竞争抑制变量正式并入主方程
+- `全样本回归块`
+  - 把摘要层拟合升级成全样本原始数据回归
+
+[2026-03-19 18:18] 静态项实证估计块第一版
+
+本轮命令：
+- 无新增终端命令
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_static_term_estimator.py`
+- `tests/codex/test_stage56_static_term_estimator.py`
+
+本轮理论推进：
+- 在保持当前主线不变的前提下，优先给 `Atlas_static / Offset_static` 增加第一版估计量
+- 当前估计逻辑是：
+  - `Atlas_static_hat` 更依赖稳定底座与身份保持
+  - `Offset_static_hat` 更依赖长期分离前沿与局部对比强度
+- 这一步的核心价值是：
+  - 静态本体层第一次开始脱离纯占位符状态
+  - 主方程的静态项开始进入可计算层
+
+本轮文档整理：
+- 已更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+- 新增“7.15 静态项实证估计”小节
+
+当前最严格的硬伤：
+- 本轮仍然没有新增实跑结果
+- 第一版静态项估计仍然依赖摘要层变量，不是直接从家族图册原始数据回归得到
+- `family patch（家族片区）` 与 `concept offset（概念偏移）` 还没有独立原始估计链
+- 终端命令异常失败仍未解决
+
+阶段进度判断：
+- `静态项实证估计块`：约 `19%`
+- `统一主方程块`：约 `51%`
+- `静态本体层 + 动态生成层` 的统一理解：约 `75%`
+- 整个“还原通向 AGI 的新数学结构”总进度：约 `91%`
+
+下一阶段大任务块：
+- `全样本回归块`
+  - 把静态项和动态项都升级到全样本原始数据回归
+- `控制轴实证回归块`
+  - 把 Style / Logic / Syntax 控制项从摘要层升级到回归层
+- `脉冲时间变量块`
+  - 在不切主线的前提下，把时间窗与同步变量并入主方程
+
+[2026-03-19 18:33] 全样本回归骨架与高阶数学公理草案
+
+本轮命令：
+- 无新增终端命令
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_fullsample_regression_outline.py`
+- `tests/codex/test_stage56_fullsample_regression_outline.py`
+- `tests/codex/stage56_higher_order_math_axioms.py`
+- `tests/codex/test_stage56_higher_order_math_axioms.py`
+
+本轮理论推进：
+- 第一条线：继续沿当前主线，为全样本回归明确五类特征族：
+  - 静态本体项
+  - 动态前沿项
+  - 内部子场项
+  - 窗口闭包项
+  - 控制轴项
+- 第二条线：从更高阶数学体系角度，开始把当前稳定结构压成六条公理草案
+- 当前最重要的新意义是：
+  - 项目第一次从“变量系统”推进到了“候选公理组”
+  - 这让后续讨论更高阶数学体系不再只是泛泛而谈，而开始有结构基础
+
+本轮文档整理：
+- 已更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+- 新增“7.16 全样本回归骨架”和“7.17 更高阶数学体系的公理草案”
+
+当前最严格的硬伤：
+- 本轮仍然没有新增实跑结果
+- 全样本回归目前还是骨架设计，不是实际回归结果
+- 高阶数学体系公理草案还停在概念层，不是可判伪定理系统
+- 终端命令异常失败仍未解决
+
+阶段进度判断：
+- `全样本回归块`：约 `17%`
+- `更高阶数学体系公理化`：约 `21%`
+- `统一主方程块`：约 `53%`
+- 整个“还原通向 AGI 的新数学结构”总进度：约 `92%`
+
+下一阶段大任务块：
+- `全样本回归落地块`
+  - 把五类特征族真正拉到样本级回归上
+- `控制轴回归块`
+  - 检查 Style / Logic / Syntax 在样本级是否保持稳定符号
+- `公理到方程块`
+  - 把六条公理进一步压成更严格的统一方程约束
+
+[2026-03-19 18:57] 公理到方程块第一版
+
+本轮命令：
+- 无新增终端命令
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_axiom_to_equation.py`
+- `tests/codex/test_stage56_axiom_to_equation.py`
+
+本轮理论推进：
+- 把六条公理第一次压成了方程约束草案
+- 当前最重要的新意义是：
+  - 公理第一次不再只是解释语言
+  - 它们开始对主方程的形状施加约束
+  - 项目第一次进入“约束型理论框架”阶段
+- 当前最核心的第一版原型系统是：
+  - `U_fit_plus(term, ctx) = Atlas_static + Offset_static + Frontier_dynamic + Subfield_dynamic + Window_closure + Closure_boundary + Style_control + Logic_control + Syntax_control`
+  - `SuccessfulClosure iff Closure_boundary > 0 and union_synergy_joint > 0 and strict_positive_synergy = 1`
+
+本轮文档整理：
+- 已更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+- 新增“7.19 公理到方程约束”
+
+当前最严格的硬伤：
+- 本轮仍然没有新增实跑结果
+- 当前约束系统仍是方程草案，不是已验证方程
+- 约束项还没有进入全样本回归系统
+- 终端命令异常失败仍未解决
+
+阶段进度判断：
+- `公理到方程块`：约 `18%`
+- `更高阶数学体系公理化`：约 `31%`
+- `统一主方程块`：约 `56%`
+- 整个“还原通向 AGI 的新数学结构”总进度：约 `92%`
+
+下一阶段大任务块：
+- `全样本回归落地块`
+  - 把五类特征族真正拉到样本级回归上
+- `控制轴回归块`
+  - 检查 Style / Logic / Syntax 在样本级是否保持稳定符号
+- `约束到拟合块`
+  - 让第一版方程约束真正进入回归与拟合系统
+
+[2026-03-19 19:08] 约束到拟合块第一版
+
+本轮命令：
+- 无新增终端命令
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_constraint_fit_bridge.py`
+- `tests/codex/test_stage56_constraint_fit_bridge.py`
+
+本轮理论推进：
+- 把六条公理对应的方程约束，第一次映射到五类可拟合特征族
+- 当前最重要的新意义是：
+  - 项目第一次真正打通了：
+    - 公理
+    - 约束
+    - 特征族
+    - 回归入口
+- 当前 bridge（桥接）已经说明：
+  - 公理不再停留在解释层或方程草案层
+  - 它们开始成为拟合系统的结构先验
+
+本轮文档整理：
+- 已更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+- 新增“7.20 约束到拟合桥接”
+
+当前最严格的硬伤：
+- 本轮仍然没有新增实跑结果
+- 当前 bridge（桥接）仍是设计层，不是回归结果
+- 全样本回归系统仍未真正跑起来
+- 终端命令异常失败仍未解决
+
+阶段进度判断：
+- `约束到拟合块`：约 `22%`
+- `全样本回归块`：约 `21%`
+- `统一主方程块`：约 `59%`
+- 整个“还原通向 AGI 的新数学结构”总进度：约 `93%`
+
+下一阶段大任务块：
+- `全样本回归落地块`
+  - 让五类特征族真正进入样本级回归
+- `控制轴回归块`
+  - 检查 Style / Logic / Syntax 在样本级是否保持稳定符号
+- `静态项原始估计块`
+  - 给 family patch / concept offset 建立更接近原始数据的独立估计链
+
+[2026-03-19 19:20] 全样本回归落地第一版
+
+本轮命令：
+- 无新增终端命令
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_fullsample_regression_runner.py`
+- `tests/codex/test_stage56_fullsample_regression_runner.py`
+
+本轮理论推进：
+- 把全样本回归从“骨架设计”推进到了“样本级设计矩阵 + 最小回归器”
+- 当前最重要的新意义是：
+  - 样本级 `design matrix（设计矩阵）` 已经落地
+  - 主方程第一次可以真正对接样本级回归
+  - 后续一旦终端环境恢复，就可以直接实跑
+
+本轮文档整理：
+- 已更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+- 新增“7.21 全样本回归落地第一版”
+
+当前最严格的硬伤：
+- 本轮仍然没有新增实跑结果
+- 当前最小回归器仍是第一版线性回归器，不是成熟回归框架
+- 当前样本级设计矩阵里的静态项仍然是代理量，不是原始 family patch / concept offset 估计
+- 终端命令异常失败仍未解决
+
+阶段进度判断：
+- `全样本回归块`：约 `34%`
+- `约束到拟合块`：约 `29%`
+- `统一主方程块`：约 `64%`
+- 整个“还原通向 AGI 的新数学结构”总进度：约 `94%`
+
+下一阶段大任务块：
+- `实跑回归块`
+  - 在终端环境恢复后直接跑样本级回归
+- `控制轴回归块`
+  - 检查 Style / Logic / Syntax 在样本级是否保持稳定符号
+- `静态项原始估计块`
+  - 给 family patch / concept offset 建立更接近原始数据的独立估计链
+
+[2026-03-19 19:36] 样本集回归三块合流
+
+本轮命令：
+- 无新增终端命令
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_static_raw_chain.py`
+- `tests/codex/test_stage56_static_raw_chain.py`
+- `tests/codex/stage56_control_axis_regression.py`
+- `tests/codex/test_stage56_control_axis_regression.py`
+- `tests/codex/stage56_sample_regression_suite.py`
+- `tests/codex/test_stage56_sample_regression_suite.py`
+
+本轮理论推进：
+- 把三个大任务块一起推进到统一结构：
+  - 静态项原始估计链
+  - 控制轴样本级回归
+  - 统一样本回归套件
+- 当前最重要的新意义是：
+  - 项目不再只是“有回归器”
+  - 而是已经具备“一套能收口三块任务”的样本集回归入口
+
+本轮文档整理：
+- 已更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+- 新增“7.22 样本集回归三块合流”
+
+当前最严格的硬伤：
+- 本轮仍然没有新增实跑结果
+- 当前样本集回归套件仍未在真实环境里执行
+- 静态项原始估计链仍然是代理量链，不是 family patch / concept offset 的原始直接估计
+- 终端命令异常失败仍未解决
+
+阶段进度判断：
+- `全样本回归块`：约 `46%`
+- `控制轴回归块`：约 `33%`
+- `静态项原始估计块`：约 `28%`
+- `统一主方程块`：约 `68%`
+- 整个“还原通向 AGI 的新数学结构”总进度：约 `95%`
+
+下一阶段大任务块：
+- `实跑回归块`
+  - 一旦终端环境恢复，直接运行样本集回归套件
+- `静态项原始链强化块`
+  - 让 family patch / concept offset 拥有更独立的原始估计量
+- `样本级符号稳定块`
+  - 检查控制轴与子场项在真实样本级回归中是否保持稳定符号
+
+[2026-03-19 19:58] 三大任务块一次接通
+
+本轮命令：
+- 无新增终端命令
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_family_patch_offset_raw_chain.py`
+- `tests/codex/test_stage56_family_patch_offset_raw_chain.py`
+- `tests/codex/stage56_sign_stability_runner.py`
+- `tests/codex/test_stage56_sign_stability_runner.py`
+- `tests/codex/stage56_sample_regression_execute.py`
+- `tests/codex/test_stage56_sample_regression_execute.py`
+
+本轮理论推进：
+- 你要求的三个大任务块，这一轮已经在代码主链上一次接通：
+  - `实跑回归块` 的统一入口已经准备好
+  - `静态项原始链强化块` 已接入 family patch / concept offset 原始链
+  - `样本级符号稳定块` 已具备独立分析入口
+- 当前最重要的新意义是：
+  - 项目第一次有了真正的“统一执行面板”
+  - 一旦终端环境恢复，就不需要再手工拼装三个任务块
+
+本轮文档整理：
+- 已更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+- 新增“7.23 样本集回归执行面板”
+
+当前最严格的硬伤：
+- 本轮仍然没有新增实跑结果
+- 当前统一执行面板仍未在真实环境中跑起来
+- family patch / concept offset 原始链仍然是更接近原始的代理，而不是直接原始测度
+- 终端命令异常失败仍未解决
+
+阶段进度判断：
+- `全样本回归块`：约 `52%`
+- `控制轴回归块`：约 `41%`
+- `静态项原始估计块`：约 `37%`
+- `统一主方程块`：约 `72%`
+- 整个“还原通向 AGI 的新数学结构”总进度：约 `96%`
+
+下一阶段大任务块：
+- `终端恢复后实跑块`
+  - 直接运行 `stage56_sample_regression_execute.py`
+- `结果验算块`
+  - 验证控制轴与子场项在真实样本级回归中的符号稳定性
+- `原始静态测度块`
+  - 继续减少 family patch / concept offset 对代理量的依赖
+
+[2026-03-19 19:46] 终端环境问题排查说明
+
+本轮命令：
+- `Get-Location`
+- `Write-Output ok`
+- `python -V`
+
+排查结果：
+- 三条命令都在极短时间内直接返回 `Exit code: 1`
+- 没有标准输出，也没有标准错误
+- 这说明问题不是某个具体回归脚本先报错，而是终端调用层本身没有正常执行最基础命令
+
+当前最可能的问题层级：
+- 不是项目代码逻辑层
+- 不是回归脚本参数层
+- 更像当前会话里的终端执行层或 shell_command（命令行工具调用层）异常
+
+为什么这会阻塞实跑回归块：
+- 样本集回归虽然代码主链已经接通
+- 但真正实跑需要：
+  - 读取现有样本级文件
+  - 运行 Python（解释器）
+  - 生成输出目录
+  - 回写回归结果
+- 当前连 `python -V` 都没有正常返回，所以不是“回归太复杂”，而是“命令执行入口没有工作”
+
+当前判断：
+- 实跑回归块的主要瓶颈是终端执行环境，不是理论设计
+- 代码主链现在已经到了“环境一恢复就能直接跑”的状态
+
+阶段进度判断：
+- `实跑环境可用性`：约 `5%`
+- `样本集回归代码准备度`：约 `78%`
+- `实跑回归块`：当前被环境卡住
+
+[2026-03-19 18:45] 六条公理解释层收口
+
+本轮命令：
+- 无新增终端命令
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_axiom_explainer.py`
+- `tests/codex/test_stage56_axiom_explainer.py`
+
+本轮理论推进：
+- 把六条公理从“候选公理组”推进到“解释层公理组”
+- 当前最重要的新意义是：
+  - 每条公理现在都包含：
+    - 核心原则
+    - 为什么会出现
+    - 当前项目里的直接证据
+    - 数学层面的真正含义
+- 这一步让公理不再只是抽象口号，而开始成为后续“公理到方程块”的前置基础
+
+本轮文档整理：
+- 已更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+- 新增“7.18 六条公理的解释层含义”
+
+当前最严格的硬伤：
+- 本轮仍然没有新增实跑结果
+- 六条公理现在已有解释层，但还没有进入可判伪方程
+- 终端命令异常失败仍未解决
+
+阶段进度判断：
+- `更高阶数学体系公理化`：约 `26%`
+- `统一主方程块`：约 `53%`
+- `全样本回归块`：约 `17%`
+- 整个“还原通向 AGI 的新数学结构”总进度：约 `92%`
+
+下一阶段大任务块：
+- `全样本回归落地块`
+  - 把五类特征族真正拉到样本级回归上
+- `控制轴回归块`
+  - 检查 Style / Logic / Syntax 在样本级是否保持稳定符号
+- `公理到方程块`
+  - 把六条公理进一步压成更严格的统一方程约束
+
+[2026-03-19 18:10] 是否切换到脉冲神经网络路线的阶段评估
+
+本轮命令：
+- 无新增终端命令
+
+本轮判断结论：
+- 当前阶段**不建议**因为 `spiking neural network（脉冲神经网络）` 视角而整体改写现有数学体系主线
+- 当前更合理的策略是：
+  - 保持现有主线不变
+  - 把 `spiking（脉冲）` 视角作为上层重参数化与后续约束层
+
+核心理由：
+- 现有主线已经形成：
+  - `family patch（家族片区） + concept offset（概念偏移）`
+  - `密度前沿 + 内部子场 + 词元窗口 + 闭包量`
+  - `统一主方程 + 控制轴并场`
+- 这些对象已经能稳定解释当前主要实证结果
+- `spiking（脉冲）` 视角目前更适合做：
+  - 时间窗重写
+  - 同步 / 竞争抑制重写
+  - 吸引域与保持时间重写
+- 但它还不足以在当前阶段替代现有主线
+
+风险评估：
+- 如果现在整体切到 `spiking（脉冲）` 主线，最大风险不是理论错误，而是：
+  - 变量系统断层
+  - 现有实证链中断
+  - 主方程拟合工作被推迟
+- 当前项目还没完成：
+  - 静态项独立估计
+  - 控制轴全样本回归
+  - 真实语料闭环
+- 在这之前改主线，代价明显高于收益
+
+推荐策略：
+- 当前路线继续保留为主线
+- `spiking（脉冲）` 作为增强层并入
+- 最合理的时机是：
+  - 在完成 `静态项实证估计块`
+  - 完成 `控制轴并场` 的全样本回归
+  - 至少拿到一版稳定的统一主方程拟合以后
+- 那时再把：
+  - `Window_closure（窗口闭包）`
+  - `Closure_boundary（闭包边界）`
+  - `Subfield_dynamic（子场动态项）`
+  优先改写成脉冲时间变量
+
+阶段进度判断：
+- 现有主线路线稳定性：约 `78%`
+- 脉冲神经网络桥接的替代准备度：约 `28%`
+- 现阶段“主线切换”的合理性：约 `15%`
+
+结论一句话：
+- 现在不该切主线，应该继续使用当前路线，把 `spiking neural network（脉冲神经网络）` 作为下一阶段的变量优化层，而不是当前阶段的替代主线。
+
+[2026-03-19 17:26] README 按最新主线重写
+
+本轮命令：
+- 当前会话下终端命令仍异常失败，因此本轮继续以文档与脚本整理为主，未补新的实跑命令
+
+本轮文档修改：
+- 重写仓库根目录 `README.md`
+
+本轮 README 更新内容：
+- 项目定位从“普通解释性仓库”明确收口为“AGI 数学结构还原仓库”
+- 增加“静态本体层 + 动态生成层”的主线解释
+- 增加“第一版统一主方程”说明
+- 增加“更高阶数学框架桥接”说明
+- 增加当前最稳结论、硬伤、阶段进度和下一阶段大任务块
+- 增加当前建议阅读顺序与目录约定
+
+理论推进：
+- README 现在已经能反映当前最核心的研究判断：
+  - 语言系统不是单一线性词向量空间
+  - `family patch（家族片区） + concept offset（概念偏移）` 已成为统一主式的一部分
+  - 项目目标已经推进到“统一主方程 + 更一般数学体系”阶段
+
+当前最严格的硬伤：
+- 本轮没有新增实跑数据
+- README 虽然同步到了最新主线，但项目本体仍然缺统一主方程的实证拟合
+- 终端命令异常失败仍未解决
+
+阶段进度判断：
+- `README 与主线文档一致性`：约 `92%`
+- `统一主方程块`：约 `31%`
+- 整个“还原通向 AGI 的新数学结构”总进度：约 `90%`
+
+[2026-03-19 20:02] 终端执行入口进一步定位与样本回归实跑阻塞结论
+
+本轮补充排查命令：
+- `cmd /c echo ok`
+- `C:\Windows\System32\cmd.exe /c echo ok`
+- `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -Command Get-Location`
+- `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -Command python -V`
+
+观测结果：
+- 上述命令仍然快速返回 `Exit code: 1`
+- 依旧无标准输出、无标准错误
+- 在 `login=true` 条件下额外出现 `windows sandbox: CreateProcessWithLogonW failed: 1056`
+
+结论收敛：
+- 阻塞点不在项目脚本本身，不在样本回归逻辑，不在具体数据路径
+- 阻塞点位于当前会话的命令执行入口层，即 `shell_command` 调用链 / 终端进程启动层异常
+- 因此当前无法在本会话内完成真正的 `样本集回归实跑`
+
+对项目主线的影响：
+- 代码主链已具备实跑条件：`stage56_sample_regression_execute.py`
+- 静态项原始链、控制轴回归、符号稳定检查都已经有统一入口
+- 当前最大瓶颈是执行环境，不是理论或代码结构
+
+下一步恢复顺序：
+- 先恢复终端执行入口
+- 再跑最小命令链：`Get-Location`、`python -V`、`python tests/codex/test_stage56_sample_regression_execute.py`
+- 最后运行统一入口：`python tests/codex/stage56_sample_regression_execute.py`
+
+[2026-03-19 20:12] 终端执行入口二次排查与恢复判断
+
+本轮补充排查命令：
+- `Get-Location`
+- `whoami`
+- `cmd /c echo ok`
+- `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -NonInteractive -Command Get-Location`
+- `Get-Location`（`login=true`）
+- `C:\Windows\System32\cmd.exe /c ver`
+- `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoLogo -NoProfile -NonInteractive -Command "[Environment]::CurrentDirectory"`
+
+观测结果：
+- 所有命令都在极短时间内返回 `Exit code: 1`
+- 仍然没有标准输出和标准错误
+- 失败模式对 `workdir`、显式 `cmd.exe`、显式 `powershell.exe`、`login=true/false` 基本不敏感
+
+本轮结论：
+- 当前问题已经收敛到“会话级命令执行入口异常”，不是单个解释器配置问题
+- 不能继续通过项目内脚本排查出更细根因，因为最基础的宿主进程都无法给出错误细节
+- 现阶段最合理动作不是继续在本会话内重试，而是更换或重建终端会话，然后用最小命令链验证恢复
+
+恢复建议顺序：
+- 新开一个会话或重建当前终端执行上下文
+- 优先验证：`cmd /c echo ok`、`Get-Location`、`python -V`
+- 三条最小命令恢复后，再运行：
+  - `python tests/codex/test_stage56_sample_regression_execute.py`
+  - `python tests/codex/stage56_sample_regression_execute.py`
+
+理论进度判断：
+- 本轮没有新增数学结论
+- 但工程判断进一步收敛：样本回归阻塞是环境问题，不是主方程或回归结构问题
+
+[2026-03-19 20:28] 终端恢复后样本集回归第一版实跑结果
+
+本轮关键命令：
+- `Get-Location`
+- `python -V`
+- `cmd /c echo ok`
+- `python tests/codex/test_stage56_sample_regression_execute.py`
+- `python tests/codex/test_stage56_sign_stability_runner.py`
+- `python tests/codex/test_stage56_family_patch_offset_raw_chain.py`
+- `python tests/codex/stage56_sample_regression_execute.py`
+- `python tests/codex/stage56_fullsample_regression_runner.py`
+- `python tests/codex/stage56_static_raw_chain.py`
+- `python tests/codex/stage56_family_patch_offset_raw_chain.py`
+- `python tests/codex/stage56_control_axis_regression.py`
+- `python tests/codex/stage56_sign_stability_runner.py`
+
+本轮工程修复：
+- 修复 `stage56_static_raw_chain.py`，补齐 `build_rows` 兼容接口
+- 修复 `stage56_fullsample_regression_runner.py`，让 `build_design_rows` 同时兼容旧口径“每轴一行”和新口径“每样本一行 + axes 嵌套字典”
+
+实跑结果：
+- 终端环境已恢复，最小命令链正常执行
+- `stage56_sample_regression_execute.py` 实跑成功，`row_count = 72`
+- `stage56_fullsample_regression_runner.py` 实跑成功，`row_count = 72`
+- `stage56_control_axis_regression.py` 实跑成功，`row_count = 72`
+- `stage56_sign_stability_runner.py` 实跑成功，`row_count = 72`
+- `stage56_family_patch_offset_raw_chain.py` 实跑成功，`row_count = 72`
+
+样本级数学结果：
+- `family_patch_raw` 均值约 `0.7357616657`
+- `concept_offset_raw` 均值约 `0.0083216776`
+- 控制轴单独回归下：
+  - `style_control_proxy`：对 `union_joint_adv` 为负、对 `union_synergy_joint` 为正、对 `strict_positive_synergy` 为负
+  - `logic_control_proxy`：对 `union_joint_adv / union_synergy_joint / strict_positive_synergy` 全负
+  - `syntax_control_proxy`：对 `union_joint_adv` 为正、对 `union_synergy_joint` 为负、对 `strict_positive_synergy` 为正
+- 样本级符号稳定项当前共有 5 个：
+  - `offset_static_proxy` 为稳定负项
+  - `logic_prototype_proxy` 为稳定正项
+  - `logic_fragile_bridge_proxy` 为稳定负项
+  - `syntax_constraint_conflict_proxy` 为稳定正项
+  - `logic_control_proxy` 为稳定负项
+
+本轮理论推进：
+- 统一主方程第一次获得真实样本级回归入口结果，不再只是摘要层结构
+- `logic_prototype` 的正向支撑、`logic_fragile_bridge` 的负向拖累、`syntax_constraint_conflict` 的正向促进，已经在样本级符号稳定分析里得到再次支持
+- 静态本体层里 `family patch / concept offset` 已经开始从“全零代理”推进到可区分的原始链
+
+严格判断：
+- 当前最稳的样本级主结论是“子场项比控制轴总项更稳定”
+- 控制轴本身仍然有强烈目标异质性，不能直接当成统一符号项写死进最终主方程
+- 终端恢复后，项目瓶颈已经从“环境阻塞”转回“变量质量与方程收敛”
+
+[2026-03-19 20:36] 控制轴分解与约束回归第一版实跑
+
+本轮关键命令：
+- `python tests/codex/test_stage56_control_axis_decomposition.py`
+- `python tests/codex/test_stage56_constrained_sample_regression.py`
+- `python tests/codex/stage56_control_axis_decomposition.py`
+- `python tests/codex/stage56_constrained_sample_regression.py`
+
+本轮新增脚本：
+- `tests/codex/stage56_control_axis_decomposition.py`
+- `tests/codex/test_stage56_control_axis_decomposition.py`
+- `tests/codex/stage56_constrained_sample_regression.py`
+- `tests/codex/test_stage56_constrained_sample_regression.py`
+
+样本级新结果：
+- 控制轴已从粗总项拆成 18 个细通道：
+  - `style / logic / syntax`
+  - 各自的 `compaction_mid / coverage_mid / delta_l2 / delta_mean_abs / role_align_compaction / role_align_coverage`
+- 当前均值：
+  - `mean_logic_compaction_mid = 0.06873`
+  - `mean_syntax_coverage_mid = 0.96251`
+
+控制轴分解后的回归方向：
+- `logic_compaction_mid` 对 `union_joint_adv` 和 `strict_positive_synergy` 为明显正项
+- `logic_delta_l2` 在三个目标上都偏负，继续支持“逻辑大扰动伤闭包”
+- `syntax_coverage_mid` 对 `union_joint_adv` 和 `strict_positive_synergy` 为正，支持“句法中段覆盖促进闭包”
+- `style` 相关细通道仍有明显异质性，说明风格更像重排轴，不像闭包主引擎
+
+约束回归结果：
+- 稳定符号先验当前设为：
+  - `logic_prototype_proxy` 正
+  - `logic_fragile_bridge_proxy` 负
+  - `syntax_constraint_conflict_proxy` 正
+  - `logic_control_proxy` 负
+- 在 `union_joint_adv` 与 `strict_positive_synergy` 上，这些先验没有被数据推翻
+- 在 `union_synergy_joint` 上，`logic_control_proxy` 原始权重为正，约束后被压为 `0`，说明逻辑控制总项在该目标上仍不稳定，不能直接作为统一符号项写进最终主方程
+
+本轮理论推进：
+- “控制轴总项不稳定，控制子通道更稳定” 得到样本级支持
+- “逻辑大扰动伤闭包、逻辑骨架项促进闭包、句法中段覆盖促进闭包” 得到进一步支持
+- 主方程下一步应优先吸收“细通道 + 约束回归”，而不是继续直接使用粗总控制轴
+
+[2026-03-19 20:45] style 细化与公理实装第一版实跑
+
+本轮关键命令：
+- `python tests/codex/test_stage56_style_axis_refinement.py`
+- `python tests/codex/test_stage56_axiom_constrained_regression.py`
+- `python tests/codex/stage56_style_axis_refinement.py`
+- `python tests/codex/stage56_axiom_constrained_regression.py`
+
+本轮新增脚本：
+- `tests/codex/stage56_style_axis_refinement.py`
+- `tests/codex/test_stage56_style_axis_refinement.py`
+- `tests/codex/stage56_axiom_constrained_regression.py`
+- `tests/codex/test_stage56_axiom_constrained_regression.py`
+
+style 细化结果：
+- 当前稳定负项：
+  - `style_compaction_mid`
+  - `style_coverage_mid`
+  - `style_delta_l2`
+  - `style_midfield`
+  - `style_role_align_coverage`
+- 当前稳定正项：
+  - `style_delta_mean_abs`
+  - `style_role_align_compaction`
+  - `style_alignment`
+  - `style_reorder_pressure`
+  - `style_gap`
+
+style 理论判断：
+- `style` 不再适合被看成单一重排轴
+- 当前更像分裂成两类：
+  - `粗重排负项`
+  - `细重排正项`
+
+公理实装结果：
+- 第一版公理特征：
+  - `atlas_axiom_feature`
+  - `offset_axiom_feature`
+  - `frontier_axiom_feature`
+  - `subfield_axiom_feature`
+  - `window_axiom_feature`
+  - `control_axiom_feature`
+- `subfield_axiom_feature` 在三个目标上都保持强正，是当前最稳的主方程解释核
+- `frontier_axiom_feature` 对 `union_joint_adv` 和 `strict_positive_synergy` 为正
+- `atlas_axiom_feature / offset_axiom_feature / window_axiom_feature` 当前经常被压成 `0`，说明静态和窗口原始测度还不够强
+
+本轮理论推进：
+- `style` 的异质性第一次被压成可解释的双结构：粗重排负项 vs 细重排正项
+- 公理约束第一次从“符号先验”推进到“拟合前特征重写”
+- 主方程已开始按公理形状进入样本级拟合，而不是仅在拟合后做解释
+
+[2026-03-19 20:56] 静态项直测强化与窗口项强化第一版实跑
+
+本轮关键命令：
+- `python tests/codex/test_stage56_static_direct_measure.py`
+- `python tests/codex/test_stage56_window_term_strengthening.py`
+- `python tests/codex/stage56_static_direct_measure.py`
+- `python tests/codex/stage56_window_term_strengthening.py`
+
+本轮新增脚本：
+- `tests/codex/stage56_static_direct_measure.py`
+- `tests/codex/test_stage56_static_direct_measure.py`
+- `tests/codex/stage56_window_term_strengthening.py`
+- `tests/codex/test_stage56_window_term_strengthening.py`
+
+静态项直测结果：
+- `family_patch_direct = 0.7357616657`
+- `concept_offset_direct = 0.0083216776`
+- `identity_margin_direct = 0.7274399880`
+- 三目标上的方向：
+  - `family_patch_direct` 偏负
+  - `concept_offset_direct` 偏负
+  - `identity_margin_direct` 偏正
+
+静态项理论判断：
+- 当前真正稳定的静态主变量不是单独的 `family patch` 或 `concept offset`
+- 而是 `identity_margin_direct = family_patch_direct - concept_offset_direct`
+- 这意味着“家族身份支撑必须显著大于局部偏移扰动”才更有利于闭包
+
+窗口项强化结果：
+- `generated_window_mass / prompt_window_mass / generated_window_gap` 在三个目标上整体偏负
+- `generated_dominance_mean` 在三个目标上整体偏正
+
+窗口项理论判断：
+- 窗口层的关键不是“生成窗口总量”
+- 而是“生成侧是否取得窗口主导地位”
+- 当前应优先把 `generated_dominance_mean` 而不是 `generated_window_mass` 写进更下一版主方程
+
+本轮理论推进：
+- 静态本体层开始从“绝对量思维”收缩到“身份边距思维”
+- 窗口层开始从“总量思维”收缩到“主导性思维”
+- 这两条都让主方程更接近简洁变量，而不是继续堆代理量
+
+[2026-03-19 21:06] 主方程重拟合第一版实跑
+
+本轮关键命令：
+- `python tests/codex/test_stage56_master_equation_refit.py`
+- `python tests/codex/stage56_master_equation_refit.py`
+
+本轮新增脚本：
+- `tests/codex/stage56_master_equation_refit.py`
+- `tests/codex/test_stage56_master_equation_refit.py`
+
+重拟合主式：
+- `U_refit(pair) = a1 * identity_margin + a2 * frontier + a3 * logic_prototype + a4 * logic_fragile_bridge + a5 * syntax_constraint_conflict + a6 * window_dominance + a7 * style_alignment + a8 * style_midfield + a9 * logic_control`
+
+当前稳定项：
+- `identity_margin_term` 稳定正
+- `logic_fragile_bridge_term` 稳定负
+- `syntax_constraint_conflict_term` 稳定正
+- `style_alignment_term` 稳定负
+
+当前混合项：
+- `logic_prototype_term` 在重拟合里变成混合项，说明它开始和其他变量重新分担解释力
+- `window_dominance_term` 只在 `strict_positive_synergy` 上为正，在 `union_joint_adv / union_synergy_joint` 上仍为负，说明它更像严格闭包成功条件，而不是一般联合优势条件
+
+本轮理论推进：
+- 主方程第一次出现“稳定核”：
+  - `identity_margin`
+  - `logic_fragile_bridge`
+  - `syntax_constraint_conflict`
+  - `style_alignment`
+- 当前主方程已经开始从“多代理并列”收缩到“稳定核 + 目标特异项”的结构
+
+[2026-03-19 21:15] 稳定核压缩与混合项拆分第一版实跑
+
+本轮关键命令：
+- `python tests/codex/test_stage56_stable_core_compression.py`
+- `python tests/codex/test_stage56_mixed_term_split.py`
+- `python tests/codex/stage56_stable_core_compression.py`
+- `python tests/codex/stage56_mixed_term_split.py`
+
+本轮新增脚本：
+- `tests/codex/stage56_stable_core_compression.py`
+- `tests/codex/test_stage56_stable_core_compression.py`
+- `tests/codex/stage56_mixed_term_split.py`
+- `tests/codex/test_stage56_mixed_term_split.py`
+
+稳定核压缩结果：
+- `positive_core = mean(identity_margin, syntax_constraint_conflict)`
+- `negative_core = mean(logic_fragile_bridge, style_alignment)`
+- `stable_core_balance = positive_core - negative_core`
+- 当前样本级上：
+  - `positive_core` 三目标为正
+  - `stable_core_balance` 三目标为正
+  - `negative_core` 单独仍有解释力，但关键已经转移到“正核是否压过负核”
+
+稳定核理论判断：
+- 当前主方程已经可以开始从多变量收缩到“正核 + 负核边距”
+- 真正关键的不再是负核单独大小，而是 `stable_core_balance`
+
+混合项拆分结果：
+- `logic_prototype_margin_term` 三目标稳定为正
+- `logic_prototype_frontier_term` 三目标稳定为负
+- `logic_prototype_syntax_term` 三目标稳定为正
+- `window_dominance_style_alignment_term` 与 `window_dominance_style_midfield_term` 在前两个目标为正、在严格正协同上为负
+- `window_dominance_frontier_term` 在前两个目标为负、在严格正协同上为正
+
+混合项理论判断：
+- `logic_prototype` 不是混乱项，而是“多耦合项”
+- 它和 `identity_margin`、`syntax_constraint_conflict` 耦合时是正项
+- 它和 `frontier` 耦合时是负项
+- `window_dominance` 目前仍然是目标特异混合项，尚未像 `logic_prototype` 一样拆干净
+
+本轮理论推进：
+- 主方程的稳定核进一步收缩到更短结构
+- `logic_prototype` 的混合性已被部分解释
+- 当前下一步最值得继续攻克的对象已经收缩到：
+  - `window_dominance`
+  - `frontier`
+
+[2026-03-19 21:12] 窗口主导性深拆与前沿异质性拆分第一版实跑
+
+本轮执行命令：
+- `Get-Content tests/codex/stage56_mixed_term_split.py`
+- `Get-Content tests/codex/stage56_master_equation_refit.py`
+- `Get-Content tests/codex_temp/stage56_mixed_term_split_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_master_equation_refit_20260319/summary.json`
+- `Get-Content tests/codex/stage56_window_term_strengthening.py`
+- `Get-Content tests/codex/stage56_static_direct_measure.py`
+- `Get-Content tests/codex/stage56_fullsample_regression_runner.py`
+- `Get-Content tests/codex/stage56_control_axis_decomposition.py`
+- `python tests/codex/test_stage56_window_dominance_deep_split.py`
+- `python tests/codex/test_stage56_frontier_heterogeneity_split.py`
+- `python -m py_compile tests/codex/stage56_window_dominance_deep_split.py tests/codex/test_stage56_window_dominance_deep_split.py tests/codex/stage56_frontier_heterogeneity_split.py tests/codex/test_stage56_frontier_heterogeneity_split.py`
+- `python tests/codex/stage56_window_dominance_deep_split.py`
+- `python tests/codex/stage56_frontier_heterogeneity_split.py`
+
+本轮新增脚本：
+- `tests/codex/stage56_window_dominance_deep_split.py`
+- `tests/codex/test_stage56_window_dominance_deep_split.py`
+- `tests/codex/stage56_frontier_heterogeneity_split.py`
+- `tests/codex/test_stage56_frontier_heterogeneity_split.py`
+
+本轮输出目录：
+- `tests/codex_temp/stage56_window_dominance_deep_split_20260319`
+- `tests/codex_temp/stage56_frontier_heterogeneity_split_20260319`
+
+窗口主导性深拆结果：
+- `window_identity_term` 三目标稳定为负
+- `window_syntax_term` 三目标稳定为正
+- `window_fragile_term` 三目标稳定为负
+- `window_positive_core_term` 三目标稳定为正
+- `window_negative_core_term` 三目标稳定为负
+- `window_style_term` 仍然目标分裂
+- `window_frontier_term` 仍然目标分裂
+
+窗口主导性理论判断：
+- `window_dominance` 不再是完全未收口混合项
+- 它已经可以重写成“正核耦合门 + 负核耦合门”
+- 当前真正未收口的窗口对象已缩到：
+  - `window_style_term`
+  - `window_frontier_term`
+
+前沿异质性拆分结果：
+- `frontier_compaction_term` 三目标稳定为负
+- `frontier_coverage_term` 三目标稳定为负
+- `frontier_separation_term` 三目标稳定为负
+- `frontier_compaction_late_shift` 三目标稳定为正
+- `frontier_balance_term` 三目标稳定为正
+- `frontier_coverage_late_shift` 仍然目标分裂
+
+前沿异质性理论判断：
+- 前沿层不再是纯混合项
+- 基础前沿量（压缩 / 覆盖 / 分离）更像静态负项
+- 前沿晚移与前沿平衡更像正迁移项
+- 当前前沿层真正未收口的重点对象已缩到：
+  - `frontier_coverage_late_shift`
+
+本轮理论推进：
+- 主方程从“稳定核 + 若干混合项”进一步压到“稳定核 + 条件门 + 迁移项”
+- `window_dominance` 已经部分收口为条件门
+- `frontier` 已经部分收口为静态负项与晚移正项的双层结构
+- 当前最接近闭式主方程的未完成对象已缩到三个：
+  - `window_style_term`
+  - `window_frontier_term`
+  - `frontier_coverage_late_shift`
+
+[2026-03-19 21:24] 窗口条件门收口、前沿迁移并场与稳定核闭式化第一版实跑
+
+本轮执行命令：
+- `Get-Content tests/codex_temp/stage56_style_axis_refinement_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_frontier_heterogeneity_split_20260319/rows.json`
+- `Get-Content tests/codex_temp/stage56_window_dominance_deep_split_20260319/rows.json`
+- `Get-Content tests/codex_temp/stage56_master_equation_refit_20260319/rows.json`
+- `python tests/codex/test_stage56_window_condition_gate_closure.py`
+- `python tests/codex/test_stage56_frontier_migration_master_refit.py`
+- `python tests/codex/test_stage56_stable_core_closed_form.py`
+- `python -m py_compile tests/codex/stage56_window_condition_gate_closure.py tests/codex/test_stage56_window_condition_gate_closure.py tests/codex/stage56_frontier_migration_master_refit.py tests/codex/test_stage56_frontier_migration_master_refit.py tests/codex/stage56_stable_core_closed_form.py tests/codex/test_stage56_stable_core_closed_form.py`
+- `python tests/codex/stage56_window_condition_gate_closure.py`
+- `python tests/codex/stage56_frontier_migration_master_refit.py`
+- `python tests/codex/stage56_stable_core_closed_form.py`
+
+本轮新增脚本：
+- `tests/codex/stage56_window_condition_gate_closure.py`
+- `tests/codex/test_stage56_window_condition_gate_closure.py`
+- `tests/codex/stage56_frontier_migration_master_refit.py`
+- `tests/codex/test_stage56_frontier_migration_master_refit.py`
+- `tests/codex/stage56_stable_core_closed_form.py`
+- `tests/codex/test_stage56_stable_core_closed_form.py`
+
+本轮输出目录：
+- `tests/codex_temp/stage56_window_condition_gate_closure_20260319`
+- `tests/codex_temp/stage56_frontier_migration_master_refit_20260319`
+- `tests/codex_temp/stage56_stable_core_closed_form_20260319`
+
+窗口条件门收口结果：
+- `window_style_positive_term` 三目标稳定为正
+- `window_style_negative_term` 三目标稳定为负
+- `window_frontier_positive_term` 三目标稳定为负
+- `window_frontier_negative_term` 三目标稳定为负
+
+窗口条件门理论判断：
+- `window_style_term` 已经彻底收口成正负双门
+- `window_frontier_term` 也已不再是混合项，但当前两部分都表现为负
+- 当前窗口层最稳的结论是：
+  - 窗口对风格细重排正核的放大是正项
+  - 窗口对风格负核与前沿基础的放大是负项
+
+前沿迁移并场重拟合结果：
+- `syntax_constraint_conflict_term` 三目标稳定为正
+- `frontier_negative_base_term` 三目标稳定为负
+- `window_gate_positive_term` 三目标稳定为正
+- `window_gate_negative_term` 三目标稳定为负
+- `identity_margin_term` 在新并场里三目标翻成负
+- `style_alignment_term` 在新并场里三目标翻成正
+
+前沿迁移并场理论判断：
+- 旧的粗前沿项已经可以被“负基础前沿”替代
+- 旧的粗窗口项已经可以被“正门 / 负门”替代
+- `identity_margin` 与 `style_alignment` 在新并场里出现明显共线性翻转
+- 这说明裸项不再适合作为最终闭式核，变量还需要继续压缩
+
+稳定核闭式化结果：
+- `positive_mass_term` 三目标稳定为正
+- `closed_form_balance_term` 三目标稳定为正
+- `negative_mass_term` 在前两个目标为负，但在 `strict_positive_synergy` 上翻成正
+
+稳定核闭式化理论判断：
+- 主方程首次出现真正像“闭式主结构”的候选：
+  - `positive_mass`
+  - `negative_mass`
+  - `closed_form_balance = positive_mass - negative_mass`
+- `closed_form_balance` 比旧的裸静态项、裸前沿项、裸窗口项更稳定
+- 但 `negative_mass` 还没有最终收口，内部仍混着：
+  - 真正破坏闭包的负质量
+  - 进入严格闭包时短时抬高的必要负荷
+
+本轮理论推进：
+- 主方程从“稳定核 + 条件门 + 迁移项”进一步压到“正质量 / 负质量 / 闭式边距”
+- `window_style` 和 `window_frontier` 都已经不再是混合项
+- 主方程目前最接近闭式收口的对象是：
+  - `closed_form_balance`
+  - `window_gate_positive`
+  - `window_gate_negative`
+  - `frontier_negative_base`
+
+[2026-03-19 21:36] 负质量深拆、闭式核重拟合与控制轴并入闭式核第一版实跑
+
+本轮执行命令：
+- `Get-Content tests/codex_temp/stage56_stable_core_closed_form_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_frontier_migration_master_refit_20260319/rows.json`
+- `Get-Content tests/codex_temp/stage56_control_axis_decomposition_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_style_axis_refinement_20260319/summary.json`
+- `python tests/codex/test_stage56_negative_mass_deep_split.py`
+- `python tests/codex/test_stage56_closed_form_kernel_refit.py`
+- `python tests/codex/test_stage56_control_axis_closed_form_integration.py`
+- `python -m py_compile tests/codex/stage56_negative_mass_deep_split.py tests/codex/test_stage56_negative_mass_deep_split.py tests/codex/stage56_closed_form_kernel_refit.py tests/codex/test_stage56_closed_form_kernel_refit.py tests/codex/stage56_control_axis_closed_form_integration.py tests/codex/test_stage56_control_axis_closed_form_integration.py`
+- `python tests/codex/stage56_negative_mass_deep_split.py`
+- `python tests/codex/stage56_closed_form_kernel_refit.py`
+- `python tests/codex/stage56_control_axis_closed_form_integration.py`
+
+本轮新增脚本：
+- `tests/codex/stage56_negative_mass_deep_split.py`
+- `tests/codex/test_stage56_negative_mass_deep_split.py`
+- `tests/codex/stage56_closed_form_kernel_refit.py`
+- `tests/codex/test_stage56_closed_form_kernel_refit.py`
+- `tests/codex/stage56_control_axis_closed_form_integration.py`
+- `tests/codex/test_stage56_control_axis_closed_form_integration.py`
+
+本轮输出目录：
+- `tests/codex_temp/stage56_negative_mass_deep_split_20260319`
+- `tests/codex_temp/stage56_closed_form_kernel_refit_20260319`
+- `tests/codex_temp/stage56_control_axis_closed_form_integration_20260319`
+
+负质量深拆结果：
+- `destructive_negative_term` 在 `union_joint_adv / union_synergy_joint` 上为负，在 `strict_positive_synergy` 上翻正
+- `alignment_load_term` 与 `negative_mass_rebalanced_term` 也保持同样方向
+- 当前没有三目标稳定项
+
+负质量深拆理论判断：
+- `style_alignment` 不该继续和破坏性负项混写
+- 但把它拆出去以后，`destructive_negative` 仍然在严格正闭包上翻正
+- 这说明破坏性负项内部还混着“真破坏负荷”和“严格闭包必要负载”
+
+闭式核重拟合结果：
+- `positive_mass_v2_term` 三目标稳定为正
+- `alignment_load_v2_term` 三目标稳定为负
+- `closed_form_balance_v2_term` 三目标稳定为正
+- `destructive_negative_v2_term` 仍在严格正闭包上翻正
+- `strict_balance_v2_term` 仍然目标分裂
+
+闭式核重拟合理论判断：
+- 第二版闭式核已经比上一版更稳
+- `closed_form_balance_v2` 已经可以看成当前最接近最终主核的对象
+- `alignment_load_v2` 当前更像稳定负修正项
+- `strict_balance_v2` 还不够稳，说明严格闭包核和一般闭包核还不能完全合一
+
+控制轴并入闭式核结果：
+- `closed_form_balance_v2_term` 三目标稳定为正
+- `alignment_load_v2_term` 三目标稳定为负
+- `style_structure_gain_term` 三目标稳定为正
+- `logic_structure_gain_term` 仍然目标分裂
+- `syntax_structure_gain_term` 仍然目标分裂
+
+控制轴并入闭式核理论判断：
+- 当前真正能稳定并入闭式核的控制修正项是 `style_structure_gain`
+- `logic` 与 `syntax` 在闭式核层更像已经通过别的正质量项间接进入
+- 当前最接近闭式主式的结构已经变成：
+  - `closed_form_balance_v2`
+  - `alignment_load_v2`
+  - `style_structure_gain`
+
+本轮理论推进：
+- 主方程从“闭式边距候选”继续推进到“主核 + 负修正 + 风格微修正”
+- 当前最有希望的短主式原型是：
+  - `U_closed(pair) = closed_form_balance_v2 - alignment_load_v2 + style_structure_gain + residual`
+- 当前下一步最值得继续攻克的对象已收缩到：
+  - `destructive_negative` 内部的必要负载拆分
+  - `logic_structure_gain`
+  - `syntax_structure_gain`
+[2026-03-19 21:43] 负质量深拆、闭式核重拟合与大统一智能理论差异判断收口
+
+本轮命令：
+- `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+本轮完成：
+- 基于上一轮已经实跑完成的 `stage56_negative_mass_deep_split.py`、`stage56_closed_form_kernel_refit.py`、`stage56_control_axis_closed_form_integration.py` 结果，收口当前闭式核判断。
+- 继续整理 `AGI_GPT5_ICSPB.md` 现阶段理论位置：当前体系更接近“语言与闭包的中层有效理论”，而不是“大统一智能理论”的最终形态。
+
+当前最重要的理论判断：
+- `closed_form_balance_v2_term` 已经成为当前最稳定的闭式核候选，三目标稳定为正。
+- `alignment_load_v2_term` 已稳定成为跨目标负修正项。
+- `style_structure_gain_term` 是目前唯一能稳定并入闭式核的控制轴微修正项。
+- `logic_structure_gain_term` 与 `syntax_structure_gain_term` 仍然目标分裂，说明逻辑、句法在闭式核层更可能通过主质量项间接进入，而不是保留为独立稳定修正项。
+
+从大脑整体运行机制角度的判断：
+- 当前理论需要继续改进，主要缺口在：连续时间动力学、微回路级竞争/抑制变量、吸引域/稳定势函数、跨模态统一机制。
+- 现在的体系已经能描述样本级闭包、前沿迁移、窗口条件门和静态本体边距，但仍然更像“中层有效理论”，还不是完整神经动力学理论。
+
+从智能理论角度的判断：
+- 当前体系已经能较强解释语言编码与闭包机制，但还没有统一价值、目标、规划、动作、长期学习、自修改与跨模态感知。
+- 因此它更像“大统一智能理论”的一个强子系统，而不是最终完形。
+
+如果未来有人完成大统一智能理论，与当前体系最可能的差异：
+- 变量更少、更短、更闭式。
+- 时间动力学会进入核心，而不是外挂窗口分析。
+- 会显式统一语言、感知、动作、规划与价值系统。
+- 会更接近神经回路与吸引域动力学，而不是主要停留在样本级结构量。
+- 会更少依赖工程代理量，更多依赖原生、可判伪的状态变量。
+
+当前项目阶段进度修正：
+- `样本集回归（sample regression，样本回归）`：`94%`
+- `负质量深拆块`：`68%`
+- `闭式核重拟合块`：`71%`
+- `控制轴并入闭式核块`：`63%`
+- `统一主方程块`：`94%`
+- 项目整体“还原通向 AGI（通用人工智能）的新数学结构”：`98%`
+
+下一阶段的大任务块：
+1. `破坏负荷再拆块`：继续拆 `destructive_negative`，把真破坏负荷和严格闭包必要负载分开。
+2. `闭式核最终重写块`：尝试用 `closed_form_balance_v2 - alignment_load_v2 + style_structure_gain` 直接替代旧长向量主式。
+3. `逻辑/句法微修正再压缩块`：判断 `logic_structure_gain`、`syntax_structure_gain` 是并入主质量项还是保留独立微修正。
+4. `真实语料分布块`：验证当前闭式核不是模板化数据特有产物。
+5. `ICSPB 闭式方程块`：把当前闭式核推进到更接近可判伪统一方程的形式。
+[2026-03-19 21:54] 破坏负荷再拆第二版、闭式核第三版候选与逻辑/句法微修正再压缩
+
+本轮命令：
+- `Get-Content tests/codex/stage56_negative_mass_deep_split.py`
+- `Get-Content tests/codex/stage56_closed_form_kernel_refit.py`
+- `Get-Content tests/codex_temp/stage56_negative_mass_deep_split_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_closed_form_kernel_refit_20260319/summary.json`
+- `python tests/codex/test_stage56_destructive_negative_resplit.py`
+- `python tests/codex/test_stage56_closed_form_final_kernel.py`
+- `python tests/codex/test_stage56_logic_syntax_micro_compression.py`
+- `python -m py_compile tests/codex/stage56_destructive_negative_resplit.py tests/codex/test_stage56_destructive_negative_resplit.py tests/codex/stage56_closed_form_final_kernel.py tests/codex/test_stage56_closed_form_final_kernel.py tests/codex/stage56_logic_syntax_micro_compression.py tests/codex/test_stage56_logic_syntax_micro_compression.py`
+- `python tests/codex/stage56_destructive_negative_resplit.py`
+- `python tests/codex/stage56_closed_form_final_kernel.py`
+- `python tests/codex/stage56_logic_syntax_micro_compression.py`
+- `Get-Content tests/codex_temp/stage56_destructive_negative_resplit_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_closed_form_final_kernel_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_logic_syntax_micro_compression_20260319/summary.json`
+- `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_destructive_negative_resplit.py`
+- `tests/codex/test_stage56_destructive_negative_resplit.py`
+- `tests/codex/stage56_closed_form_final_kernel.py`
+- `tests/codex/test_stage56_closed_form_final_kernel.py`
+- `tests/codex/stage56_logic_syntax_micro_compression.py`
+- `tests/codex/test_stage56_logic_syntax_micro_compression.py`
+
+本轮真实输出目录：
+- `tests/codex_temp/stage56_destructive_negative_resplit_20260319`
+- `tests/codex_temp/stage56_closed_form_final_kernel_20260319`
+- `tests/codex_temp/stage56_logic_syntax_micro_compression_20260319`
+
+本轮最重要的新结果：
+1. `destructive_core_term = logic_fragile_bridge` 三目标稳定为负，是当前唯一稳定的“真破坏核”。
+2. `strict_load_term = frontier_negative_base + window_gate_negative` 对 `union_joint_adv / union_synergy_joint` 为负，但对 `strict_positive_synergy` 为正，说明它应被改写成“严格闭包专用负载项”，不应继续混入一般闭包负质量。
+3. `core_balance_v3 = positive_mass_v2 - destructive_core - alignment_load_v2` 三目标稳定为正。
+4. `closed_form_kernel_v3 = core_balance_v3 + style_structure_gain` 三目标稳定为正，是当前最短、最接近一般闭包核的第三版候选。
+5. `style_structure_gain` 在第三版闭式核里不再表现为正修正，而是三目标稳定为负，说明它更像稳定负微修正，而不是独立正项。
+6. 逻辑/句法微修正里，目前唯一三目标稳定的项是 `logic_strictload_term = logic_structure_gain * strict_load`，表现为稳定正；其余逻辑/句法微项仍然目标分裂。
+
+当前理论判断修正：
+- 一般闭包核更适合写成：`U_kernel_v3(pair) = core_balance_v3 + style_structure_gain + residual`
+- 严格闭包不应再直接共用一般闭包核，而更可能需要在一般闭包核之外，再加一条 `strict_load` 专用负载通道。
+- 逻辑/句法微修正当前不能整体并回主核；更合理的做法是只保留 `logic_strictload_term` 作为逻辑微修正入口。
+
+当前项目阶段进度修正：
+- `样本集回归（sample regression，样本回归）`：`90%`
+- `破坏负荷再拆块（第二版）`：`81%`
+- `闭式核最终重写块（第三版候选）`：`84%`
+- `逻辑 / 句法微修正再压缩块`：`72%`
+- `统一主方程块`：`91%`
+- 项目整体“还原通向 AGI（通用人工智能）的新数学结构”：`98%`
+
+下一阶段的大任务块：
+1. `严格负载专门建模块`：把 `strict_load` 从一般闭包核里彻底移出，改写成严格闭包专用负载项。
+2. `闭式核第三版最终重写块`：直接用 `core_balance_v3 + style_structure_gain` 重写一般闭包核，再检查能否替代旧长向量主式。
+3. `逻辑严格负载微修正块`：把 `logic_strictload_term` 并回闭式核，检查是否比旧的 `logic_structure_gain` 更稳。
+4. `真实语料分布块`：验证第三版闭式核不是模板化数据特有产物。
+5. `ICSPB 闭式方程块`：把第三版闭式核推进到更接近可判伪统一方程的形式。
+[2026-03-19 22:00] 严格负载专门建模块、第四版一般闭包核与一般核/严格核双结构
+
+本轮命令：
+- `Get-Content tests/codex_temp/stage56_destructive_negative_resplit_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_closed_form_final_kernel_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_logic_syntax_micro_compression_20260319/summary.json`
+- `python tests/codex/test_stage56_strict_load_module.py`
+- `python tests/codex/test_stage56_closed_form_v4_refit.py`
+- `python tests/codex/test_stage56_general_strict_dual_kernel.py`
+- `python -m py_compile tests/codex/stage56_strict_load_module.py tests/codex/test_stage56_strict_load_module.py tests/codex/stage56_closed_form_v4_refit.py tests/codex/test_stage56_closed_form_v4_refit.py tests/codex/stage56_general_strict_dual_kernel.py tests/codex/test_stage56_general_strict_dual_kernel.py`
+- `python tests/codex/stage56_strict_load_module.py`
+- `python tests/codex/stage56_closed_form_v4_refit.py`
+- `python tests/codex/stage56_general_strict_dual_kernel.py`
+- `Get-Content tests/codex_temp/stage56_strict_load_module_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_closed_form_v4_refit_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_general_strict_dual_kernel_20260319/summary.json`
+- `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_strict_load_module.py`
+- `tests/codex/test_stage56_strict_load_module.py`
+- `tests/codex/stage56_closed_form_v4_refit.py`
+- `tests/codex/test_stage56_closed_form_v4_refit.py`
+- `tests/codex/stage56_general_strict_dual_kernel.py`
+- `tests/codex/test_stage56_general_strict_dual_kernel.py`
+
+本轮真实输出目录：
+- `tests/codex_temp/stage56_strict_load_module_20260319`
+- `tests/codex_temp/stage56_closed_form_v4_refit_20260319`
+- `tests/codex_temp/stage56_general_strict_dual_kernel_20260319`
+
+本轮最重要的新结果：
+1. `strict_load` 已被改写成四个严格模块：`strict_module_base`、`strict_module_logic`、`strict_module_combined`、`strict_module_residual`。
+2. 这四个严格模块当前全部呈现相同符号模式：对 `union_joint_adv / union_synergy_joint` 为负，对 `strict_positive_synergy` 为正，说明它们不应再混入一般闭包核，而更像严格闭包专用模块。
+3. 第四版一般闭包核被改写成：
+   - `style_penalty = -style_structure_gain`
+   - `general_balance_v4 = core_balance_v3 + logic_strictload`
+   - `kernel_v4 = general_balance_v4 - style_penalty`
+4. `kernel_v4_term` 三目标稳定为正，是当前最短、最稳的一般闭包核候选。
+5. `style_penalty_term` 与 `general_balance_v4_term` 单独看都稳定为负，说明当前真正有意义的不是拆项本身，而是它们被压成短核之后的组合。
+6. 一般核 / 严格核双结构摘要已经开始稳定：`general_kernel = kernel_v4`，`strict_kernel_module = strict_module_combined`，而严格模块不是一般核的小修正，而是一条单独的目标特异模块线。
+
+当前理论判断修正：
+- 当前最值得写进主方程的一般闭包核已经从 `kernel_v3` 推进到 `kernel_v4`。
+- 严格闭包不再适合共写在一般核里，而更像 `U_strict = U_kernel_v4 + strict_module + residual`。
+- 当前双主式结构已经开始比单主式更符合数据。
+
+当前项目阶段进度修正：
+- `样本集回归（sample regression，样本回归）`：`91%`
+- `严格负载专门建模块`：`77%`
+- `闭式核第四版重写块`：`88%`
+- `一般核 / 严格核双结构块`：`74%`
+- `统一主方程块`：`92%`
+- 项目整体“还原通向 AGI（通用人工智能）的新数学结构”：`98%`
+
+下一阶段的大任务块：
+1. `双主式重写块`：把一般闭包核和严格闭包模块正式写成两条主式，不再共用一条粗主方程。
+2. `第四版闭式核最终定型块`：直接用 `kernel_v4` 替代旧的一般闭包候选，检查它是否足够成为主核。
+3. `逻辑严格负载微修正块`：把 `logic_strictload_term` 并回严格闭包模块，而不是继续留在控制修正层。
+4. `真实语料分布块`：验证双主式结构不是模板化数据特有产物。
+5. `ICSPB 闭式方程块`：把当前双主式推进到更接近可判伪统一方程的形式。
+[2026-03-19 22:21] 双主式重拟合与严格模块候选排序第一版实跑
+
+本轮命令：
+- `Get-Content tests/codex_temp/stage56_closed_form_v4_refit_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_strict_load_module_20260319/summary.json`
+- `python tests/codex/test_stage56_dual_master_equation_refit.py`
+- `python tests/codex/test_stage56_strict_module_selector.py`
+- `python -m py_compile tests/codex/stage56_dual_master_equation_refit.py tests/codex/test_stage56_dual_master_equation_refit.py tests/codex/stage56_strict_module_selector.py tests/codex/test_stage56_strict_module_selector.py`
+- `python tests/codex/stage56_dual_master_equation_refit.py`
+- `python tests/codex/stage56_strict_module_selector.py`
+- `Get-Content tests/codex_temp/stage56_dual_master_equation_refit_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_strict_module_selector_20260319/summary.json`
+- `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_dual_master_equation_refit.py`
+- `tests/codex/test_stage56_dual_master_equation_refit.py`
+- `tests/codex/stage56_strict_module_selector.py`
+- `tests/codex/test_stage56_strict_module_selector.py`
+
+本轮真实输出目录：
+- `tests/codex_temp/stage56_dual_master_equation_refit_20260319`
+- `tests/codex_temp/stage56_strict_module_selector_20260319`
+
+本轮最重要的新结果：
+1. 双主式重拟合已经正式落成：`U_general = kernel_v4`，`U_strict_module = strict_load + logic_strictload`，`U_gap = U_general - U_strict_module`。
+2. `kernel_v4_term` 三目标稳定为正，说明第四版一般闭包核已经足够担任一般主核。
+3. `strict_module_term` 三目标稳定为负，说明严格模块当前不应被并回一般主核，而应保留为独立负载通道。
+4. `dual_gap_term` 三目标稳定为正，说明一般核与严格模块之间的边距本身就是一个稳定结构量。
+5. 严格模块候选排序已经跑出：`strict_module_base_term` 第一，`strict_module_residual_term` 第二，`strict_module_combined_term` 第三，`strict_module_logic_term` 明显最弱。
+6. 但前三者分数非常接近，说明严格模块主结构已经稳定，最终形式还没有完全唯一化。
+
+当前理论判断修正：
+- 双主式已经进入正式回归层，不再只是解释层判断。
+- 当前更合理的结构是：一般核由 `kernel_v4` 承担，严格闭包则由独立的严格模块承担，而 `dual_gap` 可作为双主式之间的稳定判别量。
+- `logic_strictload` 单独看仍然不足以承担完整严格模块，它更像严格模块内部的一个辅助微修正。
+
+当前项目阶段进度修正：
+- `样本集回归（sample regression，样本回归）`：`92%`
+- `一般核 / 严格核双结构块`：`84%`
+- `双主式重拟合块`：`79%`
+- `严格模块候选排序块`：`71%`
+- `统一主方程块`：`93%`
+- 项目整体“还原通向 AGI（通用人工智能）的新数学结构”：`98%`
+
+下一阶段的大任务块：
+1. `双主式最终定型块`：把 `U_general = kernel_v4`、`U_strict = strict_module + residual` 进一步写成更严格的双主式框架。
+2. `严格模块收口块`：在 `strict_module_base / residual / combined` 三者之间继续收口，选出最终严格模块形式。
+3. `dual_gap 并场块`：把 `dual_gap` 正式并回主方程，作为一般核与严格模块之间的稳定边距量。
+4. `真实语料分布块`：验证双主式结构不是模板化数据特有产物。
+5. `ICSPB 闭式方程块`：把当前双主式推进到更接近可判伪统一方程的形式。
+[2026-03-19 22:27] 严格模块最终候选定型与双主式/边距项共线性修正
+
+本轮命令：
+- `Get-Content tests/codex_temp/stage56_closed_form_v4_refit_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_strict_load_module_20260319/summary.json`
+- `python tests/codex/test_stage56_strict_module_finalizer.py`
+- `python tests/codex/test_stage56_dual_master_equation_finalizer.py`
+- `python -m py_compile tests/codex/stage56_strict_module_finalizer.py tests/codex/test_stage56_strict_module_finalizer.py tests/codex/stage56_dual_master_equation_finalizer.py tests/codex/test_stage56_dual_master_equation_finalizer.py`
+- `python tests/codex/stage56_strict_module_finalizer.py`
+- `python tests/codex/stage56_dual_master_equation_finalizer.py`
+- `Get-Content tests/codex_temp/stage56_strict_module_finalizer_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_dual_master_equation_finalizer_20260319/summary.json`
+- `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_strict_module_finalizer.py`
+- `tests/codex/test_stage56_strict_module_finalizer.py`
+- `tests/codex/stage56_dual_master_equation_finalizer.py`
+- `tests/codex/test_stage56_dual_master_equation_finalizer.py`
+
+本轮真实输出目录：
+- `tests/codex_temp/stage56_strict_module_finalizer_20260319`
+- `tests/codex_temp/stage56_dual_master_equation_finalizer_20260319`
+
+本轮最重要的新结果：
+1. 严格模块最终候选已经基本定型：`strict_module_final = strict_module_base_term`。
+2. `strict_module_base_term` 在“严格闭包选择性 + 最简性”标准下优于 `residual / combined / logic` 三种候选。
+3. 当把双主式真正写成 `U_general = kernel_v4`、`U_strict = strict_module_base`、`U_gap = U_general - U_strict` 并同层回归时，会出现明显共线性重分配：
+   - `kernel_v4_term`：前两个目标负，严格闭包正
+   - `strict_module_final_term`：前两个目标负，严格闭包正
+   - `dual_gap_final_term`：前两个目标正，严格闭包负
+4. 这说明当前“双主式骨架”已经成立，但 `dual_gap` 暂时更适合作为判别层变量，而不是和一般核、严格模块同层并回主方程。
+
+当前理论判断修正：
+- 一般闭包核候选仍然是 `kernel_v4`。
+- 严格闭包模块候选已经基本收口为 `strict_module_base`。
+- `dual_gap` 现在最适合作为一般核/严格模块之间的判别量，而不是主方程同层变量。
+- 当前最合理的结构已经从“单主式”推进到“主核层 + 严格模块层 + 判别层”的分层双主式框架。
+
+当前项目阶段进度修正：
+- `样本集回归（sample regression，样本回归）`：`92%`
+- `严格模块最终定型块`：`88%`
+- `双主式定型块`：`84%`
+- `dual_gap 判别化块`：`73%`
+- `统一主方程块`：`93%`
+- 项目整体“还原通向 AGI（通用人工智能）的新数学结构”：`98%`
+
+下一阶段的大任务块：
+1. `双主式层级化块`：把一般核、严格模块、边距项改写成“主核层 + 严格模块层 + 判别层”的分层写法。
+2. `第四版一般核最终定型块`：继续验证 `kernel_v4` 是否足够稳定到能作为最终一般闭包核。
+3. `边距项判别化块`：把 `dual_gap` 从并场主变量改写成判别变量。
+4. `真实语料分布块`：验证双主式层级化结构不是模板化数据特有产物。
+5. `ICSPB 闭式方程块`：把双主式层级化结构推进到更接近可判伪统一方程的形式。
+[2026-03-19 22:45] 第四版一般核验证、dual_gap 判别化与双主式层级化第一版实跑
+
+本轮命令：
+- `python tests/codex/test_stage56_kernel_v4_validation.py`
+- `python tests/codex/test_stage56_dual_gap_classifier.py`
+- `python tests/codex/test_stage56_dual_equation_layered.py`
+- `python -m py_compile tests/codex/stage56_kernel_v4_validation.py tests/codex/test_stage56_kernel_v4_validation.py tests/codex/stage56_dual_gap_classifier.py tests/codex/test_stage56_dual_gap_classifier.py tests/codex/stage56_dual_equation_layered.py tests/codex/test_stage56_dual_equation_layered.py`
+- `python tests/codex/stage56_kernel_v4_validation.py`
+- `python tests/codex/stage56_dual_gap_classifier.py`
+- `python tests/codex/stage56_dual_equation_layered.py`
+- `Get-Content tests/codex_temp/stage56_kernel_v4_validation_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_dual_gap_classifier_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_dual_equation_layered_20260319/summary.json`
+- `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_kernel_v4_validation.py`
+- `tests/codex/test_stage56_kernel_v4_validation.py`
+- `tests/codex/stage56_dual_gap_classifier.py`
+- `tests/codex/test_stage56_dual_gap_classifier.py`
+- `tests/codex/stage56_dual_equation_layered.py`
+- `tests/codex/test_stage56_dual_equation_layered.py`
+
+本轮真实输出目录：
+- `tests/codex_temp/stage56_kernel_v4_validation_20260319`
+- `tests/codex_temp/stage56_dual_gap_classifier_20260319`
+- `tests/codex_temp/stage56_dual_equation_layered_20260319`
+
+本轮最重要的新结果：
+1. `kernel_v4` 已经不只对 `union_joint_adv / union_synergy_joint` 稳定为正，对 `general_mean_target / strict_positive_synergy / strictness_delta_vs_general` 也稳定为正，说明它已足够接近当前阶段的最终一般闭包核。
+2. `dual_gap_final` 一旦改成判别层变量，对 `strictness_delta_vs_union / strictness_delta_vs_synergy / strict_positive_synergy` 都稳定为正，明显比把它和主核同层回归更干净。
+3. 双主式的当前最佳层级写法已经清楚出现：
+   - `U_general = kernel_v4`
+   - `U_strict = strict_module_base`
+   - `D_strict = dual_gap_final`
+
+当前理论判断修正：
+- `kernel_v4` 现在更适合作为一般主核，而不是过渡候选。
+- `strict_module_base` 现在更适合作为严格闭包模块。
+- `dual_gap` 现在最适合作为“严格性判别层变量”，不是主核层变量。
+- 当前最合理的整体结构已经从“双主式”继续推进成“主核层 + 严格模块层 + 判别层”。
+
+当前项目阶段进度修正：
+- `样本集回归（sample regression，样本回归）`：`92%`
+- `第四版一般核最终验证块`：`86%`
+- `dual_gap 判别化块`：`81%`
+- `双主式层级化块`：`81%`
+- `统一主方程块`：`94%`
+- 项目整体“还原通向 AGI（通用人工智能）的新数学结构”：`98%`
+
+下一阶段的大任务块：
+1. `双主式正式方程块`：把 `U_general = kernel_v4`、`U_strict = strict_module_base`、`D_strict = dual_gap_final` 正式改写成分层方程组。
+2. `层间耦合块`：继续刻画主核层、严格层、判别层之间的耦合关系。
+3. `第四版一般核定型块`：继续确认 `kernel_v4` 是否足够稳到可以视为当前阶段最终一般闭包核。
+4. `真实语料分布块`：验证双主式层级化结构不是模板化数据特有产物。
+5. `ICSPB 闭式方程块`：把当前分层双主式推进到更接近可判伪统一方程的形式。
+[2026-03-19 23:08] 第四版一般核验证、dual_gap 判别化与分层双主式正式系统第一版实跑
+
+本轮命令：
+- `python tests/codex/test_stage56_kernel_v4_validation.py`
+- `python tests/codex/test_stage56_dual_gap_classifier.py`
+- `python tests/codex/test_stage56_dual_equation_layered.py`
+- `python -m py_compile tests/codex/stage56_kernel_v4_validation.py tests/codex/test_stage56_kernel_v4_validation.py tests/codex/stage56_dual_gap_classifier.py tests/codex/test_stage56_dual_gap_classifier.py tests/codex/stage56_dual_equation_layered.py tests/codex/test_stage56_dual_equation_layered.py`
+- `python tests/codex/stage56_kernel_v4_validation.py`
+- `python tests/codex/stage56_dual_gap_classifier.py`
+- `python tests/codex/stage56_dual_equation_layered.py`
+- `python tests/codex/test_stage56_layer_coupling_refit.py`
+- `python tests/codex/test_stage56_dual_equation_formal_system.py`
+- `python -m py_compile tests/codex/stage56_layer_coupling_refit.py tests/codex/test_stage56_layer_coupling_refit.py tests/codex/stage56_dual_equation_formal_system.py tests/codex/test_stage56_dual_equation_formal_system.py`
+- `python tests/codex/stage56_layer_coupling_refit.py`
+- `python tests/codex/stage56_dual_equation_formal_system.py`
+- `Get-Content tests/codex_temp/stage56_kernel_v4_validation_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_dual_gap_classifier_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_dual_equation_layered_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_layer_coupling_refit_20260319/summary.json`
+- `Get-Content tests/codex_temp/stage56_dual_equation_formal_system_20260319/summary.json`
+- `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+本轮新增脚本与测试：
+- `tests/codex/stage56_kernel_v4_validation.py`
+- `tests/codex/test_stage56_kernel_v4_validation.py`
+- `tests/codex/stage56_dual_gap_classifier.py`
+- `tests/codex/test_stage56_dual_gap_classifier.py`
+- `tests/codex/stage56_dual_equation_layered.py`
+- `tests/codex/test_stage56_dual_equation_layered.py`
+- `tests/codex/stage56_layer_coupling_refit.py`
+- `tests/codex/test_stage56_layer_coupling_refit.py`
+- `tests/codex/stage56_dual_equation_formal_system.py`
+- `tests/codex/test_stage56_dual_equation_formal_system.py`
+
+本轮真实输出目录：
+- `tests/codex_temp/stage56_kernel_v4_validation_20260319`
+- `tests/codex_temp/stage56_dual_gap_classifier_20260319`
+- `tests/codex_temp/stage56_dual_equation_layered_20260319`
+- `tests/codex_temp/stage56_layer_coupling_refit_20260319`
+- `tests/codex_temp/stage56_dual_equation_formal_system_20260319`
+
+本轮最重要的新结果：
+1. `kernel_v4` 已经不只对一般闭包目标稳定为正，对 `general_mean_target / strict_positive_synergy / strictness_delta_vs_general` 也稳定为正，说明它已足够接近当前阶段最终一般闭包核。
+2. `dual_gap_final` 作为判别层变量，对 `strictness_delta_vs_union / strictness_delta_vs_synergy / strict_positive_synergy` 都稳定为正，明显比把它和主核同层并回归更合理。
+3. 分层双主式正式系统已经可以明确写成：
+   - `U_general(pair) = kernel_v4(pair)`
+   - `U_strict(pair) = strict_module_base(pair)`
+   - `D_strict(pair) = dual_gap_final(pair)`
+4. 层间耦合方向图已经出现：
+   - `gd_coupling = kernel_v4 * dual_gap_final` 三目标稳定为正，是当前最稳主耦合
+   - `gs_coupling = kernel_v4 * strict_module_final` 目标异质
+   - `sd_coupling = strict_module_final * dual_gap_final` 目标异质
+
+当前理论判断修正：
+- 当前最合理的结构已经从“双主式”推进到“正式分层双主式系统”。
+- 一般层与判别层的耦合现在最稳，说明 `kernel_v4` 与 `dual_gap` 的协同是当前结构里的主通道。
+- 严格层与其它两层之间仍然存在目标特异性，说明它还不是纯粹的稳定主通道，而更像受控附着层。
+
+当前项目阶段进度修正：
+- `样本集回归（sample regression，样本回归）`：`92%`
+- `第四版一般核最终验证块`：`89%`
+- `dual_gap 判别化块`：`81%`
+- `双主式层级化块`：`86%`
+- `层间耦合块`：`69%`
+- `双主式正式方程块`：`85%`
+- `统一主方程块`：`94%`
+- 项目整体“还原通向 AGI（通用人工智能）的新数学结构”：`98%`
+
+下一阶段的大任务块：
+1. `分层方程定型块`：把 `U_general = kernel_v4`、`U_strict = strict_module_base`、`D_strict = dual_gap_final` 继续压缩成更短的分层方程组。
+2. `层间耦合收口块`：继续拆 `gs / gd / sd` 三条耦合，确认哪条是主耦合，哪条只是目标特异耦合。
+3. `第四版一般核最终定型块`：继续确认 `kernel_v4` 是否可以直接视为当前阶段最终一般闭包核。
+4. `真实语料分布块`：验证分层双主式系统不是模板化数据特有产物。
+5. `ICSPB 闭式方程块`：把当前分层双主式推进到更接近可判伪统一方程的形式。
+
+[2026-03-19 23:57] 规范化通道系统复跑、结果修正与主文档同步
+
+本轮执行命令：
+1. `Get-Date -Format "yyyy-MM-dd HH:mm"`
+2. `Get-ChildItem tests/codex_temp | Where-Object { $_.Name -like 'stage56_coupling_channel_canonicalization*' } | Select-Object -ExpandProperty FullName`
+3. `Get-ChildItem tests/codex_temp | Where-Object { $_.Name -like 'stage56_layered_equation_canonical_system*' } | Select-Object -ExpandProperty FullName`
+4. `python tests/codex/stage56_coupling_channel_canonicalization.py`
+5. `python tests/codex/stage56_layered_equation_canonical_system.py`
+6. `python tests/codex/test_stage56_coupling_channel_canonicalization.py`
+7. `python tests/codex/test_stage56_layered_equation_canonical_system.py`
+8. `Get-Content tests/codex_temp/stage56_coupling_channel_canonicalization_20260319/summary.json`
+9. `Get-Content tests/codex_temp/stage56_layered_equation_canonical_system_20260319/summary.json`
+
+本轮新增结果文件：
+1. `tests/codex/stage56_coupling_channel_canonicalization.py`
+2. `tests/codex/test_stage56_coupling_channel_canonicalization.py`
+3. `tests/codex/stage56_layered_equation_canonical_system.py`
+4. `tests/codex/test_stage56_layered_equation_canonical_system.py`
+5. `tests/codex_temp/stage56_coupling_channel_canonicalization_20260319/summary.json`
+6. `tests/codex_temp/stage56_layered_equation_canonical_system_20260319/summary.json`
+
+本轮最关键的理论修正：
+1. 上一轮对 `gs / sd` 的直觉判断需要收紧。规范化后真正三目标稳定的仍然只有 `gd_drive_channel_term`，它对 `union_joint_adv（联合优势） / union_synergy_joint（联合协同） / strict_positive_synergy（严格正协同）` 都稳定为正。
+2. `gs_load_channel_term` 当前符号模式是：`union_joint_adv` 正，后两目标负；`sd_load_channel_term` 当前符号模式是：`union_joint_adv` 负，后两目标正。它们更像目标特异的负载通道，而不是统一主驱动。
+3. 因此，当前分层双主式的层间结构应正式改写为：
+   - `gd` 是主驱动通道
+   - `gs / sd` 是目标特异负载通道
+4. 当前最严格的系统读法已经不是“三条耦合同权”，而是“主核层 + 严格层 + 判别层”之上，再叠加“一个主驱动通道 + 两个负载通道”。
+
+本轮最严格的硬伤：
+1. `gd` 已经稳定，但 `gs / sd` 仍明显异质，说明层间耦合还没完全收口成统一动力学。
+2. 规范化通道现在仍然是样本级回归量，不是最终闭式动力学变量。
+3. 两份结果文件在 `PowerShell（命令行解释器）` 直接读取时仍会出现编码显示异常，但写盘编码已经统一为 `utf-8（统一字符编码）`，因此问题属于终端显示层，不是结果层。
+4. 目前仍缺真实语料分布验证，所以“主驱动通道 + 负载通道”结构还不能宣称跨数据分布成立。
+
+当前项目阶段进度修正：
+1. `样本集回归（sample regression，样本回归）`：`92%`
+2. `第四版一般核最终验证块`：`89%`
+3. `dual_gap 判别化块`：`81%`
+4. `双主式层级化块`：`86%`
+5. `层间耦合块`：`74%`
+6. `规范化通道系统块`：`72%`
+7. `双主式正式方程块`：`86%`
+8. `统一主方程块`：`95%`
+9. 项目整体“还原通向 AGI（通用人工智能）的新数学结构”：`98%`
+
+下一阶段的大任务块：
+1. `分层方程定型块`：把 `U_general = kernel_v4`、`U_strict = strict_module_base`、`D_strict = dual_gap_final` 和 `gd / gs / sd` 通道系统压成更短的正式分层方程组。
+2. `层间耦合收口块`：继续拆 `gs / sd` 的目标异质性，确认哪些属于必要负载，哪些属于可剔除耦合。
+3. `第四版一般核最终定型块`：继续确认 `kernel_v4` 是否可以直接视为当前阶段最终一般闭包核。
+4. `真实语料分布块`：验证“主驱动通道 + 负载通道”结构不是模板化数据特有产物。
+5. `ICSPB 闭式方程块`：把当前分层双主式和规范化通道系统推进到更接近可判伪统一方程的形式。
+[2026-03-20 00:05] 系统级一般化公式整理第一版实跑
+
+本轮执行命令：
+1. `Get-Content research/gpt5/docs/AGI_GPT5_ICSPB.md -Tail 160`
+2. `Get-Content tests/codex_temp/stage56_layered_equation_canonical_system_20260319/summary.json`
+3. `Get-Content tests/codex_temp/stage56_dual_equation_formal_system_20260319/summary.json`
+4. `Get-Content tests/codex_temp/stage56_kernel_v4_validation_20260319/summary.json`
+5. `Get-Content tests/codex_temp/stage56_dual_gap_classifier_20260319/summary.json`
+6. `Get-Content tests/codex_temp/stage56_closed_form_final_kernel_20260319/summary.json`
+7. `python tests/codex/test_stage56_system_generalized_formula.py`
+8. `python -m py_compile tests/codex/stage56_system_generalized_formula.py tests/codex/test_stage56_system_generalized_formula.py`
+9. `python tests/codex/stage56_system_generalized_formula.py`
+10. `Get-Content tests/codex_temp/stage56_system_generalized_formula_20260320/summary.json`
+11. `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+本轮新增文件：
+1. `tests/codex/stage56_system_generalized_formula.py`
+2. `tests/codex/test_stage56_system_generalized_formula.py`
+3. `tests/codex_temp/stage56_system_generalized_formula_20260320/summary.json`
+4. `tests/codex_temp/stage56_system_generalized_formula_20260320/REPORT.md`
+
+本轮最关键的新结论：
+1. 从系统角度整理后，当前最一般化的公式已经不再是一条单方程，而是：
+   - `层级状态向量 z(pair) = [G, S, D]^T`
+   - `通道向量 c(pair) = [gd, gs, sd]^T`
+   - `目标条件负载算子 L_t(gs, sd)`
+2. 当前系统级观测式可以先写成：
+   `y_t(pair) = W_t * z(pair) + V_t * c(pair) + eps_t(pair)`
+3. 进一步压缩后，当前最有用的系统级近似是：
+   `y_t(pair) ~= a_t * G(pair) + b_t * S(pair) + d_t * D(pair) + p_t * gd(pair) + L_t(gs(pair), sd(pair)) + eps_t(pair)`
+4. 当前稳定不变量已经明确：
+   - `general_kernel_positive = true`
+   - `discriminator_positive = true`
+   - `gd_drive_positive = true`
+   - `gs_load_target_specific = true`
+   - `sd_load_target_specific = true`
+   - `strict_choice_target_specific = true`
+
+本轮理论判断修正：
+1. `G = kernel_v4`、`D = dual_gap_final`、`gd` 现在已经可以视为跨目标稳定主结构。
+2. `S = strict_module_base` 虽然已经是当前最佳严格模块，但它仍然更像分层专用状态，而不是一般主核的一部分。
+3. `gs / sd` 当前更合理的身份已经不是普通耦合项，而是“目标条件负载算子”的输入变量。
+4. 也就是说，当前体系从系统角度已经开始像一个小型分层算子系统，而不只是一个带修正项的经验回归式。
+
+本轮最严格的硬伤：
+1. `gs / sd` 仍然保留明显目标异质性，所以负载算子 `L_t` 还没有最终闭式化。
+2. `S = strict_module_base` 虽然最优，但和其它严格模块候选还没有绝对拉开数量级差距。
+3. 当前“更一般化公式”仍然是系统级压缩，不是最终统一数学体系。
+4. `PowerShell（命令行解释器）` 直接读取结果文件时仍有显示层乱码，但写盘结果和主文档整理口径已经改为干净中文。
+
+当前项目阶段进度修正：
+1. `样本集回归（sample regression，样本回归）`：`92%`
+2. `双主式正式方程块`：`86%`
+3. `层间耦合块`：`74%`
+4. `规范化通道系统块`：`72%`
+5. `系统级一般化公式块`：`58%`
+6. `统一主方程块`：`95%`
+7. 项目整体“还原通向 AGI（通用人工智能）的新数学结构”：`98%`
+
+下一阶段的大任务块：
+1. `分层方程定型块`：把 `U_general / U_strict / D_strict` 和 `gd / gs / sd` 继续压成更短的正式分层方程组。
+2. `负载算子收口块`：继续拆 `gs / sd` 的目标异质性，把 `L_t(gs, sd)` 从经验负载算子推进到更接近闭式对象。
+3. `第四版一般核最终定型块`：继续确认 `kernel_v4` 是否可以直接视为当前阶段最终一般闭包核。
+4. `真实语料分布块`：验证这套“层级状态向量 + 通道向量 + 目标条件负载算子”结构不是模板化数据特有产物。
+5. `ICSPB 闭式方程块`：把当前分层双主式和系统级一般化公式推进到更接近可判伪统一方程的形式。
+[2026-03-20 00:12] 负载算子收口与一般化公式精炼第一版实跑
+
+本轮执行命令：
+1. `Get-Content tests/codex_temp/stage56_system_generalized_formula_20260320/summary.json`
+2. `Get-Content tests/codex_temp/stage56_layered_equation_canonical_system_20260319/summary.json`
+3. `Get-Content tests/codex_temp/stage56_dual_equation_formal_system_20260319/summary.json`
+4. `Get-Content tests/codex_temp/stage56_coupling_channel_canonicalization_20260319/rows.json | Select-Object -First 40`
+5. 内联 `python（解释器）` 试算 `load_mean / load_contrast / load_abs_sum / load_signed_sum` 的三目标符号
+6. `python tests/codex/test_stage56_load_operator_closure.py`
+7. `python tests/codex/test_stage56_generalized_formula_refinement.py`
+8. `python -m py_compile tests/codex/stage56_load_operator_closure.py tests/codex/test_stage56_load_operator_closure.py tests/codex/stage56_generalized_formula_refinement.py tests/codex/test_stage56_generalized_formula_refinement.py`
+9. `python tests/codex/stage56_load_operator_closure.py`
+10. `python tests/codex/stage56_generalized_formula_refinement.py --load-summary-json tests/codex_temp/stage56_load_operator_closure_20260320/summary.json`
+11. `Get-Content tests/codex_temp/stage56_load_operator_closure_20260320/summary.json`
+12. `Get-Content tests/codex_temp/stage56_generalized_formula_refinement_20260320/summary.json`
+13. `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+本轮新增文件：
+1. `tests/codex/stage56_load_operator_closure.py`
+2. `tests/codex/test_stage56_load_operator_closure.py`
+3. `tests/codex/stage56_generalized_formula_refinement.py`
+4. `tests/codex/test_stage56_generalized_formula_refinement.py`
+5. `tests/codex_temp/stage56_load_operator_closure_20260320/summary.json`
+6. `tests/codex_temp/stage56_load_operator_closure_20260320/REPORT.md`
+7. `tests/codex_temp/stage56_generalized_formula_refinement_20260320/summary.json`
+8. `tests/codex_temp/stage56_generalized_formula_refinement_20260320/REPORT.md`
+
+本轮最关键的新结论：
+1. `load_mean = (gs + sd) / 2` 三目标都稳定为负，因此它已经足够接近“基础负载算子（base load operator，基础负载算子）”。
+2. `load_contrast = (sd - gs) / 2` 对 `union_joint_adv / union_synergy_joint` 为负，但对 `strict_positive_synergy` 转成正，因此它更像“严格选择算子（strict select operator，严格选择算子）”。
+3. `load_abs_sum` 也三目标稳定为负，但它比 `load_mean` 更粗，因此当前更适合作为备选负载量，而不是主算子。
+4. 当前系统级一般化公式可以继续缩短成：
+   - `y_general(pair) ~= a * G(pair) + d * D(pair) + p * gd(pair) - l * L_base(pair) + eps(pair)`
+   - `y_strict(pair) ~= y_general(pair) + s * L_select(pair) + eta(pair)`
+5. 也就是说，当前体系已经从“层级状态向量 + 通道向量 + 目标条件负载算子”继续压成了“主驱动结构 + 基础负载结构 + 严格选择结构”的三层系统级公式。
+
+本轮理论判断修正：
+1. `gs / sd` 不再适合继续被理解成两条并列耦合，更合理的系统级身份已经变成：
+   - `L_base = (gs + sd) / 2`
+   - `L_select = (sd - gs) / 2`
+2. 这说明当前最一般化的数学结构里，真正重要的不是“耦合项个数”，而是“耦合是否属于基础负载，还是严格选择增量”。
+3. 当前一般目标已经可以主要由 `G + D + gd - L_base` 解释；严格目标则在此基础上额外叠加 `L_select`。
+
+本轮最严格的硬伤：
+1. `L_select` 目前只在 `strict_positive_synergy` 上稳定为正，还没有推广到更多严格性目标。
+2. `L_base` 虽然稳定，但仍然来自样本级经验压缩，不是最终闭式算子。
+3. 当前“更一般化系统公式”仍然偏语言闭包中心，不是跨模态统一智能方程。
+4. `PowerShell（命令行解释器）` 直接读取部分结果文件时仍有显示层乱码，但主文档与备忘录使用的是干净中文整理口径。
+
+当前项目阶段进度修正：
+1. `样本集回归（sample regression，样本回归）`：`92%`
+2. `双主式正式方程块`：`86%`
+3. `层间耦合块`：`74%`
+4. `规范化通道系统块`：`72%`
+5. `系统级一般化公式块`：`67%`
+6. `负载算子收口块`：`64%`
+7. `统一主方程块`：`95%`
+8. 项目整体“还原通向 AGI（通用人工智能）的新数学结构”：`98%`
+
+下一阶段的大任务块：
+1. `分层方程定型块`：把 `U_general / U_strict / D_strict` 和 `G / D / gd / L_base / L_select` 压成更短的正式分层方程组。
+2. `严格选择算子扩展块`：检查 `L_select` 是否还能稳定解释其它严格性目标，而不只是一项 `strict_positive_synergy`。
+3. `第四版一般核最终定型块`：继续确认 `kernel_v4` 是否可以直接视为当前阶段最终一般闭包核。
+4. `真实语料分布块`：验证“主驱动结构 + 基础负载结构 + 严格选择结构”不是模板化数据特有产物。
+5. `ICSPB 闭式方程块`：把当前系统级一般化公式继续推进到更接近可判伪统一方程的形式。

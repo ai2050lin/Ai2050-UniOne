@@ -1,124 +1,204 @@
-# TransformerLens AGI Laboratory
+# TransformerLens-main
 
-<!-- Status Icons -->
-[![Pypi](https://img.shields.io/pypi/v/transformer-lens?color=blue)](https://pypi.org/project/transformer-lens/)
-![Pypi Total Downloads](https://img.shields.io/pepy/dt/transformer_lens?color=blue) ![PyPI - License](https://img.shields.io/pypi/l/transformer_lens?color=blue) [![Release CD](https://github.com/TransformerLensOrg/TransformerLens/actions/workflows/release.yml/badge.svg)](https://github.com/TransformerLensOrg/TransformerLens/actions/workflows/release.yml)
-[![Tests CD](https://github.com/TransformerLensOrg/TransformerLens/actions/workflows/checks.yml/badge.svg)](https://github.com/TransformerLensOrg/TransformerLens/actions/workflows/checks.yml)
-[![Docs CD](https://github.com/TransformerLensOrg/TransformerLens/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/TransformerLensOrg/TransformerLens/actions/workflows/pages/pages-build-deployment)
+这是一个以 `TransformerLens（变压器透镜）` 为基础、面向 `AGI（通用人工智能）` 数学结构还原的研究型仓库。
 
-> **"Intelligence is the geometrization of information flow."**
->
-> 本项目是一个集成了 **下一代认知架构** 以及 **3D 交互式可视化分析** 的综合性 AGI 研究平台。
+当前项目的核心目标不是只做模型可视化，也不是只做几个解释性案例，而是尝试回答一个更大的问题：
+
+**深度神经网络是否从语言数据中提取了某种比现有常用数学更高阶的结构，并且这种结构是否能同时解释语言能力与更一般的大脑编码机制。**
 
 ---
 
-## AI2050计划：当前宇宙的一般性智能理论 (The Unified Vision)
+## 1. 当前研究主线
 
-我们不仅在研究如何“解释”模型，更在探索智能的数学本质。
+当前仓库已经从“零散现象收集”推进到“统一变量系统重写”阶段。
 
-### 核心观点 (Core Perspectives)
+项目现在主要围绕两层结构展开：
 
-1. **统一的数学机制**：大脑有多个脑区，每个脑区处理不同信息，意识可以统筹处理各种信息。不同脑区很可能是一种统一的数学机制，只是参数有所不同。
-2. **DNN是对数学结构的逼近与还原**：深度神经网络通过大规模训练，部分还原了大脑中的这种数学结构，所以具备了诸如语言表达、图像生成、代码编写等强大能力。我们可以通过深度分析神经网络，逆向还原出这个关键的数学结构。
-3. **该数学结构的核心特性**：
-   - **编码角度（自下而上）**：大脑是一个自下而上的系统，每个神经元仅根据前置信号进行充放电。神经网络通过提取特征，具备了四种不可或缺的特性：
-     1. **高维抽象 (High-Dimensional Abstraction)**：可以提取泛化的高维度特征。
-     2. **低维精确 (Low-Dimensional Precision)**：可以准确地预测和表征具体事物。
-     3. **特异性 (Specificity)**：编码可以完美模拟一切特征（例如视觉内部、语言内部、跨模态的各种信息）。
-     4. **系统性 (Systemicity)**：所有编码都可进行统一处理（如语言语法规则的处理），所有模态的信息亦都能被意识核心理解。
-   - **网络架构角度**：这种结构支撑了三大能力：1）能够提取出极其复杂的特征编码；2）各种特征可以形成一个严密的 **知识层次网络结构**，任何特征都可以跨区关联；3）能够实现快速读取和修改，表明这种底层结构极为高效。
-   - **系统级表现**：不同脑区负责提取特定信息束，而高级意识能随时调取与处理所有信息网络。
+1. `静态本体层`
+   - `family patch（家族片区）`
+   - `concept offset（概念偏移）`
+   - 这一层回答：某个概念先落在哪个局部家族图册里，以及它在家族内部具体偏移到哪里
 
-### 补充说明与还原路线 (Supplementary Notes & Roadmap)
+2. `动态生成层`
+   - `密度前沿（density frontier，密度前沿）`
+   - `内部子场（internal subfield，内部子场）`
+   - `词元窗口（token window，词元窗口）`
+   - `闭包量（closure，闭包量）`
+   - 这一层回答：高质量支撑在哪里、谁在起作用、什么时候起作用、最后有没有真的收束成稳定输出
 
-1. **自发涌现的特征提取机制**：大脑中的神经网络并非自顶向下设计而来。神经元单纯依赖输入信号充放电，但在庞大的数据流冲刷与突触可塑性机制的共同作用下，最终自发形成了一个强悍的网络系统。在这个过程中，某种底层的特征提取编码能力带来了系统泛化与精确的认知表现。这也是我们必须重点还原的一环：海量神经元能形成如此强大且高效的结构，绝非“误打误撞”，而是遵循了极高效的数学/物理规律。
-2. **深度神经网络的三个核心映射**：
-   - **多层机制 (MLP)**：映射“多层级提取高维抽象特征”，存储海量知识。
-   - **注意力机制 (Attention)**：映射“保存上下文关联信息”。
-   - **自回归预测 (Autoregressive Prediction)**：通过损失函数强制将大脑该有的结构还原到全局网络模型中。因此在预测Next Token时，不仅能延续上文风格和逻辑，还能做出精确推演（此机制同样在生成式图像、视频及编程领域体现，并可无限扩展到其他信息网络中心）。
-3. **AGI的终极核心关键 (The Holy Grail)**：
-   - 大脑本质上是一个自下而上的系统。**一切的基石和核心关键在于：弄清大脑神经网络究竟是如何自发提取特征，并形成编码的！**
-   - 建立在它之上的知识层次网络结构为何能如此高效，均源于这个根基。只有彻底破译具备**高维抽象、低维精确、特异性和系统性**特征的底层编码机制及其提取途径，我们才能在系统工程中还原大脑的真实数学结构，最终实现真正的通用人工智能（AGI）。
+当前已经形成的第一版统一主式是：
 
-详见：[AGI 一般性理论 (AGI_THEORY_PAPER.md)](AGI_THEORY_PAPER.md)
+`U(term, ctx) = Atlas_static(term) + Offset_static(term) + Frontier_dynamic(term, ctx) + Subfield_dynamic(term, ctx) + Window_closure(ctx) + Closure_boundary(term, ctx)`
+
+这条主式还不是最终闭式方程，但它标志着项目已经从“解释现象”推进到了“组织统一变量”。
 
 ---
 
-## 项目组件 (Project Components)
+## 2. 当前最稳的系统结论
 
-### 1. TransformerLens (Core Library)
-作为本平台的地基，`TransformerLens` 提供了强大的机械解释性（Mechanistic Interpretability）工具，支持 50+ 种开源语言模型的内部激活查看与编辑。
+到目前为止，最稳的一句话可以写成：
 
--   **加载模型**: `HookedTransformer.from_pretrained("gpt2-small")`
--   **介入分析**: 支持缓存激活、计算回路（Circuits）以及执行各种消融（Ablation）实验。
+**语言系统不像单一线性词向量空间，而更像锚点、纤维、路径束、密度前沿和窗口化闭包构成的分层复合结构。**
 
-### 2. AGI 实验室 (Laboratory)
-一个现代化的 Web 交互系统，用于实时可视化和分析复杂神经行为。
--   **后端**: 基于 FastAPI (`server.py`)，提供神经结构提取算法。
--   **前端**: 基于 React 和 Three.js，提供沉浸式的 **3D 结构分析面板 (Structure Analysis Panel)**。
--   **功能**: 电路发现（Circuit Discovery）、流形分析（Manifold Analysis）、因果介入。
+更具体地说：
 
-### 3. 实验性模拟 (Experiments)
-我们正在探索超越传统 Transformer 的架构：
--   **架构探索**: 实现即时学习（Immediate Learning）的下一代认知架构。
--   **SNN 模拟**: 脉冲神经网络模拟，验证生物大脑中的底层编码机制。
+1. 概念本体更像中观锚点，而不是纯粹的离散标签。
+2. 属性修饰更像挂在锚点周围的纤维。
+3. 关系与角色更像路径束，而不是全局统一线性关系。
+4. `style / logic / syntax（风格 / 逻辑 / 句法）` 更像生成时的控制轴，不是概念本体本身。
+5. 真正决定输出是否稳定成立的，不是总激活量，而是高质量前沿如何分离、压缩，并在句尾前窗口中完成闭包。
 
 ---
 
-## 快速开始 (Quick Start)
+## 3. 当前最重要的实证结果
 
-### 1. 安装库环境
-```shell
-pip install transformer_lens
-```
+### 3.1 关系结构
 
-### 2. 启动研究实验室 (Web UI)
-如果你想通过可视化界面研究模型结构：
-1. **启动后端服务**:
-   ```shell
-   python server.py
-   ```
-2. **启动前端界面**:
-   ```shell
-   cd frontend
-   npm run dev
-   ```
+当前结果不再支持“整个语言系统本质上就是词向量算术”。
+
+更稳的判断是：
+
+1. 局部线性切片真实存在。
+2. 但它们只占少数。
+3. 大多数关系更适合用 `path bundle（路径束）` 解释。
+
+也就是说，`king - man + woman ≈ queen（国王 - 男人 + 女人 约等于 王后）` 这类关系更像局部切片，不像总理论。
+
+### 3.2 控制轴
+
+当前对 `style / logic / syntax（风格 / 逻辑 / 句法）` 的理解已经收缩成更细的结构：
+
+1. `logic（逻辑）`
+   - 真正有利的不是大幅局部扰动，而是定向骨架化
+   - `logic_prototype（逻辑原型）` 更像稳骨架项
+
+2. `syntax（句法）`
+   - 正项更像中段筛选带，而不是简单总量增强
+   - `syntax_constraint_conflict（句法约束型冲突）` 是当前最稳的正闭包机制之一
+
+3. `style（风格）`
+   - 更像重排项，不是闭包主引擎
+
+### 3.3 闭包动力学
+
+当前闭包侧最关键的量仍然是：
+
+1. `union_joint_adv（联合优势）`
+2. `union_synergy_joint（联合协同）`
+3. `strict_positive_synergy（严格正协同）`
+
+这说明项目已经不只是“看激活”，而是在研究“最后有没有真的形成稳定联合输出”。
+
+---
+
+## 4. 当前阶段的统一理解
+
+按现在的证据，项目更像在长出一套“分层混合数学体系”，而不是简单落入某一个现成数学分支。
+
+当前最自然的整理方式是：
+
+1. `线性代数 + 表示论`
+   - 负责局部线性切片和局部关系轴
+
+2. `图册 / 纤维束`
+   - 负责静态概念层，也就是 `family patch + concept offset`
+
+3. `动力系统 + 控制论`
+   - 负责内部子场、词元窗口和生成收束
+
+4. `拓扑边界`
+   - 负责长期分离前沿与闭包成功 / 失败边界
+
+所以当前项目已经开始支持这样一个判断：
+
+**如果要完成语言背后的数学机制，甚至逼近大脑编码理论，确实很可能需要比现有常用分析框架更高阶的数学体系；但它更像分层混合体系，而不是单一现成学科。**
 
 ---
 
-## 研究成果展示 (Gallery & Research)
+## 5. 当前最严格的硬伤
 
-- [AGI 研究备忘录 (AGI_RESEARCH_MEMO.md)](AGI_RESEARCH_MEMO.md): 记录了关于数学证明和 SNN 实验的最新进展。
-- [系统性提取指南 (systematic_extraction_guide.md)](systematic_extraction_guide.md): 如何自动化地从大型模型中提取数学结构。
+用最严格的眼光看，现在还有这些明显问题：
 
----
-
-## 机械解释性资源 (Legacy Resources)
-
-本项目保留并扩展了由 [Neel Nanda](https://neelnanda.io/about) 创建的经典机械解释性资源：
-- [Introduction to Mech Interp](https://arena-chapter1-transformer-interp.streamlit.app/[1.2]_Intro_to_Mech_Interp)
-- [Main TransformerLens Features Demo](https://neelnanda.io/transformer-lens-demo)
-- [ARENA Tutorials](https://arena3-chapter1-transformer-interp.streamlit.app/)
+1. 第一版统一主方程还是结构原型，不是拟合后的可判伪方程。
+2. 主式中的系数仍是组织性权重，不是稳定实验估计量。
+3. `style / logic / syntax（风格 / 逻辑 / 句法）` 三条控制轴还没有直接并入统一主方程。
+4. `真实原始语料分布` 还没有完整替代当前模板化自然提示。
+5. `关系轴 + 内部子场 + 词元窗口 + 连续密度前沿 + 闭包量` 还没有一次性接成最终闭环。
+6. 当前项目已经形成强经验方程，但还没有得到闭式数学系统。
 
 ---
 
-## 社区与贡献
+## 6. 当前阶段进度
 
-我们欢迎所有对 AGI 物理本质感兴趣的研究者：
-- 加入 [Slack 社区](https://join.slack.com/t/opensourcemechanistic/shared_invite/zt-2n26nfoh1-TzMHrzyW6HiOsmCESxXtyw)
-- 提交 Issue 或 Pull Request
+按当前证据强度，项目大致处在下面这个阶段：
 
-### 引用本项目
+1. `静态本体层 + 动态生成层` 的统一理解：约 `71%`
+2. `统一主方程块`：约 `31%`
+3. `更高阶数学框架桥接`：约 `42%`
+4. 整个“还原通向 AGI 的新数学结构”总进度：约 `90%`
 
-```BibTeX
-@misc{antigravity2026unified,
-    title = {The Unified Theory of AGI},
-    author = {Antigravity and User},
-    year = {2026},
-    howpublished = {\url{https://github.com/TransformerLensOrg/TransformerLens}},
-}
-```
+这个 `90%` 不是说“AGI 快完成了”，而是说：
+
+**当前这条“语言编码机制与数学结构还原”的主线，已经从现象探索推进到了统一变量和主方程原型阶段。**
 
 ---
-*Created by [Neel Nanda](https://neelnanda.io), maintained by [Bryce Meyer](https://github.com/bryce13950), and evolved into an AGI platform by Antigravity & User.*
 
+## 7. 下一阶段的大任务块
+
+接下来不应该继续补零散功能，而应该直接推进下面几个大任务块：
+
+1. `主方程实证拟合块`
+   - 把第一版统一主式里的各项，从结构占位符推进到实验估计量
+
+2. `控制轴并场块`
+   - 把 `style / logic / syntax` 直接并入统一主方程
+
+3. `真实语料闭环块`
+   - 用更接近原始语料分布的数据，验证统一主方程是否稳定成立
+
+4. `可计算高阶对象落地块`
+   - 把图册、纤维束、分层场、闭包边界变成可计算变量，而不是只停在解释语言
+
+---
+
+## 8. 目录约定
+
+项目当前使用下面的研究约定：
+
+1. `tests/codex/`
+   - 所有研究脚本、测试脚本
+
+2. `tests/codex_temp/`
+   - 所有临时输出、阶段性结果
+
+3. `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+   - 当前主线整理稿
+
+4. `research/gpt5/docs/AGI_GPT5_MEMO.md`
+   - 按时间顺序追加的研究备忘录
+
+---
+
+## 9. 当前建议阅读顺序
+
+如果要快速进入当前主线，建议按这个顺序读：
+
+1. [research/gpt5/docs/AGI_GPT5_ICSPB.md](research/gpt5/docs/AGI_GPT5_ICSPB.md)
+2. `tests/codex/stage56_frontier_subfield_window_closure_summary.py`
+3. `tests/codex/stage56_math_framework_bridge.py`
+4. `tests/codex/stage56_general_math_system_outline.py`
+5. `tests/codex/stage56_unified_master_equation.py`
+
+---
+
+## 10. 项目当前最终判断
+
+当前最稳的方向已经不是“再找更多零散现象”，而是：
+
+1. 把静态本体层和动态生成层压成真正统一的主方程
+2. 把经验结构变量改写成更严格的数学对象
+3. 用更真实的数据去验证这些对象是不是语言系统的一般规律
+
+如果这条线继续成立，项目最终瞄准的就不只是“解释一个模型”，而是：
+
+**从语言系统中还原一种更一般的编码数学，并把它作为理解智能与大脑编码的候选统一框架。**
