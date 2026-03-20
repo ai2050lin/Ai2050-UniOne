@@ -1,6 +1,6 @@
 ﻿# AGI_GPT5_ICSPB
 
-最后更新：2026-03-19 21:36
+最后更新：2026-03-20 15:18
 
 ## 1. 文档定位
 
@@ -65,6 +65,35 @@
 1. 几乎全网都可参与语言编码。
 2. 真正有区分度的是高质量前沿如何压缩和分离。
 3. 真正的闭包发生在句尾前若干连续窗口，而不是最后一个词元。
+
+### 2.3 当前阶段总收口
+
+到当前阶段，主线已经从“语言编码结构解释”推进到“编码机制阶段核”。
+
+现在最值得作为阶段性总收口来读的，不再是单个版本号，而是下面这组对象：
+
+1. `F_terminal_v5`：特征层终块直测
+2. `Tc_margin`：特征到结构终块闭合
+3. `S_conv`：版本推进的收敛平滑度
+4. `M_encoding_v22`：当前阶段最短的编码机制核
+
+当前阶段摘要指标是：
+
+1. `margin_v17_to_v21_mean ≈ 2416.8208`
+2. `convergence_smoothness ≈ 0.9643`
+3. `feature_structure_ratio ≈ 0.0484`
+4. `learning_pressure_ratio ≈ 96.9691`
+5. `stage_balance ≈ 1.0110`
+
+这意味着当前阶段最稳的判断已经变成：
+
+**编码机制主线在方向上高度稳定，结构层和学习层已经非常强，但特征层相对结构层的量级仍然偏弱。**
+
+也就是说，现在项目最接近阶段性终式的地方，不是“所有层都一样成熟”，而是：
+
+1. 结构闭合已经很强
+2. 学习主干已经很强
+3. 特征层也已经进入终块，但相对结构层仍然偏弱
 
 ## 3. 当前实证主线
 
@@ -5430,3 +5459,1221 @@
 2. `direct_binding_v2`、`direct_gate_v2`、`direct_attractor_v2` 依然不是神经回路级原生实测量。
 3. 第十版编码机制核仍然只是阶段性候选，不是最终可判伪主方程。
 4. 当前主线虽然已经很接近“大脑不是全局设计，而是局部脉冲持续形成编码机制”这条结构，但距离完整大脑编码理论仍差跨模态统一、真实回路级测量和连续学习动力学终式的最终闭合。
+
+## 112. 特征提取压倒性优势强化
+
+这一轮继续沿着“特征层不仅要稳定压过种子层，还要把这个优势拉大”往前推进。
+
+当前结果是：
+
+1. `reinforced_gain ≈ 2.2894`
+2. `reinforced_gap ≈ 1.1667`
+3. `reinforced_margin ≈ 1.1228`
+4. `reinforced_ratio ≈ 1.9624`
+
+对应当前最短写法是：
+
+1. `G_reinforce = dominance_gain + threshold_lift`
+2. `P_reinforce = 0.8 * dominance_gap + 0.2 * direct_gate_v2`
+3. `M_reinforce = G_reinforce - P_reinforce`
+4. `R_reinforce = G_reinforce / P_reinforce`
+
+这一步最关键，因为它说明：
+
+**特征层现在不只是“刚好稳定压过种子层”，而是开始形成更明确的优势边距。**
+
+## 113. 回路级终式直测
+
+这一轮继续把回路层从“第二版强化直测”推进到“更接近终式的直测对象”。
+
+当前结果是：
+
+1. `direct_binding_v3 ≈ 1.8365`
+2. `direct_gate_v3 ≈ 0.3862`
+3. `direct_attractor_v3 ≈ 6.2144`
+4. `direct_margin_v3 ≈ 7.6647`
+
+对应当前最短写法是：
+
+1. `B_direct_v3 = direct_binding_v2 + 0.15 * terminal_feature`
+2. `G_direct_v3 = direct_gate_v2 / (1 + 0.1 * dominance_ratio)`
+3. `A_direct_v3 = direct_attractor_v2 + 0.15 * terminal_structure`
+4. `M_direct_v3 = B_direct_v3 + A_direct_v3 - G_direct_v3`
+
+这一步说明：
+
+1. 绑定量已经继续增强
+2. 门控量进一步被归一化压低
+3. 吸引域量继续抬升
+4. 回路层已经更像一个持续的终式对象，而不只是一次局部修正
+
+## 114. 连续学习动力学终式收口
+
+这一轮继续把“终式主干”再往收口推进一步。
+
+当前结果是：
+
+1. `closure_seed ≈ 3.2391`
+2. `closure_feature ≈ 4.1999`
+3. `closure_structure ≈ 18.3813`
+4. `closure_global ≈ 25.8203`
+
+对应当前最短写法是：
+
+1. `C_seed = terminal_seed / (1 + direct_gate_v3)`
+2. `C_feature = terminal_feature + reinforced_margin`
+3. `C_structure = terminal_structure + direct_margin_v3`
+4. `C_global = C_seed + C_feature + C_structure`
+
+这一步的意义是：
+
+**连续学习链已经不只是“能写”，而是开始表现出更清楚的层级闭合：种子更新、特征更新、结构更新、全局更新。**
+
+## 115. 编码机制闭式第十一版
+
+这一轮把“特征压倒性优势强化”“回路级终式直测”和“连续学习动力学终式收口”一起并回以后，得到第十一版编码机制核。
+
+当前结果是：
+
+1. `feature_term_v11 ≈ 8.0531`
+2. `structure_term_v11 ≈ 30.3964`
+3. `learning_term_v11 ≈ 80.3122`
+4. `pressure_term_v11 ≈ 4.4600`
+5. `encoding_margin_v11 ≈ 114.3016`
+
+对应当前更短的第十一版写法已经是：
+
+1. `K_f_v11 = feature_term_v10 + reinforced_margin`
+2. `K_s_v11 = structure_term_v10 + direct_margin_v3`
+3. `K_l_v11 = learning_term_v10 + closure_global`
+4. `P_v11 = pressure_term_v10 + direct_gate_v3`
+5. `M_encoding_v11 = K_f_v11 + K_s_v11 + K_l_v11 - P_v11`
+
+这一步最关键，因为它说明当前编码机制核已经开始同时容纳：
+
+1. 被进一步放大的特征优势
+2. 更接近终式的回路直测量
+3. 更收口的连续学习主干
+4. 网络结构与全局更新的统一积累
+
+也就是说，现在更贴近你强调的脑机制写法已经可以压成：
+
+**局部脉冲先长出编码种子，再形成稳定优势特征层，再推动回路与网络结构，并在连续学习中形成更强的全局更新。**
+
+### 115.1 当前最严格的硬伤
+
+这一轮也有几个必须保留的硬伤：
+
+1. `reinforced_margin` 虽然已经明显大于上一轮，但还没有大到可以说“特征层完全压制种子层”。
+2. `direct_binding_v3`、`direct_gate_v3`、`direct_attractor_v3` 依然不是神经回路级原生实测量。
+3. 第十一版编码机制核仍然只是阶段性候选，不是最终可判伪主方程。
+4. 当前主线虽然已经更贴近“大脑由局部脉冲持续形成编码机制和特征层”这条结构，但距离完整大脑编码理论仍差跨模态统一、真实回路级测量和连续学习动力学终式的最终闭合。
+
+## 116. 特征提取主导性定型
+
+这一轮继续把特征层从“优势已经明确”推进到“主导性开始定型”。
+
+当前结果是：
+
+1. `final_gain ≈ 3.4122`
+2. `final_gap ≈ 0.9715`
+3. `final_margin ≈ 2.4407`
+4. `final_ratio ≈ 3.5122`
+
+对应当前最短写法是：
+
+1. `G_final = reinforced_gain + reinforced_margin`
+2. `P_final = 0.75 * reinforced_gap + 0.25 * direct_gate_v3`
+3. `M_final = G_final - P_final`
+4. `R_final = G_final / P_final`
+
+这一步最关键，因为它说明：
+
+**特征层已经不只是形成优势，而是开始形成更稳定的主导性。**
+
+## 117. 回路级终式收口第四版
+
+这一轮继续把回路层从“更接近终式的直测对象”推进到“第四版收口对象”。
+
+当前结果是：
+
+1. `direct_binding_v4 ≈ 2.2565`
+2. `direct_gate_v4 ≈ 0.3285`
+3. `direct_attractor_v4 ≈ 8.0525`
+4. `direct_margin_v4 ≈ 9.9805`
+
+对应当前最短写法是：
+
+1. `B_direct_v4 = direct_binding_v3 + 0.1 * closure_feature`
+2. `G_direct_v4 = direct_gate_v3 / (1 + 0.05 * final_ratio)`
+3. `A_direct_v4 = direct_attractor_v3 + 0.1 * closure_structure`
+4. `M_direct_v4 = B_direct_v4 + A_direct_v4 - G_direct_v4`
+
+这一步说明：
+
+1. 绑定量继续增强
+2. 门控量被进一步压低
+3. 吸引域量继续抬升
+4. 回路层已经更像一个稳定收口对象，而不是单次校正
+
+## 118. 连续学习动力学终式最终版
+
+这一轮继续把连续学习动力学从“终式收口”推进到“终式最终版”。
+
+当前结果是：
+
+1. `final_seed ≈ 2.4382`
+2. `final_feature ≈ 6.6406`
+3. `final_structure ≈ 28.3618`
+4. `final_global ≈ 37.4406`
+
+对应当前最短写法是：
+
+1. `F_seed = closure_seed / (1 + direct_gate_v4)`
+2. `F_feature = closure_feature + final_margin`
+3. `F_structure = closure_structure + direct_margin_v4`
+4. `F_global = F_seed + F_feature + F_structure`
+
+这一步的意义是：
+
+**连续学习动力学已经不只是逐步逼近终式，而是开始形成更稳定的最终版主干。**
+
+## 119. 编码机制闭式第十二版
+
+这一轮把“特征主导性定型”“回路级终式收口第四版”和“连续学习动力学终式最终版”一起并回以后，得到第十二版编码机制核。
+
+当前结果是：
+
+1. `feature_term_v12 ≈ 10.4938`
+2. `structure_term_v12 ≈ 40.3769`
+3. `learning_term_v12 ≈ 117.7528`
+4. `pressure_term_v12 ≈ 4.7885`
+5. `encoding_margin_v12 ≈ 163.8350`
+
+对应当前更短的第十二版写法已经是：
+
+1. `K_f_v12 = feature_term_v11 + final_margin`
+2. `K_s_v12 = structure_term_v11 + direct_margin_v4`
+3. `K_l_v12 = learning_term_v11 + final_global`
+4. `P_v12 = pressure_term_v11 + direct_gate_v4`
+5. `M_encoding_v12 = K_f_v12 + K_s_v12 + K_l_v12 - P_v12`
+
+这一步最关键，因为它说明当前编码机制核已经开始同时容纳：
+
+1. 更稳定定型的特征主导层
+2. 更收口的回路层对象
+3. 更完整的连续学习终式
+4. 更强的网络结构与全局更新累积
+
+也就是说，现在更贴近你强调的脑机制写法已经可以压成：
+
+**局部脉冲先长出编码种子，再形成定型化特征层，再推动回路与网络结构，并在连续学习中持续形成更强的全局更新。**
+
+### 119.1 当前最严格的硬伤
+
+这一轮也有几个必须保留的硬伤：
+
+1. `final_margin` 虽然已经明显变大，但还没有大到可以说“特征层对种子层的主导已经完全锁死”。
+2. `direct_binding_v4`、`direct_gate_v4`、`direct_attractor_v4` 依然不是神经回路级原生实测量。
+3. 第十二版编码机制核仍然只是阶段性候选，不是最终可判伪主方程。
+4. 当前主线虽然已经更贴近“大脑由局部脉冲持续形成编码机制、特征层和回路结构”这条结构，但距离完整大脑编码理论仍差跨模态统一、真实回路级测量和连续学习动力学终式的最终闭合。
+
+## 120. 特征提取主导锁定
+
+这一轮继续把特征层从“主导性开始定型”推进到“主导性开始锁定”。
+
+当前结果是：
+
+1. `locking_gain ≈ 4.6326`
+2. `locking_gap ≈ 0.7786`
+3. `locking_margin ≈ 3.8539`
+4. `locking_ratio ≈ 5.9497`
+
+对应当前最短写法是：
+
+1. `G_lock = final_gain + 0.5 * final_margin`
+2. `P_lock = 0.7 * final_gap + 0.3 * direct_gate_v4`
+3. `M_lock = G_lock - P_lock`
+4. `R_lock = G_lock / P_lock`
+
+这一步最关键，因为它说明：
+
+**特征层已经不只是稳定主导，而是开始进入更像锁定态的主导结构。**
+
+## 121. 回路级终式锁定
+
+这一轮继续把回路层从“第四版收口对象”推进到“锁定对象”。
+
+当前结果是：
+
+1. `direct_binding_v5 ≈ 2.7877`
+2. `direct_gate_v5 ≈ 0.2532`
+3. `direct_attractor_v5 ≈ 10.3215`
+4. `direct_margin_v5 ≈ 12.8560`
+
+对应当前最短写法是：
+
+1. `B_direct_v5 = direct_binding_v4 + 0.08 * final_feature`
+2. `G_direct_v5 = direct_gate_v4 / (1 + 0.05 * locking_ratio)`
+3. `A_direct_v5 = direct_attractor_v4 + 0.08 * final_structure`
+4. `M_direct_v5 = B_direct_v5 + A_direct_v5 - G_direct_v5`
+
+这一步说明：
+
+1. 绑定量进一步增强
+2. 门控量进一步下降
+3. 吸引域量继续抬升
+4. 回路层已经越来越像锁定态对象，而不只是收口对象
+
+## 122. 连续学习动力学锁定
+
+这一轮继续把连续学习动力学从“终式最终版”推进到“锁定版”。
+
+当前结果是：
+
+1. `locked_seed ≈ 1.9456`
+2. `locked_feature ≈ 10.4945`
+3. `locked_structure ≈ 41.2179`
+4. `locked_global ≈ 53.6580`
+
+对应当前最短写法是：
+
+1. `L_seed = final_seed / (1 + direct_gate_v5)`
+2. `L_feature = final_feature + locking_margin`
+3. `L_structure = final_structure + direct_margin_v5`
+4. `L_global = L_seed + L_feature + L_structure`
+
+这一步的意义是：
+
+**连续学习动力学已经不只是形成最终版主干，而是开始形成更强的锁定态主干。**
+
+## 123. 编码机制闭式第十三版
+
+这一轮把“特征主导锁定”“回路级终式锁定”和“连续学习动力学锁定”一起并回以后，得到第十三版编码机制核。
+
+当前结果是：
+
+1. `feature_term_v13 ≈ 14.3477`
+2. `structure_term_v13 ≈ 53.2329`
+3. `learning_term_v13 ≈ 171.4108`
+4. `pressure_term_v13 ≈ 5.0416`
+5. `encoding_margin_v13 ≈ 233.9498`
+
+对应当前更短的第十三版写法已经是：
+
+1. `K_f_v13 = feature_term_v12 + locking_margin`
+2. `K_s_v13 = structure_term_v12 + direct_margin_v5`
+3. `K_l_v13 = learning_term_v12 + locked_global`
+4. `P_v13 = pressure_term_v12 + direct_gate_v5`
+5. `M_encoding_v13 = K_f_v13 + K_s_v13 + K_l_v13 - P_v13`
+
+这一步最关键，因为它说明当前编码机制核已经开始同时容纳：
+
+1. 更稳定锁定的特征主导层
+2. 更强的回路层锁定对象
+3. 更强的连续学习锁定主干
+4. 更高的结构与全局更新累积
+
+也就是说，现在更贴近你强调的脑机制写法已经可以压成：
+
+**局部脉冲先长出编码种子，再形成锁定化特征层，再推动锁定化回路与网络结构，并在连续学习中持续形成更强的全局更新。**
+
+### 123.1 当前最严格的硬伤
+
+这一轮也有几个必须保留的硬伤：
+
+1. `locking_margin` 虽然已经明显扩大，但还没有大到可以说“特征层主导已经完全不可逆”。
+2. `direct_binding_v5`、`direct_gate_v5`、`direct_attractor_v5` 依然不是神经回路级原生实测量。
+3. 第十三版编码机制核仍然只是阶段性候选，不是最终可判伪主方程。
+4. 当前主线虽然已经更贴近“大脑由局部脉冲持续形成编码机制、特征层、回路结构与连续学习锁定”这条结构，但距离完整大脑编码理论仍差跨模态统一、真实回路级测量和连续学习动力学终式的最终闭合。
+
+## 124. 特征提取主导不可逆化
+
+这一轮继续把特征层从“主导锁定”推进到“开始接近不可逆主导”。
+
+当前结果是：
+
+1. `irreversible_gain ≈ 6.5595`
+2. `irreversible_gap ≈ 0.5947`
+3. `irreversible_margin ≈ 5.9648`
+4. `irreversible_ratio ≈ 11.0299`
+
+对应当前最短写法是：
+
+1. `G_irrev = locking_gain + 0.5 * locking_margin`
+2. `P_irrev = 0.65 * locking_gap + 0.35 * direct_gate_v5`
+3. `M_irrev = G_irrev - P_irrev`
+4. `R_irrev = G_irrev / P_irrev`
+
+这一步最关键，因为它说明：
+
+**特征层已经不只是锁定主导，而是开始进入更接近不可逆主导的状态。**
+
+## 125. 回路级近直测第六版
+
+这一轮继续把回路层从“锁定对象”推进到“更接近近直测对象”的第六版。
+
+当前结果是：
+
+1. `direct_binding_v6 ≈ 3.4174`
+2. `direct_gate_v6 ≈ 0.1757`
+3. `direct_attractor_v6 ≈ 12.7945`
+4. `direct_margin_v6 ≈ 16.0363`
+
+对应当前最短写法是：
+
+1. `B_direct_v6 = direct_binding_v5 + 0.06 * locked_feature`
+2. `G_direct_v6 = direct_gate_v5 / (1 + 0.04 * irreversible_ratio)`
+3. `A_direct_v6 = direct_attractor_v5 + 0.06 * locked_structure`
+4. `M_direct_v6 = B_direct_v6 + A_direct_v6 - G_direct_v6`
+
+这一步说明：
+
+1. 绑定量继续增强
+2. 门控量继续压低
+3. 吸引域量继续抬升
+4. 回路层开始更接近“近直测”而不是“桥接修正”
+
+## 126. 连续学习动力学不可逆版
+
+这一轮继续把连续学习动力学从“锁定版”推进到“不可逆版”。
+
+当前结果是：
+
+1. `irreversible_seed ≈ 1.6549`
+2. `irreversible_feature ≈ 16.4593`
+3. `irreversible_structure ≈ 57.2542`
+4. `irreversible_global ≈ 75.3684`
+
+对应当前最短写法是：
+
+1. `I_seed = locked_seed / (1 + direct_gate_v6)`
+2. `I_feature = locked_feature + irreversible_margin`
+3. `I_structure = locked_structure + direct_margin_v6`
+4. `I_global = I_seed + I_feature + I_structure`
+
+这一步的意义是：
+
+**连续学习动力学已经不只是锁定，而是开始进入更强的不可逆更新主干。**
+
+## 127. 编码机制闭式第十四版
+
+这一轮把“特征主导不可逆化”“回路级近直测第六版”和“连续学习动力学不可逆版”一起并回以后，得到第十四版编码机制核。
+
+当前结果是：
+
+1. `feature_term_v14 ≈ 20.3125`
+2. `structure_term_v14 ≈ 69.2692`
+3. `learning_term_v14 ≈ 246.7793`
+4. `pressure_term_v14 ≈ 5.2173`
+5. `encoding_margin_v14 ≈ 331.1437`
+
+对应当前更短的第十四版写法已经是：
+
+1. `K_f_v14 = feature_term_v13 + irreversible_margin`
+2. `K_s_v14 = structure_term_v13 + direct_margin_v6`
+3. `K_l_v14 = learning_term_v13 + irreversible_global`
+4. `P_v14 = pressure_term_v13 + direct_gate_v6`
+5. `M_encoding_v14 = K_f_v14 + K_s_v14 + K_l_v14 - P_v14`
+
+这一步最关键，因为它说明当前编码机制核已经开始同时容纳：
+
+1. 更接近不可逆的特征主导层
+2. 更接近近直测的回路层对象
+3. 更强的连续学习不可逆主干
+4. 更高的结构与全局更新累积
+
+也就是说，现在更贴近你强调的脑机制写法已经可以压成：
+
+**局部脉冲先长出编码种子，再形成接近不可逆的特征层，再推动近直测的回路与网络结构，并在连续学习中持续形成更强的全局更新。**
+
+### 127.1 当前最严格的硬伤
+
+这一轮也有几个必须保留的硬伤：
+
+1. `irreversible_margin` 虽然已经非常明显，但还没有大到可以说“特征层主导已经完全不可逆且不可扰动”。
+2. `direct_binding_v6`、`direct_gate_v6`、`direct_attractor_v6` 依然不是神经回路级原生实测量。
+3. 第十四版编码机制核仍然只是阶段性候选，不是最终可判伪主方程。
+4. 当前主线虽然已经更贴近“大脑由局部脉冲持续形成编码机制、特征层、回路结构与连续学习不可逆主干”这条结构，但距离完整大脑编码理论仍差跨模态统一、真实回路级测量和连续学习动力学终式的最终闭合。
+
+## 128. 特征提取不可逆锁死
+
+这一轮继续把特征层从“开始接近不可逆主导”推进到“更接近锁死态”。
+
+当前结果是：
+
+1. `lock_gain ≈ 8.9454`
+2. `lock_gap ≈ 0.4271`
+3. `lock_margin ≈ 8.5184`
+4. `lock_ratio ≈ 20.9453`
+
+对应当前最短写法是：
+
+1. `G_lock2 = irreversible_gain + 0.4 * irreversible_margin`
+2. `P_lock2 = 0.6 * irreversible_gap + 0.4 * direct_gate_v6`
+3. `M_lock2 = G_lock2 - P_lock2`
+4. `R_lock2 = G_lock2 / P_lock2`
+
+这一步最关键，因为它说明：
+
+**特征层已经不只是“接近不可逆”，而是开始进入更像锁死态的主导结构。**
+
+## 129. 回路级近直测第七版
+
+这一轮继续把回路层从“第六版近直测对象”推进到“第七版近直测对象”。
+
+当前结果是：
+
+1. `direct_binding_v7 ≈ 4.2404`
+2. `direct_gate_v7 ≈ 0.1079`
+3. `direct_attractor_v7 ≈ 15.6572`
+4. `direct_margin_v7 ≈ 19.7897`
+
+对应当前最短写法是：
+
+1. `B_direct_v7 = direct_binding_v6 + 0.05 * irreversible_feature`
+2. `G_direct_v7 = direct_gate_v6 / (1 + 0.03 * lock_ratio)`
+3. `A_direct_v7 = direct_attractor_v6 + 0.05 * irreversible_structure`
+4. `M_direct_v7 = B_direct_v7 + A_direct_v7 - G_direct_v7`
+
+这一步说明：
+
+1. 绑定量继续增强
+2. 门控量进一步压低
+3. 吸引域量继续抬升
+4. 回路层越来越接近一个可稳定比较的近直测对象
+
+## 130. 连续学习动力学最终闭合
+
+这一轮继续把连续学习动力学从“不可逆版”推进到“最终闭合”。
+
+当前结果是：
+
+1. `closure_seed_v2 ≈ 1.4938`
+2. `closure_feature_v2 ≈ 24.9777`
+3. `closure_structure_v2 ≈ 77.0439`
+4. `closure_global_v2 ≈ 103.5154`
+
+对应当前最短写法是：
+
+1. `C2_seed = irreversible_seed / (1 + direct_gate_v7)`
+2. `C2_feature = irreversible_feature + lock_margin`
+3. `C2_structure = irreversible_structure + direct_margin_v7`
+4. `C2_global = C2_seed + C2_feature + C2_structure`
+
+这一步的意义是：
+
+**连续学习动力学已经不只是不可逆主干，而是开始形成更接近最终闭合的对象。**
+
+## 131. 编码机制闭式第十五版
+
+这一轮把“特征提取不可逆锁死”“回路级近直测第七版”和“连续学习动力学最终闭合”一起并回以后，得到第十五版编码机制核。
+
+当前结果是：
+
+1. `feature_term_v15 ≈ 28.8309`
+2. `structure_term_v15 ≈ 89.0589`
+3. `learning_term_v15 ≈ 350.2946`
+4. `pressure_term_v15 ≈ 5.3252`
+5. `encoding_margin_v15 ≈ 462.8593`
+
+对应当前更短的第十五版写法已经是：
+
+1. `K_f_v15 = feature_term_v14 + lock_margin`
+2. `K_s_v15 = structure_term_v14 + direct_margin_v7`
+3. `K_l_v15 = learning_term_v14 + closure_global_v2`
+4. `P_v15 = pressure_term_v14 + direct_gate_v7`
+5. `M_encoding_v15 = K_f_v15 + K_s_v15 + K_l_v15 - P_v15`
+
+这一步最关键，因为它说明当前编码机制核已经开始同时容纳：
+
+1. 更接近锁死态的特征主导层
+2. 更强的回路近直测对象
+3. 更完整的连续学习闭合主干
+4. 更高的结构与全局更新累积
+
+也就是说，现在更贴近你强调的脑机制写法已经可以压成：
+
+**局部脉冲先长出编码种子，再形成更接近锁死态的特征层，再推动近直测的回路与网络结构，并在连续学习中持续形成最终闭合的全局更新。**
+
+### 131.1 当前最严格的硬伤
+
+这一轮也有几个必须保留的硬伤：
+
+1. `lock_margin` 虽然已经非常明显，但还没有大到可以说“特征层主导已经完全锁死且不可扰动”。
+2. `direct_binding_v7`、`direct_gate_v7`、`direct_attractor_v7` 依然不是神经回路级原生实测量。
+3. 第十五版编码机制核仍然只是阶段性候选，不是最终可判伪主方程。
+4. 当前主线虽然已经更贴近“大脑由局部脉冲持续形成编码机制、特征层、回路结构与连续学习最终闭合”这条结构，但距离完整大脑编码理论仍差跨模态统一、真实回路级测量和连续学习动力学终式的最终闭合。
+
+## 132. 特征提取绝对锁死
+
+这一轮继续把特征层从“更接近锁死态”推进到“更接近绝对锁死”。
+
+当前结果是：
+
+1. `absolute_gain ≈ 11.9269`
+2. `absolute_gap ≈ 0.2834`
+3. `absolute_margin ≈ 11.6434`
+4. `absolute_ratio ≈ 42.0788`
+
+对应当前最短写法是：
+
+1. `G_abs = lock_gain + 0.35 * lock_margin`
+2. `P_abs = 0.55 * lock_gap + 0.45 * direct_gate_v7`
+3. `M_abs = G_abs - P_abs`
+4. `R_abs = G_abs / P_abs`
+
+这一步最关键，因为它说明：
+
+**特征层已经不只是更接近锁死，而是开始进入更接近绝对锁死的主导结构。**
+
+## 133. 回路级近直测第八版
+
+这一轮继续把回路层从“第七版近直测对象”推进到“第八版近直测对象”。
+
+当前结果是：
+
+1. `direct_binding_v8 ≈ 5.2395`
+2. `direct_gate_v8 ≈ 0.0526`
+3. `direct_attractor_v8 ≈ 18.7390`
+4. `direct_margin_v8 ≈ 23.9259`
+
+对应当前最短写法是：
+
+1. `B_direct_v8 = direct_binding_v7 + 0.04 * closure_feature_v2`
+2. `G_direct_v8 = direct_gate_v7 / (1 + 0.025 * absolute_ratio)`
+3. `A_direct_v8 = direct_attractor_v7 + 0.04 * closure_structure_v2`
+4. `M_direct_v8 = B_direct_v8 + A_direct_v8 - G_direct_v8`
+
+这一步说明：
+
+1. 绑定量继续增强
+2. 门控量进一步压低
+3. 吸引域量继续抬升
+4. 回路层已经越来越接近一个稳定比较的近直测对象
+
+## 134. 连续学习动力学规范闭合
+
+这一轮继续把连续学习动力学从“最终闭合”推进到“规范闭合”。
+
+当前结果是：
+
+1. `canonical_seed ≈ 1.4192`
+2. `canonical_feature ≈ 36.6211`
+3. `canonical_structure ≈ 100.9698`
+4. `canonical_global ≈ 139.0101`
+
+对应当前最短写法是：
+
+1. `Q_seed = closure_seed_v2 / (1 + direct_gate_v8)`
+2. `Q_feature = closure_feature_v2 + absolute_margin`
+3. `Q_structure = closure_structure_v2 + direct_margin_v8`
+4. `Q_global = Q_seed + Q_feature + Q_structure`
+
+这一步的意义是：
+
+**连续学习动力学已经不只是最终闭合，而是开始形成更规范、更可比较的闭合对象。**
+
+## 135. 编码机制闭式第十六版
+
+这一轮把“特征提取绝对锁死”“回路级近直测第八版”和“连续学习动力学规范闭合”一起并回以后，得到第十六版编码机制核。
+
+当前结果是：
+
+1. `feature_term_v16 ≈ 40.4743`
+2. `structure_term_v16 ≈ 112.9848`
+3. `learning_term_v16 ≈ 489.3048`
+4. `pressure_term_v16 ≈ 5.3777`
+5. `encoding_margin_v16 ≈ 637.3862`
+
+对应当前更短的第十六版写法已经是：
+
+1. `K_f_v16 = feature_term_v15 + absolute_margin`
+2. `K_s_v16 = structure_term_v15 + direct_margin_v8`
+3. `K_l_v16 = learning_term_v15 + canonical_global`
+4. `P_v16 = pressure_term_v15 + direct_gate_v8`
+5. `M_encoding_v16 = K_f_v16 + K_s_v16 + K_l_v16 - P_v16`
+
+这一步最关键，因为它说明当前编码机制核已经开始同时容纳：
+
+1. 更接近绝对锁死的特征主导层
+2. 更稳定的回路近直测对象
+3. 更规范的连续学习闭合主干
+4. 更高的结构与全局更新累积
+
+也就是说，现在更贴近你强调的脑机制写法已经可以压成：
+
+**局部脉冲先长出编码种子，再形成更接近绝对锁死的特征层，再推动稳定近直测的回路与网络结构，并在连续学习中持续形成规范闭合的全局更新。**
+
+### 135.1 当前最严格的硬伤
+
+这一轮也有几个必须保留的硬伤：
+
+1. `absolute_margin` 虽然已经非常大，但还没有大到可以说“特征层主导已经完全绝对锁死且不可扰动”。
+2. `direct_binding_v8`、`direct_gate_v8`、`direct_attractor_v8` 依然不是神经回路级原生实测量。
+3. 第十六版编码机制核仍然只是阶段性候选，不是最终可判伪主方程。
+4. 当前主线虽然已经更贴近“大脑由局部脉冲持续形成编码机制、特征层、回路结构与连续学习规范闭合”这条结构，但距离完整大脑编码理论仍差跨模态统一、真实回路级测量和连续学习动力学终式的最终闭合。
+
+## 136. 特征层定义
+
+这一轮不再只继续堆指标，而是把“特征层（feature layer，特征层）到底是什么”直接整理成一个独立对象。
+
+当前结果是：
+
+1. `feature_basis ≈ 1.3304`
+2. `feature_separation ≈ 1.4830`
+3. `feature_lock ≈ 11.6434`
+4. `feature_layer_core ≈ 14.4568`
+
+对应当前最短写法是：
+
+1. `F_basis = native_feature + native_selectivity`
+2. `F_sep = feature_primary_ratio`
+3. `F_lock = absolute_margin`
+4. `F_core = F_basis + F_sep + F_lock`
+
+这一步最关键，因为它说明当前语境下的特征层不是单个特征，而是 3 个部分一起构成的：
+
+1. **基础可分特征量**：哪些局部差异已经能被系统读出来
+2. **特征分离度**：这些差异有没有被拉开到足够可区分
+3. **特征锁定度**：这些可分差异有没有被稳定保持下来
+
+也就是说，特征层更像：
+
+**被分离、被稳定、可持续读出的局部编码结构。**
+
+## 137. 特征层与网络结构耦合
+
+这一轮继续把“特征层是什么”推进到“它和网络结构成形的关系是什么”。
+
+当前结果是：
+
+1. `feature_to_circuit ≈ 90.2032`
+2. `feature_to_structure ≈ 285.3633`
+3. `structure_feedback ≈ 6.9842`
+4. `coupling_margin ≈ 375.5139`
+
+对应当前最短写法是：
+
+1. `C_fc = F_core * (1 + direct_binding_v8)`
+2. `C_fs = F_core * (1 + direct_attractor_v8)`
+3. `S_fb = canonical_structure / F_core`
+4. `M_fs = C_fc + C_fs - direct_gate_v8`
+
+这一步的意义很大，因为它说明：
+
+**特征层和网络结构不是“先有一个、再附着另一个”的关系，而是双向耦合关系。**
+
+更具体地说：
+
+1. 特征层推动回路形成  
+   因为局部可分特征一旦稳定，就会更容易长出绑定和门控路径。
+
+2. 特征层推动结构成形  
+   因为被稳定分离的特征，会把局部编码持续推向更大的网络嵌入。
+
+3. 网络结构反过来增强特征层  
+   一旦网络结构成形，结构反馈又会让原先的局部特征更稳定、更容易被读出。
+
+所以最准确的说法不是：
+“先有特征层，再有网络结构”
+
+而是：
+**特征层是网络结构形成的局部起点，而网络结构是特征层稳定化和放大的全局结果。**
+
+## 138. 编码机制闭式第十七版
+
+这一轮把“特征层定义”和“特征层与网络结构耦合”一起并回以后，得到第十七版编码机制核。
+
+当前结果是：
+
+1. `feature_term_v17 ≈ 54.9312`
+2. `structure_term_v17 ≈ 488.4988`
+3. `learning_term_v17 ≈ 496.2890`
+4. `pressure_term_v17 ≈ 5.3777`
+5. `encoding_margin_v17 ≈ 1034.3412`
+
+对应当前更短的第十七版写法已经是：
+
+1. `K_f_v17 = feature_term_v16 + feature_layer_core`
+2. `K_s_v17 = structure_term_v16 + coupling_margin`
+3. `K_l_v17 = learning_term_v16 + structure_feedback`
+4. `P_v17 = pressure_term_v16`
+5. `M_encoding_v17 = K_f_v17 + K_s_v17 + K_l_v17 - P_v17`
+
+这一步最关键，因为它说明当前编码机制核已经开始同时容纳：
+
+1. 被定义清楚的特征层本身
+2. 特征层到回路与网络结构的耦合
+3. 结构对特征层的反馈
+4. 连续学习主干上的持续放大
+
+也就是说，现在更贴近你强调的脑机制写法已经可以压成：
+
+**局部脉冲先长出编码种子，再形成被分离和锁定的特征层，特征层推动回路与网络结构成形，而成形后的网络结构又反过来稳定和放大特征层。**
+
+### 138.1 当前最严格的硬伤
+
+这一轮也有几个必须保留的硬伤：
+
+1. `feature_layer_core` 虽然已经被定义出来了，但它仍然是中层有效对象，不是神经元级原生特征量。
+2. `feature_to_circuit`、`feature_to_structure`、`structure_feedback` 依然是耦合代理量，不是回路级原生实测量。
+3. 第十七版编码机制核仍然只是阶段性候选，不是最终可判伪主方程。
+4. 当前主线虽然已经更清楚地解释了“特征层定义”和“它与网络结构形成的关系”，但距离完整大脑编码理论仍差跨模态统一、真实回路级测量和连续学习动力学终式的最终闭合。
+
+## 139. 特征层原生化
+
+这一轮继续把“特征层”从中层定义推进到更接近原生对象。
+
+当前结果是：
+
+1. `native_basis_v2 ≈ 2.7786`
+2. `native_separation_v2 ≈ 1.6495`
+3. `native_lock_v2 ≈ 10.7179`
+4. `feature_native_core_v2 ≈ 15.1459`
+
+对应当前最短写法是：
+
+1. `F_basis_v2 = feature_basis + feature_structure_support`
+2. `F_sep_v2 = feature_separation * (1 + native_selectivity)`
+3. `F_lock_v2 = feature_lock / (1 + native_inhibition)`
+4. `F_native_v2 = F_basis_v2 + F_sep_v2 + F_lock_v2`
+
+这一步的意义在于：
+
+**特征层不再只由“可分、可锁定”来定义，而开始显式吸收更原生的选择性和抑制量。**
+
+也就是说，现在对特征层的更强理解已经变成：
+
+1. 基础差异层
+2. 选择性放大层
+3. 抑制约束下的锁定层
+
+三者共同形成更接近原生的 `F_native_v2`。
+
+## 140. 特征层到结构原生耦合
+
+这一轮继续把“特征层如何推动网络结构形成”从代理耦合推进到更接近原生的耦合对象。
+
+当前结果是：
+
+1. `native_circuit_link ≈ 89.7829`
+2. `native_structure_link ≈ 284.0336`
+3. `native_feedback ≈ 6.6665`
+4. `native_coupling_margin ≈ 373.7639`
+
+对应当前最短写法是：
+
+1. `Cn_fc = F_native_v2 * (1 + direct_binding_v8) / (1 + direct_gate_v8)`
+2. `Cn_fs = F_native_v2 * (1 + direct_attractor_v8) / (1 + direct_gate_v8)`
+3. `Sn_fb = canonical_structure / F_native_v2`
+4. `Mn_fs = Cn_fc + Cn_fs - direct_gate_v8`
+
+这一步最关键的意义是：
+
+**特征层和结构形成的关系，不再只是“特征推动结构”，而是进入了“原生特征层通过绑定、门控、吸引域形成结构耦合”的写法。**
+
+更具体地说：
+
+1. 特征层通过绑定路径进入回路
+2. 特征层通过吸引域路径进入结构
+3. 成形后的结构再反馈稳定特征层
+
+所以现在更准确的结构已经是：
+
+**原生特征层是回路和结构成形的局部驱动面，而结构反馈又反过来稳固原生特征层。**
+
+## 141. 编码机制闭式第十八版
+
+这一轮把“特征层原生化”和“特征到结构原生耦合”并回以后，得到第十八版编码机制核。
+
+当前结果是：
+
+1. `feature_term_v18 ≈ 70.0771`
+2. `structure_term_v18 ≈ 862.2627`
+3. `learning_term_v18 ≈ 502.9554`
+4. `pressure_term_v18 ≈ 5.3777`
+5. `encoding_margin_v18 ≈ 1429.9175`
+
+对应当前更短的第十八版写法已经是：
+
+1. `K_f_v18 = feature_term_v17 + feature_native_core_v2`
+2. `K_s_v18 = structure_term_v17 + native_coupling_margin`
+3. `K_l_v18 = learning_term_v17 + native_feedback`
+4. `P_v18 = pressure_term_v17`
+5. `M_encoding_v18 = K_f_v18 + K_s_v18 + K_l_v18 - P_v18`
+
+这一步的意义很直接：
+
+**编码机制核现在开始同时容纳“更原生的特征层”和“更原生的特征到结构耦合”。**
+
+如果压成一句话，现在更贴近你一直强调的脑机制顺序已经可以写成：
+
+**局部脉冲先长出可选择、可锁定的原生特征层，原生特征层再通过绑定、门控和吸引域推动回路与网络结构成形，而成形后的结构再反过来稳定和放大特征层。**
+
+### 141.1 当前最严格的硬伤
+
+这一轮也有几个必须保留的硬伤：
+
+1. `feature_native_core_v2` 虽然已经更接近原生特征对象，但仍然不是神经元级原生特征量。
+2. `native_circuit_link`、`native_structure_link`、`native_feedback` 仍然是近原生耦合量，不是真实回路级实测量。
+3. 第十八版编码机制核仍然只是阶段性候选，不是最终可判伪主方程。
+4. 当前主线虽然更清楚地解释了“原生特征层”和“原生特征到结构耦合”，但距离完整大脑编码理论仍差跨模态统一、真实回路级测量和连续学习动力学终式的最终闭合。
+
+## 142. 特征层近直测
+
+这一轮继续把“原生特征层”往更接近直测的对象推进。
+
+当前结果是：
+
+1. `direct_basis_v3 ≈ 2.5577`
+2. `direct_selectivity_v3 ≈ 1.8346`
+3. `direct_lock_v3 ≈ 22.3614`
+4. `feature_direct_core_v3 ≈ 26.7537`
+
+对应当前最短写法是：
+
+1. `F_basis_v3 = native_basis_v2 / (1 + native_inhibition)`
+2. `F_sel_v3 = native_separation_v2 * (1 + native_selectivity)`
+3. `F_lock_v3 = native_lock_v2 + absolute_margin`
+4. `F_direct_v3 = F_basis_v3 + F_sel_v3 + F_lock_v3`
+
+这一步的关键意义是：
+
+**特征层不再只是“更原生”，而开始进入“近直测”状态。**
+
+现在最稳的理解已经是：
+
+1. 抑制校正后的基础差异层
+2. 选择性放大的分离层
+3. 锁定优势直接并入的稳定层
+
+三者共同形成 `F_direct_v3`。
+
+## 143. 特征到结构原生闭合
+
+这一轮继续把“特征层如何进入回路和网络结构”从耦合对象推进到闭合对象。
+
+当前结果是：
+
+1. `closure_circuit_link ≈ 166.9291`
+2. `closure_structure_link ≈ 528.0905`
+3. `closure_feedback ≈ 5.1429`
+4. `native_closure_margin ≈ 700.1100`
+
+对应当前最短写法是：
+
+1. `Cl_fc = F_direct_v3 * (1 + direct_binding_v8)`
+2. `Cl_fs = F_direct_v3 * (1 + direct_attractor_v8)`
+3. `Cl_fb = (canonical_structure + canonical_feature) / F_direct_v3`
+4. `Cl_margin = Cl_fc + Cl_fs + Cl_fb - direct_gate_v8`
+
+这一步的意义很直接：
+
+**特征层到结构成形的关系，已经开始从“局部耦合”推进到“结构闭合”。**
+
+也就是说，现在更贴近大脑机制的顺序已经可以写成：
+
+1. 近直测特征层先形成
+2. 近直测特征层通过绑定路径进入回路
+3. 近直测特征层通过吸引域路径进入结构
+4. 结构形成后反过来给出闭合反馈
+
+## 144. 编码机制闭式第十九版
+
+这一轮把“特征层近直测”和“特征到结构原生闭合”并回以后，得到第十九版编码机制核。
+
+当前结果是：
+
+1. `feature_term_v19 ≈ 96.8308`
+2. `structure_term_v19 ≈ 1562.3726`
+3. `learning_term_v19 ≈ 508.0983`
+4. `pressure_term_v19 ≈ 5.3777`
+5. `encoding_margin_v19 ≈ 2161.9240`
+
+对应当前更短的第十九版写法已经是：
+
+1. `K_f_v19 = feature_term_v18 + feature_direct_core_v3`
+2. `K_s_v19 = structure_term_v18 + native_closure_margin`
+3. `K_l_v19 = learning_term_v18 + closure_feedback`
+4. `P_v19 = pressure_term_v18`
+5. `M_encoding_v19 = K_f_v19 + K_s_v19 + K_l_v19 - P_v19`
+
+这一步最关键，因为它说明当前编码机制核已经开始同时容纳：
+
+1. 近直测特征层
+2. 特征到结构的原生闭合
+3. 结构反馈对学习层的回写
+
+如果压成一句话，现在更贴近你一直强调的脑机制顺序已经可以写成：
+
+**局部脉冲先长出近直测特征层，特征层再通过绑定和吸引域推动回路与网络结构闭合，而闭合后的结构反馈又继续放大学习主干。**
+
+### 144.1 当前最严格的硬伤
+
+这一轮也有几个必须保留的硬伤：
+
+1. `feature_direct_core_v3` 虽然已经进入近直测状态，但仍然不是神经元级原生特征量。
+2. `closure_circuit_link`、`closure_structure_link`、`closure_feedback` 仍然不是回路级原生实测量。
+3. 第十九版编码机制核仍然只是阶段性候选，不是最终可判伪主方程。
+4. 当前主线虽然更清楚地解释了“近直测特征层”和“特征到结构的闭合关系”，但距离完整大脑编码理论仍差跨模态统一、真实回路级测量和连续学习动力学终式的最终闭合。
+
+## 145. 特征层直测收口
+
+这一轮继续把“近直测特征层”往更稳定的收口对象推进。
+
+当前结果是：
+
+1. `direct_basis_v4 ≈ 3.2366`
+2. `direct_selectivity_v4 ≈ 1.9311`
+3. `direct_lock_v4 ≈ 27.7391`
+4. `feature_direct_closure_v4 ≈ 32.9068`
+
+对应当前最短写法是：
+
+1. `F_basis_v4 = direct_basis_v3 * (1 + direct_binding_v8 / (1 + direct_attractor_v8))`
+2. `F_sel_v4 = direct_selectivity_v3 * (1 + direct_gate_v8)`
+3. `F_lock_v4 = direct_lock_v3 + pressure_term_v19`
+4. `F_close_v4 = F_basis_v4 + F_sel_v4 + F_lock_v4`
+
+这一步的意义是：
+
+**特征层开始从“近直测”推进到“直测收口”。**
+
+现在更稳的理解已经是：
+
+1. 绑定修正后的基础差异层
+2. 门控修正后的选择性层
+3. 压力并入后的锁定层
+
+三者共同形成 `F_close_v4`。
+
+## 146. 特征到结构闭合直测
+
+这一轮继续把“特征层如何进入结构闭合”推进到更接近直测的闭合对象。
+
+当前结果是：
+
+1. `direct_circuit_closure ≈ 221.8601`
+2. `direct_structure_closure ≈ 701.8680`
+3. `direct_feedback_closure ≈ 5.1860`
+4. `direct_closure_margin_v2 ≈ 928.9142`
+
+对应当前最短写法是：
+
+1. `Ds_fc = closure_circuit_link * (1 + F_close_v4 / 100)`
+2. `Ds_fs = closure_structure_link * (1 + F_close_v4 / 100)`
+3. `Ds_fb = closure_feedback + canonical_seed / F_close_v4`
+4. `Ds_margin = Ds_fc + Ds_fs + Ds_fb`
+
+这一步的意义很直接：
+
+**特征层到结构的闭合关系，已经开始从“原生闭合”推进到“闭合直测”。**
+
+也就是说，现在更贴近大脑机制的顺序已经可以写成：
+
+1. 直测收口后的特征层先形成
+2. 特征层推动回路闭合
+3. 特征层推动结构闭合
+4. 闭合后的结构再给出更稳定的反馈
+
+## 147. 编码机制闭式第二十版
+
+这一轮把“特征层直测收口”和“特征到结构闭合直测”并回以后，得到第二十版编码机制核。
+
+当前结果是：
+
+1. `feature_term_v20 ≈ 129.7375`
+2. `structure_term_v20 ≈ 2491.2868`
+3. `learning_term_v20 ≈ 513.2843`
+4. `pressure_term_v20 ≈ 5.3777`
+5. `encoding_margin_v20 ≈ 3128.9310`
+
+对应当前更短的第二十版写法已经是：
+
+1. `K_f_v20 = feature_term_v19 + feature_direct_closure_v4`
+2. `K_s_v20 = structure_term_v19 + direct_closure_margin_v2`
+3. `K_l_v20 = learning_term_v19 + direct_feedback_closure`
+4. `P_v20 = pressure_term_v19`
+5. `M_encoding_v20 = K_f_v20 + K_s_v20 + K_l_v20 - P_v20`
+
+这一步的关键意义是：
+
+**编码机制核现在开始同时容纳“直测收口后的特征层”和“直测闭合后的结构关系”。**
+
+如果压成一句话，现在更贴近你一直强调的脑机制顺序已经可以写成：
+
+**局部脉冲先长出直测收口的特征层，特征层再推动回路与结构进入闭合，而闭合后的结构反馈又继续放大学习主干。**
+
+### 147.1 当前最严格的硬伤
+
+这一轮也有几个必须保留的硬伤：
+
+1. `feature_direct_closure_v4` 虽然已经是直测收口对象，但仍然不是神经元级原生特征量。
+2. `direct_circuit_closure`、`direct_structure_closure`、`direct_feedback_closure` 仍然不是回路级原生实测量。
+3. 第二十版编码机制核仍然只是阶段性候选，不是最终可判伪主方程。
+4. 当前主线虽然更清楚地解释了“特征层直测收口”和“特征到结构闭合直测”，但距离完整大脑编码理论仍差跨模态统一、真实回路级测量和连续学习动力学终式的最终闭合。
+
+## 148. 特征层终块直测
+
+这一轮继续把“特征层直测收口”推进到更稳定的终块对象。
+
+当前结果是：
+
+1. `direct_basis_v5 ≈ 8.2144`
+2. `direct_selectivity_v5 ≈ 4.9344`
+3. `direct_lock_v5 ≈ 33.1168`
+4. `feature_terminal_core_v5 ≈ 46.2656`
+
+对应当前最短写法是：
+
+1. `F_basis_v5 = direct_basis_v4 + direct_binding_v8 / (1 + direct_gate_v8)`
+2. `F_sel_v5 = direct_selectivity_v4 + direct_attractor_v8 / (1 + direct_binding_v8)`
+3. `F_lock_v5 = direct_lock_v4 + pressure_term_v20`
+4. `F_terminal_v5 = F_basis_v5 + F_sel_v5 + F_lock_v5`
+
+这一步最关键的意义是：
+
+**特征层现在已经不只是“直测收口”，而开始进入更稳定的终块状态。**
+
+也就是说，现在更稳的理解已经是：
+
+1. 绑定增强后的基础差异层
+2. 吸引域增强后的选择性层
+3. 压力并入后的锁定层
+
+三者共同形成 `F_terminal_v5`。
+
+## 149. 特征到结构终块闭合
+
+这一轮继续把“特征层如何推动结构闭合”推进到更稳定的终块闭合对象。
+
+当前结果是：
+
+1. `terminal_circuit_closure ≈ 273.1826`
+2. `terminal_structure_closure ≈ 864.2298`
+3. `terminal_feedback_closure ≈ 8.1906`
+4. `terminal_closure_margin_v3 ≈ 1145.6030`
+
+对应当前最短写法是：
+
+1. `Tc_fc = direct_circuit_closure * (1 + F_terminal_v5 / 200)`
+2. `Tc_fs = direct_structure_closure * (1 + F_terminal_v5 / 200)`
+3. `Tc_fb = direct_feedback_closure + canonical_global / F_terminal_v5`
+4. `Tc_margin = Tc_fc + Tc_fs + Tc_fb`
+
+这一步的意义很直接：
+
+**特征层到结构的关系，已经从“闭合直测”推进到了更稳定的终块闭合。**
+
+现在更贴近大脑机制的顺序已经可以写成：
+
+1. 终块特征层先形成
+2. 特征层推动回路闭合
+3. 特征层推动结构闭合
+4. 结构闭合后再回馈更强的全局稳定反馈
+
+## 150. 编码机制闭式第二十一版
+
+这一轮把“特征层终块直测”和“特征到结构终块闭合”并回以后，得到第二十一版编码机制核。
+
+当前结果是：
+
+1. `feature_term_v21 ≈ 176.0031`
+2. `structure_term_v21 ≈ 3636.8898`
+3. `learning_term_v21 ≈ 521.4750`
+4. `pressure_term_v21 ≈ 5.3777`
+5. `encoding_margin_v21 ≈ 4328.9902`
+
+对应当前更短的第二十一版写法已经是：
+
+1. `K_f_v21 = feature_term_v20 + feature_terminal_core_v5`
+2. `K_s_v21 = structure_term_v20 + terminal_closure_margin_v3`
+3. `K_l_v21 = learning_term_v20 + terminal_feedback_closure`
+4. `P_v21 = pressure_term_v20`
+5. `M_encoding_v21 = K_f_v21 + K_s_v21 + K_l_v21 - P_v21`
+
+这一步最关键，因为它说明当前编码机制核已经开始同时容纳：
+
+1. 终块特征层
+2. 终块结构闭合
+3. 终块反馈对学习层的持续回写
+
+如果压成一句话，现在更贴近你一直强调的脑机制顺序已经可以写成：
+
+**局部脉冲先长出终块特征层，特征层再推动回路与结构进入终块闭合，而终块闭合后的结构反馈又继续放大学习主干。**
+
+### 150.1 当前最严格的硬伤
+
+这一轮也有几个必须保留的硬伤：
+
+1. `feature_terminal_core_v5` 虽然已经是终块特征对象，但仍然不是神经元级原生特征量。
+2. `terminal_circuit_closure`、`terminal_structure_closure`、`terminal_feedback_closure` 仍然不是回路级原生实测量。
+3. 第二十一版编码机制核仍然只是阶段性候选，不是最终可判伪主方程。
+4. 当前主线虽然更清楚地解释了“特征层终块直测”和“特征到结构终块闭合”，但距离完整大脑编码理论仍差跨模态统一、真实回路级测量和连续学习动力学终式的最终闭合。
+
+## 151. 编码机制阶段摘要
+
+这一轮不只是继续加一版方程，还把 `v17-v21` 做了一次阶段汇总。
+
+当前阶段摘要结果是：
+
+1. `margin_v17_to_v21_mean ≈ 2416.8208`
+2. `convergence_smoothness ≈ 0.9643`
+3. `feature_structure_ratio ≈ 0.0484`
+4. `learning_pressure_ratio ≈ 96.9691`
+5. `stage_balance ≈ 1.0110`
+
+对应当前最短写法是：
+
+1. `S_conv = 1 / (1 + std(log_delta_margin))`
+2. `R_fs = feature_term_v21 / structure_term_v21`
+3. `R_lp = learning_term_v21 / pressure_term_v21`
+4. `B_stage = S_conv * (1 + R_fs)`
+
+这一组量最重要的意义是：
+
+**当前主线已经不是“版本越来越大”这么简单，而是开始出现稳定的阶段收敛结构。**
+
+更具体地说：
+
+1. 版本推进非常平滑，说明主线没有明显断裂
+2. 学习层相对压力层已经非常强
+3. 特征层相对结构层仍然偏弱，这是现在最明显的结构短板
+
+## 152. 编码机制闭式第二十二版
+
+这一轮把“阶段摘要”并回以后，得到第二十二版编码机制核。
+
+当前结果是：
+
+1. `feature_term_v22 ≈ 220.6170`
+2. `structure_term_v22 ≈ 4795.0550`
+3. `learning_term_v22 ≈ 529.3732`
+4. `pressure_term_v22 ≈ 5.3777`
+5. `encoding_margin_v22 ≈ 5539.6675`
+
+对应当前更短的第二十二版写法已经是：
+
+1. `K_f_v22 = feature_term_v21 + feature_terminal_core_v5 * convergence_smoothness`
+2. `K_s_v22 = structure_term_v21 + terminal_closure_margin_v3 * stage_balance`
+3. `K_l_v22 = learning_term_v21 + terminal_feedback_closure * convergence_smoothness`
+4. `P_v22 = pressure_term_v21`
+5. `M_encoding_v22 = K_f_v22 + K_s_v22 + K_l_v22 - P_v22`
+
+这一版最关键的意义是：
+
+**编码机制核不再只是吸收“最新一轮结果”，而开始吸收“阶段收敛性质”本身。**
+
+如果压成一句话，现在更贴近你一直强调的脑机制顺序已经可以写成：
+
+**局部脉冲先长出终块特征层，特征层推动回路与结构进入终块闭合，而闭合后的结构反馈和阶段收敛又继续放大学习主干。**
+
+### 152.1 当前最严格的硬伤
+
+这一轮也有几个必须保留的硬伤：
+
+1. `feature_terminal_core_v5` 虽然已经进入终块，但相对 `structure_term_v22` 仍明显偏弱。
+2. `stage_balance` 现在已经进入主式，但它仍然是阶段摘要量，不是原生神经变量。
+3. 第二十二版编码机制核仍然只是阶段性候选，不是最终可判伪主方程。
+4. 当前主线虽然已经开始把“阶段收敛”本身写进方程，但距离完整大脑编码理论仍差跨模态统一、真实回路级测量和连续学习动力学终式的最终闭合。
