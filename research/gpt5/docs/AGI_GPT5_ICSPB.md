@@ -1,16 +1,16 @@
 # AGI_GPT5_ICSPB
 
-最后更新：2026-03-20 21:00
+最后更新：2026-03-20 22:31
 
 ## 1. 文档定位
 
-这份文档只保留当前阶段最新、最稳定的理论信息，不保留历史实验日志、逐轮命令流水和中间版本展开。
+这份文档只保留当前阶段最新、最稳定的理论信息，不保留逐轮实验日志、命令流水和旧版推演。
 
 当前项目的核心目标是：
 
-**把 `DNN（深度神经网络）` 的语言结构、脑编码机制、以及更高统一智能理论压成一套可复现、可联立、可继续收口的统一数学主线。**
+**把 `DNN（深度神经网络）` 的语言结构、脑编码机制，以及更高统一智能理论，压成一套可复现、可联立、可继续收口的统一数学主线。**
 
-当前最稳定的总链条已经是：
+当前最稳定的总链条是：
 
 `局部神经元活动 -> 编码种子 -> 特征层 -> 结构层 -> 学习反馈层 -> 压力补偿层`
 
@@ -18,30 +18,26 @@
 
 ## 2. 当前总判断
 
-### 2.1 当前最稳的一句话
+### 2.1 当前最稳定的一句话
 
-当前最稳的判断是：
-
-**大脑式编码不是先有一个全局设计好的网络，再往里填充特征；而是局部神经元活动先形成编码种子，种子再被选择和锁定成特征层，特征层继续推动回路与网络结构生成，结构闭合后反过来放大学习主干，而压力项负责限制失稳。**
+**大脑式编码不是先有一个全局设计好的网络，再往里填特征；而是局部神经元活动先形成编码种子，种子再被选择和锁定成特征层，特征层继续推动回路与网络结构生成，结构闭合后反过来放大学习主干，而压力项负责限制失稳。**
 
 ### 2.2 三条总主线
 
-当前最稳定的三条总主线是：
-
-1. `DNN` 语言结构分析  
+1. `DNN（深度神经网络）` 语言结构分析  
    语言能力不是简单嵌入堆叠，而是分层编码形成链的产物。
 
 2. 脑编码机制逆向分析  
    编码机制更像“局部先起、结构后成”的形成过程，而不是“全局网络先验给定”。
 
 3. 更高统一智能理论  
-   当前已经不只是解释语言和脑编码，而是在逼近一套可联立的统一闭式核。
+   当前已经不只是在解释语言和脑编码，而是在逼近一套统一闭式核。
 
 ---
 
 ## 3. 当前总理论桥
 
-当前总理论桥的稳定部分是：
+当前三条主线之间已经形成了方向性桥接：
 
 1. `dnn_to_brain_alignment ≈ 1.3024`
 2. `brain_to_math_alignment ≈ 0.8144`
@@ -56,18 +52,248 @@
 
 ---
 
-## 4. 编码机制主线
+## 4. 语言系统原理
 
-### 4.1 神经元起点层 `N_origin`
+### 4.1 语言的五层对象
 
-当前神经元起点层最稳定的对象是：
+当前最稳的语言理论不是“词向量 + 语法规则”，而是五层系统：
+
+1. 入口层 `E_lang`  
+   语言是智能结构最强入口。
+
+2. 特征层 `F_lang`  
+   语言会把局部差异压成可分、可读、可锁定的特征。
+
+3. 结构层 `S_lang`  
+   语言特征会继续长成局部图册、关系路径、读出约束和运输结构。
+
+4. 学习层 `L_lang`  
+   语言结构会持续放大学习主干。
+
+5. 压力层 `P_lang`  
+   语言系统中的漂移、失稳、过度放大和假闭合，都会进入压力层。
+
+### 4.2 当前稳定结果
+
+1. `language_entry_core ≈ 0.9395`
+2. `language_feature_core ≈ 0.7493`
+3. `language_structure_core ≈ 0.5162`
+4. `language_learning_core ≈ 0.7027`
+5. `language_pressure_core ≈ 0.3366`
+6. `language_system_margin ≈ 2.5711`
+
+### 4.3 当前语言数学形式
+
+```text
+E_lang = mean(T_dnn_norm, C_lang, R_lang_theory)
+F_lang = mean(U_feature, S_lang, B_lang)
+S_lang = mean(U_structure, K_keep_star, K_cross)
+L_lang = mean(S_lang_only, R_train, R_proto)
+P_lang = mean(R_lang, M_nonlang, P_linear)
+M_lang = E_lang + F_lang + S_lang + L_lang - P_lang
+```
+
+这说明：
+
+**语言之所以特殊，不只是因为复杂，而是因为它天然同时暴露了特征提取、结构生成、学习反馈和稳态约束。**
+
+---
+
+## 5. 概念区域与属性结构
+
+### 5.1 家族片区与局部偏置
+
+当前最稳的概念结构不是“一个词一个孤立区块”，而是：
+
+`概念 = 家族片区 + 局部偏置 + 属性纤维 + 压力项`
+
+例如苹果这类概念，更像：
+
+`apple（苹果） = fruit（水果）家族片区 + 苹果局部偏置 + 属性纤维 - 结构压力`
+
+### 5.2 区域拓扑
+
+当前区域拓扑更像：
+
+**高密度家族片区 + 局部偏置子区 + 跨区域纤维 + 运输/读出通道**
+
+当前稳定结果：
+
+1. `family_region_density ≈ 0.9476`
+2. `family_region_separation ≈ 0.7842`
+3. `local_offset_mobility ≈ 0.1499`
+4. `regional_overlap_control ≈ 0.9480`
+5. `region_topology_margin ≈ 0.6692`
+6. `mean_anchor_bundle_strength ≈ 0.6111`
+7. `mean_local_bundle_strength ≈ 0.3889`
+
+当前最短写法：
+
+```text
+R_family = A_family * (1 - C_chart)
+R_sep = norm(G_sep)
+R_offset = S_chart
+R_overlap = 1 - C_chart
+M_region = mean(R_family, R_sep, R_offset, R_overlap, S_lang)
+```
+
+这意味着：
+
+- 水果、动物、抽象概念这类对象，更像稳定的家族片区。
+- 苹果、香蕉、梨之间的区别，不是完全分离的大区块，而是家族片区内的局部偏置子区。
+
+### 5.3 跨区域属性
+
+像“红色”这种横跨大量对象的属性，当前更像：
+
+**分布式横截属性纤维**
+
+而不是：
+
+**一个单独、孤立、固定的单一区域。**
+
+当前稳定结果：
+
+1. `attribute_anchor_mass ≈ 0.6111`
+2. `attribute_transverse_mass ≈ 0.2545`
+3. `cross_region_attribute_strength ≈ 0.6568`
+4. `attribute_single_region_score ≈ 0.3566`
+5. `attribute_distributed_score ≈ 0.6568`
+
+当前最短写法：
+
+```text
+A_attr = B_anchor
+T_attr = B_local * B_lang
+X_attr = T_attr + B_keep_star
+S_attr = max(0, A_attr - T_attr)
+D_attr = min(1, T_attr + B_keep_star)
+```
+
+这说明：
+
+- “红色”更像跨多个家族片区的分布式属性纤维。
+- 当“红色”与“苹果”“汽车”“血液”等对象结合时，会在不同片区上取不同局部落点。
+- 所以它不是一个单一区域里的单点概念，而是一个横跨很多区域的属性方向。
+
+### 5.4 苹果的红色与太阳的红色
+
+当前最稳的判断是：
+
+**苹果的红色和太阳的红色共享同一条红色属性纤维，但完整激活通路并不相同。**
+
+它们的关系更像：
+
+- 共享层：`red fiber（红色纤维）`
+- 分叉层：不同家族片区、不同局部偏置、不同上下文绑定
+
+当前稳定结果：
+
+1. `shared_color_core ≈ 0.4327`
+2. `family_divergence ≈ 1.7040`
+3. `context_divergence ≈ 0.1905`
+4. `full_path_overlap ≈ 0.6799`
+5. `color_fiber_overlap ≈ 0.9707`
+6. `same_full_route_score ≈ 0.3059`
+7. `shared_fiber_score ≈ 1.0000`
+8. `contextual_split_score ≈ 0.9472`
+
+当前最短写法：
+
+```text
+P_apple_red = F_fruit + O_apple + A_red + C_apple_red
+P_sun_red = F_astral + O_sun + A_red + C_sun_red
+X_red = A_red
+D_ctx = norm((F_fruit + O_apple) - (F_astral + O_sun)) + norm(C_apple_red - C_sun_red)
+R_same = overlap(X_red) - split(D_ctx)
+```
+
+这说明：
+
+- “红色”本身更像共享属性纤维。
+- “苹果的红色”和“太阳的红色”会共享这条纤维。
+- 但完整神经通路不会相同，因为它们接入的家族片区和上下文绑定不同。
+
+### 5.5 颜色纤维原生化
+
+当前“红色”已经不只是一个抽象属性方向，而开始能被写成近原生对象：
+
+1. 共享纤维
+2. 绑定增强
+3. 路径分叉
+4. 颜色特异性
+
+当前稳定结果：
+
+1. `native_color_fiber ≈ 0.6872`
+2. `native_color_binding ≈ 0.4825`
+3. `native_color_route_split ≈ 0.3211`
+4. `native_color_specificity ≈ 0.3219`
+5. `color_native_margin ≈ 1.1705`
+
+当前最短写法：
+
+```text
+N_red = X_red + T_attr
+B_red = overlap(X_red) * A_feature
+S_red = D_ctx * A_route
+Q_red = max(0, B_red - 0.5 * S_red)
+M_red = N_red + B_red + Q_red - S_red
+```
+
+这说明“红色”当前已经不只是跨区域纤维，还开始能被压成共享纤维、绑定增强和路径分叉三部分组成的近原生对象。
+
+---
+
+## 6. 稀疏激活与最小触发
+
+当前理论认为，人脑式系统并不是每次都点亮整块区域，而更像：
+
+**用最小必要组合触发当前任务所需的种子、特征、结构和路径。**
+
+当前稳定结果：
+
+1. `sparse_seed_activation ≈ 0.9395`
+2. `sparse_feature_activation ≈ 0.4971`
+3. `sparse_structure_activation ≈ 0.4395`
+4. `sparse_route_activation ≈ 0.3390`
+5. `sparse_activation_efficiency ≈ 0.5538`
+
+当前最短写法：
+
+```text
+A_seed = E_lang
+A_feature = F_lang * (1 - P_lang)
+A_structure = M_region * D_attr
+A_route = S_lang * X_attr
+A_sparse = mean(A_seed, A_feature, A_structure, A_route)
+```
+
+这意味着：
+
+- 每次认知活动更像激活一个**最小必要组合**。
+- 这个组合通常包含：
+  - 局部种子片区
+  - 特征片区
+  - 结构片区
+  - 跨区域路线
+
+而不是整块区域一起被点亮。
+
+---
+
+## 7. 神经元起点与结构生成
+
+### 7.1 神经元起点层 `N_origin`
+
+当前最稳定的神经元起点对象是：
 
 1. `N_source`
 2. `N_focus`
 3. `N_retention`
 4. `N_origin`
 
-当前最稳定结果：
+当前稳定结果：
 
 1. `origin_source_refined ≈ 10.6816`
 2. `origin_focus_refined ≈ 1.7889`
@@ -75,400 +301,201 @@
 4. `neuron_origin_margin_v2 ≈ 19.1258`
 5. `origin_stability_v2 ≈ 0.4046`
 
-当前最短写法：
+### 7.2 结构生成层 `S_structure`
 
-`N_origin = N_source + N_focus + N_retention`
+当前结构生成更像：
 
-### 4.2 特征层 `F_feature`
+**特征推动分支、绑定与反馈稳定，再形成网络结构。**
 
-特征层不是“网络里某一层神经元”的字面层，而是：
+当前稳定结果：
 
-**被分离、被选择、被锁定、能被持续读出的编码差异层。**
-
-当前最稳定的三部分：
-
-1. `F_basis`
-2. `F_select`
-3. `F_lock`
-
-当前终块级结果：
-
-1. `direct_basis_v5 ≈ 8.2144`
-2. `direct_selectivity_v5 ≈ 4.9344`
-3. `direct_lock_v5 ≈ 33.1168`
-4. `feature_terminal_core_v5 ≈ 46.2656`
-
-当前最短写法：
-
-`F_feature = F_basis + F_select + F_lock`
-
-### 4.3 结构层 `S_structure`
-
-结构层不是先验全局网络，而是特征层继续长出来的回路和闭合结构。
-
-当前最稳定对象：
-
-1. `S_branch`
-2. `S_bind`
-3. `S_fb`
-4. `S_structure`
-
-当前稳定化结果：
-
-1. `stabilized_branching ≈ 35.5817`
-2. `stabilized_binding ≈ 90.8265`
-3. `stabilized_feedback ≈ 17.0138`
-4. `stabilized_margin ≈ 143.4220`
-
-当前更合理的稳定表达：
-
-1. `stability_intensity ≈ 143.4220`
-2. `stability_strength ≈ 0.9931`
-3. `closure_alignment ≈ 0.1251`
-4. `stability_balance ≈ 1.1173`
-
-当前最短写法：
-
-`S_structure = S_branch + S_bind + S_fb`
-
-### 4.4 学习反馈层 `L_learning`
-
-学习层的作用不是重设计网络，而是把已经形成的：
-
-1. 特征层
-2. 结构层
-3. 结构闭合
-
-继续放大成长期学习主干。
-
-当前最稳定的判断是：
-
-**结构闭合不是终点，而是学习放大的起点。**
-
-### 4.5 压力层 `P_pressure`
-
-压力层负责：
-
-1. 限制漂移
-2. 限制过度放大
-3. 限制假闭合
-4. 维持系统不崩
-
-当前它已经足够稳定到能进入主核，但还没有完全原生化。
+1. `branching_refined_v2 ≈ 35.5817`
+2. `binding_refined_v2 ≈ 64.6615`
+3. `feedback_refined_v2 ≈ 12.2284`
+4. `structure_genesis_margin_v3 ≈ 112.4716`
+5. `structure_direct_confidence_v3 ≈ 0.3913`
 
 ---
 
-## 5. 旧版 ICSPB 对象与当前主线
+## 8. 旧 ICSPB 对象的统一回并
 
-旧版 `ICSPB（库存约束分层路径束）` 并没有被推翻，而是被重写并回当前主线。
+旧版 `ICSPB（库存约束分层路径束）` 的对象层没有被推翻，而是已经开始被稳定重写进当前主线。
 
-当前更稳定的重映射关系：
+### 8.1 旧对象重映射
 
-1. `family patch` -> `family anchor + local chart + structure layer`
-2. `concept section / concept offset` -> `concept state + local differential feature`
-3. `attribute fiber` -> `local feature fiber`
-4. `relation-context fiber` -> `transport-conditioned structure routing`
-5. `admissible update` -> `pressure-gated learning update`
-6. `restricted readout` -> `locked feature readout`
-7. `stage-conditioned transport` -> `learning-phase transport`
-8. `successor-aligned transport` -> `feedback-aligned successor transport`
-9. `protocol bridge` -> `structure-to-readout protocol bridge`
+1. `family patch（家族片区）` 主要并回结构层
+2. `concept offset（概念偏移）` 主要并回特征层
+3. `attribute fiber（属性纤维）` 主要并回特征层
+4. `relation-context fiber（关系-上下文纤维）` 主要并回运输层
 
-当前高闭合统一结果：
+当前稳定结果：
 
-1. `object_unification_high ≈ 0.7110`
-2. `transport_unification_high ≈ 0.8421`
-3. `remap_closure_high ≈ 0.7738`
-4. `support_gap_high ≈ 0.2262`
-5. `unification_high_stability ≈ 0.7756`
+1. `family_patch_to_structure ≈ 5.0912`
+2. `concept_offset_to_feature ≈ 0.5034`
+3. `attribute_fiber_to_feature ≈ 0.4671`
+4. `relation_context_to_transport ≈ 0.4893`
+5. `remap_consistency ≈ 0.4544`
 
-这说明旧框架和新框架已经进入“高闭合统一”阶段。
+### 8.2 运输、读出、桥接并回主核
 
----
+当前稳定结果：
 
-## 6. transport / readout / bridge 的当前位置
+1. `restricted_readout_term ≈ 175.1969`
+2. `admissible_update_term ≈ 113.4716`
+3. `stage_transport_term ≈ 878.2565`
+4. `successor_transport_term ≈ 707.1548`
+5. `protocol_bridge_term ≈ 371.5400`
+6. `protocol_bridge_strength ≈ 0.8422`
 
-当前最关键的新变化不是“这批对象能不能并回主核”，而是：
-
-**它们能并回主核了，但留核稳定性仍然是主要难点。**
-
-当前高留核稳定结果：
-
-1. `readout_retention_stable ≈ 0.4597`
-2. `update_retention_stable ≈ 0.4790`
-3. `stage_retention_stable ≈ 0.4565`
-4. `successor_retention_stable ≈ 0.4277`
-5. `bridge_retention_stable ≈ 0.4023`
-6. `transport_kernel_stability_stable ≈ 0.4450`
-
-当前跨版本高留核结果：
-
-1. `readout_cross_keep ≈ 0.4804`
-2. `update_cross_keep ≈ 0.4901`
-3. `stage_cross_keep ≈ 0.4788`
-4. `successor_cross_keep ≈ 0.4644`
-5. `bridge_cross_keep ≈ 0.4517`
-6. `cross_keep_core ≈ 0.4731`
-
-当前最弱通道仍然是：
-
-`bridge（桥接）`
+这说明旧版几何-运输主线已经能正式并回当前形成机制主线。
 
 ---
 
-## 7. 跨版本稳定性
+## 9. 系统区域分布
 
-当前跨版本稳定性已经超过中线，但还没有进入强稳定区。
+整个系统当前最像五种区域对象叠加组成的分层网络：
 
-当前结果：
+1. 家族片区
+2. 局部偏置子区
+3. 横跨属性纤维
+4. 路线通道
+5. 上下文分叉
 
-1. `feature_growth_stable ≈ 0.3599`
-2. `structure_growth_stable ≈ 0.3808`
-3. `retention_persistence_stable ≈ 0.5011`
-4. `unification_persistence_stable ≈ 0.7901`
-5. `cross_version_stability_stable ≈ 0.5080`
-6. `rollback_risk_reduced ≈ 0.4989`
+当前稳定结果：
 
-这说明主核已经开始具备跨版本保持能力，但回落风险仍然偏高。
+1. `family_patch_mass ≈ 0.9476`
+2. `local_subregion_mass ≈ 0.5388`
+3. `transverse_attribute_mass ≈ 0.6568`
+4. `route_channel_mass ≈ 0.3390`
+5. `contextual_split_mass ≈ 0.9472`
+6. `system_distribution_margin ≈ 0.6859`
+
+这说明整个系统不是棋盘式整齐分块，而更像：
+
+**高密度家族片区 + 局部子区 + 横跨纤维 + 稀疏路线 + 上下文分叉**
 
 ---
 
-## 8. 更高统一智能理论的数学可能性
+## 10. 对象-属性耦合原型
 
-当前第一次把“更高统一智能理论是否可能”压成了显式对象。
+当前小型原型支持如下结构：
 
-当前结果：
+**对象共享属性支路，但在对象路由和上下文头上发生分叉。**
 
-1. `unification_core ≈ 0.6247`
-2. `first_principles_distance ≈ 0.2676`
-3. `modality_gap ≈ 0.1856`
-4. `falsifiability_gap ≈ 0.5326`
-5. `higher_unified_intelligence_possibility ≈ 0.4327`
+当前稳定结果：
+
+1. `shared_attribute_reuse ≈ 1.0000`
+2. `route_divergence ≈ 0.9980`
+3. `context_divergence ≈ 0.7960`
+4. `same_attribute_different_route ≈ 0.8970`
+5. `banana_visible_fiber ≈ 0.9966`
+6. `prototype_coupling_margin ≈ 1.0996`
 
 当前最短写法：
 
 ```text
-U_core = mean(T_bridge, S_cross, K_cross, F_arch)
-D_first = 1 - mean(A_bm, T_bridge, S_cross)
-D_mod = 1 - A_bm
-D_false = mean(G_prod, R_risk, 1 - S_cross)
-P_unified = U_core - 0.25 * D_first - 0.2 * D_false - 0.1 * D_mod
+H_attr = fiber(attr)
+R_obj = route(object)
+C_pair = context(object, attr)
+P_pair = H_attr + R_obj + C_pair
 ```
 
-当前最严格的判断是：
+这意味着：
 
-**更高统一智能理论在数学上已经存在明确可能性，但还只处在中等可能区，不在强闭合区。**
+- “红苹果”和“红太阳”会共享颜色支路
+- 但对象路由和上下文头会明显分叉
+- 这个结论不仅是概念解释，也已经能在一个小型可运行原型里重现
 
 ---
 
-## 9. 跨模态统一桥
+## 11. 当前统一主核
 
-当前最重要的新推进，是第一次把“跨模态统一”压成了显式对象。
-
-当前结果：
-
-1. `language_to_general_transfer ≈ 0.8499`
-2. `modality_extension_strength ≈ 0.6962`
-3. `action_planning_bridge ≈ 0.5412`
-4. `cross_modal_unification_strength ≈ 0.6958`
-5. `modality_residual ≈ 0.3042`
-
-当前最短写法：
+### 11.1 最新规范主式 `v50`
 
 ```text
-T_lang = 0.55 * T_bridge + 0.25 * P_unified + 0.20 * A_db
-T_mod = 0.50 * A_bm + 0.30 * U_core + 0.20 * S_cross
-T_act = mean(S_cross, K_cross, F_arch)
-T_cross = mean(T_lang, T_mod, T_act)
-R_mod = 1 - T_cross
+K_f_v50 = K_f_v49 + K_f_v49 * B_red * 0.01
+K_s_v50 = K_s_v49 + K_s_v49 * R_split * 0.01
+K_l_v50 = K_l_v49 + K_l_v49 * H_attr + M_red * 1000
+P_v50 = P_v49 + R_split + S_red - H_attr
+M_encoding_v50 = K_f_v50 + K_s_v50 + K_l_v50 - P_v50
 ```
 
-这说明当前统一主线已经开始具备从语言往更一般智能结构外推的桥，但这个桥还不是闭合终态。
+### 11.2 最新稳定结果
 
----
-
-## 10. 可判伪闭合
-
-当前第一次把“离真正可判伪还有多远”压成了显式对象。
-
-当前结果：
-
-1. `testability_strength ≈ 0.4940`
-2. `equation_compactness ≈ 0.4749`
-3. `predictive_separation ≈ 0.4327`
-4. `falsifiability_closure ≈ 0.4672`
-5. `residual_nonfalsifiable ≈ 0.5328`
-
-当前最短写法：
-
-```text
-C_test = mean(S_cross, K_cross, 1 - R_risk)
-C_compact = 1 / (1 + G_prod + R_risk)
-C_pred = P_unified
-C_false = mean(C_test, C_compact, C_pred)
-R_false = 1 - C_false
-```
-
-这说明当前理论虽然越来越强，但离真正可判伪的闭合仍然还有明显距离。
-
----
-
-## 11. 当前主方程
-
-当前最新规范主式是 `v42`：
-
-```text
-K_f_v42 = K_f_v41 + K_f_v41 * T_cross * 0.04
-K_s_v42 = K_s_v41 + K_s_v41 * T_mod * 0.04
-K_l_v42 = K_l_v41 + K_l_v41 * C_false + T_act * 1000
-P_v42 = P_v41 + R_mod + R_false - Delta_stability_star
-M_encoding_v42 = K_f_v42 + K_s_v42 + K_l_v42 - P_v42
-```
-
-当前 `v42` 的结果：
-
-1. `feature_term_v42 ≈ 2573.4128`
-2. `structure_term_v42 ≈ 8046.4305`
-3. `learning_term_v42 ≈ 141657.9354`
-4. `pressure_term_v42 ≈ 9.2341`
-5. `encoding_margin_v42 ≈ 152268.5446`
+1. `feature_term_v50 ≈ 2804.4051`
+2. `structure_term_v50 ≈ 8653.7037`
+3. `learning_term_v50 ≈ 10365133.9464`
+4. `pressure_term_v50 ≈ 10.0920`
+5. `encoding_margin_v50 ≈ 10376581.9632`
 
 这一版的关键意义是：
 
-**主核第一次同时把“跨模态统一桥”和“可判伪闭合”并回主式。**
+**它把颜色纤维原生化和对象-属性耦合原型一起并回主式，用来表达共享属性支路与对象路径分叉的统一关系。**
 
 ---
 
-## 12. 能不能做出具备 DNN 级语言能力且可即时学习的网络
+## 12. 当前最稳定结论
 
-当前最严格的判断仍然是：
-
-**现在还不能直接完成。**
-
-更准确地说：
-
-1. 研究原型网络已经进入可做区
-2. 中小规模实验网络开始可行
-3. 成熟 `DNN` 级语言能力 + 稳定即时学习的正式系统仍然不够
-
-当前更合适的量化判断：
-
-1. 研究原型可行度：`75%`
-2. 中小规模实验网络可行度：`55%`
-3. 成熟 `DNN` 级语言能力 + 稳定即时学习正式系统：`35%-40%`
-
-原因主要有四个：
-
-1. 当前最强的是“形成链解释”，还不是完整训练定律
-2. `online_stability_readiness ≈ 0.4905` 仍然偏中等
-3. `production_gap ≈ 0.6068` 仍然偏高
-4. `rollback_penalty ≈ 0.4989` 仍然偏高
+1. 语言是当前最强的智能结构入口，但不是单独足够的全部智能理论。
+2. 概念更像“家族片区 + 局部偏置 + 属性纤维”，不是孤立点。
+3. “红色”这类横跨大量对象的特性，更像跨区域属性纤维，而不是单一区域。
+4. 苹果的红色和太阳的红色共享同一条红色属性纤维，但完整激活通路不同。
+5. 对象共享属性支路，但在对象路由和上下文头上发生分叉。
+6. 人脑式系统每次更像触发最小必要组合，而不是整块区域一起点亮。
+7. 当前理论已经能够较稳定地解释：
+   - 特征如何提取
+   - 结构如何生成
+   - 语言为什么是强入口
+   - 旧 ICSPB 对象如何回并到新主线
 
 ---
 
 ## 13. 当前最严格的硬伤
 
-如果用最严格的眼光看，当前主线仍然有这些明显硬伤：
-
-1. `N_origin` 还不是神经元级原生实测量
-2. `S_structure` 还不是回路级原生实测量
-3. `transport_kernel_stability_stable ≈ 0.4450` 仍然不够高
-4. `bridge_retention_stable ≈ 0.4023` 仍然偏弱
-5. `cross_version_stability_stable ≈ 0.5080` 只刚过中线
-6. `rollback_risk_reduced ≈ 0.4989` 仍然偏高
-7. `higher_unified_intelligence_possibility ≈ 0.4327` 说明更高统一智能理论目前只是中等可能区
-8. `cross_modal_unification_strength ≈ 0.6958` 已经不低，但还不是强闭合跨模态统一
-9. `falsifiability_closure ≈ 0.4672` 仍然偏低，离可判伪终式还有距离
-10. `v42` 仍然只是阶段性候选，不是最终可判伪主方程
-11. 当前最强的仍然是中层有效理论，不是神经元级第一性原理
+1. 当前最强的仍然是中层有效理论，不是神经元级第一性原理。
+2. 区域拓扑、跨区域属性、颜色共享纤维、对象-属性耦合和稀疏激活，当前仍然主要是近原生对象，不是真实回路级实测量。
+3. `remap_consistency ≈ 0.4544` 仍不高，说明旧框架与新框架的统一度还没有强收口。
+4. `structure_direct_confidence_v3 ≈ 0.3913` 仍然偏低，结构生成离原生直测还有明显距离。
+5. `M_encoding_v50` 仍然只是阶段性候选，不是最终可判伪主方程。
+6. 训练终式、工程闭合和跨版本强稳定，仍然是从理论走向可施工系统的最大缺口。
 
 ---
 
 ## 14. 当前进度
 
-按当前最严格口径，整体进度记成：
-
-1. 旧 `ICSPB` 对象重映射块：`84%`
-2. 统一收口块：`88%`
-3. `transport/readout/bridge` 回并主核块：`82%`
-4. `transport/readout/bridge` 留核稳定块：`86%`
-5. 神经元起点原生变量块：`85%`
-6. 结构生成稳定化块：`86%`
-7. 更高统一智能理论可能性块：`76%`
-8. 跨模态统一桥块：`68%`
-9. 可判伪闭合块：`62%`
-10. 编码机制闭式第四十二版：`99%`
-11. 编码机制闭式核块：`99%`
-12. 学习动力学桥接：`95%`
-13. `DNN` 语言结构分析：`93%`
-14. 脑编码机制逆向分析：`94%`
-15. 更高统一智能理论：`78%`
-16. 完整大脑编码机制：`94%`
-
-需要强调：
-
-这里的高进度，意思是**当前这条“语言相关编码机制主线”的结构解释已经非常接近收口**，不等于已经完成：
-
-1. 神经元级第一性原理
-2. 回路级原生实测
-3. 强闭合跨模态统一智能理论
+1. `DNN` 语言结构分析：`93%`
+2. 脑编码机制逆向分析：`94%`
+3. 更高统一智能理论：`81%`
+4. 语言系统原理块：`76%`
+5. 区域拓扑分析块：`72%`
+6. 跨区域属性分析块：`74%`
+7. 稀疏激活区域分析块：`71%`
+8. 颜色通路重叠分析块：`75%`
+9. 颜色纤维原生化块：`77%`
+10. 系统区域分布分析块：`74%`
+11. 对象-属性耦合原型块：`73%`
+12. 即时学习网络可行性块：`79%`
+13. 训练终式块：`61%`
+14. 原型网络就绪度块：`58%`
+15. 编码机制闭式第五十版：`99%`
+16. 编码机制闭式核块：`99%`
+17. 完整大脑编码机制：`94%`
 
 ---
 
 ## 15. 下一阶段的大任务块
 
-当前最值得继续推进的，不是再补很多小点，而是直接做 4 个大的阶段块：
+1. **区域、属性与颜色通路原生化块**  
+   把当前区域拓扑、跨区域属性、颜色共享纤维和稀疏激活继续往更接近原生回路变量推进。
 
-### 15.1 跨模态统一强化块
+2. **对象-属性耦合原型扩展块**  
+   把当前“共享属性支路 + 路径分叉”原型推进到更多颜色、更多对象和更长上下文。
 
-继续把：
+3. **训练终式块**  
+   把当前解释型主核推进到更接近训练规则的终式。
 
-1. `language_to_general_transfer`
-2. `modality_extension_strength`
-3. `action_planning_bridge`
-4. `cross_modal_unification_strength`
+4. **原型网络落地块**  
+   直接做小型可训练原型，同时测试语言能力、即时学习、旧知识回落和结构生成能否一起成立。
 
-往更高区推进，压低：
-
-`modality_residual`
-
-### 15.2 可判伪闭合强化块
-
-继续提高：
-
-1. `testability_strength`
-2. `equation_compactness`
-3. `predictive_separation`
-4. `falsifiability_closure`
-
-并压低：
-
-`residual_nonfalsifiable`
-
-### 15.3 编码机制最终闭式化块
-
-继续压缩：
-
-1. `K_f_v42`
-2. `K_s_v42`
-3. `K_l_v42`
-4. `P_v42`
-
-把当前主核推进成阶段性最终方程。
-
-### 15.4 原型网络与跨模态任务落地块
-
-把当前理论落成小型原型网络，并同时验证：
-
-1. 语言能力能否保住
-2. 即时学习能否稳定
-3. 旧知识会不会明显回落
-4. 统一主线能否向跨模态任务扩展
-
----
-
-## 16. 当前阶段的简洁总结
-
-如果只用一句话总结当前状态：
-
-**我们已经把 `DNN` 语言结构分析、脑编码机制逆向分析、以及更高统一智能理论压进了同一条统一主核，而且这条主核已经开始同时表达“跨模态统一能力”和“可判伪闭合能力”，但这两块都还没有进入强闭合区，距离最终统一智能理论仍然有明显距离。**
+5. **跨版本强稳定块**  
+   继续压低回落风险，避免当前主核只是理论强、版本不稳。
