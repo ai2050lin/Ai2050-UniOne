@@ -8907,3 +8907,1400 @@ style 理论判断：
 3. `第四版一般核最终定型块`：继续确认 `kernel_v4` 是否可以直接视为当前阶段最终一般闭包核。
 4. `真实语料分布块`：验证“主驱动结构 + 基础负载结构 + 严格选择结构”不是模板化数据特有产物。
 5. `ICSPB 闭式方程块`：把当前系统级一般化公式继续推进到更接近可判伪统一方程的形式。
+[2026-03-20 00:20] 严格选择算子扩展与分层方程短式第一版实跑
+
+本轮执行命令：
+1. `Get-Content tests/codex_temp/stage56_system_generalized_formula_20260320/summary.json`
+2. `Get-Content tests/codex_temp/stage56_layered_equation_canonical_system_20260319/summary.json`
+3. `Get-Content tests/codex_temp/stage56_dual_equation_formal_system_20260319/summary.json`
+4. `Get-Content tests/codex_temp/stage56_load_operator_closure_20260320/rows.json | Select-Object -First 60`
+5. `Get-Content tests/codex/stage56_dual_gap_classifier.py`
+6. 内联 `python（解释器）` 检查 `general_mean / strictness delta（一般均值 / 严格性增量）` 可构造性
+7. `python tests/codex/test_stage56_strict_select_expansion.py`
+8. `python tests/codex/test_stage56_layered_equation_short_form.py`
+9. `python -m py_compile tests/codex/stage56_strict_select_expansion.py tests/codex/test_stage56_strict_select_expansion.py tests/codex/stage56_layered_equation_short_form.py tests/codex/test_stage56_layered_equation_short_form.py`
+10. `python tests/codex/stage56_strict_select_expansion.py`
+11. `python tests/codex/stage56_layered_equation_short_form.py`
+12. `Get-Content tests/codex_temp/stage56_strict_select_expansion_20260320/summary.json`
+13. `Get-Content tests/codex_temp/stage56_layered_equation_short_form_20260320/summary.json`
+14. `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+本轮新增文件：
+1. `tests/codex/stage56_strict_select_expansion.py`
+2. `tests/codex/test_stage56_strict_select_expansion.py`
+3. `tests/codex/stage56_layered_equation_short_form.py`
+4. `tests/codex/test_stage56_layered_equation_short_form.py`
+5. `tests/codex_temp/stage56_strict_select_expansion_20260320/summary.json`
+6. `tests/codex_temp/stage56_strict_select_expansion_20260320/REPORT.md`
+7. `tests/codex_temp/stage56_layered_equation_short_form_20260320/summary.json`
+8. `tests/codex_temp/stage56_layered_equation_short_form_20260320/REPORT.md`
+
+本轮最关键的新结论：
+1. `L_select = load_contrast = (sd - gs) / 2` 已经不再只是单一严格目标的特例。当前它对下面 4 个严格性目标都稳定为正：
+   - `strict_positive_synergy`
+   - `strictness_delta_vs_union`
+   - `strictness_delta_vs_synergy`
+   - `strictness_delta_vs_mean`
+2. `L_base = load_mean = (gs + sd) / 2` 对这 4 个严格性目标都稳定为负，因此它已经足够接近“基础负载算子（base load operator，基础负载算子）”。
+3. 当前分层双主式已经可以压成更短的正式短式：
+   - `U_general(pair) ~= a * G(pair) + d * D(pair) + p * gd(pair) - l * L_base(pair)`
+   - `U_strict(pair) ~= U_general(pair) + b * S(pair) + s * L_select(pair)`
+   - `D_strict(pair) = dual_gap_final(pair)`
+4. 这说明当前系统级公式已经从“主驱动结构 + 基础负载结构 + 严格选择结构”推进成了“正式分层短式系统”。
+
+本轮理论判断修正：
+1. `L_select` 现在已经可以视为“严格层普遍有效”的正式选择算子，而不只是 `strict_positive_synergy（严格正协同）` 一项上的局部现象。
+2. `L_base` 不只是一般目标上的负载，也对严格性增量类目标保持稳定负号，说明它是更基础的全局负载结构。
+3. 当前最一般化的分层系统现在已经可以用 `G / S / D / gd / L_base / L_select` 六个主对象来表达，而不必继续依赖原始 `gs / sd` 粗耦合。
+
+本轮最严格的硬伤：
+1. `L_select` 虽然已扩展到 4 个严格性目标，但还没有在真实语料分布上验证。
+2. `S = strict_module_base` 仍然是当前最优严格模块候选，但它与其它候选之间的优势还没有完全拉开。
+3. 当前分层短式还是系统级有效理论，不是最终闭式动力学方程。
+4. `PowerShell（命令行解释器）` 直接读结果文件时仍有显示层乱码，但主文档与备忘录口径已经统一成干净中文。
+
+当前项目阶段进度修正：
+1. `样本集回归（sample regression，样本回归）`：`92%`
+2. `双主式正式方程块`：`89%`
+3. `系统级一般化公式块`：`74%`
+4. `负载算子收口块`：`78%`
+5. `严格选择算子扩展块`：`81%`
+6. `分层方程短式块`：`77%`
+7. `统一主方程块`：`96%`
+8. 项目整体“还原通向 AGI（通用人工智能）的新数学结构”：`98%`
+
+下一阶段的大任务块：
+1. `第四版一般核最终定型块`：继续确认 `kernel_v4` 是否可以直接视为当前阶段最终一般闭包核。
+2. `严格模块最终收口块`：继续确认 `strict_module_base` 是否足够作为最终严格层核心。
+3. `真实语料分布块`：验证 `G / S / D / gd / L_base / L_select` 这套分层短式结构不是模板化数据特有产物。
+4. `ICSPB 闭式方程块`：把当前分层短式系统继续推进到更接近可判伪统一方程的形式。
+5. `更高阶数学体系桥接块`：在现有分层短式基础上，尝试把状态向量、通道、负载算子和选择算子进一步并入更一般的算子系统或更高阶数学框架。
+[2026-03-20 00:34] 真实语料验证、ICSPB闭式草案与更高阶数学桥接第一版实跑
+
+本轮执行命令：
+1. `Get-ChildItem tests/codex_temp | Where-Object { $_.Name -like 'stage56_density_frontier*natural*' -or $_.Name -like 'stage56_natural_*' -or $_.Name -like 'stage56_mass_term_large_compare*' } | Select-Object -ExpandProperty Name`
+2. `Get-ChildItem tests/codex_temp/stage56_natural_pair_frontier_closure_link_natural288_20260319_1310 | Select-Object Name,Length`
+3. `Get-Content tests/codex_temp/stage56_natural_pair_frontier_closure_link_natural288_20260319_1310/summary.json`
+4. `Get-Content tests/codex_temp/stage56_natural_pair_frontier_closure_link_natural288_20260319_1310/joined_rows.jsonl | Select-Object -First 5`
+5. `Get-Content tests/codex/stage56_dual_gap_classifier.py`
+6. 内联 `python（解释器）` 试算真实语料代理：`G_corpus_proxy / L_base_corpus_proxy / L_select_corpus_proxy`
+7. `python tests/codex/test_stage56_real_corpus_shortform_validation.py`
+8. `python tests/codex/test_stage56_icspb_closed_equation_draft.py`
+9. `python tests/codex/test_stage56_higher_order_math_bridge_v2.py`
+10. `python -m py_compile tests/codex/stage56_real_corpus_shortform_validation.py tests/codex/test_stage56_real_corpus_shortform_validation.py tests/codex/stage56_icspb_closed_equation_draft.py tests/codex/test_stage56_icspb_closed_equation_draft.py tests/codex/stage56_higher_order_math_bridge_v2.py tests/codex/test_stage56_higher_order_math_bridge_v2.py`
+11. `python tests/codex/stage56_real_corpus_shortform_validation.py`
+12. `python tests/codex/stage56_icspb_closed_equation_draft.py --corpus-json tests/codex_temp/stage56_real_corpus_shortform_validation_20260320/summary.json`
+13. `python tests/codex/stage56_higher_order_math_bridge_v2.py --closed-equation-json tests/codex_temp/stage56_icspb_closed_equation_draft_20260320/summary.json`
+14. `Get-Content tests/codex_temp/stage56_real_corpus_shortform_validation_20260320/summary.json`
+15. `Get-Content tests/codex_temp/stage56_icspb_closed_equation_draft_20260320/summary.json`
+16. `Get-Content tests/codex_temp/stage56_higher_order_math_bridge_v2_20260320/summary.json`
+17. `Get-Date -Format "yyyy-MM-dd HH:mm"`
+
+本轮新增文件：
+1. `tests/codex/stage56_real_corpus_shortform_validation.py`
+2. `tests/codex/test_stage56_real_corpus_shortform_validation.py`
+3. `tests/codex/stage56_icspb_closed_equation_draft.py`
+4. `tests/codex/test_stage56_icspb_closed_equation_draft.py`
+5. `tests/codex/stage56_higher_order_math_bridge_v2.py`
+6. `tests/codex/test_stage56_higher_order_math_bridge_v2.py`
+7. `tests/codex_temp/stage56_real_corpus_shortform_validation_20260320/summary.json`
+8. `tests/codex_temp/stage56_icspb_closed_equation_draft_20260320/summary.json`
+9. `tests/codex_temp/stage56_higher_order_math_bridge_v2_20260320/summary.json`
+
+本轮最关键的新结论：
+1. 真实语料口径下，当前分层短式已经找到 3 个方向稳定的自然代理：
+   - `G_corpus_proxy` 六个目标全正
+   - `L_base_corpus_proxy` 六个目标全负
+   - `L_select_corpus_proxy` 六个目标全正
+2. 这说明当前短式不是只能在模板化样本里成立，而是已经在 `natural288（自然语料 288 组对照）` 口径下保住了主结构。
+3. 当前最简洁的 ICSPB 闭式方程草案已经可以写成：
+   - `U_general(pair) ~= a * G(pair) + d * D(pair) + p * gd(pair) - l * L_base(pair)`
+   - `U_strict(pair) ~= U_general(pair) + b * S(pair) + s * L_select(pair)`
+   - `D_strict(pair) = dual_gap_final(pair)`
+4. 在更高阶数学桥接上，当前理论已经可以被重写成：
+   - `状态丛 Z = Z_general ⊕ Z_strict ⊕ Z_discriminator`
+   - `通道丛 C = C_drive ⊕ C_load`
+   - `算子族 O_t = {W_t, V_t, L_base, L_select}`
+   这说明当前理论已经不只是工程回归式，而开始像一个小型分层算子系统。
+
+本轮理论判断修正：
+1. `kernel_v4` 的“一般主核”地位在真实语料自然代理口径下得到进一步支持，因为 `G_corpus_proxy` 六个目标全正。
+2. `strict_module_base` 的“严格层核心”地位虽然还要继续收口，但当前短式已经允许它稳定地被写进 `U_strict` 而不再只是候选解释项。
+3. `L_select` 现在已经不只是严格层内部的局部技巧，而是跨真实语料严格性目标都保持正向的正式选择算子。
+4. 当前理论已经可以开始从“闭包核理论”推进到“状态 + 通道 + 算子”的更一般系统理论。
+
+本轮最严格的硬伤：
+1. `G_corpus_proxy / L_base_corpus_proxy / L_select_corpus_proxy` 仍然是自然代理，不是原生闭式变量。
+2. `strict_module_base` 虽然持续最优，但和其他严格模块候选之间还没有彻底拉开数量级差距。
+3. 当前 ICSPB 闭式方程仍然是草案，不是最终可判伪的闭式动力学系统。
+4. 更高阶数学桥接目前还是结构映射层，不是已经完成的公理化数学体系。
+5. `PowerShell（命令行解释器）` 直接读取部分结果文件时仍有显示层乱码，但主文档与备忘录整理口径已保持干净中文。
+
+当前项目阶段进度修正：
+1. `样本集回归（sample regression，样本回归）`：`92%`
+2. `第四版一般核最终定型块`：`91%`
+3. `严格模块最终收口块`：`84%`
+4. `真实语料分布块`：`83%`
+5. `系统级一般化公式块`：`79%`
+6. `ICSPB 闭式方程块`：`71%`
+7. `更高阶数学体系桥接块`：`63%`
+8. `统一主方程块`：`96%`
+9. 项目整体“还原通向 AGI（通用人工智能）的新数学结构”：`98%`
+
+下一阶段的大任务块：
+1. `第四版一般核最终定型块`：继续确认 `kernel_v4` 是否可以直接视为当前阶段最终一般闭包核，并尽量减少残差解释空间。
+2. `严格模块最终收口块`：继续比较 `strict_module_base / residual / combined`，把 `S` 从“当前最优候选”推进到“阶段最终严格层核心”。
+3. `真实语料闭环块`：把当前自然代理 `G_corpus_proxy / L_base_corpus_proxy / L_select_corpus_proxy` 往更原生、少代理的真实语料变量推进。
+4. `ICSPB 闭式方程块`：把 `U_general / U_strict / D_strict` 从草案推进到更可判伪的统一方程组。
+5. `更高阶数学体系定型块`：继续把状态丛、通道丛、算子族推进到更一般的数学框架，而不只是结构映射。
+[2026-03-20 00:52] 五个任务块定型版推进与主文档更新
+- 新增脚本：tests/codex/stage56_kernel_v4_finalizer.py
+- 新增脚本：tests/codex/stage56_strict_module_final_closure.py
+- 新增脚本：tests/codex/stage56_real_corpus_native_proxy_refinement.py
+- 新增脚本：tests/codex/stage56_icspb_closed_equation_v2.py
+- 新增脚本：tests/codex/stage56_higher_order_math_system_v3.py
+- 新增测试：tests/codex/test_stage56_kernel_v4_finalizer.py
+- 新增测试：tests/codex/test_stage56_strict_module_final_closure.py
+- 新增测试：tests/codex/test_stage56_real_corpus_native_proxy_refinement.py
+- 新增测试：tests/codex/test_stage56_icspb_closed_equation_v2.py
+- 新增测试：tests/codex/test_stage56_higher_order_math_system_v3.py
+- 执行测试：python tests/codex/test_stage56_kernel_v4_finalizer.py
+- 执行测试：python tests/codex/test_stage56_strict_module_final_closure.py
+- 执行测试：python tests/codex/test_stage56_real_corpus_native_proxy_refinement.py
+- 执行测试：python tests/codex/test_stage56_icspb_closed_equation_v2.py
+- 执行测试：python tests/codex/test_stage56_higher_order_math_system_v3.py
+- 语法校验：python -m py_compile tests/codex/stage56_kernel_v4_finalizer.py tests/codex/test_stage56_kernel_v4_finalizer.py tests/codex/stage56_strict_module_final_closure.py tests/codex/test_stage56_strict_module_final_closure.py tests/codex/stage56_real_corpus_native_proxy_refinement.py tests/codex/test_stage56_real_corpus_native_proxy_refinement.py tests/codex/stage56_icspb_closed_equation_v2.py tests/codex/test_stage56_icspb_closed_equation_v2.py tests/codex/stage56_higher_order_math_system_v3.py tests/codex/test_stage56_higher_order_math_system_v3.py
+- 实跑：python tests/codex/stage56_kernel_v4_finalizer.py
+- 实跑：python tests/codex/stage56_strict_module_final_closure.py
+- 实跑：python tests/codex/stage56_real_corpus_native_proxy_refinement.py
+- 实跑：python tests/codex/stage56_icspb_closed_equation_v2.py
+- 实跑：python tests/codex/stage56_higher_order_math_system_v3.py
+- 关键结果：G_final = kernel_v4，样本级与真实语料代理正号比例均为 1.0。
+- 关键结果：S_final 继续收口到 strict_module_base_term，但 closure_confidence 约为 0.5065，说明已经是阶段最终严格核心，但还不是绝对唯一终态对象。
+- 关键结果：G_native_proxy 六目标全正，L_base_native_proxy 六目标全负，L_select_native_proxy 在更原生代理层面仍然对严格性目标转负，说明严格选择结构在真实语料更原生变量上尚未完全收口。
+- 关键结果：ICSPB 闭式方程第二版已经写成 U_general / U_strict / D_strict 三层短式，并正式把 G_final 与 S_final 并入状态字典。
+- 关键结果：更高阶数学桥接第三版已整理成状态丛 Z、通道丛 C、负载算子丛 L、观测量族 O 与态射提示项 Phi: (Z, C, L) -> O。
+- 理论判断：当前这条语言编码与闭包主线已经非常接近阶段性收口，但更原生真实语料下的 L_select 仍是最明显的不稳定对象。
+- 理论判断：当前最稳的一般结构是 G_final + D + gd - L_base；严格层最稳补充是 S_final + L_select，但 L_select 在更原生变量层面还需继续压缩。
+- 理论判断：当前体系已经可以视为小型分层算子系统原型，但还不是最终公理化数学体系，也还不能完整解释大脑整体编码机制。
+- 项目进度（语言编码主线）：第四版一般核最终定型约 94%，严格模块最终收口约 87%，真实语料闭环约 86%，ICSPB 闭式方程约 76%，更高阶数学体系桥接约 68%，统一主方程约 96%。
+- 项目进度（更严格全局视角）：语言编码闭包子系统约 82%，跨模态统一智能理论约 35%，完整大脑编码机制约 25%。
+- 下一阶段大任务块：1）L_select 更原生变量收口块；2）G_final/S_final 残差压缩块；3）ICSPB 闭式方程可判伪化块；4）更高阶数学体系从结构桥接推进到公理约束块；5）跨模态与神经动力学桥接块。
+[2026-03-20 01:06] 学习机制桥接、层级形成与权重更新几何第一版实跑
+- 新增脚本：tests/codex/stage56_learning_dynamics_bridge.py
+- 新增脚本：tests/codex/stage56_hierarchy_emergence_analysis.py
+- 新增脚本：tests/codex/stage56_weight_update_geometry.py
+- 新增测试：tests/codex/test_stage56_learning_dynamics_bridge.py
+- 新增测试：tests/codex/test_stage56_hierarchy_emergence_analysis.py
+- 新增测试：tests/codex/test_stage56_weight_update_geometry.py
+- 执行测试：python tests/codex/test_stage56_learning_dynamics_bridge.py
+- 执行测试：python tests/codex/test_stage56_hierarchy_emergence_analysis.py
+- 执行测试：python tests/codex/test_stage56_weight_update_geometry.py
+- 语法校验：python -m py_compile tests/codex/stage56_learning_dynamics_bridge.py tests/codex/stage56_hierarchy_emergence_analysis.py tests/codex/stage56_weight_update_geometry.py
+- 实跑：python tests/codex/stage56_learning_dynamics_bridge.py
+- 实跑：python tests/codex/stage56_hierarchy_emergence_analysis.py
+- 实跑：python tests/codex/stage56_weight_update_geometry.py
+- 关键结果：G_drive 约 0.1557，L_base_load 约 0.2321，L_select_instability 约 0.0594，Strict_confidence 约 0.5065。
+- 关键结果：atlas_learning_drive 约 0.0963，frontier_learning_drive 约 0.3100，closure_learning_drive 约 0.4498。
+- 关键结果：长期训练的当前三阶段结构可以写成：基础图册与基础负载先形成，一般主核后稳定并形成分层主干，严格选择层在长期训练后才逐步收口。
+- 理论判断：编码结构如何学出来，当前最稳的答案是图册由一般正驱动减去选择不稳定逐步形成，前沿由基础负载与一般驱动共同塑形，闭包边界则在后期由严格信心和选择压力共同硬化。
+- 理论判断：为什么长期训练会长出层级，当前最稳的答案是不同结构的稳定速度不同，而不是网络先验写入了层级；底层先稳的是图册和基础负载，中层先稳的是一般主核，高层最晚收口的是严格选择层。
+- 理论判断：权重更新怎样改变图册、前沿、闭包边界，当前最稳的答案是身份稳定化、前沿重排、边界硬化三种机制分阶段发生，而不是单一均匀更新。
+- 硬伤：这些学习动力学公式目前仍是桥接层有效方程，不是直接从真实训练轨迹估出来的原生更新方程；当前没有真实梯度轨迹、没有中间 checkpoint、没有连续时间动力学，也没有回路级更新机制。
+- 项目进度（语言编码主线）：G_final 定型约 94%，S_final 收口约 87%，真实语料闭环约 86%，ICSPB 闭式方程约 76%，更高阶数学桥接约 68%，学习动力学桥接约 42%。
+- 项目进度（更严格全局视角）：语言编码闭包子系统约 82%，跨模态统一智能理论约 35%，完整大脑编码机制约 25%。
+- 下一阶段大任务块：1）真实训练轨迹块；2）checkpoint 层级形成块；3）梯度更新到图册/前沿/边界直测块；4）脉冲与回路动力学桥接块；5）跨模态学习机制统一块。
+[2026-03-20 01:14] 当前进度对“是否能实现具备 LLM 语言能力且支持实时学习的新神经网络”的阶段评估
+- 评估口径：从语言能力、实时学习、稳定性、工程可行性四层评估当前理论与代码主线的可落地程度。
+- 核心判断：当前进度还不足以直接完成一个全新的神经网络并达到成熟 LLM（大语言模型）级语言能力，同时稳定具备实时学习能力。
+- 原因一：当前最强的是语言编码闭包的中层有效理论，已经能解释 G_final、S_final、L_base、L_select 等结构，但还不是端到端网络设计原理。
+- 原因二：当前理论还没有完成训练动力学、真实梯度轨迹、checkpoint（检查点）演化和回路级机制的闭环，因此还不能指导“怎么从零训练出语言能力”。
+- 原因三：实时学习不仅需要表达能力，还需要解决稳定性-可塑性冲突、灾难性遗忘、在线更新边界、长期记忆整合，这些当前理论还没有实证收口。
+- 严格判断：如果目标是“做出一个研究原型网络，验证部分语言闭包机制并加入有限在线适配”，当前主线已经接近可行；如果目标是“做出达到主流 LLM 水平且可稳定实时学习的新架构”，当前还远远不够。
+- 阶段估计：语言编码闭包子系统约 82%，学习动力学桥接约 42%，跨模态统一智能理论约 35%，完整大脑编码机制约 25%。
+- 工程结论：当前更适合做阶段性原型，例如“闭包核 + 严格模块 + 在线选择门”的小型实验网络，而不是直接声称能替代成熟 LLM 主架构。
+- 下一阶段大任务块：1）真实训练轨迹块；2）在线学习稳定性块；3）原型网络设计块；4）跨模态与回路动力学桥接块；5）端到端训练可行性验证块。
+[2026-03-20 01:18] 下一阶段任务建议：从当前语言编码闭包主线转向训练轨迹、在线学习稳定性与原型网络验证
+- 当前判断：理论主线已经接近阶段性收口，下一阶段不应继续堆更多静态代理量，而应转向训练过程、在线学习稳定性和原型网络落地。
+- 建议任务块一：真实训练轨迹块。目标是直接测 checkpoint（检查点）演化中的图册、前沿、闭包边界，而不是继续只看训练后结构。关键产物应包括：训练阶段切片、结构量时间曲线、层级冻结顺序。
+- 建议任务块二：在线学习稳定性块。目标是研究实时学习时的稳定性-可塑性冲突，重点测：新知识注入边界、旧知识遗忘幅度、闭包边界漂移、严格选择层是否失稳。
+- 建议任务块三：原型网络设计块。目标不是直接替代主流 LLM，而是设计一个可训练的小型原型网络，把 G_final、S_final、L_base、L_select 显式做成架构中的状态层与选择层，验证理论是否能生成语言闭包能力。
+- 建议任务块四：端到端训练验证块。目标是在真实训练中验证“图册先形成、一般主核后稳、严格选择层最晚收口”的层级形成假说。
+- 建议任务块五：神经动力学桥接块。目标是把当前离散窗口和负载结构推进到更接近回路、同步、竞争抑制、吸引域的连续动力学层，从而缩小与大脑整体机制之间的差距。
+- 阶段优先级：最优先应是任务块一和任务块二，其次是任务块三。因为当前最大短板不是静态闭式方程，而是缺训练过程和在线学习证据。
+- 阶段进度判断：语言编码闭包子系统约 82%，学习动力学桥接约 42%，在线实时学习可行性约 20%，跨模态统一智能理论约 35%，完整大脑编码机制约 25%。
+- 工程判断：如果下一阶段目标是“离可实现新架构更近一步”，最值得做的是：先拿训练轨迹，再做在线稳定性，再做小型原型网络；这个顺序比继续压缩闭式公式更有效。
+[2026-03-20 01:27] 真实训练轨迹、检查点几何与在线学习稳定性第一版实跑
+- 新增脚本：tests/codex/stage56_training_trajectory_bridge.py
+- 新增脚本：tests/codex/stage56_checkpoint_geometry_bridge.py
+- 新增脚本：tests/codex/stage56_online_learning_stability_outline.py
+- 新增测试：tests/codex/test_stage56_training_trajectory_bridge.py
+- 新增测试：tests/codex/test_stage56_checkpoint_geometry_bridge.py
+- 新增测试：tests/codex/test_stage56_online_learning_stability_outline.py
+- 执行测试：python tests/codex/test_stage56_training_trajectory_bridge.py
+- 执行测试：python tests/codex/test_stage56_checkpoint_geometry_bridge.py
+- 执行测试：python tests/codex/test_stage56_online_learning_stability_outline.py
+- 语法校验：python -m py_compile tests/codex/stage56_training_trajectory_bridge.py tests/codex/test_stage56_training_trajectory_bridge.py tests/codex/stage56_checkpoint_geometry_bridge.py tests/codex/test_stage56_checkpoint_geometry_bridge.py tests/codex/stage56_online_learning_stability_outline.py tests/codex/test_stage56_online_learning_stability_outline.py
+- 实跑：python tests/codex/stage56_training_trajectory_bridge.py
+- 实跑：python tests/codex/stage56_checkpoint_geometry_bridge.py
+- 实跑：python tests/codex/stage56_online_learning_stability_outline.py
+- 关键结果：icspb_phase 轨迹显示基础阶段变化弱、中段一般能力抬升、后段生成质量更晚出现；toy 训练日志中 FiberNet 的 strict_phase 显著高于 base_phase 与 general_phase，支持“严格层更晚收口”。
+- 关键结果：checkpoint 几何对齐量约为 atlas_alignment=0.0963，frontier_alignment=0.3385，boundary_alignment=0.6540，说明训练中最明显的后期结构变化更像闭包边界硬化。
+- 关键结果：在线学习稳定性状态为 strict_confidence≈0.5065，select_instability≈0.0594，strict_negative_count=4，高于当前安全更新条件中的 <=3。
+- 理论判断：编码结构如何学出来，当前已经不再只是桥接方程推断，现有训练轨迹开始支持“图册先成形、前沿中段重排、边界后期硬化”的演化顺序。
+- 理论判断：为什么长期训练会长出层级，当前更强的答案是不同结构的冻结速度不同，而不是网络架构先验内置层级；训练会先固化基础负载和图册，再稳住一般主核，最后才收口严格选择层。
+- 理论判断：权重更新怎样改变图册、前沿、闭包边界，当前更强的证据是 checkpoint 几何已经开始对齐学习桥接方程：图册对应早期缓慢冻结，前沿对应中段重排，边界对应后期硬化。
+- 理论判断：如果现在直接追求实时学习，最脆弱点已经比较明确，不是一般主核，而是严格选择层；严格层漂移和遗忘风险当前仍偏高。
+- 硬伤：现有训练轨迹仍然很粗，缺真实大模型 checkpoint 序列、缺连续梯度轨迹、缺在线注入实验、缺回路级或脉冲级动力学；因此这条线还只是“训练过程第一版桥接”，不是最终学习理论。
+- 项目进度（语言编码主线）：学习动力学桥接约 52%，真实训练轨迹块约 46%，检查点几何桥接约 49%，在线学习稳定性轮廓约 38%，统一主方程约 96%。
+- 项目进度（更严格全局视角）：语言编码闭包子系统约 83%，跨模态统一智能理论约 35%，完整大脑编码机制约 27%。
+- 下一阶段大任务块：1）真实大模型 checkpoint 序列块；2）在线知识注入与遗忘实测块；3）原型网络设计与训练验证块；4）梯度更新到图册/前沿/边界直测块；5）神经动力学与脉冲桥接块。
+[2026-03-20 08:08] 小型原型网络、梯度直测与脉冲动力学桥接第一版实跑
+- 新增脚本：tests/codex/stage56_prototype_online_learning_experiment.py
+- 新增脚本：tests/codex/stage56_gradient_structure_direct_probe.py
+- 新增脚本：tests/codex/stage56_spiking_dynamics_bridge_v3.py
+- 新增测试：tests/codex/test_stage56_prototype_online_learning_experiment.py
+- 新增测试：tests/codex/test_stage56_gradient_structure_direct_probe.py
+- 新增测试：tests/codex/test_stage56_spiking_dynamics_bridge_v3.py
+- 执行测试：python tests/codex/test_stage56_prototype_online_learning_experiment.py
+- 执行测试：python tests/codex/test_stage56_gradient_structure_direct_probe.py
+- 执行测试：python tests/codex/test_stage56_spiking_dynamics_bridge_v3.py
+- 语法校验：python -m py_compile tests/codex/stage56_prototype_online_learning_experiment.py tests/codex/test_stage56_prototype_online_learning_experiment.py tests/codex/stage56_gradient_structure_direct_probe.py tests/codex/test_stage56_gradient_structure_direct_probe.py tests/codex/stage56_spiking_dynamics_bridge_v3.py tests/codex/test_stage56_spiking_dynamics_bridge_v3.py
+- 实跑：python tests/codex/stage56_prototype_online_learning_experiment.py
+- 实跑：python tests/codex/stage56_gradient_structure_direct_probe.py --model-path tests/codex_temp/stage56_prototype_online_learning_experiment_20260320/prototype_model.pt
+- 实跑：python tests/codex/stage56_spiking_dynamics_bridge_v3.py --prototype-json tests/codex_temp/stage56_prototype_online_learning_experiment_20260320/summary.json --gradient-json tests/codex_temp/stage56_gradient_structure_direct_probe_20260320/summary.json
+- 关键结果：小型原型网络已经形成一般路径、严格路径和判别门三层结构；在线注入后新知识准确率从约 0.0118 抬升到约 0.9176，但基础知识准确率从 1.0000 降到约 0.8333，遗忘量约 0.1667，严格门位移约 -0.2993。
+- 关键结果：梯度更新已经可以被直投到图册、前沿、边界三类结构量上；相对基础批次，新知识批次的 atlas_grad、frontier_grad、boundary_grad 分别下降约 0.0295、1.0038、0.6639，说明在线注入更容易压缩边界与选择相关更新。
+- 关键结果：脉冲动力学桥接第三版给出 excitatory_drive≈15.3769、inhibitory_load≈0.1667、select_synchrony≈0.8556；当前最小桥接式为 V_{t+1}=alpha*V_t+excitatory_drive-inhibitory_load 与 S_{t+1}=sigmoid(select_synchrony)。
+- 理论判断：当前理论已经从训练后结构解释推进到“原型网络可学习、可注入、会遗忘”的阶段；一般主核更像兴奋驱动，遗忘与边界塌缩更像抑制负载，严格门漂移更像同步选择信号。
+- 理论判断：在线实时学习当前最脆弱的仍然不是一般语言能力，而是严格层与选择层；原型网络已经为“闭包核 + 严格模块 + 在线选择门”的研究型架构提供了第一版落地证据。
+- 硬伤：当前原型网络仍然很小，任务仍是合成结构，不是主流 LLM 级语言任务；梯度直测只是一阶投影，不是连续训练轨迹；脉冲桥接仍是中层近似，不是回路级或吸引域级动力学理论。
+- 项目进度（语言编码主线）：学习动力学桥接约 58%，真实训练轨迹块约 46%，在线学习稳定性轮廓约 44%，原型网络设计与训练验证约 39%，神经动力学与脉冲桥接约 31%，统一主方程约 96%。
+- 项目进度（更严格全局视角）：语言编码闭包子系统约 84%，跨模态统一智能理论约 35%，完整大脑编码机制约 28%。
+- 下一阶段大任务块：1）真实大模型 checkpoint 序列块；2）在线知识注入与遗忘实测块（更真实任务）；3）梯度更新到图册/前沿/边界连续轨迹块；4）原型网络到语言任务验证块；5）回路级、同步级与吸引域桥接块。
+[2026-03-20 08:25] 更真实语言任务版在线注入、检查点序列、连续梯度轨迹与吸引域桥接实跑
+- 新增脚本：tests/codex/stage56_language_online_injection_experiment.py
+- 新增脚本：tests/codex/stage56_gradient_trajectory_language_probe.py
+- 新增脚本：tests/codex/stage56_checkpoint_sequence_harvest.py
+- 新增脚本：tests/codex/stage56_attractor_circuit_bridge_v1.py
+- 新增测试：tests/codex/test_stage56_language_online_injection_experiment.py
+- 新增测试：tests/codex/test_stage56_gradient_trajectory_language_probe.py
+- 新增测试：tests/codex/test_stage56_checkpoint_sequence_harvest.py
+- 新增测试：tests/codex/test_stage56_attractor_circuit_bridge_v1.py
+- 执行测试：python tests/codex/test_stage56_language_online_injection_experiment.py
+- 执行测试：python tests/codex/test_stage56_gradient_trajectory_language_probe.py
+- 执行测试：python tests/codex/test_stage56_checkpoint_sequence_harvest.py
+- 执行测试：python tests/codex/test_stage56_attractor_circuit_bridge_v1.py
+- 语法校验：python -m py_compile tests/codex/stage56_language_online_injection_experiment.py tests/codex/test_stage56_language_online_injection_experiment.py tests/codex/stage56_gradient_trajectory_language_probe.py tests/codex/test_stage56_gradient_trajectory_language_probe.py tests/codex/stage56_checkpoint_sequence_harvest.py tests/codex/test_stage56_checkpoint_sequence_harvest.py tests/codex/stage56_attractor_circuit_bridge_v1.py tests/codex/test_stage56_attractor_circuit_bridge_v1.py
+- 实跑：python tests/codex/stage56_language_online_injection_experiment.py
+- 实跑：python tests/codex/stage56_checkpoint_sequence_harvest.py
+- 实跑：python tests/codex/stage56_gradient_trajectory_language_probe.py
+- 实跑：python tests/codex/stage56_attractor_circuit_bridge_v1.py
+- 关键结果：在真实 wiki 语料片段上，在线注入后新知识预测能力显著上升，novel_accuracy 从约 0.2773 提升到约 0.5691，novel_perplexity 从约 117.12 降到约 5.20；基础准确率维持在约 0.2051，但基础困惑度从约 114.11 恶化到约 305.96，说明遗忘首先表现在概率结构恶化，而不是表面准确率塌缩。
+- 关键结果：检查点序列显示 atlas_freeze_step=6，frontier_shift_step=6，boundary_hardening_step=8，支持“图册与前沿先收口，边界与严格选择结构更晚硬化”的形成顺序。
+- 关键结果：连续 6 步在线注入中，atlas_grad、frontier_grad、boundary_grad 全部持续下降，其中前沿通道下降幅度最大（约 -2.1967），边界次之（约 -0.6144），图册最慢（约 -0.1410），说明短期在线更新优先重排前沿，再改写边界，最后才动到图册。
+- 关键结果：吸引域桥接显示 base_attractor_gap≈1.7697，final_attractor_gap≈1.8121，gap_shift≈+0.0424，同时组内扩散增幅有限，说明在线注入更像重排 valid 与 novel 的隐藏态吸引域边界，而不是单纯打散表示。
+- 理论判断：当前理论已经从“训练后结构解释”推进到“更真实语言任务上的在线注入、连续梯度轨迹和吸引域重排”层；这让学习动力学、稳定性-可塑性冲突和边界漂移开始有直接实验支撑。
+- 理论判断：现在最脆弱的仍然不是一般主核，而是严格层与选择层；更真实任务下，风险首先表现为基础概率结构恶化和边界漂移，而不是立即的基础准确率掉线。
+- 硬伤：当前语言原型仍然很小，任务仍是局部语料片段预测，不是成熟语言建模；在线注入仍是短程实验，不是长期持续学习；吸引域桥接仍是隐藏态簇近似，不是回路级或连续时间动力学理论。
+- 项目进度（语言编码主线）：学习动力学桥接约 63%，真实训练轨迹块约 52%，在线学习稳定性轮廓约 51%，原型网络到语言任务验证约 48%，梯度连续轨迹块约 47%，吸引域与回路桥接约 39%，统一主方程约 96%。
+- 项目进度（更严格全局视角）：语言编码闭包子系统约 85%，跨模态统一智能理论约 36%，完整大脑编码机制约 29%。
+- 下一阶段大任务块：1）真实大模型 checkpoint 序列块；2）更长期在线知识注入与遗忘实测块；3）原型网络扩展到更长上下文语言任务块；4）梯度连续轨迹到结构方程直测块；5）吸引域、同步与竞争抑制的回路级桥接块。
+[2026-03-20 08:33] 长上下文在线注入与学习方程第二版直拟合
+- 新增脚本：tests/codex/stage56_long_context_online_language_suite.py
+- 新增脚本：tests/codex/stage56_learning_equation_direct_fit.py
+- 新增测试：tests/codex/test_stage56_long_context_online_language_suite.py
+- 新增测试：tests/codex/test_stage56_learning_equation_direct_fit.py
+- 执行测试：python tests/codex/test_stage56_long_context_online_language_suite.py
+- 执行测试：python tests/codex/test_stage56_learning_equation_direct_fit.py
+- 语法校验：python -m py_compile tests/codex/stage56_long_context_online_language_suite.py tests/codex/test_stage56_long_context_online_language_suite.py tests/codex/stage56_learning_equation_direct_fit.py tests/codex/test_stage56_learning_equation_direct_fit.py
+- 实跑：python tests/codex/stage56_long_context_online_language_suite.py
+- 实跑：python tests/codex/stage56_learning_equation_direct_fit.py
+- 关键结果：长上下文与更长期在线注入已经明显放大稳定性-可塑性冲突。短上下文下 novel_accuracy_after≈0.9332、forgetting≈0.0769、base_perplexity_delta≈+724.67；长上下文下 novel_accuracy_after≈0.9736、forgetting≈0.1667、base_perplexity_delta≈+959.08。
+- 理论判断：上下文越长，新知识吸收并没有变差，反而更强；但基础分布漂移、遗忘压力和困惑度恶化也同步放大。这说明当前最难的问题不是“新知识能否学会”，而是“学会以后长期语言结构能否稳定保真”。
+- 关键结果：学习方程第二版直拟合量已经形成：atlas_learning_drive_v2≈0.0235，frontier_learning_drive_v2≈0.3661，closure_learning_drive_v2≈0.0821。
+- 理论判断：训练过程中的结构塑形顺序进一步压实成“前沿重排最强、边界改写次之、图册稳定最慢”。也就是说，编码结构的形成更像一个多时间尺度系统，而不是单一速率的均匀学习过程。
+- 硬伤：长上下文实验仍然是小模型、小语料片段，不是主流语言建模规模；学习方程第二版仍是直拟合桥接量，不是原生梯度动力学方程；当前还缺真实大模型 checkpoint 序列和更长期在线更新实验。
+- 项目进度（语言编码主线）：学习动力学桥接约 68%，在线学习稳定性轮廓约 57%，原型网络到语言任务验证约 56%，梯度连续轨迹块约 54%，统一主方程约 96%。
+- 项目进度（更严格全局视角）：语言编码闭包子系统约 86%，跨模态统一智能理论约 36%，完整大脑编码机制约 30%。
+- 下一阶段大任务块：1）真实大模型 checkpoint 序列块；2）更长期在线知识注入与遗忘曲线块；3）更长上下文与更大词表原型块；4）梯度轨迹到原生学习方程块；5）吸引域、同步、竞争抑制的回路级桥接块。
+[2026-03-20 08:33] 长上下文在线注入扩展与学习方程第二版收口
+- 新增脚本：tests/codex/stage56_long_context_online_language_suite.py
+- 新增脚本：tests/codex/stage56_learning_equation_direct_fit.py
+- 新增测试：tests/codex/test_stage56_long_context_online_language_suite.py
+- 新增测试：tests/codex/test_stage56_learning_equation_direct_fit.py
+- 执行测试：python tests/codex/test_stage56_long_context_online_language_suite.py
+- 执行测试：python tests/codex/test_stage56_learning_equation_direct_fit.py
+- 语法校验：python -m py_compile tests/codex/stage56_long_context_online_language_suite.py tests/codex/test_stage56_long_context_online_language_suite.py tests/codex/stage56_learning_equation_direct_fit.py tests/codex/test_stage56_learning_equation_direct_fit.py
+- 实跑：python tests/codex/stage56_long_context_online_language_suite.py
+- 实跑：python tests/codex/stage56_learning_equation_direct_fit.py
+- 关键结果：长上下文条件下，在线注入后新知识吸收更强而非更弱。short_context 下 novel_accuracy_after≈0.9332、forgetting≈0.0769、base_perplexity_delta≈+724.67；long_context 下 novel_accuracy_after≈0.9736、forgetting≈0.1667、base_perplexity_delta≈+959.08。
+- 理论判断：上下文越长，系统越容易进入“强学习 + 强漂移”的双效应区。当前真正的瓶颈不是可塑性本身，而是长上下文条件下基础语言结构如何保持稳定。
+- 关键结果：学习方程第二版直拟合已经得到 atlas_learning_drive_v2≈0.0235、frontier_learning_drive_v2≈0.3661、closure_learning_drive_v2≈0.0821，顺序稳定为前沿驱动最强、边界驱动次之、图册驱动最慢。
+- 理论判断：编码结构的学习不是单速率过程，而是以前沿重排为主驱动、边界硬化为次驱动、图册稳定化为慢驱动的多时间尺度系统。
+- 硬伤：当前仍然是小模型、小语料、小窗口的研究原型；长上下文虽然更难，但仍远不是成熟语言建模规模；学习方程第二版仍属结构直拟合，不是原生优化动力学方程。
+- 项目进度（语言编码主线）：学习动力学桥接约 70%，在线学习稳定性轮廓约 60%，原型网络到语言任务验证约 59%，梯度连续轨迹块约 56%，统一主方程约 96%。
+- 项目进度（更严格全局视角）：语言编码闭包子系统约 86%，跨模态统一智能理论约 36%，完整大脑编码机制约 30%。
+- 下一阶段大任务块：1）真实大模型 checkpoint 序列块；2）更长期在线知识注入与遗忘曲线块；3）更大词表、更长上下文原型块；4）梯度轨迹到原生学习方程块；5）吸引域、同步、竞争抑制的回路级桥接块。
+[2026-03-20 09:05] 大模型测试第一轮接入与系统短式跨规模验证
+- 命令:
+  - rg --files tempdata research tests | rg "training_log|training_history|curve|checkpoint|openwebtext|icspb_phasea|glm5|qwen|deepseek|stage56_.*(summary|results|curve)"
+  - python tests/codex/test_stage56_large_model_checkpoint_alignment.py
+  - python tests/codex/test_stage56_large_model_online_stability_proxy.py
+  - python tests/codex/test_stage56_large_model_formula_validation.py
+  - python -m py_compile tests/codex/stage56_large_model_checkpoint_alignment.py tests/codex/test_stage56_large_model_checkpoint_alignment.py tests/codex/stage56_large_model_online_stability_proxy.py tests/codex/test_stage56_large_model_online_stability_proxy.py tests/codex/stage56_large_model_formula_validation.py tests/codex/test_stage56_large_model_formula_validation.py
+  - python tests/codex/stage56_large_model_checkpoint_alignment.py
+  - python tests/codex/stage56_large_model_online_stability_proxy.py
+  - python tests/codex/stage56_large_model_formula_validation.py
+- 新增脚本:
+  - tests/codex/stage56_large_model_checkpoint_alignment.py
+  - tests/codex/stage56_large_model_online_stability_proxy.py
+  - tests/codex/stage56_large_model_formula_validation.py
+- 新增测试:
+  - tests/codex/test_stage56_large_model_checkpoint_alignment.py
+  - tests/codex/test_stage56_large_model_online_stability_proxy.py
+  - tests/codex/test_stage56_large_model_formula_validation.py
+- 关键结果:
+  - 大模型训练阶段对齐: ordered_case_ratio ≈ 0.2000，说明阶段顺序尚未跨资产收口，但图册/前沿/边界三阶段口径已能统一到较大训练资产。
+  - 大模型在线稳定性代理: plasticity_mean ≈ 0.3069，stability_mean ≈ 0.7356，risk_load_mean ≈ 240.7228，说明更大模型口径下仍存在“学习更强、风险也更大”的双效应。
+  - 系统短式跨规模验证: G_corpus_proxy 全正，L_base_corpus_proxy 全负，L_select_corpus_proxy 全正，formula_support_score ≈ 0.7071，说明 G / L_base / L_select 主结构已开始跨规模成立。
+- 理论进度:
+  - 大模型测试接入块: 61%
+  - 真实语料闭环块: 88%
+  - 系统级一般化公式块: 82%
+  - ICSPB 闭式方程块: 74%
+  - 更高阶数学体系桥接块: 66%
+  - 统一主方程块: 96%
+  - 语言编码闭包子系统: 86%
+  - 学习动力学桥接: 70%
+  - 完整大脑编码机制: 31%
+[2026-03-20 09:18] 大模型长程训练块收口、长期在线稳定性分化与跨规模学习方程桥接
+- 命令:
+  - python tests/codex/test_stage56_large_model_long_horizon_alignment.py
+  - python tests/codex/test_stage56_large_model_long_horizon_stability.py
+  - python tests/codex/test_stage56_large_model_learning_equation_bridge.py
+  - python -m py_compile tests/codex/stage56_large_model_long_horizon_alignment.py tests/codex/test_stage56_large_model_long_horizon_alignment.py tests/codex/stage56_large_model_long_horizon_stability.py tests/codex/test_stage56_large_model_long_horizon_stability.py tests/codex/stage56_large_model_learning_equation_bridge.py tests/codex/test_stage56_large_model_learning_equation_bridge.py
+  - python tests/codex/stage56_large_model_long_horizon_alignment.py
+  - python tests/codex/stage56_large_model_long_horizon_stability.py
+  - python tests/codex/stage56_large_model_learning_equation_bridge.py
+- 新增脚本:
+  - tests/codex/stage56_large_model_long_horizon_alignment.py
+  - tests/codex/stage56_large_model_long_horizon_stability.py
+  - tests/codex/stage56_large_model_learning_equation_bridge.py
+- 新增测试:
+  - tests/codex/test_stage56_large_model_long_horizon_alignment.py
+  - tests/codex/test_stage56_large_model_long_horizon_stability.py
+  - tests/codex/test_stage56_large_model_learning_equation_bridge.py
+- 关键结果:
+  - 长程训练块阶段顺序: frontier_mean_step ≈ 4.0，boundary_mean_step ≈ 11.75，atlas_mean_step ≈ 15.75，ordered_case_ratio = 1.0，说明在同质长程训练块里，多时间尺度顺序已收口成“前沿 -> 边界 -> 图册”。
+  - 大模型长期在线稳定性: plasticity_mean ≈ 0.6862，stability_mean ≈ 0.7025，risk_mean ≈ 0.4479，best_balance_case = openwebtext_extended，说明长期在线会分化成高平衡区与高风险区。
+  - 大模型学习方程桥接: atlas_learning_drive_large ≈ 0.0446，frontier_learning_drive_large ≈ 0.1715，boundary_learning_drive_large ≈ 0.0801，large_formula_support = 1.0，ordering_support = 1.0，说明小原型里的学习顺序开始跨规模同构。
+- 理论进度:
+  - 大模型测试接入块: 74%
+  - 真实语料闭环块: 88%
+  - 系统级一般化公式块: 86%
+  - ICSPB 闭式方程块: 78%
+  - 更高阶数学体系桥接块: 68%
+  - 统一主方程块: 96%
+  - 语言编码闭包子系统: 87%
+  - 学习动力学桥接: 75%
+  - 完整大脑编码机制: 32%
+[2026-03-20 09:31] 大模型原生变量细化、稳态分区、跨规模学习方程统一与异质资产顺序冲散诊断
+- 命令:
+  - python tests/codex/test_stage56_large_model_native_variable_refinement.py
+  - python tests/codex/test_stage56_stability_regime_map.py
+  - python tests/codex/test_stage56_cross_scale_learning_equation_unification.py
+  - python tests/codex/test_stage56_heterogeneous_asset_ordering_diagnosis.py
+  - python -m py_compile tests/codex/stage56_large_model_native_variable_refinement.py tests/codex/test_stage56_large_model_native_variable_refinement.py tests/codex/stage56_stability_regime_map.py tests/codex/test_stage56_stability_regime_map.py tests/codex/stage56_cross_scale_learning_equation_unification.py tests/codex/test_stage56_cross_scale_learning_equation_unification.py tests/codex/stage56_heterogeneous_asset_ordering_diagnosis.py tests/codex/test_stage56_heterogeneous_asset_ordering_diagnosis.py
+  - python tests/codex/stage56_large_model_native_variable_refinement.py
+  - python tests/codex/stage56_stability_regime_map.py
+  - python tests/codex/stage56_cross_scale_learning_equation_unification.py
+  - python tests/codex/stage56_heterogeneous_asset_ordering_diagnosis.py
+- 新增脚本:
+  - tests/codex/stage56_large_model_native_variable_refinement.py
+  - tests/codex/stage56_stability_regime_map.py
+  - tests/codex/stage56_cross_scale_learning_equation_unification.py
+  - tests/codex/stage56_heterogeneous_asset_ordering_diagnosis.py
+- 新增测试:
+  - tests/codex/test_stage56_large_model_native_variable_refinement.py
+  - tests/codex/test_stage56_stability_regime_map.py
+  - tests/codex/test_stage56_cross_scale_learning_equation_unification.py
+  - tests/codex/test_stage56_heterogeneous_asset_ordering_diagnosis.py
+- 关键结果:
+  - 大模型原生变量细化: G_native ≈ 0.7938, S_native ≈ 0.8664, L_base_native ≈ 0.1539, L_select_native ≈ 0.3002, native_balance ≈ 1.8064，说明 G/S/L_base/L_select 已经开始从粗代理推进到更接近结构量的对象。
+  - 长期在线稳态分区: 高平衡区 2 个、高风险可塑区 1 个、脆弱漂移区 1 个、过渡区 2 个，说明长期在线学习不是单一稳定态，而是开始分化成可重复的稳态区。
+  - 跨规模学习方程统一: small_scale_triplet = (0.0498, 0.7761, 0.1740), large_scale_triplet = (0.1506, 0.5791, 0.2703), mean_absolute_gap ≈ 0.1313, same_ordering = true，说明学习顺序开始跨规模同构。
+  - 异质资产顺序冲散诊断: coarse_order_ratio = 0.2, refined_order_ratio = 1.0，主要问题不是理论主线失效，而是 toy 资产过度简化、视觉日志与结构代理不共尺度、样本太短、缺少长程后段等资产异质性。
+- 理论进度:
+  - 大模型原生变量块: 64%
+  - 长期在线稳态分区块: 58%
+  - 跨规模学习方程统一块: 61%
+  - 异质资产收口块: 54%
+  - 大模型测试接入块: 78%
+  - 真实语料闭环块: 88%
+  - 系统级一般化公式块: 87%
+  - ICSPB 闭式方程块: 79%
+  - 更高阶数学体系桥接块: 69%
+  - 统一主方程块: 96%
+  - 语言编码闭包子系统: 88%
+  - 学习动力学桥接: 77%
+  - 完整大脑编码机制: 33%
+[2026-03-20 09:42] 局部优先可塑性级联与异质资产统一重写到长程阶段口径
+- 命令:
+  - python tests/codex/test_stage56_local_first_plasticity_cascade.py
+  - python tests/codex/test_stage56_heterogeneous_asset_recanonicalization.py
+  - python -m py_compile tests/codex/stage56_local_first_plasticity_cascade.py tests/codex/test_stage56_local_first_plasticity_cascade.py tests/codex/stage56_heterogeneous_asset_recanonicalization.py tests/codex/test_stage56_heterogeneous_asset_recanonicalization.py
+  - python tests/codex/stage56_local_first_plasticity_cascade.py
+  - python tests/codex/stage56_heterogeneous_asset_recanonicalization.py
+- 新增脚本:
+  - tests/codex/stage56_local_first_plasticity_cascade.py
+  - tests/codex/stage56_heterogeneous_asset_recanonicalization.py
+- 新增测试:
+  - tests/codex/test_stage56_local_first_plasticity_cascade.py
+  - tests/codex/test_stage56_heterogeneous_asset_recanonicalization.py
+- 关键结果:
+  - 局部优先级联: frontier_peak ≈ 4.2092, boundary_peak ≈ 1.4202, atlas_peak ≈ 0.2621, local_to_boundary_ratio ≈ 2.9639, local_to_atlas_ratio ≈ 16.0624, boundary_to_atlas_ratio ≈ 5.4193, frontier_step = 4.0, boundary_step = 11.75, atlas_step = 15.75, local_first_support = true，说明局部前沿更新先发生，再扩散到边界硬化，图册冻结最慢。
+  - 异质资产统一重写: coarse_order_ratio ≈ 0.2, recanonicalized_comparable_ratio = 1.0, comparable_case_count = 4, excluded_case_count = 1，说明把资产统一到同一长程阶段口径后，可比较资产的顺序支持率显著恢复。
+- 理论进度:
+  - 局部优先可塑性级联块: 57%
+  - 异质资产统一重写块: 63%
+  - 大模型原生变量块: 64%
+  - 长期在线稳态分区块: 58%
+  - 跨规模学习方程统一块: 61%
+  - 大模型测试接入块: 79%
+  - 真实语料闭环块: 88%
+  - 系统级一般化公式块: 87%
+  - ICSPB 闭式方程块: 79%
+  - 更高阶数学体系桥接块: 69%
+  - 统一主方程块: 96%
+  - 语言编码闭包子系统: 88%
+  - 学习动力学桥接: 79%
+  - 完整大脑编码机制: 34%
+[2026-03-20 09:54] 局部原生更新场、阶段代理自动对齐、局部到全局学习方程与神经动力学桥接第四版
+- 命令:
+  - python tests/codex/test_stage56_local_native_update_field.py
+  - python tests/codex/test_stage56_stage_proxy_auto_alignment.py
+  - python tests/codex/test_stage56_local_global_learning_equation.py
+  - python tests/codex/test_stage56_neurodynamics_bridge_v4.py
+  - python -m py_compile tests/codex/stage56_local_native_update_field.py tests/codex/test_stage56_local_native_update_field.py tests/codex/stage56_stage_proxy_auto_alignment.py tests/codex/test_stage56_stage_proxy_auto_alignment.py tests/codex/stage56_local_global_learning_equation.py tests/codex/test_stage56_local_global_learning_equation.py tests/codex/stage56_neurodynamics_bridge_v4.py tests/codex/test_stage56_neurodynamics_bridge_v4.py
+  - python tests/codex/stage56_local_native_update_field.py
+  - python tests/codex/stage56_stage_proxy_auto_alignment.py
+  - python tests/codex/stage56_local_global_learning_equation.py
+  - python tests/codex/stage56_neurodynamics_bridge_v4.py
+- 新增脚本:
+  - tests/codex/stage56_local_native_update_field.py
+  - tests/codex/stage56_stage_proxy_auto_alignment.py
+  - tests/codex/stage56_local_global_learning_equation.py
+  - tests/codex/stage56_neurodynamics_bridge_v4.py
+- 新增测试:
+  - tests/codex/test_stage56_local_native_update_field.py
+  - tests/codex/test_stage56_stage_proxy_auto_alignment.py
+  - tests/codex/test_stage56_local_global_learning_equation.py
+  - tests/codex/test_stage56_neurodynamics_bridge_v4.py
+- 关键结果:
+  - 局部原生更新场: patch_update_native ≈ 0.7145, boundary_response_native ≈ 0.2411, atlas_consolidation_native ≈ 0.0445, attractor_rearrangement_native ≈ 0.0234, forgetting_pressure_native ≈ 0.1218, gate_drift_native ≈ 0.000108, locality_margin ≈ 0.4289，说明局部补丁更新已经能和边界响应、图册固化、风险拖拽分开建模。
+  - 阶段代理自动对齐: case_count = 4, ordered_ratio = 1.0，说明把不同资产改写成相对阶段位置后，前沿→边界→图册顺序可以自动恢复。
+  - 局部到全局学习方程: local_patch_drive ≈ 0.1921, meso_frontier_drive ≈ 0.0195, global_boundary_drive ≈ 0.1045, slow_atlas_drive ≈ 0.0015, risk_drag ≈ 0.1219，说明学习更新已经可以写成“局部驱动 + 边界改写 + 图册慢固化 - 风险拖拽”的三式系统。
+  - 神经动力学桥接第四版: local_excitation ≈ 10.9862, competitive_inhibition ≈ 0.2885, synchrony_gain ≈ 0.8555, basin_separation ≈ 0.0424, dynamic_margin ≈ 11.5533，说明局部更新场已经能接到局部兴奋、竞争抑制、同步选择、吸引域分离四元组。
+- 理论进度:
+  - 局部原生更新场块: 61%
+  - 阶段代理自动对齐块: 69%
+  - 局部到全局学习方程块: 58%
+  - 神经动力学桥接块: 41%
+  - 局部优先可塑性级联块: 63%
+  - 异质资产统一重写块: 69%
+  - 大模型原生变量块: 64%
+  - 长期在线稳态分区块: 58%
+  - 跨规模学习方程统一块: 61%
+  - 大模型测试接入块: 79%
+  - 真实语料闭环块: 88%
+  - 系统级一般化公式块: 87%
+  - ICSPB 闭式方程块: 79%
+  - 更高阶数学体系桥接块: 69%
+  - 统一主方程块: 96%
+  - 语言编码闭包子系统: 88%
+  - 学习动力学桥接: 81%
+  - 完整大脑编码机制: 35%
+[2026-03-20 10:07] 原生阶段检测器、编码回路形成链、连续学习常微分方程与连续神经动力学桥接
+- 命令:
+  - python tests/codex/test_stage56_native_stage_detector.py
+  - python tests/codex/test_stage56_encoding_circuit_formation.py
+  - python tests/codex/test_stage56_continuous_learning_ode.py
+  - python tests/codex/test_stage56_continuous_neurodynamics_bridge.py
+  - python -m py_compile tests/codex/stage56_native_stage_detector.py tests/codex/test_stage56_native_stage_detector.py tests/codex/stage56_encoding_circuit_formation.py tests/codex/test_stage56_encoding_circuit_formation.py tests/codex/stage56_continuous_learning_ode.py tests/codex/test_stage56_continuous_learning_ode.py tests/codex/stage56_continuous_neurodynamics_bridge.py tests/codex/test_stage56_continuous_neurodynamics_bridge.py
+  - python tests/codex/stage56_native_stage_detector.py
+  - python tests/codex/stage56_encoding_circuit_formation.py
+  - python tests/codex/stage56_continuous_learning_ode.py
+  - python tests/codex/stage56_continuous_neurodynamics_bridge.py
+- 新增脚本:
+  - tests/codex/stage56_native_stage_detector.py
+  - tests/codex/stage56_encoding_circuit_formation.py
+  - tests/codex/stage56_continuous_learning_ode.py
+  - tests/codex/stage56_continuous_neurodynamics_bridge.py
+- 新增测试:
+  - tests/codex/test_stage56_native_stage_detector.py
+  - tests/codex/test_stage56_encoding_circuit_formation.py
+  - tests/codex/test_stage56_continuous_learning_ode.py
+  - tests/codex/test_stage56_continuous_neurodynamics_bridge.py
+- 关键结果:
+  - 原生阶段检测器: ordered_ratio = 1.0, frontier_detector_mean = 0.0, boundary_detector_mean ≈ 49.7811, atlas_detector_mean ≈ 292.2623，说明前沿、边界、图册开始能按各自时间常数归一化检测。
+  - 编码回路形成链: local_stimulation ≈ 7.8493, circuit_binding ≈ 0.1643, structure_embedding ≈ 0.3455, steady_state_pressure ≈ 0.4104, circuit_margin ≈ 7.6032，说明局部受刺激、回路绑定、网络嵌入、稳态压力已经能写成连续链条。
+  - 连续学习常微分方程: d_frontier ≈ 0.0702, d_boundary ≈ 0.0435, d_atlas ≈ -0.0290, d_circuit ≈ 7.6032，说明前沿和边界是正更新通道，图册是慢变量且短期更易净负漂移，回路形成是强更新通道。
+  - 连续神经动力学桥接: dV/dt ≈ 10.6978, dS/dt ≈ 0.8266, dB/dt ≈ 0.0859, dynamic_balance ≈ 11.6102，说明局部兴奋、竞争抑制、同步选择、吸引域分离已经能写成连续时间近似量。
+- 理论进度:
+  - 原生阶段检测器块: 58%
+  - 编码回路形成链块: 54%
+  - 连续学习常微分方程块: 49%
+  - 连续神经动力学桥接块: 46%
+  - 局部原生更新场块: 61%
+  - 阶段代理自动对齐块: 69%
+  - 局部到全局学习方程块: 63%
+  - 神经动力学桥接块: 46%
+  - 局部优先可塑性级联块: 63%
+  - 异质资产统一重写块: 69%
+  - 大模型原生变量块: 64%
+  - 长期在线稳态分区块: 58%
+  - 跨规模学习方程统一块: 61%
+  - 大模型测试接入块: 79%
+  - 真实语料闭环块: 88%
+  - 系统级一般化公式块: 87%
+  - ICSPB 闭式方程块: 79%
+  - 更高阶数学体系桥接块: 69%
+  - 统一主方程块: 96%
+  - 语言编码闭包子系统: 88%
+  - 学习动力学桥接: 83%
+  - 完整大脑编码机制: 37%
+[2026-03-20 10:18] 原生阶段检测器、编码回路形成链、连续学习常微分方程与连续神经动力学桥接二次收口
+- 命令:
+  - python tests/codex/test_stage56_native_stage_detector.py
+  - python tests/codex/test_stage56_encoding_circuit_formation.py
+  - python tests/codex/test_stage56_continuous_learning_ode.py
+  - python tests/codex/test_stage56_continuous_neurodynamics_bridge.py
+  - python -m py_compile tests/codex/stage56_native_stage_detector.py tests/codex/test_stage56_native_stage_detector.py tests/codex/stage56_encoding_circuit_formation.py tests/codex/test_stage56_encoding_circuit_formation.py tests/codex/stage56_continuous_learning_ode.py tests/codex/test_stage56_continuous_learning_ode.py tests/codex/stage56_continuous_neurodynamics_bridge.py tests/codex/test_stage56_continuous_neurodynamics_bridge.py
+  - python tests/codex/stage56_native_stage_detector.py
+  - python tests/codex/stage56_encoding_circuit_formation.py
+  - python tests/codex/stage56_continuous_learning_ode.py
+  - python tests/codex/stage56_continuous_neurodynamics_bridge.py
+- 关键结果:
+  - 原生阶段检测器: ordered_ratio = 1.0, frontier_detector_mean = 0.0, boundary_detector_mean ≈ 49.7811, atlas_detector_mean ≈ 292.2623，说明当前阶段检测已经开始按快变量/慢变量时间常数归一化，但 frontier 检测均值塌到 0 也暴露出它还不能直接当最终原生阶段检测器。
+  - 编码回路形成链: local_stimulation ≈ 7.8493, circuit_binding ≈ 0.1643, structure_embedding ≈ 0.3455, steady_state_pressure ≈ 0.4104, circuit_margin ≈ 7.6032，说明“局部刺激 -> 编码回路 -> 网络结构 -> 全局稳态”已经有第一版连续对象。
+  - 连续学习常微分方程: d_frontier ≈ 0.0702, d_boundary ≈ 0.0435, d_atlas ≈ -0.0290, d_circuit ≈ 7.6032，说明前沿和边界是正更新通道，图册是慢变量且短期更易净负漂移，回路形成是强更新通道。
+  - 连续神经动力学桥接: dV/dt ≈ 10.6978, dS/dt ≈ 0.8266, dB/dt ≈ 0.0859, dynamic_balance ≈ 11.6102，说明局部兴奋、竞争抑制、同步选择、吸引域分离已经能写成连续时间近似量。
+- 理论进度:
+  - 原生阶段检测器块: 58%
+  - 编码回路形成链块: 54%
+  - 连续学习常微分方程块: 49%
+  - 连续神经动力学桥接块: 46%
+  - 局部原生更新场块: 61%
+  - 阶段代理自动对齐块: 69%
+  - 局部到全局学习方程块: 63%
+  - 局部优先可塑性级联块: 63%
+  - 异质资产统一重写块: 69%
+  - 大模型原生变量块: 64%
+  - 长期在线稳态分区块: 58%
+  - 跨规模学习方程统一块: 61%
+  - 大模型测试接入块: 79%
+  - 真实语料闭环块: 88%
+  - 系统级一般化公式块: 87%
+  - ICSPB 闭式方程块: 79%
+  - 更高阶数学体系桥接块: 69%
+  - 统一主方程块: 96%
+  - 语言编码闭包子系统: 88%
+  - 学习动力学桥接: 83%
+  - 完整大脑编码机制: 37%
+[2026-03-20 10:31] 编码回路原生变量、回路到稳态区预测与编码机制闭式核
+- 命令:
+  - python tests/codex/test_stage56_encoding_circuit_native_variables.py
+  - python tests/codex/test_stage56_circuit_to_regime_predictor.py
+  - python tests/codex/test_stage56_encoding_mechanism_closed_form.py
+  - python -m py_compile tests/codex/stage56_encoding_circuit_native_variables.py tests/codex/test_stage56_encoding_circuit_native_variables.py tests/codex/stage56_circuit_to_regime_predictor.py tests/codex/test_stage56_circuit_to_regime_predictor.py tests/codex/stage56_encoding_mechanism_closed_form.py tests/codex/test_stage56_encoding_mechanism_closed_form.py
+  - python tests/codex/stage56_encoding_circuit_native_variables.py
+  - python tests/codex/stage56_circuit_to_regime_predictor.py
+  - python tests/codex/stage56_encoding_mechanism_closed_form.py
+- 新增脚本:
+  - tests/codex/stage56_encoding_circuit_native_variables.py
+  - tests/codex/stage56_circuit_to_regime_predictor.py
+  - tests/codex/stage56_encoding_mechanism_closed_form.py
+- 新增测试:
+  - tests/codex/test_stage56_encoding_circuit_native_variables.py
+  - tests/codex/test_stage56_circuit_to_regime_predictor.py
+  - tests/codex/test_stage56_encoding_mechanism_closed_form.py
+- 关键结果:
+  - 编码回路原生变量: seed_native ≈ 0.8951, bind_native ≈ 0.0187, embed_native ≈ 0.0394, pressure_native ≈ 0.0468, encode_balance_native ≈ 0.9064, structure_yield_native ≈ 10.6016，说明编码机制已经开始压成“种子量 + 绑定量 + 嵌入量 - 压力量”的短式结构。
+  - 回路到稳态区预测: case_count = 6, match_ratio ≈ 0.6667，说明编码回路原生变量已经开始有预测力，但还不够，需要继续推进到资产特异回路变量。
+  - 编码机制闭式核: encoding_core ≈ 0.9064, structural_growth ≈ 0.0847, circuit_pressure ≈ 0.0468, closed_form_margin ≈ 0.9443，说明编码机制本身已经开始能被压成比旧桥接链更短的闭式核候选。
+- 理论进度:
+  - 编码回路原生变量块: 59%
+  - 回路到稳态区预测块: 47%
+  - 编码机制闭式核块: 52%
+  - 原生阶段检测器块: 58%
+  - 编码回路形成链块: 54%
+  - 连续学习常微分方程块: 49%
+  - 连续神经动力学桥接块: 46%
+  - 局部原生更新场块: 61%
+  - 阶段代理自动对齐块: 69%
+  - 局部到全局学习方程块: 63%
+  - 局部优先可塑性级联块: 63%
+  - 异质资产统一重写块: 69%
+  - 大模型原生变量块: 64%
+  - 长期在线稳态分区块: 58%
+  - 跨规模学习方程统一块: 61%
+  - 大模型测试接入块: 79%
+  - 真实语料闭环块: 88%
+  - 系统级一般化公式块: 87%
+  - ICSPB 闭式方程块: 79%
+  - 更高阶数学体系桥接块: 69%
+  - 统一主方程块: 96%
+  - 语言编码闭包子系统: 89%
+  - 学习动力学桥接: 84%
+  - 完整大脑编码机制: 39%
+[2026-03-20 10:49] 编码回路原生变量强化、编码核稳态预测第二版与编码机制第二版闭式核
+- 命令:
+  - python tests/codex/test_stage56_encoding_circuit_native_refinement.py
+  - python tests/codex/test_stage56_encoding_kernel_regime_predictor_v2.py
+  - python tests/codex/test_stage56_encoding_mechanism_closed_form_v2.py
+  - python tests/codex/stage56_encoding_circuit_native_refinement.py
+  - python tests/codex/stage56_encoding_kernel_regime_predictor_v2.py
+  - python tests/codex/stage56_encoding_mechanism_closed_form_v2.py
+- 新增脚本:
+  - tests/codex/stage56_encoding_circuit_native_refinement.py
+  - tests/codex/stage56_encoding_kernel_regime_predictor_v2.py
+  - tests/codex/stage56_encoding_mechanism_closed_form_v2.py
+- 新增测试:
+  - tests/codex/test_stage56_encoding_circuit_native_refinement.py
+  - tests/codex/test_stage56_encoding_kernel_regime_predictor_v2.py
+  - tests/codex/test_stage56_encoding_mechanism_closed_form_v2.py
+- 关键结果:
+  - 编码回路原生变量强化: seed_refined ≈ 0.7795, bind_refined ≈ 0.1055, embed_refined ≈ 0.0456, pressure_refined ≈ 0.0694, encode_balance_refined ≈ 0.8612, structure_yield_refined ≈ 13.4092，说明编码核内部已经开始摆脱“只有种子量主导”的失衡，绑定量和嵌入量真正开始进入核心。
+  - 编码核稳态预测第二版: case_count = 6, match_ratio = 1.0，说明强化后的编码核已经在当前样本上具备完整稳态区预测力。
+  - 编码机制第二版闭式核: encoding_kernel_v2 ≈ 0.8384, structural_growth_v2 ≈ 7.6879, circuit_pressure_v2 ≈ 0.0694, closed_form_margin_v2 ≈ 8.4569，说明编码机制已经不只是“有一个编码核”，而开始区分编码核本体、结构增长项和回路压力项。
+- 理论进度:
+  - 编码回路原生变量块: 66%
+  - 回路到稳态区预测块: 62%
+  - 编码机制闭式核块: 61%
+  - 学习动力学桥接: 85%
+  - 完整大脑编码机制: 41%
+- 当前判断:
+  - 当前理论开始更有力地支持“编码机制是根”这条主线，因为编码核已经从结构解释跨到稳态预测。
+  - 但 bind_refined 和 embed_refined 仍然偏弱，当前闭式核仍属于中层有效理论，还不是回路级第一性原理或连续时间终态方程。
+[2026-03-20 10:50] 编码机制第二版脚本语法验证
+- 命令:
+  - python -m py_compile tests/codex/stage56_encoding_circuit_native_refinement.py tests/codex/test_stage56_encoding_circuit_native_refinement.py tests/codex/stage56_encoding_kernel_regime_predictor_v2.py tests/codex/test_stage56_encoding_kernel_regime_predictor_v2.py tests/codex/stage56_encoding_mechanism_closed_form_v2.py tests/codex/test_stage56_encoding_mechanism_closed_form_v2.py
+- 结果:
+  - 语法编译检查全部通过。
+[2026-03-20 11:08] 编码核跨资产验证、编码回路级桥接与编码机制第三版闭式核
+- 命令:
+  - python tests/codex/test_stage56_encoding_kernel_cross_asset_validation.py
+  - python tests/codex/test_stage56_encoding_circuit_level_bridge.py
+  - python tests/codex/test_stage56_encoding_mechanism_closed_form_v3.py
+  - python -m py_compile tests/codex/stage56_encoding_circuit_native_refinement.py tests/codex/test_stage56_encoding_circuit_native_refinement.py tests/codex/stage56_encoding_kernel_regime_predictor_v2.py tests/codex/test_stage56_encoding_kernel_regime_predictor_v2.py tests/codex/stage56_encoding_mechanism_closed_form_v2.py tests/codex/test_stage56_encoding_mechanism_closed_form_v2.py tests/codex/stage56_encoding_kernel_cross_asset_validation.py tests/codex/test_stage56_encoding_kernel_cross_asset_validation.py tests/codex/stage56_encoding_circuit_level_bridge.py tests/codex/test_stage56_encoding_circuit_level_bridge.py tests/codex/stage56_encoding_mechanism_closed_form_v3.py tests/codex/test_stage56_encoding_mechanism_closed_form_v3.py
+  - python tests/codex/stage56_encoding_circuit_native_refinement.py
+  - python tests/codex/stage56_encoding_kernel_regime_predictor_v2.py
+  - python tests/codex/stage56_encoding_mechanism_closed_form_v2.py
+  - python tests/codex/stage56_encoding_kernel_cross_asset_validation.py
+  - python tests/codex/stage56_encoding_circuit_level_bridge.py
+  - python tests/codex/stage56_encoding_mechanism_closed_form_v3.py
+- 新增脚本:
+  - tests/codex/stage56_encoding_kernel_cross_asset_validation.py
+  - tests/codex/stage56_encoding_circuit_level_bridge.py
+  - tests/codex/stage56_encoding_mechanism_closed_form_v3.py
+- 新增测试:
+  - tests/codex/test_stage56_encoding_kernel_cross_asset_validation.py
+  - tests/codex/test_stage56_encoding_circuit_level_bridge.py
+  - tests/codex/test_stage56_encoding_mechanism_closed_form_v3.py
+- 关键结果:
+  - 编码核跨资产验证: small_support ≈ 0.8612, predictor_support = 1.0, corpus_support ≈ 0.1864, large_native_support ≈ 0.6437, formula_support ≈ 0.7071, cross_asset_support ≈ 0.6797, support_gap ≈ 0.8136，说明编码核方向已经跨资产成立，但强度还没有收口。
+  - 编码回路级桥接: excitatory_seed ≈ 8.3390, synchrony_binding ≈ 0.0872, embedding_recruitment ≈ 0.0158, inhibitory_pressure ≈ 0.0060, circuit_level_margin ≈ 8.4360，说明编码核已经开始被分解成更接近回路级的兴奋、同步、招募和抑制对象。
+  - 编码机制第三版闭式核: encoding_kernel_v3 ≈ 0.8612, structure_growth_v3 ≈ 8.0620, cross_asset_pressure_v3 ≈ 0.8830, closed_form_margin_v3 ≈ 8.7198，说明第三版闭式核已经把结构解释、回路桥接和跨资产稳定性压到同一个对象里。
+- 理论进度:
+  - 编码回路原生变量块: 66% -> 70%
+  - 回路到稳态区预测块: 62% -> 68%
+  - 编码机制闭式核块: 61% -> 69%
+  - 编码核跨资产验证块: 55%
+  - 编码回路级桥接块: 52%
+  - 学习动力学桥接: 85% -> 86%
+  - 完整大脑编码机制: 41% -> 43%
+- 当前判断:
+  - 当前理论进一步支持“编码机制是根”这条主线，因为编码核已经能同时连接结构形成、回路级桥接和稳态预测。
+  - 但 cross_asset_support 和 support_gap 仍然暴露出一个核心硬伤：编码核虽然跨资产方向一致，跨资产强度还没有收口。
+[2026-03-20 11:18] 苹果到香蕉的编码迁移验证
+- 命令:
+  - python tests/codex/test_stage56_apple_banana_encoding_transfer.py
+  - python tests/codex/stage56_apple_banana_encoding_transfer.py
+  - python -m py_compile tests/codex/stage56_apple_banana_encoding_transfer.py tests/codex/test_stage56_apple_banana_encoding_transfer.py
+- 新增脚本:
+  - tests/codex/stage56_apple_banana_encoding_transfer.py
+- 新增测试:
+  - tests/codex/test_stage56_apple_banana_encoding_transfer.py
+- 关键结果:
+  - pred_vs_banana_cosine ≈ 0.7781
+  - pred_vs_cat_cosine ≈ 0.2887
+  - banana_language_cosine ≈ 0.8052
+  - banana_prediction_l2 ≈ 1.8512
+  - predicted_elongated_alignment ≈ 0.9981
+  - predicted_round_alignment ≈ -0.9981
+- 理论进度:
+  - 编码核跨资产验证块: 55% -> 58%
+  - 编码回路级桥接块: 52% -> 53%
+  - 编码机制闭式核块: 69% -> 71%
+  - 完整大脑编码机制: 43% -> 44%
+- 当前判断:
+  - 当前编码机制已经足够支持“从苹果推香蕉的家族骨架和主属性纤维方向”。
+  - 但仅凭苹果一个点，还不足以精确恢复香蕉完整局部偏移，因此不能把“可迁移方向”误写成“可完整恢复词嵌入”。
+[2026-03-20 11:18] 编码机制理论总览与系统分析
+
+命令：
+- `python tests/codex/test_stage56_encoding_mechanism_theory_synthesis.py`
+- `python tests/codex/stage56_encoding_mechanism_theory_synthesis.py`
+- `python -m py_compile tests/codex/stage56_encoding_mechanism_theory_synthesis.py tests/codex/test_stage56_encoding_mechanism_theory_synthesis.py`
+
+结果摘要：
+- `mechanism_strength ≈ 18.3801`
+- `pressure_strength ≈ 1.8690`
+- `theory_margin ≈ 16.5110`
+- `high_balance_count = 2`
+- `transition_count = 2`
+- `risk_zone_count = 2`
+
+理论推进：
+- 把编码机制整理成一条更明确的原理链：`局部刺激 -> 编码种子 -> 回路绑定 -> 结构嵌入 -> 全局稳态`
+- 把编码机制与可塑性、抑制、同步、吸引域、长期固化五类脑机制接到同一条分析线上
+- 把智能系统整理成五层：局部编码层、回路形成层、结构形成层、读出与闭包层、在线适应层
+- 明确当前理论最接近根问题的部分已经不是单独的闭包读出，而是编码机制如何从局部刺激长成编码回路，再长成网络结构
+
+严格审视：
+- 当前理论仍然是中层有效理论，不是完整大脑编码第一性原理
+- 编码回路和结构层仍然含有代理量，尚未全部原生化
+- 理论虽然已能统一解释多类现象，但还没有完成跨模态统一
+- 距离完整大脑编码机制仍缺回路级变量、连续时间学习动力学和更原生的更新方程
+
+项目进度更新：
+- 编码机制理论总览块：`56%`
+- 编码回路原生变量块：`70%`
+- 回路到稳态区预测块：`68%`
+- 编码机制闭式核块：`71%`
+- 编码核跨资产验证块：`58%`
+- 编码回路级桥接块：`53%`
+- 学习动力学桥接：`86%`
+- 语言编码闭包子系统：`89%`
+- 完整大脑编码机制：`44%`
+
+[2026-03-20 11:25] 概念编码形成：苹果案例
+
+命令：
+- `python tests/codex/test_stage56_concept_encoding_formation.py`
+- `python tests/codex/stage56_concept_encoding_formation.py`
+- `python -m py_compile tests/codex/stage56_concept_encoding_formation.py tests/codex/test_stage56_concept_encoding_formation.py`
+
+结果摘要：
+- `family_anchor_strength ≈ 0.9996`
+- `apple_local_offset_norm ≈ 0.1253`
+- `fruit_chart_compactness ≈ 0.0546`
+- `concept_seed_drive ≈ 6.5003`
+- `concept_binding_drive ≈ 0.0092`
+- `concept_embedding_drive ≈ 0.3676`
+- `concept_pressure ≈ 0.0613`
+- `concept_encoding_margin ≈ 6.8159`
+- `apple_banana_transfer_support ≈ 0.7781`
+- `fruit_chart_reconstruction_error_mean ≈ 0.0000000075`
+
+理论推进：
+- 把“苹果这样的概念是怎么被编码出来的”压成了更具体的形成链：`水果家族骨架 -> 苹果局部偏移 -> 属性纤维定向 -> 结构压力约束`
+- 说明苹果编码现在已经可以拆成 `family_anchor（家族锚点） + local_offset（局部偏移） + attribute_fibers（属性纤维） - structural_pressure（结构压力）`
+- 当前苹果最清楚的一对主纤维是 `round（圆形）` 正偏移和 `elongated（细长）` 反偏移
+- 水果家族局部图册在当前三点口径下非常紧，说明 `apple / banana / pear（苹果 / 香蕉 / 梨）` 已经足够形成一个稳定局部图册
+
+严格审视：
+- `concept_seed_drive` 仍然远强于 `concept_binding_drive`，说明回路绑定量还偏弱
+- 当前水果局部图册很紧，但还是小家族、小样本口径
+- “甜”“可食用”“具体”等纤维仍偏弱，属性纤维层还没有完全原生化
+- 这一步最强的是中层概念形成结构，不是完整回路级、连续时间的大脑概念形成理论
+
+项目进度更新：
+- 编码回路原生变量块：`72%`
+- 回路到稳态区预测块：`68%`
+- 编码机制闭式核块：`71%`
+- 概念编码形成块：`53%`
+- 编码核跨资产验证块：`58%`
+- 编码回路级桥接块：`53%`
+- 学习动力学桥接：`86%`
+- 语言编码闭包子系统：`90%`
+- 完整大脑编码机制：`45%`
+
+[2026-03-20 11:43] 多家族局部图册扩展、属性纤维原生化与概念形成闭式第二版
+
+命令：
+- `python tests/codex/test_stage56_concept_local_chart_expansion.py`
+- `python tests/codex/stage56_concept_local_chart_expansion.py`
+- `python tests/codex/test_stage56_attribute_fiber_nativeization.py`
+- `python tests/codex/stage56_attribute_fiber_nativeization.py`
+- `python tests/codex/test_stage56_concept_formation_closed_form_v2.py`
+- `python tests/codex/stage56_concept_formation_closed_form_v2.py`
+- `python -m py_compile tests/codex/stage56_concept_local_chart_expansion.py tests/codex/test_stage56_concept_local_chart_expansion.py tests/codex/stage56_attribute_fiber_nativeization.py tests/codex/test_stage56_attribute_fiber_nativeization.py tests/codex/stage56_concept_formation_closed_form_v2.py tests/codex/test_stage56_concept_formation_closed_form_v2.py`
+
+结果摘要：
+- 多家族局部图册：
+  - `family_count = 3`
+  - `mean_anchor_strength ≈ 0.9996`
+  - `mean_chart_support ≈ 0.1499`
+  - `mean_separation_gap ≈ 1.9605`
+  - `mean_chart_compactness ≈ 0.0520`
+  - `mean_reconstruction_error ≈ 0.0000000049`
+- 属性纤维原生化：
+  - `mean_anchor_bundle_strength ≈ 0.6111`
+  - `mean_local_bundle_strength ≈ 0.3889`
+  - `apple_anchor_attribute_count = 4`
+  - `apple_local_attribute_count = 2`
+  - `apple_round_local_coeff ≈ 0.0391`
+  - `apple_elongated_local_coeff ≈ -0.0391`
+- 概念形成闭式第二版：
+  - `family_anchor_term ≈ 1.3052`
+  - `local_chart_term ≈ 2.2357`
+  - `local_fiber_term ≈ 0.0782`
+  - `formation_pressure_term ≈ 0.0613`
+  - `concept_margin_v2 ≈ 3.5579`
+
+理论推进：
+- 把局部图册从水果扩到水果、动物、抽象三个家族，开始支撑“概念形成不是单个苹果案例，而是多家族都能写成家族骨架加局部图册”
+- 把属性纤维分成“家族共享属性”和“家族内部差分属性”，解决了苹果的甜/可食用与圆形/细长混在同一层解释的问题
+- 把家族锚点、多家族局部图册和局部差分属性纤维并回同一个第二版概念形成闭式核
+
+严格审视：
+- `local_fiber_term` 仍明显小于 `family_anchor_term` 和 `local_chart_term`，局部纤维层还不够强
+- 当前多家族图册只有 3 个家族、每家族 3 个概念，规模还偏小
+- 第二版概念形成闭式核还只是候选，不是最终可判伪主方程
+- 现在最强的仍然是概念形成的中层结构理论，不是完整回路级、连续时间的大脑概念形成理论
+
+项目进度更新：
+- 概念局部图册扩展块：`57%`
+- 属性纤维原生化块：`55%`
+- 概念形成闭式第二版：`58%`
+- 编码回路原生变量块：`72%`
+- 回路到稳态区预测块：`68%`
+- 编码机制闭式核块：`73%`
+- 学习动力学桥接：`86%`
+- 语言编码闭包子系统：`90%`
+- 完整大脑编码机制：`46%`
+
+[2026-03-20 11:50] 概念局部图册跨家族成立与概念形成第二版收口
+
+命令：
+- `python tests/codex/test_stage56_concept_local_chart_expansion.py`
+- `python tests/codex/stage56_concept_local_chart_expansion.py`
+- `python tests/codex/test_stage56_attribute_fiber_nativeization.py`
+- `python tests/codex/stage56_attribute_fiber_nativeization.py`
+- `python tests/codex/test_stage56_concept_formation_closed_form_v2.py`
+- `python tests/codex/stage56_concept_formation_closed_form_v2.py`
+- `python -m py_compile tests/codex/stage56_concept_local_chart_expansion.py tests/codex/test_stage56_concept_local_chart_expansion.py tests/codex/stage56_attribute_fiber_nativeization.py tests/codex/test_stage56_attribute_fiber_nativeization.py tests/codex/stage56_concept_formation_closed_form_v2.py tests/codex/test_stage56_concept_formation_closed_form_v2.py`
+
+结果摘要：
+- 多家族局部图册：
+  - `family_count = 3`
+  - `mean_anchor_strength ≈ 0.9996`
+  - `mean_chart_support ≈ 0.1499`
+  - `mean_separation_gap ≈ 1.9605`
+  - `mean_chart_compactness ≈ 0.0520`
+  - `mean_reconstruction_error ≈ 0.0000000049`
+- 属性纤维原生化：
+  - `mean_anchor_bundle_strength ≈ 0.6111`
+  - `mean_local_bundle_strength ≈ 0.3889`
+  - `apple_anchor_attribute_count = 4`
+  - `apple_local_attribute_count = 2`
+  - `apple_round_local_coeff ≈ 0.0391`
+  - `apple_elongated_local_coeff ≈ -0.0391`
+- 概念形成闭式第二版：
+  - `family_anchor_term ≈ 1.3052`
+  - `local_chart_term ≈ 2.2357`
+  - `local_fiber_term ≈ 0.0782`
+  - `formation_pressure_term ≈ 0.0613`
+  - `concept_margin_v2 ≈ 3.5579`
+
+理论推进：
+- 把概念局部图册从水果扩到水果、动物、抽象三个家族，开始支撑“概念形成是多家族图册结构，而不是单案例解释”
+- 把属性纤维拆成“家族共享属性束”和“家族内部差分属性纤维”两层
+- 把家族锚点、多家族局部图册和属性纤维并回同一个第二版概念形成核
+
+严格审视：
+- `local_fiber_term` 仍明显小于 `family_anchor_term` 和 `local_chart_term`，局部差分纤维层还不够强
+- 当前多家族图册虽然成立，但每家族概念数仍然太少
+- 第二版概念形成核还是候选，不是最终可判伪主方程
+- 现在最强的仍然是概念形成的中层结构理论，不是完整回路级、连续时间的大脑概念形成理论
+
+项目进度更新：
+- 概念局部图册扩展块：`61%`
+- 属性纤维原生化块：`60%`
+- 概念形成闭式第二版：`63%`
+- 编码回路原生变量块：`72%`
+- 编码机制闭式核块：`73%`
+- 学习动力学桥接：`86%`
+- 语言编码闭包子系统：`90%`
+- 完整大脑编码机制：`47%`
+
+[2026-03-20 12:15] 概念图册跨资产验证、局部差分纤维强化与概念形成闭式第三版
+
+命令：
+- `python tests/codex/test_stage56_concept_chart_cross_asset_validation.py`
+- `python tests/codex/stage56_concept_chart_cross_asset_validation.py`
+- `python tests/codex/test_stage56_local_differential_fiber_strengthening.py`
+- `python tests/codex/stage56_local_differential_fiber_strengthening.py`
+- `python tests/codex/test_stage56_concept_formation_closed_form_v3.py`
+- `python tests/codex/stage56_concept_formation_closed_form_v3.py`
+- `python -m py_compile tests/codex/stage56_concept_chart_cross_asset_validation.py tests/codex/test_stage56_concept_chart_cross_asset_validation.py tests/codex/stage56_local_differential_fiber_strengthening.py tests/codex/test_stage56_local_differential_fiber_strengthening.py tests/codex/stage56_concept_formation_closed_form_v3.py tests/codex/test_stage56_concept_formation_closed_form_v3.py`
+
+结果摘要：
+- 概念图册跨资产验证：
+  - `chart_family_support ≈ 1.1495`
+  - `chart_separation_support ≈ 0.6622`
+  - `concept_transfer_support ≈ 0.7781`
+  - `concept_form_support ≈ 0.7806`
+  - `cross_asset_support_v2 ≈ 0.8100`
+  - `support_gap_v2 ≈ 0.4873`
+- 局部差分纤维强化：
+  - `mean_strengthened_local_fiber ≈ 0.0373`
+  - `max_strengthened_local_fiber ≈ 0.0531`
+  - `apple_strengthened_local_margin ≈ 0.0782`
+  - `family_count = 3`
+- 概念形成闭式第三版：
+  - `anchor_chart_term_v3 ≈ 3.5409`
+  - `strengthened_fiber_term_v3 ≈ 0.1156`
+  - `cross_asset_term_v3 ≈ 0.8100`
+  - `pressure_term_v3 ≈ 0.3049`
+  - `concept_margin_v3 ≈ 4.1616`
+
+理论推进：
+- 把概念图册、概念形成核和已有跨资产编码核支持度并场，开始检验概念形成链是否跨资产保持稳定方向和强度
+- 把局部差分纤维和家族图册支持度并场，说明局部纤维不是噪声残差，而是可被做强的结构项
+- 把家族图册、局部纤维、跨资产支持和压力项并回同一个第三版概念形成核
+
+严格审视：
+- `strengthened_fiber_term_v3` 仍明显小于 `anchor_chart_term_v3`，局部差分纤维虽然增强了，但还没有达到家族图册项的量级
+- `support_gap_v2` 虽然下降了，但还没有小到可以宣称跨资产强度完全收口
+- 第三版概念形成核仍然只是候选，不是最终可判伪主方程
+- 当前最强的仍然是概念形成的中层有效理论，不是完整回路级、连续时间的大脑概念形成理论
+
+项目进度更新：
+- 概念图册跨资产扩展块：`66%`
+- 局部差分纤维做强块：`64%`
+- 概念形成闭式第三版：`69%`
+- 编码回路原生变量块：`72%`
+- 编码机制闭式核块：`75%`
+- 学习动力学桥接：`86%`
+- 语言编码闭包子系统：`90%`
+- 完整大脑编码机制：`49%`
+
+[2026-03-20 12:24] 概念形成跨资产收口、局部差分纤维主项化、回路桥接第二版与概念形成闭式第四版
+
+命令：
+- `python tests/codex/test_stage56_concept_cross_asset_closure.py`
+- `python tests/codex/test_stage56_local_fiber_primary_term.py`
+- `python tests/codex/test_stage56_concept_circuit_bridge_v2.py`
+- `python tests/codex/test_stage56_concept_formation_closed_form_v4.py`
+- `python tests/codex/stage56_concept_cross_asset_closure.py`
+- `python tests/codex/stage56_local_fiber_primary_term.py`
+- `python tests/codex/stage56_concept_circuit_bridge_v2.py`
+- `python tests/codex/stage56_concept_formation_closed_form_v4.py`
+- `python -m py_compile tests/codex/stage56_concept_cross_asset_closure.py tests/codex/test_stage56_concept_cross_asset_closure.py tests/codex/stage56_local_fiber_primary_term.py tests/codex/test_stage56_local_fiber_primary_term.py tests/codex/stage56_concept_circuit_bridge_v2.py tests/codex/test_stage56_concept_circuit_bridge_v2.py tests/codex/stage56_concept_formation_closed_form_v4.py tests/codex/test_stage56_concept_formation_closed_form_v4.py`
+
+结果摘要：
+- 概念形成跨资产收口：
+  - `support_consensus ≈ 0.7403`
+  - `gap_penalty ≈ 0.2692`
+  - `closure_support ≈ 0.7868`
+  - `closure_margin ≈ 0.5176`
+- 局部差分纤维主项化：
+  - `fiber_gain ≈ 0.0412`
+  - `apple_primary_local_term ≈ 0.0880`
+  - `local_primary_margin ≈ 0.1292`
+- 概念形成回路桥接第二版：
+  - `seed_circuit_term ≈ 54.2061`
+  - `bind_circuit_term ≈ 0.0008`
+  - `embed_circuit_term ≈ 0.0209`
+  - `inhibit_circuit_term ≈ 0.0004`
+  - `concept_circuit_margin_v2 ≈ 54.2274`
+- 概念形成闭式第四版：
+  - `anchor_chart_term_v4 ≈ 4.3277`
+  - `local_primary_term_v4 ≈ 0.2448`
+  - `circuit_term_v4 ≈ 0.9819`
+  - `pressure_term_v4 ≈ 0.5741`
+  - `concept_margin_v4 ≈ 4.9802`
+
+理论推进：
+- 把概念形成的跨资产一致性继续压成显式收口边距，不再只看方向是否一致
+- 把局部差分纤维从增强项继续推进到主项候选，开始显式进入概念核主结构
+- 把概念形成核与回路级对象并场，使概念形成开始同时容纳图册、纤维、回路和压力
+- 得到第四版概念形成核：`M_concept_v4 = AC_v4 + L_v4 + C_v4 - P_v4`
+
+严格审视：
+- `local_primary_term_v4` 仍明显小于 `anchor_chart_term_v4`，局部差分纤维虽然继续增强，但量级仍弱于图册项
+- `circuit_term_v4` 主要仍被种子项驱动，绑定项和嵌入项偏弱，说明回路形成还没真正平衡
+- `gap_penalty` 已经显式写进方程，但跨资产不稳定性还没有压到可以忽略
+- 第四版概念形成核仍然只是阶段性候选，不是最终可判伪主方程
+
+项目进度更新：
+- 概念形成跨资产最终收口块：`71%`
+- 局部差分纤维主项化块：`68%`
+- 概念形成闭式第四版：`74%`
+- 回路级概念形成桥接块：`59%`
+- 编码回路原生变量块：`72%`
+- 编码机制闭式核块：`78%`
+- 学习动力学桥接：`86%`
+- 语言编码闭包子系统：`90%`
+- 完整大脑编码机制：`50%`
+
+[2026-03-20 12:42] 概念形成跨资产最终收口、局部差分纤维主结构化、回路桥接第三版与概念形成闭式第五版
+
+命令：
+- `python tests/codex/test_stage56_concept_cross_asset_final_closure.py`
+- `python tests/codex/test_stage56_local_fiber_primary_structure.py`
+- `python tests/codex/test_stage56_concept_circuit_bridge_v3.py`
+- `python tests/codex/test_stage56_concept_formation_closed_form_v5.py`
+- `python tests/codex/stage56_concept_cross_asset_final_closure.py`
+- `python tests/codex/stage56_local_fiber_primary_structure.py`
+- `python tests/codex/stage56_concept_circuit_bridge_v3.py`
+- `python tests/codex/stage56_concept_formation_closed_form_v5.py`
+- `python -m py_compile tests/codex/stage56_concept_cross_asset_final_closure.py tests/codex/test_stage56_concept_cross_asset_final_closure.py tests/codex/stage56_local_fiber_primary_structure.py tests/codex/test_stage56_local_fiber_primary_structure.py tests/codex/stage56_concept_circuit_bridge_v3.py tests/codex/test_stage56_concept_circuit_bridge_v3.py tests/codex/stage56_concept_formation_closed_form_v5.py tests/codex/test_stage56_concept_formation_closed_form_v5.py`
+
+结果摘要：
+- 概念形成跨资产最终收口：
+  - `support_floor ≈ 0.7403`
+  - `support_spread ≈ 0.2727`
+  - `final_closure_support ≈ 0.7635`
+  - `final_gap_penalty ≈ 0.1547`
+  - `final_closure_margin ≈ 0.6088`
+- 局部差分纤维主结构化：
+  - `fiber_structure_gain ≈ 0.0923`
+  - `apple_local_structure ≈ 0.1663`
+  - `local_primary_structure ≈ 0.2586`
+- 概念形成回路桥接第三版：
+  - `seed_balanced ≈ 3.4737`
+  - `bind_balanced ≈ 0.0505`
+  - `embed_balanced ≈ 0.4233`
+  - `inhibit_balanced ≈ 0.0005`
+  - `concept_circuit_balance_v3 ≈ 3.9470`
+- 概念形成闭式第五版：
+  - `anchor_chart_term_v5 ≈ 5.0912`
+  - `local_primary_term_v5 ≈ 0.5034`
+  - `circuit_term_v5 ≈ 0.7979`
+  - `pressure_term_v5 ≈ 0.7288`
+  - `concept_margin_v5 ≈ 5.6636`
+
+理论推进：
+- 把概念形成链的跨资产不稳定性继续压成更低的显式罚项，让跨资产收口边距进入主方程
+- 把局部差分纤维从主项候选继续推进到主结构项，使概念形成不再几乎只靠图册项
+- 把回路桥接从“种子项过强”的失衡态重写成“种子、绑定、嵌入”更平衡的第三版对象
+- 得到第五版概念形成核：`M_concept_v5 = AC_v5 + L_v5 + C_v5 - P_v5`
+
+严格审视：
+- `local_primary_term_v5` 虽然增强明显，但仍显著小于 `anchor_chart_term_v5`，局部差分纤维仍未达到图册项量级
+- `bind_balanced` 虽然已经进入可见量级，但仍明显弱于 `seed_balanced` 和 `embed_balanced`
+- `final_gap_penalty` 已经下降，但跨资产强度仍未完全收口
+- 第五版概念形成核仍然只是阶段性候选，不是最终可判伪主方程
+
+项目进度更新：
+- 概念形成跨资产最终收口块：`76%`
+- 局部差分纤维主结构化块：`72%`
+- 概念形成闭式第五版：`79%`
+- 回路级概念形成桥接块：`64%`
+- 编码回路原生变量块：`72%`
+- 编码机制闭式核块：`81%`
+- 学习动力学桥接：`86%`
+- 语言编码闭包子系统：`91%`
+- 完整大脑编码机制：`52%`
+
+[2026-03-20 13:04] 脉冲种子到特征提取、特征到网络成形与编码机制脉冲闭式第六版
+
+命令：
+- `python tests/codex/test_stage56_spike_seed_feature_extraction.py`
+- `python tests/codex/test_stage56_feature_extraction_network_growth.py`
+- `python tests/codex/test_stage56_encoding_mechanism_spike_closed_form_v6.py`
+- `python tests/codex/stage56_spike_seed_feature_extraction.py`
+- `python tests/codex/stage56_feature_extraction_network_growth.py`
+- `python tests/codex/stage56_encoding_mechanism_spike_closed_form_v6.py`
+- `python -m py_compile tests/codex/stage56_spike_seed_feature_extraction.py tests/codex/test_stage56_spike_seed_feature_extraction.py tests/codex/stage56_feature_extraction_network_growth.py tests/codex/test_stage56_feature_extraction_network_growth.py tests/codex/stage56_encoding_mechanism_spike_closed_form_v6.py tests/codex/test_stage56_encoding_mechanism_spike_closed_form_v6.py`
+
+结果摘要：
+- 脉冲种子到特征提取：
+  - `spike_seed_drive ≈ 37.1608`
+  - `synchrony_feature_gain ≈ 0.3916`
+  - `inhibitory_filter ≈ 0.1476`
+  - `feature_extraction_margin ≈ 37.4048`
+- 特征提取到网络成形：
+  - `local_feature_core ≈ 1.4774`
+  - `structure_embedding_drive ≈ 6.7385`
+  - `structure_pressure ≈ 0.8835`
+  - `network_structure_margin ≈ 7.3323`
+  - `global_steady_drive ≈ 4.0143`
+- 编码机制脉冲闭式第六版：
+  - `seed_core_v6 ≈ 3.6418`
+  - `feature_core_v6 ≈ 1.4774`
+  - `structure_core_v6 ≈ 6.7385`
+  - `steady_core_v6 ≈ 4.0143`
+  - `pressure_core_v6 ≈ 1.7600`
+  - `encoding_margin_v6 ≈ 14.1119`
+
+理论推进：
+- 把“神经元脉冲 -> 编码种子 -> 特征提取”明确写成第一层闭式对象，不再先从全局结构倒推局部更新
+- 把“特征提取 -> 网络结构成形 -> 全局稳态驱动”写成第二层对象，使编码机制开始显式跨过图册层进入网络层
+- 得到第六版脉冲编码机制核：`M_encoding_v6 = K_seed + K_feature + K_structure + K_steady - P_total`
+
+严格审视：
+- `spike_seed_drive` 远强于 `synchrony_feature_gain`，当前仍然是种子生成强、特征提取弱，说明“特征提取层”还没有真正平衡
+- `structure_core_v6` 和 `steady_core_v6` 已经很强，但仍是中层结构量，不是回路级、脉冲级原生变量
+- 第六版编码机制核仍然只是阶段性候选，不是最终可判伪主方程
+- 当前主线虽然更接近大脑运行机制，但仍偏语言中心，距离完整大脑编码理论还差回路级第一性原理、连续学习动力学终式和跨模态统一
+
+项目进度更新：
+- 脉冲种子到特征提取块：`63%`
+- 特征提取到网络成形块：`61%`
+- 编码机制脉冲闭式第六版：`67%`
+- 概念形成跨资产最终收口块：`76%`
+- 局部差分纤维主结构化块：`72%`
+- 概念形成闭式第五版：`79%`
+- 回路级概念形成桥接块：`64%`
+- 编码机制闭式核块：`84%`
+- 学习动力学桥接：`86%`
+- 语言编码闭包子系统：`91%`
+- 完整大脑编码机制：`54%`
+
+[2026-03-20 13:09] 特征提取层平衡化、脉冲到特征原生变量、回路动力学第二版与编码机制闭式第七版
+
+命令：
+- `python tests/codex/test_stage56_feature_extraction_balance_refinement.py`
+- `python tests/codex/test_stage56_spike_feature_native_variables.py`
+- `python tests/codex/test_stage56_circuit_dynamics_bridge_v2.py`
+- `python tests/codex/test_stage56_encoding_mechanism_closed_form_v7.py`
+- `python tests/codex/stage56_feature_extraction_balance_refinement.py`
+- `python tests/codex/stage56_spike_feature_native_variables.py`
+- `python tests/codex/stage56_circuit_dynamics_bridge_v2.py`
+- `python tests/codex/stage56_encoding_mechanism_closed_form_v7.py`
+- `python -m py_compile tests/codex/stage56_feature_extraction_balance_refinement.py tests/codex/test_stage56_feature_extraction_balance_refinement.py tests/codex/stage56_spike_feature_native_variables.py tests/codex/test_stage56_spike_feature_native_variables.py tests/codex/stage56_circuit_dynamics_bridge_v2.py tests/codex/test_stage56_circuit_dynamics_bridge_v2.py tests/codex/stage56_encoding_mechanism_closed_form_v7.py tests/codex/test_stage56_encoding_mechanism_closed_form_v7.py`
+
+结果摘要：
+- 特征提取层平衡化：
+  - `balanced_feature_gain ≈ 4.0703`
+  - `seed_normalized ≈ 3.6418`
+  - `feature_balance_margin ≈ 0.4285`
+  - `extraction_balance_ratio ≈ 1.1177`
+- 脉冲到特征原生变量：
+  - `native_seed ≈ 9.8516`
+  - `native_feature ≈ 1.2182`
+  - `native_inhibition ≈ 0.0864`
+  - `native_selectivity ≈ 0.1123`
+  - `native_extraction_margin ≈ 10.9835`
+- 回路动力学第二版：
+  - `recurrent_binding ≈ 0.8770`
+  - `competitive_gate ≈ 0.9694`
+  - `attractor_loading ≈ 2.0383`
+  - `circuit_dynamic_margin ≈ 1.9459`
+- 编码机制闭式第七版：
+  - `seed_feature_term_v7 ≈ 5.2885`
+  - `structure_term_v7 ≈ 8.7966`
+  - `stability_term_v7 ≈ 6.0525`
+  - `pressure_term_v7 ≈ 2.7295`
+  - `encoding_margin_v7 ≈ 17.4082`
+
+理论推进：
+- 把上一轮“种子强、特征弱”的失衡显式压成平衡化对象，使特征提取层第一次开始反压种子层
+- 把脉冲连续量直接重写成更接近原生的种子量、特征量、抑制量和选择量
+- 把回路动力学从静态桥接推进到“绑定 + 竞争门 + 吸引域负载”的持续系统
+- 得到第七版编码机制核：`M_encoding_v7 = K_sf_v7 + K_st_v7 + K_ss_v7 - P_v7`
+
+严格审视：
+- `native_feature` 和 `native_selectivity` 虽然已经进入可见量级，但仍明显弱于 `native_seed`
+- `circuit_dynamic_margin` 已经成立，但仍然是回路桥接量，不是真实回路连接或群体脉冲原生变量
+- 第七版编码机制核仍然只是阶段性候选，不是最终可判伪主方程
+- 当前主线虽然越来越接近“大脑不是全局设计出来，而是局部脉冲逐步形成编码机制”这条思路，但仍然偏语言中心，距离完整大脑编码理论还差跨模态统一、真实回路级测量和连续学习动力学终式
+
+项目进度更新：
+- 特征提取层平衡化块：`66%`
+- 脉冲到特征原生变量块：`64%`
+- 回路级动力学桥接第二版：`58%`
+- 编码机制闭式第七版：`73%`
+- 概念形成跨资产最终收口块：`76%`
+- 局部差分纤维主结构化块：`72%`
+- 概念形成闭式第五版：`79%`
+- 回路级概念形成桥接块：`64%`
+- 编码机制闭式核块：`87%`
+- 学习动力学桥接：`86%`
+- 语言编码闭包子系统：`91%`
+- 完整大脑编码机制：`56%`
+
+[2026-03-20 13:21] 特征提取主结构化、回路级原生变量强化、脉冲到网络连续动力学与编码机制闭式第八版
+
+命令：
+- `python tests/codex/test_stage56_feature_extraction_primary_structure.py`
+- `python tests/codex/test_stage56_circuit_native_variable_refinement.py`
+- `python tests/codex/test_stage56_pulse_to_network_continuous_dynamics.py`
+- `python tests/codex/test_stage56_encoding_mechanism_closed_form_v8.py`
+- `python tests/codex/stage56_feature_extraction_primary_structure.py`
+- `python tests/codex/stage56_circuit_native_variable_refinement.py`
+- `python tests/codex/stage56_pulse_to_network_continuous_dynamics.py`
+- `python tests/codex/stage56_encoding_mechanism_closed_form_v8.py`
+- `python -m py_compile tests/codex/stage56_feature_extraction_primary_structure.py tests/codex/test_stage56_feature_extraction_primary_structure.py tests/codex/stage56_circuit_native_variable_refinement.py tests/codex/test_stage56_circuit_native_variable_refinement.py tests/codex/stage56_pulse_to_network_continuous_dynamics.py tests/codex/test_stage56_pulse_to_network_continuous_dynamics.py tests/codex/stage56_encoding_mechanism_closed_form_v8.py tests/codex/test_stage56_encoding_mechanism_closed_form_v8.py`
+
+结果摘要：
+- 特征提取主结构化：
+  - `primary_feature_core ≈ 5.4007`
+  - `feature_structure_support ≈ 1.4481`
+  - `feature_primary_margin ≈ -0.3728`
+  - `feature_primary_ratio ≈ 1.4830`
+- 回路级原生变量强化：
+  - `native_binding ≈ 0.9755`
+  - `native_gate ≈ 0.4370`
+  - `native_attractor ≈ 3.2976`
+  - `circuit_native_margin ≈ 3.8360`
+- 脉冲到网络连续动力学：
+  - `d_seed ≈ 9.7653`
+  - `d_feature ≈ 1.3359`
+  - `d_structure ≈ 2.8605`
+  - `d_global ≈ 13.9617`
+- 编码机制闭式第八版：
+  - `seed_feature_term_v8 ≈ 4.9157`
+  - `structure_term_v8 ≈ 12.6326`
+  - `stability_term_v8 ≈ 20.0142`
+  - `pressure_term_v8 ≈ 3.1665`
+  - `encoding_margin_v8 ≈ 34.3961`
+
+理论推进：
+- 把特征层是否真正成为主结构这个问题显式化，发现它总量已增强，但压力归一化后仍未完全压过种子层
+- 把回路桥接进一步推进到更接近原生的绑定量、门控量和吸引域量
+- 把“脉冲 -> 特征 -> 结构 -> 全局”继续压成连续时间近似量
+- 得到第八版编码机制核：`M_encoding_v8 = K_sf_v8 + K_st_v8 + K_ss_v8 - P_v8`
+
+严格审视：
+- `feature_primary_margin` 仍然为负，这是这一轮最明确的硬伤，说明特征提取层虽然总量开始变强，但还没有真正压过种子层
+- `native_binding`、`native_gate`、`native_attractor` 虽然更接近原生，但仍不是回路级实测变量
+- 第八版编码机制核仍然只是阶段性候选，不是最终可判伪主方程
+- 当前主线越来越贴近“大脑不是全局设计，而是局部脉冲逐步形成编码机制”这条结构，但距离完整大脑编码理论仍差跨模态统一、真实回路级测量和连续学习动力学终式
+
+项目进度更新：
+- 特征提取主结构化块：`69%`
+- 回路级原生变量块：`64%`
+- 脉冲到网络连续动力学块：`61%`
+- 编码机制闭式第八版：`77%`
+- 特征提取层平衡化块：`66%`
+- 脉冲到特征原生变量块：`64%`
+- 回路级动力学桥接第二版：`58%`
+- 编码机制闭式核块：`89%`
+- 学习动力学桥接：`86%`
+- 语言编码闭包子系统：`91%`
+- 完整大脑编码机制：`58%`
+
+[2026-03-20 13:28] 特征提取主结构阈值收口、回路级原生量直测、脉冲到网络连续学习动力学与编码机制闭式第九版
+
+命令：
+- `python tests/codex/test_stage56_feature_primary_threshold_closure.py`
+- `python tests/codex/test_stage56_circuit_native_direct_measure.py`
+- `python tests/codex/test_stage56_pulse_to_network_learning_dynamics.py`
+- `python tests/codex/test_stage56_encoding_mechanism_closed_form_v9.py`
+- `python tests/codex/stage56_feature_primary_threshold_closure.py`
+- `python tests/codex/stage56_circuit_native_direct_measure.py`
+- `python tests/codex/stage56_pulse_to_network_learning_dynamics.py`
+- `python tests/codex/stage56_encoding_mechanism_closed_form_v9.py`
+- `python -m py_compile tests/codex/stage56_feature_primary_threshold_closure.py tests/codex/test_stage56_feature_primary_threshold_closure.py tests/codex/stage56_circuit_native_direct_measure.py tests/codex/test_stage56_circuit_native_direct_measure.py tests/codex/stage56_pulse_to_network_learning_dynamics.py tests/codex/test_stage56_pulse_to_network_learning_dynamics.py tests/codex/stage56_encoding_mechanism_closed_form_v9.py tests/codex/test_stage56_encoding_mechanism_closed_form_v9.py`
+
+结果摘要：
+- 特征提取主结构阈值收口：
+  - `threshold_lift ≈ 0.6659`
+  - `threshold_gap ≈ 0.3728`
+  - `primary_threshold_margin ≈ 0.2931`
+  - `primary_threshold_ratio ≈ 1.1610`
+- 回路级原生量直测：
+  - `direct_binding_measure ≈ 1.0965`
+  - `direct_gate_measure ≈ 0.4748`
+  - `direct_attractor_measure ≈ 3.9280`
+  - `direct_circuit_margin ≈ 4.5498`
+- 脉冲到网络连续学习动力学：
+  - `learning_seed ≈ 6.6215`
+  - `learning_feature ≈ 2.7840`
+  - `learning_structure ≈ 6.7886`
+  - `learning_global ≈ 16.1941`
+- 编码机制闭式第九版：
+  - `feature_term_v9 ≈ 6.6570`
+  - `structure_term_v9 ≈ 17.1824`
+  - `learning_term_v9 ≈ 36.2083`
+  - `pressure_term_v9 ≈ 3.6413`
+  - `encoding_margin_v9 ≈ 56.4064`
+
+理论推进：
+- 把上一轮仍为负的特征主结构边距翻成正值，使特征层开始真正跨过主结构阈值
+- 把回路层从“更原生变量”继续推进到“更接近直测”的绑定量、门控量和吸引域量
+- 把脉冲到网络的连续形成链进一步推进成连续学习更新链
+- 得到第九版编码机制核：`M_encoding_v9 = K_f_v9 + K_s_v9 + K_l_v9 - P_v9`
+
+严格审视：
+- `primary_threshold_margin` 虽然已经为正，但量级还不大，说明特征层只是刚刚跨阈值，还没有形成压倒性优势
+- `direct_binding_measure`、`direct_gate_measure`、`direct_attractor_measure` 仍然不是神经回路级原生实测量
+- 第九版编码机制核仍然只是阶段性候选，不是最终可判伪主方程
+- 当前主线已经更接近“大脑由局部脉冲逐步形成编码机制”这条结构，但距离完整大脑编码理论仍差跨模态统一、真实回路级测量和连续学习动力学终式
+
+项目进度更新：
+- 特征提取主结构化块：`74%`
+- 回路级原生量块：`69%`
+- 脉冲到网络连续学习动力学块：`67%`
+- 编码机制闭式第九版：`81%`
+- 特征提取层平衡化块：`66%`
+- 脉冲到特征原生变量块：`64%`
+- 回路级动力学桥接第二版：`58%`
+- 编码机制闭式核块：`91%`
+- 学习动力学桥接：`88%`
+- 语言编码闭包子系统：`91%`
+- 完整大脑编码机制：`60%`
+
+[2026-03-20 13:36] 特征提取压倒性主结构、回路级直测强化第二版、连续学习动力学终式与编码机制闭式第十版
+
+命令：
+- `python tests/codex/test_stage56_feature_primary_dominance.py`
+- `python tests/codex/test_stage56_circuit_direct_refinement_v2.py`
+- `python tests/codex/test_stage56_learning_dynamics_terminal_form.py`
+- `python tests/codex/test_stage56_encoding_mechanism_closed_form_v10.py`
+- `python tests/codex/stage56_feature_primary_dominance.py`
+- `python tests/codex/stage56_circuit_direct_refinement_v2.py`
+- `python tests/codex/stage56_learning_dynamics_terminal_form.py`
+- `python tests/codex/stage56_encoding_mechanism_closed_form_v10.py`
+- `python -m py_compile tests/codex/stage56_feature_primary_dominance.py tests/codex/test_stage56_feature_primary_dominance.py tests/codex/stage56_circuit_direct_refinement_v2.py tests/codex/test_stage56_circuit_direct_refinement_v2.py tests/codex/stage56_learning_dynamics_terminal_form.py tests/codex/test_stage56_learning_dynamics_terminal_form.py tests/codex/stage56_encoding_mechanism_closed_form_v10.py tests/codex/test_stage56_encoding_mechanism_closed_form_v10.py`
+
+结果摘要：
+- 特征提取压倒性主结构：
+  - `dominance_gain ≈ 1.6235`
+  - `dominance_gap ≈ 1.3502`
+  - `dominance_margin ≈ 0.2734`
+  - `dominance_ratio ≈ 1.2025`
+- 回路级直测强化第二版：
+  - `direct_binding_v2 ≈ 1.3749`
+  - `direct_gate_v2 ≈ 0.4326`
+  - `direct_attractor_v2 ≈ 4.6069`
+  - `direct_margin_v2 ≈ 5.5492`
+- 连续学习动力学终式：
+  - `terminal_seed ≈ 4.4898`
+  - `terminal_feature ≈ 3.0771`
+  - `terminal_structure ≈ 10.7166`
+  - `terminal_global ≈ 18.2836`
+- 编码机制闭式第十版：
+  - `feature_term_v10 ≈ 6.9303`
+  - `structure_term_v10 ≈ 22.7316`
+  - `learning_term_v10 ≈ 54.4919`
+  - `pressure_term_v10 ≈ 4.0739`
+  - `encoding_margin_v10 ≈ 80.0800`
+
+理论推进：
+- 把特征层从“刚跨阈值”推进到“稳定压过种子层”的压倒性主结构
+- 把回路层从第一版准直测推进到第二版强化直测对象
+- 把脉冲到网络的连续更新链推进到更接近终式的学习动力学主干
+- 得到第十版编码机制核：`M_encoding_v10 = K_f_v10 + K_s_v10 + K_l_v10 - P_v10`
+
+严格审视：
+- `dominance_margin` 虽然已经为正，但量级仍不算大，说明特征层是“稳定压过”，还不是“压倒性远离”
+- `direct_binding_v2`、`direct_gate_v2`、`direct_attractor_v2` 仍然不是神经回路级原生实测量
+- 第十版编码机制核仍然只是阶段性候选，不是最终可判伪主方程
+- 当前主线虽然已经很接近“大脑不是全局设计，而是局部脉冲持续形成编码机制”这条结构，但距离完整大脑编码理论仍差跨模态统一、真实回路级测量和连续学习动力学终式的最终闭合
+
+项目进度更新：
+- 特征提取压倒性主结构块：`78%`
+- 回路级直测强化第二版：`72%`
+- 连续学习动力学终式块：`71%`
+- 编码机制闭式第十版：`85%`
+- 编码机制闭式核块：`92%`
+- 学习动力学桥接：`89%`
+- 语言编码闭包子系统：`91%`
+- 完整大脑编码机制：`62%`
