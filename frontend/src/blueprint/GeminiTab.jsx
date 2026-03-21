@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Brain, ChevronDown, ChevronRight, Activity } from 'lucide-react';
 import { FeatureEmergenceAnimation } from './FeatureEmergenceAnimation';
 import QwenAblationReport from './QwenAblationReport';
@@ -118,6 +118,8 @@ import LocalPulseEndToEndRegionFamilyGeneratorNetworkDashboard from './LocalPuls
 import DnnBrainPuzzleBridgeDashboard from './DnnBrainPuzzleBridgeDashboard';
 import DProblemAtlasDashboard from './DProblemAtlasDashboard';
 import AgiConceptS1ToS7Summary from './AgiConceptS1ToS7Summary';
+import FirstPrinciplesTheoryDashboard from './FirstPrinciplesTheoryDashboard';
+
 
 export const GeminiTab = () => {
     const [expandedSteps, setExpandedSteps] = useState({});
@@ -341,7 +343,6 @@ export const GeminiTab = () => {
                     details: { syntax_head_target: "Local Diagonal [0, 0, 1, 2, 3]", logic_head_target: "Global Subject Hold [0, 0, 0, 0, 0]", syntax_pollution_residual: 0.000000, conclusion: "Absolute Dimension Isolation" }
                 }
             ]
-        }
         },
         {
             id: 'phase_7',
@@ -447,6 +448,12 @@ export const GeminiTab = () => {
                 <div style={{ marginBottom: '28px' }}>
                     <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#c084fc', marginBottom: '12px', borderBottom: '1px solid rgba(192,132,252,0.3)', paddingBottom: '8px' }}>一点五、核心概念探究与局限反思</div>
                     <AgiConceptS1ToS7Summary />
+                </div>
+
+                {/* 唯象到第一性原理跃迁 */}
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981', marginBottom: '12px', borderBottom: '1px solid rgba(16,185,129,0.3)', paddingBottom: '8px' }}>一点八、跨越唯象局限：AGI第一性原理验证</div>
+                    <FirstPrinciplesTheoryDashboard />
                 </div>
 
                 {/* 2. 完整路线图 */}
