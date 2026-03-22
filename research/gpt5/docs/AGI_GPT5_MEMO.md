@@ -21757,6 +21757,610 @@ Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
 
 只有沿着这四块连续推进，项目才不会再次退回“内部自洽分数系统”的舒适区，而会继续逼近“能被外部反例、独立观测面和脑编码约束共同支撑的第一性原理主核”。
 
+---
+
+## 2026-03-22 16:09 Stage89 最优律领先幅度拉大块
+
+### 本轮命令记录
+
+- 2026-03-22 15:58
+  - `Get-Content tests/codex/stage82_novelty_generalization_repair.py`
+  - `Get-Content tests/codex/stage86_optimal_law_robustness_scan.py`
+  - `Get-Content tests/codex/test_stage86_optimal_law_robustness_scan.py`
+  - `rg -n "best_law|margin|sqrt|rational|log|law" tests/codex/...`
+- 2026-03-22 16:02
+  - 新增 `tests/codex/stage89_law_margin_separation.py`
+  - 新增 `tests/codex/test_stage89_law_margin_separation.py`
+- 2026-03-22 16:04
+  - `python tests/codex/stage89_law_margin_separation.py`
+  - 手动导入执行 `test_stage89_law_margin_separation`
+- 2026-03-22 16:07
+  - 手动导入执行 `test_stage86_optimal_law_robustness_scan`
+  - 更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+  - 更新 `README.md`
+
+### 本轮核心结果
+
+`Stage89（第八十九阶段）` 的目标，不是再说一句“sqrt 领先”，而是回答更硬的问题：
+
+**`sqrt（平方根）` 到底只是单点分数略高，还是在多家族、多轴比较里持续占优。**
+
+当前结果是：
+
+- `separated_best_law_name = sqrt`
+- `family_win_rate = 1.0000`
+- `mean_pairwise_margin = 0.6748`
+- `minimum_pairwise_margin = 0.6368`
+- `dominance_axis_coverage = 1.0000`
+- `robustness_anchor = 0.9777`
+- `law_margin_separation_score = 0.8612`
+- `status_short = law_margin_separation_ready`
+
+这说明当前关于 `sqrt` 的判断，已经从：
+
+- `best score 稍微更高`
+
+推进到了：
+
+- `在 10 个家族场景里持续第一`
+- `在质量、安全、修复增益、耦合和有界驱动多条轴上同时占优`
+
+### 本轮理论数学研究进度
+
+这轮把“最优律”问题从单一排序，推进成了“多轴优势分离”问题。
+
+核心做法是：
+
+1. 对每个场景家族，不只看 `repaired_novelty_score（修复后新颖分数）`
+2. 同时比较：
+   - `quality_gap（质量差）`
+   - `safety_gap（安全差）`
+   - `repair_gain_gap（修复增益差）`
+   - `coupling_gap（耦合差）`
+   - `bounded_drive_gap（有界驱动差）`
+3. 把这些差额压成 `pairwise_margin（成对领先幅度）`
+4. 再在全体场景家族上统计：
+   - `family_win_rate（家族胜率）`
+   - `mean_pairwise_margin（平均领先幅度）`
+   - `minimum_pairwise_margin（最小领先幅度）`
+   - `dominance_axis_coverage（主导轴覆盖率）`
+
+也就是说，当前 `Stage89` 的贡献不是“改了原律”，而是：
+
+**把候选律比较，从单点分数竞争，推进成多轴优势的结构化分离。**
+
+### 最严格的问题、硬伤和瓶颈
+
+最严格地看，这轮仍然有 4 个不能回避的限制：
+
+1. `Stage89` 仍然是内部家族扫描
+   - 不是外部真实分布验证
+   - 所以它证明的是“内部多轴持续占优”，不是“外部泛化已经证实”
+
+2. 领先幅度虽然被拉开了
+   - 但这是“结构化优势幅度”
+   - 不是直接从独立数据拟合出的真实效应量
+
+3. 项目总瓶颈没有因为 `Stage89` 而消失
+   - 当前统一主核最弱轴仍是 `brain_grounding（脑编码落地）`
+   - `Stage84（第八十四阶段）` 的最坏反例也还活着
+
+4. 证据独立性问题仍然没根治
+   - `Stage89` 让“最优律判断”更硬了
+   - 但还没有把高层结论从摘要回灌里完全拆出来
+
+### 接下来不该只做的小功能
+
+下一步最该直接推进的是：
+
+1. `Stage90`
+   - `independent_observation_planes（独立观测面拆层块）`
+   - 目标：让“最优律占优”“统一主核得分”“可判伪边界”分别来自不同观测面
+
+2. `Stage91`
+   - `counterexample_attack_suite（强攻击测试包）`
+   - 目标：把参数扰动、顺序打乱、场景替换、边界反例做成统一攻击矩阵
+
+3. `Stage92`
+   - `brain_grounding_counterexample_pack（脑编码落地反例包）`
+   - 目标：直接攻击当前最弱轴 `brain_grounding（脑编码落地）`
+
+4. `Stage93`
+   - `law_to_theorem_bridge（候选律到定理桥接块）`
+   - 目标：把 `sqrt` 的多轴持续占优，进一步压成更接近定理前提的形式
+
+只有继续把这四块连起来，项目才会从“内部多轴优势已成形”，继续逼近“独立证据支持、强攻击下仍成立、并能向定理化主核过渡”的下一阶段。
+
+---
+
+## 2026-03-22 16:24 Stage90 独立观测面拆层块
+
+### 本轮命令记录
+
+- 2026-03-22 16:11
+  - `Get-Content tests/codex/stage87_evidence_independence_audit.py`
+  - `Get-Content tests/codex/test_stage87_evidence_independence_audit.py`
+  - `Get-Content tests/codex/stage71_first_principles_unification.py`
+  - `rg -n "independent|observation|plane|evidence|backfeed|summary" ...`
+- 2026-03-22 16:14
+  - 读取 `Stage72/73/77/78/79/81/82/84/87/88/89` 关键摘要指标
+- 2026-03-22 16:17
+  - 新增 `tests/codex/stage90_independent_observation_planes.py`
+  - 新增 `tests/codex/test_stage90_independent_observation_planes.py`
+- 2026-03-22 16:20
+  - `python tests/codex/stage90_independent_observation_planes.py`
+  - 手动导入执行 `test_stage90_independent_observation_planes`
+  - 手动导入执行 `test_stage86_optimal_law_robustness_scan`
+- 2026-03-22 16:23
+  - 更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+  - 更新 `README.md`
+
+### 本轮核心结果
+
+`Stage90（第九十阶段）` 的目标，是把当前统一主线拆成真正可点名的四个观测面：
+
+1. `language_plane（语言观测面）`
+2. `brain_plane（脑编码观测面）`
+3. `intelligence_plane（智能闭合观测面）`
+4. `falsification_plane（可判伪观测面）`
+
+当前读数是：
+
+- `plane_signal_mean = 0.8414`
+- `surface_anchor_independence = 1.0000`
+- `source_plane_separation = 1.0000`
+- `exclusive_anchor_ratio = 1.0000`
+- `variable_coupling_overlap = 0.4966`
+- `backfeed_risk_after_split = 0.5759`
+- `independent_observation_planes_score = 0.9019`
+- `status_short = independent_observation_planes_ready`
+
+### 本轮理论数学研究进度
+
+这轮最关键的推进，不是把总分再拉高，而是把“证据独立性”拆成了两层不同的问题：
+
+1. **观测锚点能否分离**
+   - 当前答案是：能
+   - 四个观测面的锚点集合已经做到 `surface_anchor_independence = 1.0`
+
+2. **底层状态变量是否仍强耦合**
+   - 当前答案是：仍然耦合很重
+   - `variable_coupling_overlap = 0.4966`
+
+所以这轮最重要的结论是：
+
+**项目现在已经能把“观测面”拆开，但还不能把“底层状态系统”说成独立。**
+
+也就是说，`Stage90` 真正回答的是：
+
+- `观测面独立` 可以成立
+- `证据链完全独立` 还不能成立
+
+这比之前只说“摘要回灌风险高”更进了一步，因为现在已经知道问题具体卡在哪：
+
+- 不是完全没拆层
+- 而是拆层后，底层变量重叠还太高
+
+### 最严格的问题、硬伤和瓶颈
+
+最严格地看，这轮虽然推进很实，但硬伤也被照得更亮了：
+
+1. `surface_anchor_independence = 1.0` 不能等于“理论已被独立证明”
+   - 它只说明观测锚点已经可以拆开
+   - 不说明底层生成律已经独立
+
+2. `variable_coupling_overlap = 0.4966` 仍然偏高
+   - 接近一半的底层状态变量在多个观测面里共享
+   - 这正是为什么项目还不能说“证据链闭合独立”
+
+3. `backfeed_risk_after_split = 0.5759`
+   - 说明拆层后风险下降了
+   - 但仍远没有降到低风险区
+
+4. 当前最弱轴仍然是 `brain_grounding（脑编码落地）`
+   - 所以接下来最危险的不是“观测面没拆开”
+   - 而是“脑编码这一面会不会直接击穿统一主线”
+
+### 接下来不该只做的小功能
+
+下一步最该直接推进的是：
+
+1. `Stage91`
+   - `counterexample_attack_suite（强攻击测试包）`
+   - 目标：检查四个观测面是否会被同一个反例同时打穿
+
+2. `Stage92`
+   - `brain_grounding_counterexample_pack（脑编码落地反例包）`
+   - 目标：直接攻击当前最弱轴 `brain_grounding（脑编码落地）`
+
+3. `Stage93`
+   - `law_to_theorem_bridge（候选律到定理桥接块）`
+   - 目标：把 `sqrt` 的多轴持续占优推进成更接近定理前提的表达
+
+4. `Stage94`
+   - `cross_plane_failure_coupling_map（跨观测面失效耦合图谱）`
+   - 目标：明确哪些失败会跨语言、脑编码、智能、判伪四面同时扩散
+
+只有把这四块顺着打下去，项目才会从“观测面可以独立阅读”，继续逼近“底层证据链也能更独立、反例也更强、理论也更接近第一性原理”的下一阶段。
+
+---
+
+## 2026-03-22 16:58 Stage91 强攻击测试包与测试体系总整理
+
+### 本轮命令记录
+
+- 2026-03-22 16:28
+  - `Get-Content tests/codex/stage90_independent_observation_planes.py`
+  - `Get-Content tests/codex/stage84_falsifiable_computation_core.py`
+  - `Get-Content tests/codex/stage88_external_counterexample_expansion.py`
+  - `rg -n "attack|counterexample|family|plane|coupling|failure|trigger" ...`
+- 2026-03-22 16:34
+  - 读取 `Stage73/84/88/89/90` 关键摘要指标
+- 2026-03-22 16:38
+  - 新增 `tests/codex/stage91_counterexample_attack_suite.py`
+  - 新增 `tests/codex/test_stage91_counterexample_attack_suite.py`
+- 2026-03-22 16:42
+  - `python tests/codex/stage91_counterexample_attack_suite.py`
+  - 手动导入执行 `test_stage91_counterexample_attack_suite`
+- 2026-03-22 16:46
+  - 新增 `research/gpt5/docs/AGI_GPT5_TEST_SYSTEM.md`
+  - 更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+  - 更新 `README.md`
+- 2026-03-22 16:52
+  - 核对 `AGI_GPT5_TEST_SYSTEM.md`
+  - 核对 `AGI_GPT5_ICSPB.md`
+  - 核对 `README.md`
+
+### 本轮核心结果
+
+`Stage91（第九十一阶段）` 已经把当前最关键的强攻击统一成一套测试包，包括：
+
+1. `parameter_perturbation（参数扰动）`
+2. `order_shuffle_attack（顺序打乱攻击）`
+3. `scenario_replacement_attack（场景替换攻击）`
+4. `boundary_overload_attack（边界过载攻击）`
+5. `cross_plane_coupling_resonance（跨平面耦合共振）`
+6. `brain_grounding_shock（脑编码冲击）`
+
+当前结果是：
+
+- `attack_suite_coverage = 1.0000`
+- `multi_plane_breach_rate = 1.0000`
+- `hardest_attack_name = order_shuffle_attack`
+- `hardest_attack_intensity = 0.6081`
+- `weakest_plane_name = falsification_plane`
+- `weakest_plane_attack_floor = 0.4331`
+- `system_attack_survival_score = 0.5193`
+- `counterexample_attack_suite_score = 0.7675`
+- `status_short = counterexample_attack_suite_ready`
+
+这说明当前理论已经不是“只有单点反例才会出问题”，而是在强攻击矩阵下会出现多平面同步掉线。
+
+### 整个测试体系整理
+
+这轮我把整个测试体系单独整理成了：
+
+- `research/gpt5/docs/AGI_GPT5_TEST_SYSTEM.md`
+
+当前测试体系已经能清楚分成 5 层：
+
+1. `机制观测层`
+   - `Stage72/77/78/79`
+   - 负责回答语言、路由、冲突是不是可观测、可计算对象
+
+2. `失效与修复层`
+   - `Stage80/82/89`
+   - 负责回答最坏裂缝在哪里、修复律是不是持续领先
+
+3. `可判伪与反例层`
+   - `Stage73/84/88/91`
+   - 负责回答反例是否真的能接触主核、打穿多个观测面
+
+4. `证据独立性层`
+   - `Stage87/90`
+   - 负责回答有没有摘要回灌、观测面能不能拆开
+
+5. `统一总核层`
+   - `Stage71`
+   - 负责回答整个统一主线是否还站得住、最弱轴是什么
+
+### 当前理论要成为第一性原理，还缺什么
+
+按最严格标准，当前理论离“第一性原理理论”还差 4 件核心东西：
+
+1. `独立证据链`
+   - 现在有独立观测面
+   - 但还没有真正独立的高层证据链
+
+2. `强外部反例`
+   - 现在有更强的内部反例族和攻击矩阵
+   - 但还不是独立数据、独立分布、独立刺激
+
+3. `脑编码闭合`
+   - 当前最弱轴仍然是 `brain_grounding（脑编码落地）`
+   - 说明统一变量和神经实现层之间还没完全闭合
+
+4. `定理桥`
+   - `sqrt` 现在已是强候选
+   - 但还没有被压成带前提、边界、失败条件的更接近定理表达
+
+### 当前最硬的问题
+
+最严格地看，当前还有这些硬伤：
+
+1. `Stage71` 仍然有明显摘要回灌
+2. `Stage88/91` 仍然不是外部真实分布反例
+3. `Stage90` 说明底层变量耦合仍然接近 `0.50`
+4. `Stage91` 说明跨平面同步失效是真实存在的
+5. `Stage84` 仍然处在 `transition（过渡态）`
+6. 当前最弱轴仍然是 `brain_grounding（脑编码落地）`
+
+### 如何解决
+
+下一步最合理的连续路线已经很清楚：
+
+1. `Stage92`
+   - `brain_grounding_counterexample_pack（脑编码落地反例包）`
+   - 目标：直接攻击当前最弱轴
+
+2. `Stage93`
+   - `law_to_theorem_bridge（候选律到定理桥接块）`
+   - 目标：把当前最强候选律推进成更接近定理前提的表达
+
+3. `Stage94`
+   - `cross_plane_failure_coupling_map（跨观测面失效耦合图谱）`
+   - 目标：把“多平面同步掉线”正式写成传播图谱
+
+4. `Stage95`
+   - `external_distribution_counterexample_pack（外部分布反例包）`
+   - 目标：让强攻击逐步脱离内部手工构造
+
+5. `Stage96`
+   - `independent_evidence_core（独立证据主核）`
+   - 目标：让高层统一判断不再主要依赖摘要回灌
+
+### 最严格的总判断
+
+当前项目已经拥有一套越来越完整的：
+
+- `统一解释`
+- `失效定位`
+- `修复候选比较`
+- `强攻击审计`
+- `证据独立性拆层`
+
+但它还远不能等于：
+
+- `理论已经正确`
+- `理论已经闭式`
+- `理论已经是第一性原理定理体系`
+
+最严格的一句话总结是：
+
+**当前项目已经有一套比较像样的理论测试体系了，但它更像“统一解释框架 + 失效定位框架 + 攻击审计框架”，离“独立证据、强外部反例、脑编码闭合、定理级表达”这四件第一性原理必需品，仍然有明显距离。**
+
+---
+
+## 2026-03-22 17:20 Stage92 脑编码落地反例包
+
+### 本轮命令记录
+
+- 2026-03-22 17:00
+  - `Get-Content tests/codex/stage77_brain_grounded_route_scaling.py`
+  - `Get-Content tests/codex/stage78_distributed_route_native_observability.py`
+  - `Get-Content tests/codex/stage90_independent_observation_planes.py`
+  - `Get-Content tests/codex/stage91_counterexample_attack_suite.py`
+- 2026-03-22 17:05
+  - 读取 `Stage71/77/78/90/91` 关键摘要指标
+  - 读取 `brain_grounding_shock` 攻击记录
+- 2026-03-22 17:10
+  - 新增 `tests/codex/stage92_brain_grounding_counterexample_pack.py`
+  - 新增 `tests/codex/test_stage92_brain_grounding_counterexample_pack.py`
+- 2026-03-22 17:14
+  - `python tests/codex/stage92_brain_grounding_counterexample_pack.py`
+  - 手动导入执行 `test_stage92_brain_grounding_counterexample_pack`
+- 2026-03-22 17:17
+  - 更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+  - 更新 `README.md`
+  - 更新 `research/gpt5/docs/AGI_GPT5_TEST_SYSTEM.md`
+
+### 本轮核心结果
+
+`Stage92（第九十二阶段）` 直接把当前最弱轴 `brain_grounding（脑编码落地）` 拆成五个组件：
+
+1. `neuron_anchor（局部锚点）`
+2. `bundle_sync（中观束流同步）`
+3. `distributed_field（分布式场）`
+4. `field_observability（场可观测性）`
+5. `repair_grounding（修复落地）`
+
+当前结果是：
+
+- `brain_counterexample_coverage = 1.0000`
+- `multi_axis_grounding_break_rate = 1.0000`
+- `hardest_counterexample_name = bundle_desynchronization`
+- `hardest_counterexample_intensity = 0.6481`
+- `weakest_component_name = field_observability`
+- `weakest_component_floor = 0.4673`
+- `brain_grounding_residual = 0.5114`
+- `brain_grounding_counterexample_score = 0.7698`
+- `status_short = brain_grounding_counterexample_pack_ready`
+
+### 本轮理论数学研究进度
+
+这轮最关键的推进，是把“脑编码落地弱”从一个总判断，推进成了可分解、可攻击、可排序的组件结构。
+
+现在更明确的判断是：
+
+1. `brain_grounding` 的问题不是单点问题
+   - 六类反例场景全部能覆盖
+   - 而且全部都能形成多轴落地破坏
+
+2. 当前最危险的不是局部锚点本身
+   - 而是 `field_observability（场可观测性）`
+   - 也就是：理论中的分布式场虽然已经出现，但还不能足够硬地落到原生可观测层
+
+3. 当前最强脑编码反例是：
+   - `bundle_desynchronization（束流失步）`
+   - 这说明“中观束流协调失败”比“单神经元锚点消失”更容易先把脑编码闭合打穿
+
+换句话说，这轮把脑编码主瓶颈从模糊表述，推进成了两条非常具体的弱链：
+
+- `bundle_sync（中观束流同步）` 的失步风险
+- `field_observability（场可观测性）` 的原生落地不足
+
+### 最严格的问题、硬伤和瓶颈
+
+最严格地看，这轮把问题照得更亮了，但没有把问题解决掉：
+
+1. `brain_grounding` 仍然是当前统一主核最弱轴
+2. `field_observability` 成了最薄弱组件
+3. `bundle_desynchronization` 成了最强脑编码反例
+4. 当前理论仍然没有把分布式场正式压成硬原生变量
+5. 所以脑编码闭合还远没完成
+
+### 接下来不该只做的小功能
+
+接下来最合理的连续路线是：
+
+1. `Stage93`
+   - `law_to_theorem_bridge（候选律到定理桥接块）`
+   - 目标：把当前最强候选律进一步压成更接近定理的形式
+
+2. `Stage94`
+   - `cross_plane_failure_coupling_map（跨观测面失效耦合图谱）`
+   - 目标：把 `bundle_sync / field_observability` 的失配如何拖垮语言、智能、可判伪三面写成传播图谱
+
+3. `Stage95`
+   - `external_distribution_counterexample_pack（外部分布反例包）`
+   - 目标：让强攻击测试逐步摆脱内部构造样本
+
+4. `Stage96`
+   - `independent_evidence_core（独立证据主核）`
+   - 目标：让高层统一结论不再主要依赖摘要回灌
+
+### 最严格的总判断
+
+这轮之后，关于 `brain_grounding（脑编码落地）` 的判断已经不能再只说“它是最弱轴”。
+
+现在更准确的说法应该是：
+
+**当前理论的脑编码闭合失败，主要不是先坏在单神经元锚点，而是先坏在中观束流同步与分布式场可观测性。**
+
+这比之前的判断更严，也更接近下一步真正该做的工作。
+
+---
+
+## 2026-03-22 17:37 Stage93 候选律到定理桥接块
+
+### 本轮命令记录
+
+- 2026-03-22 17:23
+  - `Get-Content tests/codex/stage83_forward_backward_theorem_kernel.py`
+  - `Get-Content tests/codex/stage89_law_margin_separation.py`
+  - `Get-Content tests/codex/stage92_brain_grounding_counterexample_pack.py`
+  - `rg -n "theorem|premise|conclusion|bounded|margin|law" ...`
+- 2026-03-22 17:26
+  - 读取 `Stage82/83/89/91/92` 关键摘要指标
+- 2026-03-22 17:29
+  - 新增 `tests/codex/stage93_law_to_theorem_bridge.py`
+  - 新增 `tests/codex/test_stage93_law_to_theorem_bridge.py`
+- 2026-03-22 17:32
+  - `python tests/codex/stage93_law_to_theorem_bridge.py`
+  - 手动导入执行 `test_stage93_law_to_theorem_bridge`
+- 2026-03-22 17:35
+  - 更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+  - 更新 `README.md`
+  - 更新 `research/gpt5/docs/AGI_GPT5_TEST_SYSTEM.md`
+
+### 本轮核心结果
+
+`Stage93（第九十三阶段）` 的目标，不是直接宣布“定理成立”，而是回答更硬的问题：
+
+**当前最强候选律是否已经具备更接近定理的四件套：前提条款、边界条款、失败条款、脑编码兼容条款。**
+
+当前结果是：
+
+- `premise_clause_strength = 0.9175`
+- `boundary_clause_strength = 0.7815`
+- `failure_clause_explicitness = 0.9628`
+- `brain_compatibility_clause = 0.4527`
+- `theorem_ready_gap = 0.5473`
+- `law_to_theorem_bridge_score = 0.7452`
+- `status_short = law_to_theorem_bridge_transition`
+
+### 本轮理论数学研究进度
+
+这轮最重要的推进，是把“sqrt 是最强候选律”从经验比较，推进成了更接近定理结构的表达。
+
+当前已经比较明确的四个条款是：
+
+1. `law_premise（前提条款）`
+   - `family_win_rate(sqrt) ~ 1`
+   - `robustness_anchor(sqrt) ~ 1`
+   - 这解释了为什么 `premise_clause_strength` 已经很高
+
+2. `law_boundary（边界条款）`
+   - `E_novelty(t+1) <= sqrt(raw_drive) * (1 - p_eff) + route_conflict_mass + epsilon_boundary`
+   - 这对应当前的 `boundary_clause_strength`
+
+3. `failure_clause（失败条款）`
+   - 只要强攻击跨多个观测面，或者脑编码反例跨多个组件，桥接就应判失败
+   - 所以 `failure_clause_explicitness` 现在已经很强
+
+4. `brain_clause（脑编码兼容条款）`
+   - `field_observability / bundle_sync / distributed_field`
+   - 必须同时高于门槛，桥接才能稳定落到脑编码实现层
+
+所以这轮最重要的研究判断是：
+
+**当前候选律到定理的桥，真正卡住的不是前提不足，也不是失败条款不清楚，而是脑编码兼容条款太弱。**
+
+### 最严格的问题、硬伤和瓶颈
+
+最严格地看，这轮把问题写得更清楚了，但也把瓶颈写死了：
+
+1. `premise_clause_strength` 已经高
+2. `failure_clause_explicitness` 已经更高
+3. `boundary_clause_strength` 也开始接近可用区
+4. 但 `brain_compatibility_clause = 0.4527` 明显偏弱
+5. `theorem_ready_gap = 0.5473` 说明还远没达到闭式定理区
+
+换句话说，现在不能再说“理论桥还没搭起来”。
+
+更准确地说是：
+
+- 桥已经搭起来了
+- 但桥的脑兼容桥墩还很弱
+
+### 接下来不该只做的小功能
+
+接下来最合理的连续路线是：
+
+1. `Stage94`
+   - `cross_plane_failure_coupling_map（跨观测面失效耦合图谱）`
+   - 目标：把 `field_observability / bundle_sync` 的失配如何同时拖垮语言、智能、可判伪三面写成传播图谱
+
+2. `Stage95`
+   - `external_distribution_counterexample_pack（外部分布反例包）`
+   - 目标：让强攻击逐步摆脱内部构造样本
+
+3. `Stage96`
+   - `independent_evidence_core（独立证据主核）`
+   - 目标：让高层统一判断不再主要依赖摘要回灌
+
+4. `Stage97`
+   - `brain_compatible_theorem_kernel（脑兼容定理主核）`
+   - 目标：把当前最弱的脑编码兼容条款推进成更硬的定理项
+
+### 最严格的总判断
+
+这轮之后，对“候选律到定理桥”最准确的判断应该是：
+
+**当前桥已经具备前提、边界、失败条件三件比较硬的定理部件，但脑编码兼容条款仍然明显偏弱，因此它还不是闭式定理，只能算定理桥过渡态。**
+
+这比简单说“还没定理化”更准确，也更能指导下一步真正该补哪里。
+
 ## 2026-03-22 15:59 合并处理记录
 
 - 时间：2026-03-22 15:59
@@ -21806,3 +22410,950 @@ Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
   - 先把实验产物与研究正文的提交粒度收紧，降低下次远端同步风险。
   - 再把后续阶段目标从“再做一个功能块”改成“构造一个能推翻当前理论的攻击面”。
   - 只有当理论在多个独立攻击面下仍保持领先，才能开始谈第一性原理主核的收敛。
+
+## 2026-03-22 18:25 Stage94 跨观测面失效耦合图谱
+
+- 时间：2026-03-22 18:25
+- 本轮命令：
+  - `Get-ChildItem tests/codex | Where-Object { $_.Name -like 'stage9*' -or $_.Name -like 'test_stage9*' } | Select-Object Name`
+  - `Get-Content research/gpt5/docs/AGI_GPT5_ICSPB.md -Tail 120`
+  - `Get-Content README.md -Tail 120`
+  - `Get-Content tests/codex/stage93_law_to_theorem_bridge.py`
+  - `Get-Content tests/codex/stage92_brain_grounding_counterexample_pack.py`
+  - `Get-Content tests/codex/stage91_counterexample_attack_suite.py`
+  - `Get-Content tests/codex/stage90_independent_observation_planes.py`
+  - `Get-Content tests/codex/test_stage93_law_to_theorem_bridge.py`
+  - `Get-Content tests/codex/test_stage92_brain_grounding_counterexample_pack.py`
+  - `Get-Content research/gpt5/docs/AGI_GPT5_TEST_SYSTEM.md -Tail 120`
+  - `rg -n "Stage93|10 条|当前最合理的大任务块|当前最应该直接推进的是|Stage94|Stage95|Stage96" research/gpt5/docs/AGI_GPT5_ICSPB.md README.md research/gpt5/docs/AGI_GPT5_TEST_SYSTEM.md`
+  - `python tests/codex/stage94_cross_plane_failure_coupling_map.py`
+  - `python -c "... from test_stage94_cross_plane_failure_coupling_map import test_stage94_cross_plane_failure_coupling_map ..."`
+  - `python -c "... from stage94_cross_plane_failure_coupling_map import build_cross_plane_failure_coupling_map_summary ..."`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm"`
+  - `Get-Content research/gpt5/docs/AGI_GPT5_MEMO.md -Tail 40`
+- 新增文件：
+  - `tests/codex/stage94_cross_plane_failure_coupling_map.py`
+  - `tests/codex/test_stage94_cross_plane_failure_coupling_map.py`
+- 更新文件：
+  - `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+  - `README.md`
+  - `research/gpt5/docs/AGI_GPT5_TEST_SYSTEM.md`
+- 验证结果：
+  - `python tests/codex/stage94_cross_plane_failure_coupling_map.py`：通过
+  - `test_stage94_cross_plane_failure_coupling_map`：通过
+- 核心结果：
+  - `propagation_coverage = 1.0000`
+  - `hardest_coupling_path = brain_plane->falsification_plane`
+  - `hardest_path_intensity = 0.5213`
+  - `weakest_receiver_plane = falsification_plane`
+  - `weakest_receiver_floor = 0.4328`
+  - `cross_plane_load_mean = 0.3010`
+  - `theorem_spillover_pressure = 0.5828`
+  - `cross_plane_failure_coupling_score = 0.6019`
+  - `status_short = cross_plane_failure_coupling_map_transition`
+- 理论数学研究进度：
+  - 本轮第一次把“多观测面同时掉线”推进成了“失效传播路径图谱”，不再只是知道会一起坏，而是开始知道怎么坏、从哪一面先坏、再向哪一面扩散。
+  - 当前最危险传播主链已经比较明确：`brain_plane -> falsification_plane`，这说明脑编码面受压之后，最容易先拖垮的不是语言面，而是可判伪面。
+  - 这意味着当前第一性原理理论的真正薄弱点，不只是脑编码落地本身弱，而是脑编码弱链会直接削弱理论的反例承压能力。
+  - 但这轮仍然不是传播定理，只是传播图谱；而且传播路径目前主要来自内部攻击和内部反例的联合构造，还没有经过外部分布反例检验。
+- 最严格的硬伤、问题与瓶颈：
+  - 硬伤一：`cross_plane_failure_coupling_score` 只有中等强度，说明传播图已经能画出来，但还不够硬，不能直接当作定理主核。
+  - 硬伤二：最强传播路径仍然依赖内部攻击矩阵和内部脑编码反例包，外部独立分布证据还没有接上来。
+  - 硬伤三：当前最脆弱接收面是 `falsification_plane`，说明理论一旦被脑编码弱链冲击，最先崩的是“可判伪承压能力”，这会直接影响第一性原理理论所需的强可证伪性。
+  - 瓶颈：现在已经知道失效如何跨平面扩散，但还不知道这些传播路径在外部分布、真实独立刺激和独立证据链上是否保持同构。
+- 要成为第一性原理理论，接下来必须推进的阶段任务：
+  - `Stage95`：`external_distribution_counterexample_pack`，把传播图谱拉到更独立的外部分布反例上验证。
+  - `Stage96`：`independent_evidence_core`，继续削弱摘要回灌，让高层结论更接近独立证据链。
+  - `Stage97`：`brain_compatible_theorem_kernel`，把当前最弱的脑编码兼容条款推进成定理级主核。
+  - `Stage98`：`external_to_internal_failure_alignment`，专门检查外部分布触发的失效路径，是否真能对齐当前内部传播图谱。
+
+## 2026-03-22 18:33 Stage95 外部分布反例包
+
+- 时间：2026-03-22 18:33
+- 本轮命令：
+  - `Get-Content tests/codex/stage94_cross_plane_failure_coupling_map.py`
+  - `Get-Content tests/codex/stage88_external_counterexample_expansion.py`
+  - `Get-Content tests/codex/stage91_counterexample_attack_suite.py`
+  - `Get-Content tests/codex/test_stage94_cross_plane_failure_coupling_map.py`
+  - `python tests/codex/stage95_external_distribution_counterexample_pack.py`
+  - `python -c "... from stage95_external_distribution_counterexample_pack import build_external_distribution_counterexample_pack_summary ..."`
+  - `python -c "... from test_stage95_external_distribution_counterexample_pack import test_stage95_external_distribution_counterexample_pack ..."`
+  - `python -c "... 读取 AGI_GPT5_ICSPB.md 指定区段 ..."`
+  - `python -c "... 读取 README.md 指定区段 ..."`
+  - `python -c "... 读取 AGI_GPT5_TEST_SYSTEM.md 指定区段 ..."`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm"`
+- 新增文件：
+  - `tests/codex/stage95_external_distribution_counterexample_pack.py`
+  - `tests/codex/test_stage95_external_distribution_counterexample_pack.py`
+- 更新文件：
+  - `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+  - `README.md`
+  - `research/gpt5/docs/AGI_GPT5_TEST_SYSTEM.md`
+- 验证结果：
+  - `python tests/codex/stage95_external_distribution_counterexample_pack.py`：通过
+  - `test_stage95_external_distribution_counterexample_pack`：通过
+- 核心结果：
+  - `external_family_coverage = 1.0000`
+  - `external_trigger_rate = 0.7500`
+  - `path_alignment_rate = 1.0000`
+  - `hardest_external_family_name = adversarial_external_mixture`
+  - `hardest_external_path = brain_plane->falsification_plane`
+  - `hardest_external_intensity = 0.7367`
+  - `weakest_external_receiver = falsification_plane`
+  - `weakest_external_receiver_floor = 0.1568`
+  - `mean_strongest_path_intensity = 0.6108`
+  - `external_distribution_counterexample_score = 0.8319`
+  - `status_short = external_distribution_counterexample_pack_ready`
+- 理论数学研究进度：
+  - 本轮把“外部分布型反例”第一次正式接到 `Stage94` 的跨观测面失效传播图谱上，不再只是知道内部反例如何传播，而是开始检查更接近外部刺激的样本族是否复现同一传播主链。
+  - 结果非常强：`path_alignment_rate = 1.0000`，说明当前外部分布型反例触发出来的最强路径，和内部传播图谱中的最危险路径完全一致，都是 `brain_plane -> falsification_plane`。
+  - 这意味着当前理论最危险的地方，已经从“某个单独观测面脆弱”进一步收敛成“脑编码弱链会优先拖垮可判伪面”，也就是它先打坏的不是语言投影漂亮不漂亮，而是理论还能不能承受反例。
+  - 这轮因此强化了一个更硬的判断：脑编码闭合问题，不只是解释层的缺口，而是第一性原理理论成立所需的强可判伪性缺口。
+- 最严格的硬伤、问题与瓶颈：
+  - 硬伤一：当前 `Stage95` 仍然只是“外部分布近似反例包”，不是来自真实外部数据、真实独立实验、真实独立采样的证据链。
+  - 硬伤二：虽然路径对齐率是 1.0，但这说明的是“当前内部图谱对外部分布近似反例有解释力”，还不能说明图谱本身就是真实世界里的唯一传播机制。
+  - 硬伤三：最脆弱接收面仍然是 `falsification_plane`，而且 `weakest_external_receiver_floor = 0.1568` 很低，说明一旦外部攻击确实命中脑编码弱链，理论的反例承压能力会明显失稳。
+  - 瓶颈：现在“外部分布风格”已经接上了，但“真实外部数据闭合”还没接上；“传播图谱”已经接上了，但“独立证据主核”还没接上。
+- 要成为第一性原理理论，接下来必须推进的阶段任务：
+  - `Stage96`：`independent_evidence_core`，把高层结论从摘要回灌里继续拆出来。
+  - `Stage97`：`brain_compatible_theorem_kernel`，把当前最弱的脑编码兼容条款压成更硬的定理主核。
+  - `Stage98`：`external_to_internal_failure_alignment`，正式审计外部分布反例与内部传播图谱的对齐是否稳定，不只是这轮样本碰巧一致。
+  - `Stage99`：`real_external_data_counterexample_pack`，把当前“外部分布近似反例”推进到更接近真实外部数据的反例链。
+
+## 2026-03-22 18:47 Stage96 独立证据主核
+
+- 时间：2026-03-22 18:47
+- 本轮命令：
+  - `Get-Content tests/codex/stage87_evidence_independence_audit.py`
+  - `Get-Content tests/codex/stage90_independent_observation_planes.py`
+  - `Get-Content tests/codex/stage95_external_distribution_counterexample_pack.py`
+  - `Get-Content tests/codex/stage71_first_principles_unification.py`
+  - `python tests/codex/stage96_independent_evidence_core.py`
+  - `python -c "... from stage96_independent_evidence_core import build_independent_evidence_core_summary ..."`
+  - `python -c "... from test_stage96_independent_evidence_core import test_stage96_independent_evidence_core ..."`
+  - `python -c "... 读取 AGI_GPT5_ICSPB.md 指定区段 ..."`
+  - `python -c "... 读取 README.md 指定区段 ..."`
+  - `python -c "... 读取 AGI_GPT5_TEST_SYSTEM.md 指定区段 ..."`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm"`
+- 新增文件：
+  - `tests/codex/stage96_independent_evidence_core.py`
+  - `tests/codex/test_stage96_independent_evidence_core.py`
+- 更新文件：
+  - `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+  - `README.md`
+  - `research/gpt5/docs/AGI_GPT5_TEST_SYSTEM.md`
+- 验证结果：
+  - `python tests/codex/stage96_independent_evidence_core.py`：通过
+  - `test_stage96_independent_evidence_core`：通过
+- 核心结果：
+  - `anchor_independence_strength = 0.9106`
+  - `external_refutation_support = 0.8113`
+  - `backfeed_suppression_strength = 0.2251`
+  - `cross_plane_consistency = 0.7488`
+  - `independent_ready_gap = 0.7749`
+  - `independent_evidence_core_score = 0.6515`
+  - `status_short = independent_evidence_core_transition`
+- 理论数学研究进度：
+  - 本轮第一次把“独立观测面”“外部分布反例”“回灌抑制”压成同一个独立证据主核，而不是继续直接相信统一总分。
+  - 结果显示当前强项已经很明确：独立观测面本身足够强，外部分布反例支撑也足够强，说明理论现在并不缺“独立证据元素”。
+  - 真正的新瓶颈是 `backfeed_suppression_strength = 0.2251`，这说明高层判断仍然太容易被下层摘要回灌牵着走，证据链虽然在变多，但还没有真正脱钩。
+  - 这轮因此把“证据独立性问题”从定性风险，推进成了一个可以量化的新主瓶颈：不是没有证据，而是证据还压不过回灌。
+- 最严格的硬伤、问题与瓶颈：
+  - 硬伤一：`anchor_independence_strength` 和 `external_refutation_support` 都不低，但 `backfeed_suppression_strength` 非常弱，说明项目当前更像“多证据并存”，还不是“多证据独立裁决”。
+  - 硬伤二：`independent_ready_gap = 0.7749` 很高，说明离真正的独立证据闭合还很远。
+  - 硬伤三：独立证据主核虽然成形，但仍处于 `transition`（过渡态），不能把它当成高层理论已经脱离摘要回灌的证明。
+  - 瓶颈：当前第一性原理理论线已经逐步从“外部反例不够强”转向“即便反例更强了，高层判断仍然可能被内部摘要结构绑架”。
+- 要成为第一性原理理论，接下来必须推进的阶段任务：
+  - `Stage97`：`brain_compatible_theorem_kernel`，直接攻击当前最弱的脑编码兼容条款。
+  - `Stage98`：`external_to_internal_failure_alignment`，验证外部分布反例与内部传播图谱的对齐是否稳。
+  - `Stage99`：`real_external_data_counterexample_pack`，把外部分布近似反例推进到更接近真实外部数据。
+  - `Stage100`：`backfeed_suppression_hardening`，直接压低高层判断对下层摘要回灌的依赖。
+
+## 2026-03-22 19:12 Stage97 脑兼容定理主核
+
+- 时间：2026-03-22 19:12
+- 本轮命令：
+  - `Get-Content tests/codex/stage92_brain_grounding_counterexample_pack.py`
+  - `Get-Content tests/codex/stage93_law_to_theorem_bridge.py`
+  - `Get-Content tests/codex/stage95_external_distribution_counterexample_pack.py`
+  - `Get-Content tests/codex/stage96_independent_evidence_core.py`
+  - `python -c "... from stage92_brain_grounding_counterexample_pack import build_brain_grounding_counterexample_pack_summary ..."`
+  - `python -c "... from stage95_external_distribution_counterexample_pack import build_external_distribution_counterexample_pack_summary ..."`
+  - `python -c "... from stage96_independent_evidence_core import build_independent_evidence_core_summary ..."`
+  - `python tests/codex/stage97_brain_compatible_theorem_kernel.py`
+  - `python -c "... from stage97_brain_compatible_theorem_kernel import build_brain_compatible_theorem_kernel_summary ..."`
+  - `python -c "... from test_stage97_brain_compatible_theorem_kernel import test_stage97_brain_compatible_theorem_kernel ..."`
+  - `python -c "... 读取 AGI_GPT5_ICSPB.md 指定区段 ..."`
+  - `python -c "... 读取 README.md 指定区段 ..."`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm"`
+- 新增文件：
+  - `tests/codex/stage97_brain_compatible_theorem_kernel.py`
+  - `tests/codex/test_stage97_brain_compatible_theorem_kernel.py`
+- 更新文件：
+  - `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+  - `README.md`
+  - `research/gpt5/docs/AGI_GPT5_TEST_SYSTEM.md`
+- 验证结果：
+  - `python tests/codex/stage97_brain_compatible_theorem_kernel.py`：通过
+  - `test_stage97_brain_compatible_theorem_kernel`：通过
+- 核心结果：
+  - `neuron_anchor_clause = 0.6046`
+  - `bundle_sync_clause = 0.6198`
+  - `field_compatibility_clause = 0.6151`
+  - `repair_transfer_clause = 0.6823`
+  - `evidence_isolation_clause = 0.4755`
+  - `theorem_viability_gap = 0.5245`
+  - `brain_compatible_theorem_kernel_score = 0.5981`
+  - `status_short = brain_compatible_theorem_kernel_transition`
+- 理论数学研究进度：
+  - 本轮第一次把“脑编码弱链”正式推进成定理条款结构，而不再只是说“脑编码落地偏弱”。
+  - 当前脑兼容主核已经能拆成五个条款：局部锚点、束流同步、场兼容、修复传递、证据隔离。
+  - 结果显示最弱条款不是神经元锚点，也不是束流同步，而是 `evidence_isolation_clause`。这说明脑编码闭合失败现在已经不只是神经实现问题，而是“脑兼容条款”和“证据独立性条款”互相拖累的问题。
+  - 这让当前理论主瓶颈进一步收敛：不是不知道脑编码哪里弱，而是已经知道脑兼容为什么推不上去，因为一旦要把它写成定理，就会立刻暴露证据隔离不够硬。
+- 最严格的硬伤、问题与瓶颈：
+  - 硬伤一：`brain_compatible_theorem_kernel_score` 仍然不高，说明脑兼容定理主核已经成形，但还远不够闭式。
+  - 硬伤二：最弱条款是 `evidence_isolation_clause`，这说明脑编码闭合和证据独立性还没有解耦。
+  - 硬伤三：`field_compatibility_clause` 也没有明显强过其他条款，说明场可观测性问题仍未真正解决。
+  - 瓶颈：当前理论的核心困难已经从“把脑编码弱链定位出来”转向“如何让脑兼容条款在不依赖摘要回灌的情况下也能硬起来”。
+- 要成为第一性原理理论，接下来必须推进的阶段任务：
+  - `Stage98`：`external_to_internal_failure_alignment`，检查外部分布反例的最强路径是否稳定打穿同一条脑兼容条款。
+  - `Stage99`：`real_external_data_counterexample_pack`，把当前外部分布近似反例推进到更真实的外部数据链。
+  - `Stage100`：`backfeed_suppression_hardening`，直接降低高层判断对下层摘要回灌的依赖。
+  - `Stage101`：`brain_evidence_joint_closure`，让脑兼容条款和证据隔离条款不再互相拖后腿。
+
+## 2026-03-22 19:35 Stage98 外部分布到内部失效对齐块
+
+- 时间：2026-03-22 19:35
+- 本轮命令：
+  - `Get-Content tests/codex/stage94_cross_plane_failure_coupling_map.py`
+  - `Get-Content tests/codex/stage95_external_distribution_counterexample_pack.py`
+  - `Get-Content tests/codex/stage97_brain_compatible_theorem_kernel.py`
+  - `Get-Content tests/codex/test_stage97_brain_compatible_theorem_kernel.py`
+  - `python tests/codex/stage98_external_to_internal_failure_alignment.py`
+  - `python -c "... from stage98_external_to_internal_failure_alignment import build_external_to_internal_failure_alignment_summary ..."`
+  - `python -c "... from test_stage98_external_to_internal_failure_alignment import test_stage98_external_to_internal_failure_alignment ..."`
+  - `python -c "... 读取 AGI_GPT5_ICSPB.md 指定区段 ..."`
+  - `python -c "... 读取 README.md 指定区段 ..."`
+  - `python -c "... 读取 AGI_GPT5_TEST_SYSTEM.md 指定区段 ..."`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm"`
+- 新增文件：
+  - `tests/codex/stage98_external_to_internal_failure_alignment.py`
+  - `tests/codex/test_stage98_external_to_internal_failure_alignment.py`
+- 更新文件：
+  - `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+  - `README.md`
+  - `research/gpt5/docs/AGI_GPT5_TEST_SYSTEM.md`
+- 验证结果：
+  - `python tests/codex/stage98_external_to_internal_failure_alignment.py`：通过
+  - `test_stage98_external_to_internal_failure_alignment`：通过
+- 核心结果：
+  - `path_alignment_stability = 1.0000`
+  - `receiver_alignment_stability = 1.0000`
+  - `weakest_clause_name = evidence_isolation_clause`
+  - `weakest_clause_score = 0.4755`
+  - `clause_alignment_rate = 0.7500`
+  - `alignment_coherence_mean = 0.8793`
+  - `internal_external_gap = 0.0895`
+  - `external_to_internal_alignment_score = 0.9140`
+  - `status_short = external_to_internal_failure_alignment_ready`
+- 理论数学研究进度：
+  - 本轮把“外部分布反例”和“内部失效图谱”的对齐检查推进到了三层：最强路径、最弱接收面、最弱定理条款。
+  - 结果显示当前对齐已经非常硬，不只是 `brain_plane -> falsification_plane` 这条路径对齐，而且最脆弱接收面也稳定对齐到 `falsification_plane`，最弱条款也主要对齐到 `evidence_isolation_clause`。
+  - 这说明当前项目最危险的硬伤已经不再是分散的多个问题，而是在收敛成同一个复合硬伤：脑编码弱链会优先打击可判伪面，而一旦要把它压成定理，又会被证据隔离条款拖住。
+  - 这轮因此进一步强化了一个更严格的判断：如果后续真实外部数据也复现这条链，那么当前理论最大的崩塌风险就不在语言表层，而在“脑兼容 + 可判伪 + 证据独立性”这个联合薄弱核。
+- 最严格的硬伤、问题与瓶颈：
+  - 硬伤一：当前对齐很强，但仍然基于“外部分布近似反例”，还不是来自真实外部数据。
+  - 硬伤二：`weakest_clause_name = evidence_isolation_clause` 说明理论即使找到了弱链，也未必能靠现有证据链把它独立压实。
+  - 硬伤三：一旦高层判断继续依赖摘要回灌，这种强对齐可能会被误读成“理论已经正确”，而不是“理论已经暴露出更集中的崩塌点”。
+  - 瓶颈：当前理论主风险已经从“路径是否稳定”转向“真实外部数据是否也稳定复现同一联合硬伤”。
+- 要成为第一性原理理论，接下来必须推进的阶段任务：
+  - `Stage99`：`real_external_data_counterexample_pack`，把当前外部分布近似反例推进到更真实的外部数据反例链。
+  - `Stage100`：`backfeed_suppression_hardening`，直接降低摘要回灌依赖。
+  - `Stage101`：`brain_evidence_joint_closure`，让脑兼容条款和证据隔离条款一起变硬。
+  - `Stage102`：`real_world_falsification_bridge`，把真实外部数据反例、脑兼容条款和独立证据链接成同一套强判伪桥。
+
+## 2026-03-22 20:11 Stage99 真实外部数据反例包与推理总文档整理
+
+- 本轮命令：
+  - `Get-ChildItem tests/codex | Select-Object Name`
+  - `Get-Content tests/codex/stage92_brain_grounding_counterexample_pack.py -Encoding UTF8`
+  - `Get-Content tests/codex/stage94_cross_plane_failure_coupling_map.py -Encoding UTF8`
+  - `Get-Content tests/codex/stage95_external_distribution_counterexample_pack.py -Encoding UTF8`
+  - `Get-Content tests/codex/stage96_independent_evidence_core.py -Encoding UTF8`
+  - `Get-Content tests/codex/stage97_brain_compatible_theorem_kernel.py -Encoding UTF8`
+  - `Get-Content tests/codex/stage98_external_to_internal_failure_alignment.py -Encoding UTF8`
+  - `Get-Content tests/codex/deepseek7b_bilingual_nouns_utf8.csv -Encoding UTF8`
+  - `Get-Content tests/codex/deepseek7b_nouns_english_520_clean.csv -Encoding UTF8`
+  - `python tests/codex/stage99_real_external_data_counterexample_pack.py`
+  - 手动导入执行 `test_stage99_real_external_data_counterexample_pack`
+- 本轮新增与修改文件：
+  - 新增 [stage99_real_external_data_counterexample_pack.py](d:/develop/TransformerLens-main/tests/codex/stage99_real_external_data_counterexample_pack.py)
+  - 新增 [test_stage99_real_external_data_counterexample_pack.py](d:/develop/TransformerLens-main/tests/codex/test_stage99_real_external_data_counterexample_pack.py)
+  - 新增 [AGI_GPT5_REASONING.md](d:/develop/TransformerLens-main/research/gpt5/docs/AGI_GPT5_REASONING.md)
+  - 更新 [AGI_GPT5_ICSPB.md](d:/develop/TransformerLens-main/research/gpt5/docs/AGI_GPT5_ICSPB.md)
+  - 更新 [README.md](d:/develop/TransformerLens-main/README.md)
+  - 更新 [AGI_GPT5_TEST_SYSTEM.md](d:/develop/TransformerLens-main/research/gpt5/docs/AGI_GPT5_TEST_SYSTEM.md)
+- 本轮关键结果：
+  - `real_sample_coverage = 1.0000`
+  - `real_trigger_rate = 0.6250`
+  - `path_alignment_rate = 1.0000`
+  - `receiver_alignment_rate = 1.0000`
+  - `clause_alignment_rate = 0.5000`
+  - `hardest_real_family_name = real_data_adversarial_mixture`
+  - `hardest_real_path = brain_plane->falsification_plane`
+  - `hardest_real_intensity = 0.7662`
+  - `weakest_real_receiver = falsification_plane`
+  - `weakest_real_receiver_floor = 0.2079`
+  - `real_external_data_counterexample_score = 0.8068`
+  - `status_short = real_external_data_counterexample_pack_ready`
+- 理论数学研究进度：
+  - 本轮第一次把仓库里的真实词表样本正式拉进高层反例链，不再只依赖手写的外部分布家族。
+  - 当前结果说明：即使换成仓库中的双语名词表和英文名词表样本，最强传播主链仍然稳定落在 `brain_plane -> falsification_plane`，最弱接收面仍然稳定落在 `falsification_plane`，而最弱条款仍然维持在 `evidence_isolation_clause`。
+  - 这进一步说明当前理论最危险的不是“某个单点评分不够高”，而是“脑编码弱链、可判伪脆弱性、证据隔离薄弱”已经在多类样本上开始收敛成同一个联合硬伤。
+  - 新增的 [AGI_GPT5_REASONING.md](d:/develop/TransformerLens-main/research/gpt5/docs/AGI_GPT5_REASONING.md) 已经把当前主线中真正被使用的原始数据、二级结构化数据、三级推理数据，以及 `DNN分析 / 大脑编码机制 / 智能原理` 三条主链的推理步骤、问题和关键结论整理成独立总稿。
+- 最严格的硬伤、问题与瓶颈：
+  - 硬伤一：`Stage99` 虽然已经使用真实词表样本，但这仍然不是“真实世界实验数据”，只能算更接近真实外部样本。
+  - 硬伤二：`clause_alignment_rate = 0.5000` 说明真实样本已经能碰到最弱条款，但还没有强到“几乎全部样本都稳定打中同一条条款”。
+  - 硬伤三：高层结论依然会受到摘要回灌影响，所以当前最需要压实的不是又一个总分，而是证据独立性。
+  - 瓶颈：当前主瓶颈已经从“有没有外部样本”转成“真实外部样本能否在去回灌条件下，继续稳定复现脑弱链与最弱条款的联合崩塌路径”。
+- 要成为第一性原理理论，接下来必须推进的阶段任务：
+  - `Stage100`：`backfeed_suppression_hardening`，直接削弱摘要回灌。
+  - `Stage101`：`brain_evidence_joint_closure`，把脑兼容条款和证据隔离条款一起推进。
+  - `Stage102`：`real_world_falsification_bridge`，把当前词表级外部样本推进到真实世界级判伪桥。
+  - `Stage103`：`native_brain_anchor_search`，把脑编码兼容性往原生脑锚点推进，而不是继续停在代理变量层。
+
+## 2026-03-22 20:23 DNN分析三条推理链详细讲解
+
+- 本轮命令：
+  - `Get-Content tests/codex/stage72_language_projection_covariance.py -Encoding UTF8`
+  - `Get-Content tests/codex/stage79_route_conflict_native_measure.py -Encoding UTF8`
+  - `Get-Content tests/codex/stage81_forward_backward_unification.py -Encoding UTF8`
+  - `Get-Content research/gpt5/docs/AGI_GPT5_REASONING.md -Encoding UTF8`
+  - 手动导入执行：
+    - `build_context_native_grounding_summary`
+    - `build_fiber_reuse_reinforcement_summary`
+    - `build_native_observability_bridge_summary`
+    - `build_direct_stability_counterexample_probe_summary`
+    - `build_sqrt_repair_generalization_summary`
+    - `build_direct_identity_lock_summary`
+    - `build_intelligence_closure_failure_map_summary`
+    - `build_language_projection_covariance_summary`
+    - `build_route_conflict_native_measure_summary`
+    - `build_forward_backward_unification_summary`
+- 本轮关键读数：
+  - `Stage72`
+    - `context_covariance_stability = 0.9726`
+    - `bias_gate_transport = 0.9679`
+    - `route_conditioned_projection = 0.9091`
+    - `projection_gap = 0.0909`
+    - `language_projection_repair_score = 0.9436`
+  - `Stage79`
+    - `attention_like_selection = 0.8985`
+    - `gradient_like_correction = 0.8074`
+    - `route_conflict_mass = 0.1815`
+    - `route_computation_closure_score = 0.8402`
+  - `Stage81`
+    - `forward_selectivity = 0.9071`
+    - `backward_fidelity = 0.8051`
+    - `novelty_binding_alignment = 0.7360`
+    - `forward_backward_unification_score = 0.8193`
+- 理论数学研究进度：
+  - 这轮把 `DNN分析` 中最核心的三条推理链重新摊开成“输入量 -> 组合公式 -> 中间指标 -> 结论”的显式链条。
+  - `A：语言投影链` 的直接输入不是词表样本，而是更下游的 `context_native_readiness / conditional_gate_stability / context_route_alignment / route_fiber_coupling_balance / hidden_proxy_gap` 这些结构化原始读数；然后在 `Stage72` 里通过 `q_plus / b_plus / g_plus / projection` 的更新式，推出语言是统一状态系统在输出层与时间轴上的投影。
+  - `B：路由尺度链` 的关键中间量体现在 `Stage77-79` 之间：先证明主导尺度偏向 `distributed_network_support`，再把这种分布式路由压成 `attention_like_selection`、`route_conflict_mass`、`gradient_like_correction` 三个计算块。
+  - `C：前后向计算链` 则在 `Stage79` 的三块计算量基础上，进一步通过 `Stage81` 压成 `forward_selectivity / backward_fidelity / novelty_binding_alignment / loop_stability_gain` 四个闭环量，最后推出“现代 DNN 的核心不应只概括成反向传播加注意力，而更像分布式表示上的前向门控路由与反向误差修复闭环”。
+- 最严格的硬伤、问题与瓶颈：
+  - 硬伤一：这三条链当前都主要建立在二级结构化指标上，不是直接从大规模训练日志、逐层激活轨迹或脑实验原始记录反演出来。
+  - 硬伤二：`Stage72` 的语言场景与 `Stage79/81` 的计算块都带有研究者设定的权重与场景假设，所以它们更像结构化理论压缩，不是数据驱动定理。
+  - 硬伤三：`forward_backward_unification_score = 0.8193` 虽然说明闭环轮廓已经成形，但 `novelty_binding_alignment = 0.7360` 仍然偏弱，意味着“前向选路”和“反向修复”在新颖结构并入时还没有强稳闭合。
+  - 瓶颈：当前 DNN 分析的主要瓶颈已经不是“有没有解释主线”，而是“这些结构化链条能否继续下沉到更原生的数据层，而不是继续停留在摘要链和代理变量层”。
+- 要成为第一性原理理论，接下来必须推进的阶段任务：
+  - `Stage100`：压低摘要回灌，避免 DNN 分析链继续自我加固。
+  - `Stage101`：把脑兼容与证据独立一起闭合，避免 DNN 分析只在高层成立。
+  - `Stage102`：把当前“真实词表样本反例”推进到真实世界判伪桥。
+  - `Stage103`：补原生脑锚点，减少 `q / b / g / route_conflict / evidence_isolation_clause` 这类代理量的悬空性。
+
+## 2026-03-22 20:31 三条 DNN 推理链从最原始数据起的严格复核
+
+- 本轮命令：
+  - `Get-Content tests/codex/stage56_native_variable_candidate_mapping.py -Encoding UTF8`
+  - `Get-Content tests/codex/stage57_context_native_grounding.py -Encoding UTF8`
+  - `Get-Content tests/codex/stage57_fiber_reuse_reinforcement.py -Encoding UTF8`
+  - `Get-Content tests/codex/stage60_symbolic_coefficient_grounding.py -Encoding UTF8`
+  - `Get-Content tests/codex/stage70_native_observability_bridge.py -Encoding UTF8`
+  - `Get-Content tests/codex/stage77_brain_grounded_route_scaling.py -Encoding UTF8`
+  - `Get-Content tests/codex/stage78_distributed_route_native_observability.py -Encoding UTF8`
+  - `rg -n "from stage|build_.*summary\\(" ...`
+- 理论数学研究进度：
+  - 这轮不是继续顺着现有结论往前推，而是把 `A：语言投影链`、`B：路由尺度链`、`C：前后向计算链` 的底层依赖一路追到更原始的脚本层。
+  - 结果已经很清楚：这三条链条最底层并没有落到“真实神经网络原始轨迹”或“生物脑实验原始数据”，而是大量落在手工设定数组、候选变量打分表、人工权重和综合评分上。
+  - 例如：
+    - [stage56_native_variable_candidate_mapping.py](d:/develop/TransformerLens-main/tests/codex/stage56_native_variable_candidate_mapping.py) 里的 `locality / observability / first_principles_fitness / falsifiability` 是手工赋值。
+    - [stage57_context_native_grounding.py](d:/develop/TransformerLens-main/tests/codex/stage57_context_native_grounding.py) 的 `q_values / b_values / route_alignment_samples / gate_stability_samples` 是手工数组。
+    - [stage57_fiber_reuse_reinforcement.py](d:/develop/TransformerLens-main/tests/codex/stage57_fiber_reuse_reinforcement.py) 的 `patch_activation / recurrence / route_cost / route_gate / pressure / plasticity_budget / context_gate` 也是手工数组。
+  - 这意味着：三条链当前都更接近“结构化理论脚手架”，还不是“可作为后续第一性原理理论的硬基础数据层”。
+- 最严格的结论：
+  - `A：语言投影链`
+    - 可以保留为工作假设层和变量组织层。
+    - 不能当成后续理论的证据基础层。
+  - `B：路由尺度链`
+    - 可以保留为当前最有解释力的尺度假设。
+    - 不能当成已经被数据锁死的路由定理基础。
+  - `C：前后向计算链`
+    - 可以保留为统一解释框架中的计算轮廓。
+    - 不能作为第一性原理理论的闭环基础，因为它建立在更高层摘要和手工场景之上，证据强度最弱。
+- 是否需要推翻、重建基础：
+  - 不是“全部推翻”。
+  - 更准确的处理方式是“保留上层解释框架，但必须重建下层数据基础”。
+  - 可保留的部分：
+    - 变量命名与分层方式
+    - 候选状态系统 `X(t) = (a, r, f, g, q, b, p, h, m, c)`
+    - 目前最稳定的负结果与薄弱点定位，例如 `brain_plane -> falsification_plane`
+  - 必须重建的部分：
+    - 语言投影链的底层观测数据
+    - 路由尺度链的尺度证据
+    - 前后向计算链的真实训练/推理轨迹基础
+- 要成为第一性原理理论，接下来必须推进的阶段任务：
+  - `Stage100`：压低摘要回灌。
+  - `Stage101`：把脑兼容和证据独立联合闭合。
+  - `Stage102`：搭真实世界判伪桥。
+  - `Stage103`：开始从真实模型激活、路由、梯度、残差流、消融结果中重建一层新的原始观测基础，而不是继续从手工数组往上堆。
+
+## [2026-03-22 20:44] Codex 研究记录
+
+### 本轮命令
+- `Get-ChildItem tests/codex -Filter 'stage10*.py' | Select-Object -ExpandProperty Name`
+- `Get-ChildItem tests/codex -Filter 'test_stage10*.py' | Select-Object -ExpandProperty Name`
+- `Get-Content tests/codex/stage99_real_external_data_counterexample_pack.py -TotalCount 220`
+- `Get-Content tests/codex/stage72_language_projection_covariance.py -TotalCount 260`
+- `Get-Content tests/codex/stage79_route_conflict_native_measure.py -TotalCount 260`
+- `Get-Content tests/codex/stage81_forward_backward_unification.py -TotalCount 260`
+- `Get-Content tests/codex_temp/deepseek7b_multidim_encoding_probe_natural96_all_support_20260319_1004/multidim_encoding_probe.json -TotalCount 220`
+- `Get-Content tests/codex_temp/stage56_gradient_trajectory_language_probe_20260320/summary.json -TotalCount 220`
+- `Get-Content tests/codex_temp/stage56_true_large_scale_route_structure_coupled_validation_20260321/summary.json -TotalCount 220`
+- `Get-Content tests/codex_temp/stage56_sparse_activation_region_analysis_20260320/summary.json -TotalCount 220`
+- `Get-Content tests/codex_temp/stage56_true_large_scale_route_degradation_probe_20260321/summary.json -TotalCount 220`
+- `Get-Content tests/codex_temp/deepseek7b_multidim_encoding_probe_natural288_all_support_20260319_1118/multidim_encoding_probe.json -TotalCount 220`
+- `rg -n 'mean_pair_delta_l2|pair_delta_cosine_mean|specificity_margin|mass50_jaccard|layer_profile_corr' tests/codex_temp/deepseek7b_multidim_encoding_probe_natural96_all_support_20260319_1004/multidim_encoding_probe.json`
+- `rg -n 'mean_pair_delta_l2|pair_delta_cosine_mean|specificity_margin|mass50_jaccard|layer_profile_corr' tests/codex_temp/deepseek7b_multidim_encoding_probe_natural288_all_support_20260319_1118/multidim_encoding_probe.json`
+- `rg -n 'selected_neuron_ratio|covered_layer_ratio|participation_ratio' tests/codex_temp/deepseek7b_multidim_encoding_probe_natural96_all_support_20260319_1004/multidim_encoding_probe.json`
+- `Get-Content research/gpt5/docs/AGI_GPT5_REASONING.md -TotalCount 260`
+- `Get-Content README.md -TotalCount 220`
+- `Get-Content research/gpt5/docs/AGI_GPT5_ICSPB.md -TotalCount 260`
+- `Get-Content tests/codex/test_stage99_real_external_data_counterexample_pack.py -TotalCount 220`
+- `Get-Content tests/codex/test_stage96_independent_evidence_core.py -TotalCount 220`
+- `Get-Content tests/codex/test_stage89_law_margin_separation.py -TotalCount 220`
+- `python tests/codex/stage104_tensor_level_language_projection_rebuild.py`
+- `python tests/codex/stage105_tensor_level_route_scale_rebuild.py`
+- `python tests/codex/stage106_forward_backward_trace_rebuild.py`
+- 手动导入执行 `test_stage104_tensor_level_language_projection_rebuild`
+- 手动导入执行 `test_stage105_tensor_level_route_scale_rebuild`
+- 手动导入执行 `test_stage106_forward_backward_trace_rebuild`
+- `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+- `git status --short`
+
+### 本轮新增文件
+- `tests/codex/stage104_tensor_level_language_projection_rebuild.py`
+- `tests/codex/stage105_tensor_level_route_scale_rebuild.py`
+- `tests/codex/stage106_forward_backward_trace_rebuild.py`
+- `tests/codex/test_stage104_tensor_level_language_projection_rebuild.py`
+- `tests/codex/test_stage105_tensor_level_route_scale_rebuild.py`
+- `tests/codex/test_stage106_forward_backward_trace_rebuild.py`
+- `research/gpt5/docs/AGI_GPT5_REASONING.md`
+- `research/gpt5/docs/AGI_GPT5_DNN_3D_VISUALIZATION.md`
+
+### 本轮重建结果
+1. 语言投影链重建（Stage104）
+- `reconstructed_context_gate_coherence = 0.7525`
+- `reconstructed_bias_transport = 0.6869`
+- `reconstructed_route_projection = 0.6956`
+- `cross_dimension_projection_stability = 0.8905`
+- `cross_dimension_separation = 0.6898`
+- `raw_language_projection_score = 0.7377`
+- 结论：语言投影链已经可以从多维编码探针和稀疏激活结果中重建，不需要继续完全依赖手工 q/b/g 场景数组。
+
+2. 路由尺度链重建（Stage105）
+- `local_anchor_support = 0.6832`
+- `mesoscopic_bundle_support = 0.6764`
+- `distributed_network_support = 0.7205`
+- `route_structure_coupling_strength = 0.7285`
+- `degradation_tolerance = 0.7283`
+- `route_scale_margin = 0.0373`
+- `reconstructed_route_scale_score = 0.7034`
+- `dominant_scale_name = distributed_network`
+- 结论：分布式网络仍是当前最强主导尺度，但领先幅度不大，只能算重建后的最强候选基础，不是已锁死公理。
+
+3. 前后向计算链重建（Stage106）
+- `loss_drop_ratio = 0.5046`
+- `frontier_drop_ratio = 0.5219`
+- `boundary_drop_ratio = 0.4326`
+- `loss_monotonicity = 1.0000`
+- `frontier_boundary_coupling = 0.7061`
+- `raw_forward_selectivity = 0.6954`
+- `raw_backward_fidelity = 0.6543`
+- `raw_novelty_binding_capacity = 0.6817`
+- `raw_forward_backward_rebuild_score = 0.7279`
+- 结论：前后向计算链已经可以从真实梯度轨迹重建，但反向保真度还不够硬，暂时只能作为中层工作基础。
+
+### 严格判断
+- 旧版 DNN 三条链不能继续作为后续理论的承重基础。
+- 新版 Stage104/105/106 可以作为“工作基础层”，但还不是“第一性原理证据基础层”。
+- 当前最硬的瓶颈仍然是：`brain_grounding（脑编码落地）`、`evidence_isolation_clause（证据隔离条款）`、真实世界任务级外部反例缺失、以及前后向链的反向段仍偏弱。
+
+### 下一阶段任务
+- `Stage100`: `backfeed_suppression_hardening（回灌抑制强化块）`
+- `Stage101`: `brain_evidence_joint_closure（脑兼容与证据独立联合闭合块）`
+- `Stage102`: `real_world_falsification_bridge（真实世界判伪桥）`
+- `Stage103`: `native_brain_anchor_search（原生脑锚点搜索块）`
+- 后续应继续推进：把 Stage104/105/106 扩展到真实训练批次、真实层流日志、真实任务反事实干预。
+
+## [2026-03-22 21:08] Codex 研究记录
+
+### 本轮命令
+- `Get-Content tests/codex/stage87_evidence_independence_audit.py -TotalCount 260`
+- `Get-Content tests/codex/stage96_independent_evidence_core.py -TotalCount 300`
+- `Get-Content tests/codex/stage97_brain_compatible_theorem_kernel.py -TotalCount 300`
+- `python tests/codex/stage100_backfeed_suppression_hardening.py`
+- 手动导入执行 `test_stage100_backfeed_suppression_hardening`
+- `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+- `git status --short tests/codex/stage100_backfeed_suppression_hardening.py tests/codex/test_stage100_backfeed_suppression_hardening.py research/gpt5/docs/AGI_GPT5_REASONING.md`
+
+### 本轮新增文件
+- `tests/codex/stage100_backfeed_suppression_hardening.py`
+- `tests/codex/test_stage100_backfeed_suppression_hardening.py`
+
+### 本轮文档同步
+- 更新 `research/gpt5/docs/AGI_GPT5_REASONING.md`
+- 新增 `Stage100` 的回灌抑制强化结果与最新阶段判断
+
+### 本轮结果
+- `summary_backfeed_risk_before = 1.0000`
+- `summary_backfeed_risk_after = 0.6687`
+- `suppression_gain = 0.3313`
+- `direct_raw_source_strength = 0.7241`
+- `raw_trace_alignment = 0.8360`
+- `evidence_isolation_support = 0.4889`
+- `legacy_dependency_penalty = 0.7580`
+- `hardened_backfeed_suppression_strength = 0.6154`
+- `backfeed_suppression_hardening_score = 0.5913`
+
+### 严格判断
+- `Stage100` 证明了：重建后的 DNN 三条基础链，确实可以实质性压低旧摘要自我加固造成的回灌风险。
+- 但它也同样证明了：当前项目还没有形成强证据隔离，回灌风险只是从“极高”降到“仍偏高”。
+- 因此，当前理论仍然不能被视为已经摆脱自证结构，只能说：基础层开始变硬，但高层闭合还远没有完成。
+
+### 下一阶段任务
+- `Stage101`: `brain_evidence_joint_closure（脑兼容与证据独立联合闭合块）`
+- `Stage102`: `real_world_falsification_bridge（真实世界判伪桥）`
+- `Stage103`: `native_brain_anchor_search（原生脑锚点搜索块）`
+- 继续扩展 `Stage104/105/106` 到更多真实训练轨迹和任务反事实样本
+
+## [2026-03-22 21:18] Codex 研究记录
+
+### 本轮命令
+- `Get-Content tests/codex/stage98_external_to_internal_failure_alignment.py -TotalCount 320`
+- `Get-Content tests/codex/stage100_backfeed_suppression_hardening.py -TotalCount 320`
+- `Get-Content research/gpt5/docs/AGI_GPT5_REASONING.md -TotalCount 80`
+- `Get-Content tests/codex/stage92_brain_grounding_counterexample_pack.py -TotalCount 320`
+- `Get-Content tests/codex/stage99_real_external_data_counterexample_pack.py -TotalCount 280`
+- `Get-Content tests/codex/test_stage100_backfeed_suppression_hardening.py -TotalCount 220`
+- `rg -n 'real_trigger_rate|path_alignment_rate|receiver_alignment_rate|clause_alignment_rate|real_external_data_counterexample_score|weakest_real_receiver_floor|mean_strongest_path_intensity' tests/codex/stage99_real_external_data_counterexample_pack.py`
+- `rg -n 'brain_grounding_residual|hardest_counterexample_intensity|weakest_component_floor|weakest_component_name' tests/codex/stage92_brain_grounding_counterexample_pack.py`
+- `rg -n 'evidence_isolation_clause|brain_compatible_theorem_kernel_score|theorem_viability_gap|field_compatibility_clause|bundle_sync_clause|neuron_anchor_clause' tests/codex/stage97_brain_compatible_theorem_kernel.py`
+- `python tests/codex/stage101_brain_evidence_joint_closure.py`
+- 手动导入执行 `test_stage101_brain_evidence_joint_closure`
+- `rg -n '给普通人的快速读法|给普通人的说明|普通人应该怎样看这些数字' research/gpt5/docs/AGI_GPT5_REASONING.md`
+- `Get-Content tests/codex_temp/stage101_brain_evidence_joint_closure_20260322/summary.json -TotalCount 220`
+- 手动导入执行 `test_stage100_backfeed_suppression_hardening`
+- 再次手动导入执行 `test_stage101_brain_evidence_joint_closure`
+- `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+- `git status --short tests/codex/stage101_brain_evidence_joint_closure.py tests/codex/test_stage101_brain_evidence_joint_closure.py research/gpt5/docs/AGI_GPT5_REASONING.md`
+
+### 本轮新增文件
+- `tests/codex/stage101_brain_evidence_joint_closure.py`
+- `tests/codex/test_stage101_brain_evidence_joint_closure.py`
+
+### 本轮文档更新
+- 更新 `research/gpt5/docs/AGI_GPT5_REASONING.md`
+- 新增“给普通人的快速读法”
+- 在 `A/B/C` 三条重建链后新增“给普通人的说明”
+- 新增“普通人应该怎样看这些数字”小节
+
+### 本轮结果
+- `neuron_anchor_joint = 0.5903`
+- `bundle_sync_joint = 0.6140`
+- `field_observability_joint = 0.6920`
+- `evidence_isolation_joint = 0.5163`
+- `real_world_bridge_joint = 0.7902`
+- `weakest_joint_clause_name = evidence_isolation_joint`
+- `weakest_joint_clause_score = 0.5163`
+- `brain_evidence_joint_closure_gap = 0.4837`
+- `brain_evidence_joint_closure_score = 0.6371`
+
+### 严格判断
+- `Stage101` 证明了：当前项目最真实的联合瓶颈，已经不是单独的脑编码弱链，也不是单独的回灌问题，而是“脑兼容 + 证据隔离”两条弱链一起卡住闭合。
+- 其中最弱联合条款仍然是 `evidence_isolation_joint（证据隔离联合条款）`，说明高层理论还没有摆脱旧摘要和内部结构的拖拽。
+- `real_world_bridge_joint = 0.7902` 说明外部样本桥已经比以前明显更硬，但它目前仍然主要停留在词表级、样本级，而不是真实世界任务级。
+
+### 下一阶段任务
+- `Stage102`: `real_world_falsification_bridge（真实世界判伪桥）`
+- `Stage103`: `native_brain_anchor_search（原生脑锚点搜索块）`
+- 后续应继续扩展 `Stage104/105/106` 到更多真实训练批次、任务反事实和层流日志
+- 后续需要把 `Stage101` 的联合闭合块接回总理论主核，但前提是不能重新引入严重摘要回灌
+
+## [2026-03-22 21:33] Codex 研究记录
+
+### 本轮命令
+- `Get-ChildItem tempdata -Recurse -Filter multidim_encoding_probe.json | Select-Object -ExpandProperty FullName`
+- `Get-Content tests/codex/stage101_brain_evidence_joint_closure.py -TotalCount 320`
+- `Get-Content tests/codex/stage99_real_external_data_counterexample_pack.py -Tail 180`
+- `Get-Content tempdata/deepseek7b_multidim_encoding_probe_20260305_220444/multidim_encoding_probe.json -TotalCount 160`
+- `Get-Content tempdata/deepseek7b_multidim_multiseed_v1/seed101/probe/multidim_encoding_probe.json -TotalCount 80`
+- `Get-ChildItem tempdata/deepseek7b_multidim_multiseed_v1 -Directory | Select-Object -ExpandProperty Name`
+- `rg -n 'mean_pair_delta_l2|pair_delta_cosine_mean' tempdata/deepseek7b_multidim_multiseed_v1/seed101/probe/multidim_encoding_probe.json`
+- `python tests/codex/stage102_real_world_falsification_bridge.py`
+- 手动导入执行 `test_stage102_real_world_falsification_bridge`
+- `rg -n '给普通人的快速读法|给普通人的说明|普通人应该怎样看这些数字|真实世界判伪桥结果' research/gpt5/docs/AGI_GPT5_REASONING.md`
+- 手动导入执行 `test_stage101_brain_evidence_joint_closure`
+- 再次手动导入执行 `test_stage102_real_world_falsification_bridge`
+- `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+- `git status --short tests/codex/stage102_real_world_falsification_bridge.py tests/codex/test_stage102_real_world_falsification_bridge.py research/gpt5/docs/AGI_GPT5_REASONING.md`
+
+### 本轮新增文件
+- `tests/codex/stage102_real_world_falsification_bridge.py`
+- `tests/codex/test_stage102_real_world_falsification_bridge.py`
+
+### 本轮文档更新
+- 更新 `research/gpt5/docs/AGI_GPT5_REASONING.md`
+- 新增 `3.8 真实世界判伪桥结果`
+- 新增对应的普通人说明，解释“从词表级外部样本走向任务语境级探针”到底意味着什么
+
+### 本轮结果
+- `task_context_bridge_strength = 0.2867`
+- `multiseed_probe_stability = 0.8979`
+- `bridge_alignment_support = 0.8214`
+- `falsification_triggerability = 0.5062`
+- `remaining_real_world_gap = 0.7133`
+- `real_world_falsification_bridge_score = 0.5827`
+- `status_short = real_world_falsification_bridge_transition`
+
+### 严格判断
+- `Stage102` 说明：当前理论已经不再只停留在词表级外部样本，而是开始用更接近真实任务语境的自然语言对比句和多随机种子稳定性来搭桥。
+- 但这座桥当前仍偏弱，尤其是 `task_context_bridge_strength` 只有 `0.2867`，说明“更像真实任务”这部分还不够强。
+- 好消息是 `multiseed_probe_stability = 0.8979` 很高，说明这条桥不是随机噪声造成的；坏消息是它离真实世界任务闭合还很远。
+
+### 针对用户问题的研究判断
+- 如果语言背后真有一种新的数学理论，那么 DNN 部分不能再把当前这些数据当“终点证据”，而应把它们重新降级为“新理论的外部投影观测面”。
+- 这意味着：基础数据会从“词表、探针摘要、梯度轨迹”扩成“跨上下文、跨任务、跨时间、跨尺度的原生动力学观测”；推理过程会从“指标加权组合”改成“先找原生变量与守恒/边界，再验证投影”；推理结果也会从“某个分数成立”改成“某些定律、边界和失败条件成立”。
+
+### 下一阶段任务
+- `Stage103`: `native_brain_anchor_search（原生脑锚点搜索块）`
+- 后续需要扩展 `Stage102` 到真实任务数据、真实错误案例、真实反事实干预
+- 后续还需要把 `Stage100/101/102` 接回统一主核，但必须限制摘要回灌，避免重新退回自证结构
+
+## [2026-03-22 21:53] Codex 研究记录
+
+### 本轮命令
+- `Get-Content tempdata/deepseek7b_multidim_encoding_probe_20260305_220444/multidim_encoding_probe.json -TotalCount 160`
+- `Get-Content tempdata/deepseek7b_multidim_multiseed_v1/seed101/probe/multidim_encoding_probe.json -TotalCount 80`
+- `Get-ChildItem tempdata/deepseek7b_multidim_multiseed_v1 -Directory | Select-Object -ExpandProperty Name`
+- `python tests/codex/stage103_native_brain_anchor_search.py`
+- 手动导入执行 `test_stage103_native_brain_anchor_search`
+- 再次手动导入执行 `test_stage102_real_world_falsification_bridge`
+- `rg -n '脑兼容与证据独立联合闭合结果|原生脑锚点搜索结果' research/gpt5/docs/AGI_GPT5_REASONING.md`
+- `Get-Content tests/codex_temp/stage103_native_brain_anchor_search_20260322/summary.json -TotalCount 220`
+- `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+- `git status --short tests/codex/stage103_native_brain_anchor_search.py tests/codex/test_stage103_native_brain_anchor_search.py research/gpt5/docs/AGI_GPT5_REASONING.md`
+
+### 本轮新增文件
+- `tests/codex/stage103_native_brain_anchor_search.py`
+- `tests/codex/test_stage103_native_brain_anchor_search.py`
+
+### 本轮文档更新
+- 更新 `research/gpt5/docs/AGI_GPT5_REASONING.md`
+- 新增 `4.1 脑兼容与证据独立联合闭合结果`
+- 新增 `4.2 原生脑锚点搜索结果`
+- 为脑编码部分增加普通人可读解释
+
+### 本轮结果
+- `generic_seed_recurrence_strength = 1.0000`
+- `dimension_specific_anchor_strength = 0.8180`
+- `layer_anchor_stability = 1.0000`
+- `anchor_ambiguity_penalty = 0.6667`
+- `closure_bridge_support = 0.6576`
+- `weakest_anchor_mode_name = anchor_ambiguity_gap`
+- `weakest_anchor_mode_pressure = 0.6667`
+- `native_brain_anchor_search_score = 0.7993`
+
+### 严格判断
+- 当前不是“找不到脑锚点”，而是已经找到了相当强的一批候选锚点。
+- 真正的新问题是 `anchor_ambiguity_gap（锚点歧义缺口）`：一些锚点在 `style（风格）` 和 `syntax（语法）` 等维度之间共享过多，导致它们还不够干净，不能直接当原生定理变量。
+- 这说明项目已经从“脑锚点缺失”推进到了“脑锚点存在但还不够可分”的阶段，这是真推进，但仍不是第一性原理闭合。
+
+### 针对用户问题的研究判断
+- 如果语言背后真是一种新的数学理论，那么 DNN 部分会被整体重排：
+  1. 基础数据：从“探针结果和摘要指标”降级为“新理论在 DNN 上的投影观测”。
+  2. 推理过程：从“指标加权组合”转向“先找原生变量、守恒量、边界量、失败条件，再检查 DNN 是否满足投影规律”。
+  3. 推理结果：从“某个链条分数较高”转向“某种定律、闭合条件和失败边界是否成立”。
+- 因此，当前 DNN 部分不是终点，而更像是新数学理论的实验入口和投影面。
+
+### 下一阶段任务
+- 持续补真实有效拼图：真实任务数据、真实错误案例、真实反事实干预、真实层流日志
+- 继续压低 `anchor_ambiguity_gap（锚点歧义缺口）`
+- 把 `Stage100/101/102/103` 组织成“原生变量候选层”，而不是继续堆高层总分
+- 后续重点：从 DNN 投影观测反推更原生的数学对象与局部生成律
+
+## [2026-03-22 22:02] Codex 研究记录
+
+### 本轮命令
+- `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+
+### 本轮性质
+- 本轮未新增脚本与测试
+- 本轮任务为理论方法论回答：如果要在当前原始数据与分析推理基础上完成一个新的数学理论，应如何组织研究路线
+
+### 本轮研究判断
+- 当前项目如果真要走向“新数学理论”，最关键的不是继续堆更多高层分数，而是把现有 DNN 观测、脑编码弱链、外部反例桥，全部降级为“观测层”，然后从中反推出更原生的数学对象、局部生成律、守恒/边界量和失败条件。
+- 当前最合理的方法不是直接写大一统终极公式，而是走“五层递进路线”：
+  1. 观测层：整理哪些量是稳定投影，哪些只是辅助代理。
+  2. 对象层：从投影里抽出真正的数学对象，例如区域、纤维、路由、场、预算、压力、边界。
+  3. 律层：写出局部生成律与演化律，要求少参数、可复现、可失败。
+  4. 定理层：证明稳定性、可分性、闭合性、边界破裂条件。
+  5. 判伪层：用真实任务、真实反事实、真实外部样本去打穿错误公理。
+- 当前 DNN 部分最适合在新理论里扮演“实验物理观测层”，而不是“理论本体”。
+- 当前阶段最关键的新任务不是再加一个高层块，而是建立“原生变量候选层整合框架”，把 Stage100-103 组织成新理论入口。
+
+### 下一阶段建议
+- 建立“原生变量候选总表”：区分原生变量、投影变量、代理变量、淘汰变量
+- 建立“局部生成律候选总表”：明确哪些律只在 DNN 投影层成立，哪些可能接近理论本体
+- 建立“边界与失败条件总表”：把脑编码弱链、证据隔离弱链、真实任务桥缺口统一成失败拓扑
+- 再进入下一阶段代码实现时，应优先做“原生变量候选层整合块”，而不是继续扩写单点指标
+
+## [2026-03-22 22:25] Stage107 新数学理论对象层推进
+
+### 本轮命令
+- python tests/codex/stage107_math_theory_object_layer_synthesis.py
+- 手动导入执行 	est_stage107_math_theory_object_layer_synthesis
+- 复核并更新 esearch/gpt5/docs/AGI_GPT5_REASONING.md
+
+### 新增与更新文件
+- 	ests/codex/stage107_math_theory_object_layer_synthesis.py
+- 	ests/codex/test_stage107_math_theory_object_layer_synthesis.py
+- esearch/gpt5/docs/AGI_GPT5_REASONING.md
+
+### 核心结果
+- object_layer_viability_score = 0.7091
+- xiom_layer_viability_score = 0.7252
+- oundary_layer_viability_score = 0.5667
+- strongest_object_name = anchor_recurrence_family
+- weakest_axiom_name = falsifiable_boundary_axiom
+- weakest_axiom_score = 0.6080
+- highest_boundary_name = evidence_boundary
+- highest_boundary_pressure = 0.6687
+- 	heorem_core_transition_gap = 0.6687
+- math_theory_object_layer_score = 0.6127
+
+### 理论数学研究进度
+本轮不是再做一个桥接分数，而是第一次把当前还能稳定保留的拼图，压成了“对象层、公理层、边界层”三层骨架。当前最强对象已经转向 nchor_recurrence_family，说明跨随机种子反复出现的脑锚点候选，已经具备进入理论对象候选集的资格。当前最弱公理则明确落在 alsifiable_boundary_axiom，说明理论现在真正卡住的，不是完全没有对象，也不是完全没有公理，而是“怎样被真实世界击穿”这条可判伪边界还不够硬。
+
+同时，本轮把 AGI_GPT5_REASONING.md 改成了更接近“新数学理论工程说明书”的状态，新增 4.3 新数学理论对象层结果，并把后续任务从已完成的 Stage101-104 改写为真正面向理论主核的 Stage108-111。
+
+### 最严格判断
+当前项目已经不再主要停留在“分数解释框架”，而是开始出现候选数学对象与候选公理；但它仍然远不是闭式新理论。最硬的瓶颈仍然是 evidence_boundary 压力过高，以及 alsifiable_boundary_axiom 偏弱。也就是说，项目现在已经从“没有对象”推进到“有对象但缺强边界”，这是真推进，但不是证成。
+
+### 下一阶段任务
+- Stage108: local_generative_law_catalog，把对象层继续压成局部生成律目录。
+- Stage109: invariant_boundary_quantity_search，正式搜索守恒量、单调量、边界量。
+- Stage110: xiom_falsification_suite，用真实任务样本打当前最弱公理。
+- Stage111: 
+ative_variable_registry_pruning，裁剪代理变量，锁定理论主核变量。
+
+## [2026-03-22 22:33] Stage108 局部生成律目录推进
+
+### 本轮命令
+- python tests/codex/stage108_local_generative_law_catalog.py
+- 手动导入执行 	est_stage108_local_generative_law_catalog
+- 更新 esearch/gpt5/docs/AGI_GPT5_REASONING.md
+
+### 新增与更新文件
+- 	ests/codex/stage108_local_generative_law_catalog.py
+- 	ests/codex/test_stage108_local_generative_law_catalog.py
+- esearch/gpt5/docs/AGI_GPT5_REASONING.md
+
+### 核心结果
+- law_catalog_coverage = 0.6890
+- law_composability_score = 0.7082
+- law_failure_resilience = 0.5667
+- strongest_law_name = projection_transport_law
+- weakest_law_name = boundary_exposure_law
+- weakest_law_score = 0.5191
+- highest_failure_boundary_name = evidence_boundary
+- highest_failure_boundary_pressure = 0.6687
+- local_generative_law_catalog_score = 0.5933
+
+### 理论数学研究进度
+本轮把 Stage107 的对象层和公理层，继续压成了 5 条带局部更新式的候选生成律：projection_transport_law、distributed_route_settlement_law、ounded_repair_contraction_law、nchor_refinement_law、oundary_exposure_law。这意味着项目现在已经不只是“有对象、有公理”，而是开始出现“最小局部律目录”。当前最强律是 projection_transport_law，说明语言作为条件投影场输出这条线是当前最成型的；当前最弱律是 oundary_exposure_law，说明理论怎样沿真实外部任务暴露失效边界，仍然是最薄弱的一环。
+
+### 最严格判断
+当前项目离新数学理论又近了一步，但仍远未闭合。最大的硬伤没有变：最高失败边界仍然是 evidence_boundary，最弱局部律仍然是 oundary_exposure_law。也就是说，当前已经能写出局部生成律雏形，但还不能说明这些局部律怎样在真实世界任务里被稳定验证或稳定击穿。
+
+### 下一阶段任务
+- Stage109: invariant_boundary_quantity_search，搜索守恒量、单调量、边界量。
+- Stage110: xiom_falsification_suite，用真实任务样本打最弱公理和最弱局部律。
+- Stage111: 
+ative_variable_registry_pruning，锁定理论主核变量，裁剪投影量和代理量。
+- Stage112: world_task_boundary_bridge，把 oundary_exposure_law 推进到更强的真实任务级反例闭合。
+
+## [2026-03-22 22:41] Stage109 守恒量与边界量搜索推进
+
+### 本轮命令
+- python tests/codex/stage109_invariant_boundary_quantity_search.py
+- 手动导入执行 	est_stage109_invariant_boundary_quantity_search
+- 更新 esearch/gpt5/docs/AGI_GPT5_REASONING.md
+
+### 新增与更新文件
+- 	ests/codex/stage109_invariant_boundary_quantity_search.py
+- 	ests/codex/test_stage109_invariant_boundary_quantity_search.py
+- esearch/gpt5/docs/AGI_GPT5_REASONING.md
+
+### 核心结果
+- invariant_quantity_strength = 0.7291
+- oundary_quantity_resilience = 0.4216
+- 	heory_breakthrough_readiness = 0.6225
+- strongest_quantity_name = hierarchical_concept_span_quantity
+- weakest_quantity_name = repair_stability_quantity
+- weakest_quantity_score = 0.6632
+- highest_boundary_name = task_bridge_boundary
+- highest_boundary_pressure = 0.7133
+- invariant_boundary_quantity_score = 0.5394
+
+### 理论数学研究进度
+本轮第一次把“微观/中观/宏观概念层级”、“风格/逻辑/语法协变唯一性”、“最小传送效率”、“关系线性结构”、“修复稳态性”压成候选守恒量与候选边界量。当前最强候选量已经明确落在 hierarchical_concept_span_quantity，说明概念能否跨层级稳定转运，很可能是新数学理论的重要入口。与此同时，当前最高边界已经转向 	ask_bridge_boundary，说明项目最大的现实缺口，不再只是有没有候选理论量，而是这些量能否真正跨进真实任务语境。
+
+这一轮也进一步说明：词嵌入里的关系线性结构可以作为线索，但当前还只是 elational_linearity_quantity 级别的弱迹象，不应直接当作新理论已成立的证明；脉冲最小传送、分布式沉降、全局唯一词选择这三条线，现在更适合作为守恒量与边界量搜索的方向，而不是直接写成终式公理。
+
+### 最严格判断
+当前项目离新数学理论又近了一步，但还远不是闭式理论。现在已经开始出现更像“守恒量”和“失败边界”的东西，这是实推进；但当前最高边界是 	ask_bridge_boundary，说明理论还没有真正跨到真实任务世界。也就是说，当前最需要突破的已经不是“没有拼图”，而是“拼图能不能跨场景闭合”。
+
+### 下一阶段任务
+- Stage110: xiom_falsification_suite，用真实任务样本和强反例打当前最弱公理与任务桥边界。
+- Stage111: 
+ative_variable_registry_pruning，把理论主核变量、投影变量、代理变量正式分层。
+- Stage112: world_task_boundary_bridge，把 oundary_exposure_law 推到更强的真实任务级反例闭合。
+- Stage113: concept_hierarchy_probe_expansion，补齐微观形容词、宏观动词和抽象名词数据，让概念层级跨度量从候选量变成更硬的理论量。
+
+## [2026-03-22 23:02] Stage110 公理判伪攻击包推进
+
+### 本轮命令
+- python tests/codex/stage110_axiom_falsification_suite.py
+- 手动导入执行 	est_stage110_axiom_falsification_suite
+- 更新 esearch/gpt5/docs/AGI_GPT5_REASONING.md
+
+### 新增与更新文件
+- 	ests/codex/stage110_axiom_falsification_suite.py
+- 	ests/codex/test_stage110_axiom_falsification_suite.py
+- esearch/gpt5/docs/AGI_GPT5_REASONING.md
+
+### 核心结果
+- ttack_coverage = 1.0000
+- strongest_attack_name = logic_negation_attack
+- strongest_attack_intensity = 0.5596
+- weakest_axiom_after_attack_name = falsifiable_boundary_axiom
+- weakest_axiom_after_attack_score = 0.1727
+- 	ask_bridge_retest_pressure = 0.6547
+- alsification_survival_score = 0.4881
+- xiom_falsification_suite_score = 0.6468
+
+### 理论数学研究进度
+本轮第一次把真实存在的 style / logic / syntax 对照任务句，以及英语词表、双语词表、抽象概念样本，组织成面向公理的攻击包。攻击结果非常明确：最强攻击是 logic_negation_attack，而被打得最脆的仍然是 alsifiable_boundary_axiom。这说明当前理论已经开始有对象、有局部律、有候选守恒量，但一旦进入更接近真实任务的对照攻击，最脆弱的地方仍然是“它怎样被真实世界稳定击穿”。
+
+这一步很重要，因为它把之前的弱判断从“指标层面脆弱”推进到了“攻击后确实掉得最狠”。现在可以更严格地说：当前理论最大的危险不是完全没有结构，而是最关键的失败边界还不够硬。
+
+### 最严格判断
+当前项目离新数学理论又近了一步，但短板也暴露得更清楚。最关键的硬伤已经不是一般性的解释不足，而是 alsifiable_boundary_axiom 在真实攻击后掉到  .1727，说明当前理论的判伪主核仍然偏脆。同时，	ask_bridge_retest_pressure 仍然很高，说明候选理论量还没有真正闭合到真实任务世界。
+
+### 下一阶段任务
+- Stage111: 
+ative_variable_registry_pruning，正式分层理论主核变量、投影变量、代理变量。
+- Stage112: world_task_boundary_bridge，把当前最弱的真实任务桥推进到更强反例闭合。
+- Stage113: concept_hierarchy_probe_expansion，补齐微观形容词、宏观动词、抽象名词数据。
+- Stage114: alsifiable_boundary_kernel_repair，专门修当前最脆的 alsifiable_boundary_axiom。
+
+## [2026-03-22 23:19] Stage111 原生变量注册与裁剪推进
+
+### 本轮命令
+- python tests/codex/stage111_native_variable_registry_pruning.py
+- 手动导入执行 	est_stage111_native_variable_registry_pruning
+- 更新 esearch/gpt5/docs/AGI_GPT5_REASONING.md
+
+### 新增与更新文件
+- 	ests/codex/stage111_native_variable_registry_pruning.py
+- 	ests/codex/test_stage111_native_variable_registry_pruning.py
+- esearch/gpt5/docs/AGI_GPT5_REASONING.md
+
+### 核心结果
+- 
+ative_core_variable_count = 2
+- projection_variable_count = 7
+- proxy_variable_count = 3
+- deferred_variable_count = 2
+- strongest_native_name = anchor_recurrence_family
+- weakest_native_name = minimal_transport_efficiency_quantity
+- weakest_native_score = 0.7214
+- 
+ative_variable_purity = 0.6620
+- proxy_load_penalty = 0.2143
+- 
+ative_variable_registry_pruning_score = 0.5340
+
+### 理论数学研究进度
+本轮第一次把对象、局部律、候选守恒量、公理攻击结果统一整理成变量注册表，并明确区分 
+ative_core / projection / proxy / deferred 四层。最严格也最重要的结论是：当前真正能暂时进入理论主核的变量只有 2 个，分别是 nchor_recurrence_family 和 minimal_transport_efficiency_quantity。这说明当前最需要克制的一点，不是继续扩张理论主核，而是先让理论主核变小、变硬、变干净。
+
+这一轮的意义很大，因为它把之前容易混在一起的“对象、投影量、摘要量、代理量”正式拆开了。现在可以更清楚地说：很多看起来解释力很强的量，仍然只配留在投影层，而不是直接写进新数学理论主核。
+
+### 最严格判断
+当前项目离新数学理论又近了一步，但也更克制了。最硬的结论不是“主核越来越大”，而是“主核目前只有 2 个变量”。这说明理论变量层还远没有稳定闭合。也就是说，现在不缺拼图，不缺对象，不缺局部律；最缺的是足够干净、足够原生、足够抗攻击的主核变量。
+
+### 下一阶段任务
+- Stage112: world_task_boundary_bridge，继续降低真实任务桥边界。
+- Stage113: concept_hierarchy_probe_expansion，补齐微观形容词、宏观动词、抽象名词数据。
+- Stage114: alsifiable_boundary_kernel_repair，修当前最脆的可判伪边界公理。
+- Stage115: 
+ative_core_expansion_audit，在不污染主核的前提下审计还有哪些变量值得升级。
+
+## [2026-03-22 23:58] Stage112 真实任务边界桥推进
+
+### 本轮命令
+- python tests/codex/stage112_world_task_boundary_bridge.py
+- 手动导入执行 	est_stage112_world_task_boundary_bridge
+- 更新 esearch/gpt5/docs/AGI_GPT5_REASONING.md
+
+### 新增与更新文件
+- 	ests/codex/stage112_world_task_boundary_bridge.py
+- 	ests/codex/test_stage112_world_task_boundary_bridge.py
+- esearch/gpt5/docs/AGI_GPT5_REASONING.md
+
+### 核心结果
+- ridge_family_coverage = 1.0000
+- hardest_family_name = logic_negation_family
+- hardest_family_pressure = 0.5409
+- weakest_native_under_task_name = minimal_transport_efficiency_quantity
+- weakest_native_under_task_score = 0.6460
+- 	ask_boundary_closure_gain = 0.6183
+- world_task_boundary_bridge_score = 0.7007
+
+### 理论数学研究进度
+本轮第一次不再只看“总任务桥分数”，而是把当前 2 个主核变量直接放到 5 类真实任务家族下面复核。结果非常明确：最难家族是 logic_negation_family，而在真实任务家族下最脆的主核变量是 minimal_transport_efficiency_quantity。这说明“最小传送”这条线虽然足够硬能进入主核，但它不是无条件稳定；一旦任务进入逻辑否定、反转、矛盾穿透这类场景，它会优先承受压力。
+
+这一步很重要，因为它把主核变量从静态注册进一步推进到真实任务世界审计。现在可以更严格地说：当前新数学理论主核不是完全抽象出来的空骨架，而是已经开始知道“自己最怕哪类任务”。
+
+### 最严格判断
+当前项目离新数学理论又近了一步，但硬伤也更清楚了：主核变量虽然已经缩到 2 个，但其中 minimal_transport_efficiency_quantity 在真实任务家族下仍然优先承压。这说明主核还没有稳闭合，尤其在逻辑否定任务下仍然存在结构性脆点。
+
+### 下一阶段任务
+- Stage113: concept_hierarchy_probe_expansion，补齐微观形容词、宏观动词、抽象名词数据。
+- Stage114: alsifiable_boundary_kernel_repair，继续修当前最脆的可判伪边界公理。
+- Stage115: 
+ative_core_expansion_audit，审计还有哪些变量值得升级进主核。
+- Stage116: logic_negation_transport_repair，专门修 logic_negation_family 下的 minimal_transport_efficiency_quantity。

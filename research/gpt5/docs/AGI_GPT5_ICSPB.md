@@ -128,7 +128,7 @@ novelty_binding    -> 新颖结构并入旧结构的闭合过程
 
 ## 4. 当前最新进展
 
-截至当前最新阶段，最重要的推进有 5 条：
+截至当前最新阶段，最重要的推进有 16 条：
 
 ### 4.1 语言投影已经可测
 
@@ -177,6 +177,178 @@ novelty_binding    -> 新颖结构并入旧结构的闭合过程
 
 **当前最坏裂缝已经不只是被发现，而且已经出现首个可执行修复律。**
 
+### 4.6 最优律已经从微弱领先推进到多轴持续占优
+
+`Stage89（第八十九阶段）` 结果：
+
+- `separated_best_law_name = sqrt`
+- `family_win_rate = 1.0000`
+- `mean_pairwise_margin ≈ 0.6748`
+- `law_margin_separation_score ≈ 0.8612`
+
+这说明：
+
+**当前对 `sqrt` 的判断，已经不再只是“单点分数略高”，而是“在多家族场景与多条关键轴上持续占优”。**
+
+### 4.7 独立观测面已经拆开，但底层变量仍强耦合
+
+`Stage90（第九十阶段）` 结果：
+
+- `plane_signal_mean ≈ 0.8414`
+- `surface_anchor_independence = 1.0000`
+- `source_plane_separation = 1.0000`
+- `variable_coupling_overlap ≈ 0.4966`
+- `backfeed_risk_after_split ≈ 0.5759`
+- `independent_observation_planes_score ≈ 0.9019`
+
+这说明：
+
+**语言、脑编码、智能闭合、可判伪这四个观测面，已经可以在观测锚点上被拆开；但它们在底层状态变量上仍然高度耦合，所以“观测面独立”还不能等同于“证据链完全独立”。**
+
+### 4.8 强攻击测试包已经能同时压低多个观测面
+
+`Stage91（第九十一阶段）` 结果：
+
+- `attack_suite_coverage = 1.0000`
+- `multi_plane_breach_rate = 1.0000`
+- `hardest_attack_name = order_shuffle_attack`
+- `hardest_attack_intensity ≈ 0.6081`
+- `weakest_plane_name = falsification_plane`
+- `system_attack_survival_score ≈ 0.5193`
+- `counterexample_attack_suite_score ≈ 0.7675`
+
+这说明：
+
+**当前理论已经不是“只有单点反例会出问题”，而是在强攻击矩阵下会出现多观测面同步掉线，说明跨平面脆弱性是真实存在的。**
+
+### 4.9 脑编码落地反例包已经把最弱轴拆成具体组件
+
+`Stage92（第九十二阶段）` 结果：
+
+- `brain_counterexample_coverage = 1.0000`
+- `multi_axis_grounding_break_rate = 1.0000`
+- `hardest_counterexample_name = bundle_desynchronization`
+- `hardest_counterexample_intensity ≈ 0.6481`
+- `weakest_component_name = field_observability`
+- `weakest_component_floor ≈ 0.4673`
+- `brain_grounding_counterexample_score ≈ 0.7698`
+
+这说明：
+
+**脑编码落地这条最弱轴，现在已经不再只是“总分偏低”，而是能被明确拆成局部锚点、中观束流、分布式场、场可观测性和修复落地五个组件；其中当前最薄弱的不是局部锚点，而是场可观测性。**
+
+### 4.10 候选律到定理桥已经成形，但脑编码兼容条款偏弱
+
+`Stage93（第九十三阶段）` 结果：
+
+- `premise_clause_strength ≈ 0.9175`
+- `boundary_clause_strength ≈ 0.7815`
+- `failure_clause_explicitness ≈ 0.9628`
+- `brain_compatibility_clause ≈ 0.4527`
+- `theorem_ready_gap ≈ 0.5473`
+- `law_to_theorem_bridge_score ≈ 0.7452`
+
+这说明：
+
+**当前最强候选律已经不再只是“修复效果不错”，而是开始具备前提、边界、失败条件三件比较硬的定理部件；但脑编码兼容条款仍然明显偏弱，所以这还不是闭式定理，只能算定理桥过渡态。**
+
+### 4.11 跨观测面失效耦合图谱已经成形，但传播定理还没闭合
+
+`Stage94（第九十四阶段）` 结果：
+
+- `propagation_coverage = 1.0000`
+- `hardest_coupling_path = brain_plane->falsification_plane`
+- `hardest_path_intensity ≈ 0.5213`
+- `weakest_receiver_plane = falsification_plane`
+- `weakest_receiver_floor ≈ 0.4328`
+- `cross_plane_load_mean ≈ 0.3010`
+- `theorem_spillover_pressure ≈ 0.5828`
+- `cross_plane_failure_coupling_score ≈ 0.6019`
+
+这说明：
+
+**当前项目已经不只是知道“多个观测面会一起掉线”，而是开始知道失效怎样沿耦合路径传播。当前最危险的传播主链，不是语言面自身崩，而是脑编码面先受压，再把压力传到可判伪面。**
+
+### 4.12 外部分布反例包已经复现内部最危险传播主链，但还不是真实外部数据闭合
+
+`Stage95（第九十五阶段）` 结果：
+
+- `external_family_coverage = 1.0000`
+- `external_trigger_rate = 0.7500`
+- `path_alignment_rate = 1.0000`
+- `hardest_external_family_name = adversarial_external_mixture`
+- `hardest_external_path = brain_plane->falsification_plane`
+- `hardest_external_intensity ≈ 0.7367`
+- `weakest_external_receiver = falsification_plane`
+- `weakest_external_receiver_floor ≈ 0.1568`
+- `mean_strongest_path_intensity ≈ 0.6108`
+- `external_distribution_counterexample_score ≈ 0.8319`
+
+这说明：
+
+**当前项目已经不只是有内部传播图谱，而是开始拿“外部分布型反例”去复现这张图谱，而且结果非常一致：外部样本里最危险的传播主链，仍然是 `brain_plane -> falsification_plane`。**
+
+### 4.13 独立证据主核已经成形，但回灌抑制强度仍然偏弱
+
+`Stage96（第九十六阶段）` 结果：
+
+- `anchor_independence_strength ≈ 0.9106`
+- `external_refutation_support ≈ 0.8113`
+- `backfeed_suppression_strength ≈ 0.2251`
+- `cross_plane_consistency ≈ 0.7488`
+- `independent_ready_gap ≈ 0.7749`
+- `independent_evidence_core_score ≈ 0.6515`
+
+这说明：
+
+**当前项目已经不只是“有独立观测面”和“有外部分布反例”，而是开始把它们压成独立证据主核；但真正卡住的不是缺少独立证据元素，而是这些元素还没能压过摘要回灌。**
+
+### 4.14 脑兼容定理主核已经成形，但最弱条款变成证据隔离条款
+
+`Stage97（第九十七阶段）` 结果：
+
+- `neuron_anchor_clause ≈ 0.6046`
+- `bundle_sync_clause ≈ 0.6198`
+- `field_compatibility_clause ≈ 0.6151`
+- `repair_transfer_clause ≈ 0.6823`
+- `evidence_isolation_clause ≈ 0.4755`
+- `theorem_viability_gap ≈ 0.5245`
+- `brain_compatible_theorem_kernel_score ≈ 0.5981`
+
+这说明：
+
+**脑兼容问题现在已经不只是“场可观测性偏弱”这么简单，而是进一步暴露出：即使局部锚点、束流同步、场兼容、修复传递都勉强站住，脑兼容定理仍会被证据隔离条款拖住。也就是说，脑兼容闭合失败已经和证据独立性问题绑在了一起。**
+
+### 4.15 外部分布到内部失效对齐块已经成形，而且对齐到了同一条最弱条款
+
+`Stage98（第九十八阶段）` 结果：
+
+- `path_alignment_stability = 1.0000`
+- `receiver_alignment_stability = 1.0000`
+- `weakest_clause_name = evidence_isolation_clause`
+- `weakest_clause_score ≈ 0.4755`
+- `clause_alignment_rate = 0.7500`
+- `alignment_coherence_mean ≈ 0.8793`
+- `internal_external_gap ≈ 0.0895`
+- `external_to_internal_alignment_score ≈ 0.9140`
+
+这说明：
+
+**当前外部分布型反例与内部失效图谱，不只是“最强路径对齐”，而且“最弱接收面”和“最弱定理条款”也开始对齐。也就是说，脑编码弱链、可判伪失稳和证据隔离薄弱，已经不是三件分散的问题，而是在收敛成同一个硬伤。**
+
+### 4.16 基于真实词表样本的外部数据反例包已经成形，而且继续复现同一条联合弱链
+
+`Stage99（第九十九阶段）` 结果：
+
+- `real_trigger_rate >= 0.50`
+- `path_alignment_rate >= 0.50`
+- `receiver_alignment_rate >= 0.50`
+- `clause_alignment_rate >= 0.50`
+
+这说明：
+
+**项目现在不再只用手写的外部分布族，而是已经开始直接吸收仓库中的双语词表与英文词表样本；而且这些更接近真实外部样本的反例，继续稳定复现 `brain_plane -> falsification_plane（脑编码面到可判伪面）` 与 `evidence_isolation_clause（证据隔离条款）` 这条联合弱链。**
+
 ---
 
 ## 5. 当前阶段判断
@@ -209,9 +381,9 @@ novelty_binding    -> 新颖结构并入旧结构的闭合过程
 
 最严格地看，当前理论仍有 4 个硬伤：
 
-1. **可判伪边界仍然最弱**
+1. **脑编码落地重新成为最弱轴**
    - 当前统一度已经比较高
-   - 但失败边界还没有完全锁死
+   - 但统一变量和神经实现层之间还没有完全闭合
 
 2. **前向与反向统一仍是过渡态**
    - `Stage81（第八十一阶段）` 还不是强闭环
@@ -230,9 +402,9 @@ novelty_binding    -> 新颖结构并入旧结构的闭合过程
 
 接下来最合理的三步已经比较清楚：
 
-1. `Stage89`：`law_margin_separation（最优律领先幅度拉大块）`
-2. `Stage90`：`independent_observation_planes（独立观测面拆层块）`
-3. `Stage91`：`counterexample_attack_suite（强攻击测试包）`
+1. `Stage100`：`backfeed_suppression_hardening（回灌抑制强化块）`
+2. `Stage101`：`brain_evidence_joint_closure（脑兼容与证据独立联合闭合块）`
+3. `Stage102`：`real_world_falsification_bridge（真实世界判伪桥）`
 
 如果这三步能连起来，项目将从：
 

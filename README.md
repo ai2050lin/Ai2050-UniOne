@@ -87,12 +87,23 @@
 
 **第一性原理统一前沿区。**
 
-最新最重要的判断有 4 条：
+最新最重要的判断有 15 条：
 
 1. 语言投影链已经被测硬。
 2. 路由主导尺度已经明确是分布式网络。
 3. 前向路由与反向修复已经开始形成统一闭环。
 4. `novelty_generalization（新颖泛化）` 已经出现首个可执行修复律。
+5. `sqrt（平方根）` 已经从微弱领先推进到多轴持续占优。
+6. 独立观测面已经拆开，但底层变量仍然强耦合。
+7. 强攻击测试包已经证明多观测面会同步掉线。
+8. 脑编码落地最薄弱的具体组件已经被定位成 `field_observability（场可观测性）`。
+9. 候选律到定理桥已经成形，但脑编码兼容条款仍然偏弱。
+10. 跨观测面失效耦合图谱已经成形，当前最危险的传播主链是 `brain_plane -> falsification_plane（脑编码面到可判伪面）`。
+11. 外部分布型反例已经能稳定复现这条内部最危险传播主链，但还不等于真实外部数据闭合。
+12. 独立证据主核已经成形，但 `backfeed_suppression_strength（回灌抑制强度）` 仍然很弱。
+13. 脑兼容定理主核已经成形，但当前最弱条款已经变成 `evidence_isolation_clause（证据隔离条款）`。
+14. 外部分布到内部失效对齐块已经成形，而且已经对齐到同一条最弱条款 `evidence_isolation_clause（证据隔离条款）`。
+15. 基于仓库真实词表样本的外部数据反例包已经成形，而且继续复现 `brain_plane -> falsification_plane（脑编码面到可判伪面）` 与 `evidence_isolation_clause（证据隔离条款）` 这条联合弱链。
 
 当前最新统一读数大致是：
 
@@ -127,6 +138,9 @@
 - `research/gpt5/docs/AGI_GPT5_MEMO.md`
   - 按时间追加的研究备忘录
 
+- `research/gpt5/docs/AGI_GPT5_REASONING.md`
+  - 原始数据、推理链条、问题与关键结论的总整理
+
 ---
 
 ## 6. 建议阅读顺序
@@ -140,6 +154,18 @@
 5. `tests/codex/stage79_route_conflict_native_measure.py`
 6. `tests/codex/stage81_forward_backward_unification.py`
 7. `tests/codex/stage82_novelty_generalization_repair.py`
+8. `tests/codex/stage89_law_margin_separation.py`
+9. `tests/codex/stage90_independent_observation_planes.py`
+10. `tests/codex/stage91_counterexample_attack_suite.py`
+11. `tests/codex/stage92_brain_grounding_counterexample_pack.py`
+12. `tests/codex/stage93_law_to_theorem_bridge.py`
+13. `tests/codex/stage94_cross_plane_failure_coupling_map.py`
+14. `tests/codex/stage95_external_distribution_counterexample_pack.py`
+15. `tests/codex/stage96_independent_evidence_core.py`
+16. `tests/codex/stage97_brain_compatible_theorem_kernel.py`
+17. `tests/codex/stage98_external_to_internal_failure_alignment.py`
+18. `tests/codex/stage99_real_external_data_counterexample_pack.py`
+19. `research/gpt5/docs/AGI_GPT5_REASONING.md`
 
 ---
 
@@ -147,9 +173,9 @@
 
 接下来最应该直接推进的是：
 
-1. `Stage89`：`law_margin_separation（最优律领先幅度拉大块）`
-2. `Stage90`：`independent_observation_planes（独立观测面拆层块）`
-3. `Stage91`：`counterexample_attack_suite（强攻击测试包）`
+1. `Stage100`：`backfeed_suppression_hardening（回灌抑制强化块）`
+2. `Stage101`：`brain_evidence_joint_closure（脑兼容与证据独立联合闭合块）`
+3. `Stage102`：`real_world_falsification_bridge（真实世界判伪桥）`
 
 如果这些阶段成立，项目就会从：
 
