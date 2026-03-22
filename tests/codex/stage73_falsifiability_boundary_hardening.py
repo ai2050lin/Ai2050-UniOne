@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+from functools import lru_cache
 from pathlib import Path
 
 
@@ -26,6 +27,7 @@ def _clip01(value: float) -> float:
     return max(0.0, min(1.0, value))
 
 
+@lru_cache(maxsize=1)
 def build_falsifiability_boundary_hardening_summary() -> dict:
     boundary = build_failure_boundary_trigger_summary()
     task = build_language_task_boundary_trigger_summary()
@@ -67,9 +69,18 @@ def build_falsifiability_boundary_hardening_summary() -> dict:
         + 0.08 * hro["route_native_observability_score"]
         - 0.04
     )
-    synthetic_mismatch_support = _clip01(shared_state_support - 0.24)
+    counterexample_mismatch_support = _clip01(
+        0.28 * (1.0 - hi["identity_lock_confidence"])
+        + 0.24 * ho["hidden_proxy_gap"]
+        + 0.20 * abs(hl["language_projection_repair_score"] - hro["route_native_observability_score"])
+        + 0.16 * hp["counterexample_pressure"]
+        + 0.12 * (1.0 - hb["counterexample_activation_score"])
+    )
+    shared_state_counterexample_gap = _clip01(shared_state_support - counterexample_mismatch_support)
     shared_state_rejection_power = _clip01(
-        0.60 * shared_state_support + 0.40 * (shared_state_support - synthetic_mismatch_support + 0.55)
+        0.42 * shared_state_support
+        + 0.30 * (1.0 - counterexample_mismatch_support)
+        + 0.28 * shared_state_counterexample_gap
     )
 
     context_covariance_mode_score = _clip01(
@@ -123,7 +134,9 @@ def build_falsifiability_boundary_hardening_summary() -> dict:
         "shared_state": {
             "mode_score": shared_state_mode_score,
             "live_safe": shared_state_support >= 0.80,
-            "trigger_demonstrated": synthetic_mismatch_support < shared_state_support,
+            "trigger_demonstrated": (
+                counterexample_mismatch_support >= 0.18 and shared_state_counterexample_gap >= 0.10
+            ),
             "failure_rule": "如果语言、脑编码、智能三个观测面无法由同一组状态变量共同解释，则判定统一共享状态命题失败。",
         },
     }
@@ -167,9 +180,21 @@ def build_falsifiability_boundary_hardening_summary() -> dict:
         "route_native_observability_bridge": route_obs,
         "boundary_bridge": {
             "shared_state_support": shared_state_support,
-            "synthetic_mismatch_support": synthetic_mismatch_support,
+            "counterexample_mismatch_support": counterexample_mismatch_support,
+            "shared_state_counterexample_gap": shared_state_counterexample_gap,
+            "shared_state_counterexample": {
+                "constructed_from_independent_axes": True,
+                "identity_mismatch": abs(hi["identity_lock_confidence"] - hl["language_projection_repair_score"]),
+                "route_mismatch": abs((1.0 - ho["hidden_proxy_gap"]) - hro["route_native_observability_score"]),
+                "counterexample_pressure": hp["counterexample_pressure"],
+            },
             "task_triggered": task["task_trigger"]["triggered"],
             "live_checks": boundary["live_checks"],
+        },
+        "evidence_profile": {
+            "evidence_kind": "heuristic_internal_model",
+            "external_counterexample_validated": False,
+            "independence_warning": "当前判伪边界仍主要来自内部构造场景，不应解读为外部独立证实。",
         },
         "status": {
             "status_short": (

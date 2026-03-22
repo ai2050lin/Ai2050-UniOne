@@ -199,9 +199,9 @@ novelty_binding    -> 新颖结构并入旧结构的闭合过程
 
 当前最新总判断：
 
-- `intelligence_functional_closure ≈ 0.7821`
-- `first_principles_unification_score ≈ 0.7978`
-- `weakest_axis_name = falsifiability_boundary`
+- `intelligence_functional_closure ≈ 0.7858`
+- `first_principles_unification_score ≈ 0.8020`
+- `weakest_axis_name = brain_grounding`
 
 ---
 
@@ -230,9 +230,9 @@ novelty_binding    -> 新颖结构并入旧结构的闭合过程
 
 接下来最合理的三步已经比较清楚：
 
-1. `Stage83`：`forward_backward_theorem_kernel（前向反向定理主核）`
-2. `Stage84`：`falsifiable_computation_core（可判伪计算主核）`
-3. `Stage85`：`brain_language_intelligence_closure_proof（脑-语言-智能闭合证明块）`
+1. `Stage89`：`law_margin_separation（最优律领先幅度拉大块）`
+2. `Stage90`：`independent_observation_planes（独立观测面拆层块）`
+3. `Stage91`：`counterexample_attack_suite（强攻击测试包）`
 
 如果这三步能连起来，项目将从：
 

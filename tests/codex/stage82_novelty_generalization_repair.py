@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import math
 import sys
+from functools import lru_cache
 from pathlib import Path
 
 
@@ -16,6 +17,38 @@ from stage76_sqrt_repair_generalization import build_sqrt_repair_generalization_
 from stage79_route_conflict_native_measure import build_route_conflict_native_measure_summary
 from stage80_intelligence_closure_failure_map import build_intelligence_closure_failure_map_summary
 from stage81_forward_backward_unification import build_forward_backward_unification_summary
+
+
+DEFAULT_NOVELTY_SCENARIO = {
+    "novelty_load": 0.84,
+    "binding_depth": 0.76,
+    "repair_dependence": 0.78,
+    "abstraction_gap": 0.61,
+}
+
+DEFAULT_NOVELTY_LAWS = {
+    "sqrt": {
+        "drift_gain": 0.16,
+        "recovery_gain": 0.17,
+        "bridge_gain": 0.14,
+        "coupling_gain": 0.16,
+        "interpretability": 0.87,
+    },
+    "log": {
+        "drift_gain": 0.14,
+        "recovery_gain": 0.15,
+        "bridge_gain": 0.13,
+        "coupling_gain": 0.14,
+        "interpretability": 0.91,
+    },
+    "rational": {
+        "drift_gain": 0.15,
+        "recovery_gain": 0.16,
+        "bridge_gain": 0.13,
+        "coupling_gain": 0.15,
+        "interpretability": 0.89,
+    },
+}
 
 
 def _clip01(value: float) -> float:
@@ -32,53 +65,21 @@ def _bounded_novelty_drive(raw_drive: float, law_name: str) -> float:
     raise ValueError(f"unknown law_name={law_name}")
 
 
-def build_novelty_generalization_repair_summary() -> dict:
-    repair = build_sqrt_repair_generalization_summary()["headline_metrics"]
-    route = build_route_conflict_native_measure_summary()["headline_metrics"]
-    closure = build_intelligence_closure_failure_map_summary()
-    loop = build_forward_backward_unification_summary()["headline_metrics"]
-
-    novelty_case = next(
-        item for item in closure["scenario_records"] if item["name"] == "novelty_generalization"
-    )
-
-    scenario = {
-        "novelty_load": 0.84,
-        "binding_depth": 0.76,
-        "repair_dependence": 0.78,
-        "abstraction_gap": 0.61,
-    }
-
+def _evaluate_law_results(
+    *,
+    novelty_case: dict,
+    route: dict,
+    loop: dict,
+    repair: dict,
+    scenario: dict,
+    laws: dict,
+) -> dict:
     raw_drive = (
         0.32 * scenario["novelty_load"]
         + 0.24 * scenario["binding_depth"]
         + 0.24 * scenario["repair_dependence"]
         + 0.20 * scenario["abstraction_gap"]
     )
-
-    laws = {
-        "sqrt": {
-            "drift_gain": 0.16,
-            "recovery_gain": 0.17,
-            "bridge_gain": 0.14,
-            "coupling_gain": 0.16,
-            "interpretability": 0.87,
-        },
-        "log": {
-            "drift_gain": 0.14,
-            "recovery_gain": 0.15,
-            "bridge_gain": 0.13,
-            "coupling_gain": 0.14,
-            "interpretability": 0.91,
-        },
-        "rational": {
-            "drift_gain": 0.15,
-            "recovery_gain": 0.16,
-            "bridge_gain": 0.13,
-            "coupling_gain": 0.15,
-            "interpretability": 0.89,
-        },
-    }
 
     law_results = {}
     for law_name, params in laws.items():
@@ -140,6 +141,33 @@ def build_novelty_generalization_repair_summary() -> dict:
             "repair_gain": repair_gain,
             "repaired_novelty_score": repaired_novelty_score,
         }
+    return {"raw_drive": raw_drive, "law_results": law_results}
+
+
+@lru_cache(maxsize=1)
+def build_novelty_generalization_repair_summary() -> dict:
+    repair = build_sqrt_repair_generalization_summary()["headline_metrics"]
+    route = build_route_conflict_native_measure_summary()["headline_metrics"]
+    closure = build_intelligence_closure_failure_map_summary()
+    loop = build_forward_backward_unification_summary()["headline_metrics"]
+
+    novelty_case = next(
+        item for item in closure["scenario_records"] if item["name"] == "novelty_generalization"
+    )
+
+    scenario = DEFAULT_NOVELTY_SCENARIO
+    laws = DEFAULT_NOVELTY_LAWS
+
+    evaluation = _evaluate_law_results(
+        novelty_case=novelty_case,
+        route=route,
+        loop=loop,
+        repair=repair,
+        scenario=scenario,
+        laws=laws,
+    )
+    raw_drive = evaluation["raw_drive"]
+    law_results = evaluation["law_results"]
 
     best_law_name, best_law = max(
         law_results.items(),
@@ -149,6 +177,48 @@ def build_novelty_generalization_repair_summary() -> dict:
             -item[1]["failure_after"],
         ),
     )
+    sorted_laws = sorted(
+        law_results.items(),
+        key=lambda item: item[1]["repaired_novelty_score"],
+        reverse=True,
+    )
+    best_law_margin = sorted_laws[0][1]["repaired_novelty_score"] - sorted_laws[1][1]["repaired_novelty_score"]
+
+    sensitivity_scenarios = [
+        {"name": "novelty_up", **{**scenario, "novelty_load": scenario["novelty_load"] + 0.04}},
+        {"name": "novelty_down", **{**scenario, "novelty_load": scenario["novelty_load"] - 0.04}},
+        {"name": "binding_up", **{**scenario, "binding_depth": scenario["binding_depth"] + 0.04}},
+        {"name": "repair_up", **{**scenario, "repair_dependence": scenario["repair_dependence"] + 0.04}},
+        {"name": "abstraction_up", **{**scenario, "abstraction_gap": scenario["abstraction_gap"] + 0.04}},
+    ]
+    sensitivity_records = []
+    for variant in sensitivity_scenarios:
+        variant_eval = _evaluate_law_results(
+            novelty_case=novelty_case,
+            route=route,
+            loop=loop,
+            repair=repair,
+            scenario=variant,
+            laws=laws,
+        )
+        variant_sorted = sorted(
+            variant_eval["law_results"].items(),
+            key=lambda item: item[1]["repaired_novelty_score"],
+            reverse=True,
+        )
+        sensitivity_records.append(
+            {
+                "name": variant["name"],
+                "best_law_name": variant_sorted[0][0],
+                "best_law_margin": (
+                    variant_sorted[0][1]["repaired_novelty_score"]
+                    - variant_sorted[1][1]["repaired_novelty_score"]
+                ),
+            }
+        )
+    best_law_robust_fraction = sum(
+        1 for record in sensitivity_records if record["best_law_name"] == best_law_name
+    ) / len(sensitivity_records)
 
     return {
         "headline_metrics": {
@@ -159,9 +229,17 @@ def build_novelty_generalization_repair_summary() -> dict:
             "best_repair_gain": best_law["repair_gain"],
             "best_coupling_after": best_law["coupling_after"],
             "best_repaired_novelty_score": best_law["repaired_novelty_score"],
+            "best_law_margin": best_law_margin,
+            "best_law_robust_fraction": best_law_robust_fraction,
         },
         "worst_case_before": novelty_case,
         "law_results": law_results,
+        "sensitivity_records": sensitivity_records,
+        "evidence_profile": {
+            "scenario_source": "handcrafted_internal_case",
+            "external_fit": False,
+            "warning": "最优律判断当前来自内部设定场景与局部敏感性分析，不应被解读为外部独立证明。",
+        },
         "status": {
             "status_short": (
                 "novelty_generalization_repair_ready"

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+from functools import lru_cache
 from pathlib import Path
 
 
@@ -22,6 +23,7 @@ def _clip01(value: float) -> float:
     return max(0.0, min(1.0, value))
 
 
+@lru_cache(maxsize=1)
 def build_forward_backward_unification_summary() -> dict:
     identity = build_direct_identity_lock_summary()["headline_metrics"]
     projection = build_language_projection_covariance_summary()["headline_metrics"]

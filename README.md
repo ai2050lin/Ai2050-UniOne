@@ -96,9 +96,9 @@
 
 当前最新统一读数大致是：
 
-- `intelligence_functional_closure ≈ 0.7821`
-- `first_principles_unification_score ≈ 0.7978`
-- 当前最弱轴：`falsifiability_boundary（可判伪边界）`
+- `intelligence_functional_closure ≈ 0.7858`
+- `first_principles_unification_score ≈ 0.8020`
+- 当前最弱轴：`brain_grounding（脑编码落地）`
 
 ---
 
@@ -106,7 +106,7 @@
 
 最严格地看，当前仍然有这些硬伤：
 
-1. `falsifiability_boundary（可判伪边界）` 仍然最弱。
+1. `brain_grounding（脑编码落地）` 重新成为最弱轴。
 2. `forward_backward_unification（前向反向统一）` 还是过渡态。
 3. `novelty_generalization（新颖泛化）` 虽然已可修，但还没证明在更高抽象压力下也稳定成立。
 4. 当前理论更像强统一解释核，还不是严格闭式定理主核。
@@ -147,9 +147,9 @@
 
 接下来最应该直接推进的是：
 
-1. `Stage83`：`forward_backward_theorem_kernel（前向反向定理主核）`
-2. `Stage84`：`falsifiable_computation_core（可判伪计算主核）`
-3. `Stage85`：`brain_language_intelligence_closure_proof（脑-语言-智能闭合证明块）`
+1. `Stage89`：`law_margin_separation（最优律领先幅度拉大块）`
+2. `Stage90`：`independent_observation_planes（独立观测面拆层块）`
+3. `Stage91`：`counterexample_attack_suite（强攻击测试包）`
 
 如果这些阶段成立，项目就会从：
 

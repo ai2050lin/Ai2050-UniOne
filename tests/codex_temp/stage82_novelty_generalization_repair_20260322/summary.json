@@ -6,7 +6,9 @@
     "best_failure_after": 0.30579177077060143,
     "best_repair_gain": 0.1477877609874521,
     "best_coupling_after": 0.7964089457517535,
-    "best_repaired_novelty_score": 0.8609382162906761
+    "best_repaired_novelty_score": 0.8609382162906761,
+    "best_law_margin": 0.003740689141748854,
+    "best_law_robust_fraction": 1.0
   },
   "worst_case_before": {
     "name": "novelty_generalization",
@@ -46,6 +48,38 @@
       "repair_gain": 0.14025003259914487,
       "repaired_novelty_score": 0.8571975271489273
     }
+  },
+  "sensitivity_records": [
+    {
+      "name": "novelty_up",
+      "best_law_name": "sqrt",
+      "best_law_margin": 0.003699917554384591
+    },
+    {
+      "name": "novelty_down",
+      "best_law_name": "sqrt",
+      "best_law_margin": 0.0037870904211393386
+    },
+    {
+      "name": "binding_up",
+      "best_law_name": "sqrt",
+      "best_law_margin": 0.0037095880860190666
+    },
+    {
+      "name": "repair_up",
+      "best_law_name": "sqrt",
+      "best_law_margin": 0.0037095880860190666
+    },
+    {
+      "name": "abstraction_up",
+      "best_law_name": "sqrt",
+      "best_law_margin": 0.0037145534606787267
+    }
+  ],
+  "evidence_profile": {
+    "scenario_source": "handcrafted_internal_case",
+    "external_fit": false,
+    "warning": "最优律判断当前来自内部设定场景与局部敏感性分析，不应被解读为外部独立证明。"
   },
   "status": {
     "status_short": "novelty_generalization_repair_ready",

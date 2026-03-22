@@ -28,6 +28,9 @@ def test_stage81_forward_backward_unification() -> None:
         "forward_backward_unification_ready",
         "forward_backward_unification_transition",
     }
+    scenario_by_name = {item["name"]: item for item in summary["scenario_records"]}
+    assert scenario_by_name["stable_context_loop"]["loop_coupling"] >= scenario_by_name["novelty_generalization_loop"]["loop_coupling"]
+    assert scenario_by_name["conflict_repair_loop"]["backward_readout"] >= scenario_by_name["stable_context_loop"]["backward_readout"]
 
     out_path = ROOT / "tests" / "codex_temp" / "stage81_forward_backward_unification_20260322" / "summary.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)

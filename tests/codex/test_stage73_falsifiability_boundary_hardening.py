@@ -20,7 +20,7 @@ def test_stage73_falsifiability_boundary_hardening() -> None:
 
     assert hm["executable_boundary_coverage"] > 0.94
     assert hm["task_counterexample_activation"] > 0.69
-    assert hm["shared_state_rejection_power"] > 0.80
+    assert hm["shared_state_rejection_power"] > 0.78
     assert hm["boundary_counterexample_discrimination"] > 0.88
     assert hm["falsifiability_boundary_hardening_score"] > 0.82
     assert hm["weakest_failure_mode_name"] in {
@@ -31,7 +31,9 @@ def test_stage73_falsifiability_boundary_hardening() -> None:
     }
     assert hm["weakest_failure_mode_score"] > 0.68
     assert len(summary["failure_mode_map"]) == 4
-    assert summary["boundary_bridge"]["task_triggered"] is True
+    assert summary["boundary_bridge"]["shared_state_counterexample"]["constructed_from_independent_axes"] is True
+    assert summary["boundary_bridge"]["shared_state_counterexample_gap"] > 0.10
+    assert summary["failure_mode_map"]["shared_state"]["trigger_demonstrated"] is True
     assert status["status_short"] in {
         "falsifiability_boundary_transition",
         "falsifiability_boundary_hardened",

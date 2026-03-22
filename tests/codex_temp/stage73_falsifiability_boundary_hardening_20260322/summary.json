@@ -2,9 +2,9 @@
   "headline_metrics": {
     "executable_boundary_coverage": 0.9513595907318365,
     "task_counterexample_activation": 0.7044768477861175,
-    "shared_state_rejection_power": 0.8292829192843495,
+    "shared_state_rejection_power": 0.7872499764998471,
     "boundary_counterexample_discrimination": 0.9432348631155041,
-    "falsifiability_boundary_hardening_score": 0.9138250760363655,
+    "falsifiability_boundary_hardening_score": 0.906259146335155,
     "weakest_failure_mode_name": "learning_stability",
     "weakest_failure_mode_score": 0.7037586597308537
   },
@@ -226,7 +226,14 @@
   },
   "boundary_bridge": {
     "shared_state_support": 0.8554715321405824,
-    "synthetic_mismatch_support": 0.6154715321405824,
+    "counterexample_mismatch_support": 0.19237947585958728,
+    "shared_state_counterexample_gap": 0.6630920562809951,
+    "shared_state_counterexample": {
+      "constructed_from_independent_axes": true,
+      "identity_mismatch": 0.14097427889323788,
+      "route_mismatch": 0.024517911860422736,
+      "counterexample_pressure": 0.230173306373191
+    },
     "task_triggered": true,
     "live_checks": {
       "patch_failure": false,
@@ -234,6 +241,11 @@
       "route_failure": false,
       "kernel_failure": false
     }
+  },
+  "evidence_profile": {
+    "evidence_kind": "heuristic_internal_model",
+    "external_counterexample_validated": false,
+    "independence_warning": "当前判伪边界仍主要来自内部构造场景，不应解读为外部独立证实。"
   },
   "status": {
     "status_short": "falsifiability_boundary_hardened",

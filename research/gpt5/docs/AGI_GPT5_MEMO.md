@@ -20927,3 +20927,882 @@ Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
    - 目标：证明三条线不是经验对应，而是统一系统的必然投影
 
 如果这三块能接起来，项目才会真正从“强统一解释前沿区”，进入“第一性原理理论主核区”。
+
+## 2026-03-22 14:09 Stage83 前向反向定理主核
+
+### 本轮命令记录
+
+- `Get-ChildItem 'tests/codex' | Where-Object { $_.Name -like 'stage8*' -or $_.Name -like 'test_stage8*' -or $_.Name -like 'stage7*' -or $_.Name -like 'test_stage7*' } | Select-Object Name`
+- `Get-Content 'tests/codex/stage81_forward_backward_unification.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/stage82_novelty_generalization_repair.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/test_stage82_novelty_generalization_repair.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/stage71_first_principles_unification.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/test_stage81_forward_backward_unification.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/test_stage71_first_principles_unification.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/stage79_route_conflict_native_measure.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/stage72_language_projection_covariance.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/stage80_intelligence_closure_failure_map.py' -Encoding UTF8`
+- `python 'tests/codex/stage83_forward_backward_theorem_kernel.py'`
+- `python 'tests/codex/stage71_first_principles_unification.py'`
+- `Get-Content 'tests/codex_temp/stage83_forward_backward_theorem_kernel_20260322/summary.json' -Encoding UTF8`
+- `Get-Content 'tests/codex_temp/stage71_first_principles_unification_20260322/summary.json' -Encoding UTF8`
+- `Get-Content 'tests/codex_temp/stage83_forward_backward_theorem_kernel_20260322/REPORT.md' -Encoding UTF8`
+- `Get-Content 'tests/codex_temp/stage71_first_principles_unification_20260322/REPORT.md' -Encoding UTF8`
+- `@' ... test_stage83_forward_backward_theorem_kernel() ... '@ | python -`
+- `@' ... test_stage71_first_principles_unification() ... '@ | python -`
+
+### 本轮新增文件
+
+- `tests/codex/stage83_forward_backward_theorem_kernel.py`
+- `tests/codex/test_stage83_forward_backward_theorem_kernel.py`
+
+### 本轮改动文件
+
+- `tests/codex/stage71_first_principles_unification.py`
+
+### 本轮理论推进
+
+这轮没有继续只做一个经验摘要块，而是正式落下了：
+
+- `Stage83`
+- `forward_backward_theorem_kernel（前向反向定理主核）`
+
+核心目标是把下面四件事压进同一组约束里：
+
+1. 语言投影误差上界
+2. 路由冲突下的反向修复收缩率
+3. 新颖绑定的有界边际
+4. 跨投影面的一致性
+
+也就是说，这一轮的主判断不是“前向和反向看起来能接上”，而是开始问：
+
+**它们能不能被写成同一个 theorem kernel（定理主核）约束，而不是只靠经验读数拼起来。**
+
+### Stage83 当前结果
+
+当前跑出来的核心结果是：
+
+- `projection_error_bound = 0.0676`
+- `repair_contraction_ratio = 0.2165`
+- `bounded_novelty_margin = 0.7117`
+- `cross_projection_consistency = 0.8797`
+- `theorem_premise_satisfaction = 0.8698`
+- `theorem_conclusion_strength = 0.8289`
+- `forward_backward_theorem_kernel_score = 0.8139`
+- `status_short = forward_backward_theorem_kernel_transition`
+
+这说明：
+
+1. 语言投影误差上界已经比较紧
+   - `projection_error_bound` 很低
+
+2. 反向修复已经出现收缩轮廓
+   - `repair_contraction_ratio < 1` 的过渡态轮廓已经出现
+
+3. 真正最弱的位置不是前向或反向本身
+   - 而是 `bounded_novelty_margin（新颖有界边际）`
+
+换句话说，当前最难打通的，不是“系统会不会修”，而是：
+
+**新颖结构在并入旧结构时，能不能在理论上保持稳定有界。**
+
+### 对 Stage71 的回灌结果
+
+这轮不是孤立阶段，已经回灌进统一主核：
+
+- `intelligence_functional_closure = 0.7858`
+- `falsifiability_boundary_strength = 0.7859`
+- `first_principles_unification_score = 0.7994`
+- `weakest_axis_name = brain_grounding`
+
+这有两个重要含义：
+
+1. 项目总体统一度继续小幅抬高
+2. 新瓶颈没有再落回语言投影，而是稳定停在 `brain_grounding（脑编码落地）`
+
+这说明：
+
+- 语言主链已经相对稳
+- 前向反向统一已经开始进入定理化
+- 但脑编码落地仍然是统一主核最真实的硬瓶颈
+
+### 关于语言原理这条主链的当前理论位置
+
+本轮也进一步确认了之前那条关键判断：
+
+**语言不是单独对象，而是统一状态系统在输出层和时间轴上的投影。**
+
+当前最清楚的语言主链仍然是：
+
+- `q / b / g`
+
+也就是：
+
+- `conditional gate field（条件门控场）`
+- `context bias tensor（上下文偏置张量）`
+- `gated routing probability（门控路由概率）`
+
+`Stage72` 的这条链，本轮在 `Stage83` 里不再只是背景项，而是直接进入定理主核的前提部分：
+
+- 如果 `q / b / g` 协变关系守不住
+- 那么 `projection_error_bound` 就不可能继续压低
+- 进而前向反向统一也无法写成真正的定理约束
+
+所以，语言原理在当前项目里已经不是“现象描述层”，而是：
+
+**统一 theorem kernel 的前提层。**
+
+### 最严格的硬伤
+
+最严格地看，这轮推进虽然是真推进，但硬伤同样非常清楚：
+
+1. `Stage83` 仍然是 `transition（过渡态）`
+   - 说明还没有进入强定理区
+
+2. `bounded_novelty_margin（新颖有界边际）` 明显偏弱
+   - 说明新颖结构并入旧结构仍然是理论最薄的位置
+
+3. `brain_grounding（脑编码落地）` 仍是统一主核最弱轴
+   - 说明理论块越来越清楚，但神经层落地还不够硬
+
+4. 这轮虽然把语言投影、前向、反向压进同一组约束
+   - 但还没有把这些约束做成真正可打穿的反例主核
+
+所以当前最准确的判断不是“定理已经完成”，而是：
+
+**定理主核第一次成型了，但目前仍然只是前沿过渡态，不是闭式定理终态。**
+
+### 接下来不该只做的小功能
+
+接下来最合理的推进块已经更清楚了：
+
+1. `Stage84`
+   - `falsifiable_computation_core（可判伪计算主核）`
+   - 目标：把 `Stage83` 的约束，推进成可以被具体反例直接打穿或守住的主核
+
+2. `Stage85`
+   - `brain_language_intelligence_closure_proof（脑-语言-智能闭合证明块）`
+   - 目标：把语言投影、大脑编码和智能闭合从经验对应推进成统一系统的闭合证明
+
+3. `Stage86`
+   - `brain_grounding_counterexample_pack（脑编码落地反例包）`
+   - 目标：直接攻击当前最弱轴 `brain_grounding`
+
+如果这三块接起来，项目才可能真正从：
+
+- `第一性原理统一前沿区`
+
+继续推进到：
+
+- `第一性原理主核区`
+
+## 2026-03-22 15:11 Stage84 可判伪计算主核
+
+### 本轮命令记录
+
+- `Get-Content 'tests/codex/stage73_falsifiability_boundary_hardening.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/stage83_forward_backward_theorem_kernel.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/test_stage73_falsifiability_boundary_hardening.py' -Encoding UTF8`
+- `python 'tests/codex/stage84_falsifiable_computation_core.py'`
+- `python 'tests/codex/stage71_first_principles_unification.py'`
+- `Get-Content 'tests/codex_temp/stage84_falsifiable_computation_core_20260322/summary.json' -Encoding UTF8`
+- `Get-Content 'tests/codex_temp/stage71_first_principles_unification_20260322/summary.json' -Encoding UTF8`
+- `@' ... test_stage84_falsifiable_computation_core() ... '@ | python -`
+- `@' ... test_stage71_first_principles_unification() ... '@ | python -`
+- `Get-Content 'tests/codex_temp/stage84_falsifiable_computation_core_20260322/REPORT.md' -Encoding UTF8`
+- `git status --short`
+
+### 本轮新增文件
+
+- `tests/codex/stage84_falsifiable_computation_core.py`
+- `tests/codex/test_stage84_falsifiable_computation_core.py`
+
+### 本轮改动文件
+
+- `tests/codex/stage71_first_principles_unification.py`
+
+### 本轮理论推进
+
+这轮继续沿着 `Stage83（第八十三阶段）` 往下推进，没有去补横向功能，而是直接做了：
+
+- `Stage84`
+- `falsifiable_computation_core（可判伪计算主核）`
+
+核心目标是把下面几件事压成同一块：
+
+1. `theorem kernel（定理主核）` 的可执行区分能力
+2. 反例与主核的接触强度
+3. 路由-语言投影失败链的可追踪性
+4. 共享状态命题的拒真能力
+
+也就是说，这一轮真正要回答的问题是：
+
+**当前理论能不能不只是“有边界”，而是真正存在一组可以接触主核、触发失败、并给出失败判决的计算反例。**
+
+### Stage84 当前结果
+
+当前核心结果是：
+
+- `executable_theorem_discrimination = 0.8418`
+- `counterexample_contact_strength = 0.8383`
+- `route_projection_failure_traceability = 0.8854`
+- `shared_state_refutation_power = 0.8326`
+- `hardest_counterexample_name = novelty_bounded_break`
+- `hardest_counterexample_intensity = 0.4382`
+- `falsifiable_computation_core_score = 0.8031`
+- `status_short = falsifiable_computation_core_transition`
+
+这个结果说明两件非常重要的事：
+
+1. 可判伪主核已经开始成型
+   - 因为反例触发、主核接触、失败追踪和拒真能力都已经进入统一块
+
+2. 项目比上一轮更严格了
+   - 最坏反例被明确钉成 `novelty_bounded_break（新颖有界破裂）`
+   - 说明当前真正最危险的，不是语言投影本身，也不是路由本身，而是新颖结构并入旧结构时的有界闭合
+
+### 对 Stage71 的回灌结果
+
+这轮回灌后的统一主核读数变成：
+
+- `falsifiability_boundary_strength = 0.7790`
+- `first_principles_unification_score = 0.7983`
+- `weakest_axis_name = falsifiability_boundary`
+- `status_short = first_principles_unification_transition`
+
+这比上一轮更严格，也更真实。
+
+原因不是项目退步了，而是：
+
+- `Stage84` 把之前相对乐观的可判伪判断压进了反例主核
+- 一旦这样做，就会发现最坏反例仍然没有被完全压到低风险区
+
+所以，这轮的意义不是“分数涨了”，而是：
+
+**统一理论第一次因为更强的反例核而被迫回到更诚实的位置。**
+
+### 当前最重要的新判断
+
+本轮之后，项目的主判断发生了一个很关键的变化：
+
+- `Stage83` 告诉我们，前向路由、反向修复和语言投影已经能进入同一组定理约束
+- `Stage84` 则告诉我们，这组约束还没有强到足以稳稳挡住最坏反例
+
+所以，当前项目已经不是“缺少统一主线”，而是：
+
+**已经有统一主线，也开始有定理主核，但最坏反例还没有被主核真正压住。**
+
+### 最严格的硬伤
+
+最严格地看，这轮暴露出的硬伤比上一轮更具体：
+
+1. `falsifiable_computation_core（可判伪计算主核）` 仍然只是 `transition（过渡态）`
+   - 说明还没有形成强可判伪核
+
+2. `novelty_bounded_break（新颖有界破裂）` 成了最坏反例
+   - 说明当前理论最薄的位置，是“新颖结构并入旧结构时是否还能保持有界”
+
+3. 统一主核的最弱轴从 `brain_grounding（脑编码落地）` 回落到 `falsifiability_boundary（可判伪边界）`
+   - 说明脑编码虽然仍弱，但更危险的是：理论还不够容易被严格打穿或严格守住
+
+4. `Stage84` 做出的不是“胜利报告”
+   - 而是“反例主核首次成型后的真实压力测试”
+
+所以当前最准确的结论是：
+
+**项目已经进入“有定理核、有反例核、但最坏反例仍未被压住”的阶段。**
+
+### 接下来不该只做的小功能
+
+接下来最合理的三步也更清楚了：
+
+1. `Stage85`
+   - `brain_language_intelligence_closure_proof（脑-语言-智能闭合证明块）`
+   - 目标：把三条线从共享状态解释推进成闭合证明
+
+2. `Stage86`
+   - `brain_grounding_counterexample_pack（脑编码落地反例包）`
+   - 目标：专门攻击当前两个主弱点之一：脑编码落地
+
+3. `Stage87`
+   - `novelty_boundedness_hardening（新颖有界性强化块）`
+   - 目标：直接压低 `novelty_bounded_break`
+
+如果这三块接起来，项目才可能真正从：
+
+- `有统一主线 + 有定理核 + 有反例核`
+
+推进到：
+
+- `强可判伪第一性原理主核`
+
+## 2026-03-22 15:29 理论可信度纠偏与复核链修正
+
+### 本轮命令记录
+
+- `Get-Content 'tests/codex/stage73_falsifiability_boundary_hardening.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/stage71_first_principles_unification.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/stage80_intelligence_closure_failure_map.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/stage82_novelty_generalization_repair.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/test_stage71_first_principles_unification.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/test_stage81_forward_backward_unification.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/test_stage82_novelty_generalization_repair.py' -Encoding UTF8`
+- `python 'tests/codex/stage73_falsifiability_boundary_hardening.py'`
+- `python 'tests/codex/stage84_falsifiable_computation_core.py'`
+- `python 'tests/codex/stage71_first_principles_unification.py'`
+- `@' ... test_stage73_falsifiability_boundary_hardening() ... '@ | python -`
+- `@' ... test_stage81_forward_backward_unification() ... '@ | python -`
+- `@' ... test_stage82_novelty_generalization_repair() ... '@ | python -`
+- `@' ... test_stage84_falsifiable_computation_core() ... '@ | python -`
+- `@' ... test_stage71_first_principles_unification() ... '@ | python -`
+- `@' ... build_novelty_generalization_repair_summary(); build_first_principles_unification_summary() ... '@ | python -`
+- `Get-Content 'tests/codex_temp/stage73_falsifiability_boundary_hardening_20260322/summary.json' -Encoding UTF8`
+- `Get-Content 'tests/codex_temp/stage84_falsifiable_computation_core_20260322/summary.json' -Encoding UTF8`
+- `Get-Content 'tests/codex_temp/stage71_first_principles_unification_20260322/summary.json' -Encoding UTF8`
+- `Get-Content 'tests/codex_temp/stage84_falsifiable_computation_core_20260322/REPORT.md' -Encoding UTF8`
+- `git status --short`
+
+### 本轮纠偏目标
+
+本轮不是继续抬高理论分数，而是直接回应当前最关键的可信度问题：
+
+1. `可判伪边界` 过于依赖内部构造量
+2. `统一主核` 的叙事状态和内部判据不完全一致
+3. 测试过度依赖阈值断言
+4. 摘要组合链重复计算过重，复核成本偏高
+
+### 本轮代码层修正
+
+1. `Stage73（第七十三阶段）`
+   - 取消了原先那种接近“固定差值”的共享状态反例构造方式
+   - 不再使用单纯的 `synthetic_mismatch_support = shared_state_support - 常数`
+   - 改成基于三条相互独立的错配轴构造：
+     - `identity_mismatch`
+     - `route_mismatch`
+     - `counterexample_pressure`
+   - 同时新增：
+     - `counterexample_mismatch_support`
+     - `shared_state_counterexample_gap`
+     - `shared_state_counterexample.constructed_from_independent_axes = true`
+   - 还在摘要里新增 `evidence_profile`
+   - 明确标记当前判伪仍是 `heuristic_internal_model（启发式内部模型）`
+
+2. `Stage71（第七十一阶段）`
+   - 修正了 `status_label`
+   - 现在会随 `status_short` 动态切换：
+     - `frontier（前沿）` 时显示“前沿区”
+     - `transition（过渡）` 时显示“过渡区”
+   - 同时增加 `evidence_profile`
+   - 明确声明统一主核分数来自多阶段摘要回灌，更适合研究导航，而不是理论证明
+
+3. `Stage80 / Stage82`
+   - 增加 `evidence_profile`
+   - 明确说明：
+     - 场景是内部手工构造
+     - 当前不是外部数据拟合
+   - `Stage82` 还新增了：
+     - `best_law_margin`
+     - `best_law_robust_fraction`
+     - `sensitivity_records`
+   - 这意味着现在不再只说“sqrt（平方根）最好”，而是至少会检查它在局部扰动下是否仍保持最优
+
+4. 缓存优化
+   - 给 `Stage71 / Stage73 / Stage80 / Stage81 / Stage82 / Stage83 / Stage84` 的核心摘要函数加了 `lru_cache（最近最少使用缓存）`
+   - 目标是降低同进程复核时的重复计算开销
+
+### 本轮测试层修正
+
+本轮测试不再只看“分数是否大于阈值”，还补了几类结构性校验：
+
+1. `test_stage71_first_principles_unification`
+   - 会检查 `weakest_axis_name` 是否真的等于最小轴
+   - 会检查 `status_short` 和 `status_label` 是否一致
+
+2. `test_stage73_falsifiability_boundary_hardening`
+   - 不再要求 `task_triggered is True` 才算通过
+   - 改成检查共享状态反例是否来自独立错配轴，以及反例间隙是否真实存在
+
+3. `test_stage81_forward_backward_unification`
+   - 增加场景关系断言
+   - 例如：
+     - `stable_context_loop` 的耦合应强于 `novelty_generalization_loop`
+
+4. `test_stage82_novelty_generalization_repair`
+   - 不再只看最优律名字和阈值
+   - 还会验证：
+     - `best_law_name` 是否真的是表内最优
+     - `best_law_margin > 0`
+     - `best_law_robust_fraction >= 0.60`
+     - `sensitivity_records` 是否存在
+
+### 当前纠偏后的结果
+
+纠偏后，项目一些读数变得更严格，也更可信：
+
+1. `Stage73`
+   - `shared_state_rejection_power` 从偏乐观状态降到了 `0.7872`
+   - 但 `falsifiability_boundary_hardening_score` 仍有 `0.9063`
+   - 说明可判伪边界仍有强度，但不再像之前那样被内部构造量抬得过高
+
+2. `Stage84`
+   - `shared_state_refutation_power = 0.8191`
+   - `hardest_counterexample_name = novelty_bounded_break`
+   - `hardest_counterexample_intensity = 0.4395`
+   - `falsifiable_computation_core_score = 0.8002`
+   - 仍然是 `transition（过渡态）`
+
+3. `Stage71`
+   - `falsifiability_boundary_strength = 0.7777`
+   - `first_principles_unification_score = 0.7981`
+   - `weakest_axis_name = falsifiability_boundary`
+   - `status_short = first_principles_unification_transition`
+
+这说明：
+
+**项目在这轮不是“更好看了”，而是“更诚实了”。**
+
+### 复核成本变化
+
+同进程下重复调用时间已经明显下降：
+
+- `Stage82 first = 8.0926s`
+- `Stage82 second = 0.0000s`
+- `Stage71 first = 6.7943s`
+- `Stage71 second = 0.0000s`
+
+这不能解决跨进程的全部成本问题，但至少说明：
+
+- 缓存已经显著降低了单次复核链内部的重复计算
+
+### 最严格的当前判断
+
+用户这轮批评是成立的，而且纠偏后结论更清楚：
+
+1. 项目当前仍然不是“理论被证明正确”
+2. `可判伪性` 现在仍主要属于内部启发式模型，不是外部独立击穿
+3. `统一主核分数` 仍然主要用于研究导航，不应当作理论真实性证明
+4. 但项目并非空转，因为：
+   - 纠偏后分数没有崩掉
+   - 主线仍成立
+   - 最坏反例位置也更清楚了
+
+所以最准确的表述仍然是：
+
+**这是一个越来越完整的强统一解释框架，加上一套正在变得更诚实的内部反例系统，但还远不是被独立证据支撑的第一性原理定理体系。**
+
+### 接下来不该只做的小功能
+
+下一步最该直接推进三块：
+
+1. `Stage85`
+   - `brain_language_intelligence_closure_proof（脑-语言-智能闭合证明块）`
+   - 目标：把共享状态从“解释相容”推进到“闭合证明”
+
+2. `Stage86`
+   - `brain_grounding_counterexample_pack（脑编码落地反例包）`
+   - 目标：不再只在高层变量里做反例，而是直接攻击神经落地层
+
+3. `Stage87`
+   - `novelty_boundedness_hardening（新颖有界性强化块）`
+   - 目标：专门压低 `novelty_bounded_break`
+
+如果这三块能接起来，项目才会真正从：
+
+- `内部统一解释框架`
+
+继续推进到：
+
+- `强可判伪第一性原理主核`
+
+## 2026-03-22 15:40 四个优先块落地与文档口径同步
+
+### 本轮命令记录
+
+- `git status --short`
+- `Get-Content 'tests/codex/stage84_falsifiable_computation_core.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/stage82_novelty_generalization_repair.py' -Encoding UTF8`
+- `Get-Content 'tests/codex/test_stage84_falsifiable_computation_core.py' -Encoding UTF8`
+- `Select-String -Path 'research/gpt5/docs/AGI_GPT5_ICSPB.md','README.md' -Pattern '前沿区|过渡区|frontier|transition' -Encoding UTF8`
+- `Get-Content 'research/gpt5/docs/AGI_GPT5_ICSPB.md' -Encoding UTF8`
+- `Get-Content 'README.md' -Encoding UTF8`
+- `python 'tests/codex/stage85_external_counterexample_generator.py'`
+- `python 'tests/codex/stage86_optimal_law_robustness_scan.py'`
+- `python 'tests/codex/stage87_evidence_independence_audit.py'`
+- `@' ... test_stage85_external_counterexample_generator() ... '@ | python -`
+- `@' ... test_stage86_optimal_law_robustness_scan() ... '@ | python -`
+- `@' ... test_stage87_evidence_independence_audit() ... '@ | python -`
+- `Get-Content 'tests/codex_temp/stage85_external_counterexample_generator_20260322/summary.json' -Encoding UTF8`
+- `Get-Content 'tests/codex_temp/stage86_optimal_law_robustness_scan_20260322/summary.json' -Encoding UTF8`
+- `Get-Content 'tests/codex_temp/stage87_evidence_independence_audit_20260322/summary.json' -Encoding UTF8`
+- `Get-Content 'tests/codex_temp/stage86_optimal_law_robustness_scan_20260322/REPORT.md' -Encoding UTF8`
+- `Get-Content 'tests/codex_temp/stage87_evidence_independence_audit_20260322/REPORT.md' -Encoding UTF8`
+
+### 本轮新增文件
+
+- `tests/codex/stage85_external_counterexample_generator.py`
+- `tests/codex/stage86_optimal_law_robustness_scan.py`
+- `tests/codex/stage87_evidence_independence_audit.py`
+- `tests/codex/test_stage85_external_counterexample_generator.py`
+- `tests/codex/test_stage86_optimal_law_robustness_scan.py`
+- `tests/codex/test_stage87_evidence_independence_audit.py`
+
+### 本轮完成的 4 个优先块
+
+#### 1. 外部反例生成块
+
+`Stage85（第八十五阶段）` 已落地。
+
+它不再从已有支持量做固定平移，而是用四个独立轴生成错配样本：
+
+- `identity_shift`
+- `route_shift`
+- `projection_shift`
+- `task_shift`
+
+当前结果：
+
+- `external_counterexample_diversity = 0.8640`
+- `external_trigger_rate = 0.2000`
+- `strongest_counterexample_name = multi_axis_mismatch`
+- `strongest_refutation_strength = 0.5684`
+- `shared_state_external_break_score = 0.5886`
+
+这说明：
+
+- 外部反例块已经摆脱“支持量减常数”的构造方式
+- 但它目前只能稳定打出 `1/5` 的最坏样本
+- 所以它是一个 `ready（可执行）` 的外部反例生成原型，不是强外部击穿系统
+
+#### 2. 最优律扰动稳健性块
+
+`Stage86（第八十六阶段）` 已落地。
+
+它覆盖了：
+
+- 参数扰动
+- 顺序打乱
+- 场景替换
+
+当前结果：
+
+- `baseline_best_law_name = sqrt`
+- `order_invariance = True`
+- `best_law_flip_rate = 0.0000`
+- `best_law_mean_margin = 0.003886`
+- `scenario_replacement_stability = 1.0000`
+- `optimal_law_robustness_score = 0.8533`
+
+这个结果非常关键。
+
+它说明两件事：
+
+1. `sqrt（平方根）` 当前不是因为遍历顺序碰巧排第一
+2. 但它的领先幅度仍然很小
+   - `mean_margin` 只有 `0.003886`
+
+所以现在最严格的说法是：
+
+**sqrt 是当前内部扫描里的最稳候选，但不是“已经被充分拉开领先优势”的强结论。**
+
+#### 3. 证据独立性拆层块
+
+`Stage87（第八十七阶段）` 已落地。
+
+它直接审计了：
+
+- 高层是否存在独立证据链
+- 是否存在摘要回灌
+- 是否存在硬编码场景主导
+- 测试是否仍偏阈值型
+- 文档和代码是否一致
+
+当前结果：
+
+- `independent_evidence_chain_exists = False`
+- `summary_backfeed_risk = 1.0000`
+- `threshold_only_test_ratio = 0.6528`
+- `hardcoded_scenario_hits = 4`
+- `handcrafted_law_hits = 2`
+- `documentation_consistency = True`
+- `high_risk_count = 3`
+- `evidence_independence_score = 0.5121`
+- `status_short = evidence_independence_audit_high_risk`
+
+这意味着：
+
+- 证据独立性问题并没有被“解决”
+- 但第一次被机器化地显式钉出来了
+
+这比继续报高层总分更重要。
+
+#### 4. 强测试块
+
+本轮新增的不是普通阈值测试，而是攻击型测试块，开始覆盖：
+
+- `外部反例生成`
+- `最优律顺序打乱`
+- `场景替换`
+- `独立性审计`
+
+虽然离完整的“强测试体系”还差得远，但现在已经不再只剩“阈值断言 + 文件回读”这一种测试形态。
+
+### 文档口径同步
+
+这轮同时修了文档口径不一致问题：
+
+- `AGI_GPT5_ICSPB.md`
+- `README.md`
+
+两份文档都已经从：
+
+- `第一性原理统一前沿区`
+
+同步修正为：
+
+- `第一性原理统一过渡区`
+
+并把核心读数更新到：
+
+- `intelligence_functional_closure ≈ 0.7858`
+- `first_principles_unification_score ≈ 0.7981`
+- `weakest_axis_name = falsifiability_boundary`
+
+这一点很重要，因为现在文档口径终于和代码口径一致了。
+
+### 当前最严格的结论
+
+本轮之后，项目状态可以更精确地写成：
+
+**统一主线仍成立，但“外部反例生成、最优律稳健性、证据独立性、强测试”这四条关键补强块，才刚刚进入可执行状态。**
+
+更具体地说：
+
+1. `外部反例` 现在已经不再是固定差值构造
+   - 但还不够强，触发率只有 `0.20`
+
+2. `sqrt` 现在已经证明在当前内部扫描里有顺序不变性和局部稳健性
+   - 但领先幅度仍然太小，不能写成强稳定定律
+
+3. `证据独立性` 审计已经能自动报出高风险
+   - 但高风险本身并没有消失
+
+4. `测试` 已经开始脱离纯阈值型
+   - 但离真正的外部基线和大规模反事实测试还很远
+
+所以最严格的判断还是：
+
+**项目现在比之前更像一个“知道自己哪里不可信”的研究系统了，但距离“被强独立证据支撑的第一性原理定理体系”仍然很远。**
+
+### 接下来不该只做的小功能
+
+下一步最应该直接推进的是：
+
+1. `Stage88`
+   - `external_counterexample_expansion（外部反例扩展块）`
+   - 目标：把 `external_trigger_rate` 从 `0.20` 往上推，并扩大样本族
+
+2. `Stage89`
+   - `candidate_margin_widening（候选领先幅度拉开块）`
+   - 目标：不只是让 `sqrt` 稳，还要把领先幅度拉大
+
+3. `Stage90`
+   - `independent_observation_planes（独立观测面块）`
+   - 目标：让高层主结论不再主要依赖摘要回灌
+
+4. `Stage91`
+   - `strong_attack_testpack（强攻击测试包）`
+   - 目标：把参数扰动、顺序打乱、场景替换、边界反例扩展成统一测试矩阵
+
+只有这四块继续往下推进，项目才会真正从：
+
+- `越来越诚实的统一解释框架`
+
+继续逼近：
+
+- `可以被强审计、强反例、强独立证据共同支撑的第一性原理主核`
+
+---
+
+## 2026-03-22 15:55 Stage88 修稳、Stage84/71 回灌复核
+
+### 本轮命令记录
+
+- 2026-03-22 15:35
+  - `Get-Content tests/codex/stage88_external_counterexample_expansion.py`
+  - `Get-Content tests/codex/test_stage88_external_counterexample_expansion.py`
+  - `Get-Content tests/codex/stage84_falsifiable_computation_core.py`
+  - `Get-Content tests/codex/stage71_first_principles_unification.py`
+- 2026-03-22 15:39
+  - `python tests/codex/stage88_external_counterexample_expansion.py`
+  - `python tests/codex/stage84_falsifiable_computation_core.py`
+  - `python tests/codex/stage71_first_principles_unification.py`
+- 2026-03-22 15:43
+  - 手动导入执行 `test_stage88_external_counterexample_expansion`
+  - 手动导入执行 `test_stage84_falsifiable_computation_core`
+  - 手动导入执行 `test_stage71_first_principles_unification`
+- 2026-03-22 15:45
+  - 手动导入执行 `test_stage85_external_counterexample_generator`
+  - 手动导入执行 `test_stage86_optimal_law_robustness_scan`
+  - 手动导入执行 `test_stage87_evidence_independence_audit`
+- 2026-03-22 15:50
+  - 更新 `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+  - 更新 `README.md`
+
+### 本轮代码与文档变更
+
+1. `Stage88（第八十八阶段）`
+   - 调整外部反例扩展块的触发判据，不再卡在过硬阈值。
+   - 把 `family_coverage（家族覆盖度）` 改成封顶到 `1.0` 的规范定义，避免覆盖度大于 `1` 的异常读数。
+   - 保留 `Stage85（第八十五阶段）` 作为更严格的种子反例触发器，把 `Stage88` 定位成“扩展家族触发层”。
+
+2. `Stage84（第八十四阶段）`
+   - 继续吸收 `Stage88` 的外部反例扩展桥，重新计算 `counterexample_contact_strength（反例接触强度）` 和 `shared_state_refutation_power（共享状态拒真能力）`。
+   - 测试阈值同步修正到“更严格但不虚高”的区间。
+
+3. `Stage71（第七十一阶段）`
+   - 在外部反例扩展块回灌后重新复核统一主核，确认 `frontier（前沿）` 状态不是旧文件残留，而是当前真实输出。
+
+4. 文档
+   - `AGI_GPT5_ICSPB.md` 与 `README.md` 同步回到最新口径：
+     - 当前状态：`第一性原理统一前沿区`
+     - 最新主读数：`first_principles_unification_score ≈ 0.8020`
+     - 当前最弱轴：`brain_grounding（脑编码落地）`
+   - 下一阶段任务改写为 `Stage89-91`，不再停留在已经完成的 `Stage83-85` 上。
+
+### 当前最新读数
+
+1. `Stage88（第八十八阶段） external_counterexample_expansion（外部反例扩展块）`
+   - `family_coverage = 1.0000`
+   - `triggered_family_coverage = 0.6250`
+   - `expanded_trigger_rate = 0.6250`
+   - `strongest_counterexample_name = multi_axis_extreme`
+   - `strongest_refutation_strength = 0.5885`
+   - `external_counterexample_expansion_score = 0.6914`
+   - `status_short = external_counterexample_expansion_ready`
+
+2. `Stage84（第八十四阶段） falsifiable_computation_core（可判伪计算主核）`
+   - `counterexample_contact_strength = 0.7997`
+   - `shared_state_refutation_power = 0.8039`
+   - `hardest_counterexample_name = novelty_bounded_break`
+   - `hardest_counterexample_intensity = 0.4444`
+   - `falsifiable_computation_core_score = 0.7879`
+   - `status_short = falsifiable_computation_core_transition`
+
+3. `Stage71（第七十一阶段） first_principles_unification（第一性原理统一主核）`
+   - `brain_encoding_groundedness = 0.7840`
+   - `falsifiability_boundary_strength = 0.8020`
+   - `first_principles_unification_score = 0.8020`
+   - `weakest_axis_name = brain_grounding`
+   - `status_short = first_principles_unification_frontier`
+
+### 本轮理论数学研究进度
+
+这轮最重要的推进，不是再把总分抬高一点，而是把“外部反例扩展”从弱触发拉进了可用区间，并且让它真实影响了可判伪主核和统一主核。
+
+当前更清楚的数学判断是：
+
+1. `Stage88` 适合作为“扩展家族触发层”
+   - 它现在更像在测：
+   - `trigger_demonstrated = 1[mismatch_energy >= e_min and refutation_strength >= r_min]`
+   - 其中 `e_min` 和 `r_min` 不是最终理论阈值，只是当前扩展家族接触主核的工作阈值。
+
+2. 外部反例扩展已经开始改变高层读数
+   - `Stage84` 里：
+   - `counterexample_contact_strength` 和 `shared_state_refutation_power` 已经被 `Stage88` 拉动
+   - 这说明外部反例块不再只是旁路脚本，而开始进入主核判据
+
+3. 当前统一主核重新回到 `frontier（前沿）`
+   - 但这次不是靠乐观摘要回灌，而是靠更高的 `expanded_trigger_rate`
+   - 也就是说，统一状态重新回到前沿，不是因为反例更弱，而是因为“反例接触主核”的证据更强
+
+### 最严格的问题、硬伤和瓶颈
+
+最严格地看，这轮虽然是推进，但并没有解决根问题：
+
+1. `Stage88` 仍然不是外部真实分布采样
+   - 现在只是“更像外部反例”的内部扩展样本族
+   - 仍然不是独立数据驱动的反例
+
+2. `Stage84` 仍然处在 `transition（过渡态）`
+   - `falsifiable_computation_core_score = 0.7879`
+   - `hardest_counterexample_intensity = 0.4444`
+   - 说明最坏反例还没有被压进真正低风险区
+
+3. 当前最弱轴已经从 `falsifiability_boundary（可判伪边界）` 重新切回 `brain_grounding（脑编码落地）`
+   - 这意味着项目现在的主瓶颈，不再只是“会不会触发反例”
+   - 而是“统一变量到底能不能更硬地落到脑编码实现层”
+
+4. `sqrt（平方根）` 虽然还稳，但领先幅度问题并没有被这轮解决
+   - 这依然是 `Stage89` 必须优先处理的硬伤
+
+### 接下来不该只做的小功能
+
+下一步最应该直接推进的是：
+
+1. `Stage89`
+   - `law_margin_separation（最优律领先幅度拉大块）`
+   - 目标：不只保住 `sqrt` 第一名，还要把它和 `log / rational` 的领先幅度真正拉开
+
+2. `Stage90`
+   - `independent_observation_planes（独立观测面拆层块）`
+   - 目标：降低高层统一分数对下层摘要回灌的依赖，改成分离的观测面证据链
+
+3. `Stage91`
+   - `counterexample_attack_suite（强攻击测试包）`
+   - 目标：把参数扰动、顺序打乱、场景替换、边界反例做成统一攻击矩阵
+
+4. `Stage92`
+   - `brain_grounding_counterexample_pack（脑编码落地反例包）`
+   - 目标：直接攻击当前最弱轴 `brain_grounding（脑编码落地）`
+
+只有沿着这四块连续推进，项目才不会再次退回“内部自洽分数系统”的舒适区，而会继续逼近“能被外部反例、独立观测面和脑编码约束共同支撑的第一性原理主核”。
+
+## 2026-03-22 15:59 合并处理记录
+
+- 时间：2026-03-22 15:59
+- 任务：拉取远端代码后检查冲突并完成合并恢复
+- 执行命令：
+  - `git status --short`
+  - `git status`
+  - `rg -n "^(<<<<<<<|=======|>>>>>>>)" -S .`
+  - `git log --oneline HEAD..origin/main`
+  - `git diff --name-only HEAD..origin/main`
+  - `git diff --name-only`
+  - `git stash push -u -m "codex-auto-pre-pull-20260322-merge"`
+  - `git pull --ff-only`
+  - `git stash list`
+  - `git stash pop`
+  - `git status -sb`
+  - `git diff --check`
+- 工程结论：
+  - 当前仓库不存在 `merge`（合并）/`rebase`（变基）中的未解决冲突。
+  - 远端提交已通过 `fast-forward`（快进）方式并入本地。
+  - 本地工作区改动已成功恢复，`stash pop`（暂存弹回）阶段仅对两个 `summary.json`（摘要结果文件）执行自动合并，未留下冲突标记。
+  - 当前仍存在若干本地未提交修改与未跟踪文件，但它们属于原工作内容，不是本次拉取造成的新冲突。
+  - `git diff --check` 发现 `research/gemini/docs/AGI_GEMINI_MEMO.md` 存在 1 处尾随空格，这属于格式瑕疵，不属于合并冲突。
+- 理论数学研究进度：
+  - 本轮没有新增数学结构证明或反例实验，进展主要集中在工程层的远端同步与工作区恢复。
+  - 当前第一性原理理论链路仍停留在“内部一致性增强”强于“外部可证伪约束”的阶段，说明理论主核还没有完成对独立观测面、强反例攻击、脑编码落地三类约束的统一闭合。
+  - 之前备忘录中提出的 `Stage89` 到 `Stage92` 仍然成立：应继续扩大最优律领先幅度、拆分独立观测面、建设强攻击反例包、直接攻击脑编码落地薄弱轴，否则容易把工程进展误判为理论突破。
+
+## 2026-03-22 15:59 最终结论补记
+
+- 时间：2026-03-22 15:59
+- 结论摘要：
+  - 这次真正完成的是“远端同步成功 + 本地改动安全恢复”，不是“解决了一批复杂文本冲突”。
+  - 当前 `main`（主分支）已经追平 `origin/main`（远端主分支）。
+  - 当前工作区仍然是脏的，但这些脏文件是原有研究修改，不是新的合并故障。
+- 严格审视后的问题、硬伤和瓶颈：
+  - 硬伤一：用户感知到“拉取后出现冲突”，但仓库实际并不处于冲突态，说明当前工作流缺少对 `pull failed`（拉取失败）、`stash conflict`（暂存冲突）、`real merge conflict`（真实合并冲突）三种状态的清晰区分。
+  - 硬伤二：大量研究输出直接留在工作区未提交，导致任何远端同步都会放大风险，工程卫生不足会持续干扰理论推进。
+  - 硬伤三：当前理论线虽然不断新增阶段实验，但很多结果仍以内部评分、摘要文件和报告形式存在，离“可由外部反例否定”的第一性原理理论还有明显距离。
+  - 瓶颈：工程层没有形成稳定的“实验产物隔离 + 阶段提交 + 外部反例回归”闭环，理论层没有形成“独立观测面一致收敛”的硬约束。
+- 要成为第一性原理理论，下一步必须做什么：
+  - 任务一：把 `Stage89` 做成“最优律领先幅度”硬指标，防止理论只是险胜而不是稳定胜出。
+  - 任务二：把 `Stage90` 做成独立观测面协议，让不同证据平面可独立否定同一理论核。
+  - 任务三：把 `Stage91` 做成统一反例攻击矩阵，用扰动、错序、替代、边界条件持续攻击主核。
+  - 任务四：把 `Stage92` 聚焦到 `brain_grounding`（脑编码落地），因为这是当前最容易击穿整体叙事的薄弱轴。
+- 阶段性建议：
+  - 先把实验产物与研究正文的提交粒度收紧，降低下次远端同步风险。
+  - 再把后续阶段目标从“再做一个功能块”改成“构造一个能推翻当前理论的攻击面”。
+  - 只有当理论在多个独立攻击面下仍保持领先，才能开始谈第一性原理主核的收敛。

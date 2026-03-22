@@ -3,12 +3,12 @@
     "unified_state_readiness": 0.7971338583161774,
     "language_projection_coherence": 0.8324739047996552,
     "brain_encoding_groundedness": 0.7839822450233449,
-    "intelligence_functional_closure": 0.7821002571706002,
+    "intelligence_functional_closure": 0.7857587970047224,
     "local_generation_closure": 0.8130775882666668,
-    "falsifiability_boundary_strength": 0.7801497939035469,
-    "first_principles_unification_score": 0.7978115059065343,
-    "weakest_axis_name": "falsifiability_boundary",
-    "weakest_axis_score": 0.7801497939035469
+    "falsifiability_boundary_strength": 0.801963000384152,
+    "first_principles_unification_score": 0.8019601561135732,
+    "weakest_axis_name": "brain_grounding",
+    "weakest_axis_score": 0.7839822450233449
   },
   "unified_state_variables": {
     "a": {
@@ -155,9 +155,9 @@
     "headline_metrics": {
       "executable_boundary_coverage": 0.9513595907318365,
       "task_counterexample_activation": 0.7044768477861175,
-      "shared_state_rejection_power": 0.8292829192843495,
+      "shared_state_rejection_power": 0.7872499764998471,
       "boundary_counterexample_discrimination": 0.9432348631155041,
-      "falsifiability_boundary_hardening_score": 0.9138250760363655,
+      "falsifiability_boundary_hardening_score": 0.906259146335155,
       "weakest_failure_mode_name": "learning_stability",
       "weakest_failure_mode_score": 0.7037586597308537
     },
@@ -379,7 +379,14 @@
     },
     "boundary_bridge": {
       "shared_state_support": 0.8554715321405824,
-      "synthetic_mismatch_support": 0.6154715321405824,
+      "counterexample_mismatch_support": 0.19237947585958728,
+      "shared_state_counterexample_gap": 0.6630920562809951,
+      "shared_state_counterexample": {
+        "constructed_from_independent_axes": true,
+        "identity_mismatch": 0.14097427889323788,
+        "route_mismatch": 0.024517911860422736,
+        "counterexample_pressure": 0.230173306373191
+      },
       "task_triggered": true,
       "live_checks": {
         "patch_failure": false,
@@ -387,6 +394,11 @@
         "route_failure": false,
         "kernel_failure": false
       }
+    },
+    "evidence_profile": {
+      "evidence_kind": "heuristic_internal_model",
+      "external_counterexample_validated": false,
+      "independence_warning": "当前判伪边界仍主要来自内部构造场景，不应解读为外部独立证实。"
     },
     "status": {
       "status_short": "falsifiability_boundary_hardened",
@@ -518,6 +530,11 @@
         "failure_intensity": 0.4302442517580534
       }
     ],
+    "evidence_profile": {
+      "scenario_source": "handcrafted_internal_grid",
+      "external_dataset_fitted": false,
+      "warning": "场景与权重当前用于启发式比较，不应视为外部统计拟合结果。"
+    },
     "status": {
       "status_short": "intelligence_closure_failure_map_transition",
       "status_label": "智能闭合失效图谱已经出现可执行轮廓，但高抽象压缩和新颖泛化仍然容易拉开前向路由与反向修复的耦合。"
@@ -578,7 +595,9 @@
       "best_failure_after": 0.30579177077060143,
       "best_repair_gain": 0.1477877609874521,
       "best_coupling_after": 0.7964089457517535,
-      "best_repaired_novelty_score": 0.8609382162906761
+      "best_repaired_novelty_score": 0.8609382162906761,
+      "best_law_margin": 0.003740689141748854,
+      "best_law_robust_fraction": 1.0
     },
     "worst_case_before": {
       "name": "novelty_generalization",
@@ -619,6 +638,38 @@
         "repaired_novelty_score": 0.8571975271489273
       }
     },
+    "sensitivity_records": [
+      {
+        "name": "novelty_up",
+        "best_law_name": "sqrt",
+        "best_law_margin": 0.003699917554384591
+      },
+      {
+        "name": "novelty_down",
+        "best_law_name": "sqrt",
+        "best_law_margin": 0.0037870904211393386
+      },
+      {
+        "name": "binding_up",
+        "best_law_name": "sqrt",
+        "best_law_margin": 0.0037095880860190666
+      },
+      {
+        "name": "repair_up",
+        "best_law_name": "sqrt",
+        "best_law_margin": 0.0037095880860190666
+      },
+      {
+        "name": "abstraction_up",
+        "best_law_name": "sqrt",
+        "best_law_margin": 0.0037145534606787267
+      }
+    ],
+    "evidence_profile": {
+      "scenario_source": "handcrafted_internal_case",
+      "external_fit": false,
+      "warning": "最优律判断当前来自内部设定场景与局部敏感性分析，不应被解读为外部独立证明。"
+    },
     "status": {
       "status_short": "novelty_generalization_repair_ready",
       "status_label": "新颖泛化修复已经出现首个可执行候选，但还没有证明它能在更高抽象压力下稳定成立。"
@@ -626,6 +677,213 @@
     "project_readout": {
       "summary": "这一轮直接围绕 novelty_generalization 设计修复律，专门压低新颖结构并入旧结构时的闭合裂缝。",
       "next_question": "下一步要把这条修复律并回前向与反向统一块，检查新颖泛化环的耦合是否真正增强。"
+    }
+  },
+  "theorem_kernel_bridge": {
+    "headline_metrics": {
+      "projection_error_bound": 0.06763429233389429,
+      "repair_contraction_ratio": 0.21654942810722877,
+      "bounded_novelty_margin": 0.7117376923493564,
+      "cross_projection_consistency": 0.8797092353496521,
+      "theorem_premise_satisfaction": 0.8697966607904761,
+      "theorem_conclusion_strength": 0.8289315391558786,
+      "forward_backward_theorem_kernel_score": 0.8139078374749349
+    },
+    "scenario_records": [
+      {
+        "name": "stable_context_projection",
+        "premise_margin": 0.965573223069585,
+        "conclusion_margin": 0.9094430235470825
+      },
+      {
+        "name": "conflict_bounded_repair",
+        "premise_margin": 0.8205562846521334,
+        "conclusion_margin": 0.7950934872492945
+      },
+      {
+        "name": "novelty_bounded_closure",
+        "premise_margin": 0.8065938746680809,
+        "conclusion_margin": 0.6860002363225328
+      }
+    ],
+    "theorem_kernel_equations": {
+      "language_projection_bound": "||Y_lang(t+1)-Y_lang*(t+1)|| <= E_proj(t+1), E_proj(t+1) < projection_error_bound",
+      "repair_contraction": "E_repair(t+1) <= lambda_repair * E_repair(t) + mu_conflict * route_conflict_mass, lambda_repair < 1",
+      "novelty_boundedness": "E_novelty(t+1) <= sqrt(raw_drive) * (1 - p_eff) + route_conflict_mass",
+      "closure_theorem": "if q/b/g covariance and bounded repair both hold, then closure_error(t+1) < closure_error(t) + epsilon"
+    },
+    "status": {
+      "status_short": "forward_backward_theorem_kernel_transition",
+      "status_label": "前向路由、反向修复和语言投影已经首次压进同一组定理约束，但收缩率和误差上界还没有完全收紧到强定理区。"
+    },
+    "project_readout": {
+      "summary": "这一轮不再只做经验摘要，而是把语言投影误差、路由冲突残量、反向修复收缩和新颖绑定有界性压成同一组 theorem kernel 约束。",
+      "next_question": "下一步要把这些定理约束推进成可判伪反例块，检查哪一种反例能最直接打穿当前 theorem kernel。"
+    }
+  },
+  "falsifiable_computation_core_bridge": {
+    "headline_metrics": {
+      "executable_theorem_discrimination": 0.8417804264106852,
+      "counterexample_contact_strength": 0.7997193711914297,
+      "route_projection_failure_traceability": 0.8854403993639328,
+      "shared_state_refutation_power": 0.803936274340619,
+      "hardest_counterexample_name": "novelty_bounded_break",
+      "hardest_counterexample_intensity": 0.44440515698127164,
+      "falsifiable_computation_core_score": 0.7879004650963723
+    },
+    "scenario_records": [
+      {
+        "name": "context_covariance_break",
+        "trigger_contact": 0.5889376824449175,
+        "observable_failure": 0.0788912058931625,
+        "core_rejection": 0.8413562912397547,
+        "counterexample_intensity": 0.2864336883119191
+      },
+      {
+        "name": "route_conflict_overflow",
+        "trigger_contact": 0.5612399500546893,
+        "observable_failure": 0.1850660944597546,
+        "core_rejection": 0.8178088642238888,
+        "counterexample_intensity": 0.31962619486883803
+      },
+      {
+        "name": "novelty_bounded_break",
+        "trigger_contact": 0.8022848787140906,
+        "observable_failure": 0.29617116176160374,
+        "core_rejection": 0.8170519811824875,
+        "counterexample_intensity": 0.44440515698127164
+      },
+      {
+        "name": "shared_state_decoupling",
+        "trigger_contact": 0.8406565707305005,
+        "observable_failure": 0.12499509551436755,
+        "core_rejection": 0.8217882888136064,
+        "counterexample_intensity": 0.39859821129378326
+      }
+    ],
+    "external_counterexample_expansion_bridge": {
+      "family_coverage": 1.0,
+      "triggered_family_coverage": 0.625,
+      "expanded_trigger_rate": 0.625,
+      "strongest_counterexample_name": "multi_axis_extreme",
+      "strongest_refutation_strength": 0.5884518912606966,
+      "average_refutation_strength": 0.48307748146463436,
+      "external_counterexample_expansion_score": 0.6913906382026815
+    },
+    "falsifiable_core_equations": {
+      "counterexample_trigger": "T_fail = contact(observable_break, theorem_break, route_conflict, task_trigger)",
+      "core_rejection": "R_core = reject(shared_state, projection_bound, repair_contraction, novelty_bound)",
+      "falsifiable_core": "F_core = align(T_fail, observable_failure) * (1 - R_core)",
+      "verdict_rule": "if F_core > stability_margin then theorem_kernel fails else theorem_kernel survives"
+    },
+    "status": {
+      "status_short": "falsifiable_computation_core_transition",
+      "status_label": "可判伪计算主核已经开始把定理约束和反例触发写进同一块，但最坏反例还没有被完全压进低风险区。"
+    },
+    "project_readout": {
+      "summary": "这一轮把 theorem kernel、语言投影反例、路由冲突和共享状态拒真能力压成同一个 falsifiable computation core，不再只看边界摘要项。",
+      "next_question": "下一步要把 brain_grounding 单独做成反例包，检查哪些神经层失配会最直接打穿当前主核。"
+    }
+  },
+  "external_counterexample_expansion_bridge": {
+    "headline_metrics": {
+      "family_coverage": 1.0,
+      "triggered_family_coverage": 0.625,
+      "expanded_trigger_rate": 0.625,
+      "strongest_counterexample_name": "multi_axis_extreme",
+      "strongest_refutation_strength": 0.5884518912606966,
+      "average_refutation_strength": 0.48307748146463436,
+      "external_counterexample_expansion_score": 0.6913906382026815
+    },
+    "scenario_records": [
+      {
+        "name": "identity_route_projection_triplet",
+        "family": "triple_axis",
+        "generation_mode": "expanded_independent_axes",
+        "mismatch_energy": 0.7031999999999999,
+        "external_contact": 0.6424872158522112,
+        "support_residual": 0.8240353378652845,
+        "refutation_strength": 0.48670469126069654,
+        "trigger_demonstrated": true
+      },
+      {
+        "name": "task_projection_reversal",
+        "family": "task_projection",
+        "generation_mode": "expanded_independent_axes",
+        "mismatch_energy": 0.632,
+        "external_contact": 0.6193272158522112,
+        "support_residual": 0.8240353378652845,
+        "refutation_strength": 0.4407185318045307,
+        "trigger_demonstrated": false
+      },
+      {
+        "name": "route_field_permutation",
+        "family": "order_shuffle",
+        "generation_mode": "expanded_independent_axes",
+        "mismatch_energy": 0.6192000000000001,
+        "external_contact": 0.6190872158522112,
+        "support_residual": 0.8240353378652845,
+        "refutation_strength": 0.43902893180453073,
+        "trigger_demonstrated": false
+      },
+      {
+        "name": "boundary_load_overflow",
+        "family": "boundary_overflow",
+        "generation_mode": "expanded_independent_axes",
+        "mismatch_energy": 0.7144,
+        "external_contact": 0.6512472158522111,
+        "support_residual": 0.8240353378652845,
+        "refutation_strength": 0.5010790912606965,
+        "trigger_demonstrated": true
+      },
+      {
+        "name": "shared_state_axis_swap",
+        "family": "axis_swap",
+        "generation_mode": "expanded_independent_axes",
+        "mismatch_energy": 0.6272000000000001,
+        "external_contact": 0.6160872158522113,
+        "support_residual": 0.8240353378652845,
+        "refutation_strength": 0.43582893180453075,
+        "trigger_demonstrated": false
+      },
+      {
+        "name": "projection_route_lock_conflict",
+        "family": "route_projection",
+        "generation_mode": "expanded_independent_axes",
+        "mismatch_energy": 0.6648,
+        "external_contact": 0.6309672158522113,
+        "support_residual": 0.8240353378652845,
+        "refutation_strength": 0.46243589126069656,
+        "trigger_demonstrated": true
+      },
+      {
+        "name": "multi_axis_extreme",
+        "family": "extreme",
+        "generation_mode": "expanded_independent_axes",
+        "mismatch_energy": 0.8488000000000001,
+        "external_contact": 0.6933672158522113,
+        "support_residual": 0.8240353378652845,
+        "refutation_strength": 0.5884518912606966,
+        "trigger_demonstrated": true
+      },
+      {
+        "name": "task_identity_projection_quartet",
+        "family": "quartet",
+        "generation_mode": "expanded_independent_axes",
+        "mismatch_energy": 0.7368000000000001,
+        "external_contact": 0.6543672158522114,
+        "support_residual": 0.8240353378652845,
+        "refutation_strength": 0.5103718912606966,
+        "trigger_demonstrated": true
+      }
+    ],
+    "status": {
+      "status_short": "external_counterexample_expansion_ready",
+      "status_label": "外部反例扩展块已经能扩大样本族并提升触发率，但仍然属于内部构造反例，而不是外部真实分布采样。"
+    },
+    "project_readout": {
+      "summary": "这一轮把外部反例从 5 个独立样本扩展到 8 个跨家族样本，开始覆盖三轴、四轴、顺序打乱和边界过载等更强错配类型。",
+      "next_question": "下一步要把扩展反例直接回灌到可判伪主核，检查最坏反例强度是否继续抬升。"
     }
   },
   "projections": {
@@ -641,7 +899,12 @@
   },
   "status": {
     "status_short": "first_principles_unification_frontier",
-    "status_label": "语言结构、大脑编码、智能理论已经被压到同一状态系统上，但仍处在第一性原理统一过渡区"
+    "status_label": "语言结构、大脑编码、智能理论已经被压到同一状态系统上，并进入第一性原理统一前沿区"
+  },
+  "evidence_profile": {
+    "evidence_kind": "aggregated_internal_summaries",
+    "external_validation_complete": false,
+    "independence_warning": "统一主核分数主要来自多阶段摘要回灌，当前更适合作为研究导航，而不应视为理论已被证明。"
   },
   "project_readout": {
     "summary": "这一轮首次把原生变量、上下文原生化、纤维复用、稳定性与身份锁定并成同一个第一性原理统一框架。",

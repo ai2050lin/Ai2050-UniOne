@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+from functools import lru_cache
 from pathlib import Path
 
 
@@ -22,6 +23,7 @@ def _clip01(value: float) -> float:
     return max(0.0, min(1.0, value))
 
 
+@lru_cache(maxsize=1)
 def build_intelligence_closure_failure_map_summary() -> dict:
     identity = build_direct_identity_lock_summary()["headline_metrics"]
     projection = build_language_projection_covariance_summary()["headline_metrics"]
@@ -149,6 +151,11 @@ def build_intelligence_closure_failure_map_summary() -> dict:
             "intelligence_closure_failure_map_score": intelligence_closure_failure_map_score,
         },
         "scenario_records": scenario_records,
+        "evidence_profile": {
+            "scenario_source": "handcrafted_internal_grid",
+            "external_dataset_fitted": False,
+            "warning": "场景与权重当前用于启发式比较，不应视为外部统计拟合结果。",
+        },
         "status": {
             "status_short": (
                 "intelligence_closure_failure_map_ready"

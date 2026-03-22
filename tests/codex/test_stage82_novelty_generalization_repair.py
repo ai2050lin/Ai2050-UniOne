@@ -24,6 +24,14 @@ def test_stage82_novelty_generalization_repair() -> None:
     assert hm["best_repair_gain"] > 0.05
     assert hm["best_coupling_after"] > 0.79
     assert hm["best_repaired_novelty_score"] > 0.79
+    best_by_table = max(
+        summary["law_results"].items(),
+        key=lambda item: item[1]["repaired_novelty_score"],
+    )[0]
+    assert hm["best_law_name"] == best_by_table
+    assert hm["best_law_margin"] > 0.0
+    assert hm["best_law_robust_fraction"] >= 0.60
+    assert len(summary["sensitivity_records"]) == 5
     assert status["status_short"] in {
         "novelty_generalization_repair_ready",
         "novelty_generalization_repair_transition",

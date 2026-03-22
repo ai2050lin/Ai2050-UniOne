@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+from functools import lru_cache
 from pathlib import Path
 
 
@@ -25,12 +26,16 @@ from stage79_route_conflict_native_measure import build_route_conflict_native_me
 from stage80_intelligence_closure_failure_map import build_intelligence_closure_failure_map_summary
 from stage81_forward_backward_unification import build_forward_backward_unification_summary
 from stage82_novelty_generalization_repair import build_novelty_generalization_repair_summary
+from stage83_forward_backward_theorem_kernel import build_forward_backward_theorem_kernel_summary
+from stage84_falsifiable_computation_core import build_falsifiable_computation_core_summary
+from stage88_external_counterexample_expansion import build_external_counterexample_expansion_summary
 
 
 def _clip01(value: float) -> float:
     return max(0.0, min(1.0, value))
 
 
+@lru_cache(maxsize=1)
 def build_first_principles_unification_summary() -> dict:
     native = build_native_variable_candidate_mapping_summary()
     context = build_context_native_grounding_summary()
@@ -46,6 +51,9 @@ def build_first_principles_unification_summary() -> dict:
     intelligence_failure = build_intelligence_closure_failure_map_summary()
     forward_backward = build_forward_backward_unification_summary()
     novelty_repair = build_novelty_generalization_repair_summary()
+    theorem_kernel = build_forward_backward_theorem_kernel_summary()
+    falsifiable_core = build_falsifiable_computation_core_summary()
+    external_expansion = build_external_counterexample_expansion_summary()
 
     hn = native["headline_metrics"]
     hc = context["headline_metrics"]
@@ -61,6 +69,9 @@ def build_first_principles_unification_summary() -> dict:
     hif = intelligence_failure["headline_metrics"]
     hfb = forward_backward["headline_metrics"]
     hnr = novelty_repair["headline_metrics"]
+    htk = theorem_kernel["headline_metrics"]
+    hfc = falsifiable_core["headline_metrics"]
+    hee = external_expansion["headline_metrics"]
 
     unified_state_readiness = _clip01(
         0.28 * hn["primitive_set_readiness"]
@@ -97,12 +108,14 @@ def build_first_principles_unification_summary() -> dict:
         + 0.10 * hrc["training_route_alignment"]
     )
     intelligence_functional_closure = _clip01(
-        0.60 * base_intelligence_functional_closure
+        0.54 * base_intelligence_functional_closure
         + 0.08 * hif["intelligence_closure_failure_map_score"]
-        + 0.12 * hfb["forward_backward_unification_score"]
+        + 0.10 * hfb["forward_backward_unification_score"]
         + 0.08 * hfb["novelty_binding_alignment"]
         + 0.08 * hnr["best_repaired_novelty_score"]
         + 0.04 * (1.0 - hnr["best_failure_after"])
+        + 0.05 * htk["forward_backward_theorem_kernel_score"]
+        + 0.03 * htk["cross_projection_consistency"]
     )
     local_generation_closure = _clip01(
         0.30 * hc["context_native_readiness"]
@@ -117,9 +130,15 @@ def build_first_principles_unification_summary() -> dict:
         + 0.26 * ha["theorem_transparency_gain"]
     )
     falsifiability_boundary_strength = _clip01(
-        0.74 * base_falsifiability_boundary_strength
-        + 0.16 * hfz["falsifiability_boundary_hardening_score"]
+        0.62 * base_falsifiability_boundary_strength
+        + 0.14 * hfz["falsifiability_boundary_hardening_score"]
         + 0.10 * hfz["weakest_failure_mode_score"]
+        + 0.03 * (1.0 - htk["projection_error_bound"])
+        + 0.03 * (1.0 - htk["repair_contraction_ratio"])
+        + 0.05 * hfc["falsifiable_computation_core_score"]
+        + 0.03 * (1.0 - hfc["hardest_counterexample_intensity"])
+        + 0.02 * hee["expanded_trigger_rate"]
+        + 0.02 * hee["triggered_family_coverage"]
     )
     first_principles_unification_score = _clip01(
         0.18 * unified_state_readiness
@@ -228,8 +247,18 @@ def build_first_principles_unification_summary() -> dict:
 
     status_short = (
         "first_principles_unification_frontier"
-        if first_principles_unification_score >= 0.79 and falsifiability_boundary_strength >= 0.78
+        if (
+            first_principles_unification_score >= 0.79
+            and falsifiability_boundary_strength >= 0.78
+            and hfc["hardest_counterexample_intensity"] <= 0.45
+            and hee["expanded_trigger_rate"] >= 0.30
+        )
         else "first_principles_unification_transition"
+    )
+    status_label = (
+        "语言结构、大脑编码、智能理论已经被压到同一状态系统上，并进入第一性原理统一前沿区"
+        if status_short == "first_principles_unification_frontier"
+        else "语言结构、大脑编码、智能理论已经被压到同一状态系统上，但仍处在第一性原理统一过渡区"
     )
 
     return {
@@ -253,11 +282,19 @@ def build_first_principles_unification_summary() -> dict:
         "intelligence_closure_bridge": intelligence_failure,
         "forward_backward_bridge": forward_backward,
         "novelty_repair_bridge": novelty_repair,
+        "theorem_kernel_bridge": theorem_kernel,
+        "falsifiable_computation_core_bridge": falsifiable_core,
+        "external_counterexample_expansion_bridge": external_expansion,
         "projections": projections,
         "falsification_boundaries": falsification_boundaries,
         "status": {
             "status_short": status_short,
-            "status_label": "语言结构、大脑编码、智能理论已经被压到同一状态系统上，但仍处在第一性原理统一过渡区",
+            "status_label": status_label,
+        },
+        "evidence_profile": {
+            "evidence_kind": "aggregated_internal_summaries",
+            "external_validation_complete": False,
+            "independence_warning": "统一主核分数主要来自多阶段摘要回灌，当前更适合作为研究导航，而不应视为理论已被证明。",
         },
         "project_readout": {
             "summary": "这一轮首次把原生变量、上下文原生化、纤维复用、稳定性与身份锁定并成同一个第一性原理统一框架。",

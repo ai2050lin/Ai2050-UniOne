@@ -38,6 +38,19 @@ def test_stage71_first_principles_unification() -> None:
         "first_principles_unification_transition",
         "first_principles_unification_frontier",
     }
+    axis_scores = {
+        "language_projection": hm["language_projection_coherence"],
+        "brain_grounding": hm["brain_encoding_groundedness"],
+        "intelligence_closure": hm["intelligence_functional_closure"],
+        "local_generation": hm["local_generation_closure"],
+        "falsifiability_boundary": hm["falsifiability_boundary_strength"],
+    }
+    expected_weakest = min(axis_scores, key=axis_scores.get)
+    assert hm["weakest_axis_name"] == expected_weakest
+    if status["status_short"] == "first_principles_unification_frontier":
+        assert "前沿区" in status["status_label"]
+    else:
+        assert "过渡区" in status["status_label"]
 
     out_path = ROOT / "tests" / "codex_temp" / "stage71_first_principles_unification_20260322" / "summary.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
