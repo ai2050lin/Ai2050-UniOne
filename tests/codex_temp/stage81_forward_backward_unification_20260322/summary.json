@@ -1,6 +1,6 @@
 {
   "headline_metrics": {
-    "forward_selectivity": 0.9070631535921134,
+    "forward_selectivity": 0.9070631535921132,
     "backward_fidelity": 0.8050751069384938,
     "novelty_binding_alignment": 0.73598978607311,
     "loop_stability_gain": 0.813180089112038,
@@ -15,14 +15,14 @@
     },
     {
       "name": "novelty_generalization_loop",
-      "forward_readout": 0.8067217117997862,
+      "forward_readout": 0.8067217117997861,
       "backward_readout": 0.8043153698654154,
       "loop_coupling": 0.7459036181258845
     },
     {
       "name": "conflict_repair_loop",
-      "forward_readout": 0.8796853737281584,
-      "backward_readout": 0.8135272685105124,
+      "forward_readout": 0.8796853737281581,
+      "backward_readout": 0.8135272685105123,
       "loop_coupling": 0.8219223969707193
     }
   ],

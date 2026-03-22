@@ -4,7 +4,10 @@ import numpy as np
 import torch
 from sklearn.metrics.pairwise import cosine_similarity
 
-from scripts.riemannian_geometry import RiemannianManifold
+try:
+    from scripts.riemannian_geometry import RiemannianManifold
+except ModuleNotFoundError:
+    from riemannian_geometry import RiemannianManifold
 
 
 def run_agi_verification(model):

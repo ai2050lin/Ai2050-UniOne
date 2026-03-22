@@ -84,10 +84,10 @@
     "headline_metrics": {
       "context_covariance_stability": 0.9726069209308438,
       "bias_gate_transport": 0.9678533942157953,
-      "route_conditioned_projection": 0.9090584976724869,
+      "route_conditioned_projection": 0.9090584976724868,
       "context_shift_resilience": 1.0,
       "projection_counterexample_resistance": 0.8579577999194025,
-      "projection_gap": 0.09094150232751308,
+      "projection_gap": 0.09094150232751319,
       "language_projection_repair_score": 0.9436195252259291
     },
     "scenario_records": [
@@ -190,13 +190,13 @@
     "learning_stability_map": {
       "headline_metrics": {
         "learning_failure_surface_coverage": 0.5903425660835677,
-        "average_guarded_update_score": 0.6688645049862276,
+        "average_guarded_update_score": 0.6688645049862277,
         "average_recovery_buffer": 0.6255324150771557,
         "bounded_learning_window_score": 0.6047479490681554,
         "worst_case_failure_name": "compositional_binding_write",
         "worst_case_failure_intensity": 0.531639294707367,
         "stability_repair_priority": 0.4921286741876866,
-        "learning_stability_failure_map_score": 0.6113291466309316
+        "learning_stability_failure_map_score": 0.6113291466309317
       },
       "scenario_records": [
         {
@@ -264,8 +264,8 @@
         "best_law_name": "sqrt",
         "generalized_repair_coverage": 0.8495841676980695,
         "repaired_average_failure_intensity": 0.29696855683401946,
-        "repaired_average_guarded_update": 0.9542082730476947,
-        "repaired_bounded_learning_window": 0.8153803529498528,
+        "repaired_average_guarded_update": 0.9542082730476945,
+        "repaired_bounded_learning_window": 0.8153803529498527,
         "route_rebind_support": 0.849036824883302,
         "context_switch_support": 0.8464588346258488,
         "repaired_worst_case_name": "compositional_binding_write",
@@ -430,18 +430,18 @@
   },
   "route_conflict_bridge": {
     "headline_metrics": {
-      "attention_like_selection": 0.8984868605834299,
-      "gradient_like_correction": 0.8074490284607702,
+      "attention_like_selection": 0.8984868605834297,
+      "gradient_like_correction": 0.80744902846077,
       "route_conflict_mass": 0.18152574626985102,
-      "conflict_resolution_readiness": 0.8348442804590156,
+      "conflict_resolution_readiness": 0.8348442804590155,
       "inference_route_coherence": 0.8646987376519955,
       "training_route_alignment": 0.7949601038913414,
-      "route_computation_closure_score": 0.8402156596279744
+      "route_computation_closure_score": 0.8402156596279742
     },
     "scenario_records": [
       {
         "name": "forward_selection",
-        "attention_like_readout": 0.8986501719336175,
+        "attention_like_readout": 0.8986501719336173,
         "conflict_mass": 0.1817792072050982
       },
       {
@@ -475,7 +475,7 @@
     "headline_metrics": {
       "closure_failure_surface_coverage": 0.35121428681449296,
       "average_recovery_coherence": 0.7681704479971635,
-      "abstraction_bridge_strength": 0.7621530838708325,
+      "abstraction_bridge_strength": 0.7621530838708324,
       "worst_case_name": "novelty_generalization",
       "worst_case_failure_intensity": 0.45357953175805354,
       "closure_repair_priority": 0.32233475314282267,
@@ -529,7 +529,7 @@
   },
   "forward_backward_bridge": {
     "headline_metrics": {
-      "forward_selectivity": 0.9070631535921134,
+      "forward_selectivity": 0.9070631535921132,
       "backward_fidelity": 0.8050751069384938,
       "novelty_binding_alignment": 0.73598978607311,
       "loop_stability_gain": 0.813180089112038,
@@ -544,14 +544,14 @@
       },
       {
         "name": "novelty_generalization_loop",
-        "forward_readout": 0.8067217117997862,
+        "forward_readout": 0.8067217117997861,
         "backward_readout": 0.8043153698654154,
         "loop_coupling": 0.7459036181258845
       },
       {
         "name": "conflict_repair_loop",
-        "forward_readout": 0.8796853737281584,
-        "backward_readout": 0.8135272685105124,
+        "forward_readout": 0.8796853737281581,
+        "backward_readout": 0.8135272685105123,
         "loop_coupling": 0.8219223969707193
       }
     ],

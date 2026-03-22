@@ -118,6 +118,23 @@ const ANALYSIS_MODE_STAGE_GROUPS = [
   },
 ];
 
+const APPLE_ANIMATION_OPTIONS = [
+  { id: 'none', label: '无动画', desc: '只看静态结构。' },
+  { id: 'family_patch_formation', label: 'Family 成形', desc: '看 family patch 从散点收拢成原型核。' },
+  { id: 'instance_offset', label: '实例偏移', desc: '看实例如何从 family 核拉出 offset。' },
+  { id: 'attribute_fiber', label: '属性纤维', desc: '看颜色/形状/甜度纤维挂接到概念。' },
+  { id: 'successor_transport', label: '后继运输', desc: '看 successor 沿路径运输。' },
+  { id: 'protocol_bridge', label: '协议桥接', desc: '看内部编码如何进入读出桥。' },
+  { id: 'cross_layer_relay', label: '跨层接力', desc: '看层间 relay 的亮起顺序。' },
+  { id: 'ablation_shockwave', label: '消融冲击波', desc: '看打掉局部 witness 后的震荡外扩。' },
+  { id: 'counterfactual_split', label: '反事实分叉', desc: '看原轨迹与反事实轨迹分叉。' },
+  { id: 'minimal_circuit_peeloff', label: '最小回路剥离', desc: '看回路逐步剥离到最小集合。' },
+  { id: 'margin_breathing', label: '边界呼吸', desc: '看 family margin 的呼吸式边界变化。' },
+  { id: 'offset_sparsity', label: '偏移稀疏', desc: '看 offset 只点亮少量高权重维。' },
+  { id: 'prototype_instance_tug', label: '原型-实例拉扯', desc: '看 prototype 与 instance 两股力的拉扯。' },
+  { id: 'stage_transition', label: '阶段切换', desc: '看 observation -> extraction -> validation 的切换。' },
+];
+
 const ICSPB_THEORY_OBJECTS = [
   {
     id: 'family_patch',
@@ -778,6 +795,184 @@ function toSafeNumber(value, fallback = 0) {
 
 function normalizeConceptKey(value) {
   return String(value || '').trim().toLowerCase();
+}
+
+function nodeSignalStrength(node) {
+  return toSafeNumber(node?.strength, 0) + toSafeNumber(node?.value, 0) * 0.35;
+}
+
+function buildFamilyPatchViewModel(nodes = [], selected = null, scanMechanismData = null) {
+  const coreNodes = Array.isArray(nodes) ? nodes.filter((node) => node?.role !== 'background') : [];
+  const queryNodes = coreNodes.filter((node) => node?.role === 'query');
+  const selectedConceptKey = normalizeConceptKey(selected?.concept || selected?.label);
+  const selectedCategoryKey = normalizeConceptKey(selected?.category);
+
+  const conceptNodes = selectedConceptKey
+    ? queryNodes.filter((node) => normalizeConceptKey(node?.concept || node?.label) === selectedConceptKey)
+    : [];
+  const familyNodes = selectedCategoryKey
+    ? queryNodes.filter((node) => normalizeConceptKey(node?.category) === selectedCategoryKey)
+    : conceptNodes;
+  const siblingNodes = familyNodes.filter((node) => normalizeConceptKey(node?.concept || node?.label) !== selectedConceptKey);
+  const uniqueSiblingConcepts = Array.from(new Set(siblingNodes.map((node) => String(node?.concept || '').trim()).filter(Boolean)));
+
+  const familyCenter = averagePosition(familyNodes, Array.isArray(selected?.position) ? selected.position : [0, 0, 0]);
+  const conceptCenter = averagePosition(conceptNodes, Array.isArray(selected?.position) ? selected.position : familyCenter);
+  const siblingCenter = averagePosition(siblingNodes, familyCenter);
+  const prototypeWitness = familyNodes
+    .slice()
+    .sort((a, b) => nodeSignalStrength(b) - nodeSignalStrength(a))
+    .slice(0, 6);
+  const instanceWitness = conceptNodes
+    .slice()
+    .sort((a, b) => nodeSignalStrength(b) - nodeSignalStrength(a))
+    .slice(0, 6);
+  const selectedConceptMinimal = selectedConceptKey ? scanMechanismData?.minimalByNoun?.[selectedConceptKey] || null : null;
+  const selectedConceptCounterfactuals = selectedConceptKey ? scanMechanismData?.counterfactualByNoun?.[selectedConceptKey] || [] : [];
+  const offsetVector = [
+    conceptCenter[0] - familyCenter[0],
+    conceptCenter[1] - familyCenter[1],
+    conceptCenter[2] - familyCenter[2],
+  ];
+  const offsetNorm = Math.sqrt(offsetVector[0] ** 2 + offsetVector[1] ** 2 + offsetVector[2] ** 2);
+
+  return {
+    selectedConceptKey,
+    selectedCategoryKey,
+    familyNodes,
+    conceptNodes,
+    siblingNodes,
+    uniqueSiblingConcepts,
+    familyCenter,
+    conceptCenter,
+    siblingCenter,
+    prototypeWitness,
+    instanceWitness,
+    selectedConceptMinimal,
+    selectedConceptCounterfactuals,
+    offsetNorm,
+  };
+}
+
+function buildNodeEmphasisMap(nodes = [], primaryIds = new Set(), secondaryIds = new Set(), tertiaryIds = new Set()) {
+  return Object.fromEntries(
+    nodes.map((node) => {
+      let emphasis = node?.role === 'background' ? 0.04 : 0.08;
+      if (tertiaryIds.has(node.id)) {
+        emphasis = Math.max(emphasis, 0.22);
+      }
+      if (secondaryIds.has(node.id)) {
+        emphasis = Math.max(emphasis, 0.42);
+      }
+      if (primaryIds.has(node.id)) {
+        emphasis = 1;
+      }
+      return [node.id, emphasis];
+    })
+  );
+}
+
+function buildAnimationSceneProfile(nodes = [], selected = null, animationMode = 'none', scanMechanismData = null) {
+  const coreNodes = Array.isArray(nodes) ? nodes.filter((node) => node?.role !== 'background') : [];
+  if (animationMode === 'none' || !selected || coreNodes.length === 0) {
+    return {
+      emphasisMap: {},
+      label: APPLE_ANIMATION_OPTIONS.find((opt) => opt.id === animationMode)?.label || '无动画',
+    };
+  }
+
+  const familyView = buildFamilyPatchViewModel(coreNodes, selected, scanMechanismData);
+  const routeNodes = coreNodes.filter((node) => node.role === 'route');
+  const attributeNodes = coreNodes.filter((node) => ['style', 'logic', 'syntax'].includes(node.role));
+  const protocolNodes = coreNodes.filter((node) => ['unifiedDecode', 'route', 'query'].includes(node.role));
+  const layerRelayNodes = coreNodes
+    .filter((node) => node.role === 'query')
+    .slice()
+    .sort((a, b) => a.layer - b.layer)
+    .filter((node, idx, arr) => idx === 0 || node.layer !== arr[idx - 1].layer)
+    .slice(0, 5);
+  const minimalWitness = familyView.selectedConceptMinimal?.subset_flat_indices
+    ? familyView.instanceWitness.slice(0, Math.min(5, familyView.selectedConceptMinimal.subset_flat_indices.length))
+    : familyView.instanceWitness.slice(0, 4);
+
+  const primaryIds = new Set([selected?.id].filter(Boolean));
+  const secondaryIds = new Set();
+  const tertiaryIds = new Set();
+  const addPrimary = (items = []) => items.forEach((node) => node?.id && primaryIds.add(node.id));
+  const addSecondary = (items = []) => items.forEach((node) => node?.id && secondaryIds.add(node.id));
+  const addTertiary = (items = []) => items.forEach((node) => node?.id && tertiaryIds.add(node.id));
+
+  switch (animationMode) {
+    case 'family_patch_formation':
+      addPrimary(familyView.prototypeWitness);
+      addSecondary(familyView.familyNodes);
+      addTertiary(familyView.siblingNodes);
+      break;
+    case 'instance_offset':
+      addPrimary(familyView.instanceWitness);
+      addSecondary(familyView.conceptNodes);
+      addTertiary(familyView.familyNodes);
+      break;
+    case 'attribute_fiber':
+      addPrimary(attributeNodes);
+      addSecondary(familyView.conceptNodes);
+      break;
+    case 'successor_transport':
+      addPrimary(routeNodes);
+      addSecondary(familyView.conceptNodes);
+      addTertiary(protocolNodes);
+      break;
+    case 'protocol_bridge':
+      addPrimary(protocolNodes);
+      addSecondary(routeNodes);
+      addTertiary(familyView.conceptNodes);
+      break;
+    case 'cross_layer_relay':
+      addPrimary(layerRelayNodes);
+      addSecondary(routeNodes);
+      break;
+    case 'ablation_shockwave':
+      addPrimary(familyView.instanceWitness);
+      addSecondary(familyView.conceptNodes);
+      break;
+    case 'counterfactual_split':
+      addPrimary(familyView.conceptNodes);
+      addSecondary(familyView.siblingNodes);
+      addTertiary(familyView.familyNodes);
+      break;
+    case 'minimal_circuit_peeloff':
+      addPrimary(minimalWitness);
+      addSecondary(familyView.instanceWitness);
+      break;
+    case 'margin_breathing':
+      addPrimary(familyView.familyNodes);
+      addSecondary(familyView.siblingNodes);
+      break;
+    case 'offset_sparsity':
+      addPrimary(familyView.instanceWitness.slice(0, 3));
+      addSecondary(familyView.instanceWitness.slice(3, 6));
+      break;
+    case 'prototype_instance_tug':
+      addPrimary(familyView.prototypeWitness.slice(0, 3));
+      addPrimary(familyView.instanceWitness.slice(0, 3));
+      addSecondary(familyView.familyNodes);
+      addSecondary(familyView.conceptNodes);
+      addTertiary(familyView.siblingNodes);
+      break;
+    case 'stage_transition':
+      addPrimary(familyView.familyNodes);
+      addSecondary(routeNodes);
+      addTertiary(protocolNodes);
+      break;
+    default:
+      addSecondary(coreNodes);
+      break;
+  }
+
+  return {
+    emphasisMap: buildNodeEmphasisMap(coreNodes, primaryIds, secondaryIds, tertiaryIds),
+    label: APPLE_ANIMATION_OPTIONS.find((opt) => opt.id === animationMode)?.label || '动画',
+  };
 }
 
 function buildConceptNeuronSetFromSignature(name, category = '未分类', signatureIndices = [], idx = 0, dff = DFF, maxNodes = IMPORTED_QUERY_NODE_MAX) {
@@ -1655,6 +1850,10 @@ function TheoryObjectOverlay({ theoryObjectMeta = null, prediction = null, nodes
   const routeNodes = useMemo(() => coreNodes.filter((node) => node.role === 'route'), [coreNodes]);
   const attributeNodes = useMemo(() => coreNodes.filter((node) => ['style', 'logic', 'syntax'].includes(node.role)), [coreNodes]);
   const protocolNodes = useMemo(() => coreNodes.filter((node) => ['unifiedDecode', 'route', 'query'].includes(node.role)), [coreNodes]);
+  const familyPatchView = useMemo(
+    () => buildFamilyPatchViewModel(coreNodes, selected, null),
+    [coreNodes, selected]
+  );
 
   const fallbackCenter = useMemo(() => [0, -2.6, z], [z]);
   const familyCenter = useMemo(() => averagePosition(familyNodes, fallbackCenter), [familyNodes, fallbackCenter]);
@@ -1732,9 +1931,47 @@ function TheoryObjectOverlay({ theoryObjectMeta = null, prediction = null, nodes
             <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={0.4} transparent opacity={0.14} side={2} />
           </mesh>
           <Line points={[familyCenter, sectionCenter]} color={accent} transparent opacity={0.62} lineWidth={1.8} />
+          <mesh position={familyPatchView.conceptCenter} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[0.78, 0.04, 12, 40]} />
+            <meshStandardMaterial color="#f8b4ff" emissive="#f8b4ff" emissiveIntensity={0.92} transparent opacity={0.34} />
+          </mesh>
+          <mesh position={familyPatchView.siblingCenter} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[0.56, 0.03, 12, 36]} />
+            <meshStandardMaterial color="#a7f3d0" emissive="#a7f3d0" emissiveIntensity={0.58} transparent opacity={0.22} />
+          </mesh>
+          <Line points={[familyCenter, familyPatchView.conceptCenter]} color="#f8b4ff" transparent opacity={0.88} lineWidth={2.2} />
+          <Line points={[familyCenter, familyPatchView.siblingCenter]} color="#a7f3d0" transparent opacity={0.4} lineWidth={1.5} />
+          {familyPatchView.prototypeWitness.slice(0, 4).map((node, idx) => (
+            <Line
+              key={`family-proto-${node.id}`}
+              points={[familyCenter, node.position]}
+              color={idx < 2 ? '#dff6ff' : accent}
+              transparent
+              opacity={0.56}
+              lineWidth={idx < 2 ? 1.8 : 1.2}
+            />
+          ))}
+          {familyPatchView.instanceWitness.slice(0, 4).map((node, idx) => (
+            <Line
+              key={`family-instance-${node.id}`}
+              points={[familyPatchView.conceptCenter, node.position]}
+              color={idx < 2 ? '#f8b4ff' : '#fda4af'}
+              transparent
+              opacity={0.62}
+              lineWidth={idx < 2 ? 1.8 : 1.2}
+            />
+          ))}
           <TheoryBeacon position={familyCenter} color={accent} size={0.18} pulse={0.24} speed={1.1} phase={0.2} />
+          <TheoryBeacon position={familyPatchView.conceptCenter} color="#f8b4ff" size={0.12} pulse={0.18} speed={1.3} phase={0.6} />
+          <TheoryBeacon position={familyPatchView.siblingCenter} color="#a7f3d0" size={0.09} pulse={0.15} speed={1.05} phase={1.0} />
           <TheoryBeacon position={shiftPosition(familyCenter, 1.25, 0.3, 0.2)} color="#dff6ff" size={0.08} phase={0.7} />
           <TheoryBeacon position={shiftPosition(familyCenter, -1.1, -0.4, -0.1)} color="#dff6ff" size={0.08} phase={1.2} />
+          <Text position={shiftPosition(familyCenter, 0, 1.05, 0)} color="#dff6ff" fontSize={0.18} anchorX="center" anchorY="middle">
+            {'family prototype'}
+          </Text>
+          <Text position={shiftPosition(familyPatchView.conceptCenter, 0, 0.86, 0)} color="#f8b4ff" fontSize={0.16} anchorX="center" anchorY="middle">
+            {'instance offset'}
+          </Text>
         </>
       )}
       {theoryObjectMeta.id === 'concept_section' && (
@@ -1870,23 +2107,47 @@ export function AppleNeuronSceneContent({
   activeDimension = 'style',
   dimensionCausal = null,
   nodeDisplayEmphasis = {},
+  animationMode = 'none',
+  scanMechanismData = null,
 }) {
   const activationMap = prediction?.activationMap || {};
   const focusNodeIds = prediction?.focusNodeIds || [];
   const focusNodeSet = useMemo(() => new Set(focusNodeIds), [focusNodeIds]);
   const modeStyle = MODE_VISUALS[mode] || MODE_VISUALS.static;
+  const animationProfile = useMemo(
+    () => buildAnimationSceneProfile(nodes, selected, animationMode, scanMechanismData),
+    [animationMode, nodes, scanMechanismData, selected]
+  );
   const activeLayer = Number.isFinite(prediction?.layerProgress)
     ? prediction.layerProgress * (LAYER_COUNT - 1)
     : null;
+  const combinedNodeEmphasis = useMemo(
+    () => Object.fromEntries(
+      nodes.map((node) => {
+        const baseEmphasis = toSafeNumber(nodeDisplayEmphasis?.[node.id], 1);
+        const animationEmphasis = toSafeNumber(animationProfile.emphasisMap?.[node.id], 1);
+        return [node.id, baseEmphasis * animationEmphasis];
+      })
+    ),
+    [animationProfile.emphasisMap, nodeDisplayEmphasis, nodes]
+  );
 
   const visibleNodes = useMemo(
-    () => nodes.filter((node) => toSafeNumber(nodeDisplayEmphasis?.[node.id], 1) > 0.025),
-    [nodeDisplayEmphasis, nodes]
+    () => nodes.filter((node) => toSafeNumber(combinedNodeEmphasis?.[node.id], 1) > 0.025),
+    [combinedNodeEmphasis, nodes]
   );
   const visibleNodeIdSet = useMemo(() => new Set(visibleNodes.map((n) => n.id)), [visibleNodes]);
   const visibleLinks = useMemo(
-    () => links.filter((link) => visibleNodeIdSet.has(link?.from) && visibleNodeIdSet.has(link?.to)),
-    [links, visibleNodeIdSet]
+    () => links
+      .filter((link) => visibleNodeIdSet.has(link?.from) && visibleNodeIdSet.has(link?.to))
+      .map((link) => ({
+        ...link,
+        emphasis: (
+          toSafeNumber(combinedNodeEmphasis?.[link?.from], 1)
+          + toSafeNumber(combinedNodeEmphasis?.[link?.to], 1)
+        ) / 2,
+      })),
+    [combinedNodeEmphasis, links, visibleNodeIdSet]
   );
 
   return (
@@ -1899,8 +2160,8 @@ export function AppleNeuronSceneContent({
           points={link.points}
           color={mode === 'dynamic_prediction' || mode === 'static' ? link.color : modeStyle.accent}
           transparent
-          opacity={0.42 + (prediction?.isRunning ? 0.18 : 0) + modeStyle.linkOpacityBoost}
-          lineWidth={1.6 + modeStyle.linkWidthBoost}
+          opacity={(0.24 + (prediction?.isRunning ? 0.18 : 0) + modeStyle.linkOpacityBoost) * toSafeNumber(link.emphasis, 1)}
+          lineWidth={(1.1 + modeStyle.linkWidthBoost) * (0.8 + toSafeNumber(link.emphasis, 1) * 0.55)}
         />
       ))}
 
@@ -1913,12 +2174,19 @@ export function AppleNeuronSceneContent({
           predictionStrength={activationMap[node.id] || 0}
           mode={mode}
           isEffectiveNode={focusNodeSet.has(node.id)}
-          visibilityEmphasis={toSafeNumber(nodeDisplayEmphasis?.[node.id], 1)}
+          visibilityEmphasis={toSafeNumber(combinedNodeEmphasis?.[node.id], 1)}
         />
       ))}
 
       <ModeVisualOverlay mode={mode} prediction={prediction} />
       <TheoryObjectOverlay theoryObjectMeta={theoryObjectMeta} prediction={prediction} nodes={visibleNodes} selected={selected} />
+      <AppleNeuronAnimationOverlay
+        animationMode={animationMode}
+        nodes={visibleNodes}
+        selected={selected}
+        prediction={prediction}
+        scanMechanismData={scanMechanismData}
+      />
       <TokenPredictionCarrier prediction={prediction} mode={mode} />
       <LayerEffectiveNeuronOverlay prediction={prediction} mode={mode} />
       <DimensionLayerImpactGraph profile={dimensionLayerProfile} dimension={activeDimension} suppression={dimensionCausal} />
@@ -1957,6 +2225,8 @@ function AppleNeuronScene({
   activeDimension = 'style',
   dimensionCausal = null,
   nodeDisplayEmphasis = {},
+  animationMode = 'none',
+  scanMechanismData = null,
 }) {
   return (
     <Canvas shadows dpr={[1, 1.5]}>
@@ -1982,6 +2252,8 @@ function AppleNeuronScene({
         activeDimension={activeDimension}
         dimensionCausal={dimensionCausal}
         nodeDisplayEmphasis={nodeDisplayEmphasis}
+        animationMode={animationMode}
+        scanMechanismData={scanMechanismData}
       />
     </Canvas>
   );
@@ -2050,6 +2322,7 @@ function buildBackgroundNodes() {
 export function useAppleNeuronWorkspace() {
   const [analysisMode, setAnalysisMode] = useState('dynamic_prediction');
   const [theoryObject, setTheoryObject] = useState('family_patch');
+  const [animationMode, setAnimationMode] = useState('none');
   const [showFruitGeneral, setShowFruitGeneral] = useState(true);
   const [showFruit, setShowFruit] = useState(() => Object.fromEntries(Object.keys(FRUIT_COLORS).map((k) => [k, true])));
   const [queryInput, setQueryInput] = useState('');
@@ -2993,6 +3266,7 @@ export function useAppleNeuronWorkspace() {
       theoryObject,
       theoryObjectLabel: currentTheoryObject?.labelZh || '',
       theoryObjectDesc: currentTheoryObject?.desc || '',
+      animationMode,
       displayStrategy,
       statusText: modeOverlay.statusText || '',
     };
@@ -3010,6 +3284,7 @@ export function useAppleNeuronWorkspace() {
     querySets,
     queryVisibility,
     theoryObject,
+    animationMode,
     unifiedDecodeResult,
   ]);
 
@@ -3017,6 +3292,9 @@ export function useAppleNeuronWorkspace() {
     analysisMode,
     setAnalysisMode,
     analysisModes: ANALYSIS_MODE_OPTIONS,
+    animationMode,
+    setAnimationMode,
+    animationModes: APPLE_ANIMATION_OPTIONS,
     theoryObject,
     setTheoryObject,
     theoryObjects: ICSPB_THEORY_OBJECTS,
@@ -3043,6 +3321,7 @@ export function useAppleNeuronWorkspace() {
     scanPreviewData,
     scanPreviewLoading,
     scanPreviewError,
+    scanMechanismData,
     multidimProbeData,
     multidimCausalData,
     hardProblemResults,
@@ -3145,6 +3424,8 @@ export function AppleNeuronMainScene({ workspace, sceneHeight = '74vh' }) {
         activeDimension={workspace.multidimActiveDimension}
         dimensionCausal={workspace.multidimCausalData}
         nodeDisplayEmphasis={workspace.nodeDisplayEmphasis}
+        animationMode={workspace.animationMode}
+        scanMechanismData={workspace.scanMechanismData}
       />
     </div>
   );
@@ -3548,6 +3829,346 @@ export function AppleNeuronResearchAssetInfoPanel({ workspace, compact = false }
   );
 }
 
+function WaveRing({
+  position = [0, 0, 0],
+  color = '#ffffff',
+  baseRadius = 1,
+  thickness = 0.04,
+  speed = 1,
+  phase = 0,
+  opacity = 0.3,
+}) {
+  const ref = useRef(null);
+  useFrame((state) => {
+    if (!ref.current) {
+      return;
+    }
+    const t = state.clock.elapsedTime * speed + phase;
+    const pulse = 1 + Math.sin(t) * 0.16;
+    ref.current.scale.set(pulse, pulse, pulse);
+    ref.current.rotation.z = t * 0.18;
+  });
+  return (
+    <mesh ref={ref} position={position} rotation={[Math.PI / 2, 0, 0]}>
+      <torusGeometry args={[baseRadius, thickness, 10, 42]} />
+      <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.8} transparent opacity={opacity} />
+    </mesh>
+  );
+}
+
+function PulseColumn({
+  position = [0, 0, 0],
+  color = '#ffffff',
+  height = 1,
+  radius = 0.06,
+  speed = 1,
+  phase = 0,
+  opacity = 0.72,
+}) {
+  const ref = useRef(null);
+  useFrame((state) => {
+    if (!ref.current) {
+      return;
+    }
+    const t = state.clock.elapsedTime * speed + phase;
+    const sy = 0.84 + (Math.sin(t) + 1) * 0.24;
+    ref.current.scale.set(1, sy, 1);
+  });
+  return (
+    <mesh ref={ref} position={position}>
+      <cylinderGeometry args={[radius, radius, height, 10]} />
+      <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.92} transparent opacity={opacity} />
+    </mesh>
+  );
+}
+
+function AppleNeuronAnimationOverlay({
+  animationMode = 'none',
+  nodes = [],
+  selected = null,
+  prediction = null,
+  scanMechanismData = null,
+}) {
+  const coreNodes = useMemo(() => (Array.isArray(nodes) ? nodes.filter((node) => node?.role !== 'background') : []), [nodes]);
+  const familyView = useMemo(
+    () => buildFamilyPatchViewModel(coreNodes, selected, scanMechanismData),
+    [coreNodes, scanMechanismData, selected]
+  );
+
+  const familyCenter = familyView.familyCenter;
+  const conceptCenter = familyView.conceptCenter;
+  const siblingCenter = familyView.siblingCenter;
+  const routeNodes = coreNodes.filter((node) => node.role === 'route');
+  const routeCenter = averagePosition(routeNodes, shiftPosition(conceptCenter, 0.6, 0.1, 1.4));
+  const protocolCenter = shiftPosition(routeCenter, 2.8, 0.6, 1.2);
+  const readoutPort = shiftPosition(protocolCenter, 3.2, 0.8, 0);
+  const stagePath = [
+    shiftPosition(familyCenter, -1.4, -0.8, -2.2),
+    shiftPosition(conceptCenter, -0.4, 0.2, -0.6),
+    shiftPosition(routeCenter, 0.4, -0.2, 0.9),
+    protocolCenter,
+  ];
+  const successorPath = [
+    shiftPosition(conceptCenter, -1.0, -0.5, -0.4),
+    conceptCenter,
+    shiftPosition(conceptCenter, 1.1, 0.55, 0.45),
+    shiftPosition(conceptCenter, 2.2, 0.95, 1.1),
+  ];
+  const counterfactualPathA = [
+    familyCenter,
+    conceptCenter,
+    shiftPosition(conceptCenter, 1.2, 0.7, 0.8),
+    shiftPosition(conceptCenter, 2.2, 1.2, 1.2),
+  ];
+  const counterfactualPathB = [
+    familyCenter,
+    conceptCenter,
+    shiftPosition(conceptCenter, 1.05, -0.75, -0.6),
+    shiftPosition(conceptCenter, 2.0, -1.25, -1.1),
+  ];
+  const layerRelayNodes = coreNodes
+    .filter((node) => node.role === 'query')
+    .slice()
+    .sort((a, b) => a.layer - b.layer)
+    .filter((node, idx, arr) => idx === 0 || node.layer !== arr[idx - 1].layer)
+    .slice(0, 5);
+  const minimalWitness = familyView.selectedConceptMinimal?.subset_flat_indices
+    ? familyView.instanceWitness.slice(0, Math.min(5, familyView.selectedConceptMinimal.subset_flat_indices.length))
+    : familyView.instanceWitness.slice(0, 4);
+  const siblingLabel = familyView.uniqueSiblingConcepts[0] || 'sibling';
+  const animationLabel = APPLE_ANIMATION_OPTIONS.find((opt) => opt.id === animationMode)?.label || '动画';
+
+  if (animationMode === 'none' || !selected) {
+    return null;
+  }
+
+  return (
+    <group>
+      <Text position={shiftPosition(conceptCenter, 0, 1.45, -0.1)} color="#f8fafc" fontSize={0.17} anchorX="center" anchorY="middle">
+        {animationLabel}
+      </Text>
+      {animationMode === 'family_patch_formation' && (
+        <>
+          <WaveRing position={familyCenter} color="#7dd3fc" baseRadius={1.05} speed={1.0} opacity={0.22} />
+          <WaveRing position={familyCenter} color="#dff6ff" baseRadius={1.45} speed={1.3} phase={0.4} opacity={0.14} />
+          {familyView.prototypeWitness.slice(0, 6).map((node, idx) => (
+            <TheoryRunner
+              key={`anim-family-form-${node.id}`}
+              path={[node.position, blendPosition(node.position, familyCenter, 0.55), familyCenter]}
+              color={idx < 2 ? '#ffffff' : '#7dd3fc'}
+              size={0.065}
+              speed={0.24 + idx * 0.02}
+              phase={idx * 0.18}
+            />
+          ))}
+        </>
+      )}
+      {animationMode === 'instance_offset' && (
+        <>
+          <Line points={[familyCenter, conceptCenter]} color="#f8b4ff" transparent opacity={0.9} lineWidth={2.4} />
+          <WaveRing position={conceptCenter} color="#f8b4ff" baseRadius={0.42} speed={1.4} opacity={0.26} />
+          <TheoryRunner path={[familyCenter, conceptCenter]} color="#fff7ff" size={0.09} speed={0.44} phase={0.14} />
+          <Text position={shiftPosition(conceptCenter, 0, 0.72, 0)} color="#f8b4ff" fontSize={0.14} anchorX="center" anchorY="middle">
+            {'Δ concept'}
+          </Text>
+        </>
+      )}
+      {animationMode === 'attribute_fiber' && (
+        <>
+          <Line points={[shiftPosition(conceptCenter, -1.4, -0.7, 0), shiftPosition(conceptCenter, 1.4, 0.7, 0)]} color="#34d399" transparent opacity={0.88} lineWidth={2} />
+          <Line points={[shiftPosition(conceptCenter, -1.4, 0.7, 0), shiftPosition(conceptCenter, 1.4, -0.7, 0)]} color="#60a5fa" transparent opacity={0.82} lineWidth={2} />
+          <Line points={[shiftPosition(conceptCenter, 0, -1.0, -0.45), shiftPosition(conceptCenter, 0, 1.0, 0.45)]} color="#f59e0b" transparent opacity={0.8} lineWidth={2} />
+          <TheoryRunner path={[shiftPosition(conceptCenter, -1.4, -0.7, 0), conceptCenter, shiftPosition(conceptCenter, 1.4, 0.7, 0)]} color="#34d399" size={0.07} speed={0.38} phase={0.08} />
+          <TheoryRunner path={[shiftPosition(conceptCenter, -1.4, 0.7, 0), conceptCenter, shiftPosition(conceptCenter, 1.4, -0.7, 0)]} color="#60a5fa" size={0.07} speed={0.35} phase={0.32} />
+          <TheoryBeacon position={conceptCenter} color="#f8b4ff" size={0.1} pulse={0.12} speed={1.5} phase={0.22} />
+        </>
+      )}
+      {animationMode === 'successor_transport' && (
+        <>
+          <Line points={successorPath} color="#f59e0b" transparent opacity={0.92} lineWidth={2.2} />
+          <TheoryRunner path={successorPath} color="#fff7d6" size={0.08} speed={0.46} phase={0.08} />
+          <TheoryRunner path={successorPath} color="#f59e0b" size={0.07} speed={0.28} phase={0.42} />
+        </>
+      )}
+      {animationMode === 'protocol_bridge' && (
+        <>
+          <Line points={[conceptCenter, routeCenter, protocolCenter, readoutPort]} color="#fde68a" transparent opacity={0.88} lineWidth={2.1} />
+          <WaveRing position={protocolCenter} color="#fde68a" baseRadius={0.62} speed={1.18} opacity={0.2} />
+          <TheoryRunner path={[conceptCenter, routeCenter, protocolCenter, readoutPort]} color="#ffffff" size={0.08} speed={0.42} phase={0.16} />
+        </>
+      )}
+      {animationMode === 'cross_layer_relay' && (
+        <>
+          {layerRelayNodes.map((node, idx) => (
+            <group key={`relay-${node.id}`}>
+              <WaveRing position={node.position} color={idx % 2 === 0 ? '#38bdf8' : '#7dd3fc'} baseRadius={0.22 + idx * 0.02} speed={0.9 + idx * 0.16} phase={idx * 0.24} opacity={0.24} />
+              {idx < layerRelayNodes.length - 1 ? (
+                <Line points={[node.position, layerRelayNodes[idx + 1].position]} color="#38bdf8" transparent opacity={0.42} lineWidth={1.5} />
+              ) : null}
+            </group>
+          ))}
+          {layerRelayNodes.length > 1 ? (
+            <TheoryRunner path={layerRelayNodes.map((node) => node.position)} color="#dff6ff" size={0.07} speed={0.34} phase={0.12} />
+          ) : null}
+        </>
+      )}
+      {animationMode === 'ablation_shockwave' && (
+        <>
+          <WaveRing position={conceptCenter} color="#fb7185" baseRadius={0.36} speed={1.7} opacity={0.28} />
+          <WaveRing position={conceptCenter} color="#fb7185" baseRadius={0.72} speed={1.05} phase={0.4} opacity={0.16} />
+          {familyView.instanceWitness.slice(0, 3).map((node) => (
+            <Line key={`ablate-${node.id}`} points={[conceptCenter, node.position]} color="#fb7185" transparent opacity={0.6} lineWidth={1.6} />
+          ))}
+        </>
+      )}
+      {animationMode === 'counterfactual_split' && (
+        <>
+          <Line points={counterfactualPathA} color="#7dd3fc" transparent opacity={0.82} lineWidth={2} />
+          <Line points={counterfactualPathB} color="#fb7185" transparent opacity={0.82} lineWidth={2} />
+          <TheoryRunner path={counterfactualPathA} color="#dff6ff" size={0.07} speed={0.34} phase={0.08} />
+          <TheoryRunner path={counterfactualPathB} color="#ffd5df" size={0.07} speed={0.34} phase={0.38} />
+          <Text position={shiftPosition(counterfactualPathA[counterfactualPathA.length - 1], 0, 0.45, 0)} color="#dff6ff" fontSize={0.12}>{'actual'}</Text>
+          <Text position={shiftPosition(counterfactualPathB[counterfactualPathB.length - 1], 0, -0.45, 0)} color="#ffd5df" fontSize={0.12}>{siblingLabel}</Text>
+        </>
+      )}
+      {animationMode === 'minimal_circuit_peeloff' && (
+        <>
+          {minimalWitness.map((node, idx) => (
+            <group key={`minimal-${node.id}`}>
+              <Line points={[conceptCenter, node.position]} color={idx < 2 ? '#ffffff' : '#f97316'} transparent opacity={0.72} lineWidth={idx < 2 ? 2.0 : 1.3} />
+              <WaveRing position={node.position} color="#f97316" baseRadius={0.14 + idx * 0.02} speed={0.9 + idx * 0.18} phase={idx * 0.2} opacity={0.18} />
+            </group>
+          ))}
+        </>
+      )}
+      {animationMode === 'margin_breathing' && (
+        <>
+          <WaveRing position={familyCenter} color="#7dd3fc" baseRadius={1.05} speed={0.92} opacity={0.22} />
+          <WaveRing position={familyCenter} color="#a7f3d0" baseRadius={1.72} speed={0.72} phase={0.35} opacity={0.12} />
+          <Line points={[familyCenter, siblingCenter]} color="#a7f3d0" transparent opacity={0.36} lineWidth={1.4} />
+        </>
+      )}
+      {animationMode === 'offset_sparsity' && (
+        <>
+          {familyView.instanceWitness.slice(0, 6).map((node, idx) => (
+            <PulseColumn
+              key={`offset-sparse-${node.id}`}
+              position={shiftPosition(conceptCenter, -0.7 + idx * 0.28, -1.0, 0)}
+              color={idx < 3 ? '#f8b4ff' : '#c084fc'}
+              height={0.42 + idx * 0.18}
+              radius={0.045}
+              speed={0.9 + idx * 0.12}
+              phase={idx * 0.2}
+              opacity={0.68}
+            />
+          ))}
+        </>
+      )}
+      {animationMode === 'prototype_instance_tug' && (
+        <>
+          <Line points={[familyCenter, conceptCenter]} color="#7dd3fc" transparent opacity={0.72} lineWidth={2} />
+          <Line points={[siblingCenter, conceptCenter]} color="#f8b4ff" transparent opacity={0.72} lineWidth={2} />
+          <TheoryRunner path={[familyCenter, conceptCenter]} color="#dff6ff" size={0.07} speed={0.3} phase={0.12} />
+          <TheoryRunner path={[siblingCenter, conceptCenter]} color="#f8b4ff" size={0.07} speed={0.3} phase={0.46} />
+          <WaveRing position={conceptCenter} color="#ffffff" baseRadius={0.28} speed={1.45} opacity={0.16} />
+        </>
+      )}
+      {animationMode === 'stage_transition' && (
+        <>
+          {stagePath.map((pos, idx) => (
+            <group key={`stage-transition-${idx}`}>
+              <WaveRing position={pos} color={idx === 0 ? '#7dd3fc' : idx === 1 ? '#c084fc' : idx === 2 ? '#34d399' : '#fde68a'} baseRadius={0.26 + idx * 0.08} speed={0.82 + idx * 0.15} phase={idx * 0.26} opacity={0.18} />
+            </group>
+          ))}
+          <Line points={stagePath} color="#dff6ff" transparent opacity={0.38} lineWidth={1.6} />
+          <TheoryRunner path={stagePath} color="#ffffff" size={0.07} speed={0.28} phase={0.18} />
+        </>
+      )}
+    </group>
+  );
+}
+
+function AppleNeuronFamilyPatchInspector({ workspace, compact = false }) {
+  const nodes = workspace?.nodes || [];
+  const selected = workspace?.selected || null;
+  const currentTheoryObject = workspace?.currentTheoryObject || null;
+  const scanMechanismData = workspace?.scanMechanismData || null;
+  const cardStyle = compact ? { ...panelCardStyle, padding: 10 } : panelCardStyle;
+  const familyPatchView = useMemo(
+    () => buildFamilyPatchViewModel(nodes, selected, scanMechanismData),
+    [nodes, scanMechanismData, selected]
+  );
+
+  if (!selected || !['family_patch', 'concept_section'].includes(currentTheoryObject?.id || '')) {
+    return null;
+  }
+
+  const minimal = familyPatchView.selectedConceptMinimal;
+  const counterfactualList = familyPatchView.selectedConceptCounterfactuals || [];
+  const firstCounterfactual = counterfactualList[0] || null;
+
+  return (
+    <div style={cardStyle}>
+      <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>family patch 分解视图</div>
+      <div style={{ fontSize: 11, color: '#9bb3de', lineHeight: 1.7, display: 'grid', gap: 4 }}>
+        <div>{`概念: ${selected?.concept || selected?.label || '-'}`}</div>
+        <div>{`类别: ${selected?.category || '未分类'}`}</div>
+        <div>{`family 节点数: ${familyPatchView.familyNodes.length}`}</div>
+        <div>{`实例节点数: ${familyPatchView.conceptNodes.length}`}</div>
+        <div>{`同族兄弟概念: ${familyPatchView.uniqueSiblingConcepts.length}`}</div>
+        <div>{`offset 几何长度: ${familyPatchView.offsetNorm.toFixed(3)}`}</div>
+      </div>
+
+      <div style={{ marginTop: 10, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 10, display: 'grid', gap: 6 }}>
+        <div style={{ fontSize: 12, color: '#e4f0ff', fontWeight: 700 }}>数学解释</div>
+        <div style={{ fontSize: 11, color: '#9bb3de', lineHeight: 1.7 }}>
+          <div>{`prototype: B_${selected?.category || 'family'}`}</div>
+          <div>{`instance: Δ_${selected?.concept || selected?.label || 'c'}`}</div>
+          <div>{'state ≈ family prototype + instance offset + attribute/context corrections'}</div>
+        </div>
+        <div style={{ fontSize: 11, color: '#7ea2c9', lineHeight: 1.6 }}>
+          {`蓝色 ring 表示家族原型核，粉色 ring 表示当前概念的实例偏移核，浅绿色 ring 表示同族兄弟概念的相对中心。`}
+        </div>
+      </div>
+
+      <div style={{ marginTop: 10, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 10, display: 'grid', gap: 6 }}>
+        <div style={{ fontSize: 12, color: '#e4f0ff', fontWeight: 700 }}>神经元见证</div>
+        <div style={{ display: 'grid', gap: 4 }}>
+          {familyPatchView.prototypeWitness.length > 0 ? (
+            familyPatchView.prototypeWitness.slice(0, 4).map((node) => (
+              <div key={`family-proto-row-${node.id}`} style={{ display: 'grid', gridTemplateColumns: '88px 1fr', gap: 8, fontSize: 11, color: '#9bb3de' }}>
+                <span>prototype</span>
+                <span style={{ color: '#dbe9ff', fontWeight: 700 }}>{`${node.label} | L${node.layer} N${node.neuron}`}</span>
+              </div>
+            ))
+          ) : (
+            <div style={{ fontSize: 11, color: '#7ea2c9' }}>当前没有可用的 family witness 节点。</div>
+          )}
+          {familyPatchView.instanceWitness.length > 0 ? (
+            familyPatchView.instanceWitness.slice(0, 4).map((node) => (
+              <div key={`family-inst-row-${node.id}`} style={{ display: 'grid', gridTemplateColumns: '88px 1fr', gap: 8, fontSize: 11, color: '#9bb3de' }}>
+                <span>instance</span>
+                <span style={{ color: '#f5d0fe', fontWeight: 700 }}>{`${node.label} | L${node.layer} N${node.neuron}`}</span>
+              </div>
+            ))
+          ) : null}
+        </div>
+      </div>
+
+      <div style={{ marginTop: 10, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 10, display: 'grid', gap: 6 }}>
+        <div style={{ fontSize: 12, color: '#e4f0ff', fontWeight: 700 }}>因果证据</div>
+        <div style={{ fontSize: 11, color: '#9bb3de', lineHeight: 1.7 }}>
+          <div>{`最小回路: ${minimal ? `subset=${toSafeNumber(minimal?.subset_size, 0)} | recovery=${toSafeNumber(minimal?.recovery_ratio, 0).toFixed(3)}` : '未导入'}`}</div>
+          <div>{`反事实对: ${counterfactualList.length}`}</div>
+          {firstCounterfactual ? (
+            <div>{`首个反事实: ${firstCounterfactual?.noun || '-'} -> ${firstCounterfactual?.counterfactual_noun || '-'} | margin=${toSafeNumber(firstCounterfactual?.specificity_margin_seq_logprob, 0).toFixed(6)}`}</div>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function AppleNeuronSelectedLegendPanels({ workspace, compact = false }) {
   const selected = workspace?.selected || null;
   const summary = workspace?.summary || {};
@@ -3559,6 +4180,8 @@ export function AppleNeuronSelectedLegendPanels({ workspace, compact = false }) 
 
   return (
     <div style={{ display: 'grid', gap: 10 }}>
+      <AppleNeuronFamilyPatchInspector workspace={workspace} compact={compact} />
+
       <div style={{ ...cardStyle, minHeight: 160 }}>
         <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 10 }}>选中神经元</div>
         {selected ? (
@@ -3870,6 +4493,9 @@ export function AppleNeuronControlPanels({ workspace }) {
     analysisMode,
     setAnalysisMode,
     analysisModes,
+    animationMode,
+    setAnimationMode,
+    animationModes,
     theoryObject,
     setTheoryObject,
     theoryObjects,
@@ -4752,6 +5378,23 @@ export function AppleNeuronControlPanels({ workspace }) {
                   )}
                 </select>
               </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 8, alignItems: 'center' }}>
+                <div style={{ fontSize: 12, color: '#9eb4dd' }}>动画</div>
+                <select
+                  value={animationMode}
+                  onChange={(e) => setAnimationMode(e.target.value)}
+                  style={inputStyle}
+                >
+                  {animationModes.map((opt) => (
+                    <option key={`asset-anim-${opt.id}`} value={opt.id}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div style={{ fontSize: 11, color: '#7ea2c9', lineHeight: 1.6 }}>
+                {animationModes.find((opt) => opt.id === animationMode)?.desc || '当前未启用附加动画。'}
+              </div>
               <div style={{ fontSize: 11, color: '#7ea2c9' }}>
                 {`候选文件 ${filteredScanFileOptions.length}/${scanFileOptions.length}，当前筛选：${scanFileFilterLabelMap[scanFileFilter] || scanFileFilter}`}
               </div>
@@ -5057,6 +5700,30 @@ export function AppleNeuronControlPanels({ workspace }) {
                 ))
               )}
             </select>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: `56px ${fixedFileControlWidth}px`, gap: 8, alignItems: 'center' }}>
+            <div style={{ fontSize: 12, color: '#9eb4dd' }}>动画</div>
+            <select
+              value={animationMode}
+              onChange={(e) => setAnimationMode(e.target.value)}
+              style={{
+                ...inputStyle,
+                width: fixedFileControlWidth,
+                minWidth: fixedFileControlWidth,
+                maxWidth: fixedFileControlWidth,
+                boxSizing: 'border-box',
+                display: 'block',
+              }}
+            >
+              {animationModes.map((opt) => (
+                <option key={`bottom-anim-${opt.id}`} value={opt.id}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div style={{ fontSize: 11, color: '#7ea2c9', lineHeight: 1.6 }}>
+            {animationModes.find((opt) => opt.id === animationMode)?.desc || '当前未启用附加动画。'}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: `56px ${fixedFileControlWidth}px`, gap: 8, alignItems: 'center' }}>
             <div style={{ fontSize: 12, color: '#9eb4dd' }}>筛选</div>

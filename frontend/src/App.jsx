@@ -2449,7 +2449,7 @@ export default function App() {
     switch (appleNeuronWorkspace.analysisMode) {
       case 'static':
         return {
-          infoSections: ['category', 'encoding'],
+          infoSections: ['category', 'encoding', 'legend'],
           operationSections: ['conceptSets'],
           operationHint: '当前模式以结构总览为主，只保留概念集管理。',
         };
@@ -2528,7 +2528,7 @@ export default function App() {
     ? `${t('panels.modelInfo')} · DNN / ${currentAlgorithmInfo.name}`
     : `${t('panels.modelInfo')} · ${activeFunctionPanel.label}`;
   const operationPanelTitle = isAppleMainView
-    ? `创造面板 · DNN / ${currentAlgorithmInfo.name}`
+    ? `操作面板 · DNN / ${currentAlgorithmInfo.name}`
     : isICSPBFunctionType
     ? `操作面板 · ICSPB / ${currentAlgorithmInfo.name}`
     : hasOperationPanelContent
@@ -2763,18 +2763,6 @@ export default function App() {
             hasInfoPanelContent ? (
               <div style={{ padding: '0', height: '100%', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div style={{ flex: '0 0 auto' }}>
-                <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#888', marginBottom: '8px', textTransform: 'uppercase' }}>
-                  {isSnnFunctionType ? '系统概览' : isICSPBFunctionType ? 'ICSPB 概览' : '模型概览'}
-                </div>
-
-                <div style={{ fontSize: '12px', lineHeight: '1.6', background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '6px', marginBottom: '8px' }}>
-                  <div style={{ color: '#fff', fontWeight: '600', marginBottom: '4px' }}>{`${currentPanelBlueprint.label} · ${currentAlgorithmInfo.name}`}</div>
-                  <div style={{ color: '#c8d1df', marginBottom: '4px' }}>{currentPanelBlueprint.mission}</div>
-                  <div style={{ color: '#9ea7b7', fontSize: '11px' }}>{`当前算法焦点: ${currentAlgorithmInfo.focus}`}</div>
-                  <div style={{ color: '#8ea5c5', fontSize: '11px' }}>{`核心公式: ${currentPanelBlueprint.formula}`}</div>
-                  <div style={{ color: '#8ea5c5', fontSize: '11px' }}>{`3D原理: ${currentPanelBlueprint.model3d}`}</div>
-                </div>
-
                 {isSnnFunctionType ? (
                   <div style={{ fontSize: '12px', lineHeight: '1.6', background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '6px' }}>
                     <div style={{ display: 'grid', gridTemplateColumns: '100px 1fr', gap: '4px', color: '#aaa' }}>
@@ -2792,27 +2780,6 @@ export default function App() {
                   <div style={{ fontSize: '12px', lineHeight: '1.6', background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '6px' }}>
                     <div style={{ color: '#fff', fontWeight: '600', marginBottom: '4px' }}>ICSPB 模型说明</div>
                     <div style={{ color: '#aaa' }}>该模块现在只保留当前模型相关内容，聚焦语言主干、语义推演、记忆回放与在线学习。</div>
-                  </div>
-                ) : isAppleMainView ? (
-                  <div style={{ fontSize: '12px', lineHeight: '1.6', background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '6px' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '110px 1fr', gap: '4px', color: '#aaa' }}>
-                      <span>分析模式</span>
-                      <span style={{ color: '#fff', fontWeight: 'bold' }}>{currentAlgorithmInfo.name}</span>
-                      <span>当前词元</span>
-                      <span style={{ color: '#fff' }}>{appleNeuronWorkspace.summary?.currentToken || '-'}</span>
-                      <span>核心节点</span>
-                      <span style={{ color: '#fff' }}>{(appleNeuronWorkspace.summary?.micro || 0) + (appleNeuronWorkspace.summary?.macro || 0) + (appleNeuronWorkspace.summary?.route || 0)}</span>
-                      <span>概念集</span>
-                      <span style={{ color: '#fff' }}>{appleNeuronWorkspace.querySets?.length || 0}</span>
-                      <span>显示策略</span>
-                      <span style={{ color: '#fff' }}>
-                        {appleNeuronWorkspace.summary?.displayStrategy === 'auto'
-                          ? '自动聚焦'
-                          : appleNeuronWorkspace.summary?.displayStrategy === 'all'
-                          ? '全部显示'
-                          : '手动筛选'}
-                      </span>
-                    </div>
                   </div>
                 ) : (
                   data?.model_config ? (
@@ -2834,7 +2801,7 @@ export default function App() {
                 )}
               </div>
 
-              {!isSnnFunctionType && !isICSPBFunctionType && (
+              {!isSnnFunctionType && !isICSPBFunctionType && !isAppleMainView && (
                 <div style={{
                   display: 'flex',
                   gap: '6px',
@@ -2843,11 +2810,7 @@ export default function App() {
                   border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: '6px'
                 }}>
-                  {(isAppleMainView ? [
-                    { label: '分析阶段', value: currentAlgorithmInfo.name },
-                    { label: '当前词元', value: appleNeuronWorkspace.summary?.currentToken || '-' },
-                    { label: '查询神经元', value: `${appleNeuronWorkspace.summary?.query || 0}` }
-                  ] : encodingFocusItems).map((item) => (
+                  {encodingFocusItems.map((item) => (
                     <div key={item.label} style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: '10px', color: '#8ea5c5' }}>{item.label}</div>
                       <div style={{ fontSize: '12px', color: '#fff', fontWeight: '600', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -3827,9 +3790,13 @@ export default function App() {
               onSelect={appleNeuronWorkspace.setSelected}
               prediction={appleNeuronWorkspace.prediction}
               mode={appleNeuronWorkspace.analysisMode}
+              theoryObjectMeta={appleNeuronWorkspace.currentTheoryObject}
               dimensionLayerProfile={appleNeuronWorkspace.multidimLayerProfile}
               activeDimension={appleNeuronWorkspace.multidimActiveDimension}
               dimensionCausal={appleNeuronWorkspace.multidimCausalData}
+              nodeDisplayEmphasis={appleNeuronWorkspace.nodeDisplayEmphasis}
+              animationMode={appleNeuronWorkspace.animationMode}
+              scanMechanismData={appleNeuronWorkspace.scanMechanismData}
             />
           ) : (
             <>

@@ -14,8 +14,10 @@ from pathlib import Path
 
 # 添加路径，以便导入根目录及 scripts 目录的模块
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+server_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, root_dir)
-sys.path.insert(0, os.path.join(root_dir, "scripts"))
+sys.path.insert(1, server_dir)
+sys.path.insert(1, os.path.join(root_dir, "scripts"))
 
 from contextlib import asynccontextmanager
 from typing import Any, Dict, List, Optional
@@ -29,6 +31,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fiber_memory import FiberMemory
 from pydantic import BaseModel
+
 from scipy.linalg import orthogonal_procrustes
 from structure_analyzer import (
     CausalMediation,
