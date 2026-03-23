@@ -24322,3 +24322,89 @@ Get-Content tests/codex_temp/stage187_cross_model_shared_puzzle_strengthening_20
 - 测试结果：以上测试全部通过。
 - 关键结果：Stage191 显示跨阶段总重叠数量为 16，同一底层拼块候选分数约 0.6899；Stage192 显示时间展开切片连续性分数约 0.5599，最强切片是中段选路切片；Stage193 显示跨模型不变拼块总分约 0.6103，最强不变块是条件场，最弱不变块是副词动态选路。
 - 文档更新：已将 Stage188-193 的分析和“三维编码拼块还原视角”追加到 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 尾部，内容包括当前新增判断、苹果神经元角色卡、家族神经元束图、共享神经元重叠追踪、时间展开角色切片、跨模型不变三维拼块、整体理解、硬伤与下一阶段任务。
+
+## [2026-03-23 20:29] Stage194-196 完成记录
+- 新增脚本：tests/codex/stage194_bottom_block_intervention_priority.py
+- 新增脚本：tests/codex/stage195_3d_block_slice_map.py
+- 新增脚本：tests/codex/stage196_cross_model_invariant_block_refinement.py
+- 新增测试：tests/codex/test_stage194_bottom_block_intervention_priority.py
+- 新增测试：tests/codex/test_stage195_3d_block_slice_map.py
+- 新增测试：tests/codex/test_stage196_cross_model_invariant_block_refinement.py
+- 执行命令：python -m py_compile tests/codex/stage194_bottom_block_intervention_priority.py tests/codex/test_stage194_bottom_block_intervention_priority.py tests/codex/stage195_3d_block_slice_map.py tests/codex/test_stage195_3d_block_slice_map.py tests/codex/stage196_cross_model_invariant_block_refinement.py tests/codex/test_stage196_cross_model_invariant_block_refinement.py
+- 执行命令：python tests/codex/test_stage194_bottom_block_intervention_priority.py
+- 执行命令：python tests/codex/test_stage195_3d_block_slice_map.py
+- 执行命令：python tests/codex/test_stage196_cross_model_invariant_block_refinement.py
+- 测试结果：以上测试全部通过。
+- 关键结果：Stage194 显示一级干预目标有 3 个，头号目标是回收束，第二目标是副词动态选路；Stage195 显示最强切面是差分-路径切面，最弱切面是回收闭合切面；Stage196 显示跨模型稳定块仍只有复杂语篇重提和条件场，苹果共同核仍是过渡块，副词动态选路和结果链仍是薄弱块。
+- 当前判断：如果继续推进底层三维拼块破解，当前最该优先动的不是路径强块，而是回收束、副词动态选路、结果链这三个一级缺口；同时要把差分-路径切面和回收闭合切面之间的断层补上。
+
+## [2026-03-23 20:37] 切面原理与后段闭合解释记录
+- 用户问题：详细解释最强切面“差分-路径切面”、最弱切面“回收闭合切面”的原理，并说明后段闭合的原理、重要性，以及在人脑神经网络中是否存在类似功能。
+- 当前解释进展：差分-路径切面表示对象之间的差分结构能比较顺利进入中段路径调度，因此前向分流较强；回收闭合切面表示系统在动作或路径展开后，把结果重新绑定回来源对象的能力较弱，因此后段闭环不足。
+- 当前判断：后段闭合的核心不是再识别一次对象，而是保留来源痕迹、压制竞争对象、将结果属性重新接回正确对象。它决定系统是否只是“前向会走”，还是“走完还能收回来”。
+- 对脑科学的保守判断：人脑中很可能存在对应功能，但不应机械等同为单一模块；更可能是前额叶、顶叶、海马系统以及皮层-丘脑递归回路共同参与的对象绑定、工作记忆、来源监控与结果回接能力。
+
+## [2026-03-23 20:53] Stage197-199 完成记录
+- 新增脚本：tests/codex/stage197_recovery_bundle_causal_intervention.py
+- 新增脚本：tests/codex/stage198_provenance_trace_continuity_tracking.py
+- 新增脚本：tests/codex/stage199_result_chain_closure_strengthening.py
+- 新增测试：tests/codex/test_stage197_recovery_bundle_causal_intervention.py
+- 新增测试：tests/codex/test_stage198_provenance_trace_continuity_tracking.py
+- 新增测试：tests/codex/test_stage199_result_chain_closure_strengthening.py
+- 执行命令：python -m py_compile tests/codex/stage197_recovery_bundle_causal_intervention.py tests/codex/test_stage197_recovery_bundle_causal_intervention.py tests/codex/stage198_provenance_trace_continuity_tracking.py tests/codex/test_stage198_provenance_trace_continuity_tracking.py tests/codex/stage199_result_chain_closure_strengthening.py tests/codex/test_stage199_result_chain_closure_strengthening.py
+- 执行命令：python tests/codex/test_stage197_recovery_bundle_causal_intervention.py
+- 执行命令：python tests/codex/test_stage198_provenance_trace_continuity_tracking.py
+- 执行命令：python tests/codex/test_stage199_result_chain_closure_strengthening.py
+- 测试结果：以上测试全部通过。
+- 关键结果：Stage197 显示回收束与原生绑定都是一级强干预目标；Stage198 显示 retained_trace=0.2、repair_trace=0.95、continuity_gap=0.75，说明来源痕迹天然保留弱而修复后保留强；Stage199 显示结果链分数为 0.45、闭合缺口为 0.55，仍是一级干预对象。
+- 当前判断：后段闭合的主要瓶颈继续集中在来源痕迹天然持续不足与结果链天然闭合不足两个点上。
+
+## [2026-03-23 22:06] Stage200-202 完成记录
+- 新增脚本：tests/codex/stage200_timing_trace_puzzle.py
+- 新增脚本：tests/codex/stage201_phase_route_puzzle.py
+- 新增脚本：tests/codex/stage202_reentry_closure_puzzle.py
+- 新增测试：tests/codex/test_stage200_timing_trace_puzzle.py
+- 新增测试：tests/codex/test_stage201_phase_route_puzzle.py
+- 新增测试：tests/codex/test_stage202_reentry_closure_puzzle.py
+- 执行命令：python -m py_compile tests/codex/stage200_timing_trace_puzzle.py tests/codex/test_stage200_timing_trace_puzzle.py tests/codex/stage201_phase_route_puzzle.py tests/codex/test_stage201_phase_route_puzzle.py tests/codex/stage202_reentry_closure_puzzle.py tests/codex/test_stage202_reentry_closure_puzzle.py
+- 执行命令：python tests/codex/test_stage200_timing_trace_puzzle.py
+- 执行命令：python tests/codex/test_stage201_phase_route_puzzle.py
+- 执行命令：python tests/codex/test_stage202_reentry_closure_puzzle.py
+- 测试结果：以上测试全部通过。
+- 关键结果：Stage200 显示时序痕迹拼图总分为 0.48，最弱块是 retained_trace，最强块是 repair_trace；Stage201 显示相位路径拼图总分约 0.5298，主导带仍在 early；Stage202 显示重入闭合拼图总分约 0.3840，头号缺口是来源痕迹天然保留。
+- 当前判断：如果继续沿“单向传播 + 编码特性 + 回路重入”主线推进，当前最值得补的不是路径启动，而是时序痕迹的天然保留能力，以及它如何支撑后段重入闭合。
+
+## [2026-03-23 22:09] Stage203-205 完成记录
+- 新增脚本：tests/codex/stage203_retained_trace_hardening.py
+- 新增脚本：tests/codex/stage204_phase_route_split.py
+- 新增脚本：tests/codex/stage205_reentry_closure_bridge.py
+- 新增测试：tests/codex/test_stage203_retained_trace_hardening.py
+- 新增测试：tests/codex/test_stage204_phase_route_split.py
+- 新增测试：tests/codex/test_stage205_reentry_closure_bridge.py
+- 执行命令：python -m py_compile tests/codex/stage203_retained_trace_hardening.py tests/codex/test_stage203_retained_trace_hardening.py tests/codex/stage204_phase_route_split.py tests/codex/test_stage204_phase_route_split.py tests/codex/stage205_reentry_closure_bridge.py tests/codex/test_stage205_reentry_closure_bridge.py
+- 执行命令：python tests/codex/test_stage203_retained_trace_hardening.py
+- 执行命令：python tests/codex/test_stage204_phase_route_split.py
+- 执行命令：python tests/codex/test_stage205_reentry_closure_bridge.py
+- 测试结果：以上测试全部通过。
+- 关键结果：Stage203 显示天然痕迹保留只有 0.2，但修复迁移达到 0.95，可释放增益空间为 0.75；Stage204 显示相位路径分裂总分约 0.5932，主导带仍在 early；Stage205 显示重入闭合桥总分约 0.3837，最弱桥段是时序痕迹桥。
+- 当前判断：当前最关键的不是再增强前向路径，而是提升天然来源痕迹的保留能力，因为它直接卡住了重入闭合桥。
+
+## [2026-03-23 22:17] Stage206-208 完成记录
+- 新增脚本：tests/codex/stage206_retained_trace_transfer.py
+- 新增脚本：tests/codex/stage207_phase_timing_coupling.py
+- 新增脚本：tests/codex/stage208_forward_carried_provenance.py
+- 新增测试：tests/codex/test_stage206_retained_trace_transfer.py
+- 新增测试：tests/codex/test_stage207_phase_timing_coupling.py
+- 新增测试：tests/codex/test_stage208_forward_carried_provenance.py
+- 执行命令：python -m py_compile tests/codex/stage206_retained_trace_transfer.py tests/codex/test_stage206_retained_trace_transfer.py tests/codex/stage207_phase_timing_coupling.py tests/codex/test_stage207_phase_timing_coupling.py tests/codex/stage208_forward_carried_provenance.py tests/codex/test_stage208_forward_carried_provenance.py
+- 执行命令：python tests/codex/test_stage206_retained_trace_transfer.py
+- 执行命令：python tests/codex/test_stage207_phase_timing_coupling.py
+- 执行命令：python tests/codex/test_stage208_forward_carried_provenance.py
+- 测试结果：以上测试全部通过。
+- 关键结果：Stage206 显示天然痕迹传递总分约 0.3460，最弱传递点是天然保留，最强补偿点是修复迁移；Stage207 显示相位-时序耦合总分约 0.5314，最强部件是路径分裂，最弱部件是时序痕迹； Stage208 显示前向携带来源总分约 0.4203，头号缺口仍然是天然保留不足。
+- 当前判断：路径分裂和相位-时序耦合已经形成中等强度结构，但它们还没有把来源痕迹天然带稳；真正卡住前向携带来源能力的仍然是天然保留不足。
+
+## [2026-03-23 23:03] AGI_GPT5_LANGUAGE 文档整理记录
+- 文档动作：已将 Stage197-208 的传播编码主线整理并追加到 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 尾部。
+- 新增内容：传播编码主线、Stage197 到 Stage208 的阶段结果、当前主判断、当前硬伤、下一阶段大任务块。
+- 当前文档定位：语言文档不再只围绕静态对象编码，而开始系统纳入时序痕迹、相位路径、前向携带来源、后段重入闭合这条新主线。

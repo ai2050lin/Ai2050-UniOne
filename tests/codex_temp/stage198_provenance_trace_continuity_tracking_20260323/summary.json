@@ -1,0 +1,12 @@
+﻿{
+  "schema_version": "agi_research_result.v1",
+  "experiment_id": "stage198_provenance_trace_continuity_tracking",
+  "title": "来源痕迹持续追踪",
+  "status_short": "provenance_trace_continuity_tracking_ready",
+  "retained_trace_score": 0.2,
+  "repair_trace_score": 0.95,
+  "trace_slice_score": 0.5575,
+  "continuity_gap": 0.75,
+  "priority_level": "二级干预",
+  "trace_continuity_score": 0.31725
+}

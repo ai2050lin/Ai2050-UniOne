@@ -946,3 +946,210 @@ triple_inversion = 0.10*a + 0.20*r + 0.10*q + 0.00*g + 0.30*f + 0.30*b
 
 3. Stage196：跨模型不变拼块精炼块
    目标：只保留三模型共同稳定、而且经过干预后仍成立的底层拼块，逼近真正第一性结构。
+
+---
+
+## 8. 传播编码主线
+
+### 8.1 当前主判断
+在现阶段，语言拼图已经不再只是“静态对象编码”问题，而开始稳定转向“传播中的编码特性”问题。
+
+当前最保守但最稳的判断是：
+
+**系统的关键不只是会不会识别对象、会不会走路径，而是前向传播时能不能把来源结构一起带着走。**
+
+这意味着当前研究主线已经从：
+- 对象共享核
+- 差分边界
+- 路径选路
+
+进一步推进到：
+- 时序痕迹
+- 相位路径分裂
+- 前向携带来源
+- 重入闭合
+
+### 8.2 Stage197：回收束因果干预块
+详见 [Stage197 输出](/d:/develop/TransformerLens-main/tests/codex_temp/stage197_recovery_bundle_causal_intervention_20260323/summary.json)。
+
+当前结果表明：
+- 回收束 是头号强干预目标
+- 原生绑定 是第二强干预目标
+- 修复束 当前不需要优先动，反而更像已经存在的外部补偿机制
+
+这说明当前真正最需要突破的不是前向路径，而是：
+**系统天然把结果带回来源对象的能力。**
+
+### 8.3 Stage198：来源痕迹持续追踪
+详见 [Stage198 输出](/d:/develop/TransformerLens-main/tests/codex_temp/stage198_provenance_trace_continuity_tracking_20260323/summary.json)。
+
+关键结果：
+- etained_trace = 0.20
+- epair_trace = 0.95
+- continuity_gap = 0.75
+- 	race_continuity_score = 0.31725
+
+这说明来源痕迹并不是不存在，而是：
+- 天然持续很弱
+- 修复后能被拉得很强
+
+所以当前最真实的问题不是“没有来源痕迹”，而是：
+**来源痕迹天然保留不稳，系统更像依赖后续修复而不是天然闭环。**
+
+### 8.4 Stage199：结果链闭合补强块
+详见 [Stage199 输出](/d:/develop/TransformerLens-main/tests/codex_temp/stage199_result_chain_closure_strengthening_20260323/summary.json)。
+
+当前结果：
+- esult_chain_score = 0.45
+- closure_gap = 0.55
+- 当前仍是 一级干预 对象
+
+这说明结果链虽然已经出现，但仍然没有闭起来。真正的卡点不是“动作发生了没有”，而是：
+**动作之后的结果怎样自然回到正确对象。**
+
+### 8.5 Stage200：时序痕迹拼图
+详见 [Stage200 输出](/d:/develop/TransformerLens-main/tests/codex_temp/stage200_timing_trace_puzzle_20260323/summary.json)。
+
+当前结果：
+- aw_trace = 0.25
+- etained_trace = 0.20
+- epair_trace = 0.95
+- ecurrence_trace = 0.65
+- 	iming_trace_score = 0.48
+
+这里最重要的结论是：
+**时序痕迹本身已经开始显影，但最弱的一段恰好是天然保留，而不是修复。**
+
+这强烈支持一个方向：
+系统在传播中很可能确实携带了某种来源信息，但这部分信息在天然传播过程中衰减严重。
+
+### 8.6 Stage201：相位路径拼图
+详见 [Stage201 输出](/d:/develop/TransformerLens-main/tests/codex_temp/stage201_phase_route_puzzle_20260323/summary.json)。
+
+当前结果：
+- 主导带仍在 early（早层）
+- phase_route_score ≈ 0.5298
+
+这说明路径分裂不仅是对象差分问题，也开始显出某种时间结构特征。当前最合理的理解是：
+**路径不是在全层均匀拉开，而是在早层先形成相位/时序优势，再把系统推上不同轨道。**
+
+### 8.7 Stage202：重入闭合拼图
+详见 [Stage202 输出](/d:/develop/TransformerLens-main/tests/codex_temp/stage202_reentry_closure_puzzle_20260323/summary.json)。
+
+当前结果：
+- 	race_continuity_score = 0.31725
+- closure_strength_score = 0.4325
+- stable_backbone_score = 0.40
+- eentry_closure_score ≈ 0.3840
+- 头号缺口是 来源痕迹天然保留
+
+这说明如果系统真的存在“后段重入闭合”能力，那么它现在最弱的并不是“没有回路”，而是：
+**回路重入时，没有足够稳定的来源痕迹可供重新接回。**
+
+### 8.8 Stage203：天然痕迹保留强化块
+详见 [Stage203 输出](/d:/develop/TransformerLens-main/tests/codex_temp/stage203_retained_trace_hardening_20260323/summary.json)。
+
+当前结果：
+- etained_trace = 0.20
+- epair_trace = 0.95
+- hardening_gain_space = 0.75
+- 最弱点是 天然保留
+- 最强支撑点是 修复迁移
+
+这说明一个非常关键的事实：
+**系统的最大潜力空间，不在于再增强修复，而在于把修复后才能达到的那部分能力，前移成天然保留能力。**
+
+### 8.9 Stage204：相位路径分裂块
+详见 [Stage204 输出](/d:/develop/TransformerLens-main/tests/codex_temp/stage204_phase_route_split_20260323/summary.json)。
+
+当前结果：
+- dominant_band = early
+- oute_split_margin ≈ 0.0013766
+- phase_route_split_score ≈ 0.5932
+- 最弱带是 late
+
+这说明相位路径并不是后段才形成，而是：
+**早层先分裂，晚层更像收尾和残留。**
+
+### 8.10 Stage205：重入闭合桥
+详见 [Stage205 输出](/d:/develop/TransformerLens-main/tests/codex_temp/stage205_reentry_closure_bridge_20260323/summary.json)。
+
+当前结果：
+- ridge_score ≈ 0.3837
+- 最弱桥段是 时序痕迹桥
+- 最强桥段是 结果链桥
+
+这说明现在真正的断点不是“结果链完全没有”，而是：
+**结果链前面没有足够稳的时序痕迹去支撑它。**
+
+### 8.11 Stage206：天然痕迹传递块
+详见 [Stage206 输出](/d:/develop/TransformerLens-main/tests/codex_temp/stage206_retained_trace_transfer_20260323/summary.json)。
+
+当前结果：
+- 	ransfer_score ≈ 0.3460
+- 最弱传递点是 天然保留
+- 最强补偿点是 修复迁移
+
+这里进一步说明：
+**来源痕迹不是不能传，而是天然传不稳；一旦有外部修复结构，系统又能把它拉起来。**
+
+### 8.12 Stage207：相位-时序耦合块
+详见 [Stage207 输出](/d:/develop/TransformerLens-main/tests/codex_temp/stage207_phase_timing_coupling_20260323/summary.json)。
+
+当前结果：
+- coupling_score ≈ 0.5314
+- 最强部件是 路径分裂
+- 最弱部件是 时序痕迹
+
+这说明当前更像：
+- 相位/路径已经开始耦合
+- 但时序痕迹的稳定性还没跟上
+
+也就是说，系统已经比较会“拉开路径”，但还不够会“把来源跟着带稳”。
+
+### 8.13 Stage208：前向携带来源块
+详见 [Stage208 输出](/d:/develop/TransformerLens-main/tests/codex_temp/stage208_forward_carried_provenance_20260323/summary.json)。
+
+当前结果：
+- 	ransfer_score ≈ 0.3460
+- coupling_score ≈ 0.5314
+- ridge_score ≈ 0.3837
+- orward_carried_score ≈ 0.4203
+- 头号缺口是 天然保留不足
+
+这是当前最关键的阶段性结论：
+
+**系统很可能已经部分具备“前向携带来源”的能力，但这条链现在仍被天然保留不足卡住。**
+
+### 8.14 当前整体判断
+把 Stage197 到 Stage208 放到一起，当前最准确的判断是：
+
+1. 研究主线已经从“静态对象编码”推进到“传播中的编码特性”。
+2. 前向路径不是头号问题，天然来源痕迹保留才是头号问题。
+3. 相位/时序结构已经开始显影，但还没有强到能独立支撑闭环。
+4. 后段闭合的核心瓶颈不再只是“有没有回路”，而是“前向传播时有没有把来源结构带稳”。
+
+如果压成一句话，当前最新判断是：
+
+**系统正在显出一种“前向传播携带来源”的编码雏形，但天然来源痕迹仍然过弱，所以真正的后段闭合还没有成立。**
+
+### 8.15 当前最严格的硬伤
+最严格地看，当前还有四个硬伤：
+
+1. 天然保留 仍然长期处在全链最弱位。
+2. 修复迁移 过强，说明系统目前更像补救型结构，而不是天然稳态结构。
+3. 相位-时序耦合 只有中等强度，不能直接当作最终主机制。
+4. 前向携带来源 分数仍低于  .45，说明这条链还只是雏形，不是主核。
+
+### 8.16 下一阶段最合理的大任务块
+如果继续推进，而且继续坚持“先补拼图，不急于公式化”，下一阶段最合理的是三块一起做：
+
+1. Stage209：
+atural_trace_retention_map（天然痕迹保留图）
+   目标：找清楚来源痕迹最容易在哪一段散掉。
+
+2. Stage210：	iming_phase_route_chain（时序-相位-路径链）
+   目标：验证时序和相位是否共同驱动路径分裂，而不是单一因素。
+
+3. Stage211：source_carried_closure_bridge（来源携带闭合桥）
+   目标：验证前向携带来源是否真能支撑后段闭合。

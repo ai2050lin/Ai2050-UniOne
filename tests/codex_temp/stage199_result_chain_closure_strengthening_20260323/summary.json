@@ -1,0 +1,11 @@
+﻿{
+  "schema_version": "agi_research_result.v1",
+  "experiment_id": "stage199_result_chain_closure_strengthening",
+  "title": "结果链闭合补强块",
+  "status_short": "result_chain_closure_strengthening_ready",
+  "result_chain_score": 0.44999999999999996,
+  "result_chain_priority": "一级干预",
+  "closure_gap": 0.55,
+  "stable_block_count": 2,
+  "strengthening_score": 0.4325
+}

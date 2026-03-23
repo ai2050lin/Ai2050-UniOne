@@ -1,0 +1,11 @@
+﻿{
+  "schema_version": "agi_research_result.v1",
+  "experiment_id": "stage202_reentry_closure_puzzle",
+  "title": "重入闭合拼图",
+  "status_short": "reentry_closure_puzzle_ready",
+  "trace_continuity_score": 0.31725,
+  "closure_strength_score": 0.4325,
+  "stable_backbone_score": 0.4,
+  "reentry_closure_score": 0.38403750000000003,
+  "top_gap_name": "来源痕迹天然保留"
+}

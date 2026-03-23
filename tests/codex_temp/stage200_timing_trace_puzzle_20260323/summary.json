@@ -1,0 +1,13 @@
+﻿{
+  "schema_version": "agi_research_result.v1",
+  "experiment_id": "stage200_timing_trace_puzzle",
+  "title": "时序痕迹拼图",
+  "status_short": "timing_trace_puzzle_ready",
+  "raw_trace_score": 0.25,
+  "retained_trace_score": 0.2,
+  "repair_trace_score": 0.95,
+  "recurrence_trace_score": 0.65,
+  "weakest_piece_name": "retained_trace",
+  "strongest_piece_name": "repair_trace",
+  "timing_trace_score": 0.48
+}

@@ -1,0 +1,12 @@
+﻿{
+  "schema_version": "agi_research_result.v1",
+  "experiment_id": "stage201_phase_route_puzzle",
+  "title": "相位路径拼图",
+  "status_short": "phase_route_puzzle_ready",
+  "early_band_route": 0.0013676527111480632,
+  "middle_band_route": -8.901710518532317e-06,
+  "late_band_route": -0.0005398078097237481,
+  "dominant_band_name": "early",
+  "cross_model_route_score": 0.36650622985321685,
+  "phase_route_score": 0.5297904825407022
+}

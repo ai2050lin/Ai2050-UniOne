@@ -1,0 +1,11 @@
+﻿{
+  "schema_version": "agi_research_result.v1",
+  "experiment_id": "stage208_forward_carried_provenance",
+  "title": "前向携带来源块",
+  "status_short": "forward_carried_provenance_ready",
+  "transfer_score": 0.34595,
+  "coupling_score": 0.5313822210465678,
+  "bridge_score": 0.38374874999999997,
+  "forward_carried_score": 0.42030096486629875,
+  "top_gap_name": "天然保留不足"
+}
