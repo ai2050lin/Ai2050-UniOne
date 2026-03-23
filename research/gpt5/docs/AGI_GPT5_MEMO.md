@@ -23357,3 +23357,968 @@ ative_core_expansion_audit，在不污染主核的前提下审计还有哪些变
 - Stage115: 
 ative_core_expansion_audit，审计还有哪些变量值得升级进主核。
 - Stage116: logic_negation_transport_repair，专门修 logic_negation_family 下的 minimal_transport_efficiency_quantity。
+## [2026-03-23 22:14] Codex Progress Log
+- Task: 报告苹果在 DeepSeek（深度求索） 与 Qwen（通义千问） 中的神经元分析
+- Commands executed:
+  - Get-Content tests/codex_temp/qwen3_deepseek7b_apple_mechanism_consistency_20260309.json -TotalCount 260
+  - Get-Content tests/codex_temp/qwen3_deepseek7b_concept_encoding_decomposition_20260309.json -TotalCount 260
+  - Get-Content tests/codex_temp/qwen_deepseek_micro_meso_macro_encoding_map_20260315.json -TotalCount 260
+  - Get-Content tests/codex_temp/theory_track_apple_concept_encoding_analysis_20260312.json -Raw | ConvertFrom-Json | ConvertTo-Json -Depth 8
+  - Select-String research/gpt5/docs/AGI_GPT5_MEMO_0306.md -Pattern "apple|苹果|神经元|ablation|fruit" -Context 2,3
+  - Get-Content tests/codex_temp/stage56_apple_banana_encoding_transfer_20260320/summary.json -Raw
+  - Get-Content tests/codex_temp/stage56_conflict_pruned_flip_search_qwen_fruit_apple_20260317/summary.json -Raw
+  - Get-Content tests/codex_temp/stage56_synergy_conflict_dissection_qwen_fruit_apple_20260317/summary.json -Raw
+  - Extract apple slice from tempdata/deepseek7b_encoding_invariant_probe_v1/encoding_invariant_probe.json
+- Theory/math progress:
+  - 已完成苹果概念在两模型中的统一机制复核：当前最稳的共同结论是“水果共享骨架 + 苹果特异偏移 + 上下文门控/冲突修正”三段式，而不是“单个苹果神经元”。
+  - DeepSeek（深度求索）侧：苹果已能拆成三轴神经元群。micro_attr（微观属性）主峰在第27层，same_type（同类）主峰也在第27层，super_type（上级类别）出现早层锚点第2层，说明苹果在该模型里呈现“早层类别锚点 + 后层属性/实例细化”的结构。
+  - DeepSeek（深度求索）历史因果消融进一步支持混合符号编码：苹果召回目标质量下降约 -7.30%，随机消融反向上升，而苹果属性质量可在同组消融下上升约 +71.79%，说明同一稀疏模块里同时存在召回载体与属性抑制/门控成分。
+  - Qwen（通义千问）侧：苹果的最佳 family basis fit（家族基底拟合）位于第3层，前5个最优层集中在第3到第7层，shared_norm_ratio（共享基底范数占比）约 0.99，margin_vs_best_wrong（相对错误家族边际）约 0.915，说明苹果在 Qwen 中更像“极早层就先贴到水果家族骨架上”。
+  - Qwen（通义千问）冲突拆解说明：单独 prototype（原型，fruit） 与 instance（实例，apple） 都是正贡献，但 union_joint_adv（联合优势）为负，说明苹果与水果并非简单线性叠加，而是存在冲突门控；若去掉少数冲突神经元，联合优势可明显回升，当前最关键救援神经元集中在第23、26、33、34层。
+  - 两模型共同支持“苹果不是孤立点，而是局部概念图册（local chart，局部图谱）”；差异在于：Qwen 更偏“早层共享基底 + 中后层冲突修正”，DeepSeek 更偏“早层类别锚点 + 后层属性/实例分轴展开 + 局部因果混合符号模块”。
+  - 最严格的硬伤：当前证据仍以本地探针、结构化摘要与历史消融为主，不是统一协议下的同任务同提示同干预直接横比；因此这份报告可作为强机制假说，不可当作第一性原理定理。
+  - 下一阶段不应只继续加摘要，应直接做：1) DeepSeek/Qwen 同协议苹果对照干预块；2) 苹果-香蕉-梨三点局部图册重建块；3) 苹果在真实任务句中的因果神经元稳定性块；4) 从苹果扩展到微观/中观/宏观统一概念层级块。
+## [2026-03-23 22:36] Codex Progress Log
+- Task: 深入分析水果族共享基底、苹果实例偏置及其“为什么如此”的编码结构，为新数学理论准备更硬拼图
+- Commands executed:
+  - Get-ChildItem tests/codex -Filter 'stage11*.py'
+  - Get-Content tests/codex/stage111_native_variable_registry_pruning.py -TotalCount 260
+  - Get-Content tests/codex/test_stage111_native_variable_registry_pruning.py -TotalCount 220
+  - python(JSON 校验) 读取 qwen3_deepseek7b_apple_mechanism_consistency_20260309.json / qwen3_deepseek7b_concept_encoding_decomposition_20260309.json / theory_track_apple_concept_encoding_analysis_20260312.json / stage56_apple_banana_encoding_transfer_20260320/summary.json / stage56_conflict_pruned_flip_search_qwen_fruit_apple_20260317/summary.json / stage56_synergy_conflict_dissection_qwen_fruit_apple_20260317/summary.json / tempdata/deepseek7b_encoding_invariant_probe_v1/encoding_invariant_probe.json
+  - apply_patch: 新增 tests/codex/stage113_fruit_family_basis_offset_analysis.py
+  - apply_patch: 新增 tests/codex/test_stage113_fruit_family_basis_offset_analysis.py
+  - python tests/codex/stage113_fruit_family_basis_offset_analysis.py
+  - 手动导入执行 test_stage113_fruit_family_basis_offset_analysis
+  - Get-Content tests/codex_temp/stage113_fruit_family_basis_offset_analysis_20260323/summary.json -TotalCount 260
+  - Get-Content tests/codex_temp/stage113_fruit_family_basis_offset_analysis_20260323/REPORT.md -TotalCount 80
+- Theory/math progress:
+  - 已新增 Stage113（第113阶段）：水果族共享基底与实例偏置分析块。核心不再是“苹果有没有某个神经元”，而是“水果族共享骨架、苹果实例偏置、属性纤维束、冲突修复门控、先基底后偏置的层级顺序”这 5 个对象是否能同时成立。
+  - 当前核心结果：qwen_family_lock_strength = 0.874689，qwen_offset_expressivity = 0.774109，deepseek_basis_support = 0.700479，deepseek_offset_split_strength = 0.668202，hierarchical_ordering_strength = 0.799058，attribute_transfer_support = 0.770754，conflict_gate_necessity = 0.527993，theory_foundation_score = 0.740832。
+  - 当前最强机制对象是 attribute_fiber_bundle（属性纤维束），说明“颜色、圆润、甜味、可食性等并非独立标签，而是附着在水果局部图册上的属性纤维”这条线已经最硬。
+  - 当前最弱机制对象是 conflict_repair_gate（冲突修复门控），说明“为什么水果原型与苹果实例不能简单相加，而必须经过门控修正”仍然是最难解释的一环，也是后续新数学理论最关键的非线性边界。
+  - Qwen（通义千问）侧现在更清楚地支持“先家族基底，后实例偏置”：苹果 best layer 位于第 3 层且 shared_norm_ratio 很高；DeepSeek（深度求索）侧更清楚地支持“早层 super_type（上级类别）锚点 + 后层 same_type / micro_attr（同类/微观属性）展开”的分层顺序。
+  - 跨模型共同结论被进一步压实：水果族不是一堆词各自孤立编码，而更像共享 family basis（家族基底）上的局部 chart（图册）结构；苹果、香蕉、梨通过局部 offset（偏置）与 attribute fibers（属性纤维）区分；当原型和实例发生冲突时，需要少量 gate（门控）神经元进行修正。
+  - 最严格的硬伤：Stage113 仍然主要建立在本地已有实验结果的结构化拼接上，虽然比口头推测硬得多，但还不是同协议、同提示、同任务、同干预下的统一因果定理；尤其 conflict_repair_gate（冲突修复门控）还偏弱，说明“为什么必须这样编码”还没被彻底锁死。
+  - 下一阶段不应只继续堆摘要，最应该直接推进：1) 苹果-香蕉-梨同协议干预块；2) 水果族共享基底迁移块；3) 冲突门控定向修复块；4) 从水果族向更大概念族扩张的局部图册块。只有这样，当前结论才可能从“强机制假说”继续推进到“新数学理论的局部主核”。
+## [2026-03-23 22:49] Codex Progress Log
+- Task: 确认本机 GPT-2 是否可运行、词嵌入表规模，以及全词嵌入分析耗时估计
+- Commands executed:
+  - rg --files d:\develop\model | rg "gpt2|GPT2|models--gpt2|models--openai--gpt2"
+  - rg --files d:\develop\TransformerLens-main | rg "gpt2|GPT2"
+  - python 检查 torch / transformers 版本
+  - python 本地加载 d:\develop\model\hub\models--gpt2\snapshots\607a30d783dfa663caf39e06633721c8d4cfcd7e，并执行最小前向推理
+  - python 读取 transformer.wte.weight 形状并在 CPU 上 benchmark 全词嵌入线性扫描（norm + mean cosine + topk）
+  - nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader
+  - python 检查 CUDA 设备信息
+  - python 在 GPU 上 benchmark 全词嵌入线性扫描（norm + mean cosine + topk）
+  - python 计算 vocab=50257 时的全词唯一 pair 数量
+- Theory/math progress:
+  - 已确认本机 GPT-2 可运行：本地模型路径存在，tokenizer 与 model 均可加载，最小前向推理成功，说明当前电脑可以直接对 GPT-2 词嵌入与前向输出做分析。
+  - 当前本机 GPT-2 词表大小为 50257，词嵌入矩阵形状为 [50257, 768]。
+  - 当前实测加载耗时：tokenizer 约 0.1395 秒，model 约 0.3464 秒；CPU 上一次最小前向约 0.6392 秒。
+  - 当前实测全词嵌入“线性扫描”耗时：CPU 平均约 0.0393 秒，GPU 平均约 0.0179 秒。这里的线性扫描指对全部 50257 个词向量统一计算范数、与整体均值的余弦相似度、再做 top-k 排序。
+  - 当前机器显卡为 RTX 4090 D，显存约 23.99 GB，适合做大规模词嵌入矩阵分析；但要严格区分“线性扫描”和“全词两两关系分析”。
+  - 若只是“对所有词嵌入做一遍基础分析”，当前机器上实际是秒级，甚至模型已加载后接近 0.02 到 0.04 秒级。
+  - 若要做“全词对全词”两两关系分析，则唯一 pair 数约 1,262,857,896，对应完整相似度矩阵约 2.53e9 个值，float32 仅结果矩阵就约需 10 GB 左右显存/内存，因此必须分块计算；这已经不是“扫一遍”，而是重型全对全分析。
+  - 最严格的判断：GPT-2 在本机可直接用于词嵌入级研究；基础全量扫描非常快，但真正昂贵的是全词两两关系、聚类、图谱、最近邻网络等高阶分析，时间会从秒级上升到分钟级甚至更高。
+  - 下一阶段如果要做有效研究，不应直接盲算全词对全词，而应先定义分析目标：1) 基础统计扫描；2) 与若干锚点词的全词对比；3) 家族级局部图册；4) 全词图谱。不同目标耗时和价值差异极大。
+## [2026-03-23 23:02] Codex Progress Log
+- Task: 设计 GPT-2 全词嵌入“基底 + 偏置”分析方案，以苹果分析为参考，为新数学理论建立更系统的编码研究路线
+- Commands executed:
+  - Get-Content tests/codex/test_gpt2_qwen3_basis_hierarchy_compare.py -TotalCount 260
+  - Get-Content tests/codex_temp/gpt2_qwen3_basis_hierarchy_compare_20260308.json -TotalCount 260
+  - Get-Content tests/codex_temp/gpt2_qwen3_natural_offset_dictionary_20260308.json -TotalCount 260
+- Theory/math progress:
+  - 已确认仓库内已有两类 GPT-2 基础材料可直接作为方案起点：1) 家族共享基底比较（gpt2_qwen3_basis_hierarchy_compare）；2) 自然偏置字典与稀疏偏置捕获（gpt2_qwen3_natural_offset_dictionary）。这意味着 GPT-2 的全词“基底 + 偏置”研究不需要从零开始。
+  - 当前最值得继承的苹果分析主线是：对象不是孤立词点，而是“家族共享基底 + 实例偏置 + 属性纤维 + 冲突门控”。把它推广到 GPT-2 全词层面时，真正要做的不是暴力全词对全词，而是分层建模：词族基底、实例偏置、关系偏置、抽象偏置、任务上下文修正。
+  - 现有 GPT-2 结果已经给出先验：fruit（水果）族 mean_residual_ratio 约 0.3069，apple（苹果） 对 fruit 基底 residual_ratio 约 0.8327，并且支持“closer to fruit than animal/abstract”；natural offset（自然偏置）侧苹果支持稀疏偏置字典，但 offset top4/top8 捕获仍不高，说明“实例偏置”存在，但不是极端稀疏单点结构，而更像分布式稀疏方向。
+  - 因此，GPT-2 全词分析的核心目标不应写成“扫所有词”，而应写成 4 层：1) 全词家族基底层；2) 实例偏置字典层；3) 关系/类比偏置层；4) 任务上下文校正层。只有这样，才有机会从苹果局部机制推广到更像新数学理论的对象层。
+  - 最严格的方案建议：先把词表切成微观属性词、中观实体词、宏观抽象/关系词三大层，再在每层内部做 shared basis（共享基底）、cross-family basis（跨家族基底）、instance offset（实例偏置）、relation offset（关系偏置）分析；之后再用 king-man+woman 这类关系样本验证“偏置是否只是实例差异，还是更深的关系搬运结构”。
+  - 当前最大硬伤是：GPT-2 的现成结果仍然只是少量家族和少量锚点词，距离“全词理论主核”还很远；而且静态嵌入只覆盖基底和偏置的静态部分，无法单独解释后续层的门控、冲突修复和任务条件化。因此后续方案必须把静态嵌入层与隐藏态层分开，不然会把词表几何误当成完整编码理论。
+  - 下一阶段不应只做一个大扫描脚本，而应分成：1) 全词分层分类与家族注册；2) 家族基底批量拟合；3) 偏置字典学习；4) 关系偏置验证；5) 从静态嵌入过渡到层内隐藏态验证。这样才能真正为新数学理论打基础，而不是在全词矩阵上盲算一堆低价值结果。
+## [2026-03-23 01:06] Codex Progress Log
+- Task: 启动 GPT-2（第二代生成式预训练变换器）全词“家族基底 + 实例偏置”路线，先完成 Stage118（第118阶段）词表层级注册块，为后续水果族共享基底分析建立干净底座。
+- Commands executed:
+  - Get-Content tests/codex/test_gpt2_qwen3_basis_hierarchy_compare.py -TotalCount 260
+  - Get-Content tests/codex/deepseek7b_nouns_english_520_clean.csv -TotalCount 80
+  - Get-Content tests/codex/deepseek7b_bilingual_nouns_utf8.csv -TotalCount 80
+  - rg -n "adjective|verb|abstract|fruit|animal|vehicle|justice|truth|apple|banana" tests/codex tests/codex_temp research/gpt5/docs -S
+  - Get-Content tempdata/deepseek7b_multidim_encoding_probe_20260305_220444/multidim_encoding_probe.json -TotalCount 120
+  - Get-Content research/gpt5/docs/AGI_GPT5_REASONING.md -TotalCount 260
+  - python 读取本地 GPT-2 tokenizer（分词器）样例 token（词元）
+  - apply_patch: 新增 tests/codex/stage118_gpt2_vocab_hierarchy_registry.py
+  - apply_patch: 新增 tests/codex/test_stage118_gpt2_vocab_hierarchy_registry.py
+  - apply_patch: 修复 CSV（逗号分隔文件）头部解析、测试脚本动态导入、终端 UTF-8（统一编码）输出、家族覆盖率上界裁剪、raw token（原始词元）显示净化
+  - python tests/codex/stage118_gpt2_vocab_hierarchy_registry.py
+  - python tests/codex/test_stage118_gpt2_vocab_hierarchy_registry.py
+  - Get-Content tests/codex_temp/stage118_gpt2_vocab_hierarchy_registry_20260323/summary.json -TotalCount 220
+  - Get-Content tests/codex_temp/stage118_gpt2_vocab_hierarchy_registry_20260323/REPORT.md -TotalCount 120
+- Theory/math progress:
+  - 已完成 Stage118（第118阶段）：GPT-2（第二代生成式预训练变换器）词表层级注册块。当前目标不是直接做全词家族基底拟合，而是先把“可进入理论分析底座的干净概念词”和“应当排除的碎片词元”分开。
+  - 当前结果：vocab_size = 50257，fragment_token_count = 3469，clean_unique_word_count = 30541，registered_unique_word_count = 468，micro_count = 46，meso_count = 357，macro_count = 65，unknown_clean_count = 30073，registry_confidence_mean = 3.763675，meso_family_coverage = 1.0，basis_offset_registry_score = 0.707725，status_short = gpt2_vocab_registry_ready。
+  - 当前最重要的理论结论不是“GPT-2 全词都能被理论注册”，而是相反：真正够硬、能先进入 Micro / Meso / Macro（微观 / 中观 / 宏观）注册层的只是一小部分。这说明当前研究正在做“主核前裁剪”，不是盲目扩大理论变量。
+  - 苹果（apple）、香蕉（banana）、水果（fruit）已被稳定注册为 Meso（中观）锚点；红色（red）、甜（sweet）已被注册为 Micro（微观）锚点；正义（justice）、真理（truth）、跑（run）、跳（jump）已被注册为 Macro（宏观）锚点。这意味着“苹果分析”现在第一次有了可推广到 GPT-2 全词研究的层级词表底座。
+  - 当前最大收获是：后续水果族共享基底分析终于可以建立在“先注册概念层级，再做基底与偏置分解”的路线之上，而不是直接在 50257 个词元上暴力计算。这样更接近新数学理论需要的对象层工程。
+  - 当前最严格的硬伤也很清楚：registered_unique_word_ratio 只有约 1.53%，说明真正可进入理论分析的干净词集合仍很小；Macro（宏观）词尤其偏少，说明动词和抽象概念层还没有被系统补齐；大量 clean token（干净词元）仍处于 unknown（未确定）层，说明现在还远谈不上全词理论闭合。
+  - 下一阶段不能只继续扫词表，而应直接推进：1) Stage119（第119阶段）做水果族/动物族/抽象族共享基底批量拟合；2) Stage120（第120阶段）做实例偏置字典学习；3) Stage121（第121阶段）做关系偏置审计；4) Stage122（第122阶段）把静态词嵌入结论桥接到层内隐藏态与真实上下文。这几步连起来，才可能真正为新数学理论打下更硬基础。
+[2026-03-23 09:00] 研究记录
+- 用户目标: 对 gpt2（GPT-2，生成式预训练变换器二代）模型的词嵌入做系统分析，扫描全部词，提取有效编码信息。
+- 当前动作: 开始读取仓库结构与现有分析脚本，准备设计可复用的全词扫描流程。
+- 当前命令: 尚未执行仓库命令；下一步将检查相关目录与已有 GPT-2 分析代码。
+[2026-03-23 09:03] 研究记录
+- 已发现: 仓库存在连续 stage（阶段）分析范式，且 tests/codex/ 下已有与 gpt2（GPT-2，生成式预训练变换器二代）词表层次相关的未提交文件，需要避让。
+- 当前命令:
+  1. Get-ChildItem -Force
+  2. rg -n "gpt2|embedding|token|vocab|苹果|apple" research tests transformer_lens -S
+  3. git status --short
+- 理论进度: 当前任务应设计成新的独立分析阶段，把“全词扫描”压成可重复计算的编码信息基线，而不是只做单词个案。
+[2026-03-23 09:06] 研究记录
+- 现状判断: stage118（第一百一十八阶段）更像词表注册层，这次任务应升级为“全词有效编码扫描层”。
+- 当前计划:
+  1. 梳理 GPT-2 本地加载与已有产物格式。
+  2. 实现新的全词扫描脚本，计算嵌入有效编码指标。
+  3. 补充测试并生成结果文件。
+  4. 严格复盘硬伤、瓶颈与下一阶段任务。
+- 当前命令:
+  1. rg --files tests/codex
+  2. Get-Content -Path 'tests/codex/stage118_gpt2_vocab_hierarchy_registry.py' -TotalCount 260
+  3. Get-Content -Path 'tests/codex/test_stage118_gpt2_vocab_hierarchy_registry.py' -TotalCount 260
+  4. rg -n "HookedTransformer|from_pretrained|W_E|unembed|embedding" tests/codex research/gpt5 -S
+- 理论进度: 已把当前任务定位为“词表清洗之后的编码信息基线构建”，这是后续苹果类个案分析进入系统结构层前必须补的一层。
+[2026-03-23 09:11] 研究记录
+- 指标框架初定:
+  1. 全局几何强度: norm（范数）、top-k 能量集中、主成分对齐/残差。
+  2. 局部邻域一致性: 最近邻相似度、局部密度、邻域间隙。
+  3. 语义族中心对齐: 与 seed family（种子家族）质心的相似度与 margin（边际）。
+- 当前命令:
+  1. Get-Content tests/codex/test_gpt2_qwen3_basis_hierarchy_compare.py -TotalCount 220
+  2. Get-Content tests/codex/test_gpt2_qwen3_concept_path_signature.py -TotalCount 220
+  3. Get-Content tests/codex/deepseek7b_apple_encoding_law_dossier.py -TotalCount 220
+  4. Get-ChildItem d:\develop\model\hub\models--gpt2\snapshots
+  5. Get-Content tests/codex/agi_research_result_schema.py -TotalCount 240
+  6. Get-Content tests/codex/deepseek7b_tokenizer_vocab_expander.py -TotalCount 260
+  7. Get-Content tests/codex/test_gpt2_qwen3_natural_offset_dictionary.py -TotalCount 220
+- 理论进度: 已把“有效编码信息”从口号压成可测三层指标，后续苹果类分析可直接继承该统一坐标系。
+[2026-03-23 09:18] 研究记录
+- 关键实现决策: 改为直接读取 gpt2（GPT-2，生成式预训练变换器二代）wte.weight（词嵌入矩阵），避免为词嵌入扫描加载整套前向链。
+- 方法细化:
+  1. 先做 clean lexical word（干净词）规范化与 canonical variant（规范变体）选择。
+  2. 再做全局 PCA（主成分）与 seed group（种子家族）质心/子空间建模。
+  3. 最后为每个词输出有效编码分数、家族对齐、主成分残差与 top seed（顶部种子）锚点。
+- 当前命令:
+  1. Get-Content tests/codex/deepseek7b_nouns_english_520_clean.csv -TotalCount 80
+  2. python 内联统计类别分布
+  3. python 内联检查 GPT-2 token（词元）大小写/空格变体
+  4. Get-ChildItem 本地 GPT-2 快照目录
+  5. python 内联检查 safetensors key
+- 理论进度: 扫描对象已从“语言现象层”收缩到“词嵌入本体层”，更适合作为后续苹果类深挖的统一底座。
+[2026-03-23 09:25] 研究记录
+- 已新增文件:
+  1. tests/codex/stage119_gpt2_embedding_full_vocab_scan.py
+  2. tests/codex/test_stage119_gpt2_embedding_full_vocab_scan.py
+- 实现内容:
+  1. 直接读取 GPT-2 wte.weight（词嵌入矩阵）
+  2. 构建 canonical word（规范词）库存
+  3. 拟合 micro/meso/macro 种子家族质心与子空间
+  4. 为每个词输出 effective_encoding_score（有效编码分数）等指标
+- 下一步: 运行测试并校准锚点词 pple / fruit / justice / red / run 的落点是否合理。
+[2026-03-23 09:27] 研究记录
+- 验证阻塞: 系统级 python（Python，编程语言）缺少 pytest（Python 测试框架）。
+- 修正动作: 改用仓库 .venv（虚拟环境）里的解释器执行测试。
+- 当前命令:
+  1. python -m pytest tests/codex/test_stage119_gpt2_embedding_full_vocab_scan.py -q  -> 失败: No module named pytest
+[2026-03-23 09:33] 研究记录
+- 阶段完成: Stage119（第一百一十九阶段）已落地并通过脚本级断言验证。
+- 产物路径:
+  1. tests/codex/stage119_gpt2_embedding_full_vocab_scan.py
+  2. tests/codex/test_stage119_gpt2_embedding_full_vocab_scan.py
+  3. tests/codex_temp/stage119_gpt2_embedding_full_vocab_scan_20260323/
+- 关键结果:
+  1. vocab_size = 50257
+  2. clean_token_variant_count = 46788
+  3. clean_unique_word_count = 30541
+  4. seed_group_coverage = 0.8156
+  5. apple -> meso_fruit
+  6. justice -> macro_system
+  7. red -> micro_color
+  8. run -> macro_action
+- 当前命令:
+  1. d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage119_gpt2_embedding_full_vocab_scan.py  -> PASS
+  2. Get-Content tests/codex_temp/stage119_gpt2_embedding_full_vocab_scan_20260323/STAGE119_GPT2_EMBEDDING_FULL_VOCAB_SCAN_REPORT.md -TotalCount 120
+  3. git status --short tests/codex/stage119_gpt2_embedding_full_vocab_scan.py tests/codex/test_stage119_gpt2_embedding_full_vocab_scan.py tests/codex_temp/stage119_gpt2_embedding_full_vocab_scan_20260323
+- 理论进度: GPT-2 词嵌入已从“个别词观察”推进到“全词基线扫描”，后续苹果分析可以直接转入 fruit（水果）家族偏移、边界词裂缝和跨层投影，而不用再重复做底层清洗。
+- 最严格硬伤与瓶颈:
+  1. 当前仍是 seed family（种子家族）对齐，不是真正无监督自发结构恢复。
+  2. 还没有引入词频、上下文位置和多层隐状态，因此现在看到的是 embedding（嵌入）静态层，不是完整语言编码闭环。
+  3. macro 抽象词目前部分收敛到 macro_system（宏观系统）而非更细粒度定类，说明宏观层仍偏粗。
+  4. 没有直接计算全词最近邻图，所以局部拓扑还只是“家族子空间近似”，不是完整邻域流形。
+- 下一阶段建议:
+  1. Stage120: apple_fruit_offset_atlas（苹果-水果偏移图谱）
+  2. Stage121: boundary_word_crack_map（边界词裂缝图）
+  3. Stage122: embedding_to_hidden_projection_bridge（嵌入到隐状态投影桥）
+[2026-03-23 09:40] 研究记录
+- 用户新目标: 全词扫描不能只偏名词家族，必须覆盖名词、动词、副词、形容词、功能词等所有主要词类，为后续数学理论提供更完整基线。
+- 当前动作: 准备扩展 stage119（第一百一十九阶段），加入 broad lexical type（宽词类）扫描层与对应统计输出。
+- 当前命令: 尚未执行新命令；下一步将复查 stage119 脚本结构并定位可扩展点。
+[2026-03-23 09:48] 研究记录
+- 词类层实测结果:
+  1. lexical_type_group_count = 5
+  2. lexical_type_coverage = 0.8494
+  3. apple -> noun（名词）
+  4. build -> verb（动词）
+  5. beautiful -> adjective（形容词）
+  6. quickly -> adverb（副词）
+  7. and -> function（功能词）
+- 结论: 这说明 stage119（第一百一十九阶段）已经从“全词语义家族扫描”升级成“全词类 + 全词语义家族双坐标扫描”。
+- 当前命令:
+  1. d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage119_gpt2_embedding_full_vocab_scan.py
+  2. Get-Content tests/codex_temp/stage119_gpt2_embedding_full_vocab_scan_20260323/summary.json -TotalCount 260
+  3. python 内联读取 lexical_type_anchor_words
+[2026-03-23 09:52] 研究记录
+- 扩展完成: stage119（第一百一十九阶段）现已支持全词类扫描，不再偏名词家族。
+- 关键新增:
+  1. lexical_type（词类）第二坐标系: noun / verb / adjective / adverb / function
+  2. 每个词同时输出 semantic group（语义家族）与 lexical type（词类）
+  3. 汇总新增 lexical_type_counts、lexical_type_anchor_words、词类覆盖率
+- 最新结果:
+  1. lexical_type_coverage = 0.8494
+  2. lexical_type_counts = {noun: 27702, adjective: 1034, verb: 866, adverb: 618, function: 321}
+  3. build -> verb
+  4. beautiful -> adjective
+  5. quickly -> adverb
+  6. and -> function
+- 当前命令:
+  1. d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage119_gpt2_embedding_full_vocab_scan.py  -> PASS
+  2. Get-Content tests/codex_temp/stage119_gpt2_embedding_full_vocab_scan_20260323/STAGE119_GPT2_EMBEDDING_FULL_VOCAB_SCAN_REPORT.md -TotalCount 160
+  3. git status --short tests/codex/stage119_gpt2_embedding_full_vocab_scan.py tests/codex/test_stage119_gpt2_embedding_full_vocab_scan.py tests/codex_temp/stage119_gpt2_embedding_full_vocab_scan_20260323
+- 理论进度: 词嵌入基线已从“全词扫描”推进到“全词类双坐标扫描”，后续可以正式研究词类投影、语义家族投影与统一动力系统状态变量之间的对应关系。
+- 最严格问题:
+  1. 词类仍是 seed-based（基于种子）恢复，不是严格无监督词类拓扑。
+  2. function（功能词）与 verb（动词）数量仍偏少，说明某些边界词还会被 noun（名词）吸走。
+  3. 这仍然是 embedding（嵌入）静态层，不是上下文动态层。
+- 下一阶段建议:
+  1. Stage120: lexical_type_projection_atlas（词类投影图谱）
+  2. Stage121: apple_fruit_offset_atlas（苹果-水果偏移图谱）
+  3. Stage122: embedding_hidden_joint_bridge（嵌入-隐状态联合桥）
+[2026-03-23 09:56] 研究记录
+- 用户确认继续推进。
+- 当前动作: 进入 Stage120（第一百二十阶段）lexical_type_projection_atlas（词类投影图谱），将 stage119（第一百一十九阶段）的全词类扫描压缩成更适合理论分析的结构图谱。
+- 当前命令: 尚未执行新命令；下一步读取 stage119 结果结构并设计 Stage120 指标。
+[2026-03-23 10:03] 研究记录
+- 阶段完成: Stage120（第一百二十阶段）lexical_type_projection_atlas（词类投影图谱）已落地并验证通过。
+- 新增文件:
+  1. tests/codex/stage120_lexical_type_projection_atlas.py
+  2. tests/codex/test_stage120_lexical_type_projection_atlas.py
+  3. tests/codex_temp/stage120_lexical_type_projection_atlas_20260323/
+- 当前命令:
+  1. Get-Content tests/codex_temp/stage119_gpt2_embedding_full_vocab_scan_20260323/summary.json -TotalCount 260
+  2. Get-Content tests/codex_temp/stage119_gpt2_embedding_full_vocab_scan_20260323/word_rows.csv -TotalCount 8
+  3. python 内联读取 word_rows.jsonl 样本
+  4. python 内联统计 lexical_type × band（词类×层级）耦合
+  5. d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage120_lexical_type_projection_atlas.py -> PASS
+  6. Get-Content tests/codex_temp/stage120_lexical_type_projection_atlas_20260323/summary.json -TotalCount 260
+  7. Get-Content tests/codex_temp/stage120_lexical_type_projection_atlas_20260323/STAGE120_LEXICAL_TYPE_PROJECTION_ATLAS_REPORT.md -TotalCount 180
+  8. git status --short tests/codex/stage120_lexical_type_projection_atlas.py tests/codex/test_stage120_lexical_type_projection_atlas.py tests/codex_temp/stage120_lexical_type_projection_atlas_20260323
+- 关键结果:
+  1. lexical_type_projection_atlas_score = 0.7913
+  2. noun_meso_anchor_ratio = 0.7943
+  3. verb_macro_anchor_ratio = 0.9630
+  4. adjective_micro_anchor_ratio = 0.5513
+  5. function_macro_anchor_ratio = 0.7290
+  6. adverb_bridge_entropy = 0.9187
+  7. bridge_type_name = adverb
+- 理论进度:
+  1. 词类已不再只是语法标签，而开始表现为统一编码系统中的投影叶层。
+  2. noun（名词）偏对象层、verb（动词）偏系统动作层、function（功能词）偏控制层，这支持“语言不是纯对象表，而是路由化分布系统”的方向。
+  3. adverb（副词）表现为最高熵桥接层，提示后续应把它和 q / b / g（条件门控场/上下文偏置/门控路由）链条联动研究。
+- 最严格问题:
+  1. adjective（形容词）熵也很高，说明属性词与评价/抽象风格分量仍混叠。
+  2. function（功能词）虽然偏 macro（宏观），但仍未直接证明其就是控制路由层，只能算强线索。
+  3. 这仍然基于静态 embedding（嵌入）层，尚未闭合到上下文动态场。
+- 下一阶段建议:
+  1. Stage121: adverb_gate_bridge_probe（副词-门控桥探针）
+  2. Stage122: apple_fruit_offset_atlas（苹果-水果偏移图谱）
+  3. Stage123: lexical_type_hidden_projection_bridge（词类-隐状态投影桥）
+[2026-03-23 10:08] 研究记录
+- 用户继续推进。
+- 当前动作: 进入 Stage121（第一百二十一阶段）adverb_gate_bridge_probe（副词-门控桥探针），把 Stage120（第一百二十阶段）识别出的 adverb（副词）桥接层进一步压成可量化结构。
+- 当前命令: 尚未执行新命令；下一步将读取 Stage119/120 中 adverb（副词）相关样本与边界词。
+[2026-03-23 10:15] 研究记录
+- 质量复核发现: Stage121（第一百二十一阶段）主指标成立，但 top_gate_adverbs（顶级副词）列表混入了 allows / began 这类边界误判词。
+- 修正方向: 收紧到 core adverbs（核心副词）子集，避免词类误判污染静态桥接解释。
+- 当前命令:
+  1. Get-Content tests/codex_temp/stage121_adverb_gate_bridge_probe_20260323/summary.json -TotalCount 260
+  2. Get-Content tests/codex_temp/stage121_adverb_gate_bridge_probe_20260323/STAGE121_ADVERB_GATE_BRIDGE_PROBE_REPORT.md -TotalCount 180
+[2026-03-23 10:22] 研究记录
+- 阶段完成: Stage121（第一百二十一阶段）adverb_gate_bridge_probe（副词-门控桥探针）已落地并通过验证。
+- 新增文件:
+  1. tests/codex/stage121_adverb_gate_bridge_probe.py
+  2. tests/codex/test_stage121_adverb_gate_bridge_probe.py
+  3. tests/codex_temp/stage121_adverb_gate_bridge_probe_20260323/
+- 当前命令:
+  1. python 内联读取 Stage120 中 adverb（副词）边界词与分布
+  2. python 内联计算 adverb（副词）相对 verb/function/noun/adjective 原型的桥接原型值
+  3. d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage121_adverb_gate_bridge_probe.py -> PASS
+  4. Get-Content tests/codex_temp/stage121_adverb_gate_bridge_probe_20260323/summary.json -TotalCount 260
+  5. Get-Content tests/codex_temp/stage121_adverb_gate_bridge_probe_20260323/STAGE121_ADVERB_GATE_BRIDGE_PROBE_REPORT.md -TotalCount 180
+  6. git status --short tests/codex/stage121_adverb_gate_bridge_probe.py tests/codex/test_stage121_adverb_gate_bridge_probe.py tests/codex_temp/stage121_adverb_gate_bridge_probe_20260323
+- 关键结果:
+  1. core_adverb_count = 430
+  2. adverb_gate_bridge_score = 0.4772
+  3. adverb_gate_mean = 0.2649
+  4. control_gate_mean = 0.3343
+  5. content_gate_mean = 0.2477
+  6. adverb_midpoint_position = 0.1983
+  7. adverb_action_function_balance_mean = 0.8954
+  8. top core adverbs = also / actually / therefore / eventually / thus / simply / always
+- 理论进度:
+  1. 副词在核心子集上仍保持“高于内容层、低于控制层”的桥接位置，不是纯对象词，也不是纯控制词。
+  2. 副词的动作-功能平衡值很高，说明它同时沾到 action（动作）与 function（功能）两边，这与 q / b / g（条件门控场/上下文偏置/门控路由）静态入口假设相容。
+  3. 这使得“副词是门控桥叶层候选”从印象推进到可计算证据。
+- 最严格问题:
+  1. 副词桥分数并不高到足以单独证明门控本体，只能说明它是优先入口，不是终局证明。
+  2. 核心副词子集仍依赖 surface form（表面词形）清洗，尚非纯结构无监督恢复。
+  3. 真正闭合还需要进入上下文动态层，验证副词是否先于内容词改变路由/门控。
+- 下一阶段建议:
+  1. Stage122: adverb_context_route_shift_probe（副词-上下文选路偏移探针）
+  2. Stage123: lexical_type_hidden_projection_bridge（词类-隐状态投影桥）
+  3. Stage124: apple_fruit_offset_atlas（苹果-水果偏移图谱）
+[2026-03-23 10:28] 研究记录
+- 用户继续推进。
+- 当前动作: 进入 Stage122（第一百二十二阶段）adverb_context_route_shift_probe（副词-上下文选路偏移探针），准备把静态副词桥结论推进到真实前向动态层。
+- 当前命令: 尚未执行新命令；下一步将检查本地 GPT-2（生成式预训练变换器二代）前向输出接口与可稳定比较的提示模板。
+[2026-03-23 08:03] 进度记录
+- 命令：Get-ChildItem tests/codex | Where-Object { .Name -like 'stage12*' -or .Name -like 'test_stage12*' } | Select-Object Name
+- 命令：Get-ChildItem tests/codex_temp | Where-Object { .Name -like 'stage12*' } | Select-Object Name
+- 研究进度：已确认 Stage120、Stage121、Stage122 及对应测试和产物目录存在，下一步将继续推进动态层分析，优先把副词引发的选路偏移做层级定位，减少仅靠全层平均结论的模糊性。
+[2026-03-23 08:04] 进度记录
+- 命令：Get-Content tests/codex/stage122_adverb_context_route_shift_probe.py -TotalCount 260
+- 命令：Get-Content tests/codex/test_stage122_adverb_context_route_shift_probe.py -TotalCount 220
+- 命令：Get-Content tests/codex_temp/stage122_adverb_context_route_shift_probe_20260323/summary.json
+- 研究进度：已确认 Stage122 已经给出副词引发动态选路偏移的初步证据，但仍缺逐层轨迹输出，且源码和报告字符串存在乱码。下一步将同步修复文本编码，并新增层级定位分析，研究副词选路偏移主要起始于哪一层、集中于哪一层。
+[2026-03-23 08:05] 进度记录
+- 命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage122_adverb_context_route_shift_probe.py
+- 研究进度：Stage122 已通过回归测试。当前已修复源码中文乱码，并新增逐层轨迹输出文件 layer_trace_rows.json，为下一步的选路偏移层定位分析提供直接输入。
+[2026-03-23 08:09] 进度记录
+- 命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage123_route_shift_layer_localization.py
+- 命令：Get-Content tests/codex_temp/stage123_route_shift_layer_localization_20260323/summary.json
+- 研究进度：Stage123 已通过测试，并完成副词动态选路偏移的层定位。当前结果显示主导层为 L3，主导峰值层也为 L3，最早稳定层同样为 L3，最强层带落在 early（早层），说明副词对 GPT-2 动词位选路的主要放大并不是晚层补偿，而是在较早的上下文整合阶段就已形成明显偏移。
+[2026-03-23 08:16] 进度记录
+- 命令：Get-ChildItem tests/codex | Where-Object { .Name -like 'stage11*' -or .Name -like 'stage12*' -or .Name -like 'test_stage11*' -or .Name -like 'test_stage12*' } | Select-Object Name
+- 命令：Get-Content tests/codex/stage119_gpt2_embedding_full_vocab_scan.py -TotalCount 260
+- 研究进度：已确认现有阶段文件和 Stage119 的名词基础数据入口仍可复用。下一步将直接在 GPT-2 的隐状态与 MLP（多层感知机）通道上，对全体名词做神经元基础探针，尝试找出跨名词共享的响应规律，而不是只看单词级近邻。
+[2026-03-23 08:22] 进度记录
+- 命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage124_noun_neuron_basic_probe.py
+- 命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage124_noun_neuron_basic_probe.py
+- 研究进度：已完成对全部 27702 个名词的 GPT-2 MLP 神经元基础探针，并通过测试。当前结果显示名词通用神经元主导层落在 L11，而不是早层；顶级通用名词神经元同时具有较高效应量和较高语义组覆盖，说明模型内部存在跨名词家族共享的较一般编码规则。同时宏观抽象名词与中观具体名词之间也出现了可分离的神经元偏置链。
+[2026-03-23 08:24] 进度记录
+- 研究进度：开始把 Stage124 的名词神经元基础探针扩展到 adjective（形容词）和 verb（动词）。本轮目标是保持统计口径一致，形成三类核心词性的可比较神经元规则图谱。
+[2026-03-23 08:26] 进度记录
+- 研究进度：已决定把 Stage125 和 Stage126 的“分裂神经元”从固定的 macro/meso 比较，改成各词类内部样本最多的两条 band（尺度带） 比较。原因是 adjective（形容词）主分布更靠近 micro（微观），若强行套用名词口径会引入系统偏差。
+[2026-03-23 08:31] 进度记录
+- 命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage125_adjective_neuron_basic_probe.py
+- 命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage126_verb_neuron_basic_probe.py
+- 命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage125_adjective_neuron_basic_probe.py
+- 命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage126_verb_neuron_basic_probe.py
+- 研究进度：已完成 adjective（形容词）与 verb（动词）的同口径神经元基础探针。当前结果显示三类核心词性 noun（名词）、adjective（形容词）、verb（动词） 的通用神经元主导层都落在 L11，但内部带结构不同：形容词主要表现为 micro（微观）对 macro（宏观） 的分裂，动词主要表现为 macro（宏观）对 meso（中观） 的分裂。这说明词类共享“后层稳定聚合”这一点，但各自聚合的尺度方向并不相同。
+[2026-03-23 08:32] 进度记录
+- 研究进度：准备输出本轮总结。结论主轴为：名词、形容词、动词三类核心词性的通用神经元都在 GPT-2 的后层 L11 附近达到最强聚合，但它们的尺度分裂方向不同，这为后续把“静态词类编码”压缩成更一般的数学规则提供了新的统一锚点。
+[2026-03-23 08:34] 进度记录
+- 研究进度：开始继续推进名词后续主线任务。由于 2026-03-23 当天 Stage125 与 Stage126 已用于 adjective（形容词）和 verb（动词） 神经元基础探针，为避免覆盖历史产物，接下来将把用户新指定的三项任务顺延到新的连续阶段编号实现，但任务语义保持一致。
+[2026-03-23 08:48] 进度记录
+- 命令：查询 GPT-2 MLP 权重形状，确认 c_fc=(768,3072)，c_proj=(3072,768)
+- 研究进度：已确认 Stage128 的几何桥可用 c_proj 行向量表示 L11 神经元输出方向，用 c_fc 列向量表示 L3 神经元输入方向。这样可以把“名词静态聚合层”和“选路偏移层”联系到同一残差几何空间，而不误写成不成立的直接因果回传。
+[2026-03-23 08:55] 进度记录
+- 命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage127_noun_context_neuron_probe.py
+- 命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage128_noun_static_route_bridge.py
+- 命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage129_noun_neuron_rule_compression.py
+- 命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage127_noun_context_neuron_probe.py
+- 命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage128_noun_static_route_bridge.py
+- 命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage129_noun_neuron_rule_compression.py
+- 研究进度：三项名词后续主线任务已全部完成并通过测试。新的关键发现是：名词静态裸词探针中的 L11 主导规律并没有在句中名词位保持，句中主导层前移到了 L1；L11 静态名词神经元与 L3 选路链之间存在弱几何桥，但桥强度不高；在这种断裂结构下，最优压缩候选律变成了 linear_mean（线性均值律），即静态通用性、上下文保持性和选路桥接性需要线性叠加，而不是用更强的乘法闭合。
+[2026-03-23 09:02] 进度记录
+- 研究进度：开始继续推进名词主线的下一段任务，准备实现多句法名词位探针、L1/L3/L11 传播桥以及统一变量拟合。当前目标是把“句中名词主导层前移到 L1”这一发现，从单模板结果扩展成更稳健的句法层与传播层证据链。
+[2026-03-23 09:13] 进度更新
+- 用户要求继续推进 Stage130/131/132。
+- 当前开始执行 Stage131 三层传播桥，随后补测试并实现 Stage132 统一变量拟合。
+- 工作目录: d:\develop\TransformerLens-main
+[2026-03-23 09:19] 阶段完成记录
+- 完成 Stage131: tests/codex/stage131_l1_l3_l11_propagation_bridge.py
+  - 结果: mean_l1_l3_corr=-0.1423, mean_l3_l11_corr=-0.0671, mean_l1_l11_corr=0.3468, coherent_family_rate=0.0000, propagation_score=0.4033
+  - 结论: L1->L3 与 L3->L11 未形成强正传播链，L1->L11 保持中等正相关，说明更像“早层定锚 + 中段冲突 + 后层重聚合”。
+- 完成 Stage132: tests/codex/stage132_unified_variable_fit.py
+  - 结果: best_formula = noun_proxy = 0.50*a + 0.10*q + 0.20*g + 0.20*f
+  - 指标: best_correlation=0.9983, best_mae=0.0137, unified_variable_fit_score=0.9947, weakest_proxy=g_proxy_mean
+  - 结论: 名词统一代理量当前更偏向 anchor（定锚）主导，route（选路）是最弱项。
+- 新增测试:
+  - tests/codex/test_stage130_multisyntax_noun_context_probe.py
+  - tests/codex/test_stage131_l1_l3_l11_propagation_bridge.py
+  - tests/codex/test_stage132_unified_variable_fit.py
+- 执行命令:
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage131_l1_l3_l11_propagation_bridge.py --force
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage132_unified_variable_fit.py --force
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage130_multisyntax_noun_context_probe.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage131_l1_l3_l11_propagation_bridge.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage132_unified_variable_fit.py
+[2026-03-23 09:22] 进度更新
+- 用户要求继续推进后续阶段。
+- 当前开始执行 Stage133/134/135：复杂语篇名词传播块、名词-动词联合传播块、统一变量反演块。
+- 目标: 检验名词早层定锚在复杂语篇中的稳定性，并研究其向动词选路链的耦合。
+[2026-03-23 09:27] 实现调整
+- 因一次性补丁过大导致写入失败，改为分文件逐个落地 Stage133/134/135。
+- 当前先创建 Stage133 复杂语篇名词传播脚本，再创建 Stage134 与 Stage135。
+[2026-03-23 09:34] 阶段完成记录
+- 完成 Stage133: tests/codex/stage133_complex_discourse_noun_propagation.py
+  - 结果: mean_early_remention_corr=0.9588, mean_late_remention_corr=0.6361, early_positive_family_rate=1.0000, late_positive_family_rate=1.0000, score=0.9023
+  - 结论: 名词早层定锚在复杂语篇重提中非常稳定，后层聚合也保持正续接，但强度低于早层。
+- 完成 Stage134: tests/codex/stage134_noun_verb_joint_propagation.py
+  - 结果: mean_noun_route_corr=0.1018, mean_sign_consistency_rate=0.5156, mean_route_band_gap=0.0084, positive_family_rate=1.0000, score=0.5426
+  - 结论: 名词可以向动词选路链施加稳定但偏弱的影响，已形成联合传播，但还不是强耦合闭环。
+- 完成 Stage135: tests/codex/stage135_unified_variable_inversion.py
+  - 结果: best_formula = inversion = 0.40*a + 0.00*r + 0.00*q + 0.10*g + 0.30*f + 0.20*b
+  - 指标: best_correlation=0.8575, best_mae=0.0269, inversion_score=0.9443, weakest_proxy=b_proxy_mean, strongest_proxy=r_proxy_mean
+  - 结论: 当前反演更偏向 anchor（定锚）+ closure（续接）+ bias（偏置），而不是 recurrence（回返）和 q（条件保持）主导。
+- 新增测试:
+  - tests/codex/test_stage133_complex_discourse_noun_propagation.py
+  - tests/codex/test_stage134_noun_verb_joint_propagation.py
+  - tests/codex/test_stage135_unified_variable_inversion.py
+- 执行命令:
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage133_complex_discourse_noun_propagation.py --force
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage134_noun_verb_joint_propagation.py --force
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage135_unified_variable_inversion.py --force
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage133_complex_discourse_noun_propagation.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage134_noun_verb_joint_propagation.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage135_unified_variable_inversion.py
+[2026-03-23 09:41] 进度更新
+- 用户要求继续推进后续阶段，并在完成后整理所有语言分析到 AGI_GPT5_LANGUAGE.md。
+- 当前开始执行 Stage136/137/138：跨句回指与省略传播块、名词到动词到句尾结果链、条件门控场重建块。
+- 之后汇总 Stage119-Stage138 的语言分析主线，写入 research/gpt5/docs/AGI_GPT5_LANGUAGE.md。
+[2026-03-23 09:54] 阶段完成记录
+- 完成 Stage136: tests/codex/stage136_anaphora_ellipsis_propagation.py
+  - 结果: noun_pronoun_early_corr=-0.1313, noun_ellipsis_early_corr=-0.2194, noun_pronoun_late_corr=0.1153, noun_ellipsis_late_corr=0.3979, score=0.5613
+  - 结论: 回指与省略在早层未保持同向链，表现为“早层断裂、后层再接”。
+- 完成 Stage137: tests/codex/stage137_noun_verb_result_chain.py
+  - 结果: mean_noun_verb_corr=0.1018, mean_verb_result_corr=0.0829, mean_noun_result_corr=0.0560, score=0.5679
+  - 结论: noun->verb->result 结果链成立，但仍偏弱，动词到结果位比名词到结果位更稳定。
+- 完成 Stage138: tests/codex/stage138_conditional_gating_field_reconstruction.py
+  - 结果: best_formula = field = 0.10*q + 0.10*b + 0.80*g
+  - 指标: best_correlation=0.8332, best_mae=0.0196, score=0.9389, weakest_proxy=b_proxy_mean, strongest_proxy=q_proxy_mean
+  - 结论: 当前条件门控场重建更偏 g（门控路由）主导，稳定偏置场 b 仍然偏弱。
+- 整理总文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+  - 内容: 汇总 Stage119-Stage138 的语言分析主线、当前稳定律、硬伤与下一段任务块。
+- 新增测试:
+  - tests/codex/test_stage136_anaphora_ellipsis_propagation.py
+  - tests/codex/test_stage137_noun_verb_result_chain.py
+  - tests/codex/test_stage138_conditional_gating_field_reconstruction.py
+- 执行命令:
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage136_anaphora_ellipsis_propagation.py --force
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage137_noun_verb_result_chain.py --force
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage138_conditional_gating_field_reconstruction.py --force
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage136_anaphora_ellipsis_propagation.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage137_noun_verb_result_chain.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage138_conditional_gating_field_reconstruction.py
+[2026-03-23 10:46] 进度更新
+- 用户要求在 Qwen 模型中进行相同测试，验证当前语言理论是否可迁移。
+- 当前先检查本地 Qwen 模型路径与现有 Qwen 相关脚本，准备复用 Stage119-Stage138 的语言测试链。
+
+[2026-03-23 10:47] 开始排查Qwen模型路径与现有脚本：执行 rg 检索 tests/codex、tests/codex_temp、research/gpt5/docs 中的 Qwen 相关内容，并递归扫描本地目录名中的 Qwen 线索。
+
+[2026-03-23 10:48] 已确认本地存在 Qwen3-4B 快照与历史 Qwen 研究痕迹，开始检查 Stage119-138 语言脚本的可参数化程度，优先寻找可直接迁移到 Qwen 的底座函数。
+
+[2026-03-23 10:48] 已定位共享入口 wordclass_neuron_basic_probe_lib.py，开始检查 load_model 与词表扫描底座是否默认锁定 GPT-2，评估直接切换到 Qwen3-4B 的可行性。
+
+[2026-03-23 10:48] 继续检查 Stage119 与历史 GPT-2/Qwen3 对比脚本，准备复用其中的 Qwen3-4B 本地快照路径与加载方式，避免重新摸索模型入口。
+
+[2026-03-23 10:48] 进入 Qwen3-4B 结构核查：用本地离线加载打印层级、MLP 组件与激活函数入口，确认语言阶段脚本从 GPT-2 风格迁移到 Qwen 的最小改动面。
+
+[2026-03-23 10:49] 已确认 Qwen3 使用 model.layers / mlp.act_fn 结构，继续核对其 MLP forward 数学形式，并对照 Stage124 名词神经元探针的挂钩方式评估迁移方案。
+
+[2026-03-23 10:49] 开始补查动态语言阶段脚本：重点核对 Stage122、Stage123、Stage130 对模型层输出和注意力/隐藏态接口的依赖，准备设计统一的 Qwen 兼容底座。
+
+[2026-03-23 10:50] 开始拆解 Stage119 的嵌入读取入口，并检查 Qwen3-4B safetensors 键名，确认词嵌入矩阵是否可直接按 model.embed_tokens 读取。
+
+[2026-03-23 10:50] 已确认 Qwen3-4B 词嵌入键为 model.embed_tokens.weight，开始核对词表规模与嵌入矩阵尺寸，以决定是否需要做节省内存的同口径扫描实现。
+
+[2026-03-23 10:51] 进一步核对 Stage119 内部数据流：定位 embedding 矩阵真正参与计算的位置，评估 Qwen 版是否只需改读取与行筛选而不必重写全部扫描逻辑。
+
+[2026-03-23 10:51] 继续提取 Stage119 中与模型无关的纯函数，准备在新的 Qwen 语言验证脚本里直接复用词清洗、家族拟合和词类扫描逻辑。
+
+[2026-03-23 10:52] 继续抽取后段语言阶段逻辑：检查 Stage134、Stage136、Stage137 的 family-level 统计是否可直接迁移到 Qwen，只替换模型加载与挂钩层即可。
+
+[2026-03-23 10:52] 开始检查本机 CUDA 可用性，若存在可用显卡则优先让 Qwen3-4B 采用自动设备映射，以缩短整套语言验证的运行时间。
+
+[2026-03-23 11:06] 已新增 Qwen3 共享底座与 Stage139 迁移验证套件，开始执行 py_compile 语法检查，优先清理导入与函数拼接阶段的显性错误。
+
+[2026-03-23 11:07] 开始实跑 Stage139 Qwen3 语言理论迁移验证套件：执行 tests/codex/test_stage139_qwen3_language_validation_suite.py，覆盖全词扫描、动态选路、名词静态/上下文/语篇链与条件门控场拟合。
+
+[2026-03-23 11:08] Stage139 首次实跑失败于副词桥原型构造：Qwen3 扫描结果里按 GPT-2 原阈值筛选不到 verb 原型。开始检查 Qwen 的词类分布、锚点落点与高分动词行，准备改成更适配 Qwen 的原型选择规则。
+
+[2026-03-23 11:09] 已把副词桥与选路原型切换成 Qwen 适配的回退式原型选择规则，重新执行 Stage139 语法检查，准备再次实跑整套验证。
+
+[2026-03-23 11:09] Stage139 第二次实跑：已把副词桥原型改为 Qwen 适配的回退式选择，重新执行 tests/codex/test_stage139_qwen3_language_validation_suite.py。
+
+[2026-03-23 11:10] 已把动态选路阶段改成本地 Qwen 实现，并在加载后强制切到 eager 注意力；重新执行 py_compile，准备第三次实跑 Stage139。
+
+[2026-03-23 11:10] Stage139 第三次实跑：动态选路部分已改为 Qwen 本地实现并启用 eager 注意力，重新执行 tests/codex/test_stage139_qwen3_language_validation_suite.py。
+
+[2026-03-23 11:12] Stage139 已完整通过。开始抽取 Qwen3 核心结论、理论检查通过率、层位映射和与 GPT-2 的对照快照，准备形成最终严格结论。
+[2026-03-23 11:12] 完成 Stage139 Qwen3 语言理论迁移验证套件。
+- 新增文件：tests/codex/qwen3_language_shared.py
+- 新增文件：tests/codex/stage139_qwen3_language_validation_suite.py
+- 新增文件：tests/codex/test_stage139_qwen3_language_validation_suite.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/qwen3_language_shared.py tests/codex/stage139_qwen3_language_validation_suite.py tests/codex/test_stage139_qwen3_language_validation_suite.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage139_qwen3_language_validation_suite.py
+- 结果输出：tests/codex_temp/stage139_qwen3_language_validation_suite_20260323/summary.json
+- 结果输出：tests/codex_temp/stage139_qwen3_language_validation_suite_20260323/STAGE139_QWEN3_LANGUAGE_VALIDATION_SUITE_REPORT.md
+- 核心结论：Qwen3 的理论迁移结论为 theory_transfer_weak，理论检查通过率约 0.4286。
+- 关键数值：adverb_gate_bridge_score≈0.3563，adverb_context_route_shift_score≈0.7873，route_shift_layer_localization_score≈0.6353，noun_basic_dominant_layer_index=19，syntax_stability_rate=0.0000，complex_discourse_noun_propagation_score≈0.8066，noun_verb_joint_propagation_score≈0.2250，anaphora_ellipsis_score≈0.5234，noun_verb_result_chain_score≈0.4500。
+- 条件门控场最优式：field = 0.40*q + 0.00*b + 0.60*g；strongest_proxy_name = g_proxy_mean；weakest_proxy_name = b_proxy_mean。
+- 理论判断：Qwen3 复现了“副词动态选路”和“g 主导的条件门控场”两条现象，但没有复现 GPT-2 式的“名词早层定锚带 + 名词到动词的稳定联合链”，说明当前语言理论更像局部可迁移、非整体强迁移。
+- 下一阶段建议：Stage140 做 GPT-2 / Qwen3 层同构块；Stage141 做 Qwen3 回指与省略强化块以补 r；Stage142 做双模型联合变量反演块，验证 a/q/g/b 是否真能跨模型压到同一坐标。
+[2026-03-23 11:23] 用户追问：当前关于 Qwen3 语言理论迁移的结论，究竟是建立在本轮真实测试数据上，还是基于历史数据。准备明确区分：Qwen3 Stage139 为本轮本地真实实跑；GPT-2 对照为此前本地真实实跑生成的 summary.json 历史结果引用；不存在凭空推断成分，但存在“本轮未重跑 GPT-2、而是读取历史实测快照”的方法学边界。
+
+[2026-03-23 11:26] 用户要求：把测试原理与过程写入 AGI_GPT5_LANGUAGE.md 头部，把 Qwen 实测数据与分析结果追加到文档后部，并继续在 DeepSeek 模型上做相同测试。开始读取语言总文档头尾与本地 DeepSeek-R1-Distill-Qwen-7B 快照路径。
+
+[2026-03-23 11:27] 开始核对 DeepSeek-R1-Distill-Qwen-7B 结构兼容性：离线加载模型并打印层级与 MLP 组件，判断能否直接复用 Qwen 语言验证底座。
+
+[2026-03-23 11:28] 已新增 DeepSeek 语言验证包装层与测试脚本：stage140_deepseek_language_validation_suite.py、test_stage140_deepseek_language_validation_suite.py。开始执行 py_compile 检查包装层是否能正确复用 Stage139。
+
+[2026-03-23 11:28] 开始实跑 Stage140 DeepSeek 语言理论迁移验证套件：执行 tests/codex/test_stage140_deepseek_language_validation_suite.py，目标是复用 Stage139 同口径链条验证 DeepSeek-R1-Distill-Qwen-7B。
+
+[2026-03-23 11:31] Stage140 已完整通过。开始抽取 DeepSeek 核心指标、理论检查通过率与条件门控场公式，准备连同 Qwen 结果一起写入 AGI_GPT5_LANGUAGE.md。
+
+[2026-03-23 11:34] 已重写 AGI_GPT5_LANGUAGE.md：头部加入真实测试原理与过程，中部整理 GPT-2 主线，后部追加 Qwen3 与 DeepSeek 的实测数据和分析结论。开始做头尾抽查。
+[2026-03-23 11:36] 完成语言总文档整理与跨模型验证续推进
+- 文档整理：已将测试原理与过程补到 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 头部，并将 Qwen3 与 DeepSeek 的真实测试数据、分析结果、跨模型对照、硬伤与后续阶段任务整理到文档后部。
+- 新增脚本：tests/codex/stage140_deepseek_language_validation_suite.py，tests/codex/test_stage140_deepseek_language_validation_suite.py。
+- 复用底座：tests/codex/qwen3_language_shared.py，tests/codex/stage139_qwen3_language_validation_suite.py。
+- 真实执行命令：
+  1. d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage140_deepseek_language_validation_suite.py tests/codex/test_stage140_deepseek_language_validation_suite.py
+  2. d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage140_deepseek_language_validation_suite.py
+- DeepSeek 结果：theory_check_pass_rate≈0.2857，transfer_verdict=theory_transfer_weak；副词动态选路仍成立，但副词门控桥弱、名词早层定锚不稳、名词到动词到结果链偏弱；条件门控场最优式为 field = 0.50*q + 0.10*b + 0.40*g。
+- 当前理论判断：跨模型最稳的是“副词动态选路”和“复杂语篇名词重提”；最不稳的是名词早层定锚、回指一致性、稳定上下文偏置场。理论仍处于强解释前沿区，不是闭式第一性原理。
+[2026-03-23 12:03] 完成 Stage141-143 跨模型语言主核续推进
+- 新增脚本：tests/codex/cross_model_language_shared.py，tests/codex/stage141_cross_model_layer_isomorphism.py，tests/codex/stage142_cross_model_anaphora_hardening.py，tests/codex/stage143_triple_model_joint_variable_inversion.py。
+- 新增测试：tests/codex/test_stage141_cross_model_layer_isomorphism.py，tests/codex/test_stage142_cross_model_anaphora_hardening.py，tests/codex/test_stage143_triple_model_joint_variable_inversion.py。
+- 真实执行命令：
+  1. d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/cross_model_language_shared.py tests/codex/stage141_cross_model_layer_isomorphism.py tests/codex/stage142_cross_model_anaphora_hardening.py tests/codex/stage143_triple_model_joint_variable_inversion.py tests/codex/test_stage141_cross_model_layer_isomorphism.py tests/codex/test_stage142_cross_model_anaphora_hardening.py tests/codex/test_stage143_triple_model_joint_variable_inversion.py
+  2. d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage141_cross_model_layer_isomorphism.py
+  3. d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage142_cross_model_anaphora_hardening.py
+  4. d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage143_triple_model_joint_variable_inversion.py
+- Stage141 结果：mean_layer_isomorphism_score≈0.6405；最佳对齐模型为 DeepSeek，最弱为 Qwen3。当前结论是跨模型更像功能带同构，而不是绝对层号同构。
+- Stage142 结果：hardening_verdict=late_rescue_without_early_closure；三模型共同表现为早层回指弱、后层补救强，说明 r 更像后层补救变量而不是早层闭环变量。
+- Stage143 结果：triple_inversion = 0.10*a + 0.20*r + 0.10*q + 0.00*g + 0.30*f + 0.30*b；joint_inversion_score≈0.9948；当前跨模型语言主核更像 r/f/b 主导，而不是 g 主导。
+- 文档更新：已把 Stage141-143 的原理、结果、硬伤和下一阶段任务块追加到 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 尾部。
+- 当前理论判断：语言理论已从单模型强解释链推进到三模型对照主核，但仍停留在代理量层；最大瓶颈是层同构不严格、r 无早层闭合、g 在跨模型联合式中站不稳、b 低可观测但高重要。
+[2026-03-23 12:10] 完成三模型语言原理持续挖掘的方法学升级方案
+- 文档更新：已在 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 追加“持续挖掘三模型语言原理的方法升级方案”章节。
+- 核心判断：要实现持续挖掘目标，不能把“改进挖掘方式”和“加大数据量”分开做；正确顺序应为“先提升数据产生机制质量，再做定向扩量”。
+- 方法升级方向：从词表样本升级到机制样本，从单点探针升级到最小对照组，从固定模板升级到模板族，从层号读数升级到功能带读数，从平均分数升级到传播轨迹，从代理量堆叠升级到变量可辨识设计。
+- 规模升级方向：优先扩大家族覆盖，再扩样本量；同时做词级、句级、语篇级三层扩张；引入 easy/medium/hard/adversarial 难度分层；同时维护跨模型共用数据集与模型专用数据集；采用滚动扩量而不是一次性堆料。
+- 系统工程化框架：样本工程层、观测工程层、变量工程层、判伪工程层四层闭环。
+- 下一阶段建议：Stage147 机制家族生成器块，Stage148 变量可辨识数据包块，Stage149 滚动扩量调度块，Stage150 三模型语言主核评估块。
+[2026-03-23 12:23] 完成 Stage147 机制家族生成器块
+- 新增脚本：tests/codex/stage147_mechanism_family_generator.py。
+- 新增测试：tests/codex/test_stage147_mechanism_family_generator.py。
+- 真实执行命令：
+  1. d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage147_mechanism_family_generator.py tests/codex/test_stage147_mechanism_family_generator.py
+  2. d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage147_mechanism_family_generator.py
+- 结果：PASS。
+- 产物：tests/codex_temp/stage147_mechanism_family_generator_20260323。
+- 核心指标：family_count=6，case_count=384，difficulty_count=4，control_type_count=4，target_variable_count=6，mechanism_family_generator_score=1.0000。
+- 理论推进：项目已从“零散模板探针”进入“标准化机制家族生成”阶段；下一步可直接围绕该生成器推进 Stage148 变量可辨识数据包、Stage149 滚动扩量调度、Stage150 三模型语言主核评估闭环。
+- 文档更新：已把 Stage147 的原理、结果、硬伤与下一步任务追加到 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 尾部。
+[2026-03-23 12:40] 完成 Stage148 与语言文档系统级测试方案重构
+- 新增脚本：tests/codex/stage148_variable_identifiability_dataset_pack.py。
+- 新增测试：tests/codex/test_stage148_variable_identifiability_dataset_pack.py。
+- 真实执行命令：
+  1. d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage148_variable_identifiability_dataset_pack.py tests/codex/test_stage148_variable_identifiability_dataset_pack.py
+  2. d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage148_variable_identifiability_dataset_pack.py
+- 结果：PASS。
+- 产物：tests/codex_temp/stage148_variable_identifiability_dataset_pack_20260323。
+- 核心指标：variable_count=6，case_count=704，family_count=6，difficulty_count=4，contrast_type_count=4，overall_identifiability_score=1.0000。
+- 理论推进：项目已从“机制家族生成”推进到“变量可辨识数据包”，后续测试可直接围绕 a/r/f/g/q/b 六个变量做定向分离，不再只看总体现象。
+- 文档更新：已将 AGI_GPT5_LANGUAGE.md 头部“测试原理与过程”重写为“系统级测试方案”，明确五层测试体系、八步统一流程、样本工程规范、机制家族体系、变量可辨识体系与系统级目标；并补充 Stage148 专节。
+- 下一阶段建议：Stage149 滚动扩量调度块，Stage150 三模型语言主核评估块。
+[2026-03-23 12:48] 进度更新
+- 任务：启动 Stage149（第一百四十九阶段）与 Stage150（第一百五十阶段），并整理 AGI_GPT5_LANGUAGE.md 中 GPT-2（模型）、Qwen3（通义千问三代）、DeepSeek（深度求索）三部分为统一结构。
+- 当前动作：读取现有阶段结果与文档结构，准备新增调度脚本、三模型主核评估脚本，并重写对应文档段落。
+[2026-03-23 12:54] 进度更新
+- 完成：Stage149（第一百四十九阶段）滚动扩量调度块。
+- 脚本：tests/codex/stage149_rolling_expansion_scheduler.py
+- 测试：tests/codex/test_stage149_rolling_expansion_scheduler.py
+- 结果：highest_priority_variable = b，lowest_priority_variable = f，total_additional_case_count = 560。
+- 关键结论：下一轮扩量不应平均铺开，而应先补 b（上下文偏置）、再补 a（早层定锚）、再补 g（门控路由）。
+- 命令：python -m py_compile tests/codex/stage149_rolling_expansion_scheduler.py tests/codex/test_stage149_rolling_expansion_scheduler.py tests/codex/stage150_three_model_language_kernel_evaluation.py tests/codex/test_stage150_three_model_language_kernel_evaluation.py
+- 命令：python tests/codex/test_stage149_rolling_expansion_scheduler.py
+
+[2026-03-23 12:54] 进度更新
+- 完成：Stage150（第一百五十阶段）三模型语言主核评估块。
+- 脚本：tests/codex/stage150_three_model_language_kernel_evaluation.py
+- 测试：tests/codex/test_stage150_three_model_language_kernel_evaluation.py
+- 结果：stable_core_count = 3，partial_core_count = 2，weak_core_count = 2，overall_kernel_score ≈ 0.6819。
+- 关键结论：跨模型稳定主核当前是副词动态选路、条件场重建、复杂语篇重提；名词到动词到结果链仍是弱主核。
+- 命令：python tests/codex/test_stage150_three_model_language_kernel_evaluation.py
+
+[2026-03-23 12:54] 文档整理
+- 更新：research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+- 调整：将 GPT-2（模型）、Qwen3（通义千问三代）、DeepSeek（深度求索）三部分统一整理为“测试方式 / 测试结果 / 测试总结”结构。
+- 追加：Stage149（第一百四十九阶段）与 Stage150（第一百五十阶段）章节，形成从变量可辨识到滚动扩量再到三模型主核评估的闭环叙述。
+[2026-03-23 12:55] 进度更新
+- 任务：按五大章节重组 AGI_GPT5_LANGUAGE.md。
+- 目标：整理为“测试方案 / GPT-2（模型）测试报告 / Qwen（通义千问）测试报告 / DeepSeek（深度求索）测试报告 / 跨模型总结”。
+- 当前动作：汇总三模型测试数据量、测试方式、结果链条与跨模型推理主线，准备重写文档主体结构。
+[2026-03-23 12:58] 文档整理完成
+- 任务：按五大章节重组 AGI_GPT5_LANGUAGE.md，并补充详细测试方案、三模型测试数据量、推理链条与跨模型总结。
+- 结果：文档已整理为 5 个一级章节：1.测试方案 2.GPT-2（模型）测试报告 3.Qwen（通义千问）测试报告 4.DeepSeek（深度求索）测试报告 5.跨模型总结。
+- 重点补充：
+  - 测试方案部分：重写为系统级方案，补入测试目标、五层链条、数据构造方式、八步流程、推理链条与数据工程规模。
+  - GPT-2（模型）部分：补入词表层、句中层、语篇层的数据量，包括 50257 词表、30541 唯一词、27702 名词、144 条副词动态样本、约 10240 条语篇传播样本、约 9600 条结果链案例。
+  - Qwen（通义千问）部分：补入 151643 词表、40791 唯一词、144 条动态样本、6 个句法家族、5 个语篇家族、320 个名词样本等数据量说明。
+  - DeepSeek（深度求索）部分：补入与 Qwen（通义千问）同口径的数据量和结果说明。
+  - 跨模型总结部分：补入 Stage150（三模型语言主核评估块）结果、稳定主核 / 过渡主核 / 弱主核划分、推理链条、硬伤与下一阶段任务。
+- 校验：已检查文档一级章节顺序与各模型章节的“测试方式 / 测试数据量 / 测试结果 / 推理链条 / 测试总结”结构。
+[2026-03-23 13:34] 进度更新
+- 任务：启动 Stage151（第一百五十一阶段）到 Stage153（第一百五十三阶段），补 b（上下文偏置）、a->g（定锚到选路）桥接、noun->verb->result（名词到动词到结果）强化块。
+- 当前动作：读取现有语言阶段结果与文档结构，准备新增三块脚本与测试，并在完成后整理“如何破解模型内部语言规则”的系统测试方案。
+
+
+## 2026-03-23 13:40 Stage151-153 ????
+- ????????? Stage151??????????????Stage152?a ? g ??????Stage153??????????????????????????????????????
+- ??????????? Windows ???????????????????
+
+
+## 2026-03-23 13:44 Stage151-153 ???????????
+- ?????tests/codex/stage151_context_bias_explicit_pack.py?tests/codex/stage152_anchor_route_bridge_probe.py?tests/codex/stage153_noun_verb_result_hardening_pack.py?
+- ?????tests/codex/test_stage151_context_bias_explicit_pack.py?tests/codex/test_stage152_anchor_route_bridge_probe.py?tests/codex/test_stage153_noun_verb_result_hardening_pack.py?
+- ?????python -m py_compile tests/codex/stage151_context_bias_explicit_pack.py tests/codex/test_stage151_context_bias_explicit_pack.py tests/codex/stage152_anchor_route_bridge_probe.py tests/codex/test_stage152_anchor_route_bridge_probe.py tests/codex/stage153_noun_verb_result_hardening_pack.py tests/codex/test_stage153_noun_verb_result_hardening_pack.py?python tests/codex/test_stage151_context_bias_explicit_pack.py?python tests/codex/test_stage152_anchor_route_bridge_probe.py?python tests/codex/test_stage153_noun_verb_result_hardening_pack.py?
+- ?????Stage151 ?? 320 ?????????????? 5 ????4 ????4 ????Stage152 ????? a->g ????? 0.3467?GPT-2 ???Qwen3 ???Stage153 ?? 384 ???????????????? 6 ????8 ??????
+- ?????????????????????????????1??????????? apple ??? fruit ?????2???????????????????3??????????????????????????????-??-???????????????????????????????
+
+
+## 2026-03-23 13:52 Stage154-156 ??
+- ??????? apple????????????? Stage154???-???????Stage155??????????Stage156?????????????????????????????????
+- ??????? Stage119?Stage124?Stage147?Stage151?Stage153 ?????????????????????????
+
+
+## 2026-03-23 13:58 Stage154-156 ??
+- ?????tests/codex/stage154_apple_fruit_shared_core.py?tests/codex/stage155_apple_boundary_crack_map.py?tests/codex/stage156_apple_context_bias_shift.py?
+- ?????tests/codex/test_stage154_apple_fruit_shared_core.py?tests/codex/test_stage155_apple_boundary_crack_map.py?tests/codex/test_stage156_apple_context_bias_shift.py?
+- ?????python -m py_compile tests/codex/stage154_apple_fruit_shared_core.py tests/codex/test_stage154_apple_fruit_shared_core.py tests/codex/stage155_apple_boundary_crack_map.py tests/codex/test_stage155_apple_boundary_crack_map.py tests/codex/stage156_apple_context_bias_shift.py tests/codex/test_stage156_apple_context_bias_shift.py?python tests/codex/test_stage154_apple_fruit_shared_core.py?python tests/codex/test_stage155_apple_boundary_crack_map.py?python tests/codex/test_stage156_apple_context_bias_shift.py?
+- ?????Stage154 ?? apple ????????? 0.5149??????? 0.6888?Stage155 ?????? 0.6000?apple ? food phrase ? brand phrase ????? meso_fruit?orange ? fruit phrase ????? micro_color?Stage156 ???????????? 0.6656???????? 0.6510?
+- ???????????????????1???-??????2????????3?????????????????????????????? apple ?????????????
+
+
+## 2026-03-23 14:44 Stage157-159 ??
+- ??????? apple???????????? Stage157???????????Stage158???????????Stage159???????????
+- ???Stage157 ? Stage158 ???? GPT-2 ??????????Stage159 ?? GPT-2 / Qwen / DeepSeek ??????????????????????
+
+
+## 2026-03-23 14:49 Stage157-159 ??
+- ?????tests/codex/stage157_apple_action_route_probe.py?tests/codex/stage158_apple_result_binding_probe.py?tests/codex/stage159_triple_model_apple_kernel.py?
+- ?????tests/codex/test_stage157_apple_action_route_probe.py?tests/codex/test_stage158_apple_result_binding_probe.py?tests/codex/test_stage159_triple_model_apple_kernel.py?
+- ?????python -m py_compile tests/codex/stage157_apple_action_route_probe.py tests/codex/test_stage157_apple_action_route_probe.py tests/codex/stage158_apple_result_binding_probe.py tests/codex/test_stage158_apple_result_binding_probe.py tests/codex/stage159_triple_model_apple_kernel.py tests/codex/test_stage159_triple_model_apple_kernel.py?python tests/codex/test_stage157_apple_action_route_probe.py?python tests/codex/test_stage158_apple_result_binding_probe.py?python tests/codex/test_stage159_triple_model_apple_kernel.py?
+- ?????Stage157 ????????? 4.1812???????? 0.9762??? fruit action??????? brand action??????? GPT-2 ??????Stage158 ????????? -0.5892???????? 0.3440??????????????????????Stage159 ??????????? 0.5010???????? apples?GPT-2 ???DeepSeek ???
+- ??????????????????????????????????????????????????????????????????????????????
+
+
+## 2026-03-23 14:58 Stage160-162 ??
+- ??????? apple???????????? Stage160??????????Stage161????????????Stage162?????????
+- ???Stage160 ???? GPT-2 ?????????????????Stage161 ?? Stage154 ? Stage159 ??????????????Stage162 ??????????????????????????????????
+
+
+## 2026-03-23 15:01 Stage160-162 ??
+- ?????tests/codex/stage160_apple_result_repair_map.py?tests/codex/stage161_apple_cross_model_noise_split.py?tests/codex/stage162_apple_full_chain_equation.py?
+- ?????tests/codex/test_stage160_apple_result_repair_map.py?tests/codex/test_stage161_apple_cross_model_noise_split.py?tests/codex/test_stage162_apple_full_chain_equation.py?
+- ?????python -m py_compile tests/codex/stage160_apple_result_repair_map.py tests/codex/test_stage160_apple_result_repair_map.py tests/codex/stage161_apple_cross_model_noise_split.py tests/codex/test_stage161_apple_cross_model_noise_split.py tests/codex/stage162_apple_full_chain_equation.py tests/codex/test_stage162_apple_full_chain_equation.py?python tests/codex/test_stage160_apple_result_repair_map.py?python tests/codex/test_stage161_apple_cross_model_noise_split.py?python tests/codex/test_stage162_apple_full_chain_equation.py?
+- ?????Stage160 ??????? 1.5567???????? 0.8285?????????????????????????Stage161 ?????????? 0.7083?GPT-2 ????DeepSeek ?????Stage162 ??????? 0.6731?????? result_binding?????? action_route?
+- ????????????????????? apple_chain = shared_core + boundary_stability + context_bias + action_route + result_binding + result_repair + cross_model_clean??????????????????????????????
+
+
+## 2026-03-23 15:20 Stage163-165 ??
+- ??????? apple???????????? Stage163???????????Stage164??????????Stage165???????????
+- ???Stage163 ???? Stage158 ??????Stage164 ?? Stage160 ?????????????Stage165 ? apple ?????? a / r / f / g / q / b??????? / ??????? / ????? / ?????? / ????? / ????????????
+
+
+## 2026-03-23 15:23 Stage163-165 ?????????
+- ?????tests/codex/stage163_result_binding_failure_atlas.py?tests/codex/stage164_result_binding_repair_law.py?tests/codex/stage165_apple_to_language_kernel_bridge.py?
+- ?????tests/codex/test_stage163_result_binding_failure_atlas.py?tests/codex/test_stage164_result_binding_repair_law.py?tests/codex/test_stage165_apple_to_language_kernel_bridge.py?
+- ?????python -m py_compile tests/codex/stage163_result_binding_failure_atlas.py tests/codex/test_stage163_result_binding_failure_atlas.py tests/codex/stage164_result_binding_repair_law.py tests/codex/test_stage164_result_binding_repair_law.py tests/codex/stage165_apple_to_language_kernel_bridge.py tests/codex/test_stage165_apple_to_language_kernel_bridge.py?python tests/codex/test_stage163_result_binding_failure_atlas.py?python tests/codex/test_stage164_result_binding_repair_law.py?python tests/codex/test_stage165_apple_to_language_kernel_bridge.py?
+- ?????Stage163 ?? 20 ??????? 7 ????? 8 ??repair_binding ?????hard ?????Stage164 ?????? repair_law = 0.35*target_reassert + 0.30*distractor_suppression + 0.20*order_override + 0.15*tool_detach??????? 0.7594?Stage165 ?? apple_kernel_bridge = 0.18*a + 0.12*r + 0.18*f + 0.22*g + 0.12*q + 0.18*b?????? 0.7754??????? r_proxy??????? g_proxy?
+- ????????????????????? + ???? + ???? + ??????????????????????????????????????????????????????????????????????????????????????????????
+
+
+## 2026-03-23 15:27 Stage166-168 ??
+- ??????? Stage166????????Stage167?????????Stage168???-??-??????
+- ???Stage166 ?? GPT-2 ??????????????????Stage167 ???????????????????????Stage168 ??????????????????????
+
+
+## 2026-03-23 15:30 Stage166-168 ?????????
+- ?????tests/codex/stage166_category_fiber_map.py?tests/codex/stage167_difference_boundary_equation.py?tests/codex/stage168_fiber_route_recovery_closure.py?
+- ?????tests/codex/test_stage166_category_fiber_map.py?tests/codex/test_stage167_difference_boundary_equation.py?tests/codex/test_stage168_fiber_route_recovery_closure.py?
+- ?????python -m py_compile tests/codex/stage166_category_fiber_map.py tests/codex/test_stage166_category_fiber_map.py tests/codex/stage167_difference_boundary_equation.py tests/codex/test_stage167_difference_boundary_equation.py tests/codex/stage168_fiber_route_recovery_closure.py tests/codex/test_stage168_fiber_route_recovery_closure.py?python tests/codex/test_stage166_category_fiber_map.py?python tests/codex/test_stage167_difference_boundary_equation.py?python tests/codex/test_stage168_fiber_route_recovery_closure.py?
+- ?????Stage166 ??????? 0.4532????? fruit->tool????? vehicle->abstract????????? 0.0323??????????????Stage167 ????????? 0.3870?????? cross_category_separation?Stage168 ??-??-??????? 0.6604??????? recovery?????? route?
+- ???????????????????????????????????????????????????????????????????????????
+
+
+## 2026-03-23 15:44 Stage169-171 ??
+- ??????? Stage169?????????Stage170????????Stage171???-??-?????????????????????????
+- ???Stage169 ?????????????Stage170 ????????????????Stage171 ????????????????????
+## [2026-03-23 15:47] Stage169-171 完成记录
+
+### 本轮执行命令
+
+```powershell
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage169_category_delta_tensor.py tests/codex/test_stage169_category_delta_tensor.py tests/codex/stage170_fiber_bundle_probe.py tests/codex/test_stage170_fiber_bundle_probe.py tests/codex/stage171_delta_route_recovery_bridge.py tests/codex/test_stage171_delta_route_recovery_bridge.py
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage169_category_delta_tensor.py
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage170_fiber_bundle_probe.py
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage171_delta_route_recovery_bridge.py
+Get-Content tests/codex_temp/stage169_category_delta_tensor_20260323/summary.json
+Get-Content tests/codex_temp/stage170_fiber_bundle_probe_20260323/summary.json
+Get-Content tests/codex_temp/stage171_delta_route_recovery_bridge_20260323/summary.json
+```
+
+### 本轮研究推进
+
+- `Stage169（第一百六十九阶段）`：类别差分张量已形成。`pair_count = 10`，`mean_delta_strength ≈ 0.0646`，`delta_tensor_score ≈ 0.6462`。当前最强差分对是 `vehicle->abstract（交通工具到抽象对象）`，最弱差分对是 `fruit->tool（水果到工具）`。这说明跨类差分已经能被压成张量对象，但水果与工具的分离仍偏弱。
+- `Stage170（第一百七十阶段）`：纤维束探针已形成。`bundle_count = 5`，`fiber_bundle_score ≈ 0.4677`。最强纤维束类别是 `tool（工具）`，最弱是 `abstract（抽象对象）`。这说明共享纤维束确实存在，但抽象类的束流稳定性仍偏弱。
+- `Stage171（第一百七十一阶段）`：差分-路径-回收桥已形成。最优式为 `delta_route_recovery = 0.18*delta + 0.18*bundle + 0.26*route + 0.18*repair + 0.20*closure`，`bridge_score ≈ 0.7355`。最强组件是 `route（路径选路）`，最弱组件是 `bundle（纤维束）`。这说明当前系统已经能把差分、路径、修复、闭合压到同一链条里，但纤维束读法仍然是主瓶颈之一。
+
+### 当前严格判断
+
+- 当前最稳定的是 `route（路径选路）`，说明系统前向调度能力很强。
+- 当前最薄弱的不再只是单纯 `recovery（回收）`，而是“差分边界如何通过纤维束进入回收闭合”的中间桥段。
+- 这意味着要继续逼近第一性原理，下一段应重点强化 `fiber（纤维）` 与 `delta（差分）` 的可辨识性，而不能只继续堆动作路径样本。
+
+## [2026-03-23 16:02] Stage172-174 完成记录
+
+### 本轮执行命令
+
+```powershell
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage172_provenance_trace_probe.py tests/codex/test_stage172_provenance_trace_probe.py tests/codex/stage173_multi_entity_recovery_stress_test.py tests/codex/test_stage173_multi_entity_recovery_stress_test.py tests/codex/stage174_recovery_closure_equation.py tests/codex/test_stage174_recovery_closure_equation.py
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage172_provenance_trace_probe.py
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage173_multi_entity_recovery_stress_test.py
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage174_recovery_closure_equation.py
+Get-Content tests/codex_temp/stage172_provenance_trace_probe_20260323/summary.json
+Get-Content tests/codex_temp/stage173_multi_entity_recovery_stress_test_20260323/summary.json
+Get-Content tests/codex_temp/stage174_recovery_closure_equation_20260323/summary.json
+```
+
+### 本轮研究推进
+
+- `Stage172（第一百七十二阶段）`：来源痕迹探针已形成。`provenance_trace_score ≈ 0.5575`，最强组件是 `repair_trace（修复后来源痕迹）`，最弱组件是 `retained_trace（自然保留痕迹）`。这说明系统并不是完全丢失来源，而是原生保留偏弱、修复补强偏强。
+- `Stage173（第一百七十三阶段）`：多实体回收压力测试已形成。`stress_survival_score ≈ 0.5025`，最弱家族是 `repair_binding（修复绑定）`，最强家族是 `tool_interference（工具干扰）`。这说明多实体竞争下系统处于“勉强可救但不稳”的中间态。
+- `Stage174（第一百七十四阶段）`：回收闭合方程已形成。最优式为 `recovery_closure = 0.22*trace + 0.20*binding + 0.20*repair + 0.18*stress + 0.20*bridge`，`closure_score ≈ 0.5947`。最弱组件是 `binding（结果绑定）`，最强组件是 `repair（修复）`。这说明当前封闭回收的数学瓶颈不是修复能力不足，而是原生绑定能力不足。
+
+### 当前严格判断
+
+- 当前系统已经具备“路径后还能通过修复把结果收回来”的能力，但还没有具备足够强的“天然不丢对象”的能力。
+- `trace（来源痕迹）` 与 `stress（多实体压力）` 处于中等水平，说明系统存在来源信息，但在多对象竞争下容易衰减。
+- 要继续逼近第一性原理，下一阶段应重点补 `binding（原生绑定）` 与 `provenance（来源痕迹）` 的直接可测量化，而不是只继续增强修复项。
+
+## [2026-03-23 16:43] 研究方法修正：从现有数学拟合转向拼图式还原
+
+### 本轮执行命令
+
+```powershell
+Get-Date -Format "yyyy-MM-dd HH:mm"
+```
+
+### 方法修正
+
+- 当前研究方向正式修正为：**不预设现有数学体系足以描述该结构，不再优先把现象压成现有公式，而是先持续积累结构拼图。**
+- 今后的重点从“先给出数学式”切换为“先完成拼图板块”：对象共享核、差分边界、纤维复用、路径选路、结果回收、来源痕迹、多实体竞争、跨模型共同核。
+- 数学表达今后只作为阶段性压缩工具，不作为最终理论前提；如果压缩失败，不视为结构不存在，而视为当前拼图仍不完整。
+
+### 当前严格判断
+
+- 目前最危险的偏差不是数据不足，而是过早把新结构压进旧数学框架。
+- 真正应做的是持续收集可重复、可对照、可拼接的结构证据，直到拼图足够完整，再反向逼出新数学结构。
+
+### 下一阶段建议
+
+- `Stage178（第一百七十八阶段）`：拼图板块总图，把现有证据按结构层重新归档，不按公式归档。
+- `Stage179（第一百七十九阶段）`：缺口优先级图，明确哪些拼图块已经稳定，哪些仍缺关键证据。
+- `Stage180（第一百八十阶段）`：跨对象拼图扩张，把 `apple（苹果）` 扩到 `fruit / animal / tool / brand（水果 / 动物 / 工具 / 品牌）` 多对象系统。
+
+## [2026-03-23 17:05] 方法学再次收紧：停止公式图例，专注拼图发现
+
+### 本轮执行命令
+
+```powershell
+Get-Date -Format "yyyy-MM-dd HH:mm"
+```
+
+### 方法学决定
+
+- 研究原则进一步收紧为：**不再用公式给结构画图例，不以现有数学表达作为优先目标，只通过测试去发现更多拼图。**
+- 现有和后续的公式对象，一律降级为“临时压缩记录”，不再作为核心推进主线。
+- 今后主线目标改为：持续扩充拼图块、校验拼图块连接关系、识别拼图缺口、构建跨模型共同拼图板，而不是追求早期闭式表达。
+
+### 当前严格判断
+
+- 当前最需要防止的是“公式幻觉”：用一个看起来整齐的式子掩盖真实结构仍未补齐的事实。
+- 真正稀缺的不是表达，而是高质量拼图证据，尤其是跨对象、跨类别、跨模型、跨路径、跨回收阶段的稳定证据。
+
+### 后续任务重排
+
+- `Stage178（第一百七十八阶段）`：拼图板块总图
+- `Stage179（第一百七十九阶段）`：拼图缺口优先级图
+- `Stage180（第一百八十阶段）`：跨对象拼图扩张
+- `Stage181（第一百八十一阶段）`：跨模型共同拼图板
+
+## [2026-03-23 17:11] Stage178-181 完成记录
+
+### 本轮执行命令
+
+```powershell
+Get-ChildItem tests/codex | Select-Object -ExpandProperty Name | Select-String "stage17|test_stage17|stage18|test_stage18"
+Get-Content research/gpt5/docs/AGI_GPT5_LANGUAGE.md -Head 80
+Get-Content tests/codex/stage174_recovery_closure_equation.py
+Get-ChildItem tests/codex_temp | Select-Object -ExpandProperty Name | Select-String "stage139|stage140|stage143|stage154|stage155|stage156|stage157|stage158|stage159|stage160|stage163|stage166|stage172|stage173|stage174"
+Get-Content tests/codex_temp/stage154_apple_fruit_shared_core_20260323/summary.json
+Get-Content tests/codex_temp/stage155_apple_boundary_crack_map_20260323/summary.json
+Get-Content tests/codex_temp/stage156_apple_context_bias_shift_20260323/summary.json
+Get-Content tests/codex_temp/stage159_triple_model_apple_kernel_20260323/summary.json
+Get-Content tests/codex_temp/stage139_qwen3_language_validation_suite_20260323/summary.json
+Get-Content tests/codex_temp/stage140_deepseek_language_validation_suite_20260323/summary.json
+Get-Content tests/codex_temp/stage143_triple_model_joint_variable_inversion_20260323/summary.json
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage178_puzzle_board_overview.py tests/codex/test_stage178_puzzle_board_overview.py tests/codex/stage179_puzzle_gap_priority_map.py tests/codex/test_stage179_puzzle_gap_priority_map.py tests/codex/stage180_cross_object_puzzle_expansion.py tests/codex/test_stage180_cross_object_puzzle_expansion.py tests/codex/stage181_cross_model_shared_puzzle_board.py tests/codex/test_stage181_cross_model_shared_puzzle_board.py
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage178_puzzle_board_overview.py
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage179_puzzle_gap_priority_map.py
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage180_cross_object_puzzle_expansion.py
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage181_cross_model_shared_puzzle_board.py
+Get-Content tests/codex_temp/stage178_puzzle_board_overview_20260323/summary.json
+Get-Content tests/codex_temp/stage179_puzzle_gap_priority_map_20260323/summary.json
+Get-Content tests/codex_temp/stage180_cross_object_puzzle_expansion_20260323/summary.json
+Get-Content tests/codex_temp/stage181_cross_model_shared_puzzle_board_20260323/summary.json
+Get-Date -Format "yyyy-MM-dd HH:mm"
+```
+
+### 本轮研究推进
+
+- `Stage178（第一百七十八阶段）`：拼图板块总图已形成。当前共 `10` 个拼图块，其中稳定块只有 `2` 个，分别是 `动作选路` 与 `结果修复`；头号弱块是 `结果绑定`，其次是 `边界裂缝`。
+- `Stage179（第一百七十九阶段）`：拼图缺口优先级图已形成。一级缺口有 `2` 个：`结果绑定` 与 `边界裂缝`。二级缺口包括 `类别纤维`、`跨模型共同核`、`多实体压力`、`来源痕迹`。
+- `Stage180（第一百八十阶段）`：跨对象拼图扩张已形成。当前对象域数量 `5`，可直接扩张域数量 `0`。`fruit（水果）`、`tool（工具）`、`vehicle（交通工具）` 勉强进入可推进区，`abstract（抽象对象）` 仍是最弱缺口。
+- `Stage181（第一百八十一阶段）`：跨模型共同拼图板已形成。共同稳定块有 `2` 个：`复杂语篇重提` 与 `条件场`；共同薄弱块有 `2` 个：`副词动态选路` 与 `结果链`。`苹果共同核` 当前仍处于共同过渡态。
+
+### 文档更新
+
+- 已将“不要用公式完成图例、只测试寻找更多拼图”的研究原则添加到 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md` 文件最前面，作为后续语言研究的总前提。
+
+### 当前严格判断
+
+- 当前最危险的误判不是缺数据，而是误以为已有少量稳定块就足以代表整套结构。
+- 目前更准确的状态是：前向链已有稳定板块，但边界、绑定、跨模型共同选路仍明显缺块。
+- 接下来主线应继续围绕“补缺块、接拼图、扩对象、看共同核”推进，而不是恢复公式化主线。
+
+## [2026-03-23 17:28] Stage182-184 完成记录与语言文档新增“理论拼图”章节
+
+### 本轮执行命令
+
+```powershell
+rg -n "^## " research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+Get-Content tests/codex_temp/stage157_apple_action_route_probe_20260323/summary.json
+Get-Content tests/codex_temp/stage158_apple_result_binding_probe_20260323/summary.json
+Get-Content tests/codex_temp/stage160_apple_result_repair_map_20260323/summary.json
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage182_boundary_crack_puzzle_expansion.py tests/codex/test_stage182_boundary_crack_puzzle_expansion.py tests/codex/stage183_result_binding_puzzle_expansion.py tests/codex/test_stage183_result_binding_puzzle_expansion.py tests/codex/stage184_cross_model_puzzle_expansion.py tests/codex/test_stage184_cross_model_puzzle_expansion.py
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage182_boundary_crack_puzzle_expansion.py
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage183_result_binding_puzzle_expansion.py
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage184_cross_model_puzzle_expansion.py
+Get-Content tests/codex_temp/stage182_boundary_crack_puzzle_expansion_20260323/summary.json
+Get-Content tests/codex_temp/stage183_result_binding_puzzle_expansion_20260323/summary.json
+Get-Content tests/codex_temp/stage184_cross_model_puzzle_expansion_20260323/summary.json
+rg -n "^## 6\\. 理论拼图|^### 6\\.[1-9]" research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+Get-Content research/gpt5/docs/AGI_GPT5_LANGUAGE.md -Tail 120
+```
+
+### 本轮研究推进
+
+- `Stage182（第一百八十二阶段）`：边界裂缝拼图扩张已形成。`boundary_family_mean = 0.4000`，`cross_category_separation ≈ 0.0323`，`boundary_expansion_score ≈ 0.3819`。最弱家族是 `apple_brand_phrase（苹果品牌短语）`，最强家族是 `apple_literal（苹果字面义）`。这说明当前边界拼图仍然极弱，且品牌义、食物义、颜色义都是主要冲突源。
+- `Stage183（第一百八十三阶段）`：结果绑定拼图扩张已形成。`result_binding_expansion_score ≈ 0.5765`。五块子拼图中最弱是 `原生绑定`，最强是 `修复能力`。这再次说明系统不是完全不会回收，而是“天然回收弱、修复回收强”。
+- `Stage184（第一百八十四阶段）`：跨模型共同拼图扩张已形成。当前最强共同块是 `条件场`，最弱共同块是 `副词动态选路`；模型间分歧最大的也是 `副词动态选路`，分歧最小的是 `结果链`。这说明跨模型真正稳定的不是所有动态现象，而是少数更深层的共同结构。
+
+### 文档更新
+
+- 已在 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md` 中于“第五章 跨模型总结”之后新增“第六章 理论拼图”。
+- 新章节已系统整理：
+  - 当前为什么要用拼图而不是公式
+  - 当前已有拼图块的分层状态
+  - 拼图缺口优先级
+  - 跨对象拼图现状
+  - 边界裂缝拼图现状
+  - 结果绑定拼图现状
+  - 跨模型共同拼图现状
+  - 整体拼图理解与下一阶段任务块
+
+### 当前严格判断
+
+- 当前前向链条继续比后向链条强，说明“走出去”比“收回来”容易。
+- 边界裂缝与结果绑定仍然是当前最核心的两块缺图，且这两块互相纠缠。
+- 跨模型真正共同稳定的结构仍然偏少，说明当前理论拼图还处于“主框架已现、细部缺块很多”的阶段。
+
+## [2026-03-23 17:53] Stage185-187 完成记录
+
+### 本轮执行命令
+
+```powershell
+Get-ChildItem tests/codex | Select-Object -ExpandProperty Name | Select-String "stage18|test_stage18"
+Get-Content tests/codex_temp/stage182_boundary_crack_puzzle_expansion_20260323/summary.json
+Get-Content tests/codex_temp/stage183_result_binding_puzzle_expansion_20260323/summary.json
+Get-Content tests/codex_temp/stage184_cross_model_puzzle_expansion_20260323/summary.json
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage185_boundary_crack_system_expansion.py tests/codex/test_stage185_boundary_crack_system_expansion.py tests/codex/stage186_result_binding_system_expansion.py tests/codex/test_stage186_result_binding_system_expansion.py tests/codex/stage187_cross_model_shared_puzzle_strengthening.py tests/codex/test_stage187_cross_model_shared_puzzle_strengthening.py
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage185_boundary_crack_system_expansion.py
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage186_result_binding_system_expansion.py
+d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage187_cross_model_shared_puzzle_strengthening.py
+Get-Content tests/codex_temp/stage185_boundary_crack_system_expansion_20260323/summary.json
+Get-Content tests/codex_temp/stage186_result_binding_system_expansion_20260323/summary.json
+Get-Content tests/codex_temp/stage187_cross_model_shared_puzzle_strengthening_20260323/summary.json
+```
+
+### 本轮研究推进
+
+- `Stage185（第一百八十五阶段）`：边界裂缝系统扩张已形成。`family_count = 5`，其中 `crack_family_count = 3`。最弱家族是 `apple_brand_phrase（苹果品牌短语）`，最强家族是 `orange_color_phrase（橙色短语）`。这说明当前边界问题不是单点异常，而是已经形成系统性的裂缝家族。
+- `Stage186（第一百八十六阶段）`：结果绑定系统扩张已形成。当前 `piece_count = 6`，弱块数 `2`，最弱仍是 `原生绑定`，最强仍是 `修复能力`。这再次确认当前系统的回收问题主要不在修复，而在天然绑定能力不足。
+- `Stage187（第一百八十七阶段）`：跨模型共同拼图补强已形成。当前需要优先补强的共同拼图片有 `2` 个：`副词动态选路` 与 `结果链`。其中头号补强目标是 `副词动态选路`，因为它既弱又存在较大模型间分歧。
+
+### 当前严格判断
+
+- 现在已经可以更明确地说：前向路径、条件场、修复项比“边界”和“天然回收”成熟得多。
+- 神经元级建模如果要真正触及核心，不应先从最强块入手，而应优先针对“边界裂缝”“原生绑定”“跨模型共同弱块”做结构建模。
+
+## [2026-03-23 18:05] 神经元级编码建模思路记录
+- 用户问题：如果要在神经元级别完成编码分析，实现共享、区分、复用、走路径、又极高效这些能力，应该怎么建模。
+- 当前研究立场：不再用旧数学公式强行封装结构，转为拼图工程与角色化神经元束建模。
+- 当前结论：对象不应建模为单神经元或单向量，而应建模为多种角色化神经元束的动态组合，至少包括共享束、差分束、纤维复用束、路径触发束、来源痕迹束、结果回收束、竞争抑制束、修复束。
+- 当前证据依据：Stage185 表明边界裂缝仍是系统性硬伤；Stage186 表明原生绑定最弱而修复能力最强；Stage187 表明跨模型最该优先补强的是副词动态选路，其次是结果链。
+- 下一阶段建议：Stage188 苹果神经元角色卡；Stage189 家族神经元束图；Stage190 跨模型神经元角色共同核。
+
+## [2026-03-23 19:17] Stage188-190 完成记录
+- 新增脚本：tests/codex/stage188_apple_neuron_role_card.py
+- 新增脚本：tests/codex/stage189_family_neuron_bundle_map.py
+- 新增脚本：tests/codex/stage190_cross_model_neuron_role_consensus.py
+- 新增测试：tests/codex/test_stage188_apple_neuron_role_card.py
+- 新增测试：tests/codex/test_stage189_family_neuron_bundle_map.py
+- 新增测试：tests/codex/test_stage190_cross_model_neuron_role_consensus.py
+- 执行命令：python -m py_compile tests/codex/stage188_apple_neuron_role_card.py tests/codex/test_stage188_apple_neuron_role_card.py tests/codex/stage189_family_neuron_bundle_map.py tests/codex/test_stage189_family_neuron_bundle_map.py tests/codex/stage190_cross_model_neuron_role_consensus.py tests/codex/test_stage190_cross_model_neuron_role_consensus.py
+- 执行命令：python tests/codex/test_stage188_apple_neuron_role_card.py
+- 执行命令：python tests/codex/test_stage189_family_neuron_bundle_map.py
+- 执行命令：python tests/codex/test_stage190_cross_model_neuron_role_consensus.py
+- 测试结果：以上测试全部通过。
+- 研究进度：Stage188 表明苹果神经元角色卡里最强是路径束，最弱是回收束；Stage189 表明家族神经元束当前只有少量可复用束，更多仍是粘连束或薄弱束；Stage190 表明跨模型共同角色里最强是条件场角色，最弱是副词动态选路角色。
+- 当前判断：如果共享束、差分束、纤维束、路径束、来源痕迹束、回收束是同一个三维编码机制的不同显影，那么破解方向不应是分别拟合每束，而应是寻找同一底层三维组织在不同阶段、不同视角、不同任务下的投影关系与切面对应。
+
+## [2026-03-23 19:40] Stage191-193 与语言文档更新记录
+- 新增脚本：tests/codex/stage191_shared_neuron_overlap_tracing.py
+- 新增脚本：tests/codex/stage192_time_unfolded_role_slicing.py
+- 新增脚本：tests/codex/stage193_cross_model_invariant_3d_blocks.py
+- 新增测试：tests/codex/test_stage191_shared_neuron_overlap_tracing.py
+- 新增测试：tests/codex/test_stage192_time_unfolded_role_slicing.py
+- 新增测试：tests/codex/test_stage193_cross_model_invariant_3d_blocks.py
+- 执行命令：python -m py_compile tests/codex/stage191_shared_neuron_overlap_tracing.py tests/codex/test_stage191_shared_neuron_overlap_tracing.py tests/codex/stage192_time_unfolded_role_slicing.py tests/codex/test_stage192_time_unfolded_role_slicing.py tests/codex/stage193_cross_model_invariant_3d_blocks.py tests/codex/test_stage193_cross_model_invariant_3d_blocks.py
+- 执行命令：python tests/codex/test_stage191_shared_neuron_overlap_tracing.py
+- 执行命令：python tests/codex/test_stage192_time_unfolded_role_slicing.py
+- 执行命令：python tests/codex/test_stage193_cross_model_invariant_3d_blocks.py
+- 测试结果：以上测试全部通过。
+- 关键结果：Stage191 显示跨阶段总重叠数量为 16，同一底层拼块候选分数约 0.6899；Stage192 显示时间展开切片连续性分数约 0.5599，最强切片是中段选路切片；Stage193 显示跨模型不变拼块总分约 0.6103，最强不变块是条件场，最弱不变块是副词动态选路。
+- 文档更新：已将 Stage188-193 的分析和“三维编码拼块还原视角”追加到 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 尾部，内容包括当前新增判断、苹果神经元角色卡、家族神经元束图、共享神经元重叠追踪、时间展开角色切片、跨模型不变三维拼块、整体理解、硬伤与下一阶段任务。
