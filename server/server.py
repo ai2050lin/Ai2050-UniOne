@@ -20,7 +20,7 @@ sys.path.insert(1, server_dir)
 sys.path.insert(1, os.path.join(root_dir, "scripts"))
 
 from contextlib import asynccontextmanager
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import torch
@@ -1603,6 +1603,141 @@ async def get_agi_progress():
         }
     except Exception as e:
         return {"status": "error", "message": str(e)}
+
+
+def _default_research_audit_payload() -> Dict[str, Any]:
+    return {
+        "headline_metrics": {
+            "stage71_summary_dependency_fan_in": 14,
+            "stage80_hardcoded_scenario_count": 5,
+            "stage82_hardcoded_law_count": 3,
+            "stage82_runtime_seconds": 31.54,
+            "stage82_best_law_name": "sqrt",
+            "stage82_best_law_margin": 0.0037,
+            "roundtrip_only_test_count": 4,
+            "derived_falsification_flag": True,
+            "best_law_fragility_flag": True,
+            "status_label_mismatch_flag": True,
+            "evidence_independence_score": 0.14,
+            "test_strength_score": 0.02,
+            "theory_correctness_confidence": 0.158,
+        },
+        "audit_findings": [
+            "高层统一分数对下层摘要分数有明显回灌，证据独立性不足。",
+            "可判伪边界包含脚本内构造出的 synthetic mismatch，不属于强外部反例。",
+            "Stage82 的最优律虽然仍是 sqrt，但与第二名的优势很小，当前结论脆弱。",
+            "现有测试多为阈值断言加落盘回读，主要证明脚本稳定，不足以证明理论正确。",
+        ],
+        "status": {
+            "status_short": "unproven_explanatory_framework",
+            "status_label": "当前理论更像解释框架而非已被强证据锁定的第一性原理定理体系。",
+        },
+        "project_readout": {
+            "summary": "这一轮不是继续给理论加分，而是反过来审计证据独立性、判伪真实性、最优律稳健性和测试强度。",
+            "next_question": "下一步应把 synthetic mismatch 改成真正外部生成的反例，并增加参数扰动与顺序打乱测试，看 sqrt 优势是否仍然成立。",
+        },
+        "dependency_graph": {
+            "stage71": [
+                "stage70_direct_identity_lock",
+                "stage72_language_projection_covariance",
+                "stage73_falsifiability_boundary_hardening",
+                "stage80_intelligence_closure_failure_map",
+                "stage81_forward_backward_unification",
+                "stage82_novelty_generalization_repair",
+                "stage84_falsifiable_computation_core",
+            ],
+            "stage82": [
+                "stage76_sqrt_repair_generalization",
+                "stage79_route_conflict_native_measure",
+                "stage80_intelligence_closure_failure_map",
+                "stage81_forward_backward_unification",
+            ],
+            "stage84": [
+                "stage72_language_projection_covariance",
+                "stage73_falsifiability_boundary_hardening",
+                "stage79_route_conflict_native_measure",
+                "stage82_novelty_generalization_repair",
+                "stage83_forward_backward_theorem_kernel",
+                "stage88_external_counterexample_expansion",
+            ],
+        },
+        "backfeed_paths": [],
+        "audit_checks": [
+            {
+                "name": "independent_evidence_chain",
+                "risk_level": "high",
+                "passed": False,
+                "detail": "高层结论当前仍依赖较多下层摘要块。",
+            },
+            {
+                "name": "synthetic_falsification",
+                "risk_level": "medium",
+                "passed": False,
+                "detail": "反例仍主要来自内部构造样本。",
+            },
+            {
+                "name": "candidate_margin_strength",
+                "risk_level": "high",
+                "passed": False,
+                "detail": "最优律领先幅度仍然较小，需要继续扩大优势边际。",
+            },
+        ],
+        "source_path": "tests/codex_temp/stage83_theory_evidence_audit_20260322/summary.json",
+        "evidence_audit_source_path": "tests/codex_temp/stage87_evidence_independence_audit_20260322/summary.json",
+        "updated_at": None,
+    }
+
+
+def _load_latest_stage_summary(project_root: str, pattern: str) -> Optional[Tuple[Dict[str, Any], Path]]:
+    stage_root = Path(project_root) / "tests" / "codex_temp"
+    candidates = sorted(
+        stage_root.glob(pattern),
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
+    )
+    if not candidates:
+        return None
+
+    latest_path = candidates[0]
+    try:
+        payload = json.loads(latest_path.read_text(encoding="utf-8"))
+        return payload, latest_path
+    except Exception:
+        return None
+
+
+def _load_latest_research_audit_payload(project_root: str) -> Dict[str, Any]:
+    fallback = _default_research_audit_payload()
+    stage83_result = _load_latest_stage_summary(project_root, "stage83_theory_evidence_audit_*/summary.json")
+    if stage83_result:
+        payload, latest_path = stage83_result
+        payload["source_path"] = str(latest_path.relative_to(project_root)).replace("\\", "/")
+        payload["updated_at"] = int(latest_path.stat().st_mtime)
+    else:
+        payload = fallback
+
+    stage87_result = _load_latest_stage_summary(project_root, "stage87_evidence_independence_audit_*/summary.json")
+    if stage87_result:
+        evidence_payload, evidence_path = stage87_result
+        payload["dependency_graph"] = evidence_payload.get("dependency_graph", payload.get("dependency_graph", {}))
+        payload["backfeed_paths"] = evidence_payload.get("backfeed_paths", payload.get("backfeed_paths", []))
+        payload["audit_checks"] = evidence_payload.get("audit_checks", payload.get("audit_checks", []))
+        payload["evidence_audit_status"] = evidence_payload.get("status")
+        payload["evidence_audit_source_path"] = str(evidence_path.relative_to(project_root)).replace("\\", "/")
+    elif "evidence_audit_source_path" not in payload:
+        payload["evidence_audit_source_path"] = fallback.get("evidence_audit_source_path")
+
+    return payload
+
+
+@app.get("/api/v1/research/audit/latest")
+async def get_latest_research_audit():
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    try:
+        payload = _load_latest_research_audit_payload(project_root)
+        return {"status": "success", "audit": payload}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/nfb_ra/data")
 async def nfb_ra_data_api():

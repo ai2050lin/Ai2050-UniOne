@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Fingerprint, Network, TriangleAlert, Cpu } from 'lucide-react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine } from 'recharts';
+import SafeResponsiveContainer from '../components/shared/SafeResponsiveContainer';
 
 // 使用刚刚实验导出的 降维坍缩率(svd) 和 全新突变孤立神经元数 数据
 const bindingData = [
@@ -52,7 +53,7 @@ const HyperSpaceBindingGraph = () => {
                 padding: '24px',
                 border: '1px solid rgba(255,255,255,0.03)'
             }}>
-                <ResponsiveContainer width="100%" height="100%">
+                <SafeResponsiveContainer minHeight={260}>
                     <AreaChart data={bindingData} margin={{ top: 20, right: 30, left: 10, bottom: 10 }}>
                         <defs>
                             <linearGradient id="colorMutate" x1="0" y1="0" x2="0" y2="1">
@@ -99,7 +100,7 @@ const HyperSpaceBindingGraph = () => {
                         <Area type="monotone" dataKey="低秩坍缩绝对主干率" stroke="#8b5cf6" strokeWidth={3} fill="url(#colorSvd)" activeDot={{ r: 6 }} />
                         <Area type="monotone" dataKey="线性加法残余概率" stroke="#dc2626" strokeWidth={2} fill="transparent" strokeDasharray="5 5" />
                     </AreaChart>
-                </ResponsiveContainer>
+                </SafeResponsiveContainer>
             </div>
 
             {/* 底栏结论区 */}

@@ -20,6 +20,7 @@ import { CompositionalVisualization3D, CurvatureField3D, FeatureVisualization3D,
 import TDAVisualization3D from './TDAVisualization3D';
 import { AGIChatPanel } from './AGIChatPanel';
 import ICSPBPanel from './components/FiberNetPanel';
+import LanguageResearchControlPanel from './components/LanguageResearchControlPanel';
 
 import { locales } from './locales';
 import { INPUT_PANEL_TABS, STRUCTURE_TABS_V2, COLORS } from './config/panels';
@@ -2654,9 +2655,10 @@ export default function App() {
           <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
             {/* Main Content: Apple Neuron control cards */}
             {inputPanelTab === 'main' && (
-              <div className="animate-fade-in">
-                <AppleNeuronControlPanels workspace={appleNeuronWorkspace} />
-              </div>
+              <LanguageResearchControlPanel
+                workspace={appleNeuronWorkspace}
+                legacyControls={<AppleNeuronControlPanels workspace={appleNeuronWorkspace} />}
+              />
             )}
 
             {/* SNN Content */}
@@ -3797,6 +3799,7 @@ export default function App() {
               nodeDisplayEmphasis={appleNeuronWorkspace.nodeDisplayEmphasis}
               animationMode={appleNeuronWorkspace.animationMode}
               scanMechanismData={appleNeuronWorkspace.scanMechanismData}
+              languageFocus={appleNeuronWorkspace.languageFocus}
             />
           ) : (
             <>

@@ -8,7 +8,8 @@ import {
 } from "@/components/ui/select";
 import { Activity, AlertCircle, TrendingUp, Users, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
+import SafeResponsiveContainer from './components/shared/SafeResponsiveContainer';
 
 const TrainingMonitor = () => {
   const [agents, setAgents] = useState([]);
@@ -200,7 +201,7 @@ const TrainingMonitor = () => {
             <CardTitle className="text-white text-sm font-medium">Accuracy Comparison ({selectedAgentId})</CardTitle>
           </CardHeader>
           <CardContent className="h-[320px] p-4">
-            <ResponsiveContainer width="100%" height="100%">
+            <SafeResponsiveContainer minHeight={240}>
               <LineChart data={trainingData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.5} />
                 <XAxis dataKey="epoch" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
@@ -214,7 +215,7 @@ const TrainingMonitor = () => {
                 <Line type="monotone" dataKey="trans_acc" name="Transformer" stroke="#60a5fa" strokeWidth={2} dot={false} activeDot={{ r: 6 }} />
                 <Line type="monotone" dataKey="fiber_acc" name="FiberNet" stroke="#4ade80" strokeWidth={2} dot={false} activeDot={{ r: 6 }} />
               </LineChart>
-            </ResponsiveContainer>
+            </SafeResponsiveContainer>
           </CardContent>
         </Card>
 
@@ -223,7 +224,7 @@ const TrainingMonitor = () => {
             <CardTitle className="text-white text-sm font-medium">Curvature vs Loss ({selectedAgentId})</CardTitle>
           </CardHeader>
           <CardContent className="h-[320px] p-4">
-            <ResponsiveContainer width="100%" height="100%">
+            <SafeResponsiveContainer minHeight={240}>
               <LineChart data={trainingData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.5} />
                 <XAxis dataKey="epoch" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
@@ -237,7 +238,7 @@ const TrainingMonitor = () => {
                 <Line yAxisId="left" type="monotone" dataKey="fiber_curv" name="Fiber Curvature" stroke="#ef4444" strokeWidth={2} dot={false} activeDot={{ r: 6 }} />
                 <Line yAxisId="right" type="monotone" dataKey="trans_loss" name="Transformer Loss" stroke="#f59e0b" strokeWidth={2} dot={false} activeDot={{ r: 6 }} />
               </LineChart>
-            </ResponsiveContainer>
+            </SafeResponsiveContainer>
           </CardContent>
         </Card>
       </div>

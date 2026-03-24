@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Activity, MoveRight, Shuffle, GitCommit } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine } from 'recharts';
+import SafeResponsiveContainer from '../components/shared/SafeResponsiveContainer';
 
 // 使用刚刚实验导出的 0.988 平行率 和 0.14 低交叉干涉率 数据
 const arithmeticData = [
@@ -53,7 +54,7 @@ const ConceptVectorAlgebraGraph = () => {
                 padding: '24px',
                 border: '1px solid rgba(255,255,255,0.05)'
             }}>
-                <ResponsiveContainer width="100%" height="100%">
+                <SafeResponsiveContainer minHeight={260}>
                     <BarChart data={arithmeticData} margin={{ top: 20, right: 30, left: 10, bottom: 10 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" vertical={false} />
                         <XAxis
@@ -104,7 +105,7 @@ const ConceptVectorAlgebraGraph = () => {
                             </linearGradient>
                         </defs>
                     </BarChart>
-                </ResponsiveContainer>
+                </SafeResponsiveContainer>
             </div>
 
             {/* 底端模块解说与数学解释 */}

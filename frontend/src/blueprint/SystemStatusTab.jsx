@@ -1,4 +1,5 @@
 import { Activity, Brain, CheckCircle, Search, X } from 'lucide-react';
+import { useState } from 'react';
 
 const BrainModel = () => (
   <div
@@ -159,6 +160,7 @@ export const SystemStatusTab = ({
   const runtimeLanguage = statusData?.runtime_language || {};
   const phaseaRuntime = statusData?.phasea_runtime || {};
   const researchOverview = statusData?.research_overview || {};
+  const [expandedParam, setExpandedParam] = useState(null);
 
   return (
     <div style={{ animation: 'roadmapFade 0.5s ease-out' }}>
@@ -574,7 +576,7 @@ export const SystemStatusTab = ({
                   cursor: 'pointer',
                   transition: 'all 0.3s',
                 }}
-                onClick={() => {}}
+                onClick={() => setExpandedParam(expandedParam === i ? null : i)}
               >
                 <div style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '6px', fontWeight: 'bold' }}>{p.name}</div>
                 <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#00d2ff', marginBottom: '6px' }}>{p.value}</div>

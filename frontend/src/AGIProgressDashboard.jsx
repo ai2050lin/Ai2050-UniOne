@@ -10,9 +10,12 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import DNNAnalysisPanel from './components/evaluation/DNNAnalysisPanel';
 import MilestoneProgressPanel from './components/evaluation/MilestoneProgressPanel';
+import ProgressRiskDualAxis from './components/evaluation/ProgressRiskDualAxis';
 import RouteABComparePanel from './components/evaluation/RouteABComparePanel';
 import RouteScoreTrendPanel from './components/evaluation/RouteScoreTrendPanel';
 import RouteTimelineBoard from './components/evaluation/RouteTimelineBoard';
+import StageSwimlaneBoard from './components/evaluation/StageSwimlaneBoard';
+import TheoryAuditPanel from './components/evaluation/TheoryAuditPanel';
 import WeeklyReportPanel from './components/evaluation/WeeklyReportPanel';
 import { API_ENDPOINTS } from './config/api';
 
@@ -40,6 +43,9 @@ export const AGIProgressDashboard = () => {
   const [timeline, setTimeline] = useState(null);
   const [timelineLoading, setTimelineLoading] = useState(true);
   const [timelineError, setTimelineError] = useState(null);
+  const [auditData, setAuditData] = useState(null);
+  const [auditLoading, setAuditLoading] = useState(true);
+  const [auditError, setAuditError] = useState(null);
 
   useEffect(() => {
     const progressUrl = API_ENDPOINTS.agi.test.replace('/agi/test', '/agi/progress');
@@ -69,6 +75,19 @@ export const AGIProgressDashboard = () => {
         setTimelineError('无法加载路线测试时间线');
       })
       .finally(() => setTimelineLoading(false));
+
+    fetchJson(API_ENDPOINTS.research.auditLatest)
+      .then((payload) => {
+        if (payload?.status !== 'success') {
+          throw new Error(payload?.message || 'invalid audit payload');
+        }
+        setAuditData(payload.audit || null);
+      })
+      .catch((err) => {
+        console.error('audit fetch error:', err);
+        setAuditError('无法加载严格审查结果');
+      })
+      .finally(() => setAuditLoading(false));
   }, []);
 
   const phases = useMemo(() => asArray(progressData?.phases), [progressData]);
@@ -117,6 +136,38 @@ export const AGIProgressDashboard = () => {
       </div>
 
       <div className="flex-1 overflow-y-auto p-6 space-y-8">
+        <section>
+          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <TrendingUp className="text-blue-400" size={18} />
+            研究驾驶舱总览
+          </h2>
+          <div className="grid grid-cols-1 xl:grid-cols-[1.35fr,1fr] gap-4">
+            <ProgressRiskDualAxis
+              progressData={progressData}
+              timeline={timeline}
+              auditData={auditData}
+            />
+            <TheoryAuditPanel
+              auditData={auditData}
+              loading={auditLoading}
+              error={auditError}
+            />
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <Clock className="text-cyan-400" size={18} />
+            阶段泳道总览
+          </h2>
+          <StageSwimlaneBoard
+            phases={phases}
+            timeline={timeline}
+            auditData={auditData}
+            logs={logs}
+          />
+        </section>
+
         <section>
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <CheckCircle2 className="text-green-400" size={18} />

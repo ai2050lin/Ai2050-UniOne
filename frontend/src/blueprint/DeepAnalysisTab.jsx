@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { GeminiTab } from './GeminiTab';
-import { GPT5Tab } from './GPT5Tab';
-import { GLM5Tab } from './GLM5Tab';
+import React, { Suspense, lazy, useMemo, useState } from 'react';
+
+const GeminiTab = lazy(() => import('./GeminiTab').then((module) => ({ default: module.GeminiTab })));
+const GPT5Tab = lazy(() => import('./GPT5Tab').then((module) => ({ default: module.GPT5Tab })));
+const GLM5Tab = lazy(() => import('./GLM5Tab').then((module) => ({ default: module.GLM5Tab })));
 
 export const DeepAnalysisTab = ({
     evidenceDrivenPlan,
@@ -13,6 +14,22 @@ export const DeepAnalysisTab = ({
 }) => {
     const [activeModelTab, setActiveModelTab] = useState('Gemini');
     const modelTabs = ['Gemini', 'GPT5', 'GLM5'];
+    const ActiveTabComponent = useMemo(() => {
+        if (activeModelTab === 'Gemini') return GeminiTab;
+        if (activeModelTab === 'GPT5') return GPT5Tab;
+        return GLM5Tab;
+    }, [activeModelTab]);
+
+    const activeTabProps = activeModelTab === 'GPT5'
+        ? {
+            evidenceDrivenPlan,
+            improvements,
+            expandedImprovementPhase,
+            setExpandedImprovementPhase,
+            expandedImprovementTest,
+            setExpandedImprovementTest,
+        }
+        : {};
 
     return (
         <div style={{ animation: 'roadmapFade 0.6s ease-out', maxWidth: '1000px', margin: '0 auto' }}>
@@ -53,20 +70,25 @@ export const DeepAnalysisTab = ({
                 </div>
 
                 {/* Tab 内容区 */}
-                {activeModelTab === 'Gemini' ? (
-                    <GeminiTab />
-                ) : activeModelTab === 'GPT5' ? (
-                    <GPT5Tab
-                        evidenceDrivenPlan={evidenceDrivenPlan}
-                        improvements={improvements}
-                        expandedImprovementPhase={expandedImprovementPhase}
-                        setExpandedImprovementPhase={setExpandedImprovementPhase}
-                        expandedImprovementTest={expandedImprovementTest}
-                        setExpandedImprovementTest={setExpandedImprovementTest}
-                    />
-                ) : (
-                    <GLM5Tab />
-                )}
+                <Suspense
+                    fallback={(
+                        <div
+                            style={{
+                                padding: '22px',
+                                borderRadius: '16px',
+                                border: '1px solid rgba(255,255,255,0.08)',
+                                background: 'rgba(255,255,255,0.03)',
+                                color: '#cbd5e1',
+                                fontSize: '13px',
+                                lineHeight: '1.7',
+                            }}
+                        >
+                            正在分批加载 {activeModelTab} 深度分析内容...
+                        </div>
+                    )}
+                >
+                    <ActiveTabComponent {...activeTabProps} />
+                </Suspense>
             </div>
         </div>
     );

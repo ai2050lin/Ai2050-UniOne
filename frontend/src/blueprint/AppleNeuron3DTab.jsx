@@ -2,6 +2,7 @@ import { Html, Line, OrbitControls, PerspectiveCamera, Text } from '@react-three
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Activity, ArrowRightLeft, BarChart2, CheckCircle, GitBranch, Network, Scale, Search, Sparkles, Target } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { AUDIT_3D_FOCUS_EVENT, readPersistedAudit3DFocus } from './audit3dBridge';
 
 const LAYER_COUNT = 28;
 const DFF = 18944;
@@ -222,6 +223,42 @@ const THEORY_OBJECT_MODE_MAP = {
   protocol_bridge: ['cross_layer_transport', 'minimal_circuit', 'robustness'],
 };
 const FEATURE_AXES = ['color', 'taste', 'shape', 'category'];
+
+const DEFAULT_LANGUAGE_FOCUS = {
+  researchLayer: 'static_encoding',
+  objectGroup: 'fruit',
+  taskGroup: 'translation',
+  roleGroup: 'object',
+  structureOverlays: ['shared_base', 'local_delta', 'path_amplification'],
+  modelKey: 'gpt2',
+  stageKey: 'stage260',
+  compareMode: 'single_model',
+  riskFocus: 'fidelity',
+};
+
+const LANGUAGE_RESEARCH_LAYER_META = {
+  static_encoding: { label: '静态编码层', color: '#8fd4ff' },
+  dynamic_route: { label: '动态路径层', color: '#5eead4' },
+  result_recovery: { label: '结果回收层', color: '#fbbf24' },
+  propagation_encoding: { label: '传播编码层', color: '#f87171' },
+  semantic_roles: { label: '语义角色层', color: '#c084fc' },
+};
+
+const LANGUAGE_OVERLAY_META = {
+  shared_base: { label: '共享基底', color: '#60a5fa' },
+  local_delta: { label: '局部差分', color: '#f97316' },
+  path_amplification: { label: '路径放大', color: '#22c55e' },
+  semantic_roles: { label: '语义角色', color: '#a78bfa' },
+  fidelity: { label: '来源保真', color: '#fb7185' },
+};
+
+const LANGUAGE_RISK_META = {
+  fidelity: '天然来源保真低',
+  competition: '同类高竞争边界脆弱',
+  closure: '修复强于原生闭合',
+  brand: '品牌义边界弱',
+  cross_model: '跨模型硬主核仍少',
+};
 
 const DNN_RESEARCH_SNAPSHOT = {
   standardizedUnits: 1722,
@@ -2095,6 +2132,140 @@ function TheoryObjectOverlay({ theoryObjectMeta = null, prediction = null, nodes
   );
 }
 
+function averageScenePosition(nodes = []) {
+  if (!Array.isArray(nodes) || nodes.length === 0) return [0, 0, 0];
+  const total = nodes.reduce((acc, node) => {
+    const position = Array.isArray(node?.position) ? node.position : [0, 0, 0];
+    acc[0] += position[0] || 0;
+    acc[1] += position[1] || 0;
+    acc[2] += position[2] || 0;
+    return acc;
+  }, [0, 0, 0]);
+  return total.map((value) => value / nodes.length);
+}
+
+function LanguageResearchSceneOverlay({ languageFocus = DEFAULT_LANGUAGE_FOCUS, nodes = [], selected = null }) {
+  const overlays = Array.isArray(languageFocus?.structureOverlays) ? languageFocus.structureOverlays : [];
+  const sceneCenter = useMemo(() => averageScenePosition(nodes), [nodes]);
+  const layerMeta = LANGUAGE_RESEARCH_LAYER_META[languageFocus?.researchLayer] || LANGUAGE_RESEARCH_LAYER_META.static_encoding;
+  const selectedPosition = Array.isArray(selected?.position) ? selected.position : sceneCenter;
+  const roleLabel = languageFocus?.roleGroup || 'object';
+  const taskLabel = languageFocus?.taskGroup || 'translation';
+  const riskLabel = LANGUAGE_RISK_META[languageFocus?.riskFocus] || '风险焦点未定义';
+
+  return (
+    <group>
+      <Html position={[-11.8, 10.2, 0]} transform sprite>
+        <div style={{
+          minWidth: 260,
+          padding: '12px 14px',
+          borderRadius: 14,
+          background: 'rgba(10, 16, 28, 0.88)',
+          border: `1px solid ${layerMeta.color}`,
+          boxShadow: `0 0 24px ${layerMeta.color}33`,
+          color: '#e8f0ff',
+          backdropFilter: 'blur(10px)',
+        }}>
+          <div style={{ fontSize: 13, fontWeight: 800, color: layerMeta.color, marginBottom: 6 }}>
+            {layerMeta.label}
+          </div>
+          <div style={{ fontSize: 11, lineHeight: 1.6, color: '#b4c4dd', marginBottom: 8 }}>
+            {`对象组: ${languageFocus?.objectGroup || 'fruit'} | 任务组: ${taskLabel} | 角色组: ${roleLabel}`}
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
+            {overlays.map((item) => {
+              const meta = LANGUAGE_OVERLAY_META[item] || { label: item, color: '#94a3b8' };
+              return (
+                <span key={item} style={{
+                  padding: '3px 8px',
+                  borderRadius: 999,
+                  fontSize: 10,
+                  color: '#f8fbff',
+                  background: `${meta.color}22`,
+                  border: `1px solid ${meta.color}`,
+                }}>
+                  {meta.label}
+                </span>
+              );
+            })}
+          </div>
+          <div style={{ fontSize: 11, color: '#ffd7d7' }}>
+            {`风险焦点: ${riskLabel}`}
+          </div>
+        </div>
+      </Html>
+
+      <Text position={[0, 13.8, 0]} color={layerMeta.color} fontSize={0.42} anchorX="center" anchorY="middle">
+        {`${layerMeta.label} / ${LANGUAGE_RISK_META[languageFocus?.riskFocus] || '风险焦点'}`}
+      </Text>
+
+      {overlays.includes('shared_base') && (
+        <group position={sceneCenter}>
+          <mesh rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[4.8, 0.08, 24, 120]} />
+            <meshStandardMaterial color={LANGUAGE_OVERLAY_META.shared_base.color} emissive={LANGUAGE_OVERLAY_META.shared_base.color} emissiveIntensity={1.1} transparent opacity={0.42} />
+          </mesh>
+        </group>
+      )}
+
+      {overlays.includes('local_delta') && selected && (
+        <group position={selectedPosition}>
+          <mesh rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[0.72, 0.05, 18, 60]} />
+            <meshStandardMaterial color={LANGUAGE_OVERLAY_META.local_delta.color} emissive={LANGUAGE_OVERLAY_META.local_delta.color} emissiveIntensity={1.4} transparent opacity={0.72} />
+          </mesh>
+          <mesh position={[0, 0.45, 0]}>
+            <sphereGeometry args={[0.12, 20, 20]} />
+            <meshStandardMaterial color="#fff0d6" emissive={LANGUAGE_OVERLAY_META.local_delta.color} emissiveIntensity={1.4} />
+          </mesh>
+        </group>
+      )}
+
+      {overlays.includes('path_amplification') && selected && (
+        <>
+          <Line
+            points={[
+              selectedPosition,
+              [selectedPosition[0] + 2.4, selectedPosition[1] + 1.4, selectedPosition[2] + 1.1],
+              [selectedPosition[0] + 4.2, selectedPosition[1] + 2.6, selectedPosition[2] + 1.8],
+            ]}
+            color={LANGUAGE_OVERLAY_META.path_amplification.color}
+            transparent
+            opacity={0.82}
+            lineWidth={2.4}
+          />
+          <Text position={[selectedPosition[0] + 4.6, selectedPosition[1] + 2.9, selectedPosition[2] + 2]} color="#d9ffe8" fontSize={0.22}>
+            路径放大
+          </Text>
+        </>
+      )}
+
+      {overlays.includes('semantic_roles') && (
+        <group position={[sceneCenter[0], sceneCenter[1] + 3.2, sceneCenter[2]]}>
+          <Text position={[-2.4, 0.2, 0]} color="#d8c4ff" fontSize={0.2}>对象</Text>
+          <Text position={[-0.8, 0.9, 0]} color="#d8c4ff" fontSize={0.2}>属性</Text>
+          <Text position={[0.8, 0.9, 0]} color="#d8c4ff" fontSize={0.2}>位置</Text>
+          <Text position={[2.4, 0.2, 0]} color="#d8c4ff" fontSize={0.2}>操作</Text>
+          <Text position={[-0.8, -0.7, 0]} color="#d8c4ff" fontSize={0.2}>约束</Text>
+          <Text position={[0.8, -0.7, 0]} color="#d8c4ff" fontSize={0.2}>结果</Text>
+        </group>
+      )}
+
+      {overlays.includes('fidelity') && (
+        <group position={[sceneCenter[0], sceneCenter[1] + 0.2, sceneCenter[2]]}>
+          <mesh rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[5.8, 0.07, 20, 100]} />
+            <meshStandardMaterial color={LANGUAGE_OVERLAY_META.fidelity.color} emissive={LANGUAGE_OVERLAY_META.fidelity.color} emissiveIntensity={1.1} transparent opacity={0.34} />
+          </mesh>
+          <Text position={[0, -2.2, 0]} color="#ffd6de" fontSize={0.24} anchorX="center">
+            来源保真风险带
+          </Text>
+        </group>
+      )}
+    </group>
+  );
+}
+
 export function AppleNeuronSceneContent({
   nodes,
   links,
@@ -2109,6 +2280,7 @@ export function AppleNeuronSceneContent({
   nodeDisplayEmphasis = {},
   animationMode = 'none',
   scanMechanismData = null,
+  languageFocus = DEFAULT_LANGUAGE_FOCUS,
 }) {
   const activationMap = prediction?.activationMap || {};
   const focusNodeIds = prediction?.focusNodeIds || [];
@@ -2179,6 +2351,7 @@ export function AppleNeuronSceneContent({
       ))}
 
       <ModeVisualOverlay mode={mode} prediction={prediction} />
+      <LanguageResearchSceneOverlay languageFocus={languageFocus} nodes={visibleNodes} selected={selected} />
       <TheoryObjectOverlay theoryObjectMeta={theoryObjectMeta} prediction={prediction} nodes={visibleNodes} selected={selected} />
       <AppleNeuronAnimationOverlay
         animationMode={animationMode}
@@ -2323,6 +2496,7 @@ export function useAppleNeuronWorkspace() {
   const [analysisMode, setAnalysisMode] = useState('dynamic_prediction');
   const [theoryObject, setTheoryObject] = useState('family_patch');
   const [animationMode, setAnimationMode] = useState('none');
+  const [languageFocus, setLanguageFocus] = useState(DEFAULT_LANGUAGE_FOCUS);
   const [showFruitGeneral, setShowFruitGeneral] = useState(true);
   const [showFruit, setShowFruit] = useState(() => Object.fromEntries(Object.keys(FRUIT_COLORS).map((k) => [k, true])));
   const [queryInput, setQueryInput] = useState('');
@@ -2366,6 +2540,7 @@ export function useAppleNeuronWorkspace() {
   const [robustnessTrials, setRobustnessTrials] = useState(6);
   const [minimalSubsetSize, setMinimalSubsetSize] = useState(12);
   const [displayStrategy, setDisplayStrategy] = useState('auto');
+  const [externalAuditFocus, setExternalAuditFocus] = useState(null);
   const [manualDisplayGroups, setManualDisplayGroups] = useState({
     core: true,
     query: true,
@@ -2509,6 +2684,41 @@ export function useAppleNeuronWorkspace() {
       return next;
     });
   }, [querySets]);
+
+  useEffect(() => {
+    const applyAuditFocus = (focus) => {
+      if (!focus || typeof focus !== 'object') {
+        return;
+      }
+      if (focus.theoryObject) {
+        setTheoryObject(focus.theoryObject);
+      }
+      if (focus.analysisMode) {
+        setAnalysisMode(focus.analysisMode);
+      }
+      if (focus.animationMode) {
+        setAnimationMode(focus.animationMode);
+      }
+      setDisplayStrategy('auto');
+      setPredictPlaying(false);
+      setMechanismPlaying(false);
+      setExternalAuditFocus(focus);
+    };
+
+    const persistedFocus = readPersistedAudit3DFocus();
+    if (persistedFocus) {
+      applyAuditFocus(persistedFocus);
+    }
+
+    const handleAuditFocus = (event) => {
+      applyAuditFocus(event?.detail || null);
+    };
+
+    window.addEventListener(AUDIT_3D_FOCUS_EVENT, handleAuditFocus);
+    return () => {
+      window.removeEventListener(AUDIT_3D_FOCUS_EVENT, handleAuditFocus);
+    };
+  }, []);
 
   const handleGenerateQuery = () => {
     const concept = queryInput.trim();
@@ -3269,12 +3479,14 @@ export function useAppleNeuronWorkspace() {
       animationMode,
       displayStrategy,
       statusText: modeOverlay.statusText || '',
+      externalAuditFocus,
     };
   }, [
     analysisMode,
     bundleManifest,
     currentTheoryObject,
     displayStrategy,
+    externalAuditFocus,
     fourTasksManifest,
     hardProblemResults,
     keyNodes,
@@ -3289,6 +3501,8 @@ export function useAppleNeuronWorkspace() {
   ]);
 
   return {
+    languageFocus,
+    setLanguageFocus,
     analysisMode,
     setAnalysisMode,
     analysisModes: ANALYSIS_MODE_OPTIONS,
@@ -3376,6 +3590,7 @@ export function useAppleNeuronWorkspace() {
     setRobustnessTrials,
     minimalSubsetSize,
     setMinimalSubsetSize,
+    externalAuditFocus,
     displayStrategy,
     setDisplayStrategy,
     manualDisplayGroups,
@@ -4561,6 +4776,7 @@ export function AppleNeuronControlPanels({ workspace }) {
     setRobustnessTrials,
     minimalSubsetSize,
     setMinimalSubsetSize,
+    externalAuditFocus,
     displayStrategy,
     setDisplayStrategy,
     manualDisplayGroups,
@@ -5204,6 +5420,27 @@ export function AppleNeuronControlPanels({ workspace }) {
         <div style={{ fontSize: 11, color: '#7f95bb', lineHeight: 1.6, marginBottom: 10 }}>
           用两个入口处理研究数据：手动输入名词与类别，直接观察 3D 模型；或选择测试中的研究资产，直接展开具体数据、数学分析和对应理论。
         </div>
+        {externalAuditFocus ? (
+          <div
+            style={{
+              marginBottom: 10,
+              borderRadius: 12,
+              padding: '10px 12px',
+              border: '1px solid rgba(56, 189, 248, 0.28)',
+              background: 'rgba(8, 47, 73, 0.35)',
+            }}
+          >
+            <div style={{ fontSize: 11, color: '#67e8f9', fontWeight: 700, marginBottom: 4 }}>
+              {`严格审查联动：${externalAuditFocus.stageLabel || externalAuditFocus.stageId || '未知阶段'}`}
+            </div>
+            <div style={{ fontSize: 11, color: '#dbe9ff', lineHeight: 1.7 }}>
+              {externalAuditFocus.summary || '当前 3D 工作台已切换到来自严格审查页的聚焦方案。'}
+            </div>
+            <div style={{ fontSize: 10, color: '#8fb9d9', marginTop: 6 }}>
+              {`理论对象：${currentTheoryObject?.labelZh || '-'} | 动作：${modeMetaById[analysisMode]?.label || '-'} | 动画：${animationModes.find((item) => item.id === animationMode)?.label || '无动画'}`}
+            </div>
+          </div>
+        ) : null}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 8, marginBottom: 10 }}>
           {[
             { id: 'manual', label: '手动输入', desc: '输入名词与类别，查看对应 3D 节点' },

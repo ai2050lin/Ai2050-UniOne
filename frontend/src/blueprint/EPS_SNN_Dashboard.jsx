@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Cpu, Zap, Activity, BatteryCharging, ChevronRight } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine } from 'recharts';
+import SafeResponsiveContainer from '../components/shared/SafeResponsiveContainer';
 
 // Pytorch 测试生成的能效数据
 const energyData = [
@@ -76,7 +77,7 @@ const EPS_SNN_Dashboard = () => {
                 gap: '20px'
             }}>
                 <div style={{ flex: '1' }}>
-                    <ResponsiveContainer width="100%" height="100%">
+                    <SafeResponsiveContainer minHeight={220}>
                         <BarChart data={energyData} layout="vertical" margin={{ top: 20, right: 30, left: 60, bottom: 5 }}>
                             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
                             <XAxis type="number" stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 13 }} />
@@ -95,7 +96,7 @@ const EPS_SNN_Dashboard = () => {
                                 </linearGradient>
                             </defs>
                         </BarChart>
-                    </ResponsiveContainer>
+                    </SafeResponsiveContainer>
                 </div>
             </div>
 

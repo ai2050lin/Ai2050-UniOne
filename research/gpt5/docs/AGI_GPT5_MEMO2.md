@@ -12225,3 +12225,636 @@ g -n "AppleOrthogonalityDashboard|五点六|五点五|HRRPhaseRigorousDashboard"
     - 项目的可视化目标已经从“展示研究组件”升级为“支撑研究判断”
   - 当前可压缩判断为一句话：
     - 可视化客户端接下来最该做的，不是继续堆更多图层，而是把进度、证据、风险、判伪、时间演化统一成一个研究驾驶舱
+
+## 2026-03-22 16:15 保持整体风格前提下落地研究驾驶舱最小版本
+
+- 用户请求：
+  - 继续实现可视化客户端改造
+  - 要保持整体风格，不要修改风格
+- 本轮命令：
+  - `rg -n "AGIProgressDashboard|ResearchProgressTab|RouteTimelineBoard|MilestoneProgressPanel" frontend/src`
+  - `Get-Content -Path 'frontend/src/components/evaluation/MilestoneProgressPanel.jsx' -Encoding UTF8`
+  - `Get-Content -Path 'frontend/src/components/evaluation/RouteScoreTrendPanel.jsx' -Encoding UTF8`
+  - `Get-Content -Path 'frontend/src/components/evaluation/RouteABComparePanel.jsx' -Encoding UTF8`
+  - `Get-Content -Path 'frontend/src/AGIProgressDashboard.jsx' -Encoding UTF8`
+  - `Get-Content -Path 'server/server.py' -Encoding UTF8`
+  - `Get-Content -Path 'server/api_v1_runs.py' -Encoding UTF8`
+  - `Get-Content -Path 'frontend/package.json' -Encoding UTF8`
+  - `Get-Content -Path 'tests/codex_temp/stage83_theory_evidence_audit_20260322/summary.json' -Encoding UTF8`
+  - `npm --prefix frontend run build`
+  - `python -m py_compile server/server.py`
+  - `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+  - `git status --short`
+  - `Get-Content -Path 'research/gpt5/docs/AGI_GPT5_MEMO2.md' -Tail 50`
+- 本轮新增文件：
+  - `frontend/src/components/evaluation/ProgressRiskDualAxis.jsx`
+  - `frontend/src/components/evaluation/TheoryAuditPanel.jsx`
+  - `frontend/src/components/evaluation/StageSwimlaneBoard.jsx`
+- 本轮修改文件：
+  - `frontend/src/AGIProgressDashboard.jsx`
+  - `frontend/src/config/api.js`
+  - `server/server.py`
+- 当前研究进展摘要：
+  - 这轮没有重做视觉风格，而是在现有 `AGIProgressDashboard` 样式体系内插入了新的驾驶舱骨架
+  - 新增了三个保持现有风格的研究治理组件：
+    - `ProgressRiskDualAxis`：把“研究推进”和“严格可信度”并排显示
+    - `TheoryAuditPanel`：把严格审查状态、风险标记、审查发现放到主界面
+    - `StageSwimlaneBoard`：把“阶段 / 测试 / 审查 / 文档”做成同页泳道总览
+  - 前端总入口数据层也同步扩展：
+    - `config/api.js` 新增严格审查接口定义
+  - 服务端新增了一个轻量接口：
+    - `/api/v1/research/audit/latest`
+    - 当前会优先读取最新 `stage83` 审查结果，没有则回退到内置默认摘要
+  - 这意味着客户端已经从“只有进度与测试面板”，推进到“开始同时展示进度、证据、风险、判伪”的最小驾驶舱形态
+  - 当前实际验证结果：
+    - 前端 `vite build` 成功
+    - 服务端 `py_compile` 成功
+    - 当前没有做视觉重绘，仍沿用现有深色、边框、卡片、标题与信息层级体系
+- 理论/数学研究进度：
+  - 本轮没有新增数学母式
+  - 但把一个很关键的设计原则真正落实到客户端：
+    - 理论未严格成立时，界面不能只展示“推进了多少”，还必须同时展示“可信度有多低、风险在哪、判伪是否充分”
+  - 当前最重要的新结论是：
+    - 可视化客户端已经从“研究展示页”开始转向“研究判断界面”
+  - 当前可压缩判断为一句话：
+    - 这轮前端实现真正把“保持原风格”和“升级研究治理能力”结合起来了，后续可以在不破坏现有体验的前提下继续扩展证据链与判伪视图
+
+## 2026-03-22 16:49 修复 SystemStatusTab 中 expandedParam 未定义错误
+
+- 用户请求：
+  - 处理前端运行时报错：`ReferenceError: expandedParam is not defined`
+- 本轮命令：
+  - `Get-Content -Path 'frontend/src/blueprint/SystemStatusTab.jsx' -Encoding UTF8`
+  - `rg -n "expandedParam|setExpandedParam|expanded.*Param" frontend/src/blueprint/SystemStatusTab.jsx`
+  - `npm --prefix frontend run build`
+  - `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+  - `Get-Content -Path 'research/gpt5/docs/AGI_GPT5_MEMO2.md' -Tail 40`
+  - `git status --short`
+- 本轮修改文件：
+  - `frontend/src/blueprint/SystemStatusTab.jsx`
+- 当前研究进展摘要：
+  - 问题根因很直接：
+    - `SystemStatusTab.jsx` 中参数卡片使用了 `expandedParam`
+    - 但组件内部没有定义对应状态
+  - 本轮修复方式保持了现有交互和风格不变：
+    - 补充 `useState`
+    - 新增 `const [expandedParam, setExpandedParam] = useState(null)`
+    - 把参数卡片点击行为改为切换当前展开索引
+  - 这次修复没有改视觉风格，只是把原本就存在但未接通的展开状态补齐
+  - 当前验证结果：
+    - 前端 `vite build` 成功
+    - 当前 `ReferenceError` 已被消除
+- 理论/数学研究进度：
+  - 本轮没有新增数学母式
+  - 但工程层面补强了一点：
+    - 系统状态页的参数卡片不再因为局部状态缺失而中断
+    - 研究驾驶舱与旧蓝图页之间的基础交互完整性进一步提高
+  - 当前可压缩判断为一句话：
+    - 这次修复属于小问题快修，但它保证了客户端在继续扩展研究治理视图时，不会被旧页中的局部状态错误卡住
+
+## 2026-03-22 16:58 输出整体修改方案：项目结构、界面功能、3D 演示规则
+
+- 用户请求：
+  - 给出整体的修改方案，包括项目结构、每个界面的功能、如何使用 3D 空间演示
+- 本轮命令：
+  - `Get-ChildItem 'd:\\develop\\OpenOne\\Ai2050-OpenOne'`
+  - `Get-Content -Path 'frontend/src/HLAIBlueprint.jsx' -Encoding UTF8`
+  - `Get-Content -Path 'frontend/src/components/WorkbenchLayout.jsx' -Encoding UTF8`
+  - `Get-ChildItem 'frontend/src/components/evaluation'`
+  - `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+  - `Get-Content -Path 'research/gpt5/docs/AGI_GPT5_MEMO2.md' -Tail 40`
+  - `git status --short`
+- 本轮新增文件：
+  - `research/gpt5/docs/AGI_GPT5_UI_SYSTEM_PLAN.md`
+- 当前研究进展摘要：
+  - 本轮没有继续做局部界面补丁，而是把当前前端系统重新抽象成三层：
+    - 治理层 2D
+    - 研究层蓝图
+    - 机制层 3D
+  - 新方案明确了项目结构的职责边界：
+    - `frontend/src/components/evaluation` 负责研究治理组件
+    - `frontend/src/blueprint` 负责蓝图级研究页面
+    - `frontend/src/components/observation / analysis / intervention` 继续负责观察、分析、干预
+    - `server` 负责运行时状态与研究摘要接口
+    - `research/gpt5/docs` 负责计划、审查、备忘录和系统方案
+  - 新方案也明确了客户端的 `6` 个一级界面：
+    - 研究驾驶舱
+    - 路线与阶段中心
+    - 严格审查中心
+    - 研究蓝图页
+    - 文档与日志页
+    - 3D 机制工作台
+  - 这轮最关键的新增，不是再讲“要做什么图”，而是明确了 3D 空间的职责：
+    - 3D 只负责讲机制
+    - 2D 负责讲进度、证据、风险、判伪、时间演化
+  - 3D 演示规则被进一步细化成 `4` 层：
+    - 结构层
+    - 关系层
+    - 动态层
+    - 解释层
+  - 同时也给每类理论对象补了推荐演示脚本：
+    - `family patch`
+    - `concept section`
+    - `attribute fiber`
+    - `relation-context fiber`
+    - `protocol bridge`
+- 理论/数学研究进度：
+  - 本轮没有新增数学母式
+  - 但客户端系统设计和当前理论状态进一步对齐：
+    - 当前理论尚未严格闭合，因此界面结构必须把“理论未成立的部分”与“机制演示”明确分层
+  - 当前最重要的新结论是：
+    - 客户端的整体修改方向已经从“页面级改造”推进到“系统级分层设计”
+  - 当前可压缩判断为一句话：
+    - 整体方案现在已经明确：项目客户端应该成为“治理层 2D + 研究层蓝图 + 机制层 3D”的三层系统，而不是继续把所有信息混在一个大工作台里
+
+## 2026年03月22日 17:39 Codex 追加记录
+
+- 本轮执行命令：
+  - `Get-Content frontend/src/HLAIBlueprint.jsx`
+  - `Get-Content frontend/src/blueprint/ProjectRoadmapTab.jsx`
+  - `Get-Content frontend/src/blueprint/SystemStatusTab.jsx`
+  - `Get-Content frontend/src/components/evaluation/TheoryAuditPanel.jsx`
+  - `Get-Content frontend/src/blueprint/ResearchProgressTab.jsx`
+  - `Get-Content server/server.py`
+  - `npm --prefix frontend run build`
+- 本轮代码修改：
+  - 新增 `frontend/src/blueprint/ResearchAuditTab.jsx`
+  - 修改 `frontend/src/HLAIBlueprint.jsx`
+  - 在蓝图主入口中新增 `严格审查` 页签，并接入 `/api/v1/research/audit/latest`
+  - 页面内容保持原有深色蓝图风格，只增加新的审查信息层，不改整体主题
+- 本轮可视化客户端推进：
+  - 蓝图系统已经不再只有“项目大纲 / 深度分析 / 模型研发 / 系统状态”四块
+  - 现在补上了“严格审查中心”，使蓝图层第一次能直接展示：
+    - 理论可信度
+    - 证据独立性
+    - 测试强度
+    - 最优律领先幅度
+    - 风险标记
+    - 审查发现
+    - 候选更新律排序
+  - 这意味着客户端结构开始真正体现“研究推进”和“理论审计”并行，而不是只展示正向进展
+- 理论/数学研究进度：
+  - 本轮没有新增数学方程
+  - 但理论展示结构继续前进了一步：
+    - 当前项目的前端表达，已经从“只讲研究成果”推进到“同时讲成果为何尚未被严格证明”
+  - 这对当前项目尤其关键，因为现阶段理论身份仍更接近“未证实的强解释框架”
+  - 因此新增的审查页不是附属页面，而是理论状态在客户端中的必要投影
+  - 当前一句话结论：
+    - 客户端蓝图层已经开始具备“把理论进展和理论漏洞同时可视化”的能力，这比继续堆叠进度卡片更符合当前研究阶段
+
+## 2026年03月22日 18:18 Codex 追加记录
+
+- 本轮执行命令：
+  - `rg -n "from stage|import build_" tests/codex/...`
+  - `Get-Content tests/codex_temp/stage87_evidence_independence_audit_20260322/summary.json`
+  - `Get-Content server/server.py`
+  - `Get-Content frontend/src/blueprint/ResearchAuditTab.jsx`
+  - `python -m py_compile server/server.py`
+  - `npm --prefix frontend run build`
+- 本轮代码修改：
+  - 修改 `server/server.py`
+  - 修改 `frontend/src/blueprint/ResearchAuditTab.jsx`
+  - 将 `stage87` 的证据独立性审计结果并入现有研究审查接口
+  - 在严格审查页中新增：
+    - 证据依赖拓扑
+    - 审查检查项
+    - 回灌路径展示位
+- 本轮可视化客户端推进：
+  - 客户端已经不再只是给“审查结论”
+  - 现在开始进一步可视化“结论是通过哪些阶段依赖形成的”
+  - 这使严格审查中心从“结果展示页”推进成“证据结构页”
+  - 具体表现为：
+    - 每个关键阶段的扇入依赖被显式列出
+    - 高风险检查项被单独拆开显示
+    - 后端开始把 `stage83` 与 `stage87` 两类审计结果合并供前端消费
+- 理论/数学研究进度：
+  - 本轮没有新增数学母式
+  - 但理论展示的严苛程度继续上升：
+    - 现在前端不仅能说“理论未证实”
+    - 还能进一步展示“未证实主要卡在依赖过多、内部构造、优势边际过小、测试覆盖不足这些具体结构点上”
+  - 这一步非常关键，因为项目现阶段最大的风险已经不是“看不到进展”
+  - 而是“进展很多，但证据链条的结构问题不够直观看见”
+  - 当前一句话结论：
+    - 严格审查中心已经开始把“理论漏洞的结构来源”直接可视化，这比单独报一个风险分数更接近当前研究所需要的判断界面
+
+## 2026年03月22日 18:24 Codex 追加记录
+
+- 本轮执行命令：
+  - `Get-Content frontend/src/blueprint/AppleNeuron3DTab.jsx`
+  - `Get-Content frontend/src/blueprint/ResearchAuditTab.jsx`
+  - `Get-Content frontend/src/blueprint/UniversalManifoldGraph.jsx`
+  - `npm --prefix frontend run build`
+- 本轮代码修改：
+  - 新增 `frontend/src/blueprint/audit3dBridge.js`
+  - 修改 `frontend/src/blueprint/ResearchAuditTab.jsx`
+  - 修改 `frontend/src/blueprint/AppleNeuron3DTab.jsx`
+  - 建立“严格审查页 -> 3D 工作台”的弱耦合联动桥
+- 本轮可视化客户端推进：
+  - 严格审查中心新增了“3D 机制联动”模块
+  - 现在可以把关键阶段直接发送到 3D 工作台
+  - 3D 工作台收到后会自动切换：
+    - 理论对象
+    - 动作模式
+    - 动画模式
+  - 同时 3D 控制面板也开始显示“当前来自哪一个审查阶段的聚焦方案”
+  - 这意味着 2D 审查层和 3D 机制层第一次出现可复用的联动协议，而不是只能人工切换
+- 理论/数学研究进度：
+  - 本轮没有新增数学方程
+  - 但理论展示结构再次前进了一层：
+    - 审查页不再只是指出“哪里有漏洞”
+    - 现在开始进一步给出“应该用哪一种机制对象和哪一种 3D 动作去看这个漏洞”
+  - 这很关键，因为当前项目最难的部分之一，就是把抽象的理论风险真正翻译成可观察的机制现象
+  - 当前一句话结论：
+    - 客户端已经开始把“理论漏洞的判读”转成“机制层的可视化观察任务”，这比停留在分数或文字总结更符合当前研究阶段
+
+## 2026年03月22日 18:36 Codex 追加记录
+
+- 本轮执行命令：
+  - `Get-Content frontend/src/blueprint/DeepAnalysisTab.jsx`
+  - `Get-Content frontend/src/blueprint/GPT5Tab.jsx`
+  - `Get-Content frontend/src/blueprint/GeminiTab.jsx`
+  - `Get-Content frontend/src/blueprint/GLM5Tab.jsx`
+  - `npm --prefix frontend run build`
+- 本轮代码修改：
+  - 修改 `frontend/src/blueprint/DeepAnalysisTab.jsx`
+  - 修改 `frontend/src/blueprint/GPT5Tab.jsx`
+  - 将深度分析中的 `Gemini / GPT5 / GLM5` 改成异步按需加载
+  - 将 `GPT5` 页中的阶段列表与测试列表改成分批加载
+- 本轮可视化客户端推进：
+  - 深度分析页不再在打开时立刻同步渲染全部模型深度内容
+  - 现在先只加载当前选中的模型页签
+  - 并且 `GPT5` 的阶段详情只先显示前两阶段，每阶段测试只先显示前六条
+  - 剩余内容通过“继续加载阶段内容”“继续加载本阶段测试”逐步展开
+  - 这能显著降低深度分析首屏打开时的渲染压力
+  - 构建结果也验证了拆包已经生效：
+    - `GeminiTab`
+    - `GPT5Tab`
+    - `GLM5Tab`
+    已经分别形成独立前端资源块
+- 理论/数学研究进度：
+  - 本轮没有新增数学内容
+  - 但客户端性能结构向“研究内容分层递进展示”又推进了一步
+  - 当前项目文档和分析数据已经足够大，若仍保持一次性渲染，会直接影响研究阅读效率
+  - 因此这轮优化虽然是工程动作，但本质上是在为“大体量研究内容的可持续观察”铺路
+  - 当前一句话结论：
+    - 深度分析页已经从“一次性重载全部内容”转向“按模型拆包 + 按阶段渐进加载”，这更适合当前项目持续扩张的研究规模
+
+## 2026年03月22日 18:48 Codex 追加记录
+
+- 本轮执行命令：
+  - `Get-Content frontend/src/TrainingMonitor.jsx`
+  - `Get-Content frontend/src/blueprint/ConceptVectorAlgebraGraph.jsx`
+  - `Get-Content frontend/src/blueprint/EpisodicConsolidationDashboard.jsx`
+  - `Get-Content frontend/src/blueprint/EPS_SNN_Dashboard.jsx`
+  - `Get-Content frontend/src/blueprint/FirstPrinciplesTheoryDashboard.jsx`
+  - `Get-Content frontend/src/blueprint/HyperSpaceBindingGraph.jsx`
+  - `Get-Content frontend/src/blueprint/KnowledgeCascadeTreeGraph.jsx`
+  - `npm --prefix frontend run build`
+- 本轮代码修改：
+  - 修改 `frontend/src/TrainingMonitor.jsx`
+  - 修改 `frontend/src/blueprint/ConceptVectorAlgebraGraph.jsx`
+  - 修改 `frontend/src/blueprint/EpisodicConsolidationDashboard.jsx`
+  - 修改 `frontend/src/blueprint/EPS_SNN_Dashboard.jsx`
+  - 修改 `frontend/src/blueprint/FirstPrinciplesTheoryDashboard.jsx`
+  - 修改 `frontend/src/blueprint/HyperSpaceBindingGraph.jsx`
+  - 修改 `frontend/src/blueprint/KnowledgeCascadeTreeGraph.jsx`
+  - 为一批 `ResponsiveContainer` 补上 `minWidth={0}` 与 `minHeight`
+- 本轮可视化客户端推进：
+  - 本轮不是新增页面，而是修复深度分析中常见的图表告警与隐藏卡顿
+  - 根因更偏向图表父容器尺寸在首次切页或展开时尚未稳定，导致 `ResponsiveContainer` 读到负尺寸
+  - 当前处理方式是先给最常见的一批大图增加最小宽高兜底
+  - 这样即使父容器短暂未完成布局，也不会立刻把图表尺寸算成 `-1`
+- 理论/数学研究进度：
+  - 本轮没有新增理论方程
+  - 但研究界面的稳定性继续增强：
+    - 当深度分析页承载越来越多图表与长文档时，图表容器稳定性本身已经变成研究阅读体验的一部分
+  - 当前一句话结论：
+    - 这轮修复把“图表父容器尺寸未稳定导致的 Recharts 告警”压下去了一层，为后续继续拆分 `Gemini` 超大分析块打了基础
+
+## 2026年03月22日 19:14 Codex 追加记录
+
+- 本轮执行命令：
+  - `Get-ChildItem frontend/src -Recurse -Filter *.jsx | Select-String '<ResponsiveContainer width="100%" height="100%">'`
+  - `Get-Content frontend/src/TrainingMonitor.jsx`
+  - `Get-Content frontend/src/blueprint/ConceptVectorAlgebraGraph.jsx`
+  - `Get-Content frontend/src/blueprint/EpisodicConsolidationDashboard.jsx`
+  - `Get-Content frontend/src/blueprint/EPS_SNN_Dashboard.jsx`
+  - `Get-Content frontend/src/blueprint/FirstPrinciplesTheoryDashboard.jsx`
+  - `Get-Content frontend/src/blueprint/HyperSpaceBindingGraph.jsx`
+  - `Get-Content frontend/src/blueprint/KnowledgeCascadeTreeGraph.jsx`
+  - `npm --prefix frontend run build`
+- 本轮代码修改：
+  - 新增 `frontend/src/components/shared/SafeResponsiveContainer.jsx`
+  - 修改 `frontend/src/TrainingMonitor.jsx`
+  - 修改 `frontend/src/blueprint/ConceptVectorAlgebraGraph.jsx`
+  - 修改 `frontend/src/blueprint/EpisodicConsolidationDashboard.jsx`
+  - 修改 `frontend/src/blueprint/EPS_SNN_Dashboard.jsx`
+  - 修改 `frontend/src/blueprint/FirstPrinciplesTheoryDashboard.jsx`
+  - 修改 `frontend/src/blueprint/HyperSpaceBindingGraph.jsx`
+  - 修改 `frontend/src/blueprint/KnowledgeCascadeTreeGraph.jsx`
+  - 将一批高风险图表从直接使用 `ResponsiveContainer` 改成统一走 `SafeResponsiveContainer`
+- 本轮可视化客户端推进：
+  - 这轮从“单个图表补丁”升级成了“公共图表容器治理”
+  - `SafeResponsiveContainer` 的作用是：
+    - 先观察父容器尺寸
+    - 只有在宽高都大于 0 时才真正挂载图表
+  - 这样做的好处是：
+    - 切页时更稳
+    - 折叠区更稳
+    - 后续继续治理图表告警时可以复用同一公共组件
+- 理论/数学研究进度：
+  - 本轮没有新增数学公式
+  - 但研究界面工程开始出现“通用稳定性中间层”
+  - 这很重要，因为当前项目不是普通后台，而是一个会持续承载越来越多实验图表、理论曲线和审查图谱的研究客户端
+  - 当前一句话结论：
+    - 图表告警修复已经从局部补丁推进到公共容器层，为后续继续清理 `Gemini` 内部大规模图表块提供了统一技术底座
+
+## 2026年03月22日 20:19
+
+- 本轮命令与检查：
+  - 读取 `frontend/src/HLAIBlueprint.jsx`
+  - 读取 `frontend/src/AGIProgressDashboard.jsx`
+  - 读取 `frontend/src/blueprint/ResearchAuditTab.jsx`
+  - 读取 `frontend/src/blueprint/ProjectRoadmapTab.jsx`
+  - 读取 `frontend/src/blueprint/ResearchProgressTab.jsx`
+  - 读取 `frontend/src/blueprint/AppleNeuron3DTab.jsx`
+  - 检索 `frontend/src/App.jsx`、`frontend/src`、`server/server.py`
+  - 读取 `research/gpt5/docs/AGI_GPT5_UI_SYSTEM_PLAN.md`
+- 本轮可视化客户端结构结论：
+  - 六个界面里，当前代码层面已经比较完整落地的是：
+    - `研究蓝图页`
+    - `严格审查中心`
+    - `3D 机制工作台`
+  - `研究驾驶舱` 组件已经存在于 `frontend/src/AGIProgressDashboard.jsx`，但当前并没有接入 `frontend/src/App.jsx` 的主入口
+  - `路线与阶段中心` 目前是分散承载的，还没有作为单独一级页面完全抽离
+  - `文档与日志页` 目前仍主要停留在总方案和文档组织层，没有形成单独前端入口
+- 关于“严格审查页面为空”的严格判断：
+  - 这更像是入口层级问题，不像是审查组件本身没有内容
+  - 因为 `frontend/src/blueprint/ResearchAuditTab.jsx` 已经实现了：
+    - 加载态
+    - 失败态
+    - 审查指标
+    - 风险标记
+    - 证据依赖拓扑
+    - 审查检查项
+    - 3D 联动区
+  - 真正的问题在于：
+    - 它只在 `frontend/src/HLAIBlueprint.jsx` 的 `audit` 页签中渲染
+    - `AGIProgressDashboard.jsx` 里的严格审查目前只是卡片面板，不是完整页
+    - `AGIProgressDashboard.jsx` 本身当前也没有接到 `App.jsx` 顶层入口里
+- 理论/数学研究进度：
+  - 本轮没有新增数学公式
+  - 但客户端信息架构判断更清晰了：
+    - 研究治理层与蓝图层、机制层之间的边界已经基本确定
+    - 当前主要缺口不是“没有严格审查内容”，而是“严格审查中心还没有成为一个独立、稳定、可直接进入的一级入口”
+  - 当前一句话结论：
+    - 严格审查页面之所以看起来是空的，核心不是审查数据为空，而是页面职责和入口层级还没有完全拆清，完整审查页目前只挂在蓝图体系内部
+
+## 2026年03月24日 14:47
+
+- 本轮命令与检查：
+  - 读取 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md`
+  - 检索仓库文件结构与前端入口
+  - 读取 `frontend/src/App.jsx`
+  - 读取 `frontend/src/AGIProgressDashboard.jsx`
+  - 读取 `frontend/src/locales.js`
+  - 读取 `frontend/src/StructureAnalysisPanel.jsx`
+  - 读取 `frontend/src/LanguageValidityPanel.jsx`
+  - 读取 `frontend/src/components/evaluation/StageSwimlaneBoard.jsx`
+  - 读取 `frontend/src/components/evaluation/ProgressRiskDualAxis.jsx`
+  - 读取 `research/gpt5/docs/AGI_GPT5_VIS_CLIENT_PLAN.md`
+  - 读取 `research/gpt5/docs/AGI_GPT5_UI_SYSTEM_PLAN.md`
+  - 新增 `research/gpt5/docs/AGI_GPT5_LANGUAGE_VISUALIZATION_PLAN.md`
+- 本轮客户端可视化整理结论：
+  - 语言主线已经足够稳定，客户端不应继续按“通用图表集合”组织，而应直接按五层测试体系组织
+  - 当前最值得固化成主视觉的不是泛进度，而是：
+    - `共享基底`
+    - `局部差分`
+    - `路径放大`
+    - `语义角色`
+    - `来源保真缺口`
+  - 当前最合理的客户端结构是 `6` 个一级视图：
+    - 总览驾驶舱
+    - 语义角色中心
+    - 共享-差分-路径工作台
+    - 来源保真与闭合监测中心
+    - 跨模型与跨任务对照中心
+    - 阶段与文档回放中心
+  - 当前仓库可以直接复用两条基础：
+    - `AGIProgressDashboard.jsx` 这一类治理层组件
+    - `App.jsx / StructureAnalysisPanel.jsx` 这一类机制层与 3D 组件
+- 理论/数学研究进度：
+  - 本轮没有新增数学公式
+  - 但把语言主线进一步压成了客户端层可视化对象，这一步很关键：
+    - 研究对象从“词和任务”进一步收束为“共享基底、薄差分、路径放大、角色链、来源保真”
+    - 这说明客户端的正确方向，不是继续增加通用面板，而是围绕参数级结构拼图做信息架构
+  - 当前一句话结论：
+    - 语言主线的客户端可视化已经可以从“展示研究进度”升级成“展示结构结论、结构硬伤、跨模型迁移和阶段回放”的研究中枢
+
+## 2026年03月24日 15:34
+
+- 本轮命令与检查：
+  - 检索 `server/server.py` 中 `from typing`、`Tuple`、`Optional[Tuple`
+  - 读取 `server/server.py` 导入区
+  - 读取 `server/server.py` 第 `1691` 行附近函数定义
+  - 修改 `server/server.py`
+  - 复检 `server/server.py` 中 `Tuple` 导入与类型注解一致性
+- 本轮问题定位与修复：
+  - 异常原因是 `server/server.py` 使用了 `Optional[Tuple[Dict[str, Any], Path]]` 这类类型注解
+  - 但文件顶部只导入了：
+    - `Any`
+    - `Dict`
+    - `List`
+    - `Optional`
+  - 没有导入 `Tuple`
+  - 本轮已补上：
+    - `from typing import Any, Dict, List, Optional, Tuple`
+- 理论/数学研究进度：
+  - 本轮没有新增数学公式
+  - 但从工程稳定性角度，当前结论更清楚了：
+    - 研究服务端已经开始承载越来越多“结构化阶段摘要”的类型化接口
+    - 这意味着注解层本身也在变成研究数据总线的一部分
+    - 一旦基础类型遗漏，服务会在模块加载阶段直接中断，连后续研究页面都起不来
+  - 当前一句话结论：
+    - 这次修复虽然是小补丁，但它说明研究平台现在已经进入“类型声明也会影响整条研究可视化链路稳定性”的阶段
+
+## 2026年03月24日 15:36
+
+- 本轮命令与检查：
+  - 检索仓库中与 `venv`、`uvicorn`、启动方式相关的内容
+  - 读取 `README.md`
+  - 读取 `makefile`
+  - 检查仓库根目录虚拟环境目录
+  - 确认存在 `.venv`
+  - 检查 `server/server.py` 的启动入口
+  - 新增 `scripts/start_server.ps1`
+  - 复检 `scripts/start_server.ps1`
+- 本轮启动方式调整：
+  - 当前仓库已经存在 `.venv（隐藏虚拟环境）`
+  - 后端 `server/server.py` 本身会走 `uvicorn（异步服务）` 启动
+  - 本轮没有把“自动切虚拟环境”硬塞进 `server.py`
+  - 而是新增了独立启动脚本：
+    - `scripts/start_server.ps1`
+  - 脚本做了三件事：
+    - 进入项目根目录
+    - 激活 `.venv\Scripts\Activate.ps1`
+    - 使用 `.venv\Scripts\python.exe` 启动 `server\server.py`
+- 理论/数学研究进度：
+  - 本轮没有新增数学公式
+  - 但从研究平台工程化角度，当前认识更清楚了：
+    - “研究服务能否稳定启动”已经是整条可视化链路的一部分
+    - 比起在主程序里隐式重定向解释器，显式启动脚本更适合当前这个高耦合研究仓库
+    - 这能减少环境漂移，让后端分析结果、接口和研究页面更稳定地绑定到同一套依赖
+  - 当前一句话结论：
+    - 当前最稳的做法不是让 `server.py` 偷偷切环境，而是提供一个固定入口脚本，把 `.venv` 与后端启动过程明确绑在一起
+
+## 2026年03月24日 15:43
+
+- 本轮命令与检查：
+  - 检索 `frontend/src/StructureAnalysisPanel.jsx` 中控制面板、`activeTab`、`systemType`、`ControlGroup`
+  - 读取 `frontend/src/StructureAnalysisPanel.jsx` 前半部分
+  - 检索 `frontend/src/App.jsx` 中 `inputPanelTab`、`structureTab`、控制面板区域
+  - 读取 `frontend/src/App.jsx` 左上控制面板片段
+  - 结合 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md` 做结构对齐分析
+- 本轮客户端控制面板结构判断：
+  - 当前左侧控制面板主要还是按：
+    - 系统类型
+    - 分析算法
+    - 单个参数表单
+    来组织
+  - 这更适合“工具箱式分析界面”，还不适合“语言主线研究工作台”
+  - 如果按 `AGI_GPT5_LANGUAGE` 的思路改主 3D 空间，左侧控制面板应该从“算法 tab 面板”升级成“研究拼图导航面板”
+  - 最合理的控制逻辑应改成五层：
+    - 研究层选择
+    - 对象/任务选择
+    - 模型与阶段口径
+    - 3D 视角与叠加图层
+    - 风险与保真监测
+- 理论/数学研究进度：
+  - 本轮没有新增数学公式
+  - 但对客户端交互结构的认识更清楚了：
+    - 当前语言主线不是在研究“哪种图表更好看”
+    - 而是在研究“共享基底、局部差分、路径放大、语义角色、来源保真”这些结构拼图
+    - 所以前端左侧控制面板也不应继续以“图表类型”当主入口，而应以“研究拼图对象”当主入口
+  - 当前一句话结论：
+    - 如果主 3D 空间要真正服务语言主线，左侧控制面板就必须从“分析工具菜单”改成“研究对象与风险路径的导航中枢”
+
+## 2026年03月24日 15:56
+
+- 本轮命令与检查：
+  - 读取 `frontend/src/config/panels.js`
+  - 读取 `frontend/src/StructureAnalysisPanel.jsx` 中左侧控制区完整实现
+  - 检查 `frontend/src/components` 目录结构
+  - 新增 `research/gpt5/docs/AGI_GPT5_LANGUAGE_LEFT_PANEL_REFACTOR_PLAN.md`
+- 本轮左侧控制面板重构结论：
+  - 当前实现里：
+    - `App.jsx` 负责左上主面板容器与 `inputPanelTab`
+    - `StructureAnalysisPanel.jsx` 负责 `activeTab`、算法表单与运行逻辑
+    - `panels.js` 负责 tab 和面板配置
+  - 如果按 `AGI_GPT5_LANGUAGE` 主线重构，最合理的改法不是继续扩张 `STRUCTURE_TABS_V2`
+  - 而是新增一层语言主线专用导航状态：
+    - `researchLayer`
+    - `objectGroup`
+    - `taskGroup`
+    - `roleGroup`
+    - `structureOverlays`
+    - `modelKey`
+    - `stageKey`
+    - `compareMode`
+    - `riskFocus`
+  - 同时把左侧控制面板拆成：
+    - `LanguageResearchControlPanel`
+    - `LanguageResearchLayerTabs`
+    - `LanguageSubjectSelector`
+    - `LanguageOverlaySwitches`
+    - `LanguageScopeSelector`
+    - `LanguageRiskBoard`
+    - `LanguageAdvancedToolsPanel`
+  - 其中 `StructureAnalysisPanel.jsx` 应从“主控制面板”降级成“高级分析抽屉”
+- 理论/数学研究进度：
+  - 本轮没有新增数学公式
+  - 但客户端结构已经进一步压成了更明确的工程主线：
+    - 语言主线的 3D 空间要解释的是“结构拼图”
+    - 因此左侧控制面板必须先能表达“拼图层级、对象族、任务语义、结构图层和风险焦点”
+    - 只有这样，前端才不会继续停留在“分析工具拼盘”，而会真正变成语言结构研究工作台
+  - 当前一句话结论：
+    - 左侧控制面板的正确重构方向，已经可以明确到“新增语言主线状态模型 + 新建语言专用控制容器 + 旧算法工具降级折叠”这一层
+
+## 2026年03月24日 17:43
+
+- 本轮命令与检查：
+  - 读取 `frontend/src/App.jsx` 中左侧主面板相关状态
+  - 检查 `frontend/src/blueprint/AppleNeuron3DTab.jsx` 中工作台可用 setter
+  - 新增 `frontend/src/components/LanguageResearchControlPanel.jsx`
+  - 修改 `frontend/src/App.jsx`
+  - 运行 `npm --prefix frontend run build`
+  - 检查 `frontend/src/App.jsx` 与新增组件的变更 diff
+- 本轮客户端真实改动：
+  - 左侧 `main` 面板不再直接裸渲染 `AppleNeuronControlPanels`
+  - 现在改成先渲染新的：
+    - `LanguageResearchControlPanel`
+  - 新面板已经实际提供可见结构：
+    - 五层测试体系入口
+    - 对象/任务/角色选择
+    - 结构图层开关
+    - 模型与阶段口径
+    - 当前联动摘要
+    - 当前硬伤板
+    - 原有高级分析工具折叠区
+  - 新面板已经与 `AppleNeuron` 工作台做了基础联动：
+    - 切研究层会切理论对象
+    - 切研究层会切分析动作
+    - 切研究层会切动画模式
+    - 切对象组会同步查询类别输入
+    - 切任务组会同步分析动作
+- 验证结果：
+  - `npm --prefix frontend run build` 已通过
+  - 当前这轮改动已经是“客户端可见变化”，不是只写文档
+- 理论/数学研究进度：
+  - 本轮没有新增数学公式
+  - 但语言主线第一次真正进入了客户端主交互层：
+    - 左侧面板已经从“直接暴露旧控制器”变成“先暴露研究拼图导航”
+    - 这意味着前端的主入口开始从“分析工具优先”转向“结构主线优先”
+    - 这一步虽然还只是第一轮骨架，但已经把 `AGI_GPT5_LANGUAGE` 的研究对象压进真实界面
+  - 当前一句话结论：
+    - 语言主线已经开始从文档层进入客户端主交互层，左侧控制面板现在真正承担起了“研究导航中枢”的第一版职责
+
+## 2026年03月24日 17:50
+
+- 本轮命令与检查：
+  - 读取 `frontend/src/blueprint/AppleNeuron3DTab.jsx` 中 `AppleNeuronSceneContent`
+  - 读取 `frontend/src/blueprint/AppleNeuron3DTab.jsx` 中 `useAppleNeuronWorkspace`
+  - 读取 `frontend/src/App.jsx` 中主 3D 场景挂载片段
+  - 修改 `frontend/src/components/LanguageResearchControlPanel.jsx`
+  - 修改 `frontend/src/blueprint/AppleNeuron3DTab.jsx`
+  - 修改 `frontend/src/App.jsx`
+  - 运行 `npm --prefix frontend run build`
+  - 检查三处前端文件 diff
+- 本轮客户端真实改动：
+  - 语言主线状态已经不再只停留在左侧面板内部
+  - 现在新增了工作台共享状态：
+    - `languageFocus`
+    - `setLanguageFocus`
+  - 左侧面板改成直接写入工作台共享状态，而不是本地临时 state
+  - 主 3D 场景 `AppleNeuronSceneContent` 已接入 `languageFocus`
+  - 当前 3D 场景已新增 `LanguageResearchSceneOverlay`，会实际显示：
+    - 当前研究层标题
+    - 当前对象组 / 任务组 / 角色组
+    - 当前启用的结构图层
+    - 当前风险焦点
+    - 共享基底环
+    - 局部差分高亮
+    - 路径放大指示线
+    - 语义角色漂浮标签
+    - 来源保真风险带
+- 验证结果：
+  - `npm --prefix frontend run build` 已再次通过
+  - 当前改动已经从“面板可见变化”进一步推进到“主 3D 场景可见变化”
+- 理论/数学研究进度：
+  - 本轮没有新增数学公式
+  - 但客户端结构又向语言主线更靠近了一步：
+    - 语言主线状态已经进入工作台共享层
+    - 这意味着“研究层、图层、风险焦点”第一次开始直接驱动场景表达
+    - 客户端从“左侧菜单变化”推进到了“主空间解释逻辑变化”
+  - 当前一句话结论：
+    - 语言主线现在已经不只是决定左侧怎么选，而开始决定主 3D 空间具体显示什么结构、什么风险和什么解释层

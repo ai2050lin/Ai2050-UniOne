@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 export const GPT5Tab = ({
     evidenceDrivenPlan,
@@ -8,6 +8,9 @@ export const GPT5Tab = ({
     expandedImprovementTest,
     setExpandedImprovementTest,
 }) => {
+    const [visiblePhaseCount, setVisiblePhaseCount] = useState(2);
+    const [visibleTestsByPhase, setVisibleTestsByPhase] = useState({});
+
     const progressHighlights = [
         '阶段1（done）：不变量发现与基线校准完成，已形成候选结构库并通过跨模型稳定性初验。',
         '阶段2（in_progress）：因果验证已跑通，特征级干预显著强于整层干预，但整层证据仍偏弱。',
@@ -52,6 +55,23 @@ export const GPT5Tab = ({
         in_progress: '#f59e0b',
         pending: '#94a3b8',
     };
+
+    useEffect(() => {
+        if (!expandedImprovementPhase) {
+            return;
+        }
+        setVisibleTestsByPhase((prev) => {
+            if (prev[expandedImprovementPhase]) {
+                return prev;
+            }
+            return {
+                ...prev,
+                [expandedImprovementPhase]: 6,
+            };
+        });
+    }, [expandedImprovementPhase]);
+
+    const visibleImprovements = (improvements || []).slice(0, visiblePhaseCount);
 
     return (
         <div style={{ display: 'grid', gap: '20px' }}>
@@ -118,14 +138,15 @@ export const GPT5Tab = ({
                 >
                     <div style={{ color: '#10b981', fontWeight: 'bold', fontSize: '14px', marginBottom: '6px' }}>分阶段详情与完整测试数据</div>
                     <div style={{ color: '#9ca3af', fontSize: '12px', lineHeight: '1.7', marginBottom: '12px' }}>
-                        按阶段展开查看目标、测试参数、详细数据与分析结论。
+                        按阶段展开查看目标、测试参数、详细数据与分析结论。默认只先加载前两阶段和每阶段前六条测试，避免一次性渲染过多内容导致卡顿。
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '10px' }}>
-                        {(improvements || []).map((phase) => {
+                        {visibleImprovements.map((phase) => {
                             const isPhaseExpanded = expandedImprovementPhase === phase.id;
                             const phaseStatusColor =
                                 phase.status === 'done' ? '#10b981' : phase.status === 'in_progress' ? '#f59e0b' : '#94a3b8';
                             const phaseTestCount = (phase.tests || []).length;
+                            const visibleTests = (phase.tests || []).slice(0, visibleTestsByPhase[phase.id] || 6);
                             return (
                                 <div
                                     key={phase.id}
@@ -170,19 +191,19 @@ export const GPT5Tab = ({
 
                                     {isPhaseExpanded && (
                                         <div>
-                                        <div style={{ color: '#9fe8c7', fontSize: '12px', marginBottom: '6px' }}>阶段目标：{phase.objective}</div>
-                                        <div style={{ color: '#a7f3d0', fontSize: '12px', lineHeight: '1.6', marginBottom: '10px' }}>
-                                            阶段总结：{phase.summary}
-                                        </div>
-                                        <div style={{ color: '#86efac', fontSize: '12px', marginBottom: '8px' }}>
-                                            累计测试：{phaseTestCount} 条
-                                        </div>
-                                        <div style={{ color: '#d1fae5', fontSize: '12px', fontWeight: 'bold', marginBottom: '8px' }}>
-                                            测试列表（点击查看详细数据）
-                                        </div>
+                                            <div style={{ color: '#9fe8c7', fontSize: '12px', marginBottom: '6px' }}>阶段目标：{phase.objective}</div>
+                                            <div style={{ color: '#a7f3d0', fontSize: '12px', lineHeight: '1.6', marginBottom: '10px' }}>
+                                                阶段总结：{phase.summary}
+                                            </div>
+                                            <div style={{ color: '#86efac', fontSize: '12px', marginBottom: '8px' }}>
+                                                累计测试：{phaseTestCount} 条
+                                            </div>
+                                            <div style={{ color: '#d1fae5', fontSize: '12px', fontWeight: 'bold', marginBottom: '8px' }}>
+                                                测试列表（点击查看详细数据）
+                                            </div>
 
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '8px' }}>
-                                                {(phase.tests || []).map((test, testIdx) => {
+                                                {visibleTests.map((test, testIdx) => {
                                                     const testKey = `${phase.id}:${test.id}`;
                                                     const isTestExpanded = expandedImprovementTest === testKey;
                                                     const evidenceChain = Array.isArray(test?.details?.evidence_chain) ? test.details.evidence_chain : [];
@@ -294,12 +315,53 @@ export const GPT5Tab = ({
                                                     );
                                                 })}
                                             </div>
+                                            {phaseTestCount > visibleTests.length ? (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setVisibleTestsByPhase((prev) => ({
+                                                            ...prev,
+                                                            [phase.id]: Math.min(phaseTestCount, (prev[phase.id] || 6) + 6),
+                                                        }));
+                                                    }}
+                                                    style={{
+                                                        marginTop: '10px',
+                                                        borderRadius: '10px',
+                                                        border: '1px solid rgba(96,165,250,0.28)',
+                                                        background: 'rgba(30,64,175,0.14)',
+                                                        color: '#bfdbfe',
+                                                        fontSize: '12px',
+                                                        cursor: 'pointer',
+                                                        padding: '8px 12px',
+                                                    }}
+                                                >
+                                                    继续加载本阶段测试（已显示 {visibleTests.length} / {phaseTestCount}）
+                                                </button>
+                                            ) : null}
                                         </div>
                                     )}
                                 </div>
                             );
                         })}
                     </div>
+                    {(improvements || []).length > visibleImprovements.length ? (
+                        <button
+                            type="button"
+                            onClick={() => setVisiblePhaseCount((count) => Math.min((improvements || []).length, count + 2))}
+                            style={{
+                                marginTop: '14px',
+                                borderRadius: '12px',
+                                border: '1px solid rgba(16,185,129,0.28)',
+                                background: 'rgba(16,185,129,0.14)',
+                                color: '#d1fae5',
+                                fontSize: '12px',
+                                cursor: 'pointer',
+                                padding: '10px 14px',
+                            }}
+                        >
+                            继续加载阶段内容（已显示 {visibleImprovements.length} / {(improvements || []).length}）
+                        </button>
+                    ) : null}
                 </div>
 
                 <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#fca5a5', marginBottom: '10px', borderBottom: '1px solid rgba(248,113,113,0.35)', paddingBottom: '8px' }}>

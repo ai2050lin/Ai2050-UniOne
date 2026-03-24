@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend,
   Cell
 } from 'recharts';
 import { CheckCircle2, XCircle } from 'lucide-react';
+import SafeResponsiveContainer from '../components/shared/SafeResponsiveContainer';
 
 const EpisodicConsolidationDashboard = () => {
   const [data, setData] = useState(null);
@@ -138,7 +139,7 @@ const EpisodicConsolidationDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-800">
           <div className="h-64">
              <h3 className="text-sm text-slate-400 mb-4 text-center">序列超载模长 vs 抽象概念模长对比</h3>
-             <ResponsiveContainer width="100%" height="100%">
+             <SafeResponsiveContainer minHeight={220}>
                <BarChart data={normData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                  <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} />
@@ -150,12 +151,12 @@ const EpisodicConsolidationDashboard = () => {
                    ))}
                  </Bar>
                </BarChart>
-             </ResponsiveContainer>
+             </SafeResponsiveContainer>
           </div>
 
           <div className="h-64">
              <h3 className="text-sm text-slate-400 mb-4 text-center">微观细节方差压缩前后对比</h3>
-             <ResponsiveContainer width="100%" height="100%">
+             <SafeResponsiveContainer minHeight={220}>
                <BarChart data={varianceData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                  <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} />
@@ -167,7 +168,7 @@ const EpisodicConsolidationDashboard = () => {
                    ))}
                  </Bar>
                </BarChart>
-             </ResponsiveContainer>
+             </SafeResponsiveContainer>
           </div>
         </div>
 

@@ -48,6 +48,10 @@ export const API_ENDPOINTS = {
     test: `${API_CONFIG.main}/agi/test`,
   },
 
+  research: {
+    auditLatest: `${API_CONFIG.main}/api/v1/research/audit/latest`,
+  },
+
   runtime: {
     runs: `${API_CONFIG.main}/api/v1/runs`,
     catalogRoutes: `${API_CONFIG.main}/api/v1/catalog/routes`,

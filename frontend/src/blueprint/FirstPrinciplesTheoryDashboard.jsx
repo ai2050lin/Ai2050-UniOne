@@ -1,6 +1,7 @@
 import React from 'react';
 import { Activity, Zap, TrendingUp, ShieldAlert, CheckCircle2 } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import SafeResponsiveContainer from '../components/shared/SafeResponsiveContainer';
 
 const FirstPrinciplesTheoryDashboard = () => {
     // 模拟的爆炸数据 (唯象模型) 和收敛数据 (第一性原理)
@@ -50,7 +51,7 @@ const FirstPrinciplesTheoryDashboard = () => {
             {/* 图表展示对比 */}
             <div style={{ height: '280px', width: '100%', backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: '8px', padding: '16px', boxSizing: 'border-box' }}>
                 <div style={{ color: '#9ca3af', fontSize: '12px', textAlign: 'center', marginBottom: '10px' }}>可塑性参数 K_l 演化走势对比 (唯象指数爆炸 vs 第一性原理稳态收敛)</div>
-                <ResponsiveContainer width="100%" height="100%">
+                <SafeResponsiveContainer minHeight={220}>
                     <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                         <XAxis dataKey="step" stroke="#9ca3af" tick={{fontSize: 12}} />
@@ -63,7 +64,7 @@ const FirstPrinciplesTheoryDashboard = () => {
                         <Line type="monotone" dataKey="k_l_phenom" name="旧版本 (唯象模型) 爆炸轨迹" stroke="#ef4444" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
                         <Line type="monotone" dataKey="k_l_fp" name="新版本 (第一性原理) 稳态收敛" stroke="#10b981" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
                     </LineChart>
-                </ResponsiveContainer>
+                </SafeResponsiveContainer>
             </div>
 
             {/* 剩余硬伤诊断区域 */}

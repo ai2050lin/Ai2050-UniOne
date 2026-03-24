@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Layers, Combine, Axis3d, BrainCircuit } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceArea } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceArea } from 'recharts';
+import SafeResponsiveContainer from '../components/shared/SafeResponsiveContainer';
 
 // 使用刚刚实验输出的 36 层重合率数据，将 1.0 换算为 100%
 const cascadeData = [
@@ -62,7 +63,7 @@ const KnowledgeCascadeTreeGraph = () => {
                 padding: '24px',
                 border: '1px solid rgba(255,255,255,0.03)'
             }}>
-                <ResponsiveContainer width="100%" height="100%">
+                <SafeResponsiveContainer minHeight={280}>
                     <LineChart data={cascadeData} margin={{ top: 20, right: 30, left: 10, bottom: 10 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
                         <XAxis
@@ -100,7 +101,7 @@ const KnowledgeCascadeTreeGraph = () => {
                         <Line type="monotone" dataKey="属性实体纠缠" name="属性与实体跨阶纠缠力" stroke="#facc15" strokeWidth={3} dot={{ r: 5, fill: '#1e293b', strokeWidth: 2 }} />
                         <Line type="monotone" dataKey="词性超级融合" name="实体 vs 超类(动词/抽象) 重组崩溃点" stroke="#ef4444" strokeWidth={4} activeDot={{ r: 8, stroke: '#ef4444', strokeWidth: 2, fill: '#1e293b' }} />
                     </LineChart>
-                </ResponsiveContainer>
+                </SafeResponsiveContainer>
             </div>
 
             {/* 底端模块解说 */}
