@@ -24807,3 +24807,378 @@ Get-Content tests/codex_temp/stage187_cross_model_shared_puzzle_strengthening_20
 - Stage264 已完成完整测试结构汇总层。Qwen 历史结构分约 0.4165，DeepSeek 历史结构分约 0.4746。结论：Qwen 在当前受控直测里更稳，DeepSeek 在部分历史结构项上不弱，但两边都还没有进入参数级硬主核闭合区。
 - Stage265 已完成完整测试总评。Qwen complete_score 约 0.7082，DeepSeek14B complete_score 约 0.6373，分差约 0.0710。当前最严格判断：Qwen 当前在这套完整测试里略强于 DeepSeek14B，但优势不大，结论仍然停留在“完整测试强弱”层，不等于“参数级编码原理已经破解”。
 - 理论进度：当前跨模型完整测试已经从单点现象推进到“行为直测层 + 历史结构层 + 总评层”的三层闭环。下一阶段最关键的不是再堆行为样本，而是把 Qwen / DeepSeek 的完整测试差异继续压回共享基底、局部差分、路径放大、天然来源保真这些参数级结构上。
+[2026-03-24 14:41] Stage266-268 完整测试到参数级原理桥记录
+命令:
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage266_qwen_deepseek_parameter_hook_compare.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage267_qwen_deepseek_same_class_competition_compare.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage268_complete_test_to_parameter_principle_bridge.py
+- 更新文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md 第 29 节
+
+研究进度:
+- Stage266 已确认 Qwen3-4B 与 DeepSeek-R1-Distill-Qwen-7B 的同口径参数钩子对照可稳定复现。Qwen parameter_hook_score 约 0.8473，DeepSeek7B parameter_hook_score 约 1.3573。当前共同更弱的对照是“苹果水果义 vs 品牌义”，共同更强的对照是“翻译 vs 重构”等任务级切换，说明参数层当前更容易稳定显影任务路径切换，而不是多义对象内部边界。
+- Stage267 已确认同类高竞争参数对照可稳定复现。Qwen same_class_score 约 0.8333，DeepSeek7B same_class_score 为 1.0000。水果、品牌边界整体可站住，动物内部竞争是 Qwen 当前更明显的局部弱项。
+- Stage268 已把完整测试差异继续压回参数层。Qwen bridge_score 约 0.6723，DeepSeek14B bridge_score 约 0.7935，分差约 0.1212。两边共同最强块是 parameter_hook_score（参数钩子总分），共同最弱块是 source_fidelity_parameter_score（来源保真参数分）。
+- 理论进度: 当前最稳的结论已经从“完整测试谁更强”推进到“完整测试强弱可以被继续压回参数层，但天然来源保真仍然是跨模型共同主断点”。这说明研究已从行为/结构候选层，进一步逼近参数级结构原理，但距离硬主核闭合仍差因果干预层和跨模型不变量压缩层。
+[2026-03-24 15:07] Stage269-271 因果层推进记录
+命令:
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage269_parameter_position_causal_intervention_map.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage270_thin_delta_to_route_amplification_causal_bridge.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage271_cross_model_natural_source_fidelity_compression.py
+- 更新文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md 第 30 节
+
+研究进度:
+- Stage269 已完成参数位置因果干预图。Qwen3-4B parameter_intervention_score 约 0.0783，DeepSeek-R1-Distill-Qwen-7B parameter_intervention_score 约 1.7841。结论：高频差分位一旦被直接压低，义项边界和任务路径的输出分布会明显改写，这说明这些参数位置已经不只是相关，而是具备因果杠杆。
+- Stage270 已完成薄差分到路径放大因果桥。Qwen3-4B bridge_score 约 0.3150，DeepSeek-R1-Distill-Qwen-7B bridge_score 约 0.3356。结论：前面很薄的局部差分并不是自己就足够大，而是落在高杠杆位之后，会在后续路径中被继续放大；当早层差分位被压低后，route（路径）和 late（后层）差异会明显回落。
+- Stage271 已完成跨模型天然来源保真压缩。Qwen3-4B natural_fidelity_score = 1.0000，DeepSeek-R1-Distill-Qwen-7B natural_fidelity_score 约 0.3333，cross-model common_natural_fidelity_score 约 0.6667，而 common_repair_fidelity_score = 1.0000。结论：跨模型共同最弱的不是修复能力，而是天然状态下来源结构能不能自己带稳。
+- 理论进度: 当前已经从“共享基底 + 局部差分 + 路径放大”的结构候选，推进到因果层支撑：共享基底承载大范围复用，少量高杠杆差分位负责拨开对象或任务边界，后续路径继续放大这些薄差分，但后段天然来源保真仍然是当前最弱的共同断点。下一阶段需要继续把高频差分位拆成更稳定的角色卡，并把天然来源保真进一步压缩到更少的共同参数结构上。
+[2026-03-24 15:10] Stage269-271 结果解读与机制回答记录
+命令:
+- Get-Content tests/codex_temp/stage269_parameter_position_causal_intervention_map_20260324/summary.json
+- Get-Content tests/codex_temp/stage270_thin_delta_to_route_amplification_causal_bridge_20260324/summary.json
+- Get-Content tests/codex_temp/stage271_cross_model_natural_source_fidelity_compression_20260324/summary.json
+- 更新文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md 第 30 节
+
+研究进度:
+- 已完成 Stage269-271 的因果层推进，并确认三条主结论：高频差分位具备因果杠杆；薄差分会被后续路径继续放大；跨模型共同最弱项仍然是天然来源保真。
+- 当前参数级结构原理已经从“共享基底 + 局部差分 + 路径放大”的结构候选，推进到带有因果证据的版本：共享基底负责复用，少量高杠杆差分位负责拨开对象或任务边界，后续路径继续放大这些薄差分，但后段天然来源保真仍是共同主断点。
+- 机制解释层面，接下来回答重构和翻译两类任务的编码机制时，将基于当前稳定证据：任务语义切换比多义对象内部边界更容易在参数层稳定显影；翻译与重构都依赖操作语义切任务、对象与约束角色定作用域、后续路径放大完成任务差异。
+[2026-03-24 15:33] Stage272-274 翻译与重构编码机制推进记录
+命令:
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage272_translation_refactor_parameter_role_card.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage273_translation_content_to_output_bridge.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage274_refactor_object_constraint_structure_bridge.py
+- 更新文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md 第 31 节
+
+研究进度:
+- Stage272 已完成翻译与重构参数角色卡。Qwen3-4B role_score 约 0.3555，DeepSeek-R1-Distill-Qwen-7B role_score 约 0.5430。共同结论：翻译与重构都不是单词开关，而是操作、对象、约束三类角色共同切入参数路径；在 DeepSeek 7B 上 operation_role（操作角色）最强。
+- Stage273 已完成翻译内容保留到输出语言桥。Qwen3-4B bridge_score 约 0.9546，DeepSeek-R1-Distill-Qwen-7B bridge_score 约 0.7913。关键现象：early（早层）内容保留极强，route（路径层）相似度明显下降，late（后层）仍保留较高相似度。结论：翻译更像“内容骨架保留 + 输出语言路径重写”，而不是删掉原语义再重写。
+- Stage274 已完成重构对象约束到结构改写桥。Qwen3-4B bridge_score 约 0.3456，DeepSeek-R1-Distill-Qwen-7B bridge_score 约 0.6708。结论：重构不是普通改写，而是操作语义先切任务、对象锁定作用域、约束限定输出形式，后续路径再把系统推到结构改写链。
+- 理论进度: 当前已经能把翻译和重构都压成编码级机制：共享底盘上的任务路径分化。翻译主链更像“内容骨架保留 + 目标语言重写”，重构主链更像“代码对象锁定 + 结构改写展开”。下一阶段要继续追目标语言读出位、代码结构改写位，以及跨任务共享角色到底盘参数的统一桥。
+[2026-03-24 15:38] 参数级机制解释记录：任务切换、对象锁定、输出约束
+命令:
+- 无新增脚本；本轮基于 Stage272-274 结果做参数级机制解释
+
+研究进度:
+- 进一步把“操作角色切任务、对象角色锁对象、约束角色限定输出、后续路径放大成完整任务行为”压到参数级运算层说明。
+- 当前解释重点转向：这些机制不是单独模块，而是在共享残差流、注意力取回、MLP门控和读出层约束上的联合运算。
+- 理论进度: 研究主线继续从结构候选推进到编码级解释层，开始回答参数位怎样通过残差叠加、门控偏转、路径放大和输出读出限制来实现任务语义控制。
+[2026-03-24 15:51] Stage275-277 翻译与重构机制补强记录
+命令:
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage275_translation_target_language_readout_bridge.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage276_refactor_structure_rewrite_position_map.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage277_cross_task_shared_role_to_base_bridge.py
+- 更新文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md 第 32 节
+
+研究进度:
+- Stage275 已把翻译目标语言控制继续压到末端读出层。当前两边共同现象是：early（早层）跨方向相似度高，route（路径层）开始明显分开，late（后层）差异继续扩大。结论：翻译的目标语言控制不只是前段任务切换，还会继续压到末端读出分布上。
+- Stage276 已把重构和普通改写的差异继续压到参数位置层。Qwen3-4B map_score 约 0.1991，DeepSeek-R1-Distill-Qwen-7B map_score 约 0.8345。结论：重构的关键差异会集中落在少量高频位置上，这些位置更像结构改写位，而不是普通文本续写位。
+- Stage277 已把翻译和重构前段共享角色压回底盘参数层。Qwen3-4B bridge_score 约 0.5519，DeepSeek-R1-Distill-Qwen-7B bridge_score 约 0.6684。结论：翻译和重构虽然后段功能不同，但前段共享的不是词面，而是操作、对象、约束这些可复用角色，它们共同落在同一底盘参数体系上。
+- 理论进度: 关于翻译和重构的参数级机制，现在已经从一般结构解释推进到更接近编码原理的层面：翻译表现为内容骨架保留 + 目标语言读出重写；重构表现为操作切任务 + 对象锁定作用域 + 结构改写位集中；两者前段共享同一套角色底盘，但后段展开路径不同。
+
+[2026-03-24 16:22]
+命令:
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage278_translation_target_language_readout_position_map.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage279_refactor_structure_rewrite_causal_map.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage280_translation_refactor_shared_base_compression.py
+- 修复脚本: tests/codex/stage280_translation_refactor_shared_base_compression.py
+- 更新文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md 第 33 节
+
+研究进度:
+- Stage278 已把翻译主线继续压到目标语言读出位层。Qwen3-4B readout_score 约 1.0019，DeepSeek-R1-Distill-Qwen-7B readout_score 约 2.8149。结论：翻译的目标语言控制不只是前段任务切换，而是会继续压到末端读出分布，形成少量高频读出位。
+- Stage279 已把重构主线继续压到结构改写因果位层。Qwen3-4B causal_score 约 0.0624，DeepSeek-R1-Distill-Qwen-7B causal_score 约 0.5879。结论：重构的关键结构位一旦被压低，后段改写链和最终读出都会一起回落，这些位置已具备结构改写因果作用。
+- Stage280 已把翻译与重构前段共享底盘进一步压缩。Qwen3-4B compression_score 约 0.4733，DeepSeek-R1-Distill-Qwen-7B compression_score 约 1.3153。结论：翻译和重构前段共享同一套任务角色底盘，后段只是沿不同扩展位展开成目标语言读出或结构改写。
+- 理论进度: 关于翻译与重构的编码级原理，现在最接近证据的统一读法是：操作角色先切任务，对象角色锁定作用对象，约束角色限定输出边界；翻译沿目标语言读出位展开，重构沿结构改写位展开。两者不是两套独立大模块，而更像同一前段角色底盘上的两条后段扩展链。
+
+[2026-03-24 16:27]
+命令:
+- 重写文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+- 保留内容: 研究原则、当前核心目标、最新测试与结果、当前硬伤、当前总判断、下一阶段大任务
+- 移除内容: 中间阶段流水记录、重复阶段总结、历史残片
+
+研究进度:
+- 已将语言总文档重构为“整编版”，不再保留中间阶段流水，只保留当前仍有效、还能复核、还能继续推进的结论。
+- 当前文档主线已明确为：共享底盘 + 稀疏局部差分 + 路径放大 + 角色化语义切入 + 天然来源保真瓶颈。
+- 最新测试结果已统一收束到 Stage269、Stage270、Stage271、Stage278、Stage279、Stage280 六块，分别对应参数位置因果干预、薄差分到路径放大因果桥、跨模型天然来源保真压缩、翻译目标语言读出位图、重构结构改写因果图、翻译与重构共享底盘压缩。
+- 理论进度: 文档现在已经从“阶段堆叠记录”切换成“当前参数级结构原理候选图”。当前最接近证据的统一读法是：前段由操作、对象、约束角色切入共享底盘，中后段由薄差分和路径放大展开成翻译读出、结构改写等具体功能；天然来源保真仍然是当前最深的共同断点。
+
+[2026-03-24 16:49]
+命令:
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage281_translation_target_language_role_card.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage282_refactor_structure_rewrite_role_card.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage283_shared_task_role_base_to_bottom_param_bridge.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage284_multihop_translation_command_probe.py
+- 修复端口: tests/codex/stage284_multihop_translation_command_probe.py 读取 OLLAMA_HOST（本地模型服务地址）
+- 重写文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+
+研究进度:
+- Stage281 已把翻译目标语言控制继续压到逐位角色层。当前两边都更像“语言专属读出位”结构，而不是大面积共享读出。结论：目标语言控制已经不只是桥，而开始进入逐位角色层。
+- Stage282 已把重构结构改写从因果位推进到逐位角色层。Qwen3-4B role_score 约 0.3624，DeepSeek-R1-Distill-Qwen-7B role_score 约 0.9879。结论：重构结构改写正在形成可复用的逐位结构角色。
+- Stage283 已把翻译与重构前段共享角色继续压到底层参数桥。Qwen3-4B bridge_score 约 0.4602，DeepSeek-R1-Distill-Qwen-7B bridge_score 约 0.8422。结论：前段共享的不只是表面角色，而是已能继续压到更底层参数底盘。
+- Stage284 已完成多跳翻译命令直测。Qwen3-4B behavior_score = 0.75 且 clean_ratio = 1.0；DeepSeek-R1-14B behavior_score = 0.75 且 clean_ratio = 0.75。结论：两边前段任务理解大体正确，但 DeepSeek 14B 更容易把中间英文和最终法文一起输出，暴露的更像后段输出约束和天然稳态闭合问题，而不是前段完全没理解命令。
+- 理论进度: 当前最接近证据的更新判断是：翻译与重构前段共享同一套任务角色底盘，后段分别沿目标语言读出位和结构改写位展开；多跳翻译命令已经说明，很多错误不是“任务没切对”，而是“后段没收干净”。这进一步把主瓶颈收束到天然来源保真和后段闭合层。
+
+[2026-03-24 17:00]
+命令:
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage285_translation_target_language_causal_map.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage286_refactor_structure_function_map.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage287_multihop_task_closure_review.py
+- 更新文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+
+研究进度:
+- Stage285 已把翻译目标语言控制从逐位角色卡推进到逐位因果图。Qwen3-4B causal_score 约 0.0023，DeepSeek-R1-Distill-Qwen-7B causal_score 约 0.0066。结论：目标语言高频读出位一旦被压低，最终目标语言偏置会同步回落，这些位置已开始具备目标语言读出因果作用。
+- Stage286 已把重构结构改写从因果位推进到功能图。Qwen3-4B function_score 约 0.6624，DeepSeek-R1-Distill-Qwen-7B function_score 约 1.3879。结论：重构的结构改写位不只是高频出现，还会跨提示重复承担同一类结构功能，开始形成可复用功能位。
+- Stage287 已完成多跳任务后段闭合复核。Qwen3-4B closure_score = 0.75，DeepSeek-R1-14B closure_score = 0.25。结论：当前多跳任务暴露的主问题不是前段任务切换完全错误，而是后段把中间结果和最终结果一起吐出来，说明后段闭合和输出约束仍是硬伤。
+- 理论进度: 当前参数级原理的主收口方向已进一步明确：翻译正朝“目标语言读出位主核”收缩，重构正朝“结构改写功能位主核”收缩，而跨任务共同最难打穿的仍然是后段闭合。也就是说，现在离原理更近的地方，不是前段角色切换，而是“后段如何把正确结果收干净”。 
+
+[2026-03-24 17:06]
+命令:
+- 无新增测试命令，本轮为研究主线切换记录
+
+研究进度:
+- 研究主线调整：当前优先级从“先解决天然来源保真瓶颈”切换为“先破解参数级编码机制本身”。
+- 当前新的核心抓手被明确为：`shared base + bias（共享基底 + 偏置）` 这一段参数级机制。原因是只要这段能被拆清，就可以继续向局部差分、路径放大、任务切换、后段闭合外推。
+- 理论进度: 当前最合理的总策略不再是优先补最弱现象，而是优先拆最基础、最可复用、最可能生成其他现象的编码原段。也就是：先回答“基底是什么、偏置是什么、偏置怎样压在基底上形成对象与任务”，再用这一段去解释后面的差分、路径和闭合。
+[2026-03-24 18:34] 研究进度追加
+- 主题：基于 Stage291-293 的“共享基底 + 偏置”单参数级编码机制分析。
+- 相关结果文件：tests/codex_temp/stage291_shared_base_position_map_20260324/summary.json；tests/codex_temp/stage292_bias_injection_position_map_20260324/summary.json；tests/codex_temp/stage293_base_to_bias_operation_bridge_20260324/summary.json。
+- 关键结论：共享基底更像落在“中高基底负载、低到中等差分负载”的可复用参数位；偏置更像注入到“少量高差分负载位”，把同一套共享基底拨向水果、动物、品牌、器物、任务等不同方向；当前最接近的运算结构是“共享基底先承载通用家族结构，再由少量偏置位完成方向偏转，最后由对象压力决定偏置需要多厚”。
+- 参数级原理判断：单个参数通常不独立编码“苹果”这类完整对象，而更像承担两种角色之一：一类是共享承载位，负责维持通用骨架；另一类是偏置偏转位，负责在局部高杠杆方向上改变对象、义项或任务走向。更合理的基本运算单元不是“单概念参数”，而是“共享承载 + 稀疏偏转”的局部运算元。
+- 当前工作性数学原理（非最终闭式理论）：更像“基底承载项 + 稀疏条件偏置项 + 后续路径放大项”的连续运算，而不是每个对象各自拥有完整独立参数块。当前数学表述只作为工作性近似，不视为最终第一性原理。
+- 下一阶段建议：Stage294 基底单参数因果扫描图；Stage295 偏置单参数因果扫描图；Stage296 基底固定/偏置替换实验；Stage297 基底+偏置局部运算元图。
+[2026-03-24 18:44] 研究进度追加
+- 命令:
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage294_shared_base_single_param_causal_sweep.py tests/codex/stage295_bias_single_param_causal_sweep.py tests/codex/stage296_base_fixed_bias_swap_experiment.py tests/codex/stage297_base_bias_local_operator_map.py tests/codex/test_stage294_shared_base_single_param_causal_sweep.py tests/codex/test_stage295_bias_single_param_causal_sweep.py tests/codex/test_stage296_base_fixed_bias_swap_experiment.py tests/codex/test_stage297_base_bias_local_operator_map.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage294_shared_base_single_param_causal_sweep.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage295_bias_single_param_causal_sweep.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage296_base_fixed_bias_swap_experiment.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage297_base_bias_local_operator_map.py
+  - 追加文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+- 研究进度:
+  - Stage294 已把共享基底从“位置簇”推进到“单参数因果扫描”。当前 causal_score ≈ 0.4136，最强共享承载位 dim=138。结论：共享承载位被单点压低时，更像先伤通用家族骨架，再伤对象细节。
+  - Stage295 已把偏置推进到“单参数因果扫描”。当前 causal_score ≈ 0.6724，最强偏置位 dim=5。结论：偏置位更像少量高杠杆偏转位，先改对象、义项或任务方向，再影响后续路径。
+  - Stage296 已完成“基底固定/偏置替换”实验。当前 experiment_score ≈ 0.5448。结论：固定同一套共享底盘后，只替换少量偏置位就足以改变对象或任务方向，说明偏置更像压在底盘上的稀疏偏转器。
+  - Stage297 已把“共享承载位 + 稀疏偏转位”压成局部运算元。当前 operator_score ≈ 0.5437。结论：当前最接近参数级结构原理的局部单元，不是单概念参数，而是共享承载位与偏转位组成的局部运算元。
+- 理论进度:
+  - 当前主线进一步收口到“共享承载 + 稀疏偏转”的局部编码原段。更接近的工作性原理是：共享承载位先托住通用骨架，偏置偏转位在少量高杠杆位置上改变对象、义项或任务方向，随后后续路径继续放大。下一步关键不再是补更多现象，而是把共享承载位、偏置偏转位继续压成逐位角色卡和联合因果链。
+[2026-03-24 18:50] 研究进度追加
+- 命令:
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage298_shared_base_position_role_card.py tests/codex/stage299_bias_position_role_card.py tests/codex/stage300_shared_base_bias_joint_causal_map.py tests/codex/test_stage298_shared_base_position_role_card.py tests/codex/test_stage299_bias_position_role_card.py tests/codex/test_stage300_shared_base_bias_joint_causal_map.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage298_shared_base_position_role_card.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage299_bias_position_role_card.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage300_shared_base_bias_joint_causal_map.py
+  - 追加文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+- 研究进度:
+  - Stage298 已把共享承载位从单参数因果扫描推进到逐位角色卡。当前 role_score ≈ 0.3813，最强位 dim=138。结论：共享承载位开始形成“水果家族共享承载位”“局部共享承载位”等稳定角色，但跨家族共享承载位仍然偏少。
+  - Stage299 已把偏置偏转位推进到逐位角色卡。当前 role_score ≈ 0.4368，最强位 dim=5。结论：偏置位已能区分成对象细粒度偏转位、类内竞争偏转位、对象域切换偏转位、品牌或跨类偏转位，但任务偏转位仍然偏少。
+  - Stage300 已把共享承载位和偏置偏转位接成联合因果图。当前 joint_score ≈ 0.4580，joint_effect ≈ 0.2202。结论：当前最接近的联合因果结构是“共享承载位先托住通用骨架，再由偏置偏转位在局部高杠杆位置上改变对象、义项或任务方向”。
+- 理论进度:
+  - 当前主线已从“共享基底 + 偏置”进一步推进到“共享承载位角色卡 + 偏置偏转位角色卡 + 联合因果链”。这说明参数级结构原理正在从现象层、聚合层进入逐位角色层。下一步关键是继续把共享承载位和偏置偏转位压缩成更少、更稳定、可跨模型复核的参数主核。
+[2026-03-24 19:11] 研究进度追加
+- 命令:
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage301_cross_family_shared_base_compression.py tests/codex/stage302_task_bias_position_strengthening.py tests/codex/stage303_shared_base_bias_cross_model_joint_review.py tests/codex/test_stage301_cross_family_shared_base_compression.py tests/codex/test_stage302_task_bias_position_strengthening.py tests/codex/test_stage303_shared_base_bias_cross_model_joint_review.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage301_cross_family_shared_base_compression.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage302_task_bias_position_strengthening.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage303_shared_base_bias_cross_model_joint_review.py
+  - 追加文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+- 研究进度:
+  - Stage301 已把共享承载位进一步压向跨家族共享主核。当前 compression_score ≈ 0.3716，compressed_count = 1。结论：跨家族共享承载位已经出现，但仍然偏少，真正通用底盘主核还未完全压出。
+  - Stage302 已把任务偏转位继续补强。当前 strengthening_score ≈ 0.6425，最强模型为 DeepSeek-R1-Distill-Qwen-7B。结论：任务偏转位正在通过操作角色和约束角色显影，但在偏置位总图里仍然偏少。
+  - Stage303 已完成共享承载位与偏置偏转位的跨模型联合复核。当前 review_score ≈ 0.6013，DeepSeek-R1-14B 略强于 Qwen3-4B。结论：联合结构已经能跨模型显影，但共同主核仍然偏少，竞争场景仍然是共同弱区。
+- 理论进度:
+  - 当前“共享承载位角色卡 + 偏置偏转位角色卡 + 联合因果链”已经形成三段式主线。更接近的编码级原理是：共享承载位负责托住通用骨架，偏置偏转位负责在少量高杠杆位置上改变对象、义项或任务方向，联合因果链则说明两者不是并列现象，而是前后相接的局部运算结构。
+[2026-03-24 19:26] 研究进度追加
+- 命令:
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage304_neuron_level_shared_bias_pattern_extractor.py tests/codex/stage305_neuron_level_operator_decomposition.py tests/codex/stage306_neuron_level_math_principle_summary.py tests/codex/test_stage304_neuron_level_shared_bias_pattern_extractor.py tests/codex/test_stage305_neuron_level_operator_decomposition.py tests/codex/test_stage306_neuron_level_math_principle_summary.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage304_neuron_level_shared_bias_pattern_extractor.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage305_neuron_level_operator_decomposition.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage306_neuron_level_math_principle_summary.py
+- 研究进度:
+  - Stage304 已把“共享承载位 + 偏置偏转位 + 联合因果链”推进成规律提取器。当前 extraction_score ≈ 0.4799，shared_core_count = 4，bias_core_count = 6。结论：已经能形成一套可执行的候选位提取流程。
+  - Stage305 已把局部编码原段分解成三类算子：共享承载算子、偏置偏转算子、联合放大算子。当前 decomposition_score ≈ 0.4324。结论：当前更接近的最小运算单元不是单概念参数，而是三段式局部运算。
+  - Stage306 已把以上结果压成神经元级工作性数学原理摘要。当前 principle_score ≈ 0.4997。工作性原理：共享承载位先维持通用家族骨架，偏置偏转位再在少量高杠杆位置上改变对象、义项或任务方向，联合放大算子把局部偏转扩展成完整处理差异。
+- 理论进度:
+  - 现在已经不只是“能不能设计一种算法”，而是已经有了一个可执行原型：候选位筛选 -> 单参数因果扫描 -> 基底固定/偏置替换 -> 局部运算元压缩 -> 跨模型复核。当前它还属于工作性数学原理提取器，不是最终第一性原理定理机。
+[2026-03-24 19:34] 研究进度追加
+- 命令:
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage304_neuron_level_shared_bias_pattern_extractor.py tests/codex/stage305_neuron_level_operator_decomposition.py tests/codex/stage306_neuron_level_math_principle_summary.py tests/codex/stage307_cross_family_shared_base_core_compression.py tests/codex/stage308_task_bias_core_compression.py tests/codex/stage309_operator_to_architecture_bridge.py tests/codex/test_stage304_neuron_level_shared_bias_pattern_extractor.py tests/codex/test_stage305_neuron_level_operator_decomposition.py tests/codex/test_stage306_neuron_level_math_principle_summary.py tests/codex/test_stage307_cross_family_shared_base_core_compression.py tests/codex/test_stage308_task_bias_core_compression.py tests/codex/test_stage309_operator_to_architecture_bridge.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage304_neuron_level_shared_bias_pattern_extractor.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage305_neuron_level_operator_decomposition.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage306_neuron_level_math_principle_summary.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage307_cross_family_shared_base_core_compression.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage308_task_bias_core_compression.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage309_operator_to_architecture_bridge.py
+- 研究进度:
+  - Stage304 已形成神经元级共享承载与偏置偏转规律提取器。extraction_score ≈ 0.4799，shared_core_count = 4，bias_core_count = 6。
+  - Stage305 已把局部编码原段分解为共享承载算子、偏置偏转算子、联合放大算子。decomposition_score ≈ 0.4324。
+  - Stage306 已把以上结果压成神经元级工作性数学原理摘要。principle_score ≈ 0.4997。
+  - Stage307 已把跨家族共享承载主核继续压缩。compression_score ≈ 0.5612，core_count = 4。
+  - Stage308 已把任务偏转主核继续压缩。compression_score ≈ 0.6625，core_count = 4，最强模型为 DeepSeek-R1-Distill-Qwen-7B。
+  - Stage309 已把三算子压到网络原型模板桥。bridge_score ≈ 0.5244。
+- 理论进度:
+  - 当前最接近的工作性数学原理已经收口成三算子：共享承载算子负责托住通用骨架，偏置偏转算子负责在局部高杠杆位置上改变对象、义项或任务方向，联合放大算子负责把局部偏转扩展成完整处理差异。进一步推进方向是把三算子从工作性原理压成更少、更稳定、可跨模型复核的参数主核，并尝试映射到新的网络模板。
+[2026-03-24 19:42] 研究进度追加
+- 命令:
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage310_shared_carrier_operator_core_compression.py tests/codex/stage311_bias_deflection_operator_core_compression.py tests/codex/stage312_operator_special_format_export.py tests/codex/test_stage310_shared_carrier_operator_core_compression.py tests/codex/test_stage311_bias_deflection_operator_core_compression.py tests/codex/test_stage312_operator_special_format_export.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage310_shared_carrier_operator_core_compression.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage311_bias_deflection_operator_core_compression.py
+  - d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage312_operator_special_format_export.py
+- 研究进度:
+  - Stage310 已把共享承载算子继续压到主核层。compression_score ≈ 0.4225，core_count = 3，最强位 dim=138。结论：共享承载主核已开始收缩到少量核心位。
+  - Stage311 已把偏置偏转算子继续压到主核层。compression_score ≈ 0.4396，core_count = 4，最强位 dim=5。结论：偏置偏转主核已开始稳定，但任务偏转核和品牌偏转核仍不够干净。
+  - Stage312 已完成三算子原始参数特殊格式导出。record_count = 8，导出格式 schema = agi_operator_trace_v1，文件路径 = tests/codex_temp/stage312_operator_special_format_export_20260324/agi_operator_trace_v1.jsonl。
+- 理论进度:
+  - 当前已经不只是在做工作性原理解释，还形成了可复用的数据出口：共享承载主核、偏置偏转主核、网络模板信息已可统一导出到 agi_operator_trace_v1。后续可以直接基于这份格式做更细的逐位分析、聚类压缩、跨模型比对和新网络模板搜索。
+[2026-03-24 19:44] 研究进度追加
+- 命令:
+  - 无新增测试命令，本轮为研究主线调整记录
+- 研究进度:
+  - 研究主线调整：暂停持续推进数学压缩，优先回到原始数据层，继续分析共享承载位、偏置偏转位、联合放大位的原始分布、原始响应、原始竞争和原始跨模型差异。
+  - 方法调整：当前公式保留为工作性描述，不继续把它们往更强数学闭式推进；优先验证原始数据是否足以支撑这些公式成为更底层原理，而不是反过来用公式覆盖原始数据缺口。
+  - 第一性原理方向：后续重点不再是“公式能不能更漂亮”，而是“公式能不能满足第一性原理条件”，包括最小性、可重复性、跨模型稳定性、因果闭合性、可扩展性和可判伪性。
+- 理论进度:
+  - 当前最合理的判断是：共享承载算子、偏置偏转算子、联合放大算子仍然只是工作性原理候选。要把它们变成第一性原理理论，必须先补原始数据层的缺口，尤其是跨家族共享位、任务偏转位、放大链原始数据、天然来源保真对原段验证的污染程度，以及跨模型共同主核的真实稳定范围。
+[2026-03-24 19:52] Stage313-316 原始数据层补图与第一性原理资格审查
+
+执行命令：
+- python -m py_compile tests/codex/stage313_shared_carrier_raw_distribution_map.py tests/codex/test_stage313_shared_carrier_raw_distribution_map.py tests/codex/stage314_bias_deflection_raw_competition_map.py tests/codex/test_stage314_bias_deflection_raw_competition_map.py tests/codex/stage315_joint_amplification_raw_trajectory_map.py tests/codex/test_stage315_joint_amplification_raw_trajectory_map.py tests/codex/stage316_first_principles_eligibility_review.py tests/codex/test_stage316_first_principles_eligibility_review.py
+- python tests/codex/test_stage313_shared_carrier_raw_distribution_map.py
+- python tests/codex/test_stage314_bias_deflection_raw_competition_map.py
+- python tests/codex/test_stage315_joint_amplification_raw_trajectory_map.py
+- python tests/codex/test_stage316_first_principles_eligibility_review.py
+- Get-Content tests/codex_temp/stage313_shared_carrier_raw_distribution_map_20260324/summary.json
+- Get-Content tests/codex_temp/stage314_bias_deflection_raw_competition_map_20260324/summary.json
+- Get-Content tests/codex_temp/stage315_joint_amplification_raw_trajectory_map_20260324/summary.json
+- Get-Content tests/codex_temp/stage316_first_principles_eligibility_review_20260324/summary.json
+
+研究进度：
+- Stage313 已把共享承载位从压缩层退回到原始分布层，raw_distribution_score ≈ 0.2992。最强位仍是 dim 138。当前最清楚的事实不是“共享位已经闭合”，而是“共享承载位的原始覆盖开始稳定，但跨家族覆盖仍偏薄”。
+- Stage314 已把偏置偏转位退回到原始竞争层，raw_competition_score ≈ 0.4557。最强位仍是 dim 5。当前对象偏转和类内竞争偏转明显强于任务竞争和品牌竞争，说明偏置原始轨迹仍以对象边界为主。
+- Stage315 已把三算子退回到原始层间轨迹，raw_trajectory_score ≈ 0.4878。当前轨迹顺序清楚：共享承载段 0.1681 -> 偏置偏转段 0.2282 -> 联合放大段 0.2202。说明三段连续结构已经显影，但逐层放大主核还没拆清。
+- Stage316 已做第一性原理资格审查，eligibility_score ≈ 0.5688。当前审查结论：最小性=中等，跨模型稳定性=中等偏弱，因果闭合性=中等，可扩展性=中等，可判伪性=较强，原始数据独立显影=中等。
+- 最严格结论：三算子已经接近第一性原理候选，但现在还不能直接上升成硬主核理论。关键原因不是公式不够漂亮，而是跨模型稳定性和原始数据独立显影还不够强。
+- 研究路线已明确转向：先补原始数据，再审公式资格，最后才做理论升级。后续优先级应是共享承载原始覆盖、偏置偏转原始竞争、联合放大逐层原始轨迹，而不是继续直接压数学形式。
+[2026-03-24 19:57] Stage317-320 原始覆盖扩张、原始竞争扩张、逐层放大拆分、第一性原理资格增强复核
+
+执行命令：
+- python -m py_compile tests/codex/stage317_shared_carrier_raw_coverage_expansion.py tests/codex/test_stage317_shared_carrier_raw_coverage_expansion.py tests/codex/stage318_bias_deflection_raw_competition_expansion.py tests/codex/test_stage318_bias_deflection_raw_competition_expansion.py tests/codex/stage319_joint_amplification_layerwise_core_split.py tests/codex/test_stage319_joint_amplification_layerwise_core_split.py tests/codex/stage320_first_principles_eligibility_reinforced_review.py tests/codex/test_stage320_first_principles_eligibility_reinforced_review.py
+- python tests/codex/test_stage317_shared_carrier_raw_coverage_expansion.py
+- python tests/codex/test_stage318_bias_deflection_raw_competition_expansion.py
+- python tests/codex/test_stage319_joint_amplification_layerwise_core_split.py
+- python tests/codex/test_stage320_first_principles_eligibility_reinforced_review.py
+- Get-Content tests/codex_temp/stage317_shared_carrier_raw_coverage_expansion_20260324/summary.json
+- Get-Content tests/codex_temp/stage318_bias_deflection_raw_competition_expansion_20260324/summary.json
+- Get-Content tests/codex_temp/stage319_joint_amplification_layerwise_core_split_20260324/summary.json
+- Get-Content tests/codex_temp/stage320_first_principles_eligibility_reinforced_review_20260324/summary.json
+
+研究进度：
+- Stage317 把共享承载位从原始分布推进到原始覆盖扩张，raw_coverage_score ≈ 0.3318。当前跨类 coverage_count=5，水果 coverage_count=3，说明共享承载位已经从水果底盘扩到跨类和器物层，但真正跨家族稳定复用的主核仍然偏少。
+- Stage318 把偏置偏转位从原始竞争推进到原始竞争扩张，raw_expansion_score ≈ 0.5306。当前最厚的是类内竞争轴，其 mean_selectivity ≈ 0.7280、mean_causal ≈ 0.2124；对象竞争、对象域切换、品牌或跨类次之。说明偏置偏转目前仍以对象竞争和类内边界为主。
+- Stage319 把联合放大链拆成逐层段，layerwise_split_score ≈ 0.3198。当前早层第一次放大≈0.1922，中层主放大≈0.2246，后层持续放大≈0.3267。说明放大不是单点事件，而是三段连续结构，且当前最强仍然落在后层持续放大。
+- Stage320 做第一性原理资格增强复核，reinforced_score ≈ 0.4640。当前资格表为：最小性=中等偏上，跨模型稳定性=中等偏弱，因果闭合性=中等，可扩展性=中等，可判伪性=较强，原始数据独立显影=中等偏上。
+- 最严格结论：三算子的原始覆盖、原始竞争和逐层放大都在增强，因此工作性原理比上一轮更扎实；但跨模型稳定性仍然不够厚，所以现在还不能把它上升成硬主核第一性原理理论。
+- 研究路线继续明确：先把原始覆盖、原始竞争、逐层放大主核做厚，再审第一性原理资格，而不是继续优先做公式压缩。
+[2026-03-24 20:02] Stage321-324 跨任务共享承载扩张、任务偏转竞争扩张、逐位放大主核拆分、跨模型资格增强复核
+
+执行命令：
+- python -m py_compile tests/codex/stage321_shared_carrier_cross_task_raw_coverage.py tests/codex/test_stage321_shared_carrier_cross_task_raw_coverage.py tests/codex/stage322_bias_deflection_task_competition_expansion.py tests/codex/test_stage322_bias_deflection_task_competition_expansion.py tests/codex/stage323_joint_amplification_position_core_split.py tests/codex/test_stage323_joint_amplification_position_core_split.py tests/codex/stage324_first_principles_cross_model_reinforced_review.py tests/codex/test_stage324_first_principles_cross_model_reinforced_review.py
+- python tests/codex/test_stage321_shared_carrier_cross_task_raw_coverage.py
+- python tests/codex/test_stage322_bias_deflection_task_competition_expansion.py
+- python tests/codex/test_stage323_joint_amplification_position_core_split.py
+- python tests/codex/test_stage324_first_principles_cross_model_reinforced_review.py
+- Get-Content tests/codex_temp/stage321_shared_carrier_cross_task_raw_coverage_20260324/summary.json
+- Get-Content tests/codex_temp/stage322_bias_deflection_task_competition_expansion_20260324/summary.json
+- Get-Content tests/codex_temp/stage323_joint_amplification_position_core_split_20260324/summary.json
+- Get-Content tests/codex_temp/stage324_first_principles_cross_model_reinforced_review_20260324/summary.json
+
+研究进度：
+- Stage321 把共享承载从对象家族覆盖扩到任务覆盖，raw_cross_task_score ≈ 0.4728。当前翻译 shared_base_bridge ≈ 0.3555，重构 shared_base_bridge ≈ 0.5430，说明共享承载位已经开始跨翻译和重构复用，但任务层覆盖仍明显薄于对象层。
+- Stage322 把偏置偏转从对象竞争扩到任务竞争，task_competition_score ≈ 0.5219。当前 Qwen 的约束强于操作，DeepSeek7B 的操作强于约束，说明任务偏转正在显影，但仍弱于对象竞争和类内竞争的原始轨迹厚度。
+- Stage323 把联合放大拆到逐位主核候选，position_split_score ≈ 0.3198。当前第一次放大主核候选=carrier 138 + bias 5，中层主放大同组合，后层持续放大同组合但强度最高≈0.3267。说明放大链有位置主核候选，但独立放大核仍未完全剥离。
+- Stage324 做跨模型增强复核，cross_model_score ≈ 0.5076。资格表更新为：最小性=中等偏上，跨模型稳定性=中等，因果闭合性=中等，可扩展性=中等偏上，可判伪性=较强，原始数据独立显影=中等偏上。
+- 最严格结论：三算子的原始链条在单模型内部已经比上一轮更清楚，并开始跨任务、跨模型显影；但跨模型共同主核仍然偏薄，所以目前仍只能算高质量候选结构，不能升级成硬主核第一性原理。
+- 研究方向继续明确：不要做新公式，继续围绕共享承载、偏置偏转、逐层放大三条原始链扩张覆盖、竞争、逐位主核和跨模型稳定性。
+[2026-03-24 20:07] Stage321-324 完成 + AGI_GPT5_LANGUAGE 文档重写清理
+
+执行命令：
+- Get-Content research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+- Get-Content tests/codex/stage321_shared_carrier_cross_task_raw_coverage.py
+- Get-Content tests/codex/stage322_bias_deflection_task_competition_expansion.py
+- Get-Content tests/codex/stage323_joint_amplification_position_core_split.py
+- Get-Content tests/codex/stage324_first_principles_cross_model_reinforced_review.py
+- Get-Content tests/codex_temp/stage280_translation_refactor_shared_base_compression_20260324/summary.json
+- Get-Content tests/codex_temp/stage302_task_bias_position_strengthening_20260324/summary.json
+- python -m py_compile tests/codex/stage321_shared_carrier_cross_task_raw_coverage.py tests/codex/test_stage321_shared_carrier_cross_task_raw_coverage.py tests/codex/stage322_bias_deflection_task_competition_expansion.py tests/codex/test_stage322_bias_deflection_task_competition_expansion.py tests/codex/stage323_joint_amplification_position_core_split.py tests/codex/test_stage323_joint_amplification_position_core_split.py tests/codex/stage324_first_principles_cross_model_reinforced_review.py tests/codex/test_stage324_first_principles_cross_model_reinforced_review.py
+- python tests/codex/test_stage321_shared_carrier_cross_task_raw_coverage.py
+- python tests/codex/test_stage322_bias_deflection_task_competition_expansion.py
+- python tests/codex/test_stage323_joint_amplification_position_core_split.py
+- python tests/codex/test_stage324_first_principles_cross_model_reinforced_review.py
+- Get-Content tests/codex_temp/stage321_shared_carrier_cross_task_raw_coverage_20260324/summary.json
+- Get-Content tests/codex_temp/stage322_bias_deflection_task_competition_expansion_20260324/summary.json
+- Get-Content tests/codex_temp/stage323_joint_amplification_position_core_split_20260324/summary.json
+- Get-Content tests/codex_temp/stage324_first_principles_cross_model_reinforced_review_20260324/summary.json
+- 使用 apply_patch 重写 research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+
+研究进度：
+- Stage321 raw_cross_task_score ≈ 0.4728，说明共享承载位已经跨对象家族显影，也开始跨翻译与重构任务复用，但任务层覆盖仍明显薄于对象层覆盖。
+- Stage322 task_competition_score ≈ 0.5219，说明任务偏转正在增强，但当前仍弱于对象竞争与类内竞争，任务层偏转还没有形成足够厚的原始轨迹。
+- Stage323 position_split_score ≈ 0.3198，说明联合放大已经能拆成第一次放大、中层主放大、后层持续放大三段位置主核候选，但独立逐位放大核仍未完全剥离。
+- Stage324 cross_model_score ≈ 0.5076，说明三算子的原始链条在单模型内部更清楚了，也开始跨模型增强，但共同主核仍然不够厚，暂时仍不能升级成硬主核第一性原理。
+- AGI_GPT5_LANGUAGE.md 已重写为干净版，清理了中间日志式内容和重复阶段堆叠，只保留研究原则、核心目标、最新原始数据、分析过程、当前硬伤和下一阶段大任务。
+- 当前文档中的“共享承载 -> 偏置偏转 -> 逐层放大”部分，已经加入原始数据和结论形成过程，不再只是压缩式表述。
+[2026-03-24 20:20] Stage325-328 共享承载跨任务主核压缩、任务偏转厚化、联合放大独立主核剥离、跨模型共同主核压缩
+
+执行命令：
+- python -m py_compile tests/codex/stage325_shared_carrier_cross_task_core_compression.py tests/codex/test_stage325_shared_carrier_cross_task_core_compression.py tests/codex/stage326_task_bias_raw_competition_thickening.py tests/codex/test_stage326_task_bias_raw_competition_thickening.py tests/codex/stage327_joint_amplification_independent_core_isolation.py tests/codex/test_stage327_joint_amplification_independent_core_isolation.py tests/codex/stage328_cross_model_common_core_compression.py tests/codex/test_stage328_cross_model_common_core_compression.py
+- python tests/codex/test_stage325_shared_carrier_cross_task_core_compression.py
+- python tests/codex/test_stage326_task_bias_raw_competition_thickening.py
+- python tests/codex/test_stage327_joint_amplification_independent_core_isolation.py
+- python tests/codex/test_stage328_cross_model_common_core_compression.py
+- Get-Content tests/codex_temp/stage325_shared_carrier_cross_task_core_compression_20260324/summary.json
+- Get-Content tests/codex_temp/stage326_task_bias_raw_competition_thickening_20260324/summary.json
+- Get-Content tests/codex_temp/stage327_joint_amplification_independent_core_isolation_20260324/summary.json
+- Get-Content tests/codex_temp/stage328_cross_model_common_core_compression_20260324/summary.json
+
+研究进度：
+- Stage325 compression_score ≈ 0.3079，说明共享承载已经能跨对象和任务形成共同底盘候选，但当前真正稳定的跨任务共享主核仍然只有很少一层；最强任务是重构，最弱任务是翻译。
+- Stage326 thickening_score ≈ 0.5488，说明任务偏转已经能区分操作偏转和约束偏转。Qwen 偏约束，DeepSeek7B 偏操作，但整体厚度仍明显弱于对象竞争和类内竞争。
+- Stage327 isolation_score ≈ 0.1685，说明联合放大已经能部分从共享位和偏置位中剥离，但当前仍存在明显耦合残留，独立放大核尚未完全显影；后层持续放大仍最强。
+- Stage328 common_core_score ≈ 0.4081，说明共同主核已经从单模型候选推进到跨模型压缩层，但任务偏转共同核和独立放大共同核仍然偏薄，离硬主核还有距离。
+- 当前研究方向继续明确：不要优先造新公式，而应继续追原始编码特性本身，尤其是共享承载跨任务主核、任务偏转厚度、独立放大核、跨模型共同主核。
+[2026-03-24 20:28] Stage329-332 多空间角色映射、模糊承载与稀疏偏转联合、层间接力独立主核、局部运算元拼接
+
+执行命令：
+- python -m py_compile tests/codex/stage329_multi_space_role_mapping.py tests/codex/test_stage329_multi_space_role_mapping.py tests/codex/stage330_fuzzy_carrier_sparse_deflection_joint_map.py tests/codex/test_stage330_fuzzy_carrier_sparse_deflection_joint_map.py tests/codex/stage331_layerwise_relay_independent_core_map.py tests/codex/test_stage331_layerwise_relay_independent_core_map.py tests/codex/stage332_local_operator_stitching_map.py tests/codex/test_stage332_local_operator_stitching_map.py
+- python tests/codex/test_stage329_multi_space_role_mapping.py
+- python tests/codex/test_stage330_fuzzy_carrier_sparse_deflection_joint_map.py
+- python tests/codex/test_stage331_layerwise_relay_independent_core_map.py
+- python tests/codex/test_stage332_local_operator_stitching_map.py
+- Get-Content tests/codex_temp/stage330_fuzzy_carrier_sparse_deflection_joint_map_20260324/summary.json
+- Get-Content tests/codex_temp/stage331_layerwise_relay_independent_core_map_20260324/summary.json
+- python tests/codex/stage329_multi_space_role_mapping.py
+- python tests/codex/stage332_local_operator_stitching_map.py
+
+研究进度：
+- Stage329 mapping_score ≈ 0.1742，说明对象、属性、位置、操作已经能显影成多空间角色，任务空间和层间传播空间也已进入同一张图，但当前多空间角色的整体整合仍偏薄。
+- Stage330 joint_score ≈ 0.6559，说明当前数据已经非常支持“模糊承载 + 稀疏偏转”的联合结构：共享底盘表现为模糊承载，偏置表现为稀疏偏转。
+- Stage331 relay_score ≈ 0.3586，说明层间接力已经能分段看见，且后层持续放大最强；但独立增益仍弱于接力整体，独立放大核尚未完全剥离。
+- Stage332 stitching_score ≈ 0.4331，说明局部运算元已经可以与多空间角色、模糊承载、层间接力拼接成统一工作框架，但当前仍是工作性拼接，不是统一理论。
+- 最严格结论：当前数据结构已经开始要求一种能处理多空间、模糊承载、稀疏偏转、层间接力和局部拼接的新型结构理论；但现在还不能说“范畴论 + 信息几何 + 拓扑数据分析”的组合已经足够直接成为最终理论，只能说它是目前最有希望的描述框架候选之一。
+[2026-03-24 20:40] Stage333-336 原始簇、原始偏转方向、原始共现、拓扑式描述候选复核
+
+执行命令：
+- python -m py_compile tests/codex/stage333_shared_carrier_cluster_raw_map.py tests/codex/test_stage333_shared_carrier_cluster_raw_map.py tests/codex/stage334_bias_deflection_direction_raw_map.py tests/codex/test_stage334_bias_deflection_direction_raw_map.py tests/codex/stage335_local_operator_raw_cooccurrence_map.py tests/codex/test_stage335_local_operator_raw_cooccurrence_map.py tests/codex/stage336_topological_description_candidate_review.py tests/codex/test_stage336_topological_description_candidate_review.py
+- python tests/codex/test_stage333_shared_carrier_cluster_raw_map.py
+- python tests/codex/test_stage334_bias_deflection_direction_raw_map.py
+- python tests/codex/test_stage335_local_operator_raw_cooccurrence_map.py
+- python tests/codex/test_stage336_topological_description_candidate_review.py
+- Get-Content tests/codex_temp/stage333_shared_carrier_cluster_raw_map_20260324/summary.json
+- Get-Content tests/codex_temp/stage334_bias_deflection_direction_raw_map_20260324/summary.json
+- Get-Content tests/codex_temp/stage335_local_operator_raw_cooccurrence_map_20260324/summary.json
+- Get-Content tests/codex_temp/stage336_topological_description_candidate_review_20260324/summary.json
+
+研究进度：
+- Stage333 cluster_count = 4，说明共享承载已经形成水果共享簇、跨类共享簇、器物共享簇、混合共享簇。其中水果共享簇成员维度为 138、306、660；跨类共享簇成员维度为 469、364、215、530、273。当前跨类共享簇已明显存在，但器物和混合簇仍偏薄。
+- Stage334 direction_count = 5，说明偏置偏转方向已经能拆成对象细粒度偏转、类内竞争偏转、对象域切换偏转、品牌或跨类偏转、任务偏转五类。当前任务偏转最薄，且 Qwen 偏约束偏转，DeepSeek7B 偏操作偏转。
+- Stage335 operator_count = 3，说明局部运算元已经能与共享承载簇和偏置偏转方向发生稳定共现：共享承载运算元、家族偏转运算元、底盘偏置联动运算元都能映射到共享簇和偏转方向。但当前共现仍然是粗粒度的，还没细到逐位角色链。
+- Stage336 candidate_score ≈ 0.4333，说明当前数据已经同时支持多空间结构、模糊承载与稀疏偏转、层间接力、局部拼接四类特征，因此拓扑式描述具有明显潜力；但跨模型共同主核仍然偏薄，所以现在只能算候选描述框架，不是最终理论。
+- 最严格结论：当前数据结构确实开始要求一种能够处理多空间、模糊承载、层间接力和局部拼接的结构理论；但范畴论、信息几何、拓扑数据分析、拓扑深度学习的组合，现在还只能作为高潜力候选框架，不能直接宣称已经足够描述全部编码机制。

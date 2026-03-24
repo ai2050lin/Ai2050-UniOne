@@ -58,7 +58,7 @@ def load_model(model_path: Path):
         local_files_only=True,
         trust_remote_code=True,
         low_cpu_mem_usage=True,
-        torch_dtype=torch.bfloat16,
+        dtype=torch.bfloat16,
         device_map="cpu",
         attn_implementation="eager",
     )
@@ -216,4 +216,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
