@@ -24408,3 +24408,402 @@ Get-Content tests/codex_temp/stage187_cross_model_shared_puzzle_strengthening_20
 - 文档动作：已将 Stage197-208 的传播编码主线整理并追加到 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 尾部。
 - 新增内容：传播编码主线、Stage197 到 Stage208 的阶段结果、当前主判断、当前硬伤、下一阶段大任务块。
 - 当前文档定位：语言文档不再只围绕静态对象编码，而开始系统纳入时序痕迹、相位路径、前向携带来源、后段重入闭合这条新主线。
+[2026-03-23 23:42] Stage209-211 传播编码主线推进
+- 新增脚本:
+  - tests/codex/stage209_natural_trace_retention_map.py
+  - tests/codex/test_stage209_natural_trace_retention_map.py
+  - tests/codex/stage210_timing_phase_route_chain.py
+  - tests/codex/test_stage210_timing_phase_route_chain.py
+  - tests/codex/stage211_source_carried_closure_bridge.py
+  - tests/codex/test_stage211_source_carried_closure_bridge.py
+- 执行命令:
+  - python -m py_compile tests/codex/stage209_natural_trace_retention_map.py tests/codex/test_stage209_natural_trace_retention_map.py tests/codex/stage210_timing_phase_route_chain.py tests/codex/test_stage210_timing_phase_route_chain.py tests/codex/stage211_source_carried_closure_bridge.py tests/codex/test_stage211_source_carried_closure_bridge.py
+  - python tests/codex/test_stage209_natural_trace_retention_map.py
+  - python tests/codex/test_stage210_timing_phase_route_chain.py
+  - python tests/codex/test_stage211_source_carried_closure_bridge.py
+- 测试结果:
+  - Stage209: PASS
+  - Stage210: PASS
+  - Stage211: PASS
+- 关键结果:
+  - Stage209 retention_map_score = 0.47345, weakest_segment = 天然保留段, strongest_segment = 修复迁移段, continuity_gap = 0.75
+  - Stage210 chain_score = 0.5332439140996101, weakest_piece = 时序痕迹, strongest_piece = 路径分裂, dominant_band = early
+  - Stage211 closure_bridge_score = 0.38789917500000004, weakest_piece = 天然痕迹传递, strongest_piece = 前向携带来源, top_gap = 天然痕迹传递不足
+- 理论进度:
+  - 当前主判断进一步收敛为: 系统的关键不只是会走路径, 而是前向传播时能否把来源结构天然带着走。
+  - 传播编码链目前更像: 天然痕迹保留偏弱 -> 时序/相位驱动路径分裂 -> 前向携带来源雏形成立 -> 后段闭合仍被天然痕迹传递不足拖住。
+  - 当前头号瓶颈不是路径展开, 而是来源痕迹在自然传播中的持续保真。
+[2026-03-23 23:55] Stage212-214 传播编码补强与文档整理
+- 新增脚本:
+  - tests/codex/stage212_natural_trace_decay_map.py
+  - tests/codex/test_stage212_natural_trace_decay_map.py
+  - tests/codex/stage213_timing_phase_route_bridge.py
+  - tests/codex/test_stage213_timing_phase_route_bridge.py
+  - tests/codex/stage214_source_carried_reentry_closure.py
+  - tests/codex/test_stage214_source_carried_reentry_closure.py
+- 执行命令:
+  - python -m py_compile tests/codex/stage212_natural_trace_decay_map.py tests/codex/test_stage212_natural_trace_decay_map.py tests/codex/stage213_timing_phase_route_bridge.py tests/codex/test_stage213_timing_phase_route_bridge.py tests/codex/stage214_source_carried_reentry_closure.py tests/codex/test_stage214_source_carried_reentry_closure.py
+  - python tests/codex/test_stage212_natural_trace_decay_map.py
+  - python tests/codex/test_stage213_timing_phase_route_bridge.py
+  - python tests/codex/test_stage214_source_carried_reentry_closure.py
+  - append 更新 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 尾部, 新增“9. 传播编码补强与原理展开”
+- 测试结果:
+  - Stage212: PASS
+  - Stage213: PASS
+  - Stage214: PASS
+- 关键结果:
+  - Stage212 decay_map_score = 0.52655, strongest_decay_segment = 天然保留段, weakest_decay_segment = 修复迁移段, continuity_gap = 0.75
+  - Stage213 bridge_score = 0.5367592039271045, weakest_piece = 时序痕迹桥, strongest_piece = 路径分裂桥, dominant_band = early
+  - Stage214 closure_score = 0.38405505700053055, weakest_piece = 天然痕迹传递, strongest_piece = 前向携带来源, top_gap = 天然痕迹传递不足
+- 理论进度:
+  - 当前主判断进一步收敛为: 系统最大的瓶颈不是不会分路, 而是来源结构在自然传播中的保真不足。
+  - 传播编码链更像: 天然保留脆弱 -> 时序/相位支撑早层分流 -> 前向携带来源雏形出现 -> 后段重入闭合仍被天然痕迹传递不足拖住。
+  - 当前闭合能力更像修复驱动闭合, 还不是天然稳态闭合。
+[2026-03-24 00:05] Stage215-217 传播保真深化
+- 新增脚本:
+  - tests/codex/stage215_natural_trace_breakpoint_map.py
+  - tests/codex/test_stage215_natural_trace_breakpoint_map.py
+  - tests/codex/stage216_early_timing_phase_split_map.py
+  - tests/codex/test_stage216_early_timing_phase_split_map.py
+  - tests/codex/stage217_source_fidelity_closure_block.py
+  - tests/codex/test_stage217_source_fidelity_closure_block.py
+- 执行命令:
+  - python -m py_compile tests/codex/stage215_natural_trace_breakpoint_map.py tests/codex/test_stage215_natural_trace_breakpoint_map.py tests/codex/stage216_early_timing_phase_split_map.py tests/codex/test_stage216_early_timing_phase_split_map.py tests/codex/stage217_source_fidelity_closure_block.py tests/codex/test_stage217_source_fidelity_closure_block.py
+  - python tests/codex/test_stage215_natural_trace_breakpoint_map.py
+  - python tests/codex/test_stage216_early_timing_phase_split_map.py
+  - python tests/codex/test_stage217_source_fidelity_closure_block.py
+  - append 更新 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 尾部, 新增“10. 传播保真深化”
+- 测试结果:
+  - Stage215: PASS
+  - Stage216: PASS
+  - Stage217: PASS
+- 关键结果:
+  - Stage215 breakpoint_score = 0.52655, strongest_breakpoint = 天然保留段, weakest_breakpoint = 修复迁移段, continuity_gap = 0.75
+  - Stage216 split_map_score = 0.5434142722708056, weakest_piece = 时序触发, strongest_piece = 早层路径分流, dominant_band = early
+  - Stage217 block_score = 0.33851902300734826, weakest_piece = 天然来源保真, strongest_piece = 前向携带来源, top_gap = 天然来源保真不足
+- 理论进度:
+  - 当前主判断进一步收敛为: 早层路径分流已经较稳定, 但天然来源保真仍是后段闭合无法站住的总瓶颈。
+  - 新证据表明来源痕迹不是单点掉落, 而是至少存在“天然保留段”和“传递桥段”两处明显断裂。
+  - 当前系统更像‘前向分流强、来源保真弱、后段闭合脆’的结构, 还不是天然稳态闭环。
+[2026-03-24 00:12] 机制判断补充：注意力与回收闭合
+- 本轮未新增脚本，未运行测试命令。
+- 理论进度:
+  - 明确补充判断：在深度神经网络中，注意力机制会把上文重新带入当前计算，通过上下文相关性重新加权上文片段，从而帮助系统区分 apple 在当前语境下更应回收到水果义还是品牌义。
+  - 更严格地说：注意力负责“把什么重新带进来”，但最终能否稳定完成回收闭合，还取决于残差流中的来源痕迹是否被保留、后续层是否能完成差分放大与结果回接。
+  - 当前阶段判断：注意力机制是回收闭合的重要入口，但不是全部机制；真正的闭合仍应理解为“注意力重取上文 + 路径重加权 + 来源痕迹保留 + 后段回接”联合完成。
+[2026-03-24 00:18] Stage218-220 注意力主线推进与整体思路重整
+- 新增脚本:
+  - tests/codex/stage218_apple_sense_attention_retrieval_map.py
+  - tests/codex/test_stage218_apple_sense_attention_retrieval_map.py
+  - tests/codex/stage219_attention_route_split_bridge.py
+  - tests/codex/test_stage219_attention_route_split_bridge.py
+  - tests/codex/stage220_attention_closure_bridge.py
+  - tests/codex/test_stage220_attention_closure_bridge.py
+- 执行命令:
+  - python -m py_compile tests/codex/stage218_apple_sense_attention_retrieval_map.py tests/codex/test_stage218_apple_sense_attention_retrieval_map.py tests/codex/stage219_attention_route_split_bridge.py tests/codex/test_stage219_attention_route_split_bridge.py tests/codex/stage220_attention_closure_bridge.py tests/codex/test_stage220_attention_closure_bridge.py
+  - python tests/codex/test_stage218_apple_sense_attention_retrieval_map.py
+  - python tests/codex/test_stage219_attention_route_split_bridge.py
+  - python tests/codex/test_stage220_attention_closure_bridge.py
+  - append 更新 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 尾部, 新增“11. 注意力主线与整体分析思路重整版”
+- 测试结果:
+  - Stage218: PASS
+  - Stage219: PASS
+  - Stage220: PASS
+- 关键结果:
+  - Stage218 retrieval_score = 0.6868870775850237, weakest_piece = 品牌义取回, strongest_piece = 水果义取回, collision_rate = 0.6
+  - Stage219 bridge_score = 0.6550900242272437, weakest_piece = 品牌义注意力取回, strongest_piece = 动作选路, dominant_band = early
+  - Stage220 bridge_score = 0.3848264752924082, weakest_piece = 来源保真闭合, strongest_piece = 前向携带来源, top_gap = 天然来源保真不足
+- 理论进度:
+  - 当前主判断新增一条更清楚的链: 注意力式上文关键因素取回 -> 早层路径分流 -> 前向携带来源 -> 后段闭合。
+  - 当前最强的不是注意力到闭合, 而是注意力到分流; 当前最弱的不是取回本身, 而是取回之后的天然来源保真与后段闭合承接。
+  - 重新整理后的整体分析思路已从静态编码、动态路径、结果回收、传播编码、注意力取回五层重新串联, 更适合作为后续持续研究主线。
+[2026-03-24 00:30] Stage221-223 品牌义/来源保真/天然闭合推进
+- 新增脚本:
+  - tests/codex/stage221_brand_attention_strengthening_map.py
+  - tests/codex/test_stage221_brand_attention_strengthening_map.py
+  - tests/codex/stage222_attention_source_fidelity_bridge.py
+  - tests/codex/test_stage222_attention_source_fidelity_bridge.py
+  - tests/codex/stage223_natural_vs_repair_closure_split_map.py
+  - tests/codex/test_stage223_natural_vs_repair_closure_split_map.py
+- 执行命令:
+  - python -m py_compile tests/codex/stage221_brand_attention_strengthening_map.py tests/codex/test_stage221_brand_attention_strengthening_map.py tests/codex/stage222_attention_source_fidelity_bridge.py tests/codex/test_stage222_attention_source_fidelity_bridge.py tests/codex/stage223_natural_vs_repair_closure_split_map.py tests/codex/test_stage223_natural_vs_repair_closure_split_map.py
+  - python tests/codex/test_stage221_brand_attention_strengthening_map.py
+  - python tests/codex/test_stage222_attention_source_fidelity_bridge.py
+  - python tests/codex/test_stage223_natural_vs_repair_closure_split_map.py
+  - append 更新 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 尾部, 新增“12. 品牌义、来源保真与天然闭合的瓶颈展开”
+- 测试结果:
+  - Stage221: PASS
+  - Stage222: PASS
+  - Stage223: PASS
+- 关键结果:
+  - Stage221 strengthening_score = 0.37666216520346063, weakest_piece = 品牌边界冲突反向值, strongest_piece = 水果义取回对照, top_gap = 品牌义取回不足
+  - Stage222 bridge_score = 0.35038957411354055, weakest_piece = 天然来源保真, strongest_piece = 前向携带来源, top_gap = 天然来源保真不足
+  - Stage223 split_score = 0.49906835464799204, weakest_piece = 跨模型传播不变量, strongest_piece = 修复闭合, top_gap = 跨模型传播不变量偏少
+- 理论进度:
+  - 当前主判断进一步收敛为: 品牌义边界未站住、天然来源保真未站住、跨模型传播不变量未站住, 这三者共同解释了为什么系统仍停留在候选结构层。
+  - 修复闭合远强于原生闭合, 进一步支持“补救型闭合”判断。
+  - 跨模型传播不变量偏少, 说明许多单模型里成立的强现象, 还没有升级成跨模型硬主核。
+[2026-03-24 00:41] Stage224-226 品牌边界/天然保真/跨模型不变量补强
+- 新增脚本:
+  - tests/codex/stage224_brand_boundary_support_map.py
+  - tests/codex/test_stage224_brand_boundary_support_map.py
+  - tests/codex/stage225_attention_to_natural_fidelity_chain.py
+  - tests/codex/test_stage225_attention_to_natural_fidelity_chain.py
+  - tests/codex/stage226_cross_model_propagation_invariant_expansion.py
+  - tests/codex/test_stage226_cross_model_propagation_invariant_expansion.py
+- 执行命令:
+  - python -m py_compile tests/codex/stage224_brand_boundary_support_map.py tests/codex/test_stage224_brand_boundary_support_map.py tests/codex/stage225_attention_to_natural_fidelity_chain.py tests/codex/test_stage225_attention_to_natural_fidelity_chain.py tests/codex/stage226_cross_model_propagation_invariant_expansion.py tests/codex/test_stage226_cross_model_propagation_invariant_expansion.py
+  - python tests/codex/test_stage224_brand_boundary_support_map.py
+  - python tests/codex/test_stage225_attention_to_natural_fidelity_chain.py
+  - python tests/codex/test_stage226_cross_model_propagation_invariant_expansion.py
+  - append 更新 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 尾部, 新增“13. 品牌边界、来源保真与跨模型不变量补强”
+- 测试结果:
+  - Stage224: PASS
+  - Stage225: PASS
+  - Stage226: PASS
+- 关键结果:
+  - Stage224 support_score = 0.46761583228818615, weakest_piece = 品牌边界就绪度, strongest_piece = 水果义边界对照, top_gap = 品牌边界未站住
+  - Stage225 chain_score = 0.3588729552904385, weakest_piece = 天然来源保真, strongest_piece = 天然断裂约束, top_gap = 天然来源保真不足
+  - Stage226 expansion_score = 0.3090237132790594, weakest_piece = 过渡共同块, strongest_piece = 稳定共同块, top_gap = 跨模型传播不变量偏少
+- 理论进度:
+  - 当前主判断进一步收敛为: 品牌义边界未站住、天然来源保真未站住、跨模型传播不变量未站住, 这是当前系统从候选结构走向硬主核的三大总瓶颈。
+  - 新结果表明注意力取回之后, 真正拖住系统的仍然是天然来源保真和品牌边界支撑, 而不是前向分流本身。
+  - 跨模型传播不变量扩张仍偏弱, 说明当前阶段的很多结论仍应保持‘强候选’而非‘已闭合’的严格定位。
+[2026-03-24 00:54] Stage227-229 品牌触发/天然保真增强/传播主核筛选
+- 新增脚本:
+  - tests/codex/stage227_brand_trigger_word_map.py
+  - tests/codex/test_stage227_brand_trigger_word_map.py
+  - tests/codex/stage228_natural_fidelity_gain_map.py
+  - tests/codex/test_stage228_natural_fidelity_gain_map.py
+  - tests/codex/stage229_cross_model_propagation_core_filter.py
+  - tests/codex/test_stage229_cross_model_propagation_core_filter.py
+- 执行命令:
+  - python -m py_compile tests/codex/stage227_brand_trigger_word_map.py tests/codex/test_stage227_brand_trigger_word_map.py tests/codex/stage228_natural_fidelity_gain_map.py tests/codex/test_stage228_natural_fidelity_gain_map.py tests/codex/stage229_cross_model_propagation_core_filter.py tests/codex/test_stage229_cross_model_propagation_core_filter.py
+  - python tests/codex/test_stage227_brand_trigger_word_map.py
+  - python tests/codex/test_stage228_natural_fidelity_gain_map.py
+  - python tests/codex/test_stage229_cross_model_propagation_core_filter.py
+  - append 更新 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 尾部, 新增“14. 品牌触发、天然保真增强与传播主核筛选”
+- 测试结果:
+  - Stage227: PASS
+  - Stage228: PASS
+  - Stage229: PASS
+- 关键结果:
+  - Stage227 trigger_map_score = 0.6131706633221956, best_trigger_word = iphone, worst_trigger_word = store, top_gap = 品牌边界触发不足
+  - Stage228 gain_map_score = 0.5209101584520232, best_gain_piece = 理论提升空间, worst_gain_piece = 当前天然保真, top_gap = 天然来源保真不足
+  - Stage229 filter_score = 0.4090544091177987, filtered_core_names = 复杂语篇重提/条件场/苹果共同核, excluded_weak_names = 副词动态选路/结果链
+- 理论进度:
+  - 当前主判断进一步收敛为: 天然来源保真是连接注意力取回、路径分流、后段闭合的中间保真层, 也是整条传播闭合链最稳定的中心瓶颈。
+  - 品牌义当前更缺触发条件与边界支撑, 而不是单纯缺一个路径分流能力。
+  - 跨模型传播主核目前只能稳定保留三块, 说明硬主核仍然偏少, 当前整体仍应保持‘强候选结构’而非‘已闭合理论’定位。
+[2026-03-24 01:04] 理论澄清：天然来源保真测试的对象
+- 本轮未新增脚本，未运行测试命令。
+- 理论进度:
+  - 明确判断：天然来源保真测试，首先测试的是模型内部机制本身的能力边界，而不是外部算法实现是否有缺陷。
+  - 更严格地说：它测试的是‘模型在不依赖额外修复与提示时，能否自然保留来源结构并完成后段回接’。如果分数长期偏低，优先应解释为模型内部表征与传播机制的天然短板；只有在探针设计、样本构造、提示模板存在明显偏差时，才应部分归因于测试算法。
+  - 当前阶段判断：天然来源保真更像在测模型本体是否具备天然稳态闭合能力，而不是单纯测算法写得好不好。
+
+[2026-03-24 19:37] Stage230-232 参数级编码机制与复杂处理结构推进
+- 新增脚本：tests/codex/stage230_parameter_boundary_trigger_pack.py
+- 新增脚本：tests/codex/stage231_source_fidelity_parameter_structure_map.py
+- 新增脚本：tests/codex/stage232_parameter_complex_structure_joint_puzzle.py
+- 新增测试：tests/codex/test_stage230_parameter_boundary_trigger_pack.py
+- 新增测试：tests/codex/test_stage231_source_fidelity_parameter_structure_map.py
+- 新增测试：tests/codex/test_stage232_parameter_complex_structure_joint_puzzle.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage230_parameter_boundary_trigger_pack.py tests/codex/test_stage230_parameter_boundary_trigger_pack.py tests/codex/stage231_source_fidelity_parameter_structure_map.py tests/codex/test_stage231_source_fidelity_parameter_structure_map.py tests/codex/stage232_parameter_complex_structure_joint_puzzle.py tests/codex/test_stage232_parameter_complex_structure_joint_puzzle.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage230_parameter_boundary_trigger_pack.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage231_source_fidelity_parameter_structure_map.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage232_parameter_complex_structure_joint_puzzle.py
+- 测试结果：以上三项测试均 PASS（通过）
+- Stage230 结果：parameter_boundary_score ≈ 0.5172；最强块=水果义参数占优；最弱块=参数边界分裂就绪度；头号缺口=品牌义参数边界仍未站住。
+- Stage231 结果：parameter_structure_score ≈ 0.4556；最强块=参数级提升空间；最弱块=天然来源保真参数支持；头号缺口=天然来源保真参数支持仍然不足。
+- Stage232 结果：joint_score ≈ 0.4441；最强块=参数级边界拼图；最弱块=复杂处理结构拼图；DeepSeek直测来源保真 ≈ 0.5011；DeepSeek直测判定=theory_transfer_weak（理论弱迁移）。
+- 理论进度：当前主线已经从语义现象层推进到“参数级编码机制 + 复杂处理结构”联合拼图层。当前最严格判断是：DeepSeek（深度求索）的来源保真不能说“已经很好”，更准确地说是“中等偏弱、已有雏形”；最近 Stage224-232 更多是基于已有多模型 summary（总结文件）的拼图整合层测试，不是每一轮都在 DeepSeek 单模型上重新前向直测。当前最薄弱的仍是品牌义参数边界、天然来源保真参数支持，以及复杂处理后段结构。
+- 文档更新：已将本轮分析 append（追加）到 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 尾部，新增“15. 参数级编码机制与复杂处理结构推进”。
+
+[2026-03-24 20:05] Stage233-235 参数级边界、来源保真与 DeepSeek 硬件复核
+- 新增脚本：tests/codex/stage233_brand_parameter_trigger_lattice.py
+- 新增脚本：tests/codex/stage234_source_fidelity_parameter_chain.py
+- 新增脚本：tests/codex/stage235_deepseek_direct_fidelity_recheck.py
+- 新增测试：tests/codex/test_stage233_brand_parameter_trigger_lattice.py
+- 新增测试：tests/codex/test_stage234_source_fidelity_parameter_chain.py
+- 新增测试：tests/codex/test_stage235_deepseek_direct_fidelity_recheck.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage233_brand_parameter_trigger_lattice.py tests/codex/test_stage233_brand_parameter_trigger_lattice.py tests/codex/stage234_source_fidelity_parameter_chain.py tests/codex/test_stage234_source_fidelity_parameter_chain.py tests/codex/stage235_deepseek_direct_fidelity_recheck.py tests/codex/test_stage235_deepseek_direct_fidelity_recheck.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage233_brand_parameter_trigger_lattice.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage234_source_fidelity_parameter_chain.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage235_deepseek_direct_fidelity_recheck.py
+- 执行命令：ollama run deepseek-r1:14b "请只输出四个字：测试成功"
+- 执行命令：ollama run qwen3-vl:30b "请只输出四个字：测试成功"
+- 测试结果：Stage233、Stage234、Stage235 全部 PASS（通过）
+- Stage233 结果：lattice_score ≈ 0.6276；最强块=水果义压制背景；最弱块=品牌义边界分裂就绪度；最强触发词=iphone（苹果手机）。
+- Stage234 结果：chain_score ≈ 0.4556；最强块=参数级理论提升空间；最弱块=天然来源保真参数起点；头号缺口=天然来源保真参数起点仍然过弱。
+- Stage235 结果：直测模型=deepseek-ai/DeepSeek-R1-Distill-Qwen-7B；DeepSeek直测来源保真≈0.5011；DeepSeek直测复杂处理链≈0.3375；direct_verdict=theory_transfer_weak（理论弱迁移）；14B硬件支持=True；32B硬件支持=False。
+- 硬件实测补充：本机配置为 RTX 4090 D（24GB 显存）+ 64GB 内存 + Ultra 9 285K。deepseek-r1:14b 在 Ollama 上已实际推理成功；qwen3-vl:30b 代理运行报出 CUDA error（CUDA 错误），因此当前不能把 30B/32B 级复杂分析按“稳定可用”来判断。
+- 理论进度：当前主线已经明确切换到“参数级编码机制怎样在复杂处理中被接成链”。当前最严格判断是：品牌义参数晶格开始出现，但边界仍稀薄；天然来源保真在参数链起点仍最弱；DeepSeek 的直测来源保真只能算中等偏弱雏形；当前机器对 DeepSeek 14B 的量化分析明确可做，对 DeepSeek 32B 不能直接乐观判断。
+- 文档更新：已将本轮分析 append（追加）到 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 尾部，新增“16. 参数级品牌晶格、来源保真参数链与 DeepSeek 硬件复核”。
+[2026-03-24 01:52] Stage236-238 推进记录
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage236_apple_pear_parameter_delta.py tests/codex/test_stage236_apple_pear_parameter_delta.py tests/codex/stage237_noun_parameter_efficiency_map.py tests/codex/test_stage237_noun_parameter_efficiency_map.py tests/codex/stage238_deepseek14b_direct_chain_probe.py tests/codex/test_stage238_deepseek14b_direct_chain_probe.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage236_apple_pear_parameter_delta.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage237_noun_parameter_efficiency_map.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage238_deepseek14b_direct_chain_probe.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage236_apple_pear_parameter_delta.py --force
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage237_noun_parameter_efficiency_map.py --force
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage238_deepseek14b_direct_chain_probe.py --force
+- 执行命令：ollama run deepseek-r1:14b "请只输出四个字：测试成功"
+- 执行命令：ollama run qwen3-vl:30b "请只输出四个字：测试成功"
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage235_deepseek_direct_fidelity_recheck.py --force
+- 理论进度：Stage236 把苹果与梨子的差异第一次压到参数级差分图，delta_score≈0.5166，当前更像共享底盘上的局部差分，而不是完全独立编码。
+- 理论进度：Stage237 显示共享复用效率≈0.9354，显著高于差分分裂效率≈0.1111，说明当前高效性更像“强共享、弱差分、后续路径放大”。
+- 理论进度：Stage238 把后续直测正式接入 DeepSeek 14B，本机四探针短链直测全中，说明 14B 已可进入单模型复杂处理主线。
+- 理论进度：硬件复核显示 RTX 4090 D 24GB + 64GB 内存明确支持 DeepSeek 14B 分析；30B 级代理实机报 CUDA error，因此当前不应把 32B 当作稳定主战模型。
+- 理论进度：修正后的 Stage235 明确 support_14b=True、support_32b=False，直测层与拼图整合层现已更清楚地区分。
+[2026-03-24 02:11] Stage239-241 推进记录
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage239_multi_noun_parameter_delta_map.py tests/codex/test_stage239_multi_noun_parameter_delta_map.py tests/codex/stage240_structure_efficiency_candidate_map.py tests/codex/test_stage240_structure_efficiency_candidate_map.py tests/codex/stage241_deepseek14b_long_chain_probe.py tests/codex/test_stage241_deepseek14b_long_chain_probe.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage239_multi_noun_parameter_delta_map.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage240_structure_efficiency_candidate_map.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage241_deepseek14b_long_chain_probe.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage239_multi_noun_parameter_delta_map.py --force
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage240_structure_efficiency_candidate_map.py --force
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage241_deepseek14b_long_chain_probe.py --force
+- 理论进度：Stage239 把参数级差分从苹果单点扩到更多名词对象，map_score≈0.5014，当前更像“跨对象强共享、跨类别弱差分”。
+- 理论进度：Stage240 首次把五种候选编码结构放到同一张效率图里，最优候选明确是“共享底盘 + 局部差分 + 路径放大”，最弱候选是“局部差分单独结构”。
+- 理论进度：Stage240 的关键判断是：高效性不来自单独强化差分，而来自共享复用、低成本局部分裂、后续按需路径放大三者共同成立。
+- 理论进度：Stage241 把 DeepSeek 14B 推进到 6 条长链复杂处理直测，当前 6/6 全中，说明 14B 已经从短链可用推进到小规模长链可用。
+- 理论进度：当前最严格的瓶颈仍不是前向触发，而是天然来源保真没有进入稳态闭合区，因此高效结构主链仍呈现“前中段更强、后段更脆”的特征。
+[2026-03-24 02:30] Stage242-244 推进记录
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage242_large_scale_noun_shared_delta_matrix.py tests/codex/test_stage242_large_scale_noun_shared_delta_matrix.py tests/codex/stage243_efficiency_reason_map.py tests/codex/test_stage243_efficiency_reason_map.py tests/codex/stage244_deepseek14b_stress_long_chain_probe.py tests/codex/test_stage244_deepseek14b_stress_long_chain_probe.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage242_large_scale_noun_shared_delta_matrix.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage243_efficiency_reason_map.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage244_deepseek14b_stress_long_chain_probe.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage242_large_scale_noun_shared_delta_matrix.py --force
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage243_efficiency_reason_map.py --force
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage244_deepseek14b_stress_long_chain_probe.py --force
+- 理论进度：Stage242 直接拉入 27702 个名词中的大样本子集，结果显示 shared_base_strength≈0.4817，而 local_delta_strength≈0.0229，大样本下共享仍明显强于差分。
+- 理论进度：Stage243 把高效性的原因拆成四块，当前最强的是局部差分稀疏性≈0.9771、路径放大强度≈0.9762、共享复用强度≈0.9354，说明高效性更像“共享很多、差分很少、后续再放大”。
+- 理论进度：Stage240 与 Stage243 合起来，已经把“共享底盘 + 局部差分 + 路径放大”为何最像当前最高效结构的证据压得更实。
+- 理论进度：Stage244 把 DeepSeek 14B 推进到 8 条高压长链复核，当前 8/8 全中，说明 14B 已经从短链、小规模长链可用，推进到了小规模高压长链也可用。
+- 理论进度：当前最严格的瓶颈仍然是天然来源保真没有进入稳态闭合区，因此高效结构的前中段已经越来越清楚，但后段闭合仍然是主断层。
+[2026-03-24 08:51] Stage245-247 推进记录
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe -m py_compile tests/codex/stage245_large_scale_noun_shared_delta_tensor.py tests/codex/test_stage245_large_scale_noun_shared_delta_tensor.py tests/codex/stage246_base_delta_ratio_empirical_map.py tests/codex/test_stage246_base_delta_ratio_empirical_map.py tests/codex/stage247_deepseek14b_large_template_long_chain_review.py tests/codex/test_stage247_deepseek14b_large_template_long_chain_review.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage245_large_scale_noun_shared_delta_tensor.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage246_base_delta_ratio_empirical_map.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage247_deepseek14b_large_template_long_chain_review.py
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage245_large_scale_noun_shared_delta_tensor.py --force
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage246_base_delta_ratio_empirical_map.py --force
+- 执行命令：d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage247_deepseek14b_large_template_long_chain_review.py --force
+- 理论进度：Stage245 把名词共享-差分扩成 8 组、覆盖 27702 名词中的大样本，shared_base_mean≈0.4784，而 local_delta_mean≈0.0219，说明大样本下仍然是重基底、轻差分结构。
+- 理论进度：Stage246 首次把基底/差分比例做成经验候选图，observed_base_ratio≈0.9563，当前最优经验比例落在 95/5，最弱比例是 70/30。
+- 理论进度：Stage246 进一步说明，高效性并不来自强差分，而更像来自“重基底、轻差分、强路径放大”。
+- 理论进度：Stage247 把 DeepSeek 14B 的大模板长链扩到 12 条，当前 11/12 正确，说明 14B 在更大模板长链下整体稳定，但竞争水果链仍会暴露天然来源保真的薄弱点。
+- 理论进度：当前最严格判断是：共享基底和局部差分的经验比例已经开始稳定落在 95/5 附近，但这仍是经验主线，不是最终第一性原理比例。
+[2026-03-24 09:55] Stage248-250 推进记录
+命令:
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage248_delta_position_selection_map.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage249_fruit_animal_delta_reason_spectrum.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage250_deepseek14b_high_competition_fidelity_review.py
+- 更新文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md 第 21 节
+
+研究进度:
+- Stage248 形成差分位置选择图。当前 24 个对象、3 个家族的结果表明，高频差分维度并非随机分布，而是集中在少量重复位置；这些位置通常具有较高局部差分增量，并且跨家族复用。当前位置图总分约 0.6435，头号发现是“差分位置集中在少量高杠杆维度”。
+- Stage249 形成水果-动物差分原因谱。当前水果平均边界余量约 0.1335，动物平均边界余量约 0.1475；水果平均家族共享约 0.6831，高于动物约 0.6608。当前最合理判断是：水果整体更偏共享基底主导，动物整体更偏边界差分主导；苹果是当前最薄边界对象之一，狗是当前最厚边界对象之一。
+- Stage250 完成 DeepSeek 14B 高竞争来源保真复核。当前 8 个高竞争探针中 4 个正确，总分 0.5000。水果内部竞争 0/3，动物内部竞争 2/3，品牌竞争 1/1，跨类竞争 1/1。当前最清楚的硬伤是：薄差分结构首先在同类内部高竞争里失稳，而不是先在跨类分离里失稳。
+- 当前总判断继续收紧为：参数级高效结构不只是“共享基底 + 局部差分 + 路径放大”，而且差分位置选择本身也遵循高杠杆、低成本偏转原则；对象当前的差分厚度，主要由家族共享压力、内部竞争压力、跨类分离压力三者共同决定。
+[2026-03-24 12:29] Stage254-256 命令记录
+- python tests/codex/test_stage254_translation_multitemplate_route_map.py
+- python tests/codex/test_stage255_translation_token_role_refinement.py
+- python tests/codex/test_stage256_deepseek14b_multidirection_translation_probe.py
+
+[2026-03-24 12:29] Stage254-256 研究进度
+- 已新增 Stage254：翻译指令多模板参数级路径图。当前 template_count=3，route_score≈0.2703，最强模板 weather，最弱模板 apple。结论：翻译命令不是单层开关，而更像早层启动、后层再放大的两段式路径。
+- 已新增 Stage255：翻译指令词角色细化图。当前 variant_count=4，role_score≈0.5085，最强角色 remove_translate_word，最弱角色 remove_target_word。结论：当前参数级任务触发词里，“翻译”比目标语言词更像第一触发器。
+- 已新增 Stage256：DeepSeek14B 多方向翻译直测。当前 probe_count=4，correct_count=3，behavior_score=0.7500。结论：14B 已具备多方向翻译切换能力，但纯净输出仍会被思考过程污染。
+- 已把翻译主线作为新的 clean section 追加到 AGI_GPT5_LANGUAGE.md 尾部，避免继续触碰前文已有乱码段。
+[2026-03-24 13:09] Stage251-253 推进记录
+命令:
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage251_delta_position_role_map.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage252_object_pressure_to_delta_thickness_bridge.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage253_deepseek14b_same_class_high_competition_expansion.py
+- 更新文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md 第 23 节
+
+研究进度:
+- Stage251 形成差分位置角色图。当前 24 个高频差分维度已被拆成 6 类角色，其中跨类共享触发 8 个、水果内部差分 5 个、动物内部差分 4 个、品牌与跨类触发 2 个。结论：高频差分维度并不是随机分布，而是会集中承担少量固定角色。
+- Stage252 形成对象压力到差分厚度桥。当前 bridge_score≈0.7870，最薄差分对象是 apple，最厚差分对象是 dog。结论：对象最终拿到多厚的差分，主要由家族共享压力、同类竞争压力、跨类分离压力三者共同决定。
+- Stage253 完成 DeepSeek 14B 同类高竞争长链扩张。在 Stage250 的 8 条基线上追加 3 条新探针后，总 probe_count=11，correct_count=5，review_score≈0.4545。水果内部竞争得分 0.0000，动物 0.7500，品牌 0.5000。结论：同类高竞争最先暴露的是水果内部这种“高共享、薄差分、强竞争”场景。
+- 当前最严格判断：参数级差分结构已经开始显出“少量高杠杆位置承担固定角色”的轮廓；而天然来源保真和水果内部边界，仍然是复杂处理后段最硬的断点。
+[2026-03-24 13:15] Stage254-256 推进记录
+命令:
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage251_delta_position_role_map.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage252_object_pressure_to_delta_thickness_bridge.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage253_deepseek14b_same_class_high_competition_expansion.py
+- 更新文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md 第 24 节
+
+研究进度:
+- Stage254 继续把差分位置压到对象角色层。当前高频差分维度已能稳定分成跨类共享触发、水果内部差分、动物内部差分、品牌与跨类触发等角色，说明参数位首先承担的是语义角色，而不只是词级标签。
+- Stage255 继续把对象压力压到逐维差分位置层。当前最合理判断是：对象不是先拿完整专属参数，而是先拿共享基底，再由共享压力、同类竞争、跨类分离三类压力选择少量高杠杆差分位，最后沿后续路径放大成完整语义差异。
+- Stage256 继续用 DeepSeek 14B 做同类高竞争极限复核。当前 11 条高竞争长链里正确 5 条，水果内部竞争得分 0.0000，动物 0.7500，品牌 0.5000。结论：高共享、薄差分、强竞争的水果内部场景，仍然是天然来源保真和边界稳定性的最硬瓶颈。
+- 理论进度：当前对“语义和参数结构关系”的最稳判断已经推进到：参数和神经元更像承担对象、属性、位置、操作、约束、结果这些可复用语义角色；语言语义是在复杂处理链里被组合、约束、放大和回收出来的，不是简单标签匹配。
+[2026-03-24 13:26] AGI_GPT5_LANGUAGE 文档整编记录
+命令:
+- 重写文件: research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+- 快速检查: Get-Content research/gpt5/docs/AGI_GPT5_LANGUAGE.md | Select-Object -First 80
+- 快速检查: Get-Content research/gpt5/docs/AGI_GPT5_LANGUAGE.md | Select-Object -Last 60
+- 章节检查: rg -n "^## " research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+
+研究进度:
+- 已将 AGI_GPT5_LANGUAGE.md 从历史混杂版重写为当前进展整编版，去掉旧的阶段堆叠写法，改成按“研究原则、测试方案、模型平台、结构拼图、高效结构、语义结构、翻译主线、DeepSeek14B、硬伤、总判断、下一阶段任务”组织。
+- 已把当前仍然有效的核心判断固定下来：共享底盘 + 稀疏局部差分 + 路径放大，是当前最像真实高效结构的主线；参数和神经元更像承担可复用语义角色，而不是直接存词。
+- 已把当前最硬的瓶颈集中收敛为两条：天然来源保真长期低位；同类高竞争边界尤其是水果内部边界最脆。
+- 已把后续任务明确改成结构导向，而不是零散实验导向，避免后续文档再次回到阶段堆叠和结论分裂状态。
+[2026-03-24 13:39] Stage257-259 语义角色到参数结构推进记录
+命令:
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage257_object_attribute_position_operation_role_map.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage258_task_semantic_to_processing_route_bridge.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage259_cross_task_semantic_core_filter.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage258_task_semantic_to_processing_route_bridge.py --force
+- 更新文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md 第 25 节
+
+研究进度:
+- Stage257 已把语义进一步压成对象、属性、位置、操作四类参数角色。当前角色图总分约 0.5440，最强角色是 operation（操作），最弱角色是 attribute（属性）。结论：参数和神经元更像先承担可复用语义角色，再被具体任务接成链。
+- Stage258 已把任务语义到处理路径的桥单独拉出来。当前桥总分约 0.3527，最强任务是 refactor（重构），最弱任务是 translation（翻译）。结论：任务词会在早中层切入处理路径，但不同任务的切入力度明显不对称。
+- Stage259 已完成跨任务语义主核筛选。当前筛选总分约 0.5233，稳定主核数量为 2，最强主核是 shared_delta_route_core（共享-差分-路径联合核），最弱主核是 operation_core（操作主核）。
+- 理论进度：当前最接近参数级结构原理的主线已经推进到“语义先压成角色，角色再压到共享基底和局部差分，任务语义切入处理路径，后续路径把薄差分放大成完整任务差异”。当前最深瓶颈仍然不是前段分路，而是后段天然来源保真和天然稳态闭合。
+[2026-03-24 13:48] Stage260-262 参数级结构原理推进记录
+命令:
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage260_full_semantic_role_total_map.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage261_task_semantic_to_long_chain_bridge.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage262_semantic_role_to_natural_fidelity_bridge.py
+- 更新文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md 第 26 节
+
+研究进度:
+- Stage260 已把语义角色扩成对象、属性、位置、操作、约束、结果六类完整总图。当前总图得分约 0.4118，最强角色是 operation（操作），最弱角色是 result（结果）。结论：当前最稳的是前段任务切换和角色组织层，而不是结果收束层。
+- Stage261 已把任务语义到长链处理桥单独拉出。当前桥总分约 0.6999，最强块是 long_template_execution（大模板长链执行），最弱块是 task_semantic_route_entry（任务语义入口桥）。结论：任务语义进入系统以后，长链执行可以被明显带起来，但前段入口桥仍弱于后段执行表现。
+- Stage262 已把语义角色到天然来源保真桥拉出。当前桥总分约 0.4572，最强块是 理论提升空间，最弱块是 天然来源保真。结论：语义角色结构已经存在，但它们还没有自然升级成稳定的天然来源保真；当前主断点仍在“角色成立之后，保真掉落”这一步。
+- 理论进度：当前更接近的参数级结构原理主线是“语义先压成角色，任务语义再把这些角色切入处理路径，路径能继续支撑长链执行，但后段天然来源保真仍明显弱于前段角色组织与路径切换”。除了概念比较和语义分析，后续更关键的突破方向应转向参数位置角色追踪、参数干预因果测试、路径放大链追踪、来源保真断裂图、跨任务共享核筛选和训练/微调轨迹回看。
+[2026-03-24 13:54] 参数级编码原理完整测试方案整理记录
+命令:
+- 更新文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md 第 27 节
+- 快速检查章节: rg -n "^## " research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+- 快速检查尾部: Get-Content research/gpt5/docs/AGI_GPT5_LANGUAGE.md -Tail 160
+
+研究进度:
+- 已将当前研究主线整理成一套完整测试方案，不再按零散阶段堆叠，而是按参数位置层、对象结构层、语义角色层、处理路径层、闭合保真层五层闭环组织。
+- 已把完整测试体系收束成九类：共享基底测试、差分位置测试、对象压力测试、语义角色测试、任务路径测试、路径放大测试、天然来源保真测试、因果干预测试、跨模型与跨任务不变量测试。
+- 已明确三层数据方案：对象数据、语义角色数据、复杂处理数据；以及三层模型平台：GPT-2（轻量参数扫描）、DeepSeek-R1-Distill-Qwen-7B（参数级前向分析）、DeepSeek 14B（复杂处理长链直测）。
+- 理论进度：当前已把核心目标重新收束为“不是继续多做概念比较，而是把参数位置、对象压力、语义角色、任务路径、路径放大、天然来源保真、因果干预、跨模型不变量接成完整闭环，持续逼近参数级编码原理本身”。 
+[2026-03-24 14:21] Stage263-265 Qwen 与 DeepSeek 完整测试记录
+命令:
+- ollama list
+- ollama run qwen3:4b "只输出 OK"
+- ollama run deepseek-r1:14b "只输出 OK"
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage263_qwen_deepseek_complete_behavior_suite.py --force
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage264_qwen_deepseek_complete_structural_aggregate.py --force
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/stage265_qwen_deepseek_complete_final_review.py --force
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage263_qwen_deepseek_complete_behavior_suite.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage264_qwen_deepseek_complete_structural_aggregate.py
+- d:\develop\TransformerLens-main\.venv\Scripts\python.exe tests/codex/test_stage265_qwen_deepseek_complete_final_review.py
+- 更新文档: research/gpt5/docs/AGI_GPT5_LANGUAGE.md 第 28 节
+
+研究进度:
+- Stage263 已完成 Qwen3-4B 与 DeepSeek-R1-14B 的同口径完整行为直测。每模型 10 个探针，覆盖 translation（翻译）、sense（义项分裂）、competition（同类竞争）、long_chain（长链回收）、task_semantics（任务语义）五类。Qwen 直测总分 1.0000，DeepSeek14B 直测总分 0.8000。DeepSeek14B 的主要掉分点是 translation 和 competition。
+- Stage264 已完成完整测试结构汇总层。Qwen 历史结构分约 0.4165，DeepSeek 历史结构分约 0.4746。结论：Qwen 在当前受控直测里更稳，DeepSeek 在部分历史结构项上不弱，但两边都还没有进入参数级硬主核闭合区。
+- Stage265 已完成完整测试总评。Qwen complete_score 约 0.7082，DeepSeek14B complete_score 约 0.6373，分差约 0.0710。当前最严格判断：Qwen 当前在这套完整测试里略强于 DeepSeek14B，但优势不大，结论仍然停留在“完整测试强弱”层，不等于“参数级编码原理已经破解”。
+- 理论进度：当前跨模型完整测试已经从单点现象推进到“行为直测层 + 历史结构层 + 总评层”的三层闭环。下一阶段最关键的不是再堆行为样本，而是把 Qwen / DeepSeek 的完整测试差异继续压回共享基底、局部差分、路径放大、天然来源保真这些参数级结构上。

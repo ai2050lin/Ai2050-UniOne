@@ -1,0 +1,18 @@
+﻿{
+  "schema_version": "agi_research_result.v1",
+  "experiment_id": "stage229_cross_model_propagation_core_filter",
+  "title": "跨模型传播主核筛选",
+  "status_short": "cross_model_propagation_core_filter_ready",
+  "filtered_core_count": 3,
+  "filtered_core_names": [
+    "复杂语篇重提",
+    "条件场",
+    "苹果共同核"
+  ],
+  "excluded_weak_names": [
+    "副词动态选路",
+    "结果链"
+  ],
+  "filter_score": 0.4090544091177987,
+  "top_gap_name": "硬主核仍偏少"
+}
