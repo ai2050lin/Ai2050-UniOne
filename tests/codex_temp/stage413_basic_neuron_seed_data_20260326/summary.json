@@ -1,0 +1,7 @@
+{
+  "stage": "stage413",
+  "has_nonempty_apple_core_neurons": true,
+  "has_nonempty_fruit_general_neurons": true,
+  "has_nonempty_fruit_specific_neurons": true,
+  "has_fruit_colors": true
+}

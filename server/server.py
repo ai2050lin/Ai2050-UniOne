@@ -253,6 +253,112 @@ def _looks_like_main_scan_json_file(p: Path) -> bool:
         return False
 
 
+def _default_runtime_prompt(mode: str) -> str:
+    prompt_map = {
+        "shared_carrier_3d": "The apple and pear are both fruits.",
+        "bias_deflection_3d": "Please translate Chinese to English: 今天天气不错。",
+        "layerwise_amplification_3d": "Refactor src/app.py to reduce duplication and keep behavior unchanged.",
+        "multispace_operator_3d": "Modify the left apple color in the image and only output the final instruction.",
+        "cross_model_compare_3d": "Apple can mean fruit or brand depending on context.",
+    }
+    return prompt_map.get(mode, "The apple is red.")
+
+
+def _runtime_band_y(layer_idx: int, n_layers: int) -> float:
+    if n_layers <= 1:
+        return 4.6
+    return 1.6 + (6.0 * float(layer_idx) / float(max(1, n_layers - 1)))
+
+
+def _runtime_mode_z(mode: str) -> float:
+    z_map = {
+        "shared_carrier_3d": -12.0,
+        "bias_deflection_3d": -4.0,
+        "layerwise_amplification_3d": 4.0,
+        "multispace_operator_3d": 12.0,
+        "cross_model_compare_3d": 18.0,
+    }
+    return z_map.get(mode, 0.0)
+
+
+def _build_runtime_neuron_flow(mode: str, prompt: str, top_k: int = 8, token_index: int = -1) -> Dict[str, Any]:
+    if model is None:
+        raise HTTPException(status_code=503, detail="Model not loaded")
+
+    safe_top_k = max(1, min(int(top_k), 24))
+    with torch.no_grad():
+        tokens = model.to_tokens(prompt)
+        _, cache = model.run_with_cache(tokens)
+
+    str_tokens = model.to_str_tokens(tokens[0])
+    seq_len = len(str_tokens)
+    target_index = token_index if token_index >= 0 else seq_len + token_index
+    if target_index < 0 or target_index >= seq_len:
+        raise HTTPException(status_code=400, detail="token_index out of range")
+
+    target_token = str_tokens[target_index]
+    n_layers = int(model.cfg.n_layers)
+    z_axis = _runtime_mode_z(mode)
+    nodes: List[Dict[str, Any]] = []
+    links: List[Dict[str, Any]] = []
+    previous_rank_nodes: Dict[int, Dict[str, Any]] = {}
+
+    for layer_idx in range(n_layers):
+        hook_name = f"blocks.{layer_idx}.hook_resid_post"
+        if hook_name not in cache:
+            continue
+        activation = cache[hook_name][0, target_index, :].detach().float().cpu()
+        values, indices = torch.topk(activation.abs(), k=min(safe_top_k, activation.numel()))
+        y = _runtime_band_y(layer_idx, n_layers)
+
+        for rank, (value, dim_index) in enumerate(zip(values.tolist(), indices.tolist())):
+            signed_value = float(activation[dim_index].item())
+            x = (rank - ((safe_top_k - 1) / 2.0)) * 1.35
+            node_id = f"layer-{layer_idx}-rank-{rank}"
+            node = {
+                "id": node_id,
+                "label": f"L{layer_idx} · d{dim_index}",
+                "layer_index": layer_idx,
+                "token_index": target_index,
+                "token": target_token,
+                "dim_index": int(dim_index),
+                "activation_value": signed_value,
+                "activation_abs": float(value),
+                "hook_name": hook_name,
+                "topk_rank": rank,
+                "position": [x, y, z_axis],
+            }
+            nodes.append(node)
+
+            prev = previous_rank_nodes.get(rank)
+            if prev is not None:
+                links.append(
+                    {
+                        "id": f"{prev['id']}->{node_id}",
+                        "from": prev["position"],
+                        "to": node["position"],
+                        "from_layer": prev["layer_index"],
+                        "to_layer": layer_idx,
+                        "rank": rank,
+                        "strength": float((prev["activation_abs"] + node["activation_abs"]) / 2.0),
+                    }
+                )
+            previous_rank_nodes[rank] = node
+
+    return {
+        "mode": mode,
+        "model_name": getattr(model.cfg, "model_name", "unknown"),
+        "prompt": prompt,
+        "top_k": safe_top_k,
+        "token_index": target_index,
+        "target_token": target_token,
+        "token_count": seq_len,
+        "layer_count": n_layers,
+        "nodes": nodes,
+        "links": links,
+    }
+
+
 @app.get("/api/main/scan_files")
 async def list_main_scan_files(limit: int = 120):
     try:
@@ -327,6 +433,28 @@ async def load_main_scan_file(path: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to load scan file: {e}")
 
+
+@app.get("/api/runtime/neuron_flow")
+async def get_runtime_neuron_flow(
+    mode: str = "shared_carrier_3d",
+    prompt: Optional[str] = None,
+    top_k: int = 8,
+    token_index: int = -1,
+):
+    try:
+        actual_prompt = (prompt or "").strip() or _default_runtime_prompt(mode)
+        payload = _build_runtime_neuron_flow(
+            mode=mode,
+            prompt=actual_prompt,
+            top_k=top_k,
+            token_index=token_index,
+        )
+        return {"ok": True, **payload}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to build runtime neuron flow: {e}")
+
 # --- AGI Chat Engine API ---
 
 class AGIChatRequest(BaseModel):
@@ -348,6 +476,13 @@ async def reset_agi_chat():
 
 class WashRequest(BaseModel):
     max_files: int = 1
+
+
+class RuntimeNeuronFlowRequest(BaseModel):
+    mode: str = "shared_carrier_3d"
+    prompt: Optional[str] = None
+    top_k: int = 8
+    token_index: int = -1
 
 @app.post("/api/agi_chat/wash")
 async def start_agi_wash(request: WashRequest):

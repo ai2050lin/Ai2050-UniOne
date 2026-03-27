@@ -13,7 +13,9 @@ import FlowTubesVisualizer from './FlowTubesVisualizer';
 import GlassMatrix3D from './GlassMatrix3D';
 import { GlobalTopologyDashboard } from './GlobalTopologyDashboard';
 import { HLAIBlueprint } from './HLAIBlueprint';
-import { AppleNeuronCategoryComparePanel, AppleNeuronControlPanels, AppleNeuronEncodingInfoPanels, AppleNeuronGeneratedConceptSetsPanel, AppleNeuronMultidimSettingsPanel, AppleNeuronResearchAssetInfoPanel, AppleNeuronSceneContent, AppleNeuronSelectedLegendPanels, useAppleNeuronWorkspace } from './blueprint/AppleNeuron3DTab';
+import { AppleNeuronGeneratedConceptSetsPanel, AppleNeuronMultidimSettingsPanel } from './blueprint/appleNeuronInfoPanelsBridge';
+import { AppleNeuronSceneContent } from './blueprint/appleNeuronSceneBridge';
+import { useAppleNeuronWorkspace } from './blueprint/appleNeuronWorkspaceBridge';
 import ResonanceField3D from './ResonanceField3D';
 import { SimplePanel } from './SimplePanel';
 import { CompositionalVisualization3D, CurvatureField3D, FeatureVisualization3D, FiberBundleVisualization3D, LayerDetail3D, ManifoldVisualization3D, NetworkGraph3D, RPTVisualization3D, SNNVisualization3D, StructureAnalysisControls, ValidityVisualization3D } from './StructureAnalysisPanel';
@@ -21,6 +23,8 @@ import TDAVisualization3D from './TDAVisualization3D';
 import { AGIChatPanel } from './AGIChatPanel';
 import ICSPBPanel from './components/FiberNetPanel';
 import LanguageResearchControlPanel from './components/LanguageResearchControlPanel';
+import LanguageResearchDataPanel from './components/LanguageResearchDataPanel';
+import ParameterEncoding3D from './ParameterEncoding3D';
 
 import { locales } from './locales';
 import { INPUT_PANEL_TABS, STRUCTURE_TABS_V2, COLORS } from './config/panels';
@@ -1678,6 +1682,7 @@ export default function App() {
   const [stepAnalysisMode, setStepAnalysisMode] = useState('features'); // 'features', 'circuit', 'causal', 'none'
   const [analysisResult, setAnalysisResult] = useState(null);
   const [structureTab, setStructureTab] = useState('circuit');
+  const retiredEncoding3DTabs = ['shared_carrier_3d', 'bias_deflection_3d', 'layerwise_amplification_3d', 'multispace_operator_3d', 'cross_model_compare_3d'];
 
   // 操作历史
   const { history, addHistory, clearHistory, restoreHistory } = useOperationHistory();
@@ -1801,7 +1806,7 @@ export default function App() {
     return () => clearInterval(interval);
   }, [snnState.isPlaying, snnState.initialized]);
 
-  const [infoPanelTab, setInfoPanelTab] = useState('overview'); // 'overview' | 'encoding' | 'detail'
+  const [infoPanelTab, setInfoPanelTab] = useState('focus'); // Apple 主工作台: focus | layers | replay | assets
   const [displayInfo, setDisplayInfo] = useState(null); // Persisted hover info
   const [topologyResults, setTopologyResults] = useState(null); // Global Scan Data
 
@@ -1835,10 +1840,10 @@ export default function App() {
     }
   }, [hoveredInfo, isAppleMainView]);
 
-  // 切换到 DNN 主工作台时，默认进入“编码焦点”页签，便于查看编码模块。
+  // 切换到 DNN 主工作台时，默认进入“当前焦点”页签，便于先看正在观察的数据对象。
   useEffect(() => {
     if (inputPanelTab === 'main') {
-      setInfoPanelTab('encoding');
+      setInfoPanelTab('focus');
     }
   }, [inputPanelTab]);
 
@@ -2287,7 +2292,12 @@ export default function App() {
     holonomy: { name: '全纯扫描', category: 'topology', focus: '关注闭环偏差与几何扭转' },
     debias: { name: '几何去偏', category: 'system', focus: '关注偏置方向与去偏效果' },
     validity: { name: '有效性检验', category: 'system', focus: '关注指标稳定性与可复现性' },
-    training: { name: '训练动力学', category: 'system', focus: '关注训练阶段变化与收敛趋势' }
+    training: { name: '训练动力学', category: 'system', focus: '关注训练阶段变化与收敛趋势' },
+    shared_carrier_3d: { name: '共享承载层', category: 'encoding3d', focus: '关注共享承载簇、跨类共享簇与任务共享桥' },
+    bias_deflection_3d: { name: '偏置偏转层', category: 'encoding3d', focus: '关注对象偏转、类内竞争偏转与任务偏转轨迹' },
+    layerwise_amplification_3d: { name: '逐层放大层', category: 'encoding3d', focus: '关注第一次放大、中层主放大与后层持续放大' },
+    multispace_operator_3d: { name: '多空间角色层', category: 'encoding3d', focus: '关注对象空间、任务空间、传播空间与局部运算元拼接' },
+    cross_model_compare_3d: { name: '跨模型对照层', category: 'encoding3d', focus: '关注 Qwen 与 DeepSeek 的五层结构对照' }
   };
   const currentStructureUI = structureTabUI[structureTab] || { name: structureTab, category: 'analysis', focus: '关注当前分析结果与关键指标' };
   const isObservationMode = currentStructureUI.category === 'observation';
@@ -2502,6 +2512,13 @@ export default function App() {
   const showAppleLegend = appleMainPanelConfig.infoSections.includes('legend');
   const showAppleConceptSets = appleMainPanelConfig.operationSections.includes('conceptSets');
   const showAppleMultidimSettings = appleMainPanelConfig.operationSections.includes('multidim');
+  useEffect(() => {
+    if (retiredEncoding3DTabs.includes(structureTab)) {
+      setStructureTab('circuit');
+    }
+  }, [structureTab]);
+
+  const isEncoding3DTab = false;
 
   const structureGuideItems = STRUCTURE_TABS_V2.groups.flatMap((group, groupIdx) => ([
     ...(groupIdx === 0 ? [] : [{ type: 'sep' }]),
@@ -2526,7 +2543,7 @@ export default function App() {
   ];
   const showGlobalResonanceField = inputPanelTab !== 'dnn' && inputPanelTab !== 'snn';
   const infoPanelTitle = isAppleMainView
-    ? `${t('panels.modelInfo')} · DNN / ${currentAlgorithmInfo.name}`
+    ? `数据面板 · DNN / ${currentAlgorithmInfo.name}`
     : `${t('panels.modelInfo')} · ${activeFunctionPanel.label}`;
   const operationPanelTitle = isAppleMainView
     ? `操作面板 · DNN / ${currentAlgorithmInfo.name}`
@@ -2657,7 +2674,8 @@ export default function App() {
             {inputPanelTab === 'main' && (
               <LanguageResearchControlPanel
                 workspace={appleNeuronWorkspace}
-                legacyControls={<AppleNeuronControlPanels workspace={appleNeuronWorkspace} />}
+                structureTab={structureTab}
+                setStructureTab={setStructureTab}
               />
             )}
 
@@ -2862,6 +2880,21 @@ export default function App() {
                       建议流程：先在左侧配置 ICSPB 实验参数，再在 3D 主空间检查结构变化与稳定性。
                     </div>
                   </div>
+                ) : isAppleMainView ? (
+                  <LanguageResearchDataPanel
+                    workspace={appleNeuronWorkspace}
+                    hoveredInfo={hoveredInfo}
+                    displayInfo={displayInfo}
+                    infoPanelTab={infoPanelTab}
+                    setInfoPanelTab={setInfoPanelTab}
+                    showAppleCategoryCompare={showAppleCategoryCompare}
+                    showAppleEncodingInfo={showAppleEncodingInfo}
+                    showAppleResearchAsset={showAppleResearchAsset}
+                    showAppleLegend={showAppleLegend}
+                    currentAlgorithmName={currentAlgorithmInfo.name}
+                    currentAlgorithmFocus={currentAlgorithmInfo.focus}
+                    structureTab={structureTab}
+                  />
                 ) : (
                   <div>
                     <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
@@ -2906,44 +2939,22 @@ export default function App() {
                     )}
 
                     {infoPanelTab === 'encoding' && (
-                      isAppleMainView ? (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                          {showAppleCategoryCompare && <AppleNeuronCategoryComparePanel workspace={appleNeuronWorkspace} compact />}
-                          {showAppleEncodingInfo && <AppleNeuronEncodingInfoPanels workspace={appleNeuronWorkspace} compact />}
-                          {showAppleResearchAsset && <AppleNeuronResearchAssetInfoPanel workspace={appleNeuronWorkspace} compact />}
-                          {showAppleLegend && <AppleNeuronSelectedLegendPanels workspace={appleNeuronWorkspace} compact />}
-                          {!showAppleCategoryCompare && !showAppleEncodingInfo && !showAppleResearchAsset && !showAppleLegend && (
-                            <div style={{
-                              padding: '10px',
-                              borderRadius: '6px',
-                              background: 'rgba(255,255,255,0.03)',
-                              border: '1px solid rgba(255,255,255,0.08)',
-                              fontSize: '11px',
-                              color: '#9ea7b7',
-                              lineHeight: '1.6'
-                            }}>
-                              当前模式没有额外编码说明卡片，右侧只保留与左侧当前动作直接相关的内容。
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                          {encodingFocusItems.map((item) => (
-                            <div key={`encoding-${item.label}`} style={{
-                              background: 'rgba(255,255,255,0.03)',
-                              border: '1px solid rgba(255,255,255,0.08)',
-                              borderRadius: '6px',
-                              padding: '8px'
-                            }}>
-                              <div style={{ color: '#8ea5c5', fontSize: '10px' }}>{item.label}</div>
-                              <div style={{ color: '#fff', fontSize: '13px', fontWeight: '600' }}>{item.value}</div>
-                            </div>
-                          ))}
-                          <div style={{ fontSize: '11px', color: '#9ea7b7', lineHeight: '1.5' }}>
-                            重点看层间变化: 若某指标在相邻层出现阶跃，通常意味着编码从局部特征转向组合语义。
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        {encodingFocusItems.map((item) => (
+                          <div key={`encoding-${item.label}`} style={{
+                            background: 'rgba(255,255,255,0.03)',
+                            border: '1px solid rgba(255,255,255,0.08)',
+                            borderRadius: '6px',
+                            padding: '8px'
+                          }}>
+                            <div style={{ color: '#8ea5c5', fontSize: '10px' }}>{item.label}</div>
+                            <div style={{ color: '#fff', fontSize: '13px', fontWeight: '600' }}>{item.value}</div>
                           </div>
+                        ))}
+                        <div style={{ fontSize: '11px', color: '#9ea7b7', lineHeight: '1.5' }}>
+                          重点看层间变化: 若某指标在相邻层出现阶跃，通常意味着编码从局部特征转向组合语义。
                         </div>
-                      )
+                      </div>
                     )}
 
                     {infoPanelTab === 'detail' && (
@@ -2963,6 +2974,45 @@ export default function App() {
                                 <div>
                                   <div>数据点: {(hoveredInfo || displayInfo).index}</div>
                                   <div>PC1/2/3: {(hoveredInfo || displayInfo).pc1?.toFixed(2)}, {(hoveredInfo || displayInfo).pc2?.toFixed(2)}, {(hoveredInfo || displayInfo).pc3?.toFixed(2)}</div>
+                                </div>
+                              ) : (hoveredInfo || displayInfo).type?.startsWith?.('encoding3d_') ? (
+                                <div>
+                                  <div>名称: <strong>{(hoveredInfo || displayInfo).label}</strong></div>
+                                  {(hoveredInfo || displayInfo).role && <div>角色: {(hoveredInfo || displayInfo).role}</div>}
+                                  {(hoveredInfo || displayInfo).nodeKind && <div>节点类型: {(hoveredInfo || displayInfo).nodeKind}</div>}
+                                  {(hoveredInfo || displayInfo).layerLabel && <div>场景层: {(hoveredInfo || displayInfo).layerLabel}</div>}
+                                  {typeof (hoveredInfo || displayInfo).score === 'number' && (
+                                    <div>分数: <span style={{ color: '#4ecdc4' }}>{(hoveredInfo || displayInfo).score.toFixed(4)}</span></div>
+                                  )}
+                                  {typeof (hoveredInfo || displayInfo).gain === 'number' && (
+                                    <div>增益: <span style={{ color: '#ffd166' }}>{(hoveredInfo || displayInfo).gain.toFixed(4)}</span></div>
+                                  )}
+                                  {typeof (hoveredInfo || displayInfo).memberCount === 'number' && <div>成员数: {(hoveredInfo || displayInfo).memberCount}</div>}
+                                  {Array.isArray((hoveredInfo || displayInfo).members) && <div>原始位点: {(hoveredInfo || displayInfo).members.join(', ')}</div>}
+                                  {Array.isArray((hoveredInfo || displayInfo).position) && <div>坐标: {(hoveredInfo || displayInfo).position.map((v) => Number(v).toFixed(2)).join(', ')}</div>}
+                                  {Array.isArray((hoveredInfo || displayInfo).from) && <div>起点: {(hoveredInfo || displayInfo).from.map((v) => Number(v).toFixed(2)).join(', ')}</div>}
+                                  {Array.isArray((hoveredInfo || displayInfo).to) && <div>终点: {(hoveredInfo || displayInfo).to.map((v) => Number(v).toFixed(2)).join(', ')}</div>}
+                                  {(hoveredInfo || displayInfo).model && <div>模型: {(hoveredInfo || displayInfo).model}</div>}
+                                  {(hoveredInfo || displayInfo).metric && <div>指标: {(hoveredInfo || displayInfo).metric}</div>}
+                                  {typeof (hoveredInfo || displayInfo).length === 'number' && <div>长度: {(hoveredInfo || displayInfo).length}</div>}
+                                  {(hoveredInfo || displayInfo).detailText && <div>结构说明: {(hoveredInfo || displayInfo).detailText}</div>}
+                                  {(hoveredInfo || displayInfo).sourceStage && <div>来源阶段: {(hoveredInfo || displayInfo).sourceStage}</div>}
+                                  {(hoveredInfo || displayInfo).sourceScript && <div>脚本: {(hoveredInfo || displayInfo).sourceScript}</div>}
+                                  {(hoveredInfo || displayInfo).sourceOutput && <div>输出目录: {(hoveredInfo || displayInfo).sourceOutput}</div>}
+                                </div>
+                              ) : (hoveredInfo || displayInfo).type?.startsWith?.('layerfirst_') ? (
+                                <div>
+                                  <div>名称: <strong>{(hoveredInfo || displayInfo).label}</strong></div>
+                                  {(hoveredInfo || displayInfo).nodeKind && <div>节点类型: {(hoveredInfo || displayInfo).nodeKind}</div>}
+                                  {(hoveredInfo || displayInfo).category && <div>类别: {(hoveredInfo || displayInfo).category}</div>}
+                                  {(hoveredInfo || displayInfo).role && <div>角色: {(hoveredInfo || displayInfo).role}</div>}
+                                  {(hoveredInfo || displayInfo).layerLabel && <div>层号: {(hoveredInfo || displayInfo).layerLabel}</div>}
+                                  {typeof (hoveredInfo || displayInfo).dimIndex === 'number' && <div>参数维度: d{(hoveredInfo || displayInfo).dimIndex}</div>}
+                                  {Array.isArray((hoveredInfo || displayInfo).members) && <div>参数位: {(hoveredInfo || displayInfo).members.join(', ')}</div>}
+                                  {Array.isArray((hoveredInfo || displayInfo).position) && <div>坐标: {(hoveredInfo || displayInfo).position.map((v) => Number(v).toFixed(2)).join(', ')}</div>}
+                                  {(hoveredInfo || displayInfo).detailText && <div>结构说明: {(hoveredInfo || displayInfo).detailText}</div>}
+                                  {(hoveredInfo || displayInfo).sourceStage && <div>来源阶段: {(hoveredInfo || displayInfo).sourceStage}</div>}
+                                  {(hoveredInfo || displayInfo).sourceOutput && <div>输出目录: {(hoveredInfo || displayInfo).sourceOutput}</div>}
                                 </div>
                               ) : (
                                 <div>
@@ -3757,11 +3807,15 @@ export default function App() {
         </SimplePanel>
       )}
 
-      <Canvas shadows>
+        <Canvas shadows>
           {isAppleMainView && <color attach="background" args={['#090b15']} />}
           {isAppleMainView && <fog attach="fog" args={['#090b15', 14, 42]} />}
 
-          <PerspectiveCamera makeDefault position={isAppleMainView ? [16, 12, 26] : [20, 20, 20]} fov={isAppleMainView ? 42 : 50} />
+          <PerspectiveCamera
+            makeDefault
+            position={isEncoding3DTab ? [0, 8, 34] : isAppleMainView ? [16, 12, 26] : [20, 20, 20]}
+            fov={isEncoding3DTab ? 46 : isAppleMainView ? 42 : 50}
+          />
           <OrbitControls
             makeDefault
             target={[0, 0, 0]}
@@ -3776,6 +3830,12 @@ export default function App() {
             <>
               <pointLight position={[12, 12, 16]} intensity={70} color="#8fc4ff" />
               <pointLight position={[-14, -8, -15]} intensity={30} color="#ff9e6b" />
+              {isEncoding3DTab && (
+                <>
+                  <pointLight position={[0, 18, 18]} intensity={35} color="#4ecdc4" />
+                  <pointLight position={[0, 6, 30]} intensity={18} color="#ffffff" />
+                </>
+              )}
             </>
           ) : (
             <>
@@ -3784,7 +3844,7 @@ export default function App() {
             </>
           )}
 
-          {isAppleMainView ? (
+          {isAppleMainView && !isEncoding3DTab ? (
             <AppleNeuronSceneContent
               nodes={appleNeuronWorkspace.nodes}
               links={appleNeuronWorkspace.links}
@@ -3822,7 +3882,7 @@ export default function App() {
           )}
 
           {/* Analysis Overlays - 模态观测图层叠加 */}
-          {!isAppleMainView && analysisResult && structureTab !== 'glass_matrix' && structureTab !== 'flow_tubes' && (
+          {!isAppleMainView && analysisResult && structureTab !== 'glass_matrix' && structureTab !== 'flow_tubes' && !['shared_carrier_3d', 'bias_deflection_3d', 'layerwise_amplification_3d', 'multispace_operator_3d', 'cross_model_compare_3d'].includes(structureTab) && (
             <group position={data ? [-data.tokens.length, 0, -data.logit_lens.length] : [0, 0, 0]}>
               {/* 场景标签 - 动态显示当前观测模态 */}
               <Text position={[0, 14, 0]} fontSize={1} color="#4ecdc4" anchorX="center">
@@ -3871,6 +3931,18 @@ export default function App() {
           {!isAppleMainView && structureTab === 'tda' && (
             <group position={[0, 0, 0]}>
               <TDAVisualization3D result={analysisResult} t={t} />
+            </group>
+          )}
+
+          {isEncoding3DTab && (
+            <group position={[0, 0, 0]}>
+              <gridHelper args={[80, 40, '#1f3d57', '#102235']} position={[0, -2.4, 0]} />
+              <axesHelper args={[10]} position={[-16, -2.2, -16]} />
+              <ParameterEncoding3D
+                mode={structureTab}
+                onHover={setHoveredInfo}
+                onSelect={setDisplayInfo}
+              />
             </group>
           )}
 

@@ -103,6 +103,20 @@ export const STRUCTURE_TABS_V2 = {
         { id: 'training', label: '训练 (Training)', desc: '训练动力学', icon: 'Activity' },
       ],
     },
+    {
+      id: 'encoding3d',
+      label: '编码 3D',
+      icon: 'Layers',
+      color: '#22c55e',
+      description: '共享承载、偏置偏转与逐层放大的五层 3D 场景',
+      items: [
+        { id: 'shared_carrier_3d', label: '承载层', desc: '共享承载层 3D 场景', icon: 'Layers' },
+        { id: 'bias_deflection_3d', label: '偏转层', desc: '偏置偏转层 3D 场景', icon: 'GitBranch' },
+        { id: 'layerwise_amplification_3d', label: '放大层', desc: '逐层放大层 3D 场景', icon: 'TrendingUp' },
+        { id: 'multispace_operator_3d', label: '角色层', desc: '多空间角色与局部运算元', icon: 'Grid3x3' },
+        { id: 'cross_model_compare_3d', label: '对照层', desc: '跨模型结构对照层', icon: 'ArrowRightLeft' },
+      ],
+    },
   ],
 };
 
@@ -112,6 +126,7 @@ export const STRUCTURE_TABS = {
   analysis: STRUCTURE_TABS_V2.groups.find((g) => g.id === 'analysis').items,
   geometry: STRUCTURE_TABS_V2.groups.find((g) => g.id === 'geometry').items,
   advanced: STRUCTURE_TABS_V2.groups.find((g) => g.id === 'advanced').items,
+  encoding3d: STRUCTURE_TABS_V2.groups.find((g) => g.id === 'encoding3d').items,
 };
 
 // 输入面板标签

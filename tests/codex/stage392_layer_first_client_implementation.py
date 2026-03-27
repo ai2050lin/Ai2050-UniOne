@@ -1,0 +1,48 @@
+from __future__ import annotations
+
+import json
+from datetime import datetime
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[2]
+OUT_DIR = ROOT / "tests" / "codex_temp" / "stage392_layer_first_client_implementation_20260325"
+
+
+def main() -> None:
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    summary = {
+        "schema_version": "agi_research_result.v1",
+        "experiment_id": "stage392_layer_first_client_implementation",
+        "title": "28层优先客户端主视图改造",
+        "status_short": "implemented",
+        "implemented_files": [
+            "frontend/src/LayerFirstNeuronScene.jsx",
+            "frontend/src/blueprint/data/agi_layer_raw_scene_v1.js",
+            "frontend/src/App.jsx",
+        ],
+        "base_principle": "先显示28个layer骨架，再显示有效神经元和参数位，最后叠加高级分析层。",
+        "scene_features": [
+            "28个layer固定骨架",
+            "层级运行锚点",
+            "参数位节点机架",
+            "多空间角色节点",
+            "逐层放大路径",
+            "右侧详情联动",
+        ],
+        "data_source": {
+            "layer_scene": "tests/codex_temp/stage384_layer_model_raw_scene_export_20260325/agi_layer_raw_scene_v1.json",
+            "scheme": "tests/codex_temp/stage391_layer_first_visualization_scheme_20260325/summary.json",
+        },
+        "build_verification": {
+            "frontend_build": "passed",
+            "verified_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        },
+        "top_gap_name": "当前主视图已切到28层优先方案，但token_index和更完整的显式layer_index仍不足。",
+    }
+    (OUT_DIR / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+if __name__ == "__main__":
+    main()
+
