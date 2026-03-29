@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 // 新工作台架构备份: import App from './AppNew.jsx'
 import './index.css'
+import './css/DNNAnalysisControlPanel.css'
 import ErrorBoundary from './ErrorBoundary.jsx'
 
 createRoot(document.getElementById('root')).render(

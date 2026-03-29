@@ -6,6 +6,7 @@ import {
   PERSISTED_REPAIR_REPLAY_SLOT_META_V1,
 } from '../blueprint/data/persisted_repair_replay_sample_slots_v1';
 import BasicEncodingPanel from './BasicEncodingPanel';
+import DNNAnalysisControlPanel from './DNNAnalysisControlPanel';
 
 const RESEARCH_LAYERS = [
   {
@@ -661,6 +662,7 @@ export default function LanguageResearchControlPanel({
   setStructureTab = null,
 }) {
   const [legacyOpen, setLegacyOpen] = useState(false);
+  const [dnnAnalysisOpen, setDnnAnalysisOpen] = useState(false);
   const [fallbackFocus, setFallbackFocus] = useState({
     researchLayer: 'static_encoding',
     puzzleAxisFilter: 'all',
@@ -963,27 +965,7 @@ export default function LanguageResearchControlPanel({
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <div
-        style={{
-          padding: '14px',
-          borderRadius: '12px',
-          background: 'linear-gradient(160deg, rgba(58,123,213,0.18), rgba(16,24,40,0.92))',
-          border: '1px solid rgba(125, 211, 252, 0.18)',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-          <Layers3 size={16} color="#8fd4ff" />
-          <div style={{ color: '#eff6ff', fontSize: '14px', fontWeight: 800 }}>主界面操作入口</div>
-        </div>
-        <div style={{ color: '#bdd6f7', fontSize: '11px', lineHeight: 1.6, marginBottom: '10px' }}>
-          这里只保留需要点击和切换的内容。语言主线控制台、研究总览、关键性质、验证入口、概念关联、拼图对比台，统一移动到战略层级路线图。
-        </div>
-        <div style={summaryGridStyle}>
-          <FocusSummaryItem label="当前研究层" value={currentLayerMeta.label} />
-          <FocusSummaryItem label="当前主视图" value={currentSceneLabel} />
-          <FocusSummaryItem label="当前操作焦点" value={selectedRepairReplaySlot ? selectedRepairReplaySlot.label : (activePuzzle?.title || '未选择')} />
-        </div>
-      </div>
+      
 
       <div style={cardStyle}>
         <div style={sectionTitleStyle}>
@@ -1034,22 +1016,7 @@ export default function LanguageResearchControlPanel({
         </div>
       </div>
 
-      <div style={cardStyle}>
-        <div style={sectionTitleStyle}>
-          <Boxes size={15} color="#7dd3fc" />
-          <span>基础编码</span>
-        </div>
-        <div style={{ ...detailGridStyle, marginBottom: '10px' }}>
-          <DetailItem label="当前主视图" value={currentSceneLabel} />
-          <DetailItem label="当前研究层" value={currentLayerMeta.label} />
-          <DetailItem label="动画状态" value={basicRuntimePlaying ? '播放中' : '静止'} />
-          <DetailItem label="当前步数" value={String(basicRuntimeStep)} />
-        </div>
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          <button type="button" onClick={handleOpenBasicInfo} style={actionButtonStyle}>
-            打开基础编码
-          </button>
-        </div>
+      <div style={cardStyle}>        
         {legacyOpen ? (
           <div style={{ marginTop: '10px' }}>
             <BasicEncodingPanel workspace={workspace} />
@@ -1057,94 +1024,6 @@ export default function LanguageResearchControlPanel({
         ) : null}
       </div>
 
-      <div style={cardStyle}>
-        <div style={sectionTitleStyle}>
-          <Target size={15} color="#8fd4ff" />
-          <span>基础拼图仓</span>
-        </div>
-
-        <div style={{ ...summaryGridStyle, marginBottom: '10px' }}>
-          <div style={summaryCardStyle}>
-            <div style={summaryLabelStyle}>拼图总数</div>
-            <div style={summaryValueStyle}>{PERSISTED_PUZZLE_SUMMARY_V1.totalCount}</div>
-          </div>
-          <div style={summaryCardStyle}>
-            <div style={summaryLabelStyle}>优先主轴</div>
-            <div style={summaryValueStyle}>{PERSISTED_PUZZLE_SUMMARY_V1.topPriorityIds.length}</div>
-          </div>
-          <div style={summaryCardStyle}>
-            <div style={summaryLabelStyle}>当前筛选后</div>
-            <div style={summaryValueStyle}>{filteredPuzzleRecords.length}</div>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '10px' }}>
-          <button
-            type="button"
-            onClick={() => handleAxisFilterChange('all')}
-            style={puzzleAxisFilter === 'all' ? actionButtonStyle : secondaryButtonStyle}
-          >
-            全部
-          </button>
-          {PERSISTED_PUZZLE_SUMMARY_V1.priorityAxisCounts.map((axis) => (
-            <button
-              key={axis.id}
-              type="button"
-              onClick={() => handleAxisFilterChange(axis.id)}
-              style={puzzleAxisFilter === axis.id ? actionButtonStyle : secondaryButtonStyle}
-            >
-              {`${axis.label} ${axis.count}`}
-            </button>
-          ))}
-        </div>
-
-        <div style={{ display: 'grid', gap: '8px', marginBottom: '10px', maxHeight: '220px', overflowY: 'auto', paddingRight: '2px' }}>
-          {filteredPuzzleRecords.map((record) => {
-            const isActive = activePuzzle?.id === record.id;
-            return (
-              <button
-                key={record.id}
-                type="button"
-                onClick={() => handlePuzzleSelect(record)}
-                style={{
-                  textAlign: 'left',
-                  padding: '10px 12px',
-                  borderRadius: '10px',
-                  border: isActive ? '1px solid rgba(143, 212, 255, 0.55)' : '1px solid rgba(255,255,255,0.08)',
-                  background: isActive ? 'rgba(143, 212, 255, 0.12)' : 'rgba(255,255,255,0.02)',
-                  color: isActive ? '#eef7ff' : '#a8b7cc',
-                  cursor: 'pointer',
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '8px', marginBottom: '3px' }}>
-                  <div style={{ fontSize: '12px', fontWeight: 700 }}>{record.title}</div>
-                  <div style={{ fontSize: '10px', color: isActive ? '#c8e6ff' : '#7e91ab' }}>{record.priority}</div>
-                </div>
-                <div style={{ fontSize: '10px', color: isActive ? '#c8e6ff' : '#7e91ab', lineHeight: 1.5 }}>
-                  {`${record.priorityAxisLabel} | ${record.layerLabel} | 置信度 ${Math.round(record.confidence * 100)}%`}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {activePuzzle ? (
-          <div style={{ ...cardStyle, padding: '10px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '8px', marginBottom: '6px' }}>
-              <div style={{ fontSize: '12px', fontWeight: 700, color: '#eef7ff' }}>{activePuzzle.title}</div>
-              <div style={{ fontSize: '10px', color: '#7f95bb' }}>{activePuzzle.puzzleTypeLabel}</div>
-            </div>
-            <div style={detailGridStyle}>
-              <DetailItem label="主轴" value={activePuzzle.priorityAxisLabel} />
-              <DetailItem label="层范围" value={`${activePuzzle.layerRange[0]} - ${activePuzzle.layerRange[1]}`} />
-              <DetailItem label="映射变量" value={activePuzzle.mappedVariables.join(' / ')} />
-              <DetailItem label="置信度" value={`${Math.round(activePuzzle.confidence * 100)}%`} />
-              <DetailItem label="下一步动作" value={activePuzzle.nextAction} />
-              <DetailItem label="投射研究层" value={activePuzzle.layerLabel} />
-            </div>
-          </div>
-        ) : null}
-      </div>
 
       {repairReplaySlotSummary ? (
         <div style={cardStyle}>
@@ -1265,6 +1144,39 @@ export default function LanguageResearchControlPanel({
           </div>
         </div>
       ) : null}
+
+      {/* DNN分析控制面板 */}
+      <div style={cardStyle}>
+        <div style={sectionTitleStyle}>
+          <Brain size={15} color="#8fd4ff" />
+          <span>DNN分析</span>
+        </div>
+        <div style={{ color: '#9bb3de', fontSize: '11px', lineHeight: 1.6, marginBottom: '10px' }}>
+          深度神经网络多维度分析工具，支持后续数据扩充。
+        </div>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '8px' }}>
+          <button
+            type="button"
+            onClick={() => setDnnAnalysisOpen(!dnnAnalysisOpen)}
+            style={dnnAnalysisOpen ? actionButtonStyle : secondaryButtonStyle}
+          >
+            {dnnAnalysisOpen ? '收起面板' : '展开面板'}
+          </button>
+        </div>
+      </div>
+
+      {dnnAnalysisOpen && (
+        <div style={cardStyle}>
+          <DNNAnalysisControlPanel
+            onAnalysisRequest={(data) => {
+              console.log('DNN分析请求:', data);
+            }}
+            onDataSelect={(data) => {
+              console.log('DNN数据选择:', data);
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

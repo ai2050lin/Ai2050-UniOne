@@ -1,0 +1,7 @@
+{
+  "family_type": "family_shared",
+  "model": "deepseek7b",
+  "num_concepts": 120,
+  "num_parameters": 256,
+  "generation_date": "2026-03-28"
+}

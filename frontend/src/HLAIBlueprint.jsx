@@ -2,9 +2,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { pollRuntimeWithFallback } from './utils/runtimeClient';
 import { ProjectRoadmapTab } from './blueprint/ProjectRoadmapTab';
+import { LanguageAnalysisTab } from './blueprint/LanguageAnalysisTab';
 import { DeepAnalysisTab } from './blueprint/DeepAnalysisTab';
 import { ResearchProgressTab } from './blueprint/ResearchProgressTab';
-import { ResearchAuditTab } from './blueprint/ResearchAuditTab';
 import { SystemStatusTab } from './blueprint/SystemStatusTab';
 import {
   PHASES,
@@ -16,7 +16,7 @@ import {
 } from './blueprint/blueprintConfig';
 import { API_BASE, mapLegacyConsciousField, mapRuntimeConsciousField } from './blueprint/blueprintRuntimeUtils';
 
-const BLUEPRINT_TABS = new Set(['roadmap', 'analysis', 'progress', 'audit', 'system']);
+const BLUEPRINT_TABS = new Set(['roadmap', 'language', 'analysis', 'progress', 'system']);
 
 export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
   const [activeTab, setActiveTab] = useState(initialTab); // roadmap, progress, system
@@ -32,9 +32,6 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
   const [multimodalView, setMultimodalView] = useState('multimodal_connector');
   const [multimodalError, setMultimodalError] = useState(null);
   const [runtimeStatusSummary, setRuntimeStatusSummary] = useState(null);
-  const [researchAudit, setResearchAudit] = useState(null);
-  const [researchAuditError, setResearchAuditError] = useState(null);
-  const [researchAuditLoading, setResearchAuditLoading] = useState(true);
   const runtimeStepRef = useRef(0);
 
   useEffect(() => {
@@ -153,39 +150,6 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
     };
   }, []);
 
-  useEffect(() => {
-    let mounted = true;
-
-    const fetchResearchAudit = async () => {
-      try {
-        if (mounted) {
-          setResearchAuditLoading(true);
-        }
-        const res = await fetch(`${API_BASE}/api/v1/research/audit/latest`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const payload = await res.json();
-        if (!mounted) return;
-        if (payload?.status !== 'success') throw new Error('invalid audit payload');
-        setResearchAudit(payload.audit || null);
-        setResearchAuditError(null);
-      } catch (err) {
-        if (!mounted) return;
-        setResearchAudit(null);
-        setResearchAuditError(err?.message || 'research audit unavailable');
-      } finally {
-        if (mounted) {
-          setResearchAuditLoading(false);
-        }
-      }
-    };
-
-    fetchResearchAudit();
-    const interval = setInterval(fetchResearchAudit, 20000);
-    return () => {
-      mounted = false;
-      clearInterval(interval);
-    };
-  }, []);
 
   useEffect(() => {
     const available = Array.isArray(multimodalSummary?.available_views)
@@ -1042,15 +1006,15 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '50px', height: '100%' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <Brain size={28} color="#00d2ff" />
-            <span style={{ fontSize: '18px', fontWeight: 'bold', letterSpacing: '2px' }}>智能一号</span>
+            <span style={{ fontSize: '18px', fontWeight: 'bold', letterSpacing: '2px' }}>理论分析</span>
           </div>
 
           <nav style={{ display: 'flex', gap: '10px', height: '100%', overflowX: 'auto', scrollbarWidth: 'thin' }}>
             {[
               { id: 'roadmap', label: '项目大纲' },
-              { id: 'analysis', label: '深度分析' },
+              { id: 'language', label: '语言分析' },
+              { id: 'analysis', label: '智能理论' },
               { id: 'progress', label: '模型研发' },
-              { id: 'audit', label: '严格审查' },
               { id: 'system', label: '系统状态' },
             ].map(t => (
               <button
@@ -1165,6 +1129,11 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
             />
           )}
 
+          {/* TAB: Language Analysis */}
+          {activeTab === 'language' && (
+            <LanguageAnalysisTab />
+          )}
+
           {/* TAB: Deep Analysis / Model Comparison */}
           {activeTab === 'analysis' && (
             <DeepAnalysisTab
@@ -1194,16 +1163,6 @@ export const HLAIBlueprint = ({ onClose, initialTab = 'roadmap' }) => {
               selectedMultimodalData={selectedMultimodalData}
               selectedMultimodalLatest={selectedMultimodalLatest}
               multimodalMetricRows={multimodalMetricRows}
-            />
-          )}
-
-          {activeTab === 'audit' && (
-            <ResearchAuditTab
-              auditData={researchAudit}
-              auditLoading={researchAuditLoading}
-              auditError={researchAuditError}
-              selectedRoute={selectedRoute}
-              timelineRoutes={timelineRoutes}
             />
           )}
 

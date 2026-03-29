@@ -24,6 +24,7 @@ import { AGIChatPanel } from './AGIChatPanel';
 import ICSPBPanel from './components/FiberNetPanel';
 import LanguageResearchControlPanel from './components/LanguageResearchControlPanel';
 import LanguageResearchDataPanel from './components/LanguageResearchDataPanel';
+import DNNAnalysisControlPanel from './components/DNNAnalysisControlPanel';
 import ParameterEncoding3D from './ParameterEncoding3D';
 
 import { locales } from './locales';

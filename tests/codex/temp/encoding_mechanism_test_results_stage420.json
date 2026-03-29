@@ -1,0 +1,458 @@
+{
+  "word_embedding_arithmetic": {
+    "description": "词嵌入算术的神经元级编码验证",
+    "results": [
+      {
+        "test": "woman - man + king = queen",
+        "cosine_similarity": 1.0,
+        "success": true
+      },
+      {
+        "test": "girl - boy + prince = princess",
+        "cosine_similarity": 0.5796627998352051,
+        "success": true
+      },
+      {
+        "test": "sister - brother + uncle = aunt",
+        "cosine_similarity": 0.49261897802352905,
+        "success": false
+      }
+    ],
+    "conclusion": "参数空间中存在语义关系的向量表示"
+  },
+  "spiking_nn_principle": {
+    "description": "脉冲神经网络最小传送量原理验证",
+    "results": [
+      {
+        "sentence": "The red apple is sweet",
+        "avg_activation_ratio": 0.18712293853362402,
+        "sparsity": 0.812877061466376,
+        "layer_details": {
+          "layer_0": {
+            "active_ratio": 0.20244140923023224,
+            "sparse_ratio": 0.7975585907697678
+          },
+          "layer_1": {
+            "active_ratio": 0.17942708730697632,
+            "sparse_ratio": 0.8205729126930237
+          },
+          "layer_2": {
+            "active_ratio": 0.18492838740348816,
+            "sparse_ratio": 0.8150716125965118
+          },
+          "layer_3": {
+            "active_ratio": 0.17893880605697632,
+            "sparse_ratio": 0.8210611939430237
+          },
+          "layer_4": {
+            "active_ratio": 0.18476562201976776,
+            "sparse_ratio": 0.8152343779802322
+          },
+          "layer_5": {
+            "active_ratio": 0.18968099355697632,
+            "sparse_ratio": 0.8103190064430237
+          },
+          "layer_6": {
+            "active_ratio": 0.18385416269302368,
+            "sparse_ratio": 0.8161458373069763
+          },
+          "layer_7": {
+            "active_ratio": 0.19147135317325592,
+            "sparse_ratio": 0.8085286468267441
+          },
+          "layer_8": {
+            "active_ratio": 0.19651693105697632,
+            "sparse_ratio": 0.8034830689430237
+          },
+          "layer_9": {
+            "active_ratio": 0.19843749701976776,
+            "sparse_ratio": 0.8015625029802322
+          },
+          "layer_10": {
+            "active_ratio": 0.1775716096162796,
+            "sparse_ratio": 0.8224283903837204
+          },
+          "layer_11": {
+            "active_ratio": 0.17744140326976776,
+            "sparse_ratio": 0.8225585967302322
+          }
+        }
+      },
+      {
+        "sentence": "The red banana is sweet",
+        "avg_activation_ratio": 0.18935818100968996,
+        "sparsity": 0.8106418189903101,
+        "layer_details": {
+          "layer_0": {
+            "active_ratio": 0.20104166865348816,
+            "sparse_ratio": 0.7989583313465118
+          },
+          "layer_1": {
+            "active_ratio": 0.1826171875,
+            "sparse_ratio": 0.8173828125
+          },
+          "layer_2": {
+            "active_ratio": 0.19355468451976776,
+            "sparse_ratio": 0.8064453154802322
+          },
+          "layer_3": {
+            "active_ratio": 0.18505859375,
+            "sparse_ratio": 0.81494140625
+          },
+          "layer_4": {
+            "active_ratio": 0.19020181894302368,
+            "sparse_ratio": 0.8097981810569763
+          },
+          "layer_5": {
+            "active_ratio": 0.18870443105697632,
+            "sparse_ratio": 0.8112955689430237
+          },
+          "layer_6": {
+            "active_ratio": 0.17884114384651184,
+            "sparse_ratio": 0.8211588561534882
+          },
+          "layer_7": {
+            "active_ratio": 0.18974609673023224,
+            "sparse_ratio": 0.8102539032697678
+          },
+          "layer_8": {
+            "active_ratio": 0.2014973908662796,
+            "sparse_ratio": 0.7985026091337204
+          },
+          "layer_9": {
+            "active_ratio": 0.20494791865348816,
+            "sparse_ratio": 0.7950520813465118
+          },
+          "layer_10": {
+            "active_ratio": 0.17763671278953552,
+            "sparse_ratio": 0.8223632872104645
+          },
+          "layer_11": {
+            "active_ratio": 0.17845052480697632,
+            "sparse_ratio": 0.8215494751930237
+          }
+        }
+      },
+      {
+        "sentence": "The blue sky is beautiful",
+        "avg_activation_ratio": 0.18586968258023262,
+        "sparsity": 0.8141303174197674,
+        "layer_details": {
+          "layer_0": {
+            "active_ratio": 0.19615885615348816,
+            "sparse_ratio": 0.8038411438465118
+          },
+          "layer_1": {
+            "active_ratio": 0.17975260317325592,
+            "sparse_ratio": 0.8202473968267441
+          },
+          "layer_2": {
+            "active_ratio": 0.17965494096279144,
+            "sparse_ratio": 0.8203450590372086
+          },
+          "layer_3": {
+            "active_ratio": 0.18948568403720856,
+            "sparse_ratio": 0.8105143159627914
+          },
+          "layer_4": {
+            "active_ratio": 0.1785481721162796,
+            "sparse_ratio": 0.8214518278837204
+          },
+          "layer_5": {
+            "active_ratio": 0.1787109375,
+            "sparse_ratio": 0.8212890625
+          },
+          "layer_6": {
+            "active_ratio": 0.18011067807674408,
+            "sparse_ratio": 0.8198893219232559
+          },
+          "layer_7": {
+            "active_ratio": 0.19371744990348816,
+            "sparse_ratio": 0.8062825500965118
+          },
+          "layer_8": {
+            "active_ratio": 0.19384765625,
+            "sparse_ratio": 0.80615234375
+          },
+          "layer_9": {
+            "active_ratio": 0.1796875,
+            "sparse_ratio": 0.8203125
+          },
+          "layer_10": {
+            "active_ratio": 0.18548177182674408,
+            "sparse_ratio": 0.8145182281732559
+          },
+          "layer_11": {
+            "active_ratio": 0.19527994096279144,
+            "sparse_ratio": 0.8047200590372086
+          }
+        }
+      }
+    ],
+    "conclusion": "网络呈现稀疏激活模式,平均激活比例: 0.1875"
+  },
+  "global_uniqueness": {
+    "description": "全局唯一性验证: 所有神经元参与但总能收敛到合适输出",
+    "results": [
+      {
+        "style": "chat",
+        "prompt": "What is the color of an apple?",
+        "avg_neuron_participation": 0.6895616319444445,
+        "keyword_found": true,
+        "layer_participation": {
+          "layer_0": {
+            "active_neurons": 593,
+            "total_neurons": 768,
+            "participation_ratio": 0.7721354166666666
+          },
+          "layer_1": {
+            "active_neurons": 564,
+            "total_neurons": 768,
+            "participation_ratio": 0.734375
+          },
+          "layer_2": {
+            "active_neurons": 470,
+            "total_neurons": 768,
+            "participation_ratio": 0.6119791666666666
+          },
+          "layer_3": {
+            "active_neurons": 530,
+            "total_neurons": 768,
+            "participation_ratio": 0.6901041666666666
+          },
+          "layer_4": {
+            "active_neurons": 504,
+            "total_neurons": 768,
+            "participation_ratio": 0.65625
+          },
+          "layer_5": {
+            "active_neurons": 544,
+            "total_neurons": 768,
+            "participation_ratio": 0.7083333333333334
+          },
+          "layer_6": {
+            "active_neurons": 473,
+            "total_neurons": 768,
+            "participation_ratio": 0.6158854166666666
+          },
+          "layer_7": {
+            "active_neurons": 532,
+            "total_neurons": 768,
+            "participation_ratio": 0.6927083333333334
+          },
+          "layer_8": {
+            "active_neurons": 468,
+            "total_neurons": 768,
+            "participation_ratio": 0.609375
+          },
+          "layer_9": {
+            "active_neurons": 588,
+            "total_neurons": 768,
+            "participation_ratio": 0.765625
+          },
+          "layer_10": {
+            "active_neurons": 609,
+            "total_neurons": 768,
+            "participation_ratio": 0.79296875
+          },
+          "layer_11": {
+            "active_neurons": 480,
+            "total_neurons": 768,
+            "participation_ratio": 0.625
+          }
+        }
+      },
+      {
+        "style": "academic",
+        "prompt": "Describe chromatic characteristics of Malus domestica.",
+        "avg_neuron_participation": 0.6937934027777777,
+        "keyword_found": true,
+        "layer_participation": {
+          "layer_0": {
+            "active_neurons": 563,
+            "total_neurons": 768,
+            "participation_ratio": 0.7330729166666666
+          },
+          "layer_1": {
+            "active_neurons": 599,
+            "total_neurons": 768,
+            "participation_ratio": 0.7799479166666666
+          },
+          "layer_2": {
+            "active_neurons": 546,
+            "total_neurons": 768,
+            "participation_ratio": 0.7109375
+          },
+          "layer_3": {
+            "active_neurons": 516,
+            "total_neurons": 768,
+            "participation_ratio": 0.671875
+          },
+          "layer_4": {
+            "active_neurons": 541,
+            "total_neurons": 768,
+            "participation_ratio": 0.7044270833333334
+          },
+          "layer_5": {
+            "active_neurons": 489,
+            "total_neurons": 768,
+            "participation_ratio": 0.63671875
+          },
+          "layer_6": {
+            "active_neurons": 610,
+            "total_neurons": 768,
+            "participation_ratio": 0.7942708333333334
+          },
+          "layer_7": {
+            "active_neurons": 464,
+            "total_neurons": 768,
+            "participation_ratio": 0.6041666666666666
+          },
+          "layer_8": {
+            "active_neurons": 511,
+            "total_neurons": 768,
+            "participation_ratio": 0.6653645833333334
+          },
+          "layer_9": {
+            "active_neurons": 530,
+            "total_neurons": 768,
+            "participation_ratio": 0.6901041666666666
+          },
+          "layer_10": {
+            "active_neurons": 502,
+            "total_neurons": 768,
+            "participation_ratio": 0.6536458333333334
+          },
+          "layer_11": {
+            "active_neurons": 523,
+            "total_neurons": 768,
+            "participation_ratio": 0.6809895833333334
+          }
+        }
+      },
+      {
+        "style": "casual",
+        "prompt": "Hey, what color are apples usually?",
+        "avg_neuron_participation": 0.6981336805555555,
+        "keyword_found": true,
+        "layer_participation": {
+          "layer_0": {
+            "active_neurons": 490,
+            "total_neurons": 768,
+            "participation_ratio": 0.6380208333333334
+          },
+          "layer_1": {
+            "active_neurons": 496,
+            "total_neurons": 768,
+            "participation_ratio": 0.6458333333333334
+          },
+          "layer_2": {
+            "active_neurons": 601,
+            "total_neurons": 768,
+            "participation_ratio": 0.7825520833333334
+          },
+          "layer_3": {
+            "active_neurons": 557,
+            "total_neurons": 768,
+            "participation_ratio": 0.7252604166666666
+          },
+          "layer_4": {
+            "active_neurons": 536,
+            "total_neurons": 768,
+            "participation_ratio": 0.6979166666666666
+          },
+          "layer_5": {
+            "active_neurons": 559,
+            "total_neurons": 768,
+            "participation_ratio": 0.7278645833333334
+          },
+          "layer_6": {
+            "active_neurons": 487,
+            "total_neurons": 768,
+            "participation_ratio": 0.6341145833333334
+          },
+          "layer_7": {
+            "active_neurons": 543,
+            "total_neurons": 768,
+            "participation_ratio": 0.70703125
+          },
+          "layer_8": {
+            "active_neurons": 605,
+            "total_neurons": 768,
+            "participation_ratio": 0.7877604166666666
+          },
+          "layer_9": {
+            "active_neurons": 489,
+            "total_neurons": 768,
+            "participation_ratio": 0.63671875
+          },
+          "layer_10": {
+            "active_neurons": 508,
+            "total_neurons": 768,
+            "participation_ratio": 0.6614583333333334
+          },
+          "layer_11": {
+            "active_neurons": 563,
+            "total_neurons": 768,
+            "participation_ratio": 0.7330729166666666
+          }
+        }
+      }
+    ],
+    "conclusion": "平均神经元参与度: 0.6938"
+  },
+  "encoding_convergence": {
+    "description": "不同语义表达的编码空间收敛性分析",
+    "results": [
+      {
+        "layer": 0,
+        "avg_similarity": -0.013109405525028706
+      },
+      {
+        "layer": 1,
+        "avg_similarity": -0.0049867830239236355
+      },
+      {
+        "layer": 2,
+        "avg_similarity": -0.011870543472468853
+      },
+      {
+        "layer": 3,
+        "avg_similarity": -0.007249752525240183
+      },
+      {
+        "layer": 4,
+        "avg_similarity": 0.007920563220977783
+      },
+      {
+        "layer": 5,
+        "avg_similarity": -0.0014046827564015985
+      },
+      {
+        "layer": 6,
+        "avg_similarity": -0.011977513320744038
+      },
+      {
+        "layer": 7,
+        "avg_similarity": 0.02721635438501835
+      },
+      {
+        "layer": 8,
+        "avg_similarity": 0.006733536720275879
+      },
+      {
+        "layer": 9,
+        "avg_similarity": 0.008203049190342426
+      },
+      {
+        "layer": 10,
+        "avg_similarity": 0.00853766966611147
+      },
+      {
+        "layer": 11,
+        "avg_similarity": 0.026516297832131386
+      }
+    ],
+    "conclusion": "编码在高层逐渐收敛,形成统一的语义表示"
+  }
+}
