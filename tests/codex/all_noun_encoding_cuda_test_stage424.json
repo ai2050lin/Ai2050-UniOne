@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-03-30T00:51:22.602888",
+  "device": "cuda",
+  "models": {
+    "qwen3": {
+      "name": "Qwen3-4B",
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "layers": 36,
+      "hidden_dim": 2048,
+      "ff_dim": 5504
+    },
+    "deepseek7b": {
+      "name": "DeepSeek-7B",
+      "model_id": "deepseek-ai/DeepSeek-V2-Lite-Instruct",
+      "layers": 28,
+      "hidden_dim": 4096,
+      "ff_dim": 11008
+    }
+  },
+  "noun_count": 1040,
+  "category_count": 10,
+  "tests": {},
+  "cuda_test": {
+    "cuda_available": true,
+    "device_name": "NVIDIA GeForce RTX 4090 D",
+    "cuda_version": "12.4",
+    "pytorch_version": "2.6.0+cu124"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "stage": 428,
+    "description": "使用CUDA测试真实模型词性层分布",
+    "timestamp": "2026-03-30T11:41:49.773474",
+    "cuda_available": true,
+    "models": [
+      "gpt2-small"
+    ],
+    "pos_types": [
+      "noun",
+      "adjective",
+      "verb",
+      "adverb",
+      "pronoun",
+      "preposition"
+    ]
+  },
+  "models": {
+    "gpt2-small": {
+      "model_name": "gpt2-small",
+      "model_config": {
+        "name": "gpt2",
+        "num_layers": 12,
+        "hidden_size": 768,
+        "use_transformer_lens": true,
+        "trust_remote_code": false,
+        "torch_dtype": "float32"
+      },
+      "model_loaded": false,
+      "pos_analysis": {},
+      "error": "模型加载失败"
+    }
+  },
+  "cross_model_comparison": {}
+}

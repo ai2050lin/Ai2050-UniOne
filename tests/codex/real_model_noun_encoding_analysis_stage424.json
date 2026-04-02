@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-03-30T00:52:15.449976",
+  "device": "cuda",
+  "transformerlens_available": true,
+  "noun_count": 1040,
+  "category_count": 10,
+  "tests": {
+    "test1_real_model_noun_encoding": {
+      "gpt2_small": {
+        "noun_count": 50,
+        "mean_activation_rate": 0.18932942708333333,
+        "std_activation_rate": 0.0002613283376526157,
+        "min_activation_rate": 0.18880208333333334,
+        "max_activation_rate": 0.1899956597222222
+      }
+    }
+  }
+}

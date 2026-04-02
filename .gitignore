@@ -51,3 +51,6 @@ datasets/
 *.bin
 *.npz
 *.arrow
+
+# Exact large local artifact kept out of git history
+/tests/codex/fruit_neuron_encoding_qwen3_deepseek7b_stage422.json
