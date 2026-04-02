@@ -33308,3 +33308,587 @@ Layer 1, neuron 0:
 6. 通用激活通路
 
 AGI需要：大规模并行 + 模块化 + Hub整合 + 层级架构 + 通用机制
+
+## Stage448-451: DeepSeek-7B/14B验证实验 (2026-03-31 22:35)
+
+### 完成的工作
+1. **Stage448**: DeepSeek-7B神经元激活分析 (28层×18944神经元)
+   - 词性质心层: noun=14.01, adj=11.27, verb=14.39, adv=18.19, pron=10.28, prep=8.66
+   - 有效神经元: ~2650/词性
+
+2. **Stage450**: Qwen3-4B vs DeepSeek-7B跨模型对比
+   - 归一化后质心分布高度一致
+   - Hub比例稳定在0.5%
+   - 功能模块化程度>0.96
+
+3. **Stage451**: AGI编码机制理论验证报告
+   - ✅ 归一化质心一致性验证
+   - ✅ Hub比例稳定性验证
+   - ✅ 功能模块化验证
+
+### 待完成
+- **Stage449**: DeepSeek-14B行为测试（需启动Ollama服务）
+
+### 核心发现
+- 归一化后质心层：功能词0.30-0.50，实义词0.45-0.65
+- Hub神经元是信息整合关键，比例约0.5%
+- 层级连续处理，相邻层r>0.9
+
+## 理论文档更新 (2026-03-31 22:42)
+
+### 更新内容
+- **UNIFIED_LANGUAGE_ENCODING_THEORY.md**: 根据Stage448-451实验结果大幅更新
+  - 新增第三章：跨模型验证结果（Qwen3-4B vs DeepSeek-7B）
+  - 新增六大编码机制的形式化描述和验证数据
+  - 新增第四章：修正后的理论框架（含层依赖方程）
+  - 更新瓶颈分析：五项突破标准中已完成跨模型验证
+  - 更新阶段性规划：三模型验证为最高优先级
+  - Ollama端口配置为11454
+
+### 修正的核心方程
+```
+h_concept(layer) = B_family × W_layer + offset_concept × W_layer + Σ(a_i(layer) × u_i(layer))
+```
+增加了层依赖性 `W_layer`，解释相邻层r>0.9的连续处理特性。
+
+### 脚本更新
+- `stage449_deepseek14b_behavior.py`: Ollama端口改为11454
+
+[2026-04-02 13:34] stage428 DeepSeek7B 代词头组稳定性精确穷举进展
+- 命令进展:
+  - 新增脚本: tests/codex/stage428_deepseek7b_pronoun_head_group_stability.py
+  - 语法编译: python -m py_compile tests\\codex\\stage428_deepseek7b_pronoun_head_group_stability.py
+  - 正式执行: python tests\\codex\\stage428_deepseek7b_pronoun_head_group_stability.py
+  - 输出已写入: tests/codex_temp/stage428_deepseek7b_pronoun_head_group_stability_20260402/summary.json 与 tests/codex_temp/stage428_deepseek7b_pronoun_head_group_stability_20260402/REPORT.md
+  - 运行中出现一次 CUDA unknown error，随后通过在每个子集评估后显式执行 CUDA synchronize 与 empty_cache 修复，最终成功完成全量扫描
+- 算法升级:
+  - stage428 不再使用启发式贪心近似来判断头组结构，而是对 stage427 找到的 6 个 DeepSeek7B 代词核心头做精确穷举，总计扫描 63 个非空头组
+  - 在每个头组上同时计算 search utility、全量句子复核 target_drop、leave-one-out 必要性、pair synergy 与精确 Shapley 贡献
+  - 这让“哪个头重要”第一次从经验排序升级成了组合因果排序
+- 结果摘要:
+  - 最强搜索子集与最强全量复核子集一致，都是完整六头组: H:2:0、H:2:10、H:2:3、H:2:8、H:3:1、H:3:27。全量句子复核 pronoun target_prob_delta 约为 -0.4371，略强于 stage427 的 -0.4353。
+  - 但完整六头组不是唯一值得关注的结构。达到全量最强效果 50% 的最小子集只需要 3 个头: H:2:0、H:2:3、H:3:1，其 pronoun target_prob_delta 约为 -0.2960。达到 70% 与 80% 阈值的最小子集只需要 4 个头: H:2:0、H:2:3、H:3:1、H:3:27。
+  - 这说明 DeepSeek7B 的代词路由回路虽然最强形态是六头协同，但真正的“核心骨架”大约是三头到四头，而不是六头全部等价重要。
+  - leave-one-out 必要性排序显示，最不可替代的三个头是 H:2:0、H:3:1、H:2:3。把它们分别从完整六头组中拿掉，full_target_drop 会下降约 0.1305、0.1101、0.1042，明显高于其余三个补充头。
+  - 精确 Shapley 排序与 leave-one-out 高度一致，再次确认核心头序列为 H:3:1、H:2:0、H:2:3。后三个头 H:2:8、H:3:27、H:2:10 仍有正贡献，但更像增强器，而不是主骨架。
+  - pair synergy 最强的是 H:2:0 与 H:2:3，utility synergy 约 0.0867；其次是 H:3:1 与 H:3:27，utility synergy 约 0.0464。这提示第 2 层内部存在强路由对，第 3 层内部也存在配对协同，而不是完全独立的单头工作。
+- 理论数学研究进展:
+  - stage428 把“DeepSeek7B 的代词依赖早层 attention”推进到了更细粒度的结构结论：代词机制不是均匀分布在早层所有头上，而是集中在一个稀疏的分层头组系统，其中第 2 层的 H:0/H:3 与第 3 层的 H:1 构成核心骨架。
+  - 这让“编码机制如何破解”进一步具体化了。破解编码机制的关键不再只是找出高分单元，而是恢复最小回路的拓扑结构：哪些头先做路由、哪些头后做聚合、哪些头只是放大器。
+  - 从第一性原理角度看，语言编码很可能由三类对象组成：核心骨架头、增强头、局部整合单元。不同模型共享这种拓扑角色划分，但不共享具体层号与模块配比。
+  - 下一阶段的大任务应转向两个方向：第一，围绕 H:2:0 / H:2:3 / H:3:1 做 head-pair 与 head-order 机制验证，研究它们是否在执行不同的变量绑定职责；第二，把同样的精确穷举方法扩展到 preposition 与指代解析任务，检验“功能词由稀疏头组骨架承载”是否是一般规律，而不只是 pronoun 的特例。
+
+[2026-04-02 13:58] stage429 DeepSeek7B 代词三头骨架 head-pair 与 head-order 机制验证进展
+- 命令进展:
+  - 新增脚本: tests/codex/stage429_deepseek7b_pronoun_head_pair_order_validation.py
+  - 语法编译: python -m py_compile tests\\codex\\stage429_deepseek7b_pronoun_head_pair_order_validation.py
+  - 首次执行: python tests\\codex\\stage429_deepseek7b_pronoun_head_pair_order_validation.py
+  - 首次执行在重复跑 search/full 全量评估时触发一次 CUDA unknown error；随后改为直接复用 stage428 的 63 子集精确表，只把新的 heldout pronoun 保留句集放到 CUDA 上重新评估
+  - 修正后正式执行: python tests\\codex\\stage429_deepseek7b_pronoun_head_pair_order_validation.py
+  - 输出已写入: tests/codex_temp/stage429_deepseek7b_pronoun_head_pair_order_validation_20260402/summary.json 与 tests/codex_temp/stage429_deepseek7b_pronoun_head_pair_order_validation_20260402/REPORT.md
+- 算法升级:
+  - stage429 不再追加新的大规模穷举，而是在 stage428 的精确 63 子集因果表之上，抽取稳定核心三头 H:3:1、H:2:0、H:2:3 和三个增强头 H:2:8、H:3:27、H:2:10，做定向机制验证
+  - 新实验新增 12 个 heldout pronoun 句子，覆盖主语代词、宾语代词、指示代词、疑问代词和不定代词，专门测试“骨架”与“增强器”是否能跨句型保留
+  - 评价指标分成三层: stage428 复用的 search utility、stage428 复用的 full target drop，以及本轮新跑的 heldout target drop
+  - 新增条件增益分析: 比较 H:3:1 加到 H:2:0+H:2:3 之上，与 H:2:0 或 H:2:3 加到 H:3:1 之上的增量差异，用来判断更像“先路由后整合”还是“先整合后补路由”
+- 结果摘要:
+  - 稳定核心三头与 stage428 一致，仍然是 H:3:1、H:2:0、H:2:3；其中 H:2:0 与 H:2:3 构成 route pair，H:3:1 是 integrator head。
+  - 三个核心二头组合中，最强的是 route pair H:2:0 + H:2:3。它在全量句集上的 pronoun drop 约为 0.1706，在 heldout pronoun 句集上的 drop 约为 0.1516，均高于 H:3:1 与任一路由头组成的二头组。
+  - 把 integrator head H:3:1 加到 route pair 之上，full target drop 的条件增益约为 0.1254，heldout 条件增益约为 0.0957；而把单个 route head 加到 integrator H:3:1 之上的最佳反向增益，full 只有约 0.0852，heldout 只有约 0.0643。
+  - 因而“route then integrate”的顺序支持边际为 full 约 0.0402、heldout 约 0.0315。这是目前最直接的机制证据，说明 DeepSeek7B 的代词核心更像先在第 2 层形成路由底座，再由第 3 层头完成进一步整合。
+  - 在增强头方面，full 数据里 H:3:27 和 H:2:8 的增益更大，但在 heldout pronoun 上最强增强头变成了 H:2:10，增益约 0.0322。这说明增强头不像核心骨架那样稳定，更依赖句型分布，可能承担的是局部放大或补偿功能，而不是主拓扑职责。
+- 理论数学研究进展:
+  - stage429 把“稀疏头组骨架”进一步推进成了“有顺序偏向的分层回路”：第 2 层双头更像先完成变量路由或候选绑定，第 3 层 H:3:1 再对该底座做代词相关整合。
+  - 这意味着编码机制的破解路径又清晰了一步。我们不该只恢复静态拓扑，还要恢复拓扑上的有向计算顺序，也就是哪些模块的边际效应依赖哪些先验上下文。
+  - 目前可以把 DeepSeek7B 代词机制暂时抽象成三段式结构：route pair 提供骨架底座，integrator head 提供主增益，booster heads 负责分布相关的后续放大。这个结构比“早层 attention 很重要”更接近第一性原理层面的机制描述。
+  - 下一阶段的大任务不应只盯着代词一个类别，而应把同样的方法推广到 preposition 和指代解析任务，并同时研究注意力头之间是否存在更细的角色分工，例如“先选候选，再做绑定，再做读出”的三步链条。
+
+[2026-04-02 14:45] stage430 DeepSeek7B 介词 mixed circuit 搜索与保留集验证进展
+- 命令进展:
+  - 新增脚本: tests/codex/stage430_deepseek7b_preposition_mixed_circuit_search.py
+  - 语法编译: python -m py_compile tests\\codex\\stage430_deepseek7b_preposition_mixed_circuit_search.py
+  - 首次执行: python tests\\codex\\stage430_deepseek7b_preposition_mixed_circuit_search.py
+  - 首次执行在逐个神经元单筛阶段触发 CUDA unknown error；随后将神经元单筛改成“stage423 高分神经元先验候选池”，保留 attention 头的真实单筛和后续混合因果搜索
+  - 修正后正式执行: python tests\\codex\\stage430_deepseek7b_preposition_mixed_circuit_search.py
+  - 输出已写入: tests/codex_temp/stage430_deepseek7b_preposition_mixed_circuit_search_20260402/summary.json 与 tests/codex_temp/stage430_deepseek7b_preposition_mixed_circuit_search_20260402/REPORT.md
+- 算法升级:
+  - stage430 将 pronoun 的 mixed greedy + backward pruning 方法推广到 preposition，并新增 12 个 heldout preposition 句子，验证搜索到的回路是否跨句型稳定
+  - 候选头来自 stage423 的 preposition 高质量层带 [2, 3, 1]；候选神经元来自 stage423 的 top 20 高分神经元，但不再逐个做昂贵单筛，而是作为先验候选并交给后续组合因果搜索判断
+  - 这一步的重点不是追求“最小回路已被完全证明”，而是检验“功能词是否普遍由稀疏头回路承载”这条更大的假设
+- 结果摘要:
+  - DeepSeek7B 的介词最终子集大小为 4，而且 4 个全部是 attention 头，没有稳定神经元进入最终回路: H:3:4、H:3:20、H:1:14、H:1:7
+  - 搜索集上的 target drop 约为 0.0540，utility 约为 0.0450；全量句集上的 preposition target_prob_delta 约为 -0.0536；heldout preposition 句集上的 target_prob_delta 约为 -0.0534
+  - 全量句集和 heldout 句集几乎一致，这说明这四头组合虽然不强，但确实不是完全偶然拼出来的，它对介词类输入存在一定跨句型稳定性
+  - 与 stage424 的层消融相比，这个介词回路的强度明显偏弱。相对于 stage424 最强层消融绝对值 0.1751，当前四头回路只恢复了约 0.306 倍
+  - 介词的 top single heads 主要集中在第 3 层和第 1 层，而不是像 pronoun 那样出现更尖锐的“第 2 层 route pair + 第 3 层 integrator”结构，说明不同功能词的内部实现复杂度并不一样
+- 理论数学研究进展:
+  - stage430 给出了一条很关键的反例式信息：并不是所有功能词都像 pronoun 一样拥有强而清晰的稀疏骨架。介词也表现出稀疏头回路，但强度更弱、结构更分散、层间角色分工也更不清晰
+  - 这意味着“功能词由稀疏头回路承载”可能是对的，但还不够；更接近事实的表述应是：不同功能词共享回路化实现趋势，但回路的稀疏度、可识别性和层间职责分化程度不同
+  - 从第一性原理角度看，代词更像变量绑定与路由问题，因此容易出现清晰骨架；介词更像关系约束或句法接口问题，可能需要更分布式、更上下文依赖的回路共同完成
+  - 下一阶段的大任务应转向两条线并行推进：第一，对 stage430 的 4 个介词核心头做精确子集扫描，判断是否存在比当前更小的稳定骨架；第二，做指代解析与介词短语附着任务，把“功能词分类”升级成“真实句法关系”因果验证
+
+[2026-04-02 16:16] Stage431安全修复、介词精确扫描完成、语言理论文档重写
+
+一、问题诊断
+- 当前任务导致的两次系统重启，不是简单的显存溢出。
+- 通过 
+vidia-smi、Get-WinEvent、Get-CimInstance Win32_OperatingSystem 检查，确认最近两次重启前出现了 
+vlddmkm 驱动错误，随后出现 BugCheck 0x00000133，即典型的驱动级卡死/超时问题，而不是普通 Python 进程内 OOM 退出。
+- 最近一次开机时间为 2026-04-02 15:51:44。自本次安全修复后，再查询 LastBootUpTime 之后的 
+vlddmkm 事件，没有新增记录，说明后续安全模式没有再次触发驱动级崩溃。
+- 根因判断：stage431 的原始执行方式对桌面态 WDDM 下的 4090D 过于激进，尤其是“长时间连续 GPU 精确穷举”以及“反复大模型装载/释放”会放大驱动超时风险。
+
+二、工程修复
+- 修改 	ests/codex/stage431_deepseek7b_preposition_head_group_stability.py
+- 新增断点续跑机制：subset_table_partial.json
+- 新增分批执行控制：--max-new-subsets
+- 新增子集间暂停：--pause-seconds
+- 增加部分扫描时的安全汇总逻辑，避免未扫完就做全量两两协同和全量稳定核心排序时抛异常。
+- 修复全量完成后的稳定核心排序逻辑：允许 leave_one_out 只覆盖最佳全量子集中的候选，不再错误假设所有候选都在最佳子集里。
+- 实际安全运行方式：每次只扫少量新子集，使用 CUDA_LAUNCH_BLOCKING=1，分批续跑直到全量完成。
+
+三、关键命令记录
+- python -m py_compile tests/codex/stage431_deepseek7b_preposition_head_group_stability.py
+- python tests/codex/stage431_deepseek7b_preposition_head_group_stability.py
+- 
+vidia-smi
+- Get-CimInstance Win32_OperatingSystem | Select-Object LastBootUpTime | Format-List
+- Get-WinEvent -FilterHashtable @{LogName='System'; Level=1,2; StartTime=(Get-Date).AddDays(-2)} ...
+- Get-WinEvent -FilterHashtable @{LogName='System'; ProviderName='nvlddmkm'; StartTime=} ...
+- $env:CUDA_LAUNCH_BLOCKING='1'; python tests/codex/stage431_deepseek7b_preposition_head_group_stability.py --max-new-subsets 2 --pause-seconds 1.0
+- $env:CUDA_LAUNCH_BLOCKING='1'; python tests/codex/stage431_deepseek7b_preposition_head_group_stability.py --max-new-subsets 4 --pause-seconds 1.0
+- $env:CUDA_LAUNCH_BLOCKING='1'; python tests/codex/stage431_deepseek7b_preposition_head_group_stability.py --max-new-subsets 5 --pause-seconds 1.0
+- $env:CUDA_LAUNCH_BLOCKING='1'; python tests/codex/stage431_deepseek7b_preposition_head_group_stability.py --max-new-subsets 0 --pause-seconds 0.0
+
+四、Stage431结果
+- 输出目录：	ests/codex_temp/stage431_deepseek7b_preposition_head_group_stability_20260402
+- 使用 CUDA，完整扫描 15 个非空子集，is_complete_scan = true
+- 候选头：H:3:4、H:3:20、H:1:14、H:1:7
+- 全量句集最强子集：单头 H:1:14
+- 全量句集最强目标下降： .0163065592447917
+- 留出介词句集最强子集：四头全组 H:1:14、H:1:7、H:3:20、H:3:4
+- 留出介词句集最强目标下降： .0533599853515625
+- Shapley 全量下降排序：H:3:4 > H:3:20 > H:1:7 > H:1:14
+- 这说明介词的跨句型稳定性需要多头协同，但全量句集上的即时最强点却可能退化成单头最优。
+- 两两协同多数为负值，说明介词四头之间不是像代词那样的强正协同骨架，而更像弱耦合、分布式、上下文相关的关系回路。
+
+五、理论推进
+- 代词主线已经给出“稀疏骨架回路”证据；介词主线则给出“弱耦合分布回路”证据。
+- 因而不能再把所有功能词看成同一种内部机制。
+- 更合理的中间理论是：
+  - 代词更像变量绑定问题，容易长出硬骨架。
+  - 介词更像关系接口问题，更依赖分布式协同。
+- 这一步非常重要，因为它把“功能词有专项机制”进一步推进成“不同功能词有不同回路拓扑”。
+
+六、理论文档重写
+- 已重写 esearch/gpt5/docs/AGI_GPT5_LANGUAGE.md
+- 删除旧乱码和大量冗余阶段堆叠
+- 仅保留：研究目标、理论框架、核心拼图、当前最硬结论、当前硬伤与瓶颈、下一阶段大任务、当前阶段性判断
+- 新文档已纳入最新研究：stage423 到 stage431，尤其纳入代词骨架回路与介词分布式回路这两条主线
+
+七、下一阶段建议
+- 大任务一：从词类任务升级到真实语言操作任务，重点做代词回指、介词短语附着、主谓绑定、修饰关系。
+- 大任务二：做头间变量追踪，不再只看哪个头重要，而是看各头到底搬运什么变量。
+- 大任务三：建立跨模型隐藏变量映射，把 Qwen3 与 DeepSeek7B 压到同一套抽象状态变量中。
+- 大任务四：尝试把当前拼图压缩成统一状态方程，逼近第一性原理理论。
+
+2026-04-02 16:35:02
+
+一、本次命令记录
+- `git log --oneline -- research/gpt5/docs/AGI_GPT5_LANGUAGE.md`
+- `Get-ChildItem research/gpt5/docs | Select-Object Name,Length,LastWriteTime`
+- `git status --short -- research/gpt5/docs/AGI_GPT5_LANGUAGE.md`
+- `git show c16d828:research/gpt5/docs/AGI_GPT5_LANGUAGE.md`
+- `git show ca6e312:research/gpt5/docs/AGI_GPT5_LANGUAGE.md`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+- `Get-Content research/gpt5/docs/AGI_GPT5_MEMO.md -Tail 20`
+
+二、本次操作进度
+- 已确认 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md` 当前处于未提交修改状态，不能直接覆盖。
+- 已从 git 历史中定位到上一版内容来源：提交 `c16d828` 中的 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md`。
+- 已按要求把上一版内容恢复为独立历史备份文件：`research/gpt5/docs/AGI_GPT5_LANGUAGE_20260402.md`。
+- 本次未改动现有 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md` 文件内容。
+
+三、理论数学研究进度
+- 本次任务属于文档版本回溯与研究材料归档，不新增数学结论，也不推进新的理论证明。
+- 但这一步对后续理论研究有直接价值：它保留了 2026-04-02 之前的一版语言机制主线文档，便于后面对比“理论压缩版”和“重写版”之间的信息损失、结构漂移与证据保真度。
+- 从第一性原理视角看，当前真正推进点不是新增公式，而是保证研究轨迹可追溯；否则后续无法严格检查哪些结论是从原始数据稳定长出来的，哪些只是文档重写后的表达变化。
+
+[2026-04-02 16:52] stage432 苹果名词编码表达力-性能平衡实验完成
+- 命令记录:
+  - python -m py_compile tests/codex/stage432_apple_noun_efficiency_expression_tradeoff.py
+  - python tests/codex/stage432_apple_noun_efficiency_expression_tradeoff.py
+  - Get-Content -Raw -Encoding utf8 tests/codex_temp/stage432_apple_noun_efficiency_expression_tradeoff_20260402/summary.json | ConvertFrom-Json
+  - Get-Content -Encoding utf8 research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+- 新增脚本:
+  - 	ests/codex/stage432_apple_noun_efficiency_expression_tradeoff.py
+- 结果文件:
+  - 	ests/codex_temp/stage432_apple_noun_efficiency_expression_tradeoff_20260402/summary.json
+  - 	ests/codex_temp/stage432_apple_noun_efficiency_expression_tradeoff_20260402/REPORT.md
+- 关键结果:
+  - Qwen3 最佳平衡层为 L34，compact_efficiency_score=0.8809987634，expressive_power_score=0.7464335587，balance=0.7323445449
+  - DeepSeek7B 最佳平衡层为 L26，compact_efficiency_score=0.9212476480，expressive_power_score=0.7132093860，balance=0.7355056653
+  - 两模型在最佳层的 fruit explained ratio 分别为 0.8560 与 0.8680，brand explained ratio 分别为 0.9988 与 0.9918
+  - 两模型 delta structured ratio 均为 1.0，说明苹果水果义/品牌义切换更像结构化增量，不像整向量重写
+  - 两模型 interpretation 均支持 shared_base_dominant=true、sense_switch_is_structured=true、sense_readout_is_reliable=true
+  - apple_fruit_to_fruit_centroid 分别约 0.9166 与 0.9298，apple_brand_to_company_centroid 分别约 0.9986 与 0.9942
+- 理论数学进展:
+  - 名词编码出现了新的核心拼图：共享名词底座 + 类别偏置 + 结构化小增量
+  - 这为“为什么语言表达能力强且性能高”提供了更强解释：模型主要复用公共名词结构，只在少数方向上做语义切换，因此同时获得参数复用、上下文适配和多义表达
+  - 当前最合理判断：苹果不是被完全单独记住，而是在共享底座上，通过水果家族偏置或品牌家族偏置完成低成本语义切换
+- 文档更新:
+  - 已将上述新拼图追加到 esearch/gpt5/docs/AGI_GPT5_LANGUAGE.md
+  - 新增“拼图七：名词编码更像共享底座 + 类别偏置 + 结构化切换”，并同步更新当前最硬结论、瓶颈、下一阶段大任务
+
+[2026-04-02 17:02] stage433 多义名词共享底座泛化实验完成
+- 命令记录:
+  - python -m py_compile tests/codex/stage433_polysemous_noun_family_generalization.py
+  - python tests/codex/stage433_polysemous_noun_family_generalization.py
+  - Get-Content -Raw -Encoding utf8 tests/codex_temp/stage433_polysemous_noun_family_generalization_20260402/summary.json | ConvertFrom-Json
+  - Get-Content -Encoding utf8 research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+- 新增脚本:
+  - 	ests/codex/stage433_polysemous_noun_family_generalization.py
+- 结果文件:
+  - 	ests/codex_temp/stage433_polysemous_noun_family_generalization_20260402/summary.json
+  - 	ests/codex_temp/stage433_polysemous_noun_family_generalization_20260402/REPORT.md
+- 数据集范围:
+  - 多义名词扩展到 apple、amazon、python、java 四个词，覆盖水果/品牌、河流/公司、动物/编程语言、咖啡/编程语言四类切换
+- 关键结果:
+  - 跨两模型共 8 个“模型-名词”组合中，shared_base_support_rate=1.0，structured_switch_support_rate=1.0，reliable_readout_support_rate=0.75，small_delta_support_rate=0.0
+  - Qwen3 的四个多义名词最佳平衡层全部集中在 L34
+  - DeepSeek7B 的四个多义名词最佳平衡层主要集中在 L26-L27
+  - Qwen3: apple balance=0.7323, amazon=0.6835, python=0.7358, java=0.7114
+  - DeepSeek7B: apple balance=0.7354, amazon=0.7071, python=0.7433, java=0.7062
+  - 所有 8 个组合都满足 shared_base_dominant=true 与 sense_switch_is_structured=true，说明“共享底座 + 结构化切换”已不再只是 apple 个案
+  - java 在线索读出上偏弱，Qwen3 与 DeepSeek7B 的 reliable_readout 均为 false，提示咖啡/编程语言这一对的测量仍需加强
+- 理论数学进展:
+  - 名词线从“apple 个案”推进到“小规模多义名词一般化”
+  - 目前最合理的解释是：多义名词主要复用公共名词底座，再通过类别偏置和上下文方向完成语义分叉，因此可以在不为每个词义重建独立编码块的情况下维持表达力
+  - Qwen3 与 DeepSeek7B 在层号上不同，但都表现出稳定的名词压缩层，进一步支持“共享约束、不共享坐标”的跨模型判断
+  - 但 small_delta_support_rate 仍为 0.0，说明当前还不能把“极高性能”简单等同为“切换代价绝对很小”；更谨慎的说法应是：性能优势来自高度复用与结构化切换，而非已经证明切换幅度普遍极小
+- 文档更新:
+  - 已将 AGI_GPT5_LANGUAGE.md 中的“苹果个案”升级为“多义名词编码更像共享底座 + 类别偏置 + 结构化切换”的一般拼图
+  - 同步更新了当前最硬结论、瓶颈和下一阶段大任务
+
+[2026-04-02 17:28] stage434-stage435 苹果二义性与属性绑定机制实验完成
+- 命令记录:
+  - python -m py_compile tests/codex/stage434_apple_polysemy_factorized_switch.py
+  - python tests/codex/stage434_apple_polysemy_factorized_switch.py
+  - python -m py_compile tests/codex/stage435_apple_feature_binding_neuron_channels.py
+  - python tests/codex/stage435_apple_feature_binding_neuron_channels.py
+  - Get-Content -Raw -Encoding utf8 tests/codex_temp/stage434_apple_polysemy_factorized_switch_20260402/summary.json | ConvertFrom-Json
+  - Get-Content -Raw -Encoding utf8 tests/codex_temp/stage435_apple_feature_binding_neuron_channels_20260402/summary.json | ConvertFrom-Json
+- 新增脚本:
+  - 	ests/codex/stage434_apple_polysemy_factorized_switch.py
+  - 	ests/codex/stage435_apple_feature_binding_neuron_channels.py
+- 结果文件:
+  - 	ests/codex_temp/stage434_apple_polysemy_factorized_switch_20260402/summary.json
+  - 	ests/codex_temp/stage434_apple_polysemy_factorized_switch_20260402/REPORT.md
+  - 	ests/codex_temp/stage435_apple_feature_binding_neuron_channels_20260402/summary.json
+  - 	ests/codex_temp/stage435_apple_feature_binding_neuron_channels_20260402/REPORT.md
+- stage434 关键结果:
+  - Qwen3 最佳层 L5，fruit_base_reuse=0.9346，brand_base_reuse=1.0000，switch_axis_orthogonality=0.9998，factorized_polysemy_score=0.6928
+  - DeepSeek7B 最佳层 L2，fruit_base_reuse=0.8579，brand_base_reuse=1.0000，switch_axis_orthogonality=0.8962，factorized_polysemy_score=0.6698
+  - 两模型都支持 stable_base=true 与 distinct_switch=true，说明苹果水果义/品牌义之间存在较稳定、相对独立的词义切换轴
+  - 但 within_sense_modifiers_are_low_rank 在两模型上都没有被当前实验强支持，说明“词义内部低秩修饰”这一环仍需更强测量
+- stage435 第一版问题与修正:
+  - 初版直接用“强选择性神经元”做交集，过于稀疏，导致共享骨干被严重低估，出现大量 0 overlap
+  - 已改为“高激活骨干神经元 + 选择性修饰神经元”双视角，并重新真实运行
+- stage435 修正后关键结果:
+  - Qwen3: apple_banana_backbone_overlap=0.2427，apple_color_overlap=0.1228，apple_taste_overlap=0.1179，apple-color union coverage=0.7422，apple-taste union coverage=0.7305，apple-size union coverage=0.7266，bridge_only_ratio 约 0.26-0.27
+  - DeepSeek7B: apple_banana_backbone_overlap=0.3333，apple_color_overlap=0.3438，apple_taste_overlap=0.2962，apple-color union coverage=0.8047，apple-taste union coverage=0.7773，apple-size union coverage=0.7773，bridge_only_ratio 约 0.20-0.22
+  - 跨模型结论: fruit_backbone_shared_vote_count=2，binding_reuse_vote_count=2，noun_attribute_separation_vote_count=1
+- 理论数学进展:
+  - 苹果二义性目前最稳的解释不是“每种含义单独存一整块”，而是“共享名词底座 + 稳定词义切换轴 + 属性修饰通道 + 少量桥接神经元”
+  - 这给“为什么无数二义性排列组合还能高效”提供了更具体机制：系统主要复用骨干与修饰通道，再用较小绑定残差完成组合，而不是为每个组合单独开辟独立编码块
+  - 神经元级别上，苹果与香蕉确实共享一部分水果骨干通道；red、sweet、sour、fist 更像属性修饰或大小锚点通道；组合句中的苹果表示大约 73%-80% 可落在“名词骨干 + 属性通道”的并集中，剩余约 20%-27% 由桥接神经元承担
+  - 需要严格保留的保留意见: stage434 的“低秩修饰”证据目前偏弱，因此还不能把全部高效性归结为少数低秩方向；更稳的说法是“高效性来自复用、分通道和小比例桥接”
+
+[2026-04-02 18:40] stage438 苹果机制神经元三轴 3D 可视化完成
+- 命令记录:
+  - python -m py_compile tests/codex/stage438_apple_neuron_role_3d_view.py
+  - python tests/codex/stage438_apple_neuron_role_3d_view.py
+  - Get-ChildItem tests/codex_temp/stage438_apple_neuron_role_3d_view_20260402
+  - Get-Content -Raw -Encoding utf8 tests/codex_temp/stage438_apple_neuron_role_3d_view_20260402/summary.json | ConvertFrom-Json
+- 新增脚本:
+  - 	ests/codex/stage438_apple_neuron_role_3d_view.py
+- 结果文件:
+  - 	ests/codex_temp/stage438_apple_neuron_role_3d_view_20260402/qwen3_neuron_role_3d.html
+  - 	ests/codex_temp/stage438_apple_neuron_role_3d_view_20260402/deepseek7b_neuron_role_3d.html
+  - 	ests/codex_temp/stage438_apple_neuron_role_3d_view_20260402/qwen3_neuron_role_3d_points.json
+  - 	ests/codex_temp/stage438_apple_neuron_role_3d_view_20260402/deepseek7b_neuron_role_3d_points.json
+  - 	ests/codex_temp/stage438_apple_neuron_role_3d_view_20260402/summary.json
+  - 	ests/codex_temp/stage438_apple_neuron_role_3d_view_20260402/README.md
+- 可视化方案:
+  - 不使用黑盒降维作为主坐标，而是直接给每个神经元定义三个可解释坐标轴：名词骨干分数、词义切换分数、属性修饰分数
+  - 每个点是一个神经元，颜色按 dominant role（主导角色）分类：noun_backbone、sense_switch、attribute_modifier、mixed
+- 关键结果:
+  - Qwen3 可视化神经元数 563，其中 noun_backbone=161，sense_switch=208，attribute_modifier=139，mixed=55
+  - DeepSeek7B 可视化神经元数 527，其中 noun_backbone=142，sense_switch=189，attribute_modifier=159，mixed=37
+  - 已生成可交互 HTML，可在浏览器中旋转、缩放、悬停查看 L层号/N神经元号 和三轴分数
+- 理论数学进展:
+  - 现在“名词骨干 / 词义切换 / 属性修饰”三者已经不只是口头框架，而是被压成同一三轴几何空间，可直接看神经元在三种机制中的角色偏置
+  - 这为下一步做桥接神经元因果消融提供了更清晰入口：可以优先从 3D 空间中靠近纯骨干区、纯切换区、纯属性区、以及混合过渡区的点分别抽样验证
+
+[2026-04-02 19:07] stage439-stage441 绑定因果消融、更大属性图谱泛化、统一状态方程整合
+
+一、本轮主要命令
+- python -m py_compile tests/codex/stage439_binding_bridge_causal_ablation.py
+- python -m py_compile tests/codex/stage440_attribute_graph_generalization.py
+- python -m py_compile tests/codex/stage441_unified_language_state_equation.py
+- python tests/codex/stage439_binding_bridge_causal_ablation.py
+- python tests/codex/stage440_attribute_graph_generalization.py
+- python tests/codex/stage441_unified_language_state_equation.py
+
+二、新增脚本与结果文件
+- 	ests/codex/stage439_binding_bridge_causal_ablation.py
+- 	ests/codex_temp/stage439_binding_bridge_causal_ablation_20260402/summary.json
+- 	ests/codex_temp/stage439_binding_bridge_causal_ablation_20260402/REPORT.md
+- 	ests/codex/stage440_attribute_graph_generalization.py
+- 	ests/codex_temp/stage440_attribute_graph_generalization_20260402/summary.json
+- 	ests/codex_temp/stage440_attribute_graph_generalization_20260402/REPORT.md
+- 	ests/codex/stage441_unified_language_state_equation.py
+- 	ests/codex_temp/stage441_unified_language_state_equation_20260402/summary.json
+- 	ests/codex_temp/stage441_unified_language_state_equation_20260402/REPORT.md
+- esearch/gpt5/docs/AGI_GPT5_LANGUAGE.md
+
+三、实验结果摘要
+1. stage439 绑定因果消融
+- 目标：直接打掉 bridge neurons（桥接神经元），看 apple-red、apple-sweet、apple-fist 是否真的崩掉。
+- 结果：inding_causal_support_rate = 0.0。
+- Qwen3：color  .0000，taste  .0000，size  .0013；heldout（留出集）几乎全是  .0000。
+- DeepSeek7B：color  .0047，taste  .0005，size  .0052；heldout 最大也只有  .0075，且有负值。
+- 理论含义：桥接项在当前证据下“几何稳定但稀疏因果不硬”。更像分布式绑定项，而不是少量关键桥接神经元就能打穿的机制。
+
+2. stage440 更大属性图谱泛化
+- 目标：把水果、颜色、味道、大小扩展成更大属性图谱，验证“骨干 + 修饰 + 桥接”是否普遍成立。
+- 数据：两模型合计 36 个水果-属性绑定组。
+- 结果：ttribute_graph_support_rate = 1.0。
+- 跨模型平均：union_coverage = 0.7428，ridge_only_ratio = 0.2572。
+- Qwen3：mean_union_coverage = 0.7177，mean_bridge_only_ratio = 0.2823。
+- DeepSeek7B：mean_union_coverage = 0.7680，mean_bridge_only_ratio = 0.2320。
+- 理论含义：属性绑定的主结构非常稳定，确实更像“名词骨干 + 属性修饰 + 中等比例桥接区”的一般规律，不是 apple 个案。
+
+3. stage441 统一状态方程
+- 统一框架：oute -> backbone -> switch -> attribute -> bridge -> readout
+- 状态方程：h_{t}^{l+1} = h_{t}^{l} + R_l(x_{<=t}) + B_l(lemma_t) + S_l(lemma_t, context_t) + A_l(attr_t, context_t) + G_l(B_l, A_l, route_t) + O_l(h_t^l)
+- 当前证据分数：
+  - shared_base_support = 1.0
+  - sense_switch_support = 1.0
+  - inding_reuse_support = 1.0
+  - inding_causal_support = 0.0
+  - eadout_support = 0.75
+- 理论含义：代词路由、多义名词切换、属性绑定现在已经能压到同一个统一机制框架里，但桥接项 G_l 仍是最薄弱的一环。
+
+四、理论进展判断
+- 当前最硬的统一判断：语言编码不是静态词典，而是一个可组合的状态演化系统。
+- 最成熟的线：代词路由。
+- 第二成熟的线：多义名词共享底座与词义切换轴。
+- 第三成熟的线：属性绑定的结构规律已经很稳，但桥接因果仍未被最小单元级别打穿。
+- 下一阶段的大任务应聚焦：搜索最小桥接子回路，把 attention head（注意力头）、MLP neuron（多层感知机神经元）和残差方向放到同一回路搜索里，而不是继续只扫高分桥接神经元。
+[2026-04-02 21:18] stage442-stage443 绑定混合子回路与分家族独立探针
+
+一、命令记录
+1. 读取并检查脚本与理论文档：
+- Get-Content tests/codex/stage442_binding_mixed_subcircuit_search.py
+- Get-Content research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+2. 修复 stage442：
+- 增加按模型容错、失败模型结果结构、增量落盘
+- 增加候选探针，先探 attention head 与 MLP neuron 是否稳定
+- 对单候选打分与贪心/剪枝阶段加入 RuntimeError 跳过
+- 去除 JSON 不可序列化的 cache / tuple-key 输出
+3. 真实运行：
+- python -m py_compile tests/codex/stage442_binding_mixed_subcircuit_search.py
+- python tests/codex/stage442_binding_mixed_subcircuit_search.py --models deepseek7b --batch-size 1
+- 设置 CUDA_LAUNCH_BLOCKING=1 后重复运行定位错误位置
+4. 定位得到的关键故障：
+- DeepSeek7B 在 color 家族单候选扫描中，前 112 个 attention head 候选可跑；进入首个 MLP neuron 候选时触发 CUBLAS_STATUS_EXECUTION_FAILED
+- 组合搜索阶段还会在 logits.index_select 与 encoded.to(device) 一带触发 CUDA unknown error
+- 并行同时加载多个 7B 模型时触发 os error 1455，页面文件太小
+5. 新增脚本并真实运行：
+- python -m py_compile tests/codex/stage443_binding_family_split_probe.py
+- python tests/codex/stage443_binding_family_split_probe.py --model-key deepseek7b --batch-size 1
+6. 更新理论文档：
+- 重写 research/gpt5/docs/AGI_GPT5_LANGUAGE.md，只保留核心理论框架、关键拼图、当前结论、硬伤与下一阶段任务
+
+二、结果文件
+1. stage442 主脚本：
+- tests/codex/stage442_binding_mixed_subcircuit_search.py
+2. stage442 输出目录：
+- tests/codex_temp/stage442_binding_mixed_subcircuit_search_20260402/
+3. stage443 分家族独立探针脚本：
+- tests/codex/stage443_binding_family_split_probe.py
+4. stage443 输出目录：
+- tests/codex_temp/stage443_binding_family_split_probe_20260402/
+5. 理论文档：
+- research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+
+三、理论数学研究进度
+1. bridge（桥接）项 G_l 不是统一的稀疏神经元簇。
+- stage439 已显示：单独打桥接神经元没有产生强因果崩塌。
+- 本轮继续显示：桥接更像依赖 family-specific（家族特定）混合子回路，而不是单一统一模板。
+2. DeepSeek7B 的 taste（味道）绑定只出现弱单头结果。
+- 最优子集：H:25:8
+- binding_drop 约 0.0122
+- heldout_binding_drop 约 0.0163
+- mixed_support = false
+- 说明味道绑定目前看起来仍偏分布式，未压缩成足够强的小回路。
+3. DeepSeek7B 的 size（大小）绑定第一次出现稳定混合子回路。
+- 最优子集：H:25:12, N:26:17120, H:23:11, H:23:3, H:27:19
+- binding_drop 约 0.0643
+- heldout_binding_drop 约 0.0521
+- utility 约 0.0272
+- mixed_support = true
+- 这说明 G_l 至少在部分属性家族上可以被较小的 head + neuron 联合回路近似承载。
+4. DeepSeek7B 的 color（颜色）绑定仍未稳定。
+- 当前分家族探针下仍触发 CUDA unknown error
+- 所以颜色这条线现在不能当成理论正证据，只能当成数值不稳定与实验瓶颈的暴露点
+5. 理论框架更新为：
+- route -> backbone -> switch -> attribute -> bridge -> readout
+- 新增判断：bridge 项开始露出“局部可压缩性”，但并不在所有属性家族上同样成立
+6. 工程层瓶颈被正式纳入理论推进条件。
+- 当前不仅有机制难题，也有系统执行难题
+- 后续大任务必须默认采用：单模型、单家族、串行、中途落盘，避免驱动与页面文件把实验链路打断
+
+四、阶段性判断
+1. 代词主线最稳，说明早层路由拓扑存在。
+2. 多义名词主线说明共享底座与词义切换轴存在。
+3. 属性绑定主线说明骨干 + 修饰 + 桥接框架成立。
+4. 新结果进一步说明：桥接项不是完全不可压缩，但它的可压缩性具有属性家族差异；size 比 taste 更容易露出混合回路。
+5. 距离第一性原理仍差最后一步：把 G_l 从“局部出现”推进到“统一可写”。
+
+[2026-04-02 21:41] stage444/格式定义继续研究
+- 本轮命令:
+  - Get-Content -Raw tests/codex_temp/stage444_qwen3_binding_family_split_probe_20260402/taste/summary.json
+  - Get-Content -Raw tests/codex_temp/stage444_qwen3_binding_family_split_probe_20260402/size/summary.json
+  - Get-Content -Raw tests/codex_temp/stage444_qwen3_binding_family_split_probe_20260402/taste/REPORT.md
+  - Get-Content -Raw tests/codex_temp/stage444_qwen3_binding_family_split_probe_20260402/size/REPORT.md
+  - $env:CUDA_LAUNCH_BLOCKING='1'; python tests/codex/stage443_binding_family_split_probe.py --model-key qwen3 --families size --batch-size 1 --output-dir d:\develop\TransformerLens-main\tests\codex_temp\stage444_qwen3_binding_family_split_probe_20260402\size_retry
+  - rg -n "def candidate_id|attention_head|mlp_neuron" tests/codex/stage427_pronoun_mixed_circuit_search.py
+  - Get-Content tests/codex/stage427_pronoun_mixed_circuit_search.py | Select-Object -Skip 286 -First 24
+- 结果进展:
+  - Qwen3 的 taste 与 size 家族在 stage443 分家族独立探针中均再次失败，错误仍为 CUDA error: unknown error。
+  - 即使改为串行、batch_size=1、CUDA_LAUNCH_BLOCKING=1 后，Qwen3 的 size 家族仍失败，说明当前瓶颈不是简单并行加载冲突，而是 Qwen3 绑定搜索在当前环境/算子路径上的 CUDA 不稳定。
+  - DeepSeek7B 仍然是当前绑定桥接主线里最稳定的模型；Qwen3 这条线暂时不能给出正结论，只能给出失败边界。
+- 代码定义确认:
+  - stage427 中 candidate_id 明确定义: H:{layer_index}:{head_index} 表示 attention head（注意力头），N:{layer_index}:{neuron_index} 表示 MLP neuron（多层感知机神经元）。
+  - 因此 H:25:8 的精确定义是: 第 25 层的第 8 个注意力头。
+- 理论判断:
+  - 当前桥接项 G_l 仍未形成跨模型稳定闭环。DeepSeek7B 在 size 家族上已有混合子回路证据，但 Qwen3 在同类搜索上持续出现 CUDA 未知错误，导致“桥接是否为普遍定律”还不能下最终结论。
+  - 下一阶段大任务应分成两条:
+    1. 工程线: 继续收缩 Qwen3 搜索空间，拆成更细的候选批次，必要时改 CPU 校验小样本，先把失败边界精确定位。
+    2. 理论线: 以 DeepSeek7B 为主线继续做 size/taste/color 的桥接回路比较，先把“哪些属性家族更容易压缩成小回路”做成稳定分类理论。
+[2026-04-02 21:42] stage444补充核对
+- 本轮补充命令:
+  - rg -n 'for head_idx in range|for layer_idx in range|"head_index": head_idx|"layer_index": layer_idx' tests/codex/stage427_pronoun_mixed_circuit_search.py
+  - Get-Content tests/codex/stage427_pronoun_mixed_circuit_search.py | Select-Object -Skip 368 -First 18
+- 补充确认:
+  - head_index 来自 or head_idx in range(n_heads)，因此 H:25:8 里的层号和头号按脚本实现是从 0 开始编号。
+[2026-04-02 23:02] stage444失败边界诊断与脚本修复
+- 本轮命令:
+  - rg -n "def analyze_family|def score_single_candidates|def greedy_mixed_search|build_candidate_rows" tests/codex/stage442_binding_mixed_subcircuit_search.py
+  - Get-Content tests/codex/stage442_binding_mixed_subcircuit_search.py | Select-Object -Skip 240 -First 260
+  - Get-Content tests/codex/stage443_binding_family_split_probe.py | Select-Object -First 240
+  - python -m py_compile tests/codex/stage443_binding_family_split_probe.py tests/codex/stage444_qwen3_binding_failure_boundary.py
+  - python tests/codex/stage444_qwen3_binding_failure_boundary.py --help
+  - $env:CUDA_LAUNCH_BLOCKING='1'; python tests/codex/stage444_qwen3_binding_failure_boundary.py --model-key qwen3 --families color,taste,size --batch-size 1 --max-heads 4 --max-neurons 4 --output-dir d:\develop\TransformerLens-main\tests\codex_temp\stage444_qwen3_binding_failure_boundary_20260402\qwen3_cuda
+  - $env:CUDA_LAUNCH_BLOCKING='1'; python tests/codex/stage444_qwen3_binding_failure_boundary.py --model-key qwen3 --families color,taste,size --batch-size 1 --max-heads 16 --max-neurons 16 --output-dir d:\develop\TransformerLens-main\tests\codex_temp\stage444_qwen3_binding_failure_boundary_20260402\qwen3_cuda_16
+  - python tests/codex/stage444_qwen3_binding_failure_boundary.py --model-key qwen3 --families color --batch-size 1 --max-heads 8 --max-neurons 8 --cpu --output-dir d:\develop\TransformerLens-main\tests\codex_temp\stage444_qwen3_binding_failure_boundary_20260402\qwen3_cpu_color
+  - Get-Content -Raw tests/codex_temp/stage444_qwen3_binding_failure_boundary_20260402/qwen3_cuda/summary.json
+  - Get-Content -Raw tests/codex_temp/stage444_qwen3_binding_failure_boundary_20260402/qwen3_cuda_16/summary.json
+  - Get-Content -Raw tests/codex_temp/stage444_qwen3_binding_failure_boundary_20260402/qwen3_cpu_color/summary.json
+- 文件变更:
+  - 重写 tests/codex/stage443_binding_family_split_probe.py，清理乱码帮助文本与标题。
+  - 新增 tests/codex/stage444_qwen3_binding_failure_boundary.py，用于拆分 baseline（基线）、attention head（注意力头）探针、MLP neuron（多层感知机神经元）探针，定位 Qwen3 失败边界。
+- 结果进展:
+  - 在 CUDA 下，小规模探针（max_heads=4, max_neurons=4）时，Qwen3 的 color/taste/size 三个家族全部 baseline 正常，前 4 个头与前 4 个神经元单独消融也全部成功。
+  - 在 CUDA 下，把探针扩展到 max_heads=16, max_neurons=16 后，Qwen3 出现明显不稳定：color 家族 baseline 仍正常，但第一个 head probe H:33:0 与第一个 neuron probe N:27:995 就报 CUDA error: unknown error；随后 taste/size 连 baseline 都失败。
+  - 在 CPU 下，Qwen3 的 color 家族 baseline 正常，前 8 个头与前 8 个神经元单独消融全部成功。
+- 当前判断:
+  - Qwen3 绑定搜索的问题不是脚本逻辑本身错误，也不是某一个固定候选天然非法；因为同一批候选在 CPU 下可稳定通过，在 CUDA 下小规模也可通过。
+  - 更可能的根因是：长链或高频的 CUDA hook/前向/清理循环触发了 GPU 驱动或 CUDA 状态累积不稳定，表现为非确定性的 unknown error，而不是纯显存 OOM（显存溢出）。
+- 理论研究进度:
+  - 这一结果把 Qwen3 的失败性质从“模型机制不成立”收缩成了“当前 GPU 路径不可信”，因此不能拿 Qwen3 的负结果去反驳桥接机制理论。
+  - 目前更稳的理论边界是：DeepSeek7B 仍是桥接项 G_l（桥接项）的主要正证据来源；Qwen3 在绑定桥接线上暂时属于工程未闭环，而不是理论已否证。
+- 下一阶段大任务:
+  1. 工程线：把 Qwen3 的组合搜索进一步拆成短进程、短家族、短候选批次，必要时每一批独立启动 Python 进程，避免同一 CUDA 上下文长时间累积。
+  2. 验证线：先在 CPU 上做一条更小规模的 Qwen3 color 家族混合搜索，验证组合逻辑本身是否能跑通，再决定如何迁回 CUDA。
+  3. 理论线：继续以 DeepSeek7B 为主，比较 color/taste/size 三类桥接项的稀疏度差异，把“哪些属性家族更容易形成小回路”做成稳定分类理论。
+[2026-04-03 00:18] stage445 CPU混合搜索与编码机制方法论总结
+- 本轮命令:
+  - rg -n "def parse_args|--models|def main\(|for family_name in|OUTPUT_DIR|build_report|write_outputs" tests/codex/stage442_binding_mixed_subcircuit_search.py
+  - Get-Content tests/codex/stage442_binding_mixed_subcircuit_search.py | Select-Object -Skip 520 -First 220
+  - Get-Content -Raw tests/codex_temp/stage435_apple_feature_binding_neuron_channels_20260402/summary.json
+  - python tests/codex/stage443_binding_family_split_probe.py --model-key qwen3 --families color --batch-size 1 --cpu --output-dir d:\develop\TransformerLens-main\tests\codex_temp\stage445_qwen3_color_cpu_mixed_search_20260402
+  - Get-Content -Raw tests/codex_temp/stage445_qwen3_color_cpu_mixed_search_20260402/summary.json
+  - Get-Content -Raw tests/codex_temp/stage445_qwen3_color_cpu_mixed_search_20260402/REPORT.md
+  - Get-Content tests/codex_temp/stage434_apple_polysemy_factorized_switch_20260402/summary.json | Select-Object -First 120
+  - Get-Content tests/codex_temp/stage432_apple_noun_efficiency_expression_tradeoff_20260402/summary.json | Select-Object -First 120
+  - Get-Content tests/codex_temp/stage434_apple_polysemy_factorized_switch_20260402/summary.json | Select-Object -Skip 730 -First 40
+  - Get-Content tests/codex_temp/stage432_apple_noun_efficiency_expression_tradeoff_20260402/summary.json | Select-Object -Skip 704 -First 28
+  - Get-Content tests/codex_temp/stage441_unified_language_state_equation_20260402/REPORT.md | Select-Object -First 120
+- 新结果:
+  - stage445 在 CPU 下完整跑通了 Qwen3 的 color 家族混合搜索。
+  - 结果显示：baseline 极强（binding 正确概率约 0.9961，heldout 约 0.9974），但当前 shortlist（候选短名单）中的单头、单神经元以及贪心组合对任务几乎零影响；最终 subset 为空，binding_drop=0。
+  - 这说明 Qwen3 color 线当前不是“机制不存在”，而更像“任务过易 + 候选池未对准真正因果结构”。
+- 关键理论整合:
+  - stage433 给出多义名词一般规律：shared_base_support_rate=1.0，structured_switch_support_rate=1.0，说明多义名词广泛符合“共享底座 + 结构化切换”。
+  - stage434 给出 apple 水果义/品牌义更细的因子化结果：
+    - Qwen3 最优切换层 L5：fruit_base_reuse≈0.9346，brand_base_reuse≈1.0000，switch_axis_orthogonality≈0.9998，fruit_brand_base_similarity≈0.4795。
+    - DeepSeek7B 最优切换层 L2：fruit_base_reuse≈0.8579，brand_base_reuse≈1.0000，switch_axis_orthogonality≈0.8962，fruit_brand_base_similarity≈0.6585。
+  - stage432 给出 apple 表达力-性能平衡层：
+    - Qwen3 最优平衡层 L34：fruit_explained_ratio≈0.8560，brand_explained_ratio≈0.9988，shared_core_similarity≈0.6228。
+    - DeepSeek7B 最优平衡层 L26：fruit_explained_ratio≈0.8680，brand_explained_ratio≈0.9918，shared_core_similarity≈0.8165。
+  - stage435 给出属性绑定通道：
+    - Qwen3：apple_banana_backbone_overlap≈0.2427，apple_color_overlap≈0.1228，apple_taste_overlap≈0.1179；apple_color_union_coverage≈0.7422，bridge_only_ratio≈0.2578。
+    - DeepSeek7B：apple_banana_backbone_overlap≈0.3333，apple_color_overlap≈0.3438，apple_taste_overlap≈0.2962；apple_color_union_coverage≈0.8047，bridge_only_ratio≈0.1953。
+- 对“如何完成编码机制分析”的阶段判断:
+  - 当前最合理框架仍是 stage441 的统一状态方程：R_l（路由） + B_l（骨干） + S_l（切换） + A_l（属性） + G_l（桥接） + O_l（读出）。
+  - 要把“发现大量语言特征”推进成“完成编码机制分析”，关键不是再累积更多亮点，而是把每类特征压缩成少量稳定隐藏变量，并做最小因果回路验证。
+- 下一阶段大任务:
+  1. 任务升级：把 Qwen3 color 绑定任务改得更难，避免 baseline 饱和，让真正因果单元有下降空间。
+  2. 候选升级：不要只从 top active neuron（顶部活跃神经元）里取候选，要加入切换轴方向、属性方向和注意力头对齐分数，构造更贴近机制的候选池。
+  3. 统一变量：围绕 R/B/S/A/G/O 六项，对普通名词、多义词、属性绑定、代词路由建立同一套跨模型因果验证协议，推动从拼图描述走向第一性原理理论。
+[2026-04-03 00:33] stage446 多义词神经元重合与切换轴因果消融
+- 本轮命令:
+  - Get-Content -Raw tests/codex/stage434_apple_polysemy_factorized_switch.py
+  - Get-Content -Raw tests/codex/stage433_polysemous_noun_family_generalization.py
+  - Get-Content -Raw tests/codex/stage432_apple_noun_efficiency_expression_tradeoff.py
+  - Get-Content -Raw tests/codex/stage435_apple_feature_binding_neuron_channels.py
+  - Get-Content -Raw tests/codex/qwen3_language_shared.py
+  - Get-Content -Raw tests/codex/stage426_pronoun_minimal_causal_mechanism.py
+  - Get-Content -Raw tests/codex_temp/stage441_unified_language_state_equation_20260402/REPORT.md
+  - python -m py_compile tests/codex/stage446_polysemy_neuron_overlap_and_switch_axis_ablation.py
+  - python tests/codex/stage446_polysemy_neuron_overlap_and_switch_axis_ablation.py --help
+  - python tests/codex/stage446_polysemy_neuron_overlap_and_switch_axis_ablation.py --models qwen3 --output-dir d:\develop\TransformerLens-main\tests\codex_temp\stage446_polysemy_neuron_overlap_and_switch_axis_ablation_20260403\qwen3
+  - python tests/codex/stage446_polysemy_neuron_overlap_and_switch_axis_ablation.py --models deepseek7b --output-dir d:\develop\TransformerLens-main\tests\codex_temp\stage446_polysemy_neuron_overlap_and_switch_axis_ablation_20260403\deepseek7b
+  - Get-Content -Raw tests/codex_temp/stage446_polysemy_neuron_overlap_and_switch_axis_ablation_20260403\qwen3\summary.json
+  - Get-Content -Raw tests/codex_temp/stage446_polysemy_neuron_overlap_and_switch_axis_ablation_20260403\deepseek7b\summary.json
+- 新增文件:
+  - tests/codex/stage446_polysemy_neuron_overlap_and_switch_axis_ablation.py
+- 核心结果:
+  - Qwen3:
+    - best_switch_layer=L5。
+    - fruit_brand_active_jaccard≈0.0199，水果义/品牌义激活神经元交并比很低。
+    - banana_context_mean_active_jaccard≈0.2897，普通名词 banana（香蕉）在不同上下文里的活跃集合重合度显著更高。
+    - ordinary_vs_polysemy_gap≈0.2698，说明多义词切换不是普通上下文扰动的放大版，而是另一种结构。
+    - switch_axis_removed 后：accuracy 0.8→0.6，mean_correct_prob 下降≈0.0674；control_axis_removed 只下降≈0.0219。
+    - 这说明切换轴对 apple 水果义/品牌义判别具有可见因果性，而且强于正交控制轴。
+  - DeepSeek7B:
+    - best_switch_layer=L2。
+    - fruit_brand_active_jaccard≈0.0139，水果义/品牌义激活神经元交并比同样很低。
+    - banana_context_mean_active_jaccard≈0.2611，普通名词上下文重合度仍远高于多义词跨词义重合度。
+    - ordinary_vs_polysemy_gap≈0.2472，方向与 Qwen3 一致。
+    - switch_axis_removed 后 mean_correct_prob 下降≈0.0252；control_axis_removed 下降≈0.0105；accuracy 都未下降。
+    - DeepSeek7B 的方向正确，但切换轴因果效应目前弱于 Qwen3，且品牌侧基线任务本身较弱。
+- 对“苹果为什么这样编码”的更新判断:
+  - 现在已经能更硬地说：apple（苹果）的水果义和品牌义不是两套大面积重合的神经元库，也不是普通名词上下文漂移，而是“共享底座 + 低重合跨义神经元群 + 可干预切换轴”。
+  - 普通名词更像同一语义盆地内部的属性扰动；多义词则多出一个跨盆地切换结构，这就是它能处理无数二义性组合而不爆炸的关键。
+- 理论边界与硬伤:
+  - 目前的“重合度”是基于 top active neuron（顶部活跃神经元）集合和 selective neuron（选择性神经元）集合，不是全空间最优定义。
+  - DeepSeek7B 的品牌义判别基线较弱，使得切换轴消融效应被压低，因此跨模型因果强度还不能直接横向比较。
+  - Qwen3 虽然出现了明显切换轴因果性，但下降幅度仍不算巨大，说明切换机制可能仍是分布式，不是少量孤立神经元即可解释。
+- 下一阶段大任务:
+  1. 做多义词家族扩展，把 apple / amazon / python / java 等词放进同一神经元集合交并比协议，确认“普通名词高重合、多义词低重合”是否为一般定律。
+  2. 对 top switch-biased neuron（顶部切换偏置神经元）做真正的神经元级因果消融，而不是只做层状态的轴投影移除。
+  3. 把多义词切换轴 S_l（切换项）与属性桥接 G_l（桥接项）、代词路由 R_l（路由项）放入同一状态方程验证框架，推动从局部解释走向统一编码机制理论。
