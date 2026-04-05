@@ -1,0 +1,175 @@
+{
+  "exp1_hook_patch": {
+    "bank": {
+      "original_cos": 0.7433,
+      "hooked_cos": 0.9735,
+      "gain": 0.2302,
+      "control_cos": 0.9668,
+      "probe_shifts": {
+        "river": {
+          "baseline": 0.3282,
+          "after_hook": 0.3076,
+          "shift": -0.0206
+        },
+        "water": {
+          "baseline": 0.3617,
+          "after_hook": 0.3369,
+          "shift": -0.0248
+        },
+        "money": {
+          "baseline": 0.2422,
+          "after_hook": 0.2488,
+          "shift": 0.0066
+        },
+        "loan": {
+          "baseline": 0.28,
+          "after_hook": 0.2812,
+          "shift": 0.0012
+        },
+        "deposit": {
+          "baseline": 0.1912,
+          "after_hook": 0.2061,
+          "shift": 0.0149
+        },
+        "financial": {
+          "baseline": 0.3391,
+          "after_hook": 0.3159,
+          "shift": -0.0232
+        }
+      }
+    },
+    "apple": {
+      "original_cos": 0.4082,
+      "hooked_cos": 0.9947,
+      "gain": 0.5866,
+      "control_cos": 0.9655,
+      "probe_shifts": {
+        "fruit": {
+          "baseline": 0.3257,
+          "after_hook": 0.8722,
+          "shift": 0.5465
+        },
+        "sweet": {
+          "baseline": 0.3427,
+          "after_hook": 0.9395,
+          "shift": 0.5968
+        },
+        "delicious": {
+          "baseline": 0.6811,
+          "after_hook": 0.4284,
+          "shift": -0.2527
+        },
+        "phone": {
+          "baseline": 0.2818,
+          "after_hook": 0.8842,
+          "shift": 0.6025
+        },
+        "iPhone": {
+          "baseline": 0.3222,
+          "after_hook": 0.9597,
+          "shift": 0.6374
+        },
+        "technology": {
+          "baseline": 0.3407,
+          "after_hook": 0.9393,
+          "shift": 0.5986
+        }
+      }
+    }
+  },
+  "exp2_cross_layer": {
+    "original_cos": 0.7433,
+    "layer_results": {
+      "L0": {
+        "patched_cos": 0.4773,
+        "gain": -0.266
+      },
+      "L3": {
+        "patched_cos": 0.8168,
+        "gain": 0.0735
+      },
+      "L6": {
+        "patched_cos": 0.964,
+        "gain": 0.2207
+      },
+      "L9": {
+        "patched_cos": 0.8739,
+        "gain": 0.1306
+      },
+      "L12": {
+        "patched_cos": 0.9853,
+        "gain": 0.242
+      },
+      "L15": {
+        "patched_cos": 0.9904,
+        "gain": 0.2471
+      },
+      "L19": {
+        "patched_cos": 0.9877,
+        "gain": 0.2444
+      },
+      "L22": {
+        "patched_cos": 0.9731,
+        "gain": 0.2298
+      },
+      "L25": {
+        "patched_cos": 0.9676,
+        "gain": 0.2243
+      },
+      "L28": {
+        "patched_cos": 0.9716,
+        "gain": 0.2283
+      },
+      "L31": {
+        "patched_cos": 0.9609,
+        "gain": 0.2176
+      },
+      "L35": {
+        "patched_cos": 0.8174,
+        "gain": 0.0741
+      }
+    }
+  },
+  "exp3_selective": {
+    "original_cos": 0.7433,
+    "full_vector_cos": 0.9735,
+    "selective": {
+      "K=5": {
+        "cos": 0.7237,
+        "gain": -0.0196
+      },
+      "K=10": {
+        "cos": 0.7136,
+        "gain": -0.0297
+      },
+      "K=20": {
+        "cos": 0.7126,
+        "gain": -0.0307
+      },
+      "K=50": {
+        "cos": 0.7338,
+        "gain": -0.0095
+      },
+      "K=100": {
+        "cos": 0.7352,
+        "gain": -0.0081
+      },
+      "K=200": {
+        "cos": 0.7096,
+        "gain": -0.0337
+      },
+      "K=500": {
+        "cos": 0.685,
+        "gain": -0.0583
+      },
+      "K=1000": {
+        "cos": 0.7851,
+        "gain": 0.0418
+      },
+      "full_vector": {
+        "cos": 0.9735,
+        "gain": 0.2302
+      }
+    }
+  }
+}

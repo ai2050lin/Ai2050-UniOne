@@ -1,0 +1,259 @@
+{
+  "exp1_head_ablation": {
+    "num_heads": 32,
+    "baseline_cos": 0.7433,
+    "significant_heads": [],
+    "all_scores": [
+      {
+        "head": 0,
+        "cos_disambig": 0.7389,
+        "delta": -0.0044,
+        "norm_ratio": 1.0003
+      },
+      {
+        "head": 1,
+        "cos_disambig": 0.7419,
+        "delta": -0.0014,
+        "norm_ratio": 1.0044
+      },
+      {
+        "head": 2,
+        "cos_disambig": 0.7428,
+        "delta": -0.0005,
+        "norm_ratio": 1.0021
+      },
+      {
+        "head": 3,
+        "cos_disambig": 0.7397,
+        "delta": -0.0036,
+        "norm_ratio": 1.0028
+      },
+      {
+        "head": 4,
+        "cos_disambig": 0.742,
+        "delta": -0.0013,
+        "norm_ratio": 1.0006
+      },
+      {
+        "head": 5,
+        "cos_disambig": 0.7409,
+        "delta": -0.0024,
+        "norm_ratio": 1.007
+      },
+      {
+        "head": 6,
+        "cos_disambig": 0.7444,
+        "delta": 0.0011,
+        "norm_ratio": 0.9954
+      },
+      {
+        "head": 7,
+        "cos_disambig": 0.7422,
+        "delta": -0.0011,
+        "norm_ratio": 0.9996
+      },
+      {
+        "head": 8,
+        "cos_disambig": 0.744,
+        "delta": 0.0007,
+        "norm_ratio": 0.9973
+      },
+      {
+        "head": 9,
+        "cos_disambig": 0.7412,
+        "delta": -0.0021,
+        "norm_ratio": 1.0025
+      },
+      {
+        "head": 10,
+        "cos_disambig": 0.7427,
+        "delta": -0.0006,
+        "norm_ratio": 1.0033
+      },
+      {
+        "head": 11,
+        "cos_disambig": 0.7402,
+        "delta": -0.0031,
+        "norm_ratio": 1.0035
+      },
+      {
+        "head": 12,
+        "cos_disambig": 0.7416,
+        "delta": -0.0017,
+        "norm_ratio": 1.0022
+      },
+      {
+        "head": 13,
+        "cos_disambig": 0.741,
+        "delta": -0.0022,
+        "norm_ratio": 1.0008
+      },
+      {
+        "head": 14,
+        "cos_disambig": 0.7414,
+        "delta": -0.0019,
+        "norm_ratio": 1.0005
+      },
+      {
+        "head": 15,
+        "cos_disambig": 0.7426,
+        "delta": -0.0007,
+        "norm_ratio": 0.9986
+      },
+      {
+        "head": 16,
+        "cos_disambig": 0.741,
+        "delta": -0.0023,
+        "norm_ratio": 0.9999
+      },
+      {
+        "head": 17,
+        "cos_disambig": 0.7411,
+        "delta": -0.0022,
+        "norm_ratio": 0.9983
+      },
+      {
+        "head": 18,
+        "cos_disambig": 0.7422,
+        "delta": -0.0011,
+        "norm_ratio": 1.0028
+      },
+      {
+        "head": 19,
+        "cos_disambig": 0.7417,
+        "delta": -0.0016,
+        "norm_ratio": 1.0014
+      },
+      {
+        "head": 20,
+        "cos_disambig": 0.7395,
+        "delta": -0.0038,
+        "norm_ratio": 0.9992
+      },
+      {
+        "head": 21,
+        "cos_disambig": 0.742,
+        "delta": -0.0013,
+        "norm_ratio": 1.0003
+      },
+      {
+        "head": 22,
+        "cos_disambig": 0.7411,
+        "delta": -0.0022,
+        "norm_ratio": 0.9982
+      },
+      {
+        "head": 23,
+        "cos_disambig": 0.7423,
+        "delta": -0.001,
+        "norm_ratio": 1.0015
+      },
+      {
+        "head": 24,
+        "cos_disambig": 0.7438,
+        "delta": 0.0005,
+        "norm_ratio": 0.9963
+      },
+      {
+        "head": 25,
+        "cos_disambig": 0.742,
+        "delta": -0.0013,
+        "norm_ratio": 1.0001
+      },
+      {
+        "head": 26,
+        "cos_disambig": 0.7451,
+        "delta": 0.0018,
+        "norm_ratio": 1.0029
+      },
+      {
+        "head": 27,
+        "cos_disambig": 0.7434,
+        "delta": 0.0001,
+        "norm_ratio": 0.9997
+      },
+      {
+        "head": 28,
+        "cos_disambig": 0.7417,
+        "delta": -0.0016,
+        "norm_ratio": 1.0
+      },
+      {
+        "head": 29,
+        "cos_disambig": 0.7412,
+        "delta": -0.0021,
+        "norm_ratio": 1.0002
+      },
+      {
+        "head": 30,
+        "cos_disambig": 0.7421,
+        "delta": -0.0012,
+        "norm_ratio": 1.0015
+      },
+      {
+        "head": 31,
+        "cos_disambig": 0.7406,
+        "delta": -0.0027,
+        "norm_ratio": 0.9992
+      }
+    ]
+  },
+  "exp2_attention_patterns": {
+    "bank_river": {
+      "tokens": [
+        "'The'",
+        "'Ġriver'",
+        "'Ġbank'",
+        "'Ġwas'",
+        "'Ġmuddy'",
+        "'Ġand'",
+        "'Ġsteep'"
+      ],
+      "target_pos": 2
+    },
+    "bank_finance": {
+      "tokens": [
+        "'The'",
+        "'Ġbank'",
+        "'Ġgave'",
+        "'Ġme'",
+        "'Ġa'",
+        "'Ġloan'",
+        "'Ġtoday'"
+      ],
+      "target_pos": 1
+    },
+    "apple_fruit": {
+      "tokens": [
+        "'The'",
+        "'Ġred'",
+        "'Ġapple'",
+        "'Ġis'",
+        "'Ġsweet'",
+        "'Ġand'",
+        "'Ġdelicious'"
+      ],
+      "target_pos": 2
+    },
+    "apple_company": {
+      "tokens": [
+        "'Apple'",
+        "'Ġreleased'",
+        "'Ġthe'",
+        "'Ġnew'",
+        "'ĠiPhone'",
+        "'Ġtoday'"
+      ],
+      "target_pos": 0
+    }
+  },
+  "exp3_parity": {
+    "stats": {
+      "mean_cos": 0.9687,
+      "min_cos": 0.5983
+    },
+    "head_diffs": [
+      {
+        "head": 0,
+        "cos": 0.9999,
+        "l1": 

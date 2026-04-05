@@ -33892,3 +33892,3495 @@ vidia-smi
   1. 做多义词家族扩展，把 apple / amazon / python / java 等词放进同一神经元集合交并比协议，确认“普通名词高重合、多义词低重合”是否为一般定律。
   2. 对 top switch-biased neuron（顶部切换偏置神经元）做真正的神经元级因果消融，而不是只做层状态的轴投影移除。
   3. 把多义词切换轴 S_l（切换项）与属性桥接 G_l（桥接项）、代词路由 R_l（路由项）放入同一状态方程验证框架，推动从局部解释走向统一编码机制理论。
+
+## [2026-04-03 01:15] Git 大文件推送跳过修复
+- 时间: 2026-04-03 01:15
+- 任务: 跳过大文件推送到 git（吉特，版本管理工具），保留本地实验数据与临时文件，但从版本控制索引中移除，避免后续 git push 持续失败。
+- 执行命令:
+  - git status --short
+  - git status --short --ignored
+  - Get-Content -LiteralPath 'research/gpt5/docs/AGI_GPT5_MEMO.md' -Tail 40
+  - Get-Content -LiteralPath '.gitignore'
+  - git ls-files '*.pt' '*.pth' '*.bin' '*.npz' '*.arrow'
+  - git log -1 --stat --oneline
+  - powershell -NoProfile -ExecutionPolicy Bypass -File 'tests/codex/untrack_large_git_files.ps1'
+  - git diff --cached --stat
+- 代码与配置变更:
+  - 在 .gitignore 末尾追加目录级忽略规则: 	empdata/、	ests/codex_temp/、
+fb_data/。
+  - 新增脚本 	ests/codex/untrack_large_git_files.ps1，用于把上述目录从 git 索引移除，但保留本地文件。
+  - 已实际执行索引清理命令，当前暂存区表现为这些目录中的文件被标记为 D（删除），本地实体文件仍然存在。
+- 结果判断:
+  - 这次修复解决的是“已被跟踪的大文件/生成物继续参与 push”的根因，而不只是新增文件忽略问题。
+  - 下一次提交如果包含这些删除记录，远端将不再接收这些本地大文件与临时产物。
+  - .gitignore 新规则会阻止它们未来再次被误加入版本控制。
+- 理论数学研究进度:
+  - 这次没有新增数学结构实验结果，属于工程管线清障。
+  - 但从 AGI（通用人工智能）研究主线看，这一步是在压缩“工程噪声维度”，让版本控制重新只承载可复现实验脚本、理论文档和核心机制代码，减少由大规模临时产物造成的信号污染。
+  - 更严格地说，这不是第一性原理理论本身的推进，而是为后续统一状态方程、跨模型因果验证、多义词切换结构等研究建立更稳定的实验记录边界。
+- 严格审视下的问题、硬伤和瓶颈:
+  - 当前清理是按目录级处理，覆盖面大，适合“临时产物不入库”的工作流，但如果这些目录里未来需要保留少量应入库样本，就需要另建白名单目录。
+  - 本次没有自动提交 commit（提交），所以只有在你执行提交后，远端历史中的当前提交路径才会真正变干净。
+  - 如果远端拒绝来自“更早历史提交”中的超大文件，而不是当前索引内容，那么还需要进一步做历史重写；本次尚未触发这一步。
+- 下一阶段大任务建议:
+  - 建立“源码 / 理论 / 可复现实验脚本 / 大型结果产物”四层分离规范，避免研究型仓库持续被输出文件污染。
+  - 把临时实验输出统一汇总到 	ests/codex_temp/ 和 	empdata/，只保留摘要报告或清单进入正式研究文档。
+  - 如远端仍拒推，下一步应系统检查历史提交中的超大 blob（大对象），必要时执行历史瘦身，而不是只修当前工作区。
+
+### [2026-04-03 01:15] Git 修复补充记录
+- 补充命令:
+  - git add .gitignore tests/codex/untrack_large_git_files.ps1
+  - git status --short | Select-Object -First 40
+- 补充结果:
+  - .gitignore 与 	ests/codex/untrack_large_git_files.ps1 已加入暂存区。
+  - esearch/gpt5/docs/AGI_GPT5_MEMO.md 因本次记录追加而处于工作区修改状态。
+- 研究备注:
+  - 这一步属于研究工程可追踪性整理，不新增数学理论结论，但提高了后续实验记录与理论资产分层的稳定性。
+
+## [2026-04-03 01:17] 撤销目录级忽略规则
+- 时间: 2026-04-03 01:17
+- 任务: 用户要求不能忽略目录，因此删除 .gitignore 中此前新增的目录级规则。
+- 执行命令:
+  - git diff -- .gitignore
+- 代码与配置变更:
+  - 已从 .gitignore 删除 	empdata/、	ests/codex_temp/、
+fb_data/ 三条目录级忽略规则。
+- 结果判断:
+  - 现在仓库不再通过目录级规则整体忽略这些路径。
+  - 之前已经执行过的索引清理状态不会因为删除 .gitignore 规则而自动恢复；如果后续需要更细粒度方案，应改成按文件类型、文件名模式或显式白名单/黑名单规则处理。
+- 理论数学研究进度:
+  - 本次仍属工程边界整理，不新增数学结论。
+  - 但它进一步明确了研究仓库的约束条件：不能依赖粗粒度目录屏蔽，后续必须寻找更细粒度、可审计的版本控制边界表达方式。
+- 严格审视下的问题、硬伤和瓶颈:
+  - 仅删除目录级忽略规则，并不能自动解决未来大文件再次被误加入的问题。
+  - 如果不允许目录级忽略，后续需要设计更精细的规则体系，否则研究输出仍可能反复污染提交面。
+
+## [2026-04-03 01:19] 解释 git 几千个修改的原因
+- 时间: 2026-04-03 01:19
+- 任务: 解释为什么 git status 显示几千个修改。
+- 执行命令:
+  - git status --short | Measure-Object | Select-Object -ExpandProperty Count
+  - git status --short | Group-Object { .Substring(0,2) } | Select-Object Name,Count | Format-Table -AutoSize
+  - git diff --cached --name-only | Measure-Object | Select-Object -ExpandProperty Count
+  - git status --short | Select-Object -First 30
+- 结果:
+  - 当前共有 5179 条状态记录。
+  - 其中 5172 条是 D，表示文件被从 git 索引中标记为删除。
+  - 根因是之前执行过 git rm -r --cached --ignore-unmatch -- tempdata tests/codex_temp nfb_data，这会批量取消跟踪这些目录下的文件，但保留本地文件。
+- 结论:
+  - 这不是几千个文件都被重新编辑，而是几千个已跟踪文件被批量标记为“下一次提交时从仓库删除”。
+  - 如果不想要这批删除记录，后续需要撤销索引清理，而不是去逐个处理文件。
+- 理论数学研究进度:
+  - 本次没有新增数学结构结果，属于版本控制状态解释与工程清障。
+  - 这次进一步暴露了研究仓库的核心瓶颈之一：实验产物、临时数据、理论文档和源码未充分分层，导致一次索引级操作会在版本控制表面放大成数千条状态噪声。
+- 严格审视下的问题与瓶颈:
+  - 当前仓库对“应入库对象”和“仅本地保存对象”的边界表达仍不够精细。
+  - 如果不建立更细粒度规则，未来仍会在“推送失败”和“状态爆炸”之间来回切换。
+
+## [2026-04-03 01:19] stage447 多义词家族统一协议
+- 时间: 2026-04-03 01:19
+- 任务: 把 apple（苹果）、amazon（亚马逊）、python（蟒蛇/编程语言）、java（咖啡/编程语言）纳入同一套“神经元交并比 + 普通名词对照 + 切换轴因果消融”协议。
+- 新增/修改文件:
+  - 新增 `tests/codex/stage447_polysemy_family_switch_protocol.py`
+  - 修改 `tests/codex/stage447_polysemy_family_switch_protocol.py`
+- 执行命令:
+  - `rg -n "stage446|polysemy_neuron_overlap|switch_axis_ablation|APPLE_FRUIT_CASES|APPLE_BRAND_CASES|POLYSEMOUS" tests/codex research/gpt5/docs -S`
+  - `Get-Content -Raw tests/codex/stage446_polysemy_neuron_overlap_and_switch_axis_ablation.py`
+  - `Get-Content -Raw tests/codex/stage433_polysemous_noun_family_generalization.py`
+  - `python -m py_compile tests/codex/stage447_polysemy_family_switch_protocol.py`
+  - `python tests/codex/stage447_polysemy_family_switch_protocol.py --help`
+  - `python tests/codex/stage447_polysemy_family_switch_protocol.py --models qwen3 --output-dir d:\develop\TransformerLens-main\tests\codex_temp\stage447_polysemy_family_switch_protocol_20260403\qwen3`
+  - `python tests/codex/stage447_polysemy_family_switch_protocol.py --models deepseek7b --output-dir d:\develop\TransformerLens-main\tests\codex_temp\stage447_polysemy_family_switch_protocol_20260403\deepseek7b`
+  - `python -m py_compile tests/codex/stage447_polysemy_family_switch_protocol.py`
+  - `python tests/codex/stage447_polysemy_family_switch_protocol.py --models deepseek7b --output-dir d:\develop\TransformerLens-main\tests\codex_temp\stage447_polysemy_family_switch_protocol_20260403\deepseek7b`
+  - `python tests/codex/stage447_polysemy_family_switch_protocol.py --cpu --models deepseek7b --output-dir d:\develop\TransformerLens-main\tests\codex_temp\stage447_polysemy_family_switch_protocol_20260403\deepseek7b_cpu`
+  - `Get-Content -Raw tests/codex_temp/stage447_polysemy_family_switch_protocol_20260403/qwen3/summary.json`
+  - `Get-Content -Raw tests/codex_temp/stage447_polysemy_family_switch_protocol_20260403/deepseek7b_cpu/summary.json`
+- 结果文件:
+  - `tests/codex_temp/stage447_polysemy_family_switch_protocol_20260403/qwen3/summary.json`
+  - `tests/codex_temp/stage447_polysemy_family_switch_protocol_20260403/qwen3/REPORT.md`
+  - `tests/codex_temp/stage447_polysemy_family_switch_protocol_20260403/deepseek7b_cpu/summary.json`
+  - `tests/codex_temp/stage447_polysemy_family_switch_protocol_20260403/deepseek7b_cpu/REPORT.md`
+- 核心结果:
+  - Qwen3:
+    - 4/4 多义词都满足 `supports_polysemy_split=true`。
+    - 平均多义词跨义活跃交并比 `mean_polysemy_jaccard≈0.0892`。
+    - 平均普通名词上下文活跃交并比 `mean_ordinary_jaccard≈0.2959`。
+    - 平均差值 `≈0.2067`，说明多义词跨义切换不是普通上下文扰动。
+    - 四个词的跨义活跃交并比分别约：
+      - apple `0.0644`
+      - amazon `0.0802`
+      - python `0.0894`
+      - java `0.1228`
+  - DeepSeek7B:
+    - GPU 路径在极小判别前向上仍报 `CUDA error: unknown error`，最终改为 CPU 跑通完整协议。
+    - 4/4 多义词都满足 `supports_polysemy_split=true`。
+    - 平均多义词跨义活跃交并比 `mean_polysemy_jaccard≈0.1202`。
+    - 平均普通名词上下文活跃交并比 `mean_ordinary_jaccard≈0.2846`。
+    - 平均差值 `≈0.1644`。
+    - 四个词的跨义活跃交并比分别约：
+      - apple `0.0894`
+      - amazon `0.1034`
+      - python `0.1082`
+      - java `0.1797`
+- 理论数学研究进度:
+  - 这一轮把“apple 个案”推进成了“多义词家族规律”：
+    - 普通名词更像同一语义盆地内的上下文扰动。
+    - 多义词更像共享底座之上的低重合跨义切换结构。
+  - 现在已经有跨两模型、跨四个多义词的稳定证据支持：
+    - 普通名词上下文重合度显著高于多义词跨义重合度。
+    - 因而“多义词 = 普通上下文漂移放大版”这个朴素解释越来越站不住。
+  - 但切换轴因果线这轮没有同步增强：
+    - Qwen3 平均 `switch_axis_prob_drop≈0.0014`，DeepSeek7B 平均约 `-0.0003`。
+    - 这说明在当前最佳层协议下，跨义低重合结构很稳，但切换轴的可干预读出仍弱，可能需要更贴近机制的层位、方向定义或神经元级组合干预。
+- 严格审视下的问题、硬伤和瓶颈:
+  - DeepSeek7B 的 GPU 路径依然不稳定，哪怕把判别评测改成逐条微批也仍报 CUDA 未知错误，说明当前环境存在模型级工程噪声。
+  - 这轮切换轴因果效应弱于预期，不能据此说“切换轴不存在”，更可能是：
+    - stage433 的最佳平衡层并不是最佳切换干预层；
+    - 当前方向定义仍偏粗；
+    - 真正切换机制更分布式，不能靠单方向投影移除完全命中。
+  - java 的跨义交并比相对更高，说明不同多义词的切换稀疏度并不完全一致，后面要做分类理论，不能只讲统一规律。
+- 下一阶段大任务:
+  1. 重新定义切换轴搜索，不再直接沿用最佳平衡层，而是在每个词上搜索“切换干预最敏感层”。
+  2. 从方向级消融升级到神经元组合级消融，直接验证 `top switch-biased neurons（顶部切换偏置神经元）` 是否能重现跨义判别下降。
+  3. 把多义词分成不同家族，研究为什么 java 这类词的跨义重合度高于 apple/amazon，建立“多义词切换稀疏度分类理论”。
+
+## [2026-04-03 01:20] 撤销批量取消跟踪
+- 时间: 2026-04-03 01:20
+- 任务: 撤销此前对 	empdata、	ests/codex_temp、
+fb_data 的批量取消跟踪，恢复正常 git 状态。
+- 执行命令:
+  - git restore --staged --source=HEAD -- tempdata tests/codex_temp nfb_data
+  - git status --short | Measure-Object | Select-Object -ExpandProperty Count
+  - git status --short | Group-Object { .Substring(0,2) } | Select-Object Name,Count | Format-Table -AutoSize
+  - git status --short | Select-Object -First 40
+- 结果:
+  - 原先约 5172 条 D（索引删除）已全部消失。
+  - 当前只剩 5 条状态，分别来自 .gitignore、AGI_GPT5_MEMO.md、	ests/codex/untrack_large_git_files.ps1 以及两个未跟踪测试产物。
+- 结论:
+  - 之前的“几千个修改”已经撤销，不会再因为那次批量索引清理而污染状态界面。
+  - 本地文件和 git 跟踪关系都已恢复到更接近原状的状态。
+- 理论数学研究进度:
+  - 本次仍是研究工程恢复，不新增数学结构结论。
+  - 但这一步说明后续若要实现“跳过大文件推送”，必须采用更细粒度、可逆且低噪声的方法，不能再用目录级批量取消跟踪这种会放大状态面的操作。
+- 严格审视下的问题与瓶颈:
+  - 虽然状态恢复了，但“大文件如何稳定管理”这个根问题仍未解决。
+  - 下一阶段需要设计更细粒度策略，例如只针对明确的大文件模式、单文件路径或历史中的超大 blob 做处理，而不是对研究目录整体动刀。
+
+## [2026-04-03 01:26] 精确修复 git 大文件推送失败并完成推送
+- 时间: 2026-04-03 01:26
+- 任务: 在不使用目录级忽略的前提下，精确定位并修复导致 git push 失败的超大文件问题，保留本地文件，最终完成推送。
+- 执行命令:
+  - git ls-tree -r -l HEAD | Select-Object -First 10
+  - git branch -vv
+  - git remote -v
+  - git log --oneline --decorate --graph --all -n 20
+  - git diff --name-only origin/main..HEAD
+  - git diff --stat origin/main..HEAD
+  - git log --follow --oneline -- 'tests/codex/fruit_neuron_encoding_qwen3_deepseek7b_stage422.json'
+  - git show --stat --oneline --name-only 525cc11
+  - git show --stat --oneline --name-only 5ac9af0
+  - git stash push -u -m 'codex-temp-before-large-file-rewrite-20260403'
+  - git branch backup/pre_large_file_rewrite_20260403_0126
+  - git switch -c temp/rebuild_without_stage422 origin/main
+  - git cherry-pick --no-commit 525cc11
+  - git restore --staged --source=HEAD -- 'tests/codex/fruit_neuron_encoding_qwen3_deepseek7b_stage422.json'
+  - git add .gitignore
+  - git commit -m "20260331"
+  - git cherry-pick 5ac9af0
+  - git switch -C main
+  - git stash pop
+  - git ls-tree -l HEAD -- 'tests/codex_temp/stage460_high_dim_factors_20260401/DeepSeek-7B_bias_matrix.npy'
+  - git ls-tree -l HEAD -- 'tests/codex_temp/stage460_high_dim_factors_20260401/Qwen3-4B_bias_matrix.npy'
+  - git check-attr filter diff merge -- 'tests/codex_temp/stage460_high_dim_factors_20260401/DeepSeek-7B_bias_matrix.npy' 'tests/codex_temp/stage460_high_dim_factors_20260401/Qwen3-4B_bias_matrix.npy'
+  - git push origin main
+- 关键定位结果:
+  - 当前待推送历史比 origin/main 超前 2 个提交。
+  - 真正超过 GitHub（吉特中心）常见 100MB 硬限制的关键文件是 	ests/codex/fruit_neuron_encoding_qwen3_deepseek7b_stage422.json，本地体积约 117MB。
+  - 	ests/codex_temp/stage460_high_dim_factors_20260401/DeepSeek-7B_bias_matrix.npy 与 Qwen3-4B_bias_matrix.npy 虽然本地文件大，但在 git 对象中分别只有 134 字节与 133 字节，因为它们由 LFS（大文件存储）管理，不是这次失败根因。
+- 实际修复动作:
+  - 新建了本地备份分支，避免历史重写不可逆。
+  - 从 origin/main 重新构建了本地领先的 2 个提交。
+  - 在重放 525cc11 时，精确移除了超限文件 	ests/codex/fruit_neuron_encoding_qwen3_deepseek7b_stage422.json 的提交记录，但保留本地文件。
+  - 在 .gitignore 中增加了单文件级规则: /tests/codex/fruit_neuron_encoding_qwen3_deepseek7b_stage422.json。
+  - 原先未提交的本地工作在 stash（暂存栈）中保护，重写后已成功恢复。
+- 推送结果:
+  - git push origin main 已成功完成。
+  - 远端提示仓库地址已迁移到 https://github.com/ai2050lin/Ai2050-OpenOne.git，但当前推送仍然成功送达。
+- 结论:
+  - 本次问题的根因不是目录本身，也不是所有大文件，而是一个具体的非 LFS 超限 JSON 文件进入了待推送历史。
+  - 采用“单文件级排除 + 本地历史重构 + 保留本地文件”的方式，既避免了目录级粗暴忽略，也避免了几千条索引删除噪声。
+- 理论数学研究进度:
+  - 本次没有新增关于语言能力、脑编码结构或统一状态方程的实验结论，属于研究工程基础设施修复。
+  - 但这一步对 AGI（通用人工智能）研究主线有实际价值：它把“理论资产 / 可复现实验脚本 / 本地超大实验产物”三者的边界表达从粗粒度目录规则推进到了精确对象级规则，更接近可审计、可复现、可长期积累的研究仓库范式。
+  - 从第一性原理视角看，这仍不是理论突破，而是为后续大规模拼图分析提供更稳定的知识沉积机制。
+- 严格审视下的问题、硬伤和瓶颈:
+  - 当前仍有不少大型实验产物进入正式提交面，虽然未必超限，但会持续抬高仓库体积与协作成本。
+  - 单文件规则解决了这次问题，但还没有形成系统的“哪些结果应入库、哪些结果应只保留摘要”的统一标准。
+  - 远端仓库地址已迁移，后续最好更新 origin，减少未来推送歧义。
+- 下一阶段大任务建议:
+  - 建立一套精细化的大文件治理协议：优先正文档、脚本、摘要；对大型结果使用 LFS 或仅保留摘要索引。
+  - 为研究输出定义“可复现最小提交单元”，减少把整份原始大结果直接放入主分支的概率。
+  - 把版本控制策略本身纳入研究工程规范，使理论推进不会反复被大文件和历史对象问题打断。
+
+## [2026-04-03 01:27] 解释“为什么还有几千个未提交”
+- 时间: 2026-04-03 01:27
+- 任务: 核对当前仓库是否仍存在几千个未提交状态。
+- 执行命令:
+  - git status --short | Measure-Object | Select-Object -ExpandProperty Count
+  - git status --short
+  - git diff --name-only origin/main..HEAD | Measure-Object | Select-Object -ExpandProperty Count
+  - git log --oneline --decorate -n 3
+- 核对结果:
+  - 当前 git status 实际只有 4 条状态，不是几千条。
+  - 当前状态分别是:
+    - M research/gpt5/docs/AGI_GPT5_MEMO.md
+    - A tests/codex/untrack_large_git_files.ps1
+    - ?? tests/codex/stage447_polysemy_family_switch_protocol.py
+    - ?? tests/codex_temp/stage447_polysemy_family_switch_protocol_20260403/
+  - git diff --name-only origin/main..HEAD 为 0，说明本地提交与远端主分支当前已经一致。
+- 结论:
+  - “几千个未提交”不是当前 git 真实状态，很可能是 IDE 缓存未刷新，或者界面显示的是旧的变更列表。
+  - 从命令行角度看，仓库已经恢复正常，只剩 4 个真实未提交项。
+- 理论数学研究进度:
+  - 本次没有新增理论结果，属于研究工程状态校验。
+  - 但这进一步确认：当前仓库的版本控制状态已经从“高噪声历史/超大文件阻塞”恢复到“低噪声可操作状态”，为后续真正的机制实验和理论积累扫清了工程表层障碍。
+- 严格审视下的问题与瓶颈:
+  - 现在的瓶颈不在 git 状态爆炸，而在于如何决定这 4 条状态哪些应提交、哪些应继续保留为本地工作。
+  - 如果 IDE 持续显示旧状态，还需要刷新其源控制视图或重启索引，而不是继续改仓库本身。
+
+## [2026-04-03 01:28] 进一步核对“几千个未提交”来源
+- 时间: 2026-04-03 01:28
+- 任务: 进一步验证当前仓库是否存在 IDE 看到的“几千个未提交”。
+- 执行命令:
+  - git status --short --ignored | Measure-Object | Select-Object -ExpandProperty Count
+  - git status --short --ignored | Group-Object { if (.Length -ge 2) { .Substring(0,2) } else {  } } | Select-Object Name,Count | Format-Table -AutoSize
+  - git ls-files -m | Measure-Object | Select-Object -ExpandProperty Count
+  - git ls-files -o --exclude-standard | Measure-Object | Select-Object -ExpandProperty Count
+  - git ls-files --deleted | Measure-Object | Select-Object -ExpandProperty Count
+  - git diff --numstat | Measure-Object | Select-Object -ExpandProperty Count
+  - Get-ChildItem -LiteralPath 'tests/codex_temp/stage447_polysemy_family_switch_protocol_20260403' -Recurse -File | Measure-Object | Select-Object -ExpandProperty Count
+  - git status --short --untracked-files=all | Measure-Object | Select-Object -ExpandProperty Count
+  - git status --short --untracked-files=all | Select-Object -First 80
+- 核对结果:
+  - git status --ignored 共 210 条，其中:
+    -  M 1 条
+    - A  1 条
+    - ?? 2 条（目录模式下）
+    - !! 206 条（已忽略）
+  - git ls-files -m 为 1。
+  - git ls-files -o --exclude-standard 为 5。
+  - git ls-files --deleted 为 0。
+  - git status --untracked-files=all 为 8 条，不是几千条。
+  - 	ests/codex_temp/stage447_polysemy_family_switch_protocol_20260403/ 目录下实际只有 4 个文件。
+- 结论:
+  - 从 git 真实状态看，当前仓库没有几千个未提交。
+  - 如果 IDE 仍显示几千个，大概率是源控制面板缓存、插件缓存，或者它统计的是别的索引而不是当前 git 工作区状态。
+- 理论数学研究进度:
+  - 本次没有新增理论结果，属于研究工程界面与真实状态一致性校验。
+  - 这一步再次说明当前工程侧已经从“真实仓库状态混乱”切换到了“展示层可能残留旧缓存”的阶段，问题重心已不在版本历史本身。
+- 严格审视下的问题与瓶颈:
+  - 当前瓶颈已经不是 git 数据面，而是 IDE 展示面与 git 实际状态的同步。
+  - 若不刷新 IDE 源控制缓存，用户会被错误的状态感知持续干扰，影响研究推进节奏。
+
+## [2026-04-03 01:39] stage448 苹果语义切换敏感层与复用/差异神经元计数
+- 时间: 2026-04-03 01:39
+- 任务: 继续推进“最敏感切换层”主线，并直接回答苹果不同语义的复用神经元数量、差异神经元数量。
+- 新增文件:
+  - `tests/codex/stage448_apple_switch_layer_scan_and_neuron_counts.py`
+- 执行命令:
+  - `Get-Content -Raw tests/codex/stage447_polysemy_family_switch_protocol.py`
+  - `Get-Content -Raw tests/codex_temp/stage446_polysemy_neuron_overlap_and_switch_axis_ablation_20260403/qwen3/summary.json`
+  - `Get-Content -Raw tests/codex_temp/stage446_polysemy_neuron_overlap_and_switch_axis_ablation_20260403/deepseek7b/summary.json`
+  - `python -m py_compile tests/codex/stage448_apple_switch_layer_scan_and_neuron_counts.py`
+  - `python tests/codex/stage448_apple_switch_layer_scan_and_neuron_counts.py --help`
+  - `python tests/codex/stage448_apple_switch_layer_scan_and_neuron_counts.py --models qwen3 --output-dir d:\develop\TransformerLens-main\tests\codex_temp\stage448_apple_switch_layer_scan_and_neuron_counts_20260403\qwen3`
+  - `python tests/codex/stage448_apple_switch_layer_scan_and_neuron_counts.py --cpu --models deepseek7b --output-dir d:\develop\TransformerLens-main\tests\codex_temp\stage448_apple_switch_layer_scan_and_neuron_counts_20260403\deepseek7b_cpu`
+  - `python tests/codex/stage448_apple_switch_layer_scan_and_neuron_counts.py --cpu --models qwen3 --output-dir d:\develop\TransformerLens-main\tests\codex_temp\stage448_apple_switch_layer_scan_and_neuron_counts_20260403\qwen3_cpu`
+  - `Get-Content -Raw tests/codex_temp/stage448_apple_switch_layer_scan_and_neuron_counts_20260403/deepseek7b_cpu/summary.json`
+  - `Get-Content -Raw tests/codex_temp/stage448_apple_switch_layer_scan_and_neuron_counts_20260403/qwen3_cpu/summary.json`
+- 结果文件:
+  - `tests/codex_temp/stage448_apple_switch_layer_scan_and_neuron_counts_20260403/qwen3_cpu/summary.json`
+  - `tests/codex_temp/stage448_apple_switch_layer_scan_and_neuron_counts_20260403/qwen3_cpu/REPORT.md`
+  - `tests/codex_temp/stage448_apple_switch_layer_scan_and_neuron_counts_20260403/deepseek7b_cpu/summary.json`
+  - `tests/codex_temp/stage448_apple_switch_layer_scan_and_neuron_counts_20260403/deepseek7b_cpu/REPORT.md`
+- 核心结果:
+  - 统一口径采用：
+    - 全网络 `top 256` 高活跃神经元集合。
+    - 单层 `top 64` 高活跃神经元集合。
+  - Qwen3:
+    - 全网络口径：
+      - 复用神经元 `10`
+      - 水果义独有 `246`
+      - 品牌义独有 `246`
+      - 差异神经元总数 `492`
+      - 交并比 `≈0.0199`
+    - 最敏感切换层为 `L5`：
+      - `switch_prob_drop≈0.0539`
+      - `control_prob_drop≈-0.0008`
+      - `excess_switch_drop≈0.0547`
+      - 在 `L5` 的单层口径下：
+        - 复用神经元 `6`
+        - 水果义独有 `58`
+        - 品牌义独有 `58`
+        - 单层差异总数 `116`
+    - 最强复用层为 `L1`：
+      - 复用神经元 `23`
+      - 水果义独有 `41`
+      - 品牌义独有 `41`
+  - DeepSeek7B:
+    - 当前为 CPU 稳定结果；GPU 路径在本机仍会触发 `CUDA unknown error`。
+    - 全网络口径：
+      - 复用神经元 `10`
+      - 水果义独有 `246`
+      - 品牌义独有 `246`
+      - 差异神经元总数 `492`
+      - 交并比 `≈0.0199`
+    - 最敏感切换层为 `L2`：
+      - `switch_prob_drop≈0.0349`
+      - `control_prob_drop≈0.0085`
+      - `excess_switch_drop≈0.0264`
+      - 在 `L2` 的单层口径下：
+        - 复用神经元 `6`
+        - 水果义独有 `58`
+        - 品牌义独有 `58`
+        - 单层差异总数 `116`
+    - 最强复用层为 `L1`：
+      - 复用神经元 `19`
+      - 水果义独有 `45`
+      - 品牌义独有 `45`
+- 理论数学研究进度:
+  - 现在可以把“苹果不同语义的神经元复用”分成三层口径理解：
+    1. 全网络高活跃集合口径：
+       - 复用极少，差异极大，说明不同词义主要依赖不同的高活跃神经元群。
+    2. 最强复用层口径：
+       - 早层 `L1` 复用更多，说明共享底座主要更靠前。
+    3. 最敏感切换层口径：
+       - Qwen3 在 `L5`，DeepSeek7B 在 `L2`，这里复用更少、分裂更强，说明切换操作在敏感层上主要依靠差异神经元而不是共享神经元。
+  - 这支持一个更清楚的中层理论：
+    - 早层更像共享底座。
+    - 敏感层更像语义分叉与切换带。
+    - 苹果的“水果义/品牌义”并不是均匀分散的差别，而是“前面共享，到了切换带迅速分裂”。
+- 严格审视下的问题、硬伤和瓶颈:
+  - 当前“复用神经元数量”依赖阈值定义（这里是 `top 256` 和 `top 64`），不是绝对自然常数。
+  - Qwen3 和 DeepSeek7B 的全网络计数这次出现完全一致，虽然层内结构并不一致；这提示全网络阈值口径可能过粗，后面要加入更多口径验证。
+  - 本机 GPU 状态仍不稳，Qwen3 与 DeepSeek7B 在长链切换实验上都会触发 `CUDA unknown error`，当前稳定结论主要来自 CPU。
+- 下一阶段大任务:
+  1. 对苹果的 `L5（Qwen3）/L2（DeepSeek7B）` 做神经元组合因果消融，验证这些差异神经元是否真是切换核心。
+  2. 把“全网络口径”升级成多阈值、多层累计口径，避免单一 `top-k` 定义过粗。
+  3. 把“共享底座层”和“切换敏感层”合并成统一的动态流程图，逼近苹果多义编码的状态转移机制。
+[2026-04-03 01:43] 文档整理任务：重构 AGI_GPT5_LANGUAGE.md
+- 执行命令:
+  - 读取 research/gpt5/docs/AGI_GPT5_LANGUAGE.md 旧内容，确认存在大量编码损坏和冗余段落。
+  - 读取 tests/codex_temp/stage441_unified_language_state_equation_20260402/REPORT.md，提取统一状态方程与六段框架。
+  - 结合 stage446、stage447、stage448 已有稳定结果，重写文档骨架。
+  - 使用 apply_patch 整体替换 research/gpt5/docs/AGI_GPT5_LANGUAGE.md。
+  - 使用 Python utf-8 读取新文件做编码自检，确认文件内容正常。
+- 文档重构结果:
+  - 清除了旧文档中的乱码、重复表述和实验堆叠式叙述。
+  - 新版只保留当前最核心的理论框架、核心拼图、最硬结论、主要硬伤与下一阶段大任务。
+  - 文档主框架现在固定为:
+    1. 研究目标
+    2. 当前最稳的统一框架
+    3. 核心拼图
+    4. 当前最硬的结论
+    5. 当前还没有解决的问题
+    6. 目前最合理的中层解释
+    7. 下一阶段的大任务
+    8. 当前文档的定位
+- 本次写入的核心理论内容:
+  - 统一状态方程继续保留为:
+    h_{t}^{l+1} = h_{t}^{l} + R_l(x_{<=t}) + B_l(lemma_t) + S_l(lemma_t, context_t) + A_l(attr_t, context_t) + G_l(B_l, A_l, route_t) + O_l(h_t^l)
+  - 明确保留六项含义:
+    - R_l：路由项
+    - B_l：骨干项
+    - S_l：切换项
+    - A_l：属性项
+    - G_l：桥接项
+    - O_l：读出项
+  - 明确保留三条主线拼图:
+    - 代词/功能词：DeepSeek7B 早层稀疏头组骨架，支持“先路由后整合”。
+    - 多义名词：共享底座 + 切换轴，不是每个词义一整套独立编码。
+    - 属性绑定：骨干 + 修饰 + 桥接，不是整块重写。
+  - 明确保留苹果个案的最新稳定结论:
+    - 早层 L1 更像共享底座层。
+    - Qwen3 的最敏感切换层在 L5，DeepSeek7B 在 L2。
+    - 苹果更像“前面共享，到了切换带迅速分裂”。
+  - 明确保留普通名词与多义词的结构差异:
+    - 普通名词更像同一语义盆地内扰动。
+    - 多义词更像共享底座上的跨语义盆地切换。
+- 严格审视后的保留边界:
+  - G_l 也就是桥接项仍然是当前理论最薄弱的一环。
+  - 神经元复用数量仍依赖 top-k 阈值口径，不能直接当成自然常数。
+  - 部分因果结论仍受 CUDA 不稳定影响，当前部分硬结论主要依赖 CPU 稳定路径。
+  - 当前理论仍属于中层机制理论，还不是第一性原理状态方程。
+- 下一阶段大任务在文档中已重新压缩为四条主线:
+  1. 切换轴最小因果子回路搜索。
+  2. 多阈值、多层累计口径的神经元复用协议。
+  3. 桥接项的回路化验证。
+  4. 代词路由、多义切换、属性绑定的统一动态理论闭环。
+[2026-04-03 02:05] 继续任务：苹果多义切换最小神经元子回路搜索
+- 执行命令:
+  - rg --files tests/codex | rg "stage44|stage45|stage46|stage47|stage48|run_stage468_471_batch"
+  - Get-Content tests/codex/run_stage468_471_batch.py
+  - Get-Content tests/codex/stage448_apple_switch_layer_scan_and_neuron_counts.py
+  - Get-Content tests/codex/stage446_polysemy_neuron_overlap_and_switch_axis_ablation.py
+  - Get-Content tests/codex/qwen3_language_shared.py
+  - Get-Content tests/codex_temp/stage446_polysemy_neuron_overlap_and_switch_axis_ablation_20260403/qwen3/summary.json
+  - Get-Content tests/codex/stage442_binding_mixed_subcircuit_search.py
+  - Get-Content tests/codex/stage434_apple_polysemy_factorized_switch.py
+  - Get-Content tests/codex_temp/stage448_apple_switch_layer_scan_and_neuron_counts_20260403/qwen3_cpu/summary.json
+  - 使用 apply_patch 新增 tests/codex/stage478_apple_switch_minimal_subcircuit.py
+  - python -m py_compile tests/codex/stage478_apple_switch_minimal_subcircuit.py
+  - 首次运行: python tests/codex/stage478_apple_switch_minimal_subcircuit.py --cpu --batch-size 2
+  - 发现 KeyError: MODEL_SPECS 中字段名不是 label，而是 model_name
+  - 使用 apply_patch 修复字段兼容问题
+  - 二次运行: python tests/codex/stage478_apple_switch_minimal_subcircuit.py --cpu --batch-size 2
+  - 读取输出:
+    - tests/codex_temp/stage478_apple_switch_minimal_subcircuit_20260403/summary.json
+    - tests/codex_temp/stage478_apple_switch_minimal_subcircuit_20260403/REPORT.md
+- 新增脚本:
+  - tests/codex/stage478_apple_switch_minimal_subcircuit.py
+- 输出结果目录:
+  - tests/codex_temp/stage478_apple_switch_minimal_subcircuit_20260403/
+- 实验设计:
+  - 目标: 在苹果多义切换敏感层中搜索最小神经元子回路，而不是继续停留在整层切换消融。
+  - 依据: 复用 stage448 的最敏感切换层结论，Qwen3 固定到 L5，DeepSeek7B 固定到 L2。
+  - 候选池: 在敏感层内，从品牌偏置和水果偏置差分向量中，各取 top 8 候选神经元，总计 16 个候选。
+  - 搜索算法: 单神经元快筛 + 贪心组合搜索 + 反向剪枝。
+  - 目标函数: 0.5 * (search_drop + heldout_drop) - 0.5 * control_abs_shift。
+  - 对照集: 使用 banana 单义上下文作为副作用控制，避免把一般性模型损伤误判成苹果切换机制。
+- 关键结果:
+  - Qwen3:
+    - 最敏感层 L5。
+    - 原始候选数 16，shortlist 8。
+    - 最终最小子集大小 1。
+    - 最终神经元: N:5:9059。
+    - search_drop = 0.004557291666666741
+    - heldout_drop = 0.0
+    - control_abs_shift = 0.0
+    - utility = 0.0022786458333333703
+    - 相对 stage448 最强层切换效应恢复比例约 0.0833。
+  - DeepSeek7B:
+    - 最敏感层 L2。
+    - 原始候选数 16，shortlist 8。
+    - 最终最小子集大小 2。
+    - 最终神经元: N:2:16785, N:2:17269。
+    - search_drop = 0.10994466145833337
+    - heldout_drop = 0.06146240234375
+    - control_abs_shift = 0.0048828125
+    - utility = 0.08326212565104169
+    - 贪心搜索先加入 N:2:16785，再加入 N:2:17269，第三个候选 N:2:11237 被反向剪枝移除。
+- 理论数学研究进度:
+  - 这轮第一次把“苹果词义切换”从方向级消融推进到了神经元组合级搜索。
+  - 当前最稳的新拼图是:
+    1. DeepSeek7B 的苹果切换，在 L2 已经出现小规模神经元子回路证据。
+       - 两个水果偏置神经元 N:2:16785 和 N:2:17269 的联合消融，就能稳定压低苹果水果/品牌判别概率，而且对 banana 控制集副作用很小。
+       - 这说明 DeepSeek7B 的苹果切换，不只是“方向存在”，还开始显露出可以压缩成少量神经元组合的局部回路结构。
+    2. Qwen3 的苹果切换在 L5 没有出现同等级别的稀疏子回路。
+       - 单个最强神经元 N:5:9059 只有很弱的 search_drop，heldout 基本不掉。
+       - 这支持一个更严格的分化结论: Qwen3 的切换机制更分布式，DeepSeek7B 的切换机制更稀疏、更容易被局部神经元组合命中。
+    3. 多义切换机制的“模型差异”比之前更清楚了。
+       - 不是所有模型都会在同一种粒度上暴露最小回路。
+       - 同一个“共享底座 + 切换”框架，在不同模型中可能对应不同的稀疏度和不同的可压缩性。
+- 严格审视下的问题、硬伤和瓶颈:
+  - DeepSeek7B 的 recovered_fraction_vs_stage448 大于 1，不应被过度字面解读。
+    - 原因是 stage478 的目标函数和 stage448 的整层对照不是完全同一任务口径。
+    - 这更像说明“神经元组合在当前协议下比整层轴消融更对靶”，不是数学上严格超过原上界。
+  - Qwen3 的结果很弱，说明我们当前候选池和阈值定义可能还没打中真正的最小切换机制。
+  - 当前候选池只来自敏感层内的神经元差分，不包含 attention 头，也不包含跨层组合，因此仍然不是完整切换回路搜索。
+  - banana 控制集本身有一道样本原始准确率偏低，这意味着副作用惩罚仍然不是完美仪器。
+- 下一阶段大任务:
+  1. 把苹果切换搜索从“单层神经元”扩展到“attention 头 + 神经元 + 跨层组合”的混合回路搜索。
+  2. 在 Qwen3 的 L5 周围扩大候选池，不只看差分 top-k，还要加上 stage446 中高偏置神经元与相邻层候选。
+  3. 将 apple、amazon、python、java 放进同一协议，验证 DeepSeek7B 的“少量切换子回路”是否是一般规律，还是苹果个案。
+  4. 重新设计单义控制集，避免 control 基线偏弱对 utility 造成噪声。
+[2026-04-03 02:27] 继续任务：苹果多义切换 mixed circuit（混合回路）搜索
+- 执行命令:
+  - 读取 tests/codex_temp/stage478_apple_switch_minimal_subcircuit_20260403/summary.json，复用上一轮神经元候选与敏感层结论。
+  - 读取 tests/codex_temp/stage446_polysemy_neuron_overlap_and_switch_axis_ablation_20260403/qwen3/summary.json，提取 Qwen3 全局切换偏置神经元。
+  - 读取 tests/codex_temp/stage446_polysemy_neuron_overlap_and_switch_axis_ablation_20260403/deepseek7b/summary.json，提取 DeepSeek7B 全局切换偏置神经元。
+  - 使用 apply_patch 新增 tests/codex/stage479_apple_switch_mixed_circuit_search.py。
+  - python -m py_compile tests/codex/stage479_apple_switch_mixed_circuit_search.py
+  - python tests/codex/stage479_apple_switch_mixed_circuit_search.py --cpu --batch-size 2
+  - 读取输出:
+    - tests/codex_temp/stage479_apple_switch_mixed_circuit_search_20260403/summary.json
+    - tests/codex_temp/stage479_apple_switch_mixed_circuit_search_20260403/REPORT.md
+- 新增脚本:
+  - tests/codex/stage479_apple_switch_mixed_circuit_search.py
+- 输出目录:
+  - tests/codex_temp/stage479_apple_switch_mixed_circuit_search_20260403/
+- 实验设计:
+  - 目标: 在苹果词义切换任务上，把 attention head 和 MLP neuron 一起纳入同一搜索协议，看最终核心是头、神经元还是混合回路。
+  - 头候选: 敏感层全部注意力头。
+    - Qwen3: L5 全部头。
+    - DeepSeek7B: L2 全部头。
+  - 神经元候选: 两部分合并。
+    1. stage478 的敏感层差分神经元。
+    2. stage446 的全局切换偏置神经元。
+  - 搜索算法: 单元快筛 + mixed greedy search（混合贪心搜索）+ backward pruning（反向剪枝）。
+  - 目标函数: 0.5 * (search_drop + heldout_drop) - 0.5 * control_abs_shift。
+  - 控制集: banana 单义上下文。
+- 关键结果:
+  - Qwen3:
+    - 敏感层 L5。
+    - 原始候选数 56（头 32，神经元 24）。
+    - shortlist 14。
+    - 最终最小子集大小 3。
+    - 最终核心全部是注意力头，没有神经元保留到最终子集:
+      - H:5:2
+      - H:5:29
+      - H:5:9
+    - 最终效果:
+      - search_drop = 0.13704427083333337
+      - heldout_drop = 0.0
+      - control_abs_shift = 0.0
+      - utility = 0.06852213541666669
+    - 相对 stage478 的 utility 提升倍数约 30.07。
+  - DeepSeek7B:
+    - 敏感层 L2。
+    - 原始候选数 52（头 28，神经元 24）。
+    - shortlist 14。
+    - 最终最小子集大小 6。
+    - 最终子集是 1 个神经元 + 5 个注意力头的混合回路:
+      - N:2:16785
+      - H:2:2
+      - H:2:22
+      - H:2:10
+      - H:2:26
+      - H:2:5
+    - 最终效果:
+      - search_drop = 0.15452067057291674
+      - heldout_drop = 0.1185302734375
+      - control_abs_shift = 0.005859375
+      - utility = 0.13359578450520837
+    - 相对 stage478 的 utility 提升倍数约 1.60。
+- 理论数学研究进度:
+  - 这轮第一次明确区分出两种不同的苹果切换实现风格:
+    1. Qwen3:
+       - 在当前协议下，苹果词义切换更像“敏感层头组主导”。
+       - stage478 只看神经元时几乎打不中；stage479 把头放进来后，最终核心变成纯头组 H:5:2 / H:5:29 / H:5:9。
+       - 这说明 Qwen3 的苹果切换，很可能更依赖注意力路径上的状态路由或状态重排，而不是少量 MLP 神经元的局部压缩。
+    2. DeepSeek7B:
+       - 苹果切换更像“一个强神经元锚点 + 多个敏感层头”的混合回路。
+       - N:2:16785 仍然是最强单点，但只有和 H:2:2 / H:2:22 / H:2:10 / H:2:26 / H:2:5 组合后，才能把 heldout_drop 一起拉起来。
+       - 这支持一个更细的机制解释: DeepSeek7B 不是纯头回路，也不是纯神经元回路，而更像“头负责切换路径，神经元负责切换落点”的混合实现。
+  - 这比上一轮更硬地支持一个跨模型差异结论:
+    - 同样是“共享底座 + 切换”框架，Qwen3 更像 head-dominant（头主导）切换，DeepSeek7B 更像 mixed-circuit（混合回路）切换。
+- 严格审视下的问题、硬伤和瓶颈:
+  - Qwen3 的 heldout_drop 仍然是 0，说明虽然 search 集上出现很强信号，但泛化还不够硬，不能直接说已经找到稳固普适回路。
+  - DeepSeek7B 的最终子集达到 6 个单元，说明虽然比纯分布式更稀疏，但还远不到“极小闭环”程度。
+  - 当前 mixed search 仍只覆盖单层头 + 一批神经元，还没纳入跨层 attention 头，也没有加入显式残差方向，所以仍然不是完整最小回路。
+  - banana 控制集基线依然不是满分，说明副作用惩罚还有测量噪声。
+- 下一阶段大任务:
+  1. Qwen3 主线:
+     - 围绕 H:5:2 / H:5:29 / H:5:9 做 head-group 精确子集扫描，验证是否真的存在三头骨架，以及是否还有更小骨架。
+  2. DeepSeek7B 主线:
+     - 围绕 N:2:16785 + H:2 头群做 pair/group 穷举，区分“骨架头”和“增强头”。
+  3. 统一理论主线:
+     - 把苹果切换机制从“神经元 vs 头”升级成三角色图:
+       - 头负责路由/重排
+       - 神经元负责落点/压缩
+       - 残差方向负责跨层传递
+  4. 方法学主线:
+     - 替换现有 banana 控制集，构造更稳的单义名词控制协议，降低 utility 测量噪声。
+[2026-04-03 08:22] 继续任务：苹果切换核心 exact core scan（精确核心子集扫描）
+- 执行命令:
+  - 读取 tests/codex_temp/stage479_apple_switch_mixed_circuit_search_20260403/summary.json，提取 Qwen3 与 DeepSeek7B 的最终核心候选。
+  - 使用 apply_patch 新增 tests/codex/stage480_apple_switch_exact_core_scan.py。
+  - python -m py_compile tests/codex/stage480_apple_switch_exact_core_scan.py
+  - python tests/codex/stage480_apple_switch_exact_core_scan.py --cpu --batch-size 2
+  - 读取输出:
+    - tests/codex_temp/stage480_apple_switch_exact_core_scan_20260403/summary.json
+    - tests/codex_temp/stage480_apple_switch_exact_core_scan_20260403/REPORT.md
+- 新增脚本:
+  - tests/codex/stage480_apple_switch_exact_core_scan.py
+- 输出目录:
+  - tests/codex_temp/stage480_apple_switch_exact_core_scan_20260403/
+- 实验设计:
+  - 目标: 对上一轮 mixed circuit 搜索得到的苹果切换核心做精确子集穷举，不再依赖贪心启发式，直接区分骨架与增强器。
+  - Qwen3 候选集合:
+    - H:5:2
+    - H:5:29
+    - H:5:9
+    - H:5:8
+    - H:5:0
+    - 总计 5 个头，穷举全部非空子集。
+  - DeepSeek7B 候选集合:
+    - N:2:16785
+    - H:2:2
+    - H:2:22
+    - H:2:10
+    - H:2:26
+    - H:2:5
+    - 总计 6 个单元，穷举全部非空子集。
+  - 额外计算:
+    - 最优 utility 子集
+    - 最优 heldout_drop 子集
+    - 50% / 70% / 90% 阈值下的最小达标子集
+    - Shapley（沙普利）贡献
+    - leave-one-out（留一剔除）必要性
+- 关键结果:
+  - Qwen3:
+    - best utility 子集 = 全 5 头:
+      - H:5:0, H:5:2, H:5:29, H:5:8, H:5:9
+      - utility = 0.07470703125
+      - heldout_drop = 0.0029296875
+    - 50% utility 最小子集:
+      - H:5:2 + H:5:29
+      - utility = 0.055582682291666685
+    - 70% utility 最小子集:
+      - 仍然是 H:5:2 + H:5:29
+    - 90% utility 最小子集:
+      - H:5:2 + H:5:29 + H:5:9
+      - utility = 0.06852213541666669
+    - heldout_drop 50/70/90% 最小达标子集:
+      - H:5:0 + H:5:2 + H:5:29 + H:5:8
+      - heldout_drop = 0.0029296875
+    - Qwen3 头贡献排序（按 Shapley utility）:
+      - H:5:2 > H:5:29 > H:5:8 > H:5:9 > H:5:0
+    - 这说明:
+      - H:5:2 是明确第一骨架头。
+      - H:5:29 是第二骨架头。
+      - H:5:9 更像把 2 头骨架推进到 90% utility 的第三骨架头。
+      - H:5:0 和 H:5:8 更像泛化增强器，因为主要贡献体现在 heldout_drop 而不是基础 utility。
+  - DeepSeek7B:
+    - best utility 子集 = 全 6 单元:
+      - N:2:16785
+      - H:2:2
+      - H:2:22
+      - H:2:10
+      - H:2:26
+      - H:2:5
+      - utility = 0.13359578450520837
+      - heldout_drop = 0.1185302734375
+    - 50% utility 最小子集:
+      - 只要 N:2:16785
+      - utility = 0.07663981119791669
+      - heldout_drop = 0.0640869140625
+    - 70% utility 最小子集:
+      - N:2:16785 + H:2:10 + H:2:22
+      - utility = 0.109405517578125
+      - heldout_drop = 0.09112548828125
+    - 90% heldout_drop 最小子集:
+      - N:2:16785 + H:2:10 + H:2:2 + H:2:26
+      - heldout_drop = 0.107574462890625
+    - DeepSeek7B 单元贡献排序（按 Shapley utility）:
+      - N:2:16785 >> H:2:22 > H:2:26 ≈ H:2:10 > H:2:5 > H:2:2
+    - 这说明:
+      - N:2:16785 是明确的神经元锚点。
+      - H:2:22 / H:2:26 / H:2:10 构成主要增强头群。
+      - H:2:5 和 H:2:2 更像次级增强器，但在高 heldout_drop 时仍有用。
+- 理论数学研究进度:
+  - 这轮第一次把苹果切换 mixed circuit 主线压成了“骨架 + 增强器”结构，而不是只给一个最终子集列表。
+  - 当前最清楚的结构差异是:
+    1. Qwen3:
+       - 苹果切换是纯头机制，而且骨架很小。
+       - H:5:2 + H:5:29 这两个头已经足以覆盖 70% utility。
+       - H:5:9 让它达到 90% utility。
+       - H:5:0 / H:5:8 主要提升 heldout 泛化，所以更像增强器，而不是基本骨架。
+       - 通俗说，Qwen3 更像“2 头骨架 + 1 头补齐 + 2 头泛化增强”。
+    2. DeepSeek7B:
+       - 苹果切换存在一个非常硬的单神经元锚点 N:2:16785。
+       - 单独这个神经元已经达到 50% utility 和 50% heldout。
+       - 但要继续往上推，必须叠加多头增强器，说明它是“锚点 + 头群增强”结构。
+       - 通俗说，DeepSeek7B 更像“1 个神经元骨干 + 2 个主增强头 + 其余补强头”。
+  - 这比 stage479 更进一步，因为现在不只是知道两模型实现不同，而是知道它们的稀疏拓扑也不同:
+    - Qwen3: 纯头骨架，神经元不是核心。
+    - DeepSeek7B: 神经元锚点不可替代，头群负责放大与泛化。
+- 严格审视下的问题、硬伤和瓶颈:
+  - Qwen3 的 heldout_drop 绝对值仍然非常小，说明虽然结构分解很清楚，但泛化信号仍偏弱，不能高估其理论强度。
+  - DeepSeek7B 的最优 heldout 和最优 utility 仍然出现在全 6 单元，说明增强器还比较多，离“极小闭环”还有距离。
+  - 当前 exact scan 仍然只在上轮缩小后的核心候选里穷举，不代表全空间最优；它是“局部精确”，不是“全局精确”。
+  - 依然没有显式纳入残差方向，所以“头负责路由、神经元负责落点、残差负责传递”的第三块还没有直接因果验证。
+- 下一阶段大任务:
+  1. Qwen3:
+     - 对 H:5:2 / H:5:29 / H:5:9 做更细的 pair/order 分析，确认谁是第一路由头，谁是后续整合头。
+  2. DeepSeek7B:
+     - 围绕 N:2:16785 与 H:2:22 / H:2:26 / H:2:10 做精确 pair/group/order 分析，区分主增强头与次增强头。
+  3. 统一理论:
+     - 把苹果切换的两类结构压成统一图:
+       - Qwen3: head skeleton（头骨架）
+       - DeepSeek7B: neuron anchor（神经元锚点） + head boosters（头增强器）
+     - 再看这两种实现是否能映射到同一个更抽象的状态转移方程。
+[2026-04-03 08:42] 继续任务：苹果切换 pair/order（配对/顺序）分析
+- 执行命令:
+  - 读取 tests/codex_temp/stage480_apple_switch_exact_core_scan_20260403/summary.json 与 REPORT.md。
+  - 使用 apply_patch 新增 tests/codex/stage481_apple_switch_pair_order_analysis.py。
+  - python -m py_compile tests/codex/stage481_apple_switch_pair_order_analysis.py
+  - 首次运行 python tests/codex/stage481_apple_switch_pair_order_analysis.py
+  - 发现 heldout 指标字段名兼容问题，使用 apply_patch 修复 synergy key 选择逻辑。
+  - 再次运行 python tests/codex/stage481_apple_switch_pair_order_analysis.py
+  - 读取输出:
+    - tests/codex_temp/stage481_apple_switch_pair_order_analysis_20260403/summary.json
+    - tests/codex_temp/stage481_apple_switch_pair_order_analysis_20260403/REPORT.md
+- 新增脚本:
+  - tests/codex/stage481_apple_switch_pair_order_analysis.py
+- 输出目录:
+  - tests/codex_temp/stage481_apple_switch_pair_order_analysis_20260403/
+- 实验设计:
+  - 不再重跑大模型，而是直接消费 stage480 的精确全子集结果。
+  - 目标: 从已有全子集数据中抽出三类信息:
+    1. 角色分工: 谁是骨架，谁是桥接到 90% utility 的单元，谁是 heldout 泛化增强器。
+    2. pair synergy（配对协同）: 哪两个单元组合最有效。
+    3. order analysis（顺序分析）: 在所有排列中，哪个加入顺序能最大化前缀累计收益。
+  - Qwen3 焦点集合:
+    - utility 核心: H:5:2 / H:5:29 / H:5:9
+    - heldout 焦点: H:5:0 / H:5:2 / H:5:29 / H:5:8
+  - DeepSeek7B 焦点集合:
+    - utility 核心: N:2:16785 / H:2:22 / H:2:10
+    - heldout 焦点: N:2:16785 / H:2:26 / H:2:10 / H:2:2
+- 关键结果:
+  - Qwen3:
+    - 角色划分:
+      - skeleton（骨架）: H:5:2, H:5:29
+      - bridge_to_90pct_utility（推进到 90% utility 的桥接头）: H:5:9
+      - heldout_boosters（留出集增强头）: H:5:0, H:5:8
+    - utility 最优顺序:
+      - H:5:2 -> H:5:29 -> H:5:9
+    - 这说明 Qwen3 的最清晰机制顺序是:
+      - 先由 H:5:2 起手
+      - 再由 H:5:29 把骨架补强
+      - 最后 H:5:9 作为桥接头把它推到 90% utility 区间
+    - utility pair synergy 排序:
+      - H:5:2 + H:5:29 = 0.0166015625（最强）
+      - H:5:2 + H:5:9 = 0.012288411458333315
+      - H:5:29 + H:5:9 = 0.006103515625
+    - 这进一步说明 H:5:2 + H:5:29 才是最硬的双头骨架。
+  - DeepSeek7B:
+    - 角色划分:
+      - anchor（锚点）: N:2:16785
+      - main_boosters（主增强头）: H:2:10, H:2:22
+      - heldout_boosters（留出集增强头）: H:2:2, H:2:26
+      - max_utility_boosters（最大 utility 补强头）: H:2:2, H:2:26, H:2:5
+    - utility 最优顺序:
+      - N:2:16785 -> H:2:22 -> H:2:10
+    - heldout 最优顺序:
+      - N:2:16785 -> H:2:26 -> H:2:10 -> H:2:2
+    - 这说明 DeepSeek7B 的结构更像:
+      - 先由神经元锚点 N:2:16785 落地切换
+      - 再由 H:2:22 / H:2:10 提升基础 utility
+      - 若要提升 heldout 泛化，则 H:2:26 和 H:2:2 更关键
+    - utility pair synergy 结果很有意思:
+      - H:2:10 + H:2:22 = 0（几乎正好相加）
+      - N:2:16785 与主增强头的 pair synergy 多为负值
+    - 这说明 DeepSeek7B 更像“锚点提供主效应，头主要做后续放大”，而不是强烈的二元配对协同系统。
+- 理论数学研究进度:
+  - 这轮第一次把苹果切换主线压成了明确的时序型机制描述，而不只是结构型描述。
+  - 当前最简机制图可以写成:
+    - Qwen3:
+      - H:5:2 先手骨架
+      - H:5:29 二号骨架
+      - H:5:9 作为 utility bridge（效用桥接头）
+      - H:5:0 / H:5:8 作为 heldout boosters（泛化增强头）
+    - DeepSeek7B:
+      - N:2:16785 作为切换锚点
+      - H:2:22 / H:2:10 作为主增强头
+      - H:2:26 / H:2:2 作为泛化增强头
+      - H:2:5 更像最大化 utility 时的次级补强头
+  - 这使我们第一次能用一句非常通俗但相对严谨的话来概括差异:
+    - Qwen3 更像“先由头决定怎么切，再由更多头把这个切换稳住”。
+    - DeepSeek7B 更像“先由一个神经元把切换落点钉住，再由头群把这个切换扩散和泛化”。
+- 严格审视下的问题、硬伤和瓶颈:
+  - Qwen3 的 heldout 信号仍很弱，所以它的“泛化增强头”结论只应看作局部趋势，不应高估。
+  - DeepSeek7B 的负 pair synergy 说明它不是简单的强协同双元系统，而更像一套增益逐步累加的非对称机制。
+  - 这轮完全依赖 stage480 的局部精确子集空间，所以仍是“局部顺序理论”，不是全空间最优顺序理论。
+  - 仍然没有直接追踪残差方向，因此“头如何把状态交给后续层”现在还只是结构推断，不是显式内部变量证据。
+- 下一阶段大任务:
+  1. 变量追踪主线:
+     - 对 Qwen3 的 H:5:2 / H:5:29 / H:5:9，直接追踪这些头改写了哪条残差方向。
+  2. 锚点传播主线:
+     - 对 DeepSeek7B 的 N:2:16785 与 H:2:22 / H:2:10 / H:2:26，研究锚点如何通过头群向后续层传播。
+  3. 统一方程主线:
+     - 把 Qwen3 的“头骨架先手”与 DeepSeek7B 的“神经元锚点先手”压成同一抽象状态转移方程，逼近统一语言切换机制。
+
+## [2026-04-03 09:03] stage482 苹果切换方向追踪
+- 命令记录:
+  - `python -m py_compile tests/codex/stage482_apple_switch_direction_tracking.py`
+  - `python tests/codex/stage482_apple_switch_direction_tracking.py --cpu`
+  - `Get-Content tests/codex_temp/stage482_apple_switch_direction_tracking_20260403/summary.json -Raw`
+  - `Get-Content tests/codex_temp/stage482_apple_switch_direction_tracking_20260403/REPORT.md -Raw`
+- 产物文件:
+  - 脚本: `tests/codex/stage482_apple_switch_direction_tracking.py`
+  - 结果目录: `tests/codex_temp/stage482_apple_switch_direction_tracking_20260403/`
+  - 汇总: `tests/codex_temp/stage482_apple_switch_direction_tracking_20260403/summary.json`
+  - 报告: `tests/codex_temp/stage482_apple_switch_direction_tracking_20260403/REPORT.md`
+- 核心实验结果:
+  - Qwen3:
+    - H:5:2 的 peak layer = L35，peak_relative_drop = 0.0160，late_mean_relative_drop = 0.0057
+    - H:5:29 的 peak layer = L35，peak_relative_drop = 0.0147，late_mean_relative_drop = 0.0044
+    - H:5:9 的 peak layer = L35，peak_relative_drop = 0.0182，late_mean_relative_drop = 0.0059
+    - H:5:8 的 peak layer = L35，peak_relative_drop = 0.0129，late_mean_relative_drop = 0.0058
+    - 结论:
+      - 苹果切换核心头虽然位于 L5，但其真正可见的切换轴分离度打击并不在局部层结束，而是一路传到最终读出层 L35 才达到峰值。
+      - 这说明 Qwen3 更像“早层头写入切换方向，晚层读出把差异放大”。
+  - DeepSeek7B:
+    - N:2:16785 的 peak layer = L26，peak_relative_drop = 0.0433，late_mean_relative_drop = 0.0439
+    - H:2:22 的 peak layer = L22，peak_relative_drop = 0.0064，late_mean_relative_drop = 0.0039
+    - H:2:10 的 peak layer = L27，peak_relative_drop = 0.0193，late_mean_relative_drop = 0.0077
+    - H:2:26 的 peak layer = L26，但 late_mean_relative_drop = -0.0041
+    - 结论:
+      - N:2:16785 不是局部小修正，而是能持续压低后续多层切换轴分离度的强锚点。
+      - H:2:22 / H:2:10 更像沿 L22-L27 区间持续放大切换差异的主增强头。
+      - H:2:26 更像偏 heldout（留出集）分布校正的头，不是普适性主切换头，因为它在部分晚层反而增强分离。
+- 理论数学研究进度:
+  - 这轮第一次把“苹果切换回路”从静态结构图推进成“层间传播图”。
+  - 当前最简传播机制可以写成:
+    - Qwen3:
+      - L5 头骨架先写入切换偏置
+      - 切换偏置沿残差流向后传播
+      - 到最终读出层附近才被显著放大成水果义 / 品牌义分离
+    - DeepSeek7B:
+      - L2 神经元锚点先把切换落点钉住
+      - L22-L27 头群沿传播链持续放大该切换方向
+      - 因此其切换更像“早锚定 + 中后程放大”
+  - 这意味着同样是“共享底座 + 切换”，Qwen3 和 DeepSeek7B 已经表现出两种不同的动力学拓扑:
+    - Qwen3 是“早写入、晚放大”
+    - DeepSeek7B 是“早锚定、中后程持续增益”
+- 严格审视下的问题、硬伤和瓶颈:
+  - 这轮使用的是 CPU 路径，优点是稳定，缺点是无法直接证明 GPU 路径下数值完全一致。
+  - 当前追踪的是“水果义 - 品牌义平均分离轴”，还不是更细粒度的内部语义变量基。
+  - H:2:26 出现负 late_mean_relative_drop，说明 heldout booster（留出集增强头）的角色仍带分布依赖，不能简单并入主切换骨架。
+  - Qwen3 的相对打击幅度仍偏小，提示它的切换机制可能比当前候选头更分布式。
+- 下一阶段大任务:
+  1. 残差方向主线:
+     - 直接求出 Qwen3 的 L5 头组和 DeepSeek7B 的 L2 锚点/头群改写的主残差方向基，并比较其与切换轴的夹角。
+  2. 单元传播主线:
+     - 分别验证“Qwen3 晚放大”和“DeepSeek7B 中后程持续增益”是否能在更多多义词上复现。
+  3. 统一动力学主线:
+     - 把“早写入、晚放大”和“早锚定、中后程增益”统一进同一状态转移方程，逼近真正可计算的多义词切换理论。
+
+## [2026-04-03 09:12] stage483 苹果切换主残差方向追踪
+- 命令记录:
+  - `python -m py_compile tests/codex/stage483_apple_switch_residual_basis.py`
+  - `python tests/codex/stage483_apple_switch_residual_basis.py --cpu`
+  - `Get-Content tests/codex_temp/stage483_apple_switch_residual_basis_20260403/summary.json -Raw`
+  - `Get-Content tests/codex_temp/stage483_apple_switch_residual_basis_20260403/REPORT.md -Raw`
+- 产物文件:
+  - 脚本: `tests/codex/stage483_apple_switch_residual_basis.py`
+  - 结果目录: `tests/codex_temp/stage483_apple_switch_residual_basis_20260403/`
+  - 汇总: `tests/codex_temp/stage483_apple_switch_residual_basis_20260403/summary.json`
+  - 报告: `tests/codex_temp/stage483_apple_switch_residual_basis_20260403/REPORT.md`
+- 核心实验结果:
+  - Qwen3:
+    - H:5:2 在 L35 达到 peak_contrast_switch_coupling = 0.0160，peak_pc1_switch_abs_cos = 0.4405，pc1_explained_variance_ratio = 0.7496
+    - H:5:29 在 L35 达到 peak_contrast_switch_coupling = 0.0147，peak_pc1_switch_abs_cos = 0.5020，pc1_explained_variance_ratio = 0.6875
+    - H:5:9 在 L35 达到 peak_contrast_switch_coupling = 0.0182，peak_pc1_switch_abs_cos = 0.5017，pc1_explained_variance_ratio = 0.7436
+    - H:5:8 在 L35 达到 peak_contrast_switch_coupling = 0.0129，peak_pc1_switch_abs_cos = 0.4146，pc1_explained_variance_ratio = 0.6498
+    - 结论:
+      - Qwen3 的核心头对切换轴的主方向对齐不是在起始层最强，而是到最终读出层 L35 才最清楚。
+      - 这进一步支持“早写入、晚放大”机制，不是单纯局部层内切换。
+  - DeepSeek7B:
+    - N:2:16785 在 L4 就达到 peak_contrast_switch_coupling = 0.1526，peak_pc1_switch_abs_cos = 0.3916，pc1_explained_variance_ratio = 0.9845
+    - H:2:10 在 L27 达到 peak_contrast_switch_coupling = 0.0193，晚层平均 coupling = 0.0077
+    - H:2:22 在 L27 达到 peak_contrast_switch_coupling = 0.0093
+    - H:2:26 在 L2 达到 peak_contrast_switch_coupling = 0.0226
+    - 结论:
+      - N:2:16785 的残差改写几乎是单主方向结构，说明它更像“强锚点方向发生器”，而不是普通分布式扰动。
+      - H:2:10 / H:2:22 / H:2:26 更像不同分工的头增益器，其中 H:2:10 的晚层持续性最强。
+- 理论数学研究进度:
+  - 这轮第一次把“切换单元改写了什么”从分离度统计推进到“主残差方向”层面。
+  - 现在可以更精细地描述两模型:
+    - Qwen3:
+      - 头先写入偏置
+      - 该偏置在残差流中逐层传播
+      - 到最终读出层附近，主方向才与切换轴显著对齐
+    - DeepSeek7B:
+      - 锚点神经元在很早阶段就产生强主方向
+      - 这个主方向与切换轴有稳定耦合
+      - 后续头主要负责持续增益和分布校正
+  - 一个很重要的新拼图是:
+    - DeepSeek7B 的 N:2:16785 在 L4 的 pc1_explained_variance_ratio 达到 0.9845，说明其 ablation effect（消融效应）几乎可以压成单主方向。
+    - 这比“它是重要神经元”更强，意味着它可能是切换机制中的近一维控制杆。
+- 严格审视下的问题、硬伤和瓶颈:
+  - stage483 的 coupling 使用了绝对夹角，因此它衡量的是“是否沿切换轴方向改写”，不区分是顺向还是反向推动。
+  - 因此像 H:2:26 这样在 stage482 中有负向晚层效应的头，在这里仍可能显示较高对齐度；它说明“沿同一轴改写”，不等于“朝正确方向推进”。
+  - 仍然使用 CPU 路径，结论稳定但还没完成 GPU 工程路径复核。
+  - 目前只覆盖 apple，一般性还需要更多多义词验证。
+- 下一阶段大任务:
+  1. 有符号残差主线:
+     - 在现有主方向分析上加入方向符号判定，区分“顺切换轴推进”和“反切换轴抵消”。
+  2. 多义词泛化主线:
+     - 把 amazon / python / java 放进同一协议，验证 Qwen3 的“晚对齐”与 DeepSeek7B 的“早主方向锚定”是否具有一般性。
+  3. 统一控制杆主线:
+     - 研究是否可以把 DeepSeek7B 的锚点神经元和 Qwen3 的头骨架，都压缩成更抽象的一类“切换控制杆”变量。
+
+## [2026-04-03 09:48] stage484 有符号主方向 + stage485 CPU/GPU 一致性对照
+- 命令记录:
+  - `nvidia-smi --query-gpu=name,driver_version,memory.total,memory.free,temperature.gpu --format=csv,noheader`
+  - `@' ... torch.cuda.is_available() ... '@ | python -`
+  - `python -m py_compile tests/codex/stage484_apple_switch_signed_residual_basis.py`
+  - `python tests/codex/stage484_apple_switch_signed_residual_basis.py --cpu`
+  - `python tests/codex/stage483_apple_switch_residual_basis.py --output-dir tests/codex_temp/stage483_apple_switch_residual_basis_20260403_gpu`
+  - `python tests/codex/stage484_apple_switch_signed_residual_basis.py --output-dir tests/codex_temp/stage484_apple_switch_signed_residual_basis_20260403_gpu`
+  - `python -m py_compile tests/codex/stage485_cpu_gpu_consistency_compare.py`
+  - `python tests/codex/stage485_cpu_gpu_consistency_compare.py`
+  - `Get-Content tests/codex_temp/stage484_apple_switch_signed_residual_basis_20260403/summary.json -Raw`
+  - `Get-Content tests/codex_temp/stage484_apple_switch_signed_residual_basis_20260403_gpu/summary.json -Raw`
+  - `Get-Content tests/codex_temp/stage485_cpu_gpu_consistency_compare_20260403/summary.json -Raw`
+  - `Get-Content tests/codex_temp/stage485_cpu_gpu_consistency_compare_20260403/REPORT.md -Raw`
+- 产物文件:
+  - 脚本:
+    - `tests/codex/stage484_apple_switch_signed_residual_basis.py`
+    - `tests/codex/stage485_cpu_gpu_consistency_compare.py`
+  - 结果:
+    - `tests/codex_temp/stage484_apple_switch_signed_residual_basis_20260403/`
+    - `tests/codex_temp/stage484_apple_switch_signed_residual_basis_20260403_gpu/`
+    - `tests/codex_temp/stage485_cpu_gpu_consistency_compare_20260403/`
+- 核心实验结果:
+  - stage484 有符号主方向:
+    - Qwen3:
+      - 各核心头在晚层 `late_mean_signed_contrast_switch_coupling` 都为负值
+      - 这说明从有符号角度看，消融这些头后，模型沿“水果义 / 品牌义切换轴”的有效推进被削弱，支持它们是正向切换部件
+      - 但 forward peak（顺向峰值）主要分散在较早或中层，而 reverse peak（反向最大峰值）集中在 L35，说明 Qwen3 的最终读出层仍是主要放大点
+    - DeepSeek7B:
+      - N:2:16785 / H:2:22 / H:2:10 的晚层有符号耦合为负，说明它们整体上是正向支撑切换的核心部件
+      - H:2:26 的晚层有符号耦合为正，说明它不是纯主切换头，更像分布校正或 heldout 增强头
+  - stage483 GPU 运行情况:
+    - `stage483` 在 GPU 上触发 `CUDA illegal memory access`，不是结果偏差，而是工程路径直接失败
+  - stage485 CPU/GPU 对照:
+    - 在成功跑通的 `stage484` 上:
+      - `max_late_mean_abs_diff = 0.011670`
+      - `max_forward_peak_abs_diff = 0.016190`
+      - `max_reverse_peak_abs_diff = 0.006991`
+      - `peak_layer_match_rate = 0.375`
+    - 解释:
+      - 数值量级总体接近，说明宏观趋势并没有完全翻转
+      - 但峰值层位置只匹配了 37.5%，说明小信号和局部峰值层位对 CPU/GPU 很敏感
+- 理论数学研究进度:
+  - 这轮把“主方向对齐”进一步推进成“有符号主方向”。
+  - 现在能更清楚地区分:
+    - 哪些单元在顺着切换轴推进
+    - 哪些单元更像在反向抵消
+    - 哪些单元只是分布校正器而不是主切换骨架
+  - 对苹果切换主线，目前最稳的解释是:
+    - Qwen3:
+      - 头骨架负责早层写入
+      - 晚层读出负责放大
+      - 有符号结果说明这些头整体是切换正向支撑部件
+    - DeepSeek7B:
+      - 锚点神经元和主增强头整体是切换正向支撑部件
+      - H:2:26 更像次级分布校正头，不该和主骨架混为一谈
+  - 关于 CPU/GPU:
+    - 在这台机器上，CPU 和 GPU 对“大方向结论”影响有限，但对“精确峰值层”和“工程稳定性”影响明显
+    - 因而 CPU 更适合做基准研究结论，GPU 更适合做加速验证，但必须配套稳定性复核
+- 严格审视下的问题、硬伤和瓶颈:
+  - stage483 GPU 失败说明当前 GPU 路径仍存在非确定性工程风险，不能把 GPU 结果默认当成更可靠结论。
+  - stage485 的峰值层匹配率只有 0.375，说明若直接比较“哪一层最强”，CPU/GPU 会给出明显不同答案。
+  - 这不代表理论错，而是说明峰值层位这种指标对数值细节、精度和算子实现更敏感。
+  - 因此之后必须把“趋势级指标”和“峰值层位指标”分开对待，不能混用。
+- 下一阶段大任务:
+  1. 稳定性主线:
+     - 给关键实验补 `CPU/GPU` 双路径对照协议，优先比较趋势级指标，再比较峰值层位。
+  2. 多义词泛化主线:
+     - 将有符号主方向协议扩展到 `amazon / python / java`，验证这一结论是否普适。
+  3. 工程治理主线:
+     - 单独排查 `stage483` 的 GPU 非法显存访问，把“理论结论”和“工程噪声”彻底分离。
+
+## [2026-04-03 09:48] CPU/GPU 差异成因 + 驱动排查补充
+- 命令记录:
+  - `Get-WinEvent -FilterHashtable @{LogName='System'; StartTime=(Get-Date).AddDays(-7)} | Where-Object { $_.ProviderName -match 'nvlddmkm|Display|Microsoft-Windows-WER-SystemErrorReporting|BugCheck|Kernel-Power' -or $_.Id -in 41,1001,4101,14,153 } | Select-Object -First 40 TimeCreated, ProviderName, Id, LevelDisplayName, Message | Format-List`
+  - `Get-CimInstance Win32_VideoController | Select-Object Name, DriverVersion, DriverDate, AdapterRAM | Format-List`
+  - `Get-ItemProperty 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*' | Where-Object { $_.DisplayName -match 'NVIDIA' } | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Sort-Object DisplayName | Format-Table -AutoSize`
+  - `nvidia-smi --query-gpu=name,driver_version,memory.total,memory.free,temperature.gpu --format=csv,noheader`
+  - `@' ... torch.cuda.is_available() ... '@ | python -`
+  - 官方网页核对:
+    - NVIDIA Studio Driver 595.79
+    - GeForce Game Ready Driver 595.79
+    - NVIDIA RTX Enterprise Production Branch 595.79
+- 本机排查结果:
+  - 当前显卡:
+    - `NVIDIA GeForce RTX 4090 D`
+    - 驱动版本: `595.79`
+    - 驱动日期: `2026-03-04`
+    - 本机安装时间: `2026-03-17`
+  - 事件日志:
+    - `2026-04-03 09:46:26` 再次出现 `nvlddmkm` 事件 `153`
+    - `2026-04-03 01:28:49 ~ 01:28:51` 连续出现 `nvlddmkm` 事件 `14 / 153`
+    - `2026-04-02 23:41:11` 出现 `Kernel-Power 41`
+    - `2026-04-02 23:41:19` 出现 `WER 1001`，BugCheck = `0x00000050`
+  - 结合 stage483 的 `CUDA illegal memory access`，当前问题已经不是“纯理论上 CPU/GPU 精度差”这么简单，而是叠加了真实的显卡驱动/栈稳定性问题。
+- 理论数学研究进度:
+  - 对“为什么 CPU/GPU 不只差速度”的理解更清楚了:
+    - 理想数学里，CPU 和 GPU 只应差速度
+    - 真实工程里还会受到:
+      - 浮点精度与混合精度
+      - Tensor Core / kernel（张量核心 / 核函数）实现差异
+      - reduction order（归约顺序）差异
+      - softmax / attention 内核实现差异
+      - 驱动与 CUDA 栈状态
+    - 因而小信号、峰值层位、局部最强单元都可能漂移
+  - 这台机器的证据进一步说明:
+    - 当前 CPU/GPU 差异一部分来自数值路径不同
+    - 另一部分来自驱动不稳定，后者会放大前者
+- 关于“最适合驱动型号”的当前判断:
+  - 基于 NVIDIA 官方描述，最适合这类研究工作负载的驱动类型，不是 `Game Ready Driver`，而是 `Studio Driver`
+  - 原因:
+    - NVIDIA 官方明确说明 `Studio Driver` 面向创作者、开发者和多应用工作流可靠性，强调稳定性测试
+    - 当前 `595.79 Studio Driver` 官方明确支持 `GeForce RTX 4090 D`
+  - `RTX Enterprise Production Branch 595.79` 官方也强调长期稳定，但其支持列表不包含 `GeForce RTX 4090 D`，因此不能直接作为这张卡的推荐驱动
+- 严格审视下的问题、硬伤和瓶颈:
+  - 目前只能较高概率判断“驱动/驱动栈是问题的重要组成部分”，不能数学证明“全部问题都来自驱动”
+  - 本机当前显示版本号 `595.79`，但仅从本地安装项很难百分之百确认当前包体究竟是 Studio 还是 Game Ready 变体
+  - 因此最稳妥的工程动作不是继续猜，而是:
+    - 用 DDU 干净卸载
+    - 明确安装 `595.79 Studio Driver`
+    - 再复测 stage483 / stage484 / stage485
+- 下一阶段大任务:
+  1. 驱动治理主线:
+     - 明确切换到 `595.79 Studio Driver` 并做干净重装后复测
+  2. 工程隔离主线:
+     - 关闭超频、Overlay、浏览器视频硬件加速等潜在干扰项后复测
+  3. 机制复核主线:
+     - 若干净安装后 `nvlddmkm 14/153` 仍持续出现，再考虑回退到较早 Studio 分支做 A/B 对照
+[2026-04-03 10:13] 文档重构：AGI_GPT5_LANGUAGE.md 系统化整理
+
+一、本轮执行命令
+- `Get-Item research/gpt5/docs/AGI_GPT5_LANGUAGE.md, research/gpt5/docs/AGI_GPT5_LANGUAGE_20260402.md | Select-Object Name,Length,LastWriteTime | Format-Table -AutoSize`
+- `Get-Content research/gpt5/docs/AGI_GPT5_LANGUAGE.md -Raw`
+- `Get-Content research/gpt5/docs/AGI_GPT5_LANGUAGE_20260402.md -Raw`
+- 使用 `apply_patch` 删除旧版 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md`
+- 使用 `apply_patch` 重新创建新版 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md`
+- `Get-Content research/gpt5/docs/AGI_GPT5_LANGUAGE.md -Encoding UTF8 | Select-Object -First 80`
+
+二、本轮文档整理目标
+- 根据当前研究总进展，并参考 `AGI_GPT5_LANGUAGE_20260402.md`，重写 `AGI_GPT5_LANGUAGE.md`
+- 目标不是保留历史堆叠，而是压成一份可以长期作为总纲使用的“系统化理论文档”
+- 重点覆盖：原则、目标、统一框架、测试体系、核心拼图、当前最稳结论、问题、硬伤、瓶颈、下一阶段计划
+
+三、本轮结构性修改
+- 旧版文档在终端读取中存在明显乱码与历史冗余，继续局部修补价值不高，因此改为整份重写
+- 新文档重新组织为 10 个部分：
+  1. 文档定位
+  2. 研究原则
+  3. 研究目标
+  4. 当前统一框架
+  5. 测试体系
+  6. 核心拼图
+  7. 当前最稳结论
+  8. 当前问题与硬伤
+  9. 当前瓶颈的实质
+  10. 下一阶段的大任务与阶段总结
+
+四、本轮压入文档的关键理论内容
+- 统一保留六项状态变量框架：`R_l / B_l / S_l / A_l / G_l / O_l`
+- 明确测试体系已经从“层分布统计”推进到“因果消融、稀疏回路搜索、跨模型对照、残差方向追踪、CPU/GPU 一致性对照”
+- 保留当前最关键的三条主线：
+  1. 功能词与代词路由回路
+  2. 多义名词共享底座与切换轴
+  3. 属性绑定中的骨干、修饰、桥接
+- 将苹果案例正式压入总纲，作为“共享底座 + 切换 + 属性修饰 + 传播动力学”的代表性拼图
+- 把 `Qwen3` 与 `DeepSeek7B` 的差异明确写成“同一抽象框架，不同实现拓扑”
+
+五、本轮理论整理后的当前共识
+- 语言编码越来越像“分层状态演化系统”，不是静态词典
+- 功能词更像回路化实现，尤其代词最清楚
+- 多义词更像共享底座上的低重合切换，而不是两套完整独立词典
+- 属性绑定已经有一般规律，但桥接项 `G_l` 仍是最薄弱的一块
+- `Qwen3` 与 `DeepSeek7B` 可能共享高层原则，但在切换与放大机制上实现不同
+
+六、本轮明确写入的硬伤与边界
+- `G_l` 缺少像代词回路那样清晰的跨模型强因果闭环
+- 许多神经元计数与重合度仍依赖 `top-k` 或阈值口径
+- `CPU/GPU` 对小信号结果和峰值层位存在明显影响，且本机 `GPU` 栈有驱动不稳定噪声
+- 当前最强多义词机制证据仍然偏向 `apple` 主线，族群泛化还要继续压实
+
+七、下一阶段文档使用原则
+- 后续每一轮实验都应优先映射到 `R_l / B_l / S_l / A_l / G_l / O_l` 六项框架中的某一项或某几项
+- 避免再次把总纲文档写成实验流水账，实验细节应继续放在阶段报告和 `AGI_GPT5_MEMO.md`
+- `AGI_GPT5_LANGUAGE.md` 以后应只保留“稳定拼图、硬结论、主要边界、阶段性大任务”
+
+## [2026-04-03 13:46] 苹果神经元可视化客户端方案设计
+- 命令记录:
+  - `Get-Content -Path research/gpt5/docs/AGI_GPT5_MEMO.md -Tail 200`
+  - `rg --files . | rg 'visual|client|frontend|ui|app|layer|neuron'`
+  - `Get-ChildItem -Path . -Force`
+  - `Get-Content -Path frontend/src/components/AppleNeuronCore3D.jsx -Encoding UTF8`
+  - `Get-Content -Path frontend/src/components/MultiLayer3DVisualization.jsx -Encoding UTF8`
+  - `Get-Content -Path frontend/src/components/LanguageResearchDataPanel.jsx -Encoding UTF8`
+  - `Get-Content -Path tests/codex_temp/stage484_apple_switch_signed_residual_basis_20260403/summary.json -Encoding UTF8`
+  - `Get-Content -Path tests/codex_temp/stage479_apple_switch_mixed_circuit_search_20260403/summary.json -Encoding UTF8`
+  - `rg -n "appleNeuronInfoPanelsBridge|AppleNeuron|conceptAssociationState|scanPreviewData|languageFocus" frontend/src`
+  - `Get-Content -Path frontend/src/blueprint/appleNeuronInfoPanelsBridge.jsx -Encoding UTF8`
+  - `Get-Content -Path frontend/src/components/MainVisualizationArea.jsx -Encoding UTF8`
+  - `Get-Content -Path frontend/src/components/AGIVisualizationDashboard.jsx -Encoding UTF8`
+  - `Get-Content -Path tests/codex_temp/stage438_apple_neuron_role_3d_view_20260402/summary.json -Encoding UTF8`
+  - `Get-Content -Path tests/codex_temp/stage448_apple_switch_layer_scan_and_neuron_counts_20260403/deepseek7b_cpu/summary.json -Encoding UTF8`
+  - `Get-Content -Path tests/codex_temp/stage482_apple_switch_direction_tracking_20260403/summary.json -Encoding UTF8`
+  - `Get-Content -Path research/gpt5/docs/AGI_GPT5_LANGUAGE_0403.md -Encoding UTF8 | Select-Object -First 120`
+  - `Get-Content -Path research/gpt5/docs/AGI_GPT5_LANGUAGE_0403.md -Encoding UTF8 | Select-Object -Last 40`
+  - 使用 `apply_patch` 更新 `research/gpt5/docs/AGI_GPT5_LANGUAGE_0403.md`
+- 本轮产物:
+  - 文档更新:
+    - `research/gpt5/docs/AGI_GPT5_LANGUAGE_0403.md`
+- 本轮方案设计结论:
+  - 苹果专题不应继续停留在随机点云式演示，而应挂接到现有 `AppleNeuron3DTab`，做成研究驱动的机制展示页。
+  - 最核心的数据来源应统一接入 `stage438 / stage448 / stage479 / stage482 / stage484 / stage485` 六类结果。
+  - 前端默认排序不该再看激活值，而应改成“角色证据 + 因果证据 + 有符号推进 + 稳定性”的综合 `effective_score`。
+  - `Qwen3` 建议默认展示 `H:5:2 / H:5:29 / H:5:9 / H:5:8` 四个骨架头。
+  - `DeepSeek7B` 建议默认展示 `N:2:16785 / H:2:22 / H:2:10 / H:2:26`，其中 `H:2:26` 单列为校正或争议单元。
+  - 主场景应叠加真实 `layer` 时间轴，底部增加三条轨道:
+    - 共享/分裂计数轨道
+    - 因果影响轨道
+    - 有符号传播轨道
+  - 右侧面板应能回答四个问题:
+    - 它是谁
+    - 它像什么角色
+    - 动它会坏到什么程度
+    - 它在各层是正向推进还是反向抵消
+- 理论数学研究进度:
+  - 这轮把“苹果神经元可视化”从几何展示问题，推进成了“层间机制可视化协议”问题。
+  - 当前更稳的理解是:
+    - 可视化对象不能等于激活对象
+    - 必须把角色、因果、方向、稳定性四类证据合并后，才有资格称为“有效神经元信息”
+  - 这相当于把苹果主线进一步压成一个更接近第一性原理理论界面的结构:
+    - 共享底座负责前段复用
+    - 切换锚点负责义项分裂
+    - 增强头或骨架头负责传播与放大
+    - 校正头负责分布修补，而不一定属于主切换骨架
+  - 从统一理论角度看，这次方案设计实际上是在推动 `B_l / S_l / A_l / G_l / O_l` 五项进入同一客户端阅读框架:
+    - `B_l` 可由共享底座与早层复用显示
+    - `S_l` 可由敏感层、方向峰值与有符号推进显示
+    - `A_l` 可由属性修饰神经元带显示
+    - `G_l` 可由混合回路与跨层关系轨道显示
+    - `O_l` 可由晚层放大和最终读出轨道显示
+- 严格审视下的问题、硬伤和瓶颈:
+  - `stage438` 的角色标签仍然不是强因果闭环，只能算结构先验。
+  - `stage479` 的最小回路结果仍依赖当前搜索协议，不是数学上唯一最小解。
+  - `stage484` 的有符号结果虽然比无符号结果强，但仍受切换轴定义影响。
+  - `stage485` 已说明峰值层位对 `CPU/GPU` 敏感，因此前端必须把“趋势结论”和“峰值层位结论”分开渲染。
+  - 目前最强证据仍集中在 `apple`，客户端若直接泛化为通用规律，风险偏高。
+- 下一阶段大任务:
+  1. 资产统一主线:
+     - 先把六类实验结果整理成单一 `apple_switch_mechanism_view_v1.json` 资产，建立稳定数据契约。
+  2. 机制界面主线:
+     - 在 `AppleNeuron3DTab` 上先实现真实数据驱动的右侧详情面板和底部 layer 时间线。
+  3. 泛化验证主线:
+     - 将 `amazon / python / java` 按同一协议接入，验证“共享底座 + 切换轴 + 读出放大”是否具有一般性。
+
+## [2026-04-03 13:59] 苹果切换机制资产接入可视化客户端
+- 命令记录:
+  - `python -m py_compile tests/codex/stage486_build_apple_switch_mechanism_view.py`
+  - `python tests/codex/stage486_build_apple_switch_mechanism_view.py`
+  - `Get-Content research/gpt5/data/visualization/apple_switch_mechanism_view_v1.json -Encoding UTF8 | Select-Object -First 120`
+  - `rg -n "appleSwitchMechanismData|apple_switch_unit|apple_switch_mechanism|AppleSwitchMechanismInsightsPanel|apple_switch_mechanism_view" frontend/src`
+  - `npm run build` （workdir=`frontend`）
+  - `git diff --stat -- research/gpt5/data/visualization/apple_switch_mechanism_view_v1.json tests/codex/stage486_build_apple_switch_mechanism_view.py frontend/src/blueprint/AppleNeuron3DTab.jsx frontend/src/components/LanguageResearchDataPanel.jsx research/gpt5/docs/AGI_GPT5_MEMO.md research/gpt5/docs/AGI_GPT5_LANGUAGE_0403.md`
+  - `git status --short -- research/gpt5/data/visualization/apple_switch_mechanism_view_v1.json tests/codex/stage486_build_apple_switch_mechanism_view.py frontend/src/blueprint/AppleNeuron3DTab.jsx frontend/src/components/LanguageResearchDataPanel.jsx`
+- 产物文件:
+  - 脚本:
+    - `tests/codex/stage486_build_apple_switch_mechanism_view.py`
+  - 前端改动:
+    - `frontend/src/blueprint/AppleNeuron3DTab.jsx`
+    - `frontend/src/components/LanguageResearchDataPanel.jsx`
+  - 数据资产:
+    - `research/gpt5/data/visualization/apple_switch_mechanism_view_v1.json`
+- 本轮实现结果:
+  - 已新增统一资产生成脚本，把 `stage438 / stage448 / stage479 / stage482 / stage484 / stage485` 六类实验结果压成单一 `apple_switch_mechanism_view.v1` 数据契约。
+  - 已在 `AppleNeuron3DTab` 中接入该资产识别、导入和预览逻辑。
+  - 已将苹果切换核心单元渲染成真实研究节点，而不是随机点云。
+  - 已加入苹果机制专用面板，显示:
+    - 双模型总览
+    - 核心单元列表
+    - 可点击聚焦单元
+    - 层过程时间线
+  - 已支持在右侧数据面板中显示苹果切换单元的结构化详情。
+  - 前端 `vite build` 已通过，说明当前实现至少在打包层面闭合。
+- 当前前端实际能展示的新信息:
+  - `Qwen3` 与 `DeepSeek7B` 的苹果切换核心单元
+  - 每个核心单元的:
+    - 角色标签
+    - 有效分数
+    - 方向标签
+    - 真实层号
+    - 逐层 signed process（有符号过程）
+  - 每个模型的:
+    - 最敏感切换层
+    - 共享底座最强层
+    - 最小有效回路规模
+    - 层间共享/分裂时间线
+- 理论数学研究进度:
+  - 这轮不是单纯把 JSON 接进前端，而是把“苹果切换机制”第一次压成了前端可直接阅读的统一研究对象。
+  - 重要推进在于:
+    - 前端节点不再等于“高激活点”
+    - 前端节点开始逼近“有效单元”
+  - 也就是把四类证据正式合并:
+    - 角色证据
+    - 因果证据
+    - 有符号推进证据
+    - 稳定性证据
+  - 从理论角度，这意味着苹果主线已经从“实验拼图集合”更进一步收敛成“可视研究界面上的动态对象”。
+  - 这一步很关键，因为如果一个理论结构无法在统一界面中同时展示:
+    - 它是谁
+    - 它在第几层起作用
+    - 它怎么推动切换
+    - 它是否稳定
+    那它还没有真正进入中层机制理论，而只是零散现象。
+  - 现在至少对苹果主线，可以更清楚地区分:
+    - 共享底座层
+    - 切换敏感层
+    - 传播增强层
+    - 反向校正层
+  - 这使 `B_l / S_l / O_l` 三项在界面上的投影更清楚，`G_l` 也开始有了更可读的可视痕迹，但仍不够闭环。
+- 严格审视下的问题、硬伤和瓶颈:
+  - 当前 3D 场景里的苹果机制节点位置仍是“研究驱动布局”，不是严格几何还原坐标。
+  - `Qwen3` 的核心单元当前以头为主，而 `stage438` 的强角色证据仍以神经元视角更丰富，二者还没完全统一。
+  - `DeepSeek7B` 的最小回路有 6 个成员，但当前核心展示优先聚焦 4 个高解释力单元，界面上还不是完整子回路全景。
+  - 时间线虽然已经接入真实层过程，但目前主要突出 signed process（有符号过程）和层摘要，还没把更多反事实样本直接并排显示。
+  - 当前实现仍然是 `apple` 专题，离统一多义词协议前端还差泛化层。
+- 下一阶段大任务:
+  1. 完整回路主线:
+     - 把 `stage479` 最小回路的全部成员都映射成可见子回路，而不只显示核心解释单元。
+  2. 双时间线主线:
+     - 增加“单元逐层过程”和“模型整层摘要”并排模式，再接入样本级回放。
+  3. 泛化主线:
+     - 用同一 `schema（数据契约）` 接入 `amazon / python / java`，验证苹果界面不是特例。 
+
+## [2026-04-03 14:53] 苹果机制面板改为多条件筛选
+- 命令记录:
+  - `rg -n "function AppleSwitchMechanismInsightsPanel|苹果切换机制总览|当前聚焦模型|逐层过程" frontend/src/blueprint/AppleNeuron3DTab.jsx`
+  - `npm run build` （workdir=`frontend`）
+- 本轮修改:
+  - 已把苹果切换机制面板从“固定列出每个模型前几个单元”，改成“多条件组合筛选”。
+  - 当前支持的组合筛选条件:
+    - 模型
+    - 单元类型（attention head / MLP neuron）
+    - 方向（正向支撑 / 反向校正）
+    - 是否属于最小回路
+    - 关键词
+  - 各条件可同时生效，不再需要在很多文件或很多面板中手动查找。
+- 理论数学研究进度:
+  - 这一步虽然看起来偏 UI，但实际上是在把研究对象从“静态列表”推进成“条件查询空间”。
+  - 这很重要，因为真正的机制研究不是只看单个结论，而是不断问:
+    - 在某个模型里
+    - 某一类单元里
+    - 某一类方向上
+    - 是否属于主回路
+    - 它们共同表现出什么层间规律
+  - 多条件筛选使得苹果主线第一次更接近“可交互假设检索界面”，而不只是结果展示页。
+- 严格审视下的问题与瓶颈:
+  - 当前筛选仍然只作用于苹果机制面板，还没有扩展到整页所有研究资产。
+  - 关键词匹配仍是字符串级，不是结构化查询语言。
+  - 时间线区域目前仍以当前选中单元或当前模型为中心，尚未支持多个单元并排比较。
+- 下一步大任务:
+  1. 比较主线:
+     - 支持同时勾选多个核心单元，做并排层过程比较。
+  2. 统一筛选主线:
+     - 把苹果机制筛选协议扩展到更多研究资产，而不是只限于苹果专题。
+  3. 结构化查询主线:
+     - 以后把关键词筛选升级为更明确的角色/层位/方向查询协议。
+
+## 2026-04-03 15:09
+
+- 本次主题:
+  - 区分 `attention head（注意力头）` 与 `MLP neuron（多层感知机神经元）` 的功能差异、信息路径差异、可解释性差异。
+- 命令执行记录:
+  - `2026-04-03 15:09` `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+  - `2026-04-03 15:09` `if (Test-Path 'research/gpt5/docs/AGI_GPT5_MEMO.md') { Write-Output 'EXISTS' } else { Write-Output 'MISSING' }`
+  - `2026-04-03 15:09` `Get-Content 'research/gpt5/docs/AGI_GPT5_MEMO.md' -Tail 20`
+  - `2026-04-03 15:09` `(Get-Date).ToString('yyyy-MM-dd HH:mm')`
+- 理论数学研究进度:
+  - `attention head（注意力头）` 更像“按关系搬运信息的算子”，核心是让当前位置按需要读取别的位置，再把读取结果写回当前残差流。
+  - `MLP neuron（多层感知机神经元）` 更像“对当前 token（词元）状态做非线性特征检测与特征写入的单元”，核心是把当前局部表示映射成更抽象的方向与概念。
+  - 从电路角度看，注意力头偏向“跨位置路由”，MLP 神经元偏向“位置内变换”。
+  - 从数学结构猜想看，这说明模型内部至少同时存在两类结构:
+    - 一类是图结构或关系选择结构，决定信息从哪里来到哪里去。
+    - 一类是局部流形坐标变换结构，决定当前位置内部哪些抽象特征被激活、抑制或重写。
+  - 如果要走向更深的 AGI（通用人工智能） 第一性原理理论，不能只把模型看成“大矩阵叠加”，而要把它看成“关系路由结构 + 局部非线性特征代数”的复合系统。
+- 严格审视下的问题与瓶颈:
+  - 把 `attention head（注意力头）` 简化为“找相关词”是不够的，因为很多头执行的是复制、归纳、抑制、分隔、位置对齐等操作。
+  - 把 `MLP neuron（多层感知机神经元）` 简化为“存一个概念”也不够严格，因为很多时候真正起作用的是方向、子空间、超平面，而不只是单个神经元。
+  - 当前解释仍偏经验主义，尚未把“关系路由”和“局部特征代数”统一成一个可计算、可验证、可推导的数学框架。
+- 下一步大任务:
+  1. 电路分工主线:
+     - 系统统计哪些能力主要依赖注意力头，哪些能力主要依赖 MLP 模块，而不是停留在定性描述。
+  2. 统一数学对象主线:
+     - 尝试把头、神经元、残差方向都投影到统一状态空间中，研究它们是否是同一结构的不同作用方式。
+  3. 干预验证主线:
+     - 以后通过激活替换、路径消融、特征注入来验证“跨位置路由”和“位置内变换”这两个分类是否足够解释真实行为。
+
+## 2026-04-03 15:14
+
+- 本次主题:
+  - 回答 `attention head（注意力头）` 与 `MLP neuron（多层感知机神经元）` 在神经元级别是否独立。
+  - 梳理项目内 `锚点 / 骨架 / 增强器 / 桥接器` 四类角色的定义及其神经元级差异。
+- 命令执行记录:
+  - `2026-04-03 15:13` `rg -n "骨架|增强器|桥接器|锚点|skeleton|enhancer|bridge|anchor" .`
+  - `2026-04-03 15:13` `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+  - `2026-04-03 15:13` `rg -n "anchor_neuron|skeleton_head|bridge_head|增强器|锚点神经元|骨架头|桥接头|anchor neuron|enhancer" frontend/src/blueprint frontend/src | Select-Object -First 200`
+  - `2026-04-03 15:13` `Get-Content 'frontend/src/blueprint/AppleNeuron3DTab.jsx' -TotalCount 260`
+  - `2026-04-03 15:13` `Get-Content 'frontend/src/blueprint/AppleNeuron3DTab.jsx' | Select-Object -Skip 260 -First 220`
+  - `2026-04-03 15:13` `rg -n "main_booster_1|main_booster_2|heldout_booster|anchor_neuron|skeleton_head_1|skeleton_head_2|bridge_head" frontend/src/blueprint/AppleNeuron3DTab.jsx`
+  - `2026-04-03 15:13` `Get-Content 'frontend/src/blueprint/AppleNeuron3DTab.jsx' | Select-Object -Skip 1820 -First 90`
+  - `2026-04-03 15:13` `Get-Content 'frontend/src/blueprint/AppleNeuron3DTab.jsx' | Select-Object -Skip 120 -First 30`
+  - `2026-04-03 15:14` `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+  - `2026-04-03 15:14` `Get-Content 'research/gpt5/docs/AGI_GPT5_MEMO.md' -Tail 30`
+- 理论数学研究进度:
+  - 标准 Transformer（变压器） 结构里，`attention head（注意力头）` 和 `MLP neuron（多层感知机神经元）` 不是同一级对象。
+  - 更准确地说:
+    - `attention head（注意力头）` 是注意力子层里的一个“头级算子”。
+    - `MLP neuron（多层感知机神经元）` 是前馈子层里的一个“神经元级单元”。
+  - 所以它们不是“一个是 layer（层），一个是词嵌入”这种关系，也不是同一个坐标系里的同类元素。
+  - 它们共享的是同一条残差流与同一层级运行框架，但各自属于不同模块、不同参数块、不同计算形式。
+  - 从项目实现上看，苹果机制视图里四类角色并不全是“神经元”:
+    - `anchor_neuron（锚点神经元）` 明确是 `mlp_neuron（多层感知机神经元）`。
+    - `skeleton_head（骨架头）`、`main_booster（增强器）`、`bridge_head（桥接头）` 明确属于 `attention_head（注意力头）` 类别。
+  - 因此这四类角色更像“机制职责标签”，不是统一的物理单元类型。
+  - 可形成一个更清楚的分工图景:
+    - 锚点: 在当前位置把某个概念或判别边界钉住。
+    - 骨架: 在层间维持主结构与主路径，不让概念骨架散掉。
+    - 增强器: 放大某条已经存在但还不够强的有效证据。
+    - 桥接器: 把内部表征接到下游读出、任务接口或另一段计算协议上。
+- 严格审视下的问题与瓶颈:
+  - 这些角色名称目前是项目中的解释标签，不是 TransformerLens（变压器透镜） 社区或论文中的通用标准术语。
+  - 角色标签不等于可证的数学分类，同一个物理头在不同任务和上下文里可能同时兼具骨架、增强、桥接三种效应。
+  - 真正稳定的对象未必是单个头或单个神经元，也可能是子空间、路径组、残差方向或跨层闭环。
+- 下一步大任务:
+  1. 角色可证化主线:
+     - 给锚点/骨架/增强器/桥接器建立可计算判据，而不是只靠命名和可视化印象。
+  2. 统一粒度主线:
+     - 把“头级对象”和“神经元级对象”放到同一因果贡献框架中比较，而不是混成同一级概念。
+  3. 路径闭环主线:
+     - 以后验证一个概念真正生效时，究竟是锚点先定界、骨架维持、增强器放大、桥接器输出，还是存在完全不同的执行顺序。
+
+## 2026-04-03 18:00
+
+- 本次主题:
+  - 澄清 `attention head（注意力头）` 与 `MLP neuron（多层感知机神经元）` 是否都属于注意力机制。
+  - 对应说明它们与 `Q/K/V（查询/键/值）` 和线性变换的关系。
+- 命令执行记录:
+  - `2026-04-03 18:00` `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+  - `2026-04-03 18:00` `Get-Content 'research/gpt5/docs/AGI_GPT5_MEMO.md' -Tail 20`
+- 理论数学研究进度:
+  - `attention head（注意力头）` 属于注意力子层内部，是注意力机制的一部分。
+  - `MLP neuron（多层感知机神经元）` 不属于注意力机制本身，而属于同一层中的前馈子层。
+  - 标准一层 Transformer（变压器） 可粗分成:
+    - 输入残差流 -> 注意力子层 -> 残差相加
+    - 再进入 MLP（多层感知机） 子层 -> 再残差相加
+  - 因此:
+    - `attention head（注意力头）` 直接对应 `Q/K/V/O（查询/键/值/输出）` 这组线性映射与它们形成的注意力读写过程。
+    - `MLP neuron（多层感知机神经元）` 对应前馈网络中的 `W_in / W_out（输入权重 / 输出权重）` 与中间非线性激活，不对应 `Q/K/V（查询/键/值）`。
+  - 更细一点:
+    - 一个注意力头会把输入向量分别乘上 `W_Q、W_K、W_V` 得到查询、键、值，再根据注意力分数把别处的 `V（值）` 聚合回来，最后经 `W_O（输出矩阵）` 写回残差流。
+    - 一个 MLP 神经元通常对应 `W_in` 的一列或一行所定义的“检测方向”，加上激活函数后的一个标量通道，再通过 `W_out` 把该通道写回模型空间。
+  - 从功能上看:
+    - `Q/K（查询/键）` 决定“看谁”。
+    - `V（值）` 决定“拿什么”。
+    - `O（输出矩阵）` 决定“怎么写回去”。
+    - `MLP neuron（多层感知机神经元）` 决定“当前状态里某种特征是否被触发，以及触发后往哪个方向改写”。
+- 严格审视下的问题与瓶颈:
+  - 把一个头简单等同于 `Q/K/V（查询/键/值）` 也不完全准确，因为头真正完整的计算对象还包含注意力权重、上下文聚合与 `W_O（输出矩阵）`。
+  - 把一个 MLP 神经元理解成“单独的知识单元”也不严谨，因为很多可解释特征是分布在多个神经元或方向上的。
+  - 更本质的对象可能不是单独 `Q/K/V` 或单独神经元，而是“残差方向 + 选择算子 + 写回算子”的统一闭环。
+- 下一步大任务:
+  1. 统一算子主线:
+     - 把注意力头写成“选择-聚合-写回”算子，把 MLP 写成“检测-门控-写回”算子，放进同一形式系统。
+  2. 参数几何主线:
+     - 研究 `W_Q/W_K/W_V/W_O` 与 `W_in/W_out` 是否可被视为同一高阶几何结构的不同投影。
+  3. 路径因果主线:
+     - 以后用路径展开方式验证一次正确预测里，到底是注意力头先决定信息来源，还是 MLP 先决定概念边界，或者二者交替闭环。
+[2026-04-03 21:28] 显卡驱动重装后 GPU 复检
+
+一、本轮执行命令
+- `nvidia-smi`
+- `Get-CimInstance Win32_VideoController | Select-Object Name, DriverVersion, DriverDate | Format-List`
+- `Get-WinEvent -FilterHashtable @{LogName='System'; StartTime=(Get-Date).AddDays(-2)} | Where-Object { $_.ProviderName -match 'nvlddmkm|Display' -or $_.Id -in 14,41,153,1001 } | Select-Object -First 20 TimeCreated, ProviderName, Id, LevelDisplayName, Message | Format-List`
+- `$boot=(Get-CimInstance Win32_OperatingSystem).LastBootUpTime; Write-Output "BOOT=$boot"; Get-WinEvent -FilterHashtable @{LogName='System'; StartTime=$boot} | Where-Object { $_.ProviderName -eq 'nvlddmkm' -or $_.Id -in 41,1001 } | Select-Object TimeCreated, ProviderName, Id, LevelDisplayName, Message | Format-List`
+- `python` 内联 `PyTorch` CUDA 冒烟测试：矩阵乘、`softmax`、`torch.cuda.is_available()`
+- `Get-Content tests/codex/stage482_apple_switch_direction_tracking.py -Encoding UTF8 | Select-Object -Last 120`
+- `Get-Content tests/codex/stage484_apple_switch_signed_residual_basis.py -Encoding UTF8 | Select-Object -Last 120`
+- `python tests/codex/stage484_apple_switch_signed_residual_basis.py --output-dir tests/codex_temp/stage484_apple_switch_signed_residual_basis_20260403_gpu_retest`
+- `python tests/codex/stage485_cpu_gpu_consistency_compare.py --gpu-summary tests/codex_temp/stage484_apple_switch_signed_residual_basis_20260403_gpu_retest/summary.json --output-dir tests/codex_temp/stage485_cpu_gpu_consistency_compare_20260403_retest`
+- `Get-Content tests/codex_temp/stage484_apple_switch_signed_residual_basis_20260403_gpu_retest/summary.json -Encoding UTF8 | Select-Object -First 120`
+- `Get-Content tests/codex_temp/stage485_cpu_gpu_consistency_compare_20260403_retest/summary.json -Encoding UTF8 | Select-Object -First 120`
+- `Get-Content tests/codex_temp/stage485_cpu_gpu_consistency_compare_20260403_retest/REPORT.md -Encoding UTF8 | Select-Object -First 80`
+
+二、当前驱动与系统状态
+- 当前显卡仍为 `NVIDIA GeForce RTX 4090 D`
+- 当前驱动版本：`595.79`
+- `CUDA Version`：`13.2`
+- `torch` 检测结果：
+  - `torch_version = 2.6.0+cu124`
+  - `cuda_available = true`
+  - `device_count = 1`
+- 开机时间：`2026-04-03 21:06`
+
+三、驱动重装后的直接观察
+- 当前开机后到本轮测试结束，没有新增 `nvlddmkm`、`Kernel-Power 41`、`WER 1001` 级别系统错误
+- 说明至少在“驱动刚重装后的当前会话”里，系统级崩溃问题没有立即复现
+- `PyTorch` CUDA 冒烟测试正常：
+  - 2048x2048 `matmul` 正常完成
+  - `softmax` 正常完成
+  - 无非法显存访问、无进程中断
+
+四、研究路径复检结果
+- 代表性研究脚本 `stage484_apple_switch_signed_residual_basis.py` 已在 GPU 路径完整跑通
+- 输出目录：
+  - `tests/codex_temp/stage484_apple_switch_signed_residual_basis_20260403_gpu_retest`
+- 运行成功，`used_cuda = true`
+- 总耗时约 `24.38` 秒
+- 说明当前 GPU 不只是“能做基础算子”，而是已经能跑一轮真实研究任务
+
+五、与 CPU 基准的一致性复检
+- 对照输出目录：
+  - `tests/codex_temp/stage485_cpu_gpu_consistency_compare_20260403_retest`
+- 本轮重新得到的关键聚合指标：
+  - `max_late_mean_abs_diff = 0.007875`
+  - `max_forward_peak_abs_diff = 0.007878`
+  - `max_reverse_peak_abs_diff = 0.006976`
+  - `peak_layer_match_rate = 0.3750`
+
+六、本轮结论
+- 驱动重装后，当前 GPU 已恢复到“可以进行研究测试”的状态
+- 但 `CPU/GPU` 仍然不是完全等价：
+  - 大趋势基本可复用
+  - 小信号和峰值层位仍然会漂移
+- 因此当前最稳妥的使用原则仍然是：
+  - `CPU` 用于基准结论
+  - `GPU` 用于提速和复验
+  - 关键结论最好保留 `CPU/GPU` 双路径对照
+
+七、理论与方法上的新增认识
+- 本轮最重要的新信息不是新的语言拼图，而是“工程环境对机制研究可信度的影响边界”更清楚了
+- 现在可以把实验分成两类：
+  1. 趋势级实验：可优先在 GPU 上快速推进
+  2. 峰值层位、局部最强单元、细粒度方向耦合实验：必须保留 CPU 复核
+- 这意味着后续第一性原理理论的建立，不仅是数学问题，也是实验协议治理问题
+[2026-04-03 21:40] 四条主线正式协议化：多义词统一、桥接回路、残差动力学、CPU/GPU 治理
+
+一、本轮执行命令
+- `rg --files tests/codex research/gpt5/docs | rg "stage44[0-9]|stage48[0-9]|AGI_GPT5_LANGUAGE|AGI_GPT5_MEMO|bridge|polysemy|residual|cpu_gpu|protocol"`
+- `Get-Content tests/codex/stage447_polysemy_family_switch_protocol.py -Encoding UTF8 | Select-Object -First 220`
+- `Get-Content tests/codex/stage441_unified_language_state_equation.py -Encoding UTF8 | Select-Object -First 240`
+- `Get-Content tests/codex/stage485_cpu_gpu_consistency_compare.py -Encoding UTF8 | Select-Object -First 220`
+- 读取既有结果：
+  - `tests/codex_temp/stage447_polysemy_family_switch_protocol_20260403/qwen3/summary.json`
+  - `tests/codex_temp/stage447_polysemy_family_switch_protocol_20260403/deepseek7b_cpu/summary.json`
+  - `tests/codex_temp/stage443_binding_family_split_probe_20260402/summary.json`
+  - `tests/codex_temp/stage442_binding_mixed_subcircuit_search_20260402/summary.json`
+  - `tests/codex_temp/stage480_apple_switch_exact_core_scan_20260403/summary.json`
+  - `tests/codex_temp/stage481_apple_switch_pair_order_analysis_20260403/summary.json`
+  - `tests/codex_temp/stage439_binding_bridge_causal_ablation_20260402/summary.json`
+  - `tests/codex_temp/stage440_attribute_graph_generalization_20260402/summary.json`
+  - `tests/codex_temp/stage433_polysemous_noun_family_generalization_20260402/summary.json`
+  - `tests/codex_temp/stage448_apple_switch_layer_scan_and_neuron_counts_20260403/qwen3_cpu/summary.json`
+  - `tests/codex_temp/stage448_apple_switch_layer_scan_and_neuron_counts_20260403/deepseek7b_cpu/summary.json`
+  - `tests/codex_temp/stage479_apple_switch_mixed_circuit_search_20260403/summary.json`
+  - `tests/codex_temp/stage482_apple_switch_direction_tracking_20260403/summary.json`
+  - `tests/codex_temp/stage483_apple_switch_residual_basis_20260403/summary.json`
+  - `tests/codex_temp/stage484_apple_switch_signed_residual_basis_20260403/summary.json`
+  - `tests/codex_temp/stage484_apple_switch_signed_residual_basis_20260403_gpu_retest/summary.json`
+- 新增脚本：
+  - `tests/codex/stage487_polysemy_unified_switch_protocol.py`
+  - `tests/codex/stage488_bridge_minimal_causal_circuit_protocol.py`
+  - `tests/codex/stage489_unified_residual_dynamics_protocol.py`
+  - `tests/codex/stage490_cpu_gpu_dual_path_formal_protocol.py`
+- 执行脚本：
+  - `python tests/codex/stage487_polysemy_unified_switch_protocol.py`
+  - `python tests/codex/stage488_bridge_minimal_causal_circuit_protocol.py`
+  - `python tests/codex/stage489_unified_residual_dynamics_protocol.py`
+  - `python tests/codex/stage490_cpu_gpu_dual_path_formal_protocol.py`
+- 中途修复：
+  - `apply_patch` 修正 `stage487_polysemy_unified_switch_protocol.py` 中对 `stage448` 结果行的读取口径
+
+二、本轮新增正式协议与结果目录
+- 多义词统一协议：
+  - 脚本：`tests/codex/stage487_polysemy_unified_switch_protocol.py`
+  - 输出：`tests/codex_temp/stage487_polysemy_unified_switch_protocol_20260403`
+- 桥接最小因果回路协议：
+  - 脚本：`tests/codex/stage488_bridge_minimal_causal_circuit_protocol.py`
+  - 输出：`tests/codex_temp/stage488_bridge_minimal_causal_circuit_protocol_20260403`
+- 统一残差动力学协议：
+  - 脚本：`tests/codex/stage489_unified_residual_dynamics_protocol.py`
+  - 输出：`tests/codex_temp/stage489_unified_residual_dynamics_protocol_20260403`
+- CPU/GPU 双路径正式协议：
+  - 脚本：`tests/codex/stage490_cpu_gpu_dual_path_formal_protocol.py`
+  - 输出：`tests/codex_temp/stage490_cpu_gpu_dual_path_formal_protocol_20260403`
+
+三、本轮最关键的理论推进
+1. 多义词统一协议正式成型
+- `Qwen3`：
+  - 平均多义切换 `active_jaccard = 0.0892`
+  - 平均普通上下文 `active_jaccard = 0.2959`
+  - 平均差距 `gap = 0.2067`
+- `DeepSeek7B`：
+  - 平均多义切换 `active_jaccard = 0.1202`
+  - 平均普通上下文 `active_jaccard = 0.2846`
+  - 平均差距 `gap = 0.1644`
+- 两模型共同强支持的多义词：`amazon / apple / python`
+- 当前更稳的说法：多义词不是普通上下文扰动放大版，而是共享底座上的低重合切换结构
+
+2. 苹果切换深挖被压进统一协议
+- `Qwen3`：
+  - 最敏感层 `L5`
+  - 最优混合子集：`H:5:2, H:5:29, H:5:9`
+  - 精确核心排序：`H:5:2 > H:5:29 > H:5:8 > H:5:9 > H:5:0`
+  - 最优顺序：`H:5:2 -> H:5:29 -> H:5:9`
+- `DeepSeek7B`：
+  - 最敏感层 `L2`
+  - 最优混合子集：`N:2:16785, H:2:2, H:2:22, H:2:10, H:2:26, H:2:5`
+  - 精确核心排序：`N:2:16785 > H:2:22 > H:2:26 > H:2:10 > H:2:5 > H:2:2`
+  - 最优顺序：`N:2:16785 -> H:2:22 -> H:2:10`
+- 这使“共享底座 + 切换”从泛现象推进成了拓扑分型：
+  - `Qwen3`：头骨架写入型
+  - `DeepSeek7B`：神经元锚点增强型
+
+3. 桥接项正式分层
+- 结构定律极强：
+  - `structural_law_support_rate = 1.0`
+  - `mean_union_coverage = 0.7428`
+  - `mean_bridge_only_ratio = 0.2572`
+- 纯桥接因果仍弱：
+  - `pure_bridge_causal_support_rate = 0.0`
+- 家族分化首次被正式压实：
+  - `color`：当前仍受 CUDA 噪声干扰，分家族探针失败
+  - `taste`：只有弱单头 `H:25:8`，`utility = 0.0093`
+  - `size`：首次出现明确混合回路
+    - `final_subset_ids = H:25:12, N:26:17120, H:23:11, H:23:3, H:27:19`
+    - `binding_drop = 0.0643`
+    - `heldout_binding_drop = 0.0521`
+- 当前最稳结论：桥接不是统一稀疏点集合，而是“结构规律强、因果稀疏度家族差异大”的机制层
+
+4. 统一残差动力学被更新
+- 保留基础方程：
+  - `h_{t}^{l+1} = h_{t}^{l} + R_l(x_{<=t}) + B_l(lemma_t) + S_l(lemma_t, context_t) + A_l(attr_t, context_t) + G_l(B_l, A_l, route_t) + O_l(h_t^l)`
+- 新增抽象实现层：
+  - `S_l` 不再被默认视为单一结构，而允许两类控制杆
+  - `Qwen3`：`head skeleton write then late readout`
+  - `DeepSeek7B`：`anchor neuron pin then head boost`
+- 当前统一语言编码理论开始进入“同一抽象方程，不同模型不同拓扑实现”的阶段
+
+5. CPU/GPU 双路径治理正式化
+- 阈值被正式写入协议：
+  - `trend_max_late_mean_abs_diff = 0.01`
+  - `magnitude_max_peak_abs_diff = 0.01`
+  - `peak_layer_match_rate = 0.75`
+- 当前结果：
+  - `cpu_vs_gpu_original`：不应单独信任 GPU
+  - `cpu_vs_gpu_retest`：可用于趋势验证，但峰值层位必须 CPU 复核
+  - `gpu_original_vs_gpu_retest`：仍未达到完全稳定可替代状态
+- 这意味着工程治理已经成为理论研究的一部分，不再是附带问题
+
+四、本轮之后的当前研究共识
+- 多义词主线已经不再只是苹果个案，而是有了跨四词、跨双模型的统一协议
+- 桥接项仍然是最薄弱拼图，但已经从“模糊相关结构”推进到“家族分化的最小因果回路问题”
+- 残差动力学统一开始具备抽象拓扑层，而不是只停在现象堆叠
+- CPU/GPU 差异被正式治理化后，后续实验的可信度边界更清楚了
+
+五、最严格的硬伤与边界
+- `java` 在 `Qwen3` 上的 `gap` 只有 `0.0906`，说明多义词统一协议已经成型，但还没到“所有多义词都同等强支持”的程度
+- 桥接项 `G_l` 仍没有跨模型、跨家族都很硬的最小因果闭环
+- `color` 家族仍然夹杂工程噪声，不能拿来做最终理论支柱
+- `GPU` 经过重装驱动后已恢复可跑，但正式协议仍表明它不能替代 CPU 成为峰值层位与小信号结论的唯一基准
+
+六、下一阶段的大任务
+- 把 `java` 和更广泛多义词家族继续压入统一协议，建立“切换稀疏度分型理论”
+- 针对 `size` 家族继续做最小回路压缩，验证 `H:25:12 + N:26:17120 + H:23:11 + H:23:3 + H:27:19` 是否还能进一步缩小
+- 针对 `color` 家族优先做工程降噪，再做因果搜索，避免把驱动噪声误当理论边界
+- 将 `Qwen3` 的头骨架实现与 `DeepSeek7B` 的锚点增强实现继续压缩为更抽象的“切换控制杆”统一变量
+
+[2026-04-03 22:20] stage491 苹->果 路线机制研究进展
+- 命令记录:
+  - python tests/codex/stage491_ping_guo_route_mechanism.py --prefer-cuda
+  - 额外做了本地分词与上下文探针，确认 苹、果、苹果 都各自可作为单一词元，但 苹果 在默认语料分布里通常直接作为单词元出现，因此“苹->果”不是“苹果”默认主词元路径，而是“前缀已经被切到单字苹后，模型是否继续补出果”的条件性补全路径。
+- 关键实验结果:
+  - 新脚本: 	ests/codex/stage491_ping_guo_route_mechanism.py
+  - 结果目录: 	ests/codex_temp/stage491_ping_guo_route_mechanism_20260403/
+  - 两个模型都成功在 GPU 上跑通。
+  - 裸 苹 的下一词元 果 概率极低:
+    - Qwen3: 概率约 6.79e-06，排名 28863
+    - DeepSeek7B: 概率约 1.59e-06，排名 51673
+  - 说明不能把裸 苹 当成稳定机制入口，必须使用已经把模型推到水果补全状态的上下文。
+  - Qwen3 最强上下文:
+    - 新鲜的苹 -> 果 概率约  .2424
+    - 我今天吃了苹 -> 果 概率约  .1624
+    - 这是一个苹 -> 果 概率约  .0882
+  - DeepSeek7B 最强上下文:
+    - 她想画一个苹 -> 果 概率约  .0993
+    - 苹果的苹可以写成苹 -> 果 概率约  .0256
+    - 新鲜的苹 -> 果 概率约  .0162
+- 理论/机制拼图更新:
+  - Qwen3 的 苹->果 路线更像“晚层 MLP 神经元写入路径”。主要抬升 果 概率的层集中在 L35 / L29 / L33 / L28，最强单神经元是 N:29:5671，单独消融可让平均目标概率下降约  .0526。贪心混合子集最终全部由神经元构成: N:29:5671, N:25:3011, N:27:823, N:32:8787, N:35:1002, N:34:8571，总下降约  .1129，相对基线约打掉 68.7%。说明这条路线的主干更像“晚层写词元”。
+  - DeepSeek7B 的 苹->果 路线更像“晚中层注意力头先搬运，后接神经元补强”。主要抬升层在 L26 / L25 / L24 / L23，最强单头是 H:23:0，单独消融可让平均目标概率下降约  .0425，几乎接近全部基线。最终混合子集是 H:23:0, N:27:1766, H:23:5, N:27:3564, N:27:7619, N:27:13867，总下降约  .0454，相对基线约打掉 96.5%。说明这条路线比 Qwen3 更稀疏，也更像“头先开路，神经元后落点”。
+  - 新拼图: 同样是中文双字词补全，Qwen3 与 DeepSeek7B 也延续了此前苹果多义切换里观察到的“不同拓扑实现同一功能”的趋势。Qwen3 偏晚层写入，DeepSeek7B 偏注意力路由 + 晚层神经元锁定。
+- 严格审视:
+  - 这次研究回答的是“在前缀已经被切成单字 苹 且 果 成为高概率候选时，模型内部怎样把概率推上去”，不是“苹果整个词在默认分词里的唯一内部表示”。
+  - 路线是条件性的，不应误解为所有出现 苹果 的场景都要走 苹->果。
+  - 目前因果验证主要针对目标概率下降，还没加入更强的对照目标词惩罚项，因此更像“命中路线”证据，不是“完全最小充分回路”证明。
+  - 但 DeepSeek7B 上 H:23:0 的单头打击已经非常强，说明这里确实存在一条比较尖锐的高概率路线。
+- 下一阶段大任务:
+  - 把 苹->果 扩展到更多双字中文词，如 香->蕉、电->脑、手->机，检验这是不是一般的中文词补全机制。
+  - 给 苹->果 路线加入控制目标词，例如 菜、子、园，把“目标下降”推进成“特异性下降”。
+  - 继续把这条中文补全路线与前面的多义切换、属性绑定统一到同一残差动力学框架中，区分“词元拼接路线”和“语义切换路线”的关系。
+
+[2026-04-03 22:41] stage492 中文模式路线图谱研究进展
+- 命令记录:
+  - python tests/codex/stage492_chinese_pattern_route_atlas.py --prefer-cuda
+  - 首次运行时，DeepSeek7B 因 lm_head 仍处于 meta 设备导致目标方向无法抽取，随后修改 	ests/codex/stage492_chinese_pattern_route_atlas.py，加入自动回退到 CPU 的逻辑和 meta 检查，再次运行成功。
+- 新增脚本与结果:
+  - 脚本: 	ests/codex/stage492_chinese_pattern_route_atlas.py
+  - 结果目录: 	ests/codex_temp/stage492_chinese_pattern_route_atlas_20260403/
+  - 模式覆盖: 苹果(苹->果)、葡萄(葡->萄)、蝴蝶(蝴->蝶)、电脑(电->脑)、语言(语->言)、数据(数->据)、如果(如->果)、虽然(虽->然)
+  - 家族覆盖: concrete_noun、device_noun、bstract_noun、connective
+- 关键结果:
+  - Qwen3 的 8 个模式全部被判为 
+euron_dominant，说明在当前中文双字补全协议下，Qwen3 更像“由晚层 MLP 神经元写入目标后字”。
+  - DeepSeek7B 的 8 个模式分裂为三类:
+    - head_dominant: 2 个
+    - mixed: 3 个
+    - 
+euron_dominant: 3 个
+    说明它的中文模式编码更异质，更容易出现“注意力头先开路、神经元后补强”的混合拓扑。
+  - Qwen3 的具体模式:
+    - 苹果: 基线约  .2024，峰值层 L29，最强神经元 N:29:5671，混合子集下降约  .1277
+    - 葡萄: 基线约  .0189，峰值层 L28
+    - 蝴蝶: 基线约  .1435，峰值层 L35，混合子集下降约  .1061
+    - 虽然: 基线约  .0198，峰值层 L27，说明连接词补全在 Qwen3 上也仍偏神经元写入
+  - DeepSeek7B 的具体模式:
+    - 苹果: head_dominant，峰值层 L26，最强头 H:24:21 单独下降约  .0174
+    - 葡萄: mixed，峰值层 L23，最强头和最强神经元几乎同强，混合子集下降约  .0342
+    - 蝴蝶: mixed，峰值层 L26
+    - 电脑: 
+euron_dominant，峰值层 L27
+    - 语言: head_dominant，峰值层 L26
+    - 虽然: mixed，峰值层 L25
+- 理论/机制拼图更新:
+  - 中文双字补全模式不是统一一条路线，而是“同一任务族，不同模型、不同家族有不同拓扑”。
+  - Qwen3 当前更接近“晚层神经元写入主导”的统一风格，说明它在汉字后续补全上更像把信息在后层压成目标字写出。
+  - DeepSeek7B 则明显更接近“注意力头搬运 + 神经元落点”的混合生态，说明它在中文补全上没有单一拓扑，而是按词类/模式分化。
+  - 新拼图: concrete_noun 在两个模型中都更容易形成可打中的强路线；bstract_noun 和一部分 connective 基线更低，说明这里要么任务模板还不够准，要么本来就更分布式。
+- 严格审视:
+  - 当前协议仍然主要测“二字词后字补全”，不等于完整语言机制。
+  - bstract_noun 与部分 connective 的基线概率很低，导致因果下降值小，不能过度解释为“没有机制”。
+  - Qwen3 全部表现成 
+euron_dominant，这可能是真的统一风格，也可能说明当前候选池更偏向抓神经元而不是更深的头间协同。
+  - DeepSeek7B 的异质性很有价值，但还需要更强的控制目标词和跨模板验证，确认不是模板偶然性。
+- 下一阶段大任务:
+  - 把中文模式路线分成 高基线强路线、低基线弱路线 两组，分别优化模板，避免弱模板把理论拖偏。
+  - 在现有 8 模式基础上继续扩展到更多家族，如人称代词、时间词、方位词、成对连接词，建立中文语言模式路线总图谱。
+  - 把这条“词元补全路线图谱”与之前的多义词切换、属性绑定、代词路由三条线统一起来，寻找跨任务反复出现的控制变量，例如“头负责路由、神经元负责写入、残差负责传播”是否是更高层共性。
+
+[2026-04-03 22:54] 概念澄清：attention head / MLP neuron / residual stream 对应关系
+- 本轮未新增实验脚本，重点澄清 Transformer 内部结构映射。
+- 结论摘要:
+  - ttention head（注意力头） 属于 self-attention（自注意力） 模块内部，是“看哪里、搬什么”的局部路由单元。
+  - MLP neuron（多层感知机神经元） 不属于注意力本体，而属于每层后半段的前馈网络，是“拿到当前状态后做局部特征写入/放大”的单元。
+  - esidual stream（残差流） 是整层共享的主通道，不是某个单独模块，而是注意力输出和 MLP 输出都要写回去的公共工作记忆。
+- 理论说明更新:
+  - 后续文档与解释中，应把“注意力负责路由、MLP 负责写入、残差流负责传播”作为更高层抽象，而不是把三者都误认为注意力机制本体。
+- 下一阶段沟通要求:
+  - 后续在解释机制时，优先给出结构图式：esidual -> attention -> residual -> MLP -> residual，减少抽象术语造成的理解障碍。
+
+
+[2026-04-04 00:04] stage493-495?????????????????????????????????????
+- ????????:
+  - /tests/codex/stage493_chinese_language_master_atlas.py
+  - /tests/codex/stage494_pattern_specific_control_protocol.py
+  - /tests/codex/stage495_unified_language_control_variable_protocol.py
+- ??????:
+  - python tests/codex/stage493_chinese_language_master_atlas.py --prefer-cuda
+  - python tests/codex/stage494_pattern_specific_control_protocol.py --prefer-cuda
+  - python tests/codex/stage495_unified_language_control_variable_protocol.py
+  - ?? /research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+- stage493 ???????????:
+  - ? stage492 ? 8 ?????? 19 ?????? concrete_noun???????pronoun?????locative??????time??????quantity??????connective??????fixed_phrase???????
+  - Qwen3 ??????:
+    - neuron_dominant???????: 16
+    - distributed_weak????????: 2
+    - mixed????: 1
+  - DeepSeek7B ??????:
+    - head_dominant????????: 4
+    - mixed????: 7
+    - neuron_dominant???????: 7
+    - distributed_weak????????: 1
+  - ????:
+    - Qwen3 ? concrete_noun????????????? 0.1216?????? 0.0812?????????????
+    - DeepSeek7B ? time???????????? 0.0571?????? 0.0549???????????????????????
+  - ???:
+    - ???????????????????????????????
+    - Qwen3 ????????????????????
+    - DeepSeek7B ??????? + ????????????
+- stage494 ???????:
+  - ???????????????????????????????????????????????
+  - Qwen3 ????:
+    - strong_pattern_count??????: 7
+    - supported_count??????????: 7
+    - support_rate?????: 1.0
+    - mean_target_drop????????: 0.0473
+    - mean_control_abs_shift????????: 0.00142
+  - DeepSeek7B ????:
+    - strong_pattern_count??????: 7
+    - supported_count??????????: 7
+    - support_rate?????: 1.0
+    - mean_target_drop????????: 0.0406
+    - mean_control_abs_shift????????: 0.00025
+  - ????:
+    - ??????????????????????????????????????
+- stage495 ?????????????:
+  - ????:
+    - ??????
+    - ?????
+    - ????
+    - ????
+  - ??????????:
+    - h_{t}^{l+1} = h_{t}^{l} + C_l(form_t, context_t) + R_l(ref_t, context_t) + B_l(lemma_t) + S_l(lemma_t, context_t) + A_l(attr_t, context_t) + G_l(B_l, A_l, C_l, R_l) + O_l(h_t^l)
+  - ?????:
+    - C_l???/???????????????????????? form continuation??????????
+  - ??????????????:
+    - route_heads?????
+    - write_neurons???????
+    - mixed_binding_circuits????????
+    - late_readout_amplifiers?????????
+  - ???????:
+    - Qwen3?head_skeleton_write_then_late_readout???????????????
+    - DeepSeek7B?anchor_neuron_pin_then_head_boost?????????????????
+  - ?????:
+    - ???????????????????????
+    - ??????????????????????????????????
+- ??????:
+  - ??? /research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+  - ???????:
+    - ????
+    - ????
+    - ????
+    - ? C_l ???????
+    - ????
+    - ??????
+    - ????????
+    - ???????
+- ????:
+  - ??????? 19 ????? pronoun?????locative??????connective????????????????????????????????
+  - G_l?????????????????????????????????
+  - Qwen3 ?????????? neuron_dominant????????????????????????????/????????????????????
+  - CPU/GPU??????/?????????????????????????????? CPU ?????? GPU ???????????
+- ???????:
+  - ?????????????????????????????????????????????????????????
+  - ?????????????????????? + ????????????
+  - ?? stage495 ??????????????????????????????????????
+
+
+[2026-04-04 06:48] stage499 deepseek ?? + stage500 ????????????? + ??????
+- ????????:
+  - /tests/codex/stage500_cross_task_language_core_synthesis.py
+- ??????:
+  - python tests/codex/stage499_cross_token_routing.py deepseek
+  - python tests/codex/stage500_cross_task_language_core_synthesis.py
+  - ?? /research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+- stage499 deepseek ????:
+  - ??? /tests/codex_temp/stage499_cross_token_routing_20260404/summary_deepseek.json
+  - 5 ?? token???????:
+    - route_heads_dominant_count?????????: 0
+    - write_neurons_dominant_count???????????: 0
+    - mixed_count???????: 5
+    - avg_attn_to_mlp_ratio????/MLP ????: 1.0
+  - ????:
+    - DeepSeek7B ? Qwen3 ??????????????????????????????????
+    - ?????????????????? attention head?????? + MLP neuron?????????? ????????
+- stage500 ??????:
+  - ????:
+    - /tests/codex_temp/stage500_cross_task_language_core_synthesis_20260404/summary.json
+    - /tests/codex_temp/stage500_cross_task_language_core_synthesis_20260404/REPORT.md
+  - ????:
+    - ????????????????? + ???? + ???? + ?????????
+  - Qwen3:
+    - ?????????: 0.5
+    - ?????: write_neurons_dominant?????????, late_readout_amplifiers?????????
+    - ??: route_heads_dominant???????, mixed_binding_circuits????????
+    - faithful_propagation_count???????: 5
+    - rewritten_propagation_count???????: 0
+    - avg_cosine_preservation????????? 0.8639
+    - hierarchy avg_monotonicity_rate?????????? 0.0667
+    - cross-token mixed_count??????????: 5/5
+  - DeepSeek7B:
+    - ?????????: 0.75
+    - ?????: write_neurons_dominant, mixed_binding_circuits, late_readout_amplifiers
+    - ??: route_heads_dominant
+    - faithful_propagation_count: 5
+    - rewritten_propagation_count: 0
+    - avg_cosine_preservation ? 0.8711
+    - hierarchy avg_monotonicity_rate ? 0.1667
+    - cross-token mixed_count: 5/5
+- ??/????:
+  - route_heads????? ??????????????????????????????????????????????
+  - residual stream????? ???????????????????????????
+  - ??????????????????????????????????????
+  - ????????????????????????????????????????????????????????
+- ????:
+  - ?? stage496-stage500 ??????? /research/gpt5/docs/AGI_GPT5_LANGUAGE.md
+  - ??/?????:
+    - 3.7 ???????????????????????
+    - 5.7 ??????????????????
+    - 6.5 ?????????????
+    - 6.6 ?????????????
+    - 7.6 route_heads ?????????
+    - 8.4 ??????????
+- ????:
+  - stage499 ??????????????????????????????? route_heads??????
+  - stage498 ????????????????????????????????
+  - stage500 ?????????????????????????????????????????
+- ???????:
+  - ??????????????????????? route_heads ????????
+  - ???????????????????????????? aggregate???????
+  - ?????????????????????????????????????
+
+
+## [2026-04-04 08:54] ?????? GLM4???? stage501-stage503 ???????
+
+### ????
+1. ??? `Qwen3???????`?`DeepSeek7B?????????????` ???????????? `GLM4????????`?
+2. ?????????
+   - ???????????
+   - ??????????
+   - ??????????
+3. ????????? `AGI_GPT5_LANGUAGE.md`???????? `GLM4` ???
+
+### ??????
+```powershell
+python tests/codex/stage501_long_distance_cross_token_routing_triple_model.py
+python tests/codex/stage502_residual_fine_grained_propagation_triple_model.py
+python tests/codex/stage503_concept_hierarchy_causal_path_triple_model.py
+```
+
+### ?????????
+1. ????? `GLM4` ???????
+   `D:\develop\model\hub\models--zai-org--GLM-4-9B-Chat-HF\snapshots\8599336fc6c125203efb2360bfaf4c80eef1d1bf`
+2. ??? `GLM4` ?? `transformers??????` ?????????`self_attn????????`?`mlp??????` ??????
+3. ? `GPU` ??????????????? `CUDA error: unknown error?CUDA ?????`???????????? `CPU???????` ????????????????????
+4. ??????????
+   - `tests/codex/multimodel_language_shared.py`
+   - `tests/codex/stage501_long_distance_cross_token_routing_triple_model.py`
+   - `tests/codex/stage502_residual_fine_grained_propagation_triple_model.py`
+   - `tests/codex/stage503_concept_hierarchy_causal_path_triple_model.py`
+5. ???????
+   - `tests/codex/qwen3_language_shared.py`
+   - ???? `GLM4` ???????? `MLP` ?????
+
+### stage501 ????????????????
+?????
+`tests/codex_temp/stage501_long_distance_cross_token_routing_triple_model_20260404/`
+
+?????
+- `Qwen3`?
+  - `route_heads_dominant_count = 0`
+  - `write_neurons_dominant_count = 5`
+  - `mixed_count = 0`
+  - `avg_attn_to_mlp_ratio ? 0.0684`
+- `DeepSeek7B`?
+  - `route_heads_dominant_count = 5`
+  - `write_neurons_dominant_count = 0`
+  - `mixed_count = 0`
+  - `avg_attn_to_mlp_ratio ? 3.4747`
+- `GLM4`?
+  - `route_heads_dominant_count = 0`
+  - `write_neurons_dominant_count = 5`
+  - `mixed_count = 0`
+  - `avg_attn_to_mlp_ratio ? -0.0188`
+
+?????
+1. `DeepSeek7B` ???????????????????? `route_heads?????` ????
+2. `Qwen3` ? `GLM4` ????????? `write_neurons???????` ???
+3. ????????????????????????????????????????????????
+
+### stage502 ????????????????
+?????
+`tests/codex_temp/stage502_residual_fine_grained_propagation_triple_model_20260404/`
+
+?????
+- `Qwen3`?
+  - `mean_faithful_segment_ratio = 0.0`
+  - `mean_adjacent_cosine ? 0.244626`
+  - `mean_abs_final_cosine ? 0.417932`
+- `DeepSeek7B`?
+  - `mean_faithful_segment_ratio = 0.0`
+  - `mean_adjacent_cosine ? 0.265905`
+  - `mean_abs_final_cosine ? 0.348162`
+- `GLM4`?
+  - `mean_faithful_segment_ratio = 0.0`
+  - `mean_adjacent_cosine ? 0.252496`
+  - `mean_abs_final_cosine ? 0.408824`
+
+?????
+1. ??????????????????????????????????????
+2. ?????????????????????????????????
+3. ????????????????????????????
+   - ?????????
+   - ???????????????
+
+### stage503 ????????????????
+?????
+`tests/codex_temp/stage503_concept_hierarchy_causal_path_triple_model_20260404/`
+
+?????
+- `Qwen3`?
+  - `specific_support_count = 10`
+  - `best_component_counts = {'attn': 0, 'mlp': 6}`
+  - `mean_best_target_drop ? 8.92163`
+- `DeepSeek7B`?
+  - `specific_support_count = 7`
+  - `best_component_counts = {'attn': 4, 'mlp': 2}`
+  - `mean_best_target_drop ? 8.248924`
+- `GLM4`?
+  - `specific_support_count = 13`
+  - `best_component_counts = {'attn': 0, 'mlp': 6}`
+  - `mean_best_target_drop ? 8.697656`
+
+?????
+1. ???????????????????????????????
+2. `GLM4` ????????????????????????????????
+3. `DeepSeek7B` ?????? `attention head` ???? `Qwen3` ? `GLM4` ??? `MLP` ???
+
+### ?????????
+???????????????????????????
+1. ?????????????????????????????????????
+2. ?????????
+   - `DeepSeek7B` ?????????????? `route_heads` ?????
+   - `Qwen3` ? `GLM4` ??????????????
+   - ???????????????????? `attn/mlp` ?????
+3. ??????????????
+   - ??
+   - ??
+   - ??
+   - ??
+   - ??
+   ?????????????????????
+
+### ????
+1. ??? `research/gpt5/docs/AGI_GPT5_LANGUAGE.md`?????????
+2. ????????
+   - ????
+   - ??
+   - ????
+   - ??????
+   - ????????????????????????????????????????????
+   - ??????
+   - ??????????
+3. ??????? `GLM4` ???????????? `Qwen3` ? `DeepSeek7B`?
+
+### ????????
+1. ??????????????? `CPU` ??????????? `GPU` ???????????
+2. `stage502` ???????????????????????????????????????????
+3. `stage503` ????????????????????????????????
+4. `GLM4` ??????????????????????????????????????????????????????
+
+### ???????
+1. ? `GLM4` ????????????????????????????????????????
+2. ?????????????????????????????????? `route_heads`?
+3. ??????????????????????????????????????????
+4. ??? `CPU/GPU` ????????????????????????
+
+
+## [2026-04-04 09:10] ? Gemma4:e2b ????????????????
+
+### ????
+1. ??? `Qwen3???????`?`DeepSeek7B?????????????`?`GLM4????????` ????????? `Gemma4:e2b`?
+2. ????????????????????????? `Gemma4` ???????????
+3. ? `Gemma4` ??????????????????????????????
+
+### ????????
+```powershell
+ollama list
+Get-Content D:\work\.ollama\models\manifestsegistry.ollama.ai\library\gemma4\e2b -Raw
+python tests/codex/stage504_quad_model_external_control_suite.py
+python tests/codex/stage505_gemma_alignment_synthesis.py
+```
+
+### ?????Gemma4 ???????
+1. `gemma4:e2b` ???????? `Ollama????????`?
+   - `ollama list` ???`gemma4:e2b`
+2. `Gemma4` ????? `GGUF??????????`??????? `HF??????` ???????????????
+3. ?????
+   - ?????????????
+   - ?????????? `Qwen3 / DeepSeek7B / GLM4` ???????????????????
+4. ???????????????????
+
+### ????
+1. `tests/codex/stage504_quad_model_external_control_suite.py`
+   - ??????????????
+   - ?????
+     - `qwen3:4b`
+     - `deepseek-r1:7b`
+     - `GLM4?HF ???`
+     - `gemma4:e2b`
+2. `tests/codex/stage505_gemma_alignment_synthesis.py`
+   - ? `Gemma4` ???????????????????
+
+### stage504 ???Gemma4 ?????????????
+?????
+`tests/codex_temp/stage504_quad_model_external_control_suite_20260404/`
+
+?????
+1. ???
+2. ??????
+3. ???????
+4. ????
+5. ????
+
+?????
+- `qwen3 = 1.0`
+- `deepseek7b = 0.8`
+- `gemma4 = 0.8`
+- `glm4 = 0.7`
+
+??????
+1. `Qwen3`
+   - ????????
+2. `DeepSeek7B`
+   - ???????????????
+   - ??? -> ?????????????
+3. `GLM4`
+   - ?????????????????
+   - ????????
+   - ?????????????????
+4. `Gemma4`
+   - ????????????????????
+   - ??????????
+   - ??????
+     - `? -> ?`
+     - `? -> ?`
+
+?????
+1. `Gemma4` ???????????????????????????????????
+2. `Gemma4` ?????????????????????????????
+3. ??????????????????????????????????????????
+
+### stage505 ???Gemma4 ???????
+?????
+`tests/codex_temp/stage505_gemma_alignment_synthesis_20260404/`
+
+?????
+- `Gemma4` ?????`[1.0, 0.3333, 1.0, 1.0, 1.0]`
+- ?????????
+  - ? `Qwen3`: `0.6667`
+  - ? `DeepSeek7B`: `0.6010`
+  - ? `GLM4`: `1.0`
+- ????`DeepSeek7B`
+
+??????
+1. `Gemma4` ????????? `DeepSeek7B`???? `Qwen3` ? `GLM4`?
+2. ????????????????
+3. ??????? `GGUF + Ollama` ???????????????????????????
+
+### ??????
+????
+`research/gpt5/docs/AGI_GPT5_LANGUAGE.md`
+
+?????
+1. `Gemma4` ????????
+2. ?????
+   - ??????
+   - ??????
+3. ???????????
+   - `Gemma4` ???????
+   - ???????????
+4. ???????????
+   - ???????????????????
+   - ???????????????? + ??????????????
+
+### ????????
+1. `Gemma4` ????????????????????????????????????
+2. `Gemma4` ?????????????????
+   - ???????????
+   - ??????????????????
+   - ??????? `Qwen3` ?????????????
+3. ??????? `Gemma4` ?????????????????????
+4. `GLM4` ?????????????????????????????
+   - ????????????????????????????
+   - ????????????????
+
+### ???????
+1. ???? `Gemma4` ?????????
+   - ?????????? `GGUF` ????????????????????????
+2. ?????????? `Gemma4`?
+   - ???????
+   - ??????????
+   - ???????
+3. ??????????
+   - ??? `Gemma4` ????????????????????????????
+   - ???????????????????????????????
+4. ?????? `Gemma4` ??????????????
+   - ????
+   - ????
+   ?????
+
+
+## [2026-04-04 09:14] ?? Gemma4:e2b ??????????
+
+### ????
+??????????????? `gemma4:e2b` ???????????????????????????
+
+### ????????
+```powershell
+python - <<????????>>
+```
+???????
+- `llama_cpp`
+- `gguf`
+- `ctransformers`
+- `transformers`
+- `torch`
+- `bitsandbytes`
+
+### ??????
+- `llama_cpp`: ???
+- `gguf`: ???
+- `ctransformers`: ???
+- `transformers`: ?????? `5.1.0`
+- `torch`: ?????? `2.6.0+cu124`
+- `bitsandbytes`: ???
+
+### ??????????
+1. ???? `Gemma4` ?? `GGUF + Ollama` ??????? `HF safetensors` ???
+2. ??????????????????????????? `HF` ??????????
+3. ?????Gemma4 ????????????????????????
+
+### ???? Gemma4 ???????????
+#### ?? A?????
+1. ??????? `GGUF` ???????? `HF + safetensors` ??? `Gemma`?
+2. ? `transformers` ?????
+3. ??? `multimodel_language_shared.py` ????? `load_gemma4_model()`?
+4. ?? `discover_layers()`????????`MLP neuron` ?????????
+5. ????? `Qwen3 / DeepSeek7B / GLM4` ???????????
+
+???????????????????????
+
+#### ?? B????
+1. ?? `GGUF` ?????
+2. ?? `llama.cpp` ?? Python ?????
+3. ????????????????? hidden states?attention?MLP ????
+4. ???? Python ??????????
+
+??????????????????????????????
+
+#### ?? C??????
+????? `GGUF` ?????????????? `HF` ???
+
+????????????????????????
+
+### ???????
+???????? `Gemma4` ??????????????????
+1. ???? `gemma4:e2b` ???????
+2. ?????? `HF safetensors` ??? `Gemma`?
+3. ?????????????????
+
+### ???????
+1. ?? `Gemma4` ??????? `DeepSeek7B`??????????
+2. ???????????????????????????
+3. ??? `Gemma4` ????????????????????????????
+
+
+## [2026-04-04 10:47] ??????? google/gemma-4-E2B-it ?? DeepSeek7B ????
+
+### ????
+1. ?????? `transformers??????` ?????? `google/gemma-4-E2B-it`?
+2. ?????? `DeepSeek7B?????????????` ????????????
+3. ??????????????????? `gemma4` ???
+
+### ??????
+- `tests/codex/stage506_download_gemma4_hf.py`
+
+### ??????
+```powershell
+python -m py_compile tests/codex/stage506_download_gemma4_hf.py
+python tests/codex/stage506_download_gemma4_hf.py
+```
+
+### ?????????
+1. ?????????????????????????
+   - `HF_ENDPOINT=hf-mirror.com`
+   - ?? `https://` ??
+2. ??????????????? `HF_ENDPOINT` ?????
+   - `https://hf-mirror.com`
+3. ??????????????????
+   - `RemoteProtocolError`
+   - ??????????????????
+4. ?????????
+   - ?????
+   - ??????
+5. ?????????
+
+### ??????
+?????
+`tests/codex_temp/stage506_download_gemma4_hf_20260404/`
+
+?????
+- ???`google/gemma-4-E2B-it`
+- ?????`D:\develop\model\hub`
+- ???????
+  `D:\develop\model\hub\models--google--gemma-4-E2B-it\snapshotsļ2fe843cc01b9aed62122f6e0ddd13ea48b3d3`
+- ???? `DeepSeek7B` ???
+  - `D:\develop\model\hub\models--deepseek-ai--DeepSeek-R1-Distill-Qwen-7B`
+  - `D:\develop\model\hub\models--google--gemma-4-E2B-it`
+
+### ??????
+1. `processor?????` ????????
+2. `model????` ?????????????????????
+
+?????????
+- ?? `transformers` ??? `5.1.0`
+- ????? `gemma4` ?? `model_type??????`
+- ?????????????????????????????????
+
+### ??????
+1. ????????????? DeepSeek7B ???????????
+2. ????????????????????????????
+3. ?????? `Gemma4` ??????????????????????????????
+
+### ?????????
+1. ?? `transformers` ??? `gemma4` ???????????????
+2. ????????????
+   - `AutoProcessor.from_pretrained`
+   - `AutoModelForImageTextToText.from_pretrained`
+   - `discover_layers()`
+3. ??????????? `Gemma4` ????????????
+   - ?????
+   - ??????
+   - ????????
+
+
+## [2026-04-04 11:11] Gemma4 ?????????????????????????
+
+### ????
+1. ???????????????????? `Gemma4?Gemma ???` ?????????
+2. ??????? `gemma4` ??? `processor?????` ??????
+3. ?? `Gemma4` ???????????????????????? `MLP??????` ?????
+
+### ??????
+```powershell
+python -m pip show transformers huggingface_hub
+python -m pip install --upgrade git+https://github.com/huggingface/transformers.git
+python -m pip show mistral-common
+python -m pip install --upgrade mistral-common
+python tests/codex/stage506_download_gemma4_hf.py
+python tests/codex/stage507_gemma4_hooking_smoke.py
+```
+
+### ??????
+1. `transformers` ?? `5.1.0` ????
+   - `5.6.0.dev0`
+2. `huggingface_hub` ?????
+   - `1.9.0`
+3. `mistral-common` ?????
+   - `1.11.0`
+4. `numpy` ???????
+   - `2.3.5`
+
+### ????
+??????`transformer-lens` ????????????????????
+1. `transformer-lens` ???? `huggingface-hub < 1.0`
+2. `transformer-lens` ???? `numpy < 2`
+3. ????????????????
+4. ?????????????????????????
+
+### Gemma4 ??????
+????????
+1. `AutoProcessor.from_pretrained` ??
+   - `processor_class = Gemma4Processor`
+2. `AutoModelForImageTextToText.from_pretrained` ??
+   - `model_class = Gemma4ForConditionalGeneration`
+3. ?????
+   - ??????
+   - ??????? `gemma4` ??
+   - `Gemma4` ?????????????????????
+
+### ??????
+??????????
+1. `Gemma4` ??????? `model.layers`
+2. ?????????
+   - `model.language_model.layers`
+3. ??????
+   - `Gemma4TextDecoderLayer`
+4. ????????
+   - `self_attn`
+   - `mlp`
+
+????????????? `Gemma4` ????????????????? `discover_layers()` ?????????
+
+### ????
+????
+1. `tests/codex/qwen3_language_shared.py`
+   - ?? `GEMMA4_MODEL_PATH`
+   - ?? `load_gemma4_processor()`
+   - ?? `load_gemma4_model()`
+   - ?? `discover_layers()` ??? `model.language_model.layers`
+2. `tests/codex/multimodel_language_shared.py`
+   - ? `gemma4` ?? `MODEL_SPECS`
+   - ? `gemma4` ?? `load_model_bundle()`
+3. ???
+   - `tests/codex/stage507_gemma4_hooking_smoke.py`
+
+### stage507 ???Gemma4 ??????
+?????
+`tests/codex_temp/stage507_gemma4_hooking_smoke_20260404/`
+
+?????
+- ???`cuda:0`
+- ???`35`
+- ? 0 ????`Gemma4TextDecoderLayer`
+- ? `self_attn`?`true`
+- ? `mlp`?`true`
+- `attn_target_drop ? 1.467447`
+- `mlp_target_drop ? -1.794542`
+
+??????????????
+1. ?????? `Gemma4`
+2. ??????
+3. ????? `self_attn`
+4. ????? `mlp`
+5. ??????????????
+
+?????`Gemma4` ??????????????????????????????
+
+### ????????
+1. ?????????????????????????????????????
+2. ????????? `Gemma4` ????????? `transformer-lens` ????????
+3. ???????????
+   - ? `Gemma4` ????????????????????????????????
+4. ?????????Gemma4 ??????????????Gemma4 ???????????????????
+
+### ???????
+1. ? `Gemma4` ?????????????
+   - ????? `stage501` ???????????? `stage447` ????????????
+2. ?? `Gemma4` ? `DeepSeek7B`?
+   - ???????
+   - ?????????????????
+3. ??? Python ????????
+   - ?????? `transformer-lens` ????????????????????????????
+
+
+## [2026-04-04 13:50] Gemma4 ???????????????????????????
+
+### ????
+1. ? `Gemma4?Gemma ???` ???????????????????? `stage501??501?????` ??????????
+2. ???????????????? `Qwen3???????`?`DeepSeek7B?????????????`?`GLM4????????`?`Gemma4` ???????????
+3. ? `Gemma4` ???????????????????????????
+
+### ??????
+1. `tests/codex/stage508_long_distance_cross_token_routing_quad_model.py`
+2. ?????
+   - `tests/codex/qwen3_language_shared.py`
+   - `tests/codex/multimodel_language_shared.py`
+3. ????????????????
+   - `tests/codex/stage507_gemma4_hooking_smoke.py`
+
+### ??????
+1. ??? `Gemma4` ?? `HF??????` ?????
+2. ????? `transformers` ? `mistral-common` ???
+   - `Gemma4Processor`
+   - `Gemma4ForConditionalGeneration`
+3. ??? `Gemma4` ???????
+   - `model.language_model.layers`
+4. ????????
+   - `discover_layers()` ????? `Gemma4`
+   - `load_model_bundle('gemma4')` ???
+5. `stage507` ???????????
+   - ????
+   - ??? `self_attn`
+   - ??? `mlp`
+   - ????????????
+
+### stage508 ????
+1. ????? `GPU???????` ???
+2. ??????????? `CUDA unknown error?CUDA ?????`?
+3. ?????????????????????????? `CPU???????` ???
+
+### stage508 ????????????????????
+?????
+`tests/codex_temp/stage508_long_distance_cross_token_routing_quad_model_20260404/`
+
+????????
+- `Qwen3`
+  - `route_heads_dominant_count = 0`
+  - `write_neurons_dominant_count = 5`
+  - `avg_attn_to_mlp_ratio ? 0.0684`
+- `DeepSeek7B`
+  - `route_heads_dominant_count = 5`
+  - `write_neurons_dominant_count = 0`
+  - `avg_attn_to_mlp_ratio ? 3.4747`
+- `GLM4`
+  - `route_heads_dominant_count = 0`
+  - `write_neurons_dominant_count = 5`
+  - `avg_attn_to_mlp_ratio ? -0.0188`
+- `Gemma4`
+  - `route_heads_dominant_count = 2`
+  - `write_neurons_dominant_count = 3`
+  - `avg_attn_to_mlp_ratio ? 0.6751`
+
+### ?????????
+1. `Qwen3` ??????? `write_neurons` ??
+2. `DeepSeek7B` ??????? `route_heads` ??
+3. `GLM4` ????? `write_neurons` ??
+4. `Gemma4` ?? `Qwen3` ?????????? `DeepSeek7B` ??????????????????
+   - ?????? `route_heads` ??
+   - ???????? `write_neurons` ??
+5. ?? `Gemma4` ??????????????????
+   - ???????
+   - ??????????????????????
+
+### ?????????
+??????????????????
+1. `Qwen3`????
+2. `DeepSeek7B`????
+3. `GLM4`??????
+4. `Gemma4`????
+
+????????????????????????????????????
+- ????
+- ?????
+- ????
+
+????????????????????????????????????????????
+
+### ? Gemma4 ??????
+??????????Gemma4 ???????????
+1. `Gemma4` ?????????????
+2. ???????????????????????
+3. ???????????????? `DeepSeek7B` ?????????????????
+   - ????? `DeepSeek7B`
+   - ?????? `DeepSeek7B`
+   - ??????????????? DeepSeek ?????????
+
+### ????
+1. ????????????? `CPU` ????? `GPU` ???
+2. ??????????????????????? `Gemma4` ?????????????????????????
+3. ????????? `Gemma4` ???? `transformer-lens` ????????????????????
+
+### ???????
+1. ? `Gemma4` ????????????
+   - ???????????
+2. ?? `Gemma4` ? `DeepSeek7B`?
+   - ??????????
+   - ????????????????????
+3. ?? `Gemma4` ? `GLM4`?
+   - ???????????????????????
+4. ???? `CPU/GPU` ????????? `Gemma4` ?????????????
+## 2026-04-04 14:32
+
+### 本轮命令与执行
+- 2026-04-04 14:27 运行：`python d:\develop\TransformerLens-main\tests\codex\stage509_gemma4_polysemy_switch_protocol.py --cpu`
+- 2026-04-04 14:30 复跑：`python d:\develop\TransformerLens-main\tests\codex\stage509_gemma4_polysemy_switch_protocol.py --cpu`
+- 2026-04-04 14:31 校验：读取 `tests/codex_temp/stage509_gemma4_polysemy_switch_protocol_20260404/summary.json` 聚合指标与逐词结果
+- 2026-04-04 14:32 更新：`research/gpt5/docs/AGI_GPT5_LANGUAGE.md`，补入 Gemma4 层内多义词切换结论与四模型可观测层级修正
+
+### 新增脚本与结果
+- 新增脚本：`tests/codex/stage509_gemma4_polysemy_switch_protocol.py`
+- 结果目录：`tests/codex_temp/stage509_gemma4_polysemy_switch_protocol_20260404/`
+- 核心结果文件：`summary.json`、`REPORT.md`
+
+### 理论数学研究进度
+1. `Gemma4（Gemma 四代）` 已经不只是进入长距离跨词元路由内部协议，也进入了多义词切换内部协议。
+2. 但 `Gemma4` 在当前多义词协议中的表现明显弱于 `Qwen3（通义千问三）` 与 `DeepSeek7B（深度求索七十亿参数模型）` 已知主线：
+   - 平均多义词高活跃重合：`0.2984`
+   - 平均普通上下文重合：`0.2509`
+   - 低重合切换支持数：`0 / 4`
+   - 切换轴因果支持数：`1 / 4`
+3. 这说明 `Gemma4` 当前还没有稳定复现“共享底座 + 低重合切换结构”的强版本，更像带明显默认义偏置的弱切换系统。
+4. 分词结果显示：
+   - `apple`：最佳切换层 `L0`，多义重合与普通上下文重合相同，未支持低重合切换。
+   - `amazon`：最佳切换层 `L1`，出现局部切换轴因果支持，但结构分裂仍弱。
+   - `python`：最佳切换层 `L12`，控制轴打击强于切换轴，说明当前定义尚未命中真正切换控制杆。
+   - `java`：最佳切换层 `L4`，多义重合反而高于普通上下文，提示默认“编程语言义”偏置较强。
+5. 当前四模型图谱需要修正为：
+   - `DeepSeek7B`：长距离路由上更像 `route_heads（路由头）` 主导。
+   - `Qwen3`、`GLM4`：长距离路由上更像 `write_neurons（写入神经元）` 主导。
+   - `Gemma4`：长距离路由上是中间型，但多义词切换上仍偏弱，因此不能简单视为 `DeepSeek7B` 的机制近邻。
+6. 统一理论层面的新边界：`Gemma4` 现在已可提供“层内证据”，但它提供的是“机制不均衡”证据，而不是“又一个完全支持既有理论”的正证据。这反而有助于逼近真正的跨模型抽象结构。
+
+### 当前硬伤
+- `Gemma4` 多义词协议目前只走了 `CPU（中央处理器）` 路径，尚未做 `GPU（图形处理器）` 一致性复核。
+- `Gemma4` 的多义词判断存在明显默认义偏置，可能混入了提示模板与训练分布偏差。
+- 当前切换轴定义直接继承旧协议，未针对 `Gemma4` 做专门重标定，因此“弱切换”里混有“仪器未对靶”的风险。
+
+### 下一阶段大任务
+1. 给 `Gemma4` 做“多义词协议重标定”：重新优化提示模板、对照词、层扫描目标函数，避免把默认义偏置误当成机制缺失。
+2. 把 `Gemma4` 接入属性绑定与中文模式图谱层内协议，检查它是不是“语义层稳、切换层弱”的系统性风格。
+3. 做四模型统一的“切换控制杆”搜索，比较 `Qwen3` 的头骨架、`DeepSeek7B` 的锚点增强、`Gemma4` 的弱切换系统、`GLM4` 的写入型结构，尝试压成更高层同构变量。
+
+## 2026-04-04 16:07
+
+### 本轮命令与执行
+- 2026-04-04 16:03 新增脚本：`tests/codex/stage510_gemma4_polysemy_prompt_calibration.py`
+- 2026-04-04 16:05 运行：`python d:\develop\TransformerLens-main\tests\codex\stage510_gemma4_polysemy_prompt_calibration.py --cpu`
+- 2026-04-04 16:06 读取：`tests/codex_temp/stage510_gemma4_polysemy_prompt_calibration_20260404/summary.json`
+- 2026-04-04 16:07 更新：`research/gpt5/docs/AGI_GPT5_LANGUAGE.md`，补入 Gemma4 提示模板重标定后的边界说明
+
+### 新增脚本与结果
+- 新增脚本：`tests/codex/stage510_gemma4_polysemy_prompt_calibration.py`
+- 结果目录：`tests/codex_temp/stage510_gemma4_polysemy_prompt_calibration_20260404/`
+- 核心结果文件：`summary.json`、`REPORT.md`
+
+### 理论数学研究进度
+1. 针对 `Gemma4（Gemma 四代）` 的多义词切换弱表现，新增了“提示模板重标定”实验，比较了四种回答接口：
+   - `digit_marked`
+   - `word_lower`
+   - `letter_ab`
+   - `semantic_tag`
+2. 结果表明：`digit_marked` 仍然是 `Gemma4` 当前最合适的多义词判别接口：
+   - 总准确率：`0.5625`
+   - 平均正确分数：`-11.8835`
+3. 其他提示风格更差：
+   - `letter_ab`：准确率 `0.53125`
+   - `word_lower`：准确率 `0.46875`
+   - `semantic_tag`：准确率 `0.375`
+4. 这意味着前一轮 `stage509` 得到的“Gemma4 多义词切换偏弱”结论，不能简单归因于提示模板不合适。当前更可能的解释是：
+   - `Gemma4` 的多义词机制本身更偏默认义主导
+   - 或者当前切换控制杆比 `Qwen3（通义千问三）` / `DeepSeek7B（深度求索七十亿参数模型）` 更分布式、更难被现有协议击中
+5. 分词细节也支持“默认义偏置”而不是“问法没听懂”：
+   - `apple` 在数字式接口下依旧显著偏向品牌义
+   - `python` 与 `java` 也明显偏向编程语言义
+   - `amazon` 相对最好，说明 Gemma4 不是完全不会做多义词，而是多义词家族之间切换强度差异更大
+6. 统一理论层面的新修正：
+   - `Gemma4` 已经有层内机制证据
+   - 但这份证据当前主要支持“路由中间型、切换偏弱型”这一不均衡机制画像
+   - 它提醒我们：名词切换机制不能只按“有或没有”分类，还要按“默认义偏置强弱、切换稀疏度、控制杆显性程度”做分型
+
+### 当前硬伤
+- 这轮校准只测了提示模板，没有改动 `target（目标词）` 定位策略和候选答案词汇表。
+- 当前仍是 `CPU（中央处理器）` 路径，尚未补 `GPU（图形处理器）` 一致性复核。
+- 准确率最高也只有 `0.5625`，说明 `Gemma4` 多义词测量仪器本身还不够强，后面需要继续做任务重设计。
+
+### 下一阶段大任务
+1. 对 `Gemma4` 做“默认义偏置剥离协议”：加入更强对照句和更多 sense-balanced（词义平衡）模板，区分是机制弱还是数据先验强。
+2. 做四模型名词机制分型：围绕“共享底座强度、切换稀疏度、默认义偏置、控制杆显性度”建立统一分类表。
+3. 把名词编码机制进一步压到统一工作方程里，研究它如何同时支撑知识网络、语法角色和高效率复用。
+
+## 2026-04-04 16:46
+
+### 本轮命令与执行
+- 2026-04-04 16:34 新增脚本：`tests/codex/stage511_glm4_polysemy_switch_protocol.py`
+- 2026-04-04 16:35 运行：`python d:\develop\TransformerLens-main\tests\codex\stage511_glm4_polysemy_switch_protocol.py --cpu`
+- 2026-04-04 16:38 针对 `GLM4（智谱清言四代）` 的 `MLP（多层感知机）` 结构差异补兼容：`gate_up_proj -> gate_proj` 维度映射
+- 2026-04-04 16:41 复跑：`python d:\develop\TransformerLens-main\tests\codex\stage511_glm4_polysemy_switch_protocol.py --cpu`
+- 2026-04-04 16:44 新增汇总脚本：`tests/codex/stage512_four_model_noun_mechanism_typology.py`
+- 2026-04-04 16:45 运行：`python d:\develop\TransformerLens-main\tests\codex\stage512_four_model_noun_mechanism_typology.py`
+- 2026-04-04 16:46 更新：`research/gpt5/docs/AGI_GPT5_LANGUAGE.md`，补入四模型名词机制分型
+
+### 新增脚本与结果
+- 新增脚本：`tests/codex/stage511_glm4_polysemy_switch_protocol.py`
+- 结果目录：`tests/codex_temp/stage511_glm4_polysemy_switch_protocol_20260404/`
+- 新增脚本：`tests/codex/stage512_four_model_noun_mechanism_typology.py`
+- 结果目录：`tests/codex_temp/stage512_four_model_noun_mechanism_typology_20260404/`
+
+### 理论数学研究进度
+1. `GLM4` 已正式进入多义词切换内部协议。
+2. `GLM4` 的结构结果很强：
+   - 平均多义词重合：`0.1218`
+   - 平均普通上下文重合：`0.2839`
+   - 低重合切换支持率：`1.0`
+   - 四个词的最佳切换层全部收敛到 `L38`
+3. 但 `GLM4` 的切换轴因果信号当前很弱：
+   - 切换轴平均概率下降：`-0.00165`
+   - 控制轴平均概率下降：`-0.00043`
+   - 切换轴因果支持率：`0.0`
+4. 这说明 `GLM4` 当前更像“结构分裂已经稳定存在，但因果控制杆仍然隐蔽”的模型，不适合被简单归为 `Qwen3（通义千问三）` 或 `DeepSeek7B（深度求索七十亿参数模型）` 的同类。
+5. 四模型名词机制现在已经可以压成统一分型表：
+   - `Qwen3`：`低重合弱因果型`
+   - `DeepSeek7B`：`低重合弱因果型`
+   - `GLM4`：`结构分裂型`
+   - `Gemma4（Gemma 四代）`：`默认义偏置型弱切换`
+6. 这一步非常关键，因为它说明“名词编码机制”不能再用单一模板描述。更接近事实的是：
+   - 有的模型把“共享底座 + 低重合切换”露得很清楚
+   - 有的模型先露出结构，再把因果控制杆藏得更深
+   - 还有的模型明显带着默认义偏置，切换能力更不均衡
+7. 对统一理论的推进：名词编码机制现在更像一个多参数族，而不是单一原型。至少需要同时跟踪四个维度：
+   - 共享底座强度
+   - 切换稀疏度
+   - 默认义偏置强度
+   - 切换控制杆显性度
+
+### 当前硬伤
+- `GLM4` 当前仍走 `CPU（中央处理器）` 路径，尚未做 `GPU（图形处理器）` 一致性复核。
+- `GLM4` 的因果信号太弱，说明当前切换轴定义可能还不够对靶。
+- 四模型分型虽然已经出现，但还主要停留在多义词主线，尚未和属性绑定、语法路由、中文模式总图谱完全联表。
+
+### 下一阶段大任务
+1. 做“名词机制四维坐标系”协议，把共享底座、切换稀疏度、默认义偏置、控制杆显性度统一量化。
+2. 把这套分型和语法路由、属性绑定联表，研究为什么同一个名词可以同时承载知识网络、语法角色和高效率复用。
+3. 继续搜索更小的名词因果混合回路，特别是 `GLM4` 的隐蔽控制杆和 `Gemma4` 的默认义偏置校正机制。
+
+## 2026-04-04 17:58
+
+### 本轮命令与执行
+- 2026-04-04 17:48 新增脚本：`tests/codex/stage513_noun_cross_task_core_protocol.py`
+- 2026-04-04 17:49 运行：`python d:\develop\TransformerLens-main\tests\codex\stage513_noun_cross_task_core_protocol.py`
+- 2026-04-04 17:50 读取：`tests/codex_temp/stage513_noun_cross_task_core_protocol_20260404/summary.json`
+- 2026-04-04 17:52 更新：`research/gpt5/docs/AGI_GPT5_LANGUAGE.md`，补入“共享骨干 + 任务适配器”结论
+
+### 新增脚本与结果
+- 新增脚本：`tests/codex/stage513_noun_cross_task_core_protocol.py`
+- 结果目录：`tests/codex_temp/stage513_noun_cross_task_core_protocol_20260404/`
+- 核心结果文件：`summary.json`、`REPORT.md`
+
+### 理论数学研究进度
+1. 新增了“名词跨任务核心骨干协议”，让同一个名词同时进入四类任务：
+   - 知识家族
+   - 语法角色
+   - 属性绑定
+   - 概念联想
+2. 目标不是再看单一词义，而是直接测“跨任务复用的神经元骨干”与“任务适配器”。
+3. 四模型都出现了同一个更高层规律：同一个名词在不同任务里不是完全换一套神经元，而是表现成“共享骨干 + 任务适配器”的组合结构。
+4. 关键数值如下：
+   - `Qwen3（通义千问三）`：
+     - 全任务共享核心数 `7`
+     - 四组以上共享核心数 `98`
+     - 知识-语法共享数 `199`
+     - 知识-属性共享数 `178`
+     - 知识-联想共享数 `9`
+   - `DeepSeek7B（深度求索七十亿参数模型）`：
+     - 全任务共享核心数 `5`
+     - 四组以上共享核心数 `123`
+     - 知识-语法共享数 `227`
+     - 知识-属性共享数 `199`
+     - 知识-联想共享数 `9`
+   - `GLM4（智谱清言四代）`：
+     - 全任务共享核心数 `15`
+     - 四组以上共享核心数 `97`
+     - 知识-语法共享数 `199`
+     - 知识-属性共享数 `167`
+     - 知识-联想共享数 `27`
+   - `Gemma4（Gemma 四代）`：
+     - 全任务共享核心数 `48`
+     - 四组以上共享核心数 `118`
+     - 知识-语法共享数 `201`
+     - 知识-属性共享数 `173`
+     - 知识-联想共享数 `86`
+5. 这批结果说明：
+   - 知识与语法、知识与属性之间有大量共享底座
+   - 概念联想普遍更像单独适配器，和其他任务共享较少，尤其在 `Qwen3`、`DeepSeek7B` 里最明显
+   - `Gemma4` 的统一名词底座更厚，跨任务共享核心更多，但这也可能意味着任务专化程度较弱
+6. 对“人脑式编码机制”的推进：如果一个系统能同时支持海量概念、任意连边和高效率，它最可能不是“每个概念单独存一整套”，而是：
+   - 用共享骨干承载概念底座
+   - 用小型适配器承载关系、角色、属性、联想
+   - 用路由与绑定机制在线组合这些部件
+7. 这一步把“名词编码机制”从单一词义切换，推进到了“跨任务复用结构”层面，更接近解释为什么同一个概念可以同时进入知识网络、语法系统和关系系统。
+
+### 当前硬伤
+- 当前协议聚焦于单个名词 `apple（苹果）` 主线，还没有扩展到更多名词家族。
+- 指标仍依赖 `top-k（顶部阈值）` 活跃神经元集合，不是最终自然常数。
+- 这轮主要测的是结构复用，不是最小因果混合回路，所以还不能直接宣称“已经还原概念编码的充分必要机制”。
+
+### 下一阶段大任务
+1. 把“名词跨任务核心骨干协议”扩展到更多名词家族，比如动物、工具、组织、地点，检查这是不是普遍规律。
+2. 做跨任务最小因果回路搜索，直接找“知识 + 语法 + 属性 + 联想”共用的最小混合子回路。
+3. 继续把这条线压进统一状态方程，尝试把“共享骨干、路由、切换、绑定、读出”写成更接近第一性原理的概念编码动力学。
+
+## 2026-04-04 18:28
+
+### 本轮命令记录
+1. 读取并汇总 `stage514_multi_family_cross_task_core_protocol_20260404/summary.json`，提取四模型多名词家族聚合指标。
+2. 修复并运行 `tests/codex/stage515_cross_task_minimal_causal_circuit.py`：
+   - 将答案格式改成数字 `1/2`，降低不同分词器的单词切分噪声。
+   - 补充 `discover_layers（发现层函数）` 导入。
+   - 成功跑通 `Qwen3（通义千问三）` 与 `DeepSeek7B（深度求索七十亿参数模型）` 的跨任务最小因果回路搜索。
+3. 新建并运行 `tests/codex/stage516_neuron_level_restoration_synthesis.py`，把 `stage514` 与 `stage515` 压成统一综合摘要。
+4. 重写 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md` 为干净的 `UTF-8（统一字符编码）` 中文版本，并做字节级自检，确认文件本体是 `UTF-8` 正常内容。
+
+### 本轮新增结果
+1. `stage514` 证明“共享骨干 + 任务适配器”不是 `apple（苹果）` 个案，而是在水果、动物、工具、组织四类名词家族里都可见的更一般结构。
+2. 四模型多家族聚合结果：
+   - `Qwen3`：平均全任务共享核心 `26.25`，平均四组以上共享核心 `136.75`，平均知识-语法共享 `208.25`，平均知识-属性共享 `180.00`，平均知识-联想共享 `88.75`
+   - `DeepSeek7B`：平均全任务共享核心 `20.00`，平均四组以上共享核心 `162.50`，平均知识-语法共享 `228.00`，平均知识-属性共享 `200.25`，平均知识-联想共享 `80.50`
+   - `GLM4（智谱清言四代）`：平均全任务共享核心 `28.50`，平均四组以上共享核心 `140.00`，平均知识-语法共享 `215.00`，平均知识-属性共享 `189.25`，平均知识-联想共享 `88.00`
+   - `Gemma4（Gemma 四代）`：平均全任务共享核心 `66.75`，平均四组以上共享核心 `143.00`，平均知识-语法共享 `203.00`，平均知识-属性共享 `170.25`，平均知识-联想共享 `122.00`
+3. `stage515` 第一次把“跨任务共享骨干”推进到因果层：
+   - `Qwen3` 最小跨任务因果子集：`N:33:36`、`N:34:25`，目标下降 `0.009963`，控制偏移 `0.003593`
+   - `DeepSeek7B` 最小跨任务因果子集：`N:27:18474`、`N:27:2979`，目标下降 `0.002035`，控制偏移 `0.000488`
+4. `stage516` 的综合结论是：神经元级还原的关键不是“一个概念对应一团固定神经元”，而是同时找出共享骨干、任务适配器和最小因果子回路，再看它们如何跨任务重复组合。
+
+### 理论推进
+1. “共享概念骨干”现在已经不只是苹果主线现象，而是多名词家族中的一般结构。
+2. “关系适配器”开始有更清楚的边界：知识-联想共享显著低于知识-语法、知识-属性共享，说明关系连接更像局部适配器，而不是整套骨干重写。
+3. “低成本切换”的工作解释更稳了：同一概念不需要为每个任务单独重建整套神经元，只需要在共享骨干上叠加小型任务适配器和少量因果子集。
+4. “神经元怎么组合实现能力”的当前工作答案开始成形：
+   - 第一层是共享概念骨干，负责概念本体和家族位置
+   - 第二层是任务适配器，负责知识、语法、属性、联想这些专门接口
+   - 第三层是路由与绑定，把同一概念送入当前任务轨道并拼成当前实例
+   - 第四层是少量因果核心子集，它们在不同任务间复用，负责真正的跨任务稳定能力
+
+### 当前硬伤
+1. `stage515` 目前只在 `Qwen3` 和 `DeepSeek7B` 上完成，四模型跨任务最小因果回路还没闭环。
+2. 绑定项 `G_l` 仍然主要是结构证据强于强因果证据。
+3. 很多复用数量仍依赖 `top-k（顶部阈值）`，不能当成自然常数。
+4. `AGI_GPT5_LANGUAGE.md` 的终端直接 `Get-Content` 显示仍会受当前编码页影响，但字节级检查已确认文件本体为正常 `UTF-8`。
+
+### 下一阶段大任务
+1. 把跨任务最小因果回路扩展到 `GLM4` 和 `Gemma4`，完成四模型闭环。
+2. 把多名词家族从 4 类继续扩展到地点、组织、自然物、抽象概念，验证“共享骨干 + 任务适配器”是否普遍。
+3. 把“共享骨干、关系适配器、路由、绑定、低成本切换”继续压缩成更统一的概念编码动力学方程，争取从工作模型推进到可预测、可判伪的理论框架。
+
+## 2026-04-04 19:07
+
+### 本轮命令记录
+1. 读取 `multimodel_language_shared.py`、`stage511_glm4_polysemy_switch_protocol.py`、`stage515_cross_task_minimal_causal_circuit.py`，检查四模型加载与跨任务因果脚本兼容性。
+2. 修复 `stage515`：
+   - 为 `GLM4（智谱清言四代）` 增加 `MLP（前馈网络）` 兼容补丁。
+   - 把扁平神经元索引的解码方式，从“固定每层宽度”改成“按每层真实宽度累计解码”，从而兼容 `Gemma4（Gemma 四代）` 前后半层 `MLP` 宽度不同的问题。
+3. 新建并运行 `tests/codex/stage517_cross_task_minimal_causal_circuit_glm4_gemma4.py`，完成 `GLM4` 与 `Gemma4` 的跨任务最小因果回路搜索。
+4. 新建并运行 `tests/codex/stage518_four_model_cross_task_causal_synthesis.py`，把 `stage515 + stage517` 压成四模型综合摘要。
+5. 更新 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md`，把“跨任务最小因果回路”从两模型表述升级成四模型比较框架，并继续保持文件本体为正常 `UTF-8（统一字符编码）` 字节内容。
+
+### 本轮新增结果
+1. 四模型第一轮跨任务最小因果回路已经补齐：
+   - `Qwen3（通义千问三）`：`N:33:36`、`N:34:25`，目标下降 `0.009963`，控制偏移 `0.003593`，综合效用 `0.008167`
+   - `DeepSeek7B（深度求索七十亿参数模型）`：`N:27:18474`、`N:27:2979`，目标下降 `0.002035`，控制偏移 `0.000488`，综合效用 `0.001790`
+   - `GLM4`：`N:39:10200`，目标下降 `0.001302`，控制偏移 `0.001953`，综合效用 `0.000326`
+   - `Gemma4`：`N:4:4543`、`N:27:8248`、`N:1:4907`，目标下降 `0.024981`，控制偏移 `0.001488`，综合效用 `0.024237`
+2. 这说明“共享概念骨干”已经不只是结构复用假说，而是开始进入四模型最小因果比较框架。
+3. `Gemma4` 在跨任务因果主线上比预期更强，表现成“较厚共享骨干 + 少量关键神经元”的风格；`GLM4` 仍然更像“结构分裂清楚，但最小因果控制杆较弱”。
+
+### 理论推进
+1. 现在可以更稳地说：同一概念跨知识、语法、属性、联想任务的能力，不是整套神经元每次重建，而是由“共享骨干 + 任务适配器 + 少量因果核心子集”共同实现。
+2. 四模型比较进一步支持了“概念编码不是静态词典，而是分层控制系统”这条主线。
+3. 当前神经元级工作图景可以更具体地压成：
+   - 共享概念骨干：保存概念本体和家族位置
+   - 关系适配器：把同一概念接入知识、语法、属性、联想等不同接口
+   - 路由机制：决定当前任务调用哪条处理轨道
+   - 绑定机制：把骨干、属性、关系和当前实例拼起来
+   - 低成本切换：在共享骨干上叠加小增量改写，而不是整套重建
+
+### 当前硬伤
+1. 四模型跨任务因果已经闭环，但仍主要围绕单一名词主线，还没有扩成多名词家族统一因果定律。
+2. `GLM4` 的跨任务最小因果子集偏弱，说明它的控制杆可能更深、更分布式，或者当前协议还没完全对准。
+3. `Gemma4` 的结果很强，但还需要验证它是不是普遍适用于更多概念家族，而不是当前任务模板下的特例。
+4. 绑定项 `G_l` 依然是全局最薄弱环节，尚未达到和“共享骨干”同等强度的四模型因果证据。
+
+### 下一阶段大任务
+1. 把跨任务最小因果回路从 `apple（苹果）` 扩到水果、动物、工具、组织、地点、抽象概念等多家族，建立真正的跨概念统一因果协议。
+2. 继续比较 `GLM4` 与 `Gemma4`：前者为什么结构分裂强但因果控制杆弱，后者为什么共享骨干厚且跨任务因果更强。
+3. 把“共享骨干、关系适配器、路由、绑定、低成本切换”继续压缩成更统一的概念编码动力学方程，为回答“大脑式海量概念、任意连边、高效率更新”准备更硬的神经元级机制框架。
+
+## 2026-04-04 20:13
+
+### 本轮命令记录
+1. 新建并运行 `tests/codex/stage519_noun_attribute_bridge_layer_atlas.py`，把 `stage514` 的多名词家族结果转换成“名词-属性-桥接”层带图谱。
+2. 新建并运行 `tests/codex/stage520_noun_attribute_bridge_causal_four_model.py`，对四模型做“名词知识 + 属性绑定”桥接因果搜索。
+3. 新建并运行 `tests/codex/stage521_language_layer_band_dynamics_synthesis.py`，把 `stage518 + stage519 + stage520` 压成统一的语言层带动力学摘要。
+4. 更新 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md`，新增“层带位置图谱”和四模型桥接因果结果。
+
+### 本轮新增结果
+1. `stage519` 直接回答了“有效神经元是否有特殊位置”：
+   - 它们不是均匀散在全层，也不是单层点状，而是呈现“宽带层区中的明显功能聚集”。
+2. 四模型层带图谱：
+   - `Qwen3（通义千问三）`：名词、属性、桥接都强烈聚集在晚层 `L33-L35`，质心约 `32`
+   - `DeepSeek7B（深度求索七十亿参数模型）`：主峰在 `L26-L27`，并伴随早层 `L3` 残影，质心约 `24`
+   - `GLM4（智谱清言四代）`：极强末层聚集，主峰在 `L37-L39`，质心约 `37.8`
+   - `Gemma4（Gemma 四代）`：明显偏早层，主峰在 `L0-L4`，质心约 `6-8`
+3. `stage520` 的四模型名词-属性桥接因果：
+   - `Qwen3`：`N:34:25 + N:33:598`，目标下降 `0.000598`，控制偏移 `0.000671`
+   - `DeepSeek7B`：`N:27:13839 + N:27:15428`，目标下降 `0.003906`，控制偏移 `0.000977`
+   - `GLM4`：`N:34:5891`，目标下降 `0.008984`，控制偏移 `0.003906`
+   - `Gemma4`：`N:1:5306 + N:1:6056`，目标下降 `0.076562`，控制偏移 `0.015259`
+4. `stage521` 把结果压成统一判断：
+   - 语言相关有效神经元具有明显层带偏置
+   - 名词、属性和桥接常常落在相近但不完全重合的层区
+   - 部分模型中的桥接已可压缩成小型因果子集
+
+### 理论推进
+1. 对“名词主要分布在哪些 layer（层），属性主要分布在哪些 layer，是否通过桥接连接”这个问题，现在可以更稳地回答：
+   - 有明显层带，不是全层均匀平铺
+   - 但也不是单层孤点，而是若干相邻层组成的功能区
+   - 名词、属性、桥接往往相邻，却不完全重合，这更像“共享功能区 + 局部桥接回路”
+2. 不同模型的实现位置差异极大：
+   - `Qwen3` 更像晚层写入型
+   - `DeepSeek7B` 更像中晚层主峰 + 早层路由残影
+   - `GLM4` 更像超晚层收束型
+   - `Gemma4` 更像早层统一骨干型
+3. 这进一步支持“共享概念骨干、属性通道、桥接机制”是抽象共性，但并不存在固定统一层号。
+
+### 当前硬伤
+1. 层带图谱当前主要来自 `top-k（顶部阈值）` 活跃神经元统计，虽有强信号，但仍受阈值定义影响。
+2. 桥接因果目前最强的是 `Gemma4`，最弱的是 `Qwen3`，说明不同模型的桥接显性度差异很大，还不能用单一模板解释全部模型。
+3. 目前桥接因果仍聚焦于“名词知识 + 属性绑定”这一种桥接，不代表所有关系绑定都已打穿。
+
+### 下一阶段大任务
+1. 把层带图谱从名词-属性-桥接扩展到代词、动词、连接词、固定搭配，形成更完整的语言功能层区图谱。
+2. 把桥接因果从“名词-属性”扩展到“名词-关系”“名词-语法角色”“名词-联想网络”，检验桥接是否有统一机制。
+3. 把“层带位置图谱 + 最小因果回路”继续压成更完整的动力学框架，回答哪些能力主要依赖早层路由，哪些依赖中层绑定，哪些依赖晚层收束读出。
+
+## 2026-04-04 20:20
+
+### 本轮命令记录
+1. 新建并运行 `tests/codex/stage522_noun_panorama_hierarchy_scan.py`，对 24 个名词做全景式层级扫描：
+   - 家族：水果、动物、天体、抽象概念
+   - 每类 6 个名词
+   - 四模型统一协议：`Qwen3（通义千问三）`、`DeepSeek7B（深度求索七十亿参数模型）`、`GLM4（智谱清言四代）`、`Gemma4（Gemma 四代）`
+2. 新建并运行 `tests/codex/stage523_noun_predictive_encoding_synthesis.py`，把大规模名词扫描压成“编码预测规律”综合摘要。
+3. 更新 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md`，新增“大量名词全景层级扫描”和“名词编码预测定律”两部分。
+
+### 本轮新增结果
+1. 大量名词的编码目前最像三层结构：
+   - 全局共享名词骨干
+   - 家族共享骨干
+   - 名词独有残差
+2. 四模型的家族预测准确率都达到 `1.0`，说明当前编码规律已经足以支持家族级预测。
+3. `apple（苹果）` 的共享/独有模式现在有了更硬的数据：
+   - `Qwen3`
+     - 苹果与水果共享 `114`
+     - 苹果与动物共享 `56`
+     - 苹果与天体共享 `50`
+     - 苹果与抽象共享 `55`
+     - 苹果相对水果独有 `142`
+   - `DeepSeek7B`
+     - 苹果与水果共享 `178`
+     - 苹果与动物共享 `130`
+     - 苹果与天体共享 `132`
+     - 苹果与抽象共享 `131`
+     - 苹果相对水果独有 `78`
+   - `GLM4`
+     - 苹果与水果共享 `152`
+     - 苹果与动物共享 `103`
+     - 苹果与天体共享 `91`
+     - 苹果与抽象共享 `76`
+     - 苹果相对水果独有 `104`
+   - `Gemma4`
+     - 苹果与水果共享 `170`
+     - 苹果与动物共享 `147`
+     - 苹果与天体共享 `138`
+     - 苹果与抽象共享 `127`
+     - 苹果相对水果独有 `86`
+4. 同家族平均交并比显著高于跨家族平均交并比，这条规律在四模型里都成立。
+5. 这说明“苹果”确实明显继承“水果家族骨干”，但同时保留一大块独有残差。不同模型在“共享”和“独有”的配比上差异很大。
+
+### 理论推进
+1. 现在可以更稳地把名词编码写成：
+   - 全局名词骨干
+   - 家族骨干
+   - 名词独有残差
+2. 这条规律已经从概念直觉推进到可测试结构：
+   - 可以用家族原型去预测新名词更像哪一类
+   - 可以预测一个新名词大致会共享哪些骨干
+   - 但还不能精确恢复它的全部独有细节
+3. 这说明“知道苹果和水果、动物三者的编码，就去预测某个动物编码”这件事，现在已经能做到“家族级大轮廓预测”，但还做不到“完整个体级精确重建”。
+
+### 当前硬伤
+1. 当前预测准确率主要是家族级，不是个体级。
+2. 现在还不能精确预测一个新名词的全部独有残差、桥接细节和多任务变化。
+3. 名词层级扫描当前使用的是通用模板，虽然规律很强，但仍可能混入模板偏置。
+4. 目前还没有把“全局骨干 + 家族骨干 + 独有残差”真正写成可闭式求解的方程。
+
+### 下一阶段大任务
+1. 把家族级预测推进到个体级预测：
+   - 研究能否利用同家族多个成员去逼近一个新名词的独有残差结构
+2. 把名词层级扫描扩展到更多家族：
+   - 地点、组织、自然物、工具、抽象制度、情感概念
+3. 把“家族骨干”和“桥接机制”合并：
+   - 研究一个新名词进入知识、属性、语法、联想任务后，哪些是骨干可预测部分，哪些是桥接新增部分
+
+
+## 2026-04-04 20:58
+
+### 本轮命令记录
+1. 新建并运行 `tests/codex/stage524_language_function_zone_map.py`：
+   - 复用 `stage423（第423阶段实验）`、`stage493（第493阶段实验）`、`stage519（第519阶段实验）`
+   - 将 `noun（名词）`、`verb（动词）`、`pronoun（代词）`、`connective（连接词）`、`fixed_phrase（固定搭配）`、`time（时间词）`、`quantity（数量词）`、`locative（方位词）`、`attribute_channel（属性通道）`、`noun_attribute_bridge（名词-属性桥接）` 压成完整语言功能层区地图
+2. 新建并运行 `tests/codex/stage525_multi_bridge_causal_expansion.py`：
+   - 基于 `stage514（第514阶段实验）` 的 `family_knowledge（家族知识）`、`syntax_subject（主语语法）`、`syntax_object（宾语语法）`、`concept_association（概念联想）` 神经元集合
+   - 把桥接因果从“名词-属性”扩展到：
+     - `noun_relation（名词-关系）`
+     - `noun_syntax_role（名词-语法角色）`
+     - `noun_association_network（名词-联想网络）`
+3. 新建并运行 `tests/codex/stage526_language_band_circuit_dynamics.py`：
+   - 综合 `stage524`、`stage525`、`stage521`、`stage518`、`stage495`
+   - 把“层带位置图谱 + 最小因果回路”压成统一动力学
+4. 更新 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md`：
+   - 新增“完整语言功能层区地图”
+   - 新增“桥接因果扩展”
+   - 新增“统一层带动力学”
+   - 同步更新当前最稳结论、硬伤和下一阶段任务
+
+### 本轮新增结果
+1. 完整语言功能层区地图已经成形：
+   - `Qwen3（通义千问三）`：`noun / verb / pronoun` 主要在中层，`connective / fixed_phrase / time / quantity / locative / attribute_channel` 主要在晚层
+   - `DeepSeek7B（深度求索七十亿参数模型）`：`pronoun` 已明显前置到早层，`noun / verb` 主要在中层，`connective / fixed_phrase / time / quantity / locative / attribute_channel` 主要在晚层
+   - `GLM4（智谱清言四代）`：当前可观测的 `noun / attribute_channel / noun_attribute_bridge` 都明显末层化
+   - `Gemma4（Gemma 四代）`：当前可观测的 `noun / attribute_channel / noun_attribute_bridge` 都明显早层化
+2. 桥接因果已经从“名词-属性”扩展到“名词-关系 / 名词-语法角色 / 名词-联想网络”：
+   - `Qwen3`
+     - `noun_relation`：`N:3:4265 + N:35:16`，效用 `0.009684`
+     - `noun_syntax_role`：`N:3:4265 + N:33:36 + N:34:178`，效用 `0.047526`
+     - `noun_association_network`：`N:35:26`，效用 `0.001414`
+   - `DeepSeek7B`
+     - `noun_association_network`：`N:27:18474`，效用 `0.003581`
+     - `noun_relation` 和 `noun_syntax_role` 当前尚未打出稳定正结果
+   - `GLM4`
+     - `noun_relation`：`N:39:6921`，效用 `0.001302`
+     - `noun_syntax_role`：`N:37:8035`，效用 `0.003906`
+     - `noun_association_network`：`N:39:5081`，效用 `0.015625`
+   - `Gemma4`
+     - `noun_relation`：`N:1:3830 + N:4:4685`，效用 `0.147949`
+     - `noun_syntax_role`：`N:1:974 + N:27:8248`，效用 `0.031687`
+     - `noun_association_network`：`N:27:8248 + N:1:5306 + N:0:1653`，效用 `0.047689`
+3. 统一动力学现在可以更通俗地写成：
+   - `E_l（早层路由项）`：更偏代词、引用建立、局部功能词控制
+   - `M_l（中层绑定项）`：更偏关系桥接、语法角色整合、对象与接口耦合
+   - `L_l（晚层收束项）`：更偏名词、属性、固定搭配和最终读出
+4. 这条统一动力学在四模型里的实现风格并不相同：
+   - `Qwen3`：更像“中层组织 + 晚层读出放大”
+   - `DeepSeek7B`：更像“早层路由 + 晚层桥接收束”
+   - `GLM4`：更像“极晚层统一收束”
+   - `Gemma4`：更像“早层统一骨干 + 局部中层补充”
+
+### 理论推进
+1. 现在已经可以更明确地说：语言相关有效神经元并不是均匀散在整个网络里，而是以“宽带功能区”的形式聚集。
+2. 桥接项 `G_l（绑定项）` 已经不再只对应“名词-属性”，而是开始扩展成：
+   - 关系桥接
+   - 语法桥接
+   - 联想桥接
+3. 把层带图谱和最小因果回路压到一起之后，当前最稳的大框架已经变成：
+   - 早层更偏路由
+   - 中层更偏绑定
+   - 晚层更偏收束读出
+4. 但这仍然不是单一坐标系理论，更准确地说是：不同模型共享抽象分工，不共享同一具体层号与拓扑。
+
+### 当前硬伤
+1. `stage524` 的完整功能层区地图目前对 `GLM4` 与 `Gemma4` 仍主要覆盖名词、属性、桥接，还没有像 `Qwen3` 和 `DeepSeek7B` 一样覆盖完整功能词谱系。
+2. `stage525` 的桥接扩展虽然打通了三条新主线，但不同模型强弱差异非常大，尤其 `DeepSeek7B` 的“名词-关系”“名词-语法角色”仍然很弱，说明桥接项还没有统一定律。
+3. 当前“早层路由、中层绑定、晚层读出”仍是宽带工作模型，不是精确闭式方程，很多判断仍依赖质心、峰值层和小型因果子集的组合解释。
+4. 一部分桥接子集仍可能受模板偏置影响，还需要更多句型和更多名词家族复核。
+
+### 下一阶段大任务
+1. 把完整语言功能层区地图继续扩展到四模型对齐版本：
+   - 尤其补齐 `GLM4` 和 `Gemma4` 的代词、动词、连接词、固定搭配层区图谱
+2. 把桥接项做成分型理论：
+   - 区分属性桥接、关系桥接、语法桥接、联想桥接
+   - 研究它们各自的层带位置、稀疏度和控制杆显性度
+3. 把“宽带功能区 + 最小因果子集”继续压缩成可预测动力学：
+   - 回答新任务、新概念、新句法接口进入网络后，会优先调用哪些层区、哪些桥接单元、哪些晚层放大器
+
+## 2026-04-04 21:20
+
+### 本轮命令记录
+1. 新建并运行 `tests/codex/stage527_wordclass_panorama_layer_scan.py`：
+   - 复用 `stage423（第423阶段实验）` 的六类词性真实扫描结果
+   - 对 `noun（名词）`、`adjective（形容词）`、`verb（动词）`、`adverb（副词）`、`pronoun（代词）`、`preposition（介词）` 统一提取：
+     - 加权层中心
+     - 主峰层
+     - 早中晚质量分布
+     - 结构标签
+     - `top256（前256个）` 神经元集合交并比
+2. 新建并运行 `tests/codex/stage528_wordclass_encoding_structure_synthesis.py`：
+   - 把六类词性的全景扫描压成“编码结构综合摘要”
+   - 形成“对象骨干带 / 修饰双峰带 / 动作带 / 调制带 / 功能路由带”的工作分类
+3. 更新 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md`：
+   - 新增“六类词性全景扫描”部分
+   - 更新当前最稳结论、硬伤和下一阶段任务
+
+### 本轮新增结果
+1. 六类词性的有效神经元并不是均匀撒在整个网络里，而是各自具有稳定层带风格。
+2. `Qwen3（通义千问三）`：
+   - `noun`：`middle_dominant（中层主导）`，质心 `17.67`，主峰 `L22 / L20 / L21 / L23 / L19`
+   - `adjective`：`late_early_hybrid（晚层-早层双峰）`，质心 `17.41`，主峰 `L4 / L5 / L3 / L6 / L25`
+   - `verb`：`early_middle_hybrid（早层-中层混合）`，质心 `15.11`，主峰 `L2 / L4 / L3 / L23 / L22`
+   - `adverb`：`middle_dominant（中层主导）`，质心 `22.30`，主峰 `L23 / L22 / L21 / L20 / L24`
+   - `pronoun`：`late_middle_hybrid（晚层-中层混合）`，质心 `22.13`，主峰 `L35 / L34 / L21 / L22 / L33`
+   - `preposition`：`middle_late_hybrid（中层-晚层混合）`，质心 `21.75`，主峰 `L35 / L21 / L22 / L20 / L34`
+3. `DeepSeek7B（深度求索七十亿参数模型）`：
+   - `noun`：`late_dominant（晚层主导）`，质心 `14.60`，主峰 `L1 / L20 / L19 / L18 / L21`
+   - `adjective`：`early_dominant（早层主导）`，质心 `7.83`，主峰 `L2 / L3 / L1 / L27 / L0`
+   - `verb`：`early_late_hybrid（早层-晚层双峰）`，质心 `12.69`，主峰 `L3 / L2 / L1 / L27 / L19`
+   - `adverb`：`late_dominant（晚层主导）`，质心 `18.75`，主峰 `L19 / L20 / L18 / L17 / L23`
+   - `pronoun`：`early_dominant（早层主导）`，质心 `6.49`，主峰 `L2 / L1 / L3 / L27 / L0`
+   - `preposition`：`early_dominant（早层主导）`，质心 `6.90`，主峰 `L2 / L3 / L1 / L27 / L0`
+4. 词类在 `top256` 神经元集合上的交并比大多接近 `0`：
+   - 说明在“最尖锐控制杆”层面，各词类高度分离
+   - 但层带质心和带宽仍会相邻，说明更高层组织仍然共享部分结构
+5. 当前最稳的通俗分类已经可以写成：
+   - 名词：对象骨干带
+   - 形容词：修饰双峰带
+   - 动词：动作与过程带
+   - 副词：调制带
+   - 代词、介词：功能路由带
+
+### 理论推进
+1. 现在已经能把“语言层区地图”推进到两层结构：
+   - 第一层：能力层区，例如名词区、动词区、代词区、连接词区
+   - 第二层：控制杆层区，即真正最尖锐的神经元小子集
+2. 六类词性的结果进一步支持：
+   - 语言不是一套均匀平铺编码
+   - 更像“宽带功能区 + 尖锐控制杆”共同组成的分层系统
+3. 这和前面的“早层路由、中层绑定、晚层收束”并不矛盾，反而更完整：
+   - 词类决定大体落在哪类功能区
+   - 因果子集决定真正的控制杆在哪些单元上
+
+### 当前硬伤
+1. 六类词性的完整神经元级全景扫描目前最稳的仍然主要是 `Qwen3` 和 `DeepSeek7B`，四模型对齐版还没完成。
+2. `top256` 交并比几乎为零，这说明分离度很高，但也提示当前阈值可能过于严格，容易漏掉更高层共享结构。
+3. 现在仍然是在“词类层带风格”层面比较清楚，还没有把六类词性全部纳入同一套四模型因果扫描。
+4. 还没有完全回答“词类风格如何和概念骨干、桥接、切换统一到同一闭式方程里”。
+
+### 下一阶段大任务
+1. 把 `GLM4（智谱清言四代）` 和 `Gemma4（Gemma 四代）` 也补进六类词性的完整全景扫描，做四模型对齐版六词类图谱。
+2. 把“词类层带风格”与“桥接分型理论”合并，回答不同词类进入关系、属性、语法、联想任务后，会优先调用哪些桥接接口。
+3. 把“宽带功能区 + 尖锐控制杆 + 最小因果回路”继续压缩成更统一的语言编码动力学。
+
+## 2026-04-05 07:40 阶段分析：stage534 / stage537 / stage519-531 结论复核与下一步方案
+
+### 本轮查看命令
+1. `Get-ChildItem tests/codex -Filter 'stage53*.py' | Select-Object Name,FullName`
+2. `Get-ChildItem tests/codex_temp -Directory | Where-Object { $_.Name -like 'stage53*' } | Select-Object Name,FullName`
+3. `Get-Content tests/codex/stage534_causal_law_synthesis.py -TotalCount 260`
+4. `Get-Content tests/codex_temp/stage534_causal_law_synthesis_20260404/summary.json`
+5. `Get-Content tests/codex/stage537_binding_synthesis.py -TotalCount 260`
+6. `Get-Content tests/codex_temp/stage537_binding_synthesis_20260404/summary.json`
+7. `Get-Content tests/codex/stage539_prediction_comprehensive.py -TotalCount 260`
+8. `Get-Content tests/codex_temp/stage539_prediction_comprehensive_20260404/summary.json`
+9. `Get-Content tests/codex_temp/stage519_noun_attribute_bridge_layer_atlas_20260404/summary.json`
+10. `Get-Content tests/codex_temp/stage521_language_layer_band_dynamics_synthesis_20260404/summary.json`
+11. `Get-Content tests/codex_temp/stage532_multinoun_causal_qwen3_20260404/summary.json -TotalCount 220`
+12. `Get-Content tests/codex_temp/stage533_multinoun_causal_deepseek7b_20260404/summary.json -TotalCount 220`
+13. `Get-Content tests/codex_temp/stage535_binding_mutual_info_qwen3_20260404/summary.json -TotalCount 220`
+14. `Get-Content tests/codex_temp/stage536_binding_neuron_search_deepseek7b_20260404/summary.json -TotalCount 220`
+
+### 对 6 条结论的复核
+1. `编码拓扑不变量（Pearson r = 0.995）`：
+   - 大方向成立，而且是当前最硬的结论之一。
+   - 说明家族级几何关系在 `Qwen3（通义千问三）` 和 `DeepSeek7B（深度求索七十亿参数模型）` 之间高度一致。
+   - 但 `stage534` 脚本里有一个明显口径错误：`avg_intra_ds7b` 误用了 `dist532`，导致 `DeepSeek7B` 家族内平均距离被写成和 `Qwen3` 完全相同。
+   - 所以“拓扑相似”仍可信，但 `intra/inter` 的精确数值需要重跑校正。
+
+2. `绑定效率排名不变量（Spearman rho = 1.000）`：
+   - 排名趋势目前可信，说明属性绑定、联想绑定、语法绑定、关系绑定的相对难度次序可能真有跨模型稳定性。
+   - 但 `stage537` 的口径有第二个关键问题：它用的是“瓶颈层”的因果值，而不是“最强因果层”的因果值。
+   - 例如 `stage535` 里 `Qwen3` 的关系绑定在 `L12` 有 `+0.278707`，语法绑定在 `L12` 有 `+0.111829`，并不支持“只有属性绑定有正因果”这种强说法。
+   - 所以“效率排名不变量”比“绑定因果极弱”更可信。
+
+3. `层位置非不变量（0/4匹配）`：
+   - 这个结论方向是对的，而且很重要。
+   - 当前证据支持：抽象分工可以跨模型一致，但具体层号不是不变量。
+   - 更准确的说法应该是“层带角色可对齐，精确层号不可对齐”。
+
+4. `家族内聚性（intra/inter ≈ 0.08x）`：
+   - 这条现在要非常谨慎。
+   - `stage534` 摘要里的正式数值是 `0.294/0.359` 和 `0.294/0.396`，并不是 `0.05-0.08` 对 `0.60-0.72`。
+   - 说明摘要中的“统一定律”文本和真实 summary 数值并不一致，存在旧口径残留或人工填写错误。
+   - 结论应降级为：家族内聚性存在，但其精确倍数范围需要重算。
+
+5. `早-中-晚抽象分工跨模型一致（stage519-531）`：
+   - 这是当前最值得保留的高层工作结论。
+   - `stage519 / 521 / 526` 已经形成闭环：
+     - `Qwen3` 偏晚层写入和收束
+     - `DeepSeek7B` 偏早层路由 + 晚层主峰
+     - `GLM4（智谱清言四代）` 偏极晚层收束
+     - `Gemma4（Gemma 四代）` 偏早层统一骨干
+   - 所以“早层路由、中层绑定、晚层读出”更像抽象分工不变量，而不是固定层号不变量。
+
+6. `六词性层带风格跨模型一致（stage527-531）`：
+   - 这条在 `Qwen3` 和 `DeepSeek7B` 上已经很清楚：
+     - 名词偏对象骨干带
+     - 形容词偏修饰双峰带
+     - 动词偏动作过程带
+     - 副词偏调制带
+     - 代词、介词偏功能路由带
+   - 但四模型闭环还没完成，`GLM4` 和 `Gemma4` 的完整六词类全景仍是缺口。
+   - 所以这条现在应表述为“跨主力双模型稳定，四模型待补全”。
+
+### 本轮最重要的严格发现
+1. `stage534` 有真实脚本错误，影响家族内聚性的精确数值。
+2. `stage537` 存在“瓶颈层因果值”替代“最强因果值”的口径问题，会系统性低估绑定因果。
+3. 目前最硬的不变量不是“精确层号”，而是：
+   - 编码拓扑排序
+   - 绑定效率排序
+   - 早中晚抽象分工
+   - 词类层带风格
+
+### 最应该做的下一方案
+1. 先做 `不变量复核协议`：
+   - 重跑 `stage534`，修正 `DeepSeek7B` 家族内距离统计。
+   - 重写 `stage537`，同时输出：
+     - `bottleneck_layer_causal`
+     - `best_causal_layer`
+     - `best_causal_drop`
+   - 把“真不变量”和“口径伪不变量”彻底分开。
+
+2. 再做 `四模型六词类全景闭环`：
+   - 目前理论最缺的是 `GLM4` 和 `Gemma4` 的六词类层带地图。
+   - 只有补齐这一步，`六词性层带风格` 才能从双模型规律升格为四模型规律。
+
+3. 然后做 `桥接分型统一协议`：
+   - 把属性桥接、关系桥接、语法桥接、联想桥接放进同一口径：
+     - 层带位置
+     - 最强因果层
+     - 最小因果子集
+     - 控制集偏移
+   - 这样才能真正回答“哪些绑定是点状控制杆，哪些是场式控制杆”。
+
+4. 最后再做 `不变量升级版综合`：
+   - 只在修正完前面三步之后，重新定义：
+     - 拓扑不变量
+     - 排名不变量
+     - 层带不变量
+     - 分工不变量
+   - 避免过早把工作模型写成“第一性原理”。
+
+### 当前阶段判断
+1. 现在最稳的方向不是继续扩更多零散小实验，而是先做“口径治理 + 四模型闭环”。
+2. 如果现在直接往更大理论跳，会把脚本口径误差一起带进理论。
+3. 真正值得押注的主线仍然是：
+   - 抽象分工不变量
+   - 层带风格不变量
+   - 家族拓扑不变量
+   - 桥接类型分型
+
+## 2026-04-05 07:48 阶段推进：四模型六词类闭环 + 不变量修正版复核
+
+### 本轮执行命令
+1. `Get-ChildItem tests/codex/stage529_glm4_gemma4_wordclass_scan.py,tests/codex/stage530_four_model_wordclass_bridge_typology.py,tests/codex/stage531_unified_language_dynamics_full_update.py | Select-Object Name,Length,FullName`
+2. `Get-Content tests/codex/stage529_glm4_gemma4_wordclass_scan.py -TotalCount 260`
+3. `Get-Content tests/codex/stage530_four_model_wordclass_bridge_typology.py -TotalCount 260`
+4. `Get-Content tests/codex/stage531_unified_language_dynamics_full_update.py -TotalCount 260`
+5. `python -m py_compile tests/codex/stage529_glm4_gemma4_wordclass_scan.py`
+6. `python tests/codex/stage529_glm4_gemma4_wordclass_scan.py`
+7. `python tests/codex/stage530_four_model_wordclass_bridge_typology.py`
+8. `python tests/codex/stage531_unified_language_dynamics_full_update.py`
+9. `Get-ChildItem tests/codex_temp -Directory | Where-Object { $_.Name -like 'stage531*' } | Select-Object Name,FullName`
+10. `Get-Content tests/codex_temp/stage535_binding_mutual_info_qwen3_20260404/summary.json | Select-String 'causal_drop' -Context 0,0`
+11. `Get-Content tests/codex_temp/stage532_multinoun_causal_qwen3_20260404/summary.json | Select-String 'distance_matrix|calibration_data' -Context 0,2`
+12. `python tests/codex/stage540_invariant_recheck.py`
+13. `python tests/codex/stage541_binding_invariant_recheck.py`
+14. `Get-ChildItem tests/codex_temp -Directory | Where-Object { $_.Name -like 'stage54*' } | Select-Object Name,FullName`
+
+### 新增脚本
+1. `tests/codex/stage540_invariant_recheck.py`
+   - 修正 `stage534` 的统计口径
+   - 重新计算：
+     - 家族内 / 家族间距离
+     - 距离矩阵 Pearson
+     - 家族敏感层位精确匹配率
+     - 家族效果排序相关
+
+2. `tests/codex/stage541_binding_invariant_recheck.py`
+   - 把“瓶颈层”与“最强因果层”拆开
+   - 重新计算：
+     - 绑定效率排序一致性
+     - 最强因果排序一致性
+     - 瓶颈层匹配数
+     - 最强因果层匹配数
+
+### 本轮结果
+1. `stage529` 已跑通，四模型六词类闭环第一轮成立：
+   - `GLM4` 六词类缩减版质心大致分布在中层到中晚层：
+     - `noun ≈ 20.02`
+     - `adjective ≈ 15.08`
+     - `verb ≈ 15.39`
+     - `adverb ≈ 19.49`
+     - `pronoun ≈ 18.21`
+     - `preposition ≈ 18.51`
+   - `Gemma4` 六词类缩减版质心更偏中层：
+     - `noun ≈ 12.90`
+     - `adjective ≈ 14.74`
+     - `verb ≈ 14.52`
+     - `adverb ≈ 12.28`
+     - `pronoun ≈ 11.81`
+     - `preposition ≈ 14.56`
+   - 说明六词类层带分化已经不是 `Qwen3 / DeepSeek7B` 的局部现象，而进入四模型可比较框架。
+
+2. `stage530` 已跑通，词类层带与桥接分型开始汇合：
+   - 名词、形容词更靠内容骨干与修饰带
+   - 代词、介词更靠功能路由带
+   - 桥接项负责把这些带拼成当前任务实例
+
+3. `stage531` 已跑通，统一语言动力学补成了四块拼图：
+   - 词类层带
+   - 概念骨干
+   - 桥接因果
+   - 晚层收束
+   - 当前最稳的表达仍是：
+     - 宽带功能区
+     - 尖锐控制杆
+     - 小型桥接回路
+
+4. `stage540` 修正版不变量复核结果：
+   - 距离矩阵 `Pearson r = 0.995170`
+   - `Qwen3`：
+     - 家族内 `0.294064`
+     - 家族间 `0.359044`
+     - 比值 `0.819020`
+   - `DeepSeek7B`：
+     - 家族内 `0.329816`
+     - 家族间 `0.395955`
+     - 比值 `0.832963`
+   - 家族最敏感层位精确匹配 `0/6`
+   - 这说明最稳的不变量仍是拓扑排序，而不是具体层号
+   - 同时也说明旧版“家族内聚性精确倍数”不能继续直接引用
+
+5. `stage541` 修正版绑定复核结果：
+   - 绑定效率排序一致性 `rho ≈ 1.000`
+   - 最强因果排序一致性只有 `rho ≈ 0.400`
+   - 瓶颈层匹配 `0/4`
+   - 最强因果层匹配 `0/4`
+   - `Qwen3` 最强因果层：
+     - 属性绑定 `L6 drop=0.174435`
+     - 关系绑定 `L12 drop=0.278707`
+     - 语法绑定 `L12 drop=0.111829`
+     - 联想绑定 `L6 drop=0.011739`
+   - `DeepSeek7B` 最强因果层：
+     - 属性绑定 `L22 drop=0.009836`
+     - 关系绑定 `L9 drop=0.031060`
+     - 语法绑定 `L0 drop=-0.022003`
+     - 联想绑定 `L27 drop=0.017546`
+   - 这说明旧版“绑定极弱”被瓶颈层口径放大了，更准确的说法应是：
+     - 瓶颈层描述信息聚集位置
+     - 最强因果层描述真正可打中的控制位点
+     - 两者并不总是同一层
+
+### 理论推进
+1. 当前真正稳的不是精确层号，而是四类不变量：
+   - 编码拓扑排序
+   - 绑定效率排序
+   - 早中晚抽象分工
+   - 词类层带风格
+
+2. 当前需要降级的不是大框架，而是旧版中两类过强表述：
+   - 家族内聚性精确倍数
+   - 绑定“整体极弱”的总括表述
+
+3. 四模型六词类闭环补上后，语言编码更像：
+   - 不同词类进入不同宽带功能区
+   - 不同任务通过桥接回路把这些功能区拼成实例
+   - 早中晚抽象分工在四模型之间依旧可辨，但具体层号不对齐
+
+### 当前硬伤
+1. `GLM4` 和 `Gemma4` 的六词类版本现在还是缩减版，不是和 `Qwen3 / DeepSeek7B` 完全同口径的完整版。
+2. `stage540` 修正后发现，家族内聚性还存在，但数值没有旧摘要里那么极端，说明此前摘要有“口径放大”问题。
+3. `stage541` 修正后发现，绑定机制不是“没有因果”，而是“瓶颈层不等于最强因果层”，说明旧版综合层过度压扁了机制细节。
+4. 当前四模型统一动力学仍是工作模型，不是闭式第一性原理。
+
+### 下一阶段大任务
+1. 做 `四模型六词类完整版协议`
+   - 把 `GLM4` 和 `Gemma4` 从缩减版推进到更完整、和 `Qwen3 / DeepSeek7B` 更同口径的六词类全景扫描。
+
+2. 做 `桥接分型统一协议`
+   - 把属性桥接、关系桥接、语法桥接、联想桥接统一到同一套输出字段：
+     - 层带位置
+     - 瓶颈层
+     - 最强因果层
+     - 最小因果子集
+     - 控制集偏移
+
+3. 做 `不变量总表重写`
+   - 重新定义：
+     - 真不变量
+     - 伪不变量
+     - 待复核不变量
+   - 避免继续在理论文档里混用旧统计口径和新口径。
+## 2026-04-05 08:19 阶段推进：绑定场控制杆不变量可信度评估与神经元级结构算法设计
+
+### 本轮执行命令
+- `Get-Content -Raw tests/codex_temp/stage541_field_control_lever_20260404/summary.json`
+- `Get-Content -Raw tests/codex_temp/stage540_invariant_recheck_20260405/summary.json`
+- `Get-Content -Raw tests/codex_temp/stage547_puzzle_synthesis_20260405_012406.json`
+- `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+
+### 证据复核
+- `stage541_field_control_lever` 显示 `Qwen3` 与 `DeepSeek7B` 的四类绑定任务共 `8/8` 判定为 `FIELD`，`0/8` 判定为 `POINT`。关键量是 `top100 concentration` 普遍只有约 `0.12-0.17`，远低于“少数点状神经元承载大部分绑定差异”的图景。
+- `stage540_invariant_recheck` 修正后，`拓扑排序不变量` 仍然很强，`Pearson r = 0.9951702355513311`。这说明跨名词家族的相对几何关系在 `Qwen3` 与 `DeepSeek7B` 之间高度一致。
+- `stage547_puzzle_synthesis` 的综合结果把 `GLM4` 与 `Gemma4` 也纳入后，`绑定场控制杆` 被总结为 `56/56 = 100% FIELD`，目前是全局最强不变量之一。
+
+### 理论进展
+- 当前最可信的判断是：`绑定场控制杆不变量` 值得保留，而且比“精确层号不变量”更可信。它表达的不是“某几个神经元完全不重要”，而是“绑定控制主要表现为场式分布，不是点状独裁”。
+- `拓扑排序不变量 + 绑定场控制杆不变量` 组合起来，给出了一条更合理的神经元级还原路线：
+  1. 先恢复概念空间的相对拓扑。
+  2. 再在最关键的层带上恢复绑定场的统计结构。
+  3. 最后把场分解回神经元、注意力头和残差方向的联合子结构。
+- 因此，新的算法设计不应再从“找前几个最高分神经元”开始，而应从“几何拓扑 -> 场统计 -> 神经元分解 -> 因果验证”的四段流水线开始。
+
+### 建议中的算法原型
+- 第一步：对同家族与跨家族样本建立表示距离矩阵，恢复稳定的概念拓扑。
+- 第二步：在每层计算绑定任务前后隐藏状态的场统计差异，如均值、方差、熵、稀疏度、前 `k` 神经元集中度。
+- 第三步：定位“拓扑变化最大 + 场差异最大”的候选层带，而不是直接盯单层峰值。
+- 第四步：将这些候选层带中的场方向投影回神经元、注意力头、残差方向，得到候选骨干单元、适配器单元、桥接单元、切换单元。
+- 第五步：使用混合因果搜索，在 `attention head + MLP neuron + residual direction` 空间内寻找最小可解释子回路。
+- 第六步：使用强控制协议复核，确保打掉的是特异编码结构，而不是整体语言能力。
+
+### 严格问题与瓶颈
+- `绑定场控制杆不变量` 现在主要是“场式而非点式”的强证据，还不是完整的第一性原理方程。
+- `拓扑排序不变量` 目前最硬的直接高精度验证仍集中在 `Qwen3 + DeepSeek7B`，虽然综合摘要支持更广泛趋势，但四模型同口径直验还值得继续补齐。
+- 现有大量结果仍依赖 `top-k` 阈值与特定任务模板，后续必须进一步降低口径依赖。
+
+### 下一阶段大任务
+- 设计并实现“拓扑-场-神经元分解”统一协议，正式输出神经元级结构图。
+- 将该算法先用于名词家族，再推广到代词、动词、连接词与固定搭配。
+- 在统一协议下，把 `共享概念骨干、关系适配器、路由机制、绑定机制、低成本切换` 分别对应到最小混合因果子回路上。
+
+## 2026-04-05 08:39 阶段推进：stage548 拓扑-场-神经元分解算法原型落地
+
+### 本轮执行命令
+- `Get-ChildItem tests/codex | Where-Object { $_.Name -match '^stage54(0|1|7)|^stage52(4|5|6|7|8)|^stage53(0|1)$' } | Sort-Object Name | Select-Object -ExpandProperty Name`
+- `Get-Content -Raw tests/codex/stage540_invariant_recheck.py`
+- `Get-Content -Raw tests/codex/stage541_binding_invariant_recheck.py`
+- `Get-Content -Raw tests/codex/stage526_language_band_circuit_dynamics.py`
+- `Get-Content -Raw tests/codex/stage528_wordclass_encoding_structure_synthesis.py`
+- `Get-Content -Raw tests/codex/stage547_puzzle_synthesis.py`
+- `Get-Content -Raw tests/codex_temp/stage541_binding_invariant_recheck_20260405/summary.json`
+- `Get-Content -Raw tests/codex_temp/stage530_four_model_wordclass_bridge_typology_20260404/summary.json`
+- `python -m py_compile tests/codex/stage548_topology_field_neuron_algorithm.py`
+- `python tests/codex/stage548_topology_field_neuron_algorithm.py`
+- `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+
+### 新增文件
+- `tests/codex/stage548_topology_field_neuron_algorithm.py`
+- `tests/codex_temp/stage548_topology_field_neuron_algorithm_20260405/summary.json`
+- `tests/codex_temp/stage548_topology_field_neuron_algorithm_20260405/REPORT.md`
+
+### 本轮核心结果
+- `stage548` 正式把“拓扑不变量 + 场控制杆不变量 + 层带分工 + 最小回路”压成统一算法原型。
+- 当前最可信的算法入口不再是“先找最高分神经元”，而是：
+  1. `topology_recovery（拓扑恢复）`
+  2. `field_estimation（场统计恢复）`
+  3. `band_localization（层带定位）`
+  4. `field_to_neuron_projection（场到神经元投影）`
+  5. `mixed_causal_search（混合因果搜索）`
+  6. `strong_control_validation（强控制复核）`
+- `stage548` 数值结论：
+  - `binding_field_control_lever`：可信，`field_count=8`，`point_count=0`，`avg_top100_concentration=0.14678425`
+  - `topology_order`：可信，`Pearson r=0.9951702355513311`
+  - `binding_efficiency_ranking`：可信，`rho≈1.0`
+  - `binding_causal_ranking`：暂不够强，`rho≈0.4`
+  - `exact_layer_position`：不可信，`match_rate=0.0`
+
+### 理论推进
+- 神经元级编码结构当前更像：
+  - `拓扑骨架`
+  - `场式控制`
+  - `小型尖锐控制杆`
+- 这意味着后续不应再从“单个神经元排行榜”起步，而应从“概念地图 -> 控制场 -> 神经元分解 -> 因果验证”的统一流程起步。
+- 文档 `AGI_GPT5_LANGUAGE.md` 已新增“2026-04-05 神经元级结构获取算法原型”部分，把这条新主线纳入正式理论框架。
+
+### 严格问题与瓶颈
+- 当前 `stage548` 仍是综合协议原型，不是新的大规模原始模型干预实验。
+- `绑定场控制杆不变量` 现在最强的是“场式而非点式”，但还没有完全写成闭式动力学方程。
+- 四模型统一的“拓扑排序不变量”仍值得继续做同口径直验，而不只依赖综合摘要支持。
+
+### 下一阶段大任务
+- 用 `stage548` 算法原型去跑“名词家族 -> 代词 -> 动词 -> 连接词”四条主线。
+- 在同一口径下分解出：
+  - `共享概念骨干`
+  - `关系适配器`
+  - `路由头`
+  - `桥接单元`
+  - `切换控制杆`
+- 将结果压成可预测的新协议，最终支持“输入一个新概念，预测它的神经元级结构”。
+
+## 2026-04-05 08:47 阶段推进：stage549 名词家族神经元级结构提取协议
+
+### 本轮执行命令
+- `Get-ChildItem tests/codex_temp | Where-Object { $_.Name -match '^stage51(4|5|8)|^stage52(2|3)|^stage54(8)$' } | Sort-Object Name | Select-Object -ExpandProperty Name`
+- `Get-Content -Raw tests/codex_temp/stage518_four_model_cross_task_causal_synthesis_20260404/summary.json`
+- `Get-Content -Raw tests/codex_temp/stage522_noun_panorama_hierarchy_scan_20260404/summary.json`
+- `Get-Content -Raw tests/codex_temp/stage515_cross_task_minimal_causal_circuit_20260404/summary.json`
+- `Get-Content -Raw tests/codex_temp/stage517_cross_task_minimal_causal_circuit_glm4_gemma4_20260404/summary.json`
+- `Get-Content -Raw tests/codex_temp/stage525_multi_bridge_causal_expansion_20260404/summary.json`
+- `python -m py_compile tests/codex/stage549_noun_family_neuron_structure_protocol.py`
+- `python tests/codex/stage549_noun_family_neuron_structure_protocol.py`
+- `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+
+### 新增文件
+- `tests/codex/stage549_noun_family_neuron_structure_protocol.py`
+- `tests/codex_temp/stage549_noun_family_neuron_structure_protocol_20260405/summary.json`
+- `tests/codex_temp/stage549_noun_family_neuron_structure_protocol_20260405/REPORT.md`
+
+### 本轮核心结果
+- 名词主线现在可以被压成正式结构模板：
+  - `noun_encoding = global_backbone + family_backbone + noun_unique_residual + task_bridge_adapter + cross_task_causal_core`
+- 这意味着名词的神经元级结构已经不再只是“共享/不共享”二元问题，而是至少可以拆成五层：
+  1. `全局共享名词骨干`
+  2. `家族共享骨干`
+  3. `名词独有残差`
+  4. `任务桥接适配器`
+  5. `跨任务因果核心`
+
+### 苹果示例（四模型）
+- `Qwen3`
+  - 苹果与水果共享数：`114`
+  - 苹果相对水果独有数：`142`
+  - 共享占比：`0.4453125`
+  - 跨任务因果核心：`N:33:36 + N:34:25`
+  - 最强桥接：`noun_syntax_role`
+- `DeepSeek7B`
+  - 苹果与水果共享数：`178`
+  - 苹果相对水果独有数：`78`
+  - 共享占比：`0.6953125`
+  - 跨任务因果核心：`N:27:18474 + N:27:2979`
+  - 最强桥接：`noun_association_network`
+- `GLM4`
+  - 苹果与水果共享数：`152`
+  - 苹果相对水果独有数：`104`
+  - 共享占比：`0.59375`
+  - 跨任务因果核心：`N:39:10200`
+  - 最强桥接：`noun_association_network`
+- `Gemma4`
+  - 苹果与水果共享数：`170`
+  - 苹果相对水果独有数：`86`
+  - 共享占比：`0.6640625`
+  - 跨任务因果核心：`N:4:4543 + N:27:8248 + N:1:4907`
+  - 最强桥接：`noun_relation`
+
+### 理论推进
+- 现在已经能把“苹果”这样的名词拆成可解释字段，而不是停留在抽象叙事层。
+- 这让后续真正具备了迁移条件：同一结构模板可以继续用于动物、工具、组织、地点、抽象概念。
+- 理论文档 `AGI_GPT5_LANGUAGE.md` 已新增“2026-04-05 名词家族神经元级结构提取协议”部分。
+
+### 严格问题与瓶颈
+- 目前这套结构模板更强的是“家族级与字段级解释”，还不是“逐神经元完整生成式预测”。
+- `Qwen3` 的苹果在“共享/独有”上更偏厚独有残差，`DeepSeek7B / Gemma4` 更偏厚共享，说明结构模板成立，但具体配比不是统一常数。
+- 现阶段“最强桥接类型”仍有模型依赖性，不能过早写成单一普适定律。
+
+### 下一阶段大任务
+- 把 `stage549` 模板直接复制到：
+  - 动物家族
+  - 工具家族
+  - 组织家族
+  - 地点家族
+- 然后比较哪些字段真正稳定，哪些字段只是苹果主线的特例。
+- 最终目标是推进到“家族级预测 -> 个体级残差预测 -> 任务级桥接预测”三段式结构预测。
+
+## 2026-04-05 08:52 阶段推进：stage550 多家族名词结构模板泛化
+
+### 本轮执行命令
+- `Get-ChildItem tests/codex_temp | Where-Object { $_.Name -match '^stage53(2|3)|^stage54(9)$|^stage52(2)$' } | Sort-Object Name | Select-Object -ExpandProperty Name`
+- `Get-Content -Raw tests/codex_temp/stage532_multinoun_causal_qwen3_20260404/summary.json`
+- `Get-Content -Raw tests/codex_temp/stage533_multinoun_causal_deepseek7b_20260404/summary.json`
+- `Get-Content -Raw tests/codex_temp/stage515_cross_task_minimal_causal_circuit_20260404/summary.json`
+- `Get-Content -Raw tests/codex_temp/stage517_cross_task_minimal_causal_circuit_glm4_gemma4_20260404/summary.json`
+- `Get-Content -Raw tests/codex_temp/stage525_multi_bridge_causal_expansion_20260404/summary.json`
+- `python -m py_compile tests/codex/stage550_multi_family_structure_generalization.py`
+- `python tests/codex/stage550_multi_family_structure_generalization.py`
+- `Get-Date -Format 'yyyy-MM-dd HH:mm'`
+
+### 新增文件
+- `tests/codex/stage550_multi_family_structure_generalization.py`
+- `tests/codex_temp/stage550_multi_family_structure_generalization_20260405/summary.json`
+- `tests/codex_temp/stage550_multi_family_structure_generalization_20260405/REPORT.md`
+
+### 本轮核心结果
+- 苹果模板已被推进成“多家族名词结构模板泛化”。
+- 当前更稳的泛化模板是：
+  - `noun_family_encoding = shared_global_backbone + shared_family_backbone + family_specific_bridge_style + instance_specific_residual + cross_task_causal_core`
+
+### 关键数值
+- `Qwen3`
+  - 家族内/家族间距离：`0.294064 / 0.359044`
+  - 比值：`0.819020`
+  - 六个家族的最强敏感组件全部为 `MLP`
+  - 六个家族的最强敏感层全部集中在 `L6`
+- `DeepSeek7B`
+  - 家族内/家族间距离：`0.329816 / 0.395955`
+  - 比值：`0.832963`
+  - 六个家族中 `4` 个最强敏感组件为 `MLP`，`2` 个为 `attention`
+  - 形成“水果/组织偏早层 attention，动物/工具/天体/抽象偏晚层 MLP”的分工图案
+
+### 理论推进
+- 当前可以更有把握地说：
+  - 苹果模板不是孤例
+  - 名词结构模板已经能跨家族泛化
+  - 共享骨干、独有残差、桥接风格和跨任务因果核心，开始构成稳定字段
+- 文档 `AGI_GPT5_LANGUAGE.md` 已新增“2026-04-05 多家族名词结构模板泛化”部分。
+
+### 严格问题与瓶颈
+- 这轮最强的仍然是 `Qwen3 + DeepSeek7B` 的六家族泛化，`GLM4 / Gemma4` 目前还是通过苹果模板字段间接接入，不是完整六家族同口径复核。
+- `Qwen3` 的“全部家族都落在 L6 MLP”可能是高度一致的架构风格，也可能说明当前口径对其家族主敏感层过于粗糙。
+- 泛化模板现在更像“结构工作公式”，还不是“个体级编码可直接生成”的最终定律。
+
+### 下一阶段大任务
+- 把 `GLM4` 和 `Gemma4` 也补到同口径的多家族结构模板泛化协议。
+- 从家族级规律继续推进到“个体级独有残差预测”。
+- 最终做“新名词结构预测”实验：给定家族骨干与少量描述，预测其神经元级结构字段。

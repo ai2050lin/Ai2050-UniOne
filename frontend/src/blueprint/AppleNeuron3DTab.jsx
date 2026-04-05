@@ -120,6 +120,22 @@ const DIMENSION_LABELS = {
   syntax: '句法维度',
 };
 
+const APPLE_SWITCH_MECHANISM_SCHEMA = 'apple_switch_mechanism_view.v1';
+const APPLE_SWITCH_MODEL_COLORS = {
+  qwen3: '#60a5fa',
+  deepseek7b: '#34d399',
+};
+
+const APPLE_SWITCH_ROLE_LABELS = {
+  anchor_neuron: '锚点神经元',
+  main_booster_1: '主增强头 1',
+  main_booster_2: '主增强头 2',
+  skeleton_head_1: '骨架头 1',
+  skeleton_head_2: '骨架头 2',
+  bridge_head: '桥接头',
+  heldout_booster: '校正/补强头',
+};
+
 const DEFAULT_PREDICT_PROMPT = '';
 const PREDICT_CHAIN_LENGTH = 10;
 
@@ -678,6 +694,39 @@ function buildArtifactPreview(data, sourcePath = '') {
     };
   }
 
+  if (isAppleSwitchMechanismPayload(data)) {
+    const modelEntries = Object.entries(data?.models || {});
+    const metricRows = modelEntries.flatMap(([modelKey, modelPayload]) => ([
+      {
+        label: `${modelKey} 核心单元`,
+        value: formatPreviewValue(Array.isArray(modelPayload?.core_units) ? modelPayload.core_units.length : 0),
+      },
+      {
+        label: `${modelKey} 敏感层`,
+        value: `L${toSafeNumber(modelPayload?.best_sensitive_layer?.layer_index, 0)}`,
+      },
+    ]));
+    return {
+      typeLabel: '苹果切换机制资产',
+      title: 'Apple 切换机制统一视图',
+      subtitle: '把角色、因果、有符号推进和稳定性压成单一可视化资产，直接服务苹果专题研究界面。',
+      theoryObject: 'protocol_bridge',
+      metricRows: [
+        ...metricRows.slice(0, 6),
+        {
+          label: '峰值层匹配率',
+          value: `${(toSafeNumber(data?.aggregate_stability?.peak_layer_match_rate, 0) * 100).toFixed(1)}%`,
+        },
+      ],
+      analysisLines: [
+        '这类资产不是单纯点云，而是苹果切换主线的统一机制视图。',
+        '默认应重点看有效单元、敏感层、共享底座层，以及各层的正向推进或反向校正。',
+        '它最直接服务 protocol bridge，因为这里开始把内部多层机制压成同一前端阅读接口。',
+      ],
+      rawJson,
+    };
+  }
+
   const hasMultidimProbe = Boolean(
     data?.dimensions?.style
     && data?.dimensions?.logic
@@ -902,6 +951,12 @@ function buildArtifactPreview(data, sourcePath = '') {
 
 function shouldShowResearchAssetInTopRight(scanPreview, selectedScanPath = '') {
   const normalizedPath = String(selectedScanPath || '').toLowerCase();
+  if (
+    normalizedPath.includes('apple_switch_mechanism_view')
+    || scanPreview?.typeLabel === '苹果切换机制资产'
+  ) {
+    return true;
+  }
   if (
     normalizedPath.includes('multidim_encoding_probe')
     || normalizedPath.includes('mass_noun')
@@ -1797,6 +1852,131 @@ function buildUnifiedDecodeNodes(unifiedDecodeResult) {
   return nodes;
 }
 
+function isAppleSwitchMechanismPayload(data) {
+  return data?.schema_version === APPLE_SWITCH_MECHANISM_SCHEMA && data?.concept === 'apple' && data?.models;
+}
+
+function getAppleSwitchUnitColor(unit = {}) {
+  const lateMean = Number(unit?.signed_effect?.late_mean_signed_contrast_switch_coupling || 0);
+  const role = String(unit?.role || '');
+  const kind = String(unit?.kind || '');
+  if (lateMean > 0 || role === 'heldout_booster') {
+    return '#fb7185';
+  }
+  if (kind === 'mlp_neuron' || role === 'anchor_neuron') {
+    return '#f59e0b';
+  }
+  if (role.includes('skeleton') || role.includes('main_booster')) {
+    return '#38bdf8';
+  }
+  if (role.includes('bridge')) {
+    return '#a78bfa';
+  }
+  return '#6ee7b7';
+}
+
+function getAppleSwitchUnitRoleLabel(role = '') {
+  return APPLE_SWITCH_ROLE_LABELS[role] || role || '未分类';
+}
+
+function buildAppleSwitchMechanismNodes(appleSwitchMechanismData) {
+  if (!isAppleSwitchMechanismPayload(appleSwitchMechanismData)) {
+    return [];
+  }
+  const nodes = [];
+  Object.entries(appleSwitchMechanismData.models || {}).forEach(([modelKey, modelPayload], modelIdx) => {
+    const modelColor = APPLE_SWITCH_MODEL_COLORS[modelKey] || '#93c5fd';
+    const actualLayerCount = Math.max(1, Number(modelPayload?.actual_layer_count || LAYER_COUNT));
+    (modelPayload?.core_units || []).forEach((unit, unitIdx) => {
+      const actualLayer = Number(unit?.actual_layer_index || 0);
+      const sceneLayer = Number.isFinite(unit?.scene_layer_index)
+        ? Number(unit.scene_layer_index)
+        : Math.round((actualLayer / Math.max(1, actualLayerCount - 1)) * (LAYER_COUNT - 1));
+      const slot = unit?.kind === 'attention_head'
+        ? Number(unit?.head_index ?? unitIdx)
+        : Number(unit?.neuron_index ?? unitIdx);
+      const neuron = Math.max(0, Math.min(DFF - 1, Math.round((slot % 512) * 36 + modelIdx * 240 + unitIdx * 19)));
+      const effectiveScore = Number(unit?.scores?.effective_score || 0);
+      const causalScore = Number(unit?.scores?.causal_score || 0);
+      const lateMean = Number(unit?.signed_effect?.late_mean_signed_contrast_switch_coupling || 0);
+      const directionLabel = unit?.signed_effect?.direction_label || (lateMean <= 0 ? '正向支撑' : '反向校正');
+      const roleLabel = getAppleSwitchUnitRoleLabel(unit?.role);
+      const unitTypeLabel = unit?.kind === 'mlp_neuron' ? 'MLP 神经元' : '注意力头';
+      const color = getAppleSwitchUnitColor(unit);
+      nodes.push({
+        id: `apple-switch-${modelKey}-${unit.unit_id}`,
+        label: `${modelKey} ${unit.unit_id}`,
+        role: lateMean > 0 ? 'hardBinding' : (unit?.kind === 'mlp_neuron' ? 'micro' : 'route'),
+        nodeGroup: 'apple_switch_mechanism',
+        detailType: 'apple_switch_unit',
+        concept: 'apple',
+        category: '苹果切换机制',
+        modelKey,
+        modelName: modelPayload?.model_name || modelKey,
+        unitId: unit.unit_id,
+        unitRole: unit.role,
+        roleLabel,
+        unitKind: unit.kind,
+        unitTypeLabel,
+        layer: sceneLayer,
+        actualLayer,
+        sceneLayer,
+        neuron,
+        metric: 'effective_score',
+        value: effectiveScore,
+        strength: Math.max(0.18, 0.22 + effectiveScore * 0.72),
+        source: 'apple_switch_mechanism_view_v1',
+        color,
+        position: neuronToPosition(sceneLayer, neuron, 0.22 + effectiveScore * 0.45 + modelIdx * 0.04),
+        size: 0.14 + effectiveScore * 0.24,
+        phase: modelIdx * 0.8 + unitIdx * 0.24,
+        effectiveScore,
+        causalScore,
+        signedLateMean: lateMean,
+        directionLabel,
+        modelColor,
+        detailText: [
+          `${roleLabel}`,
+          `${unitTypeLabel}`,
+          `真实层 L${actualLayer}`,
+          `有效分数 ${effectiveScore.toFixed(3)}`,
+        ].join(' | '),
+        appleSwitchUnit: unit,
+      });
+    });
+  });
+  return nodes;
+}
+
+function buildAppleSwitchMechanismLinks(appleSwitchMechanismData, nodes = []) {
+  if (!isAppleSwitchMechanismPayload(appleSwitchMechanismData) || !Array.isArray(nodes) || nodes.length === 0) {
+    return [];
+  }
+  const byUnitId = Object.fromEntries(nodes.map((node) => [node.unitId, node]));
+  const links = [];
+  Object.entries(appleSwitchMechanismData.models || {}).forEach(([modelKey, modelPayload]) => {
+    const subsetIds = Array.isArray(modelPayload?.effective_circuit?.final_subset)
+      ? modelPayload.effective_circuit.final_subset.map((item) => item?.candidate_id).filter(Boolean)
+      : [];
+    const subsetNodes = subsetIds
+      .map((unitId) => byUnitId[unitId])
+      .filter(Boolean)
+      .sort((a, b) => a.actualLayer - b.actualLayer);
+    for (let idx = 0; idx < subsetNodes.length - 1; idx += 1) {
+      const fromNode = subsetNodes[idx];
+      const toNode = subsetNodes[idx + 1];
+      links.push({
+        id: `apple-switch-link-${modelKey}-${fromNode.unitId}-${toNode.unitId}`,
+        from: fromNode.id,
+        to: toNode.id,
+        color: APPLE_SWITCH_MODEL_COLORS[modelKey] || '#93c5fd',
+        points: [fromNode.position, toNode.position],
+      });
+    }
+  });
+  return links;
+}
+
 function nodeDisplayGroup(role) {
   if (role === 'background') {
     return 'background';
@@ -1821,6 +2001,9 @@ function isNodeVisibleByDisplayLevels(node, displayLevels) {
     return false;
   }
   const levels = displayLevels || {};
+  if (node.detailType === 'apple_switch_unit' || node.nodeGroup === 'apple_switch_mechanism') {
+    return levels.parameter_state !== false;
+  }
   if (node.nodeGroup === 'concept_core' || String(node.id || '').startsWith('apple-core-')) {
     return levels.parameter_state !== false;
   }
@@ -4090,11 +4273,21 @@ export function AppleNeuronSceneContent({
               pointerEvents: 'none',
             }}
           >
-            <div>{`${selected.label} | L${selected.layer}N${selected.neuron}`}</div>
+            <div>
+              {selected.detailType === 'apple_switch_unit'
+                ? `${selected.label} | ${selected.roleLabel || '-'} | L${selected.actualLayer}`
+                : `${selected.label} | L${selected.layer}N${selected.neuron}`}
+            </div>
             {selected.detailType === 'parameter_state' ? (
               <div style={{ marginTop: 4, fontSize: 10, color: '#334155', lineHeight: 1.45 }}>
                 <div>{`参数维度: d${selected.dimIndex}`}</div>
                 <div>{`来源阶段: ${selected.sourceStage}`}</div>
+              </div>
+            ) : null}
+            {selected.detailType === 'apple_switch_unit' ? (
+              <div style={{ marginTop: 4, fontSize: 10, color: '#334155', lineHeight: 1.45 }}>
+                <div>{`类型: ${selected.unitTypeLabel || '-'}`}</div>
+                <div>{`方向: ${selected.directionLabel || '-'}`}</div>
               </div>
             ) : null}
           </div>
@@ -4255,6 +4448,7 @@ export function useAppleNeuronWorkspace() {
   const [scanPreviewLoading, setScanPreviewLoading] = useState(false);
   const [scanPreviewError, setScanPreviewError] = useState('');
   const [scanMechanismData, setScanMechanismData] = useState(null);
+  const [appleSwitchMechanismData, setAppleSwitchMechanismData] = useState(null);
   const [multidimProbeData, setMultidimProbeData] = useState(null);
   const [multidimCausalData, setMultidimCausalData] = useState(null);
   const [hardProblemResults, setHardProblemResults] = useState({});
@@ -4320,6 +4514,10 @@ export function useAppleNeuronWorkspace() {
     () => buildMultidimNodesFromProbe(multidimProbeData, multidimVisible, multidimTopN),
     [multidimProbeData, multidimVisible, multidimTopN]
   );
+  const appleSwitchNodes = useMemo(
+    () => buildAppleSwitchMechanismNodes(appleSwitchMechanismData),
+    [appleSwitchMechanismData]
+  );
   const hardProblemNodes = useMemo(() => buildHardProblemNodes(hardProblemResults), [hardProblemResults]);
   const unifiedDecodeNodes = useMemo(() => buildUnifiedDecodeNodes(unifiedDecodeResult), [unifiedDecodeResult]);
   const predictChain = useMemo(() => generatePredictChain(predictPrompt), [predictPrompt]);
@@ -4355,6 +4553,7 @@ export function useAppleNeuronWorkspace() {
     const visibleFruitGeneral = objectFamilyVisible && showFruitGeneral ? fruitGeneralNodes : [];
     const visibleConceptCore = showAlgorithmConceptCore ? appleCoreNodes : [];
     const visibleMultidim = showAlgorithmStaticEncoding ? multidimNodes : [];
+    const visibleAppleSwitch = appleSwitchNodes;
     const visibleHardProblem = displayLevels?.advanced_analysis !== false ? hardProblemNodes : [];
     const visibleUnifiedDecode = displayLevels?.advanced_analysis !== false ? unifiedDecodeNodes : [];
     return [
@@ -4364,10 +4563,12 @@ export function useAppleNeuronWorkspace() {
       ...visibleFruitSpecific,
       ...queryNodes,
       ...visibleMultidim,
+      ...visibleAppleSwitch,
       ...visibleHardProblem,
       ...visibleUnifiedDecode,
     ];
   }, [
+    appleSwitchNodes,
     backgroundNodes,
     displayLevels?.object_family,
     fruitGeneralNodes,
@@ -4710,6 +4911,20 @@ export function useAppleNeuronWorkspace() {
       return;
     }
 
+    if (isAppleSwitchMechanismPayload(parsed)) {
+      setAppleSwitchMechanismData(parsed);
+      setDisplayLevels((prev) => ({
+        ...prev,
+        parameter_state: true,
+        mechanism_chain: true,
+      }));
+      setShowAlgorithmConceptCore(true);
+      setQueryFeedback(
+        `已导入苹果切换机制资产：${sourceName}，Qwen3 核心单元=${parsed?.models?.qwen3?.core_units?.length || 0}，DeepSeek7B 核心单元=${parsed?.models?.deepseek7b?.core_units?.length || 0}。`
+      );
+      return;
+    }
+
     if (isHardProblemResultPayload(parsed)) {
       const expId = parsed.experiment_id;
       const expLabel = HARD_PROBLEM_EXPERIMENT_LABELS[expId] || expId;
@@ -4941,6 +5156,11 @@ export function useAppleNeuronWorkspace() {
     });
   };
 
+  const appleSwitchLinks = useMemo(
+    () => buildAppleSwitchMechanismLinks(appleSwitchMechanismData, appleSwitchNodes),
+    [appleSwitchMechanismData, appleSwitchNodes]
+  );
+
   const links = useMemo(() => {
     const byId = Object.fromEntries(keyNodes.map((n) => [n.id, n]));
     const linkSpecs = [];
@@ -4979,7 +5199,7 @@ export function useAppleNeuronWorkspace() {
       return group.slice(1).map((node) => [group[0].id, node.id, color]);
     });
 
-    return [...linkSpecs, ...fruitLinks, ...queryLinks, ...multidimLinks]
+    const baseLinks = [...linkSpecs, ...fruitLinks, ...queryLinks, ...multidimLinks]
       .filter(([from, to]) => byId[from] && byId[to])
       .map(([from, to, color]) => ({
         id: `${from}->${to}`,
@@ -4988,7 +5208,10 @@ export function useAppleNeuronWorkspace() {
         color,
         points: [byId[from].position, byId[to].position],
       }));
-  }, [keyNodes, multidimVisible, querySets, showFruit]);
+    return baseLinks.concat(
+      appleSwitchLinks.filter((link) => byId[link.from] && byId[link.to])
+    );
+  }, [appleSwitchLinks, keyNodes, multidimVisible, querySets, showFruit]);
 
   const puzzleCompareState = useMemo(
     () => buildPuzzleCompareState(
@@ -5464,6 +5687,7 @@ export function useAppleNeuronWorkspace() {
         (n) => n.role === 'hardBinding' || n.role === 'hardLong' || n.role === 'hardLocal' || n.role === 'hardTriplet'
       ).length,
       unifiedDecodeNodes: keyNodes.filter((n) => n.role === 'unifiedDecode').length,
+      appleSwitchUnits: keyNodes.filter((n) => n.detailType === 'apple_switch_unit').length,
       total: keyNodes.length,
       perFruit,
       categoryStats,
@@ -5473,6 +5697,7 @@ export function useAppleNeuronWorkspace() {
       multidimActiveDimension,
       hardProblemCount: Object.keys(hardProblemResults || {}).length,
       unifiedDecodeLoaded: Boolean(unifiedDecodeResult),
+      appleSwitchLoaded: Boolean(appleSwitchMechanismData),
       bundleLoaded: Boolean(bundleManifest),
       fourTasksLoaded: Boolean(fourTasksManifest),
       currentToken: modeOverlay.currentToken?.token || '-',
@@ -5502,6 +5727,7 @@ export function useAppleNeuronWorkspace() {
     queryVisibility,
     theoryObject,
     animationMode,
+    appleSwitchMechanismData,
     unifiedDecodeResult,
   ]);
 
@@ -5541,6 +5767,7 @@ export function useAppleNeuronWorkspace() {
     scanPreviewLoading,
     scanPreviewError,
     scanMechanismData,
+    appleSwitchMechanismData,
     multidimProbeData,
     multidimCausalData,
     hardProblemResults,
@@ -5743,6 +5970,236 @@ const inferScanOptionConcept = (fileMeta) => {
   return String(fileMeta?.name || '研究资产');
 };
 
+function AppleSwitchMechanismInsightsPanel({ workspace, compact = false }) {
+  const appleSwitchMechanismData = workspace?.appleSwitchMechanismData || null;
+  const selected = workspace?.selected || null;
+  const setSelected = workspace?.setSelected || null;
+  const nodes = workspace?.nodes || [];
+  const [filterModel, setFilterModel] = useState('all');
+  const [filterKind, setFilterKind] = useState('all');
+  const [filterDirection, setFilterDirection] = useState('all');
+  const [filterCircuit, setFilterCircuit] = useState('all');
+  const [filterKeyword, setFilterKeyword] = useState('');
+
+  if (!isAppleSwitchMechanismPayload(appleSwitchMechanismData)) {
+    return null;
+  }
+
+  const cardStyle = compact ? { ...panelCardStyle, padding: 10 } : panelCardStyle;
+  const modelEntries = Object.entries(appleSwitchMechanismData.models || {});
+  const filteredModelEntries = modelEntries.filter(([modelKey]) => filterModel === 'all' || modelKey === filterModel);
+  const normalizedKeyword = String(filterKeyword || '').trim().toLowerCase();
+  const activeModelKey = selected?.detailType === 'apple_switch_unit'
+    ? selected.modelKey
+    : (filterModel !== 'all' ? filterModel : (appleSwitchMechanismData.models?.deepseek7b ? 'deepseek7b' : modelEntries[0]?.[0]));
+  const activeModel = appleSwitchMechanismData.models?.[activeModelKey] || filteredModelEntries[0]?.[1] || modelEntries[0]?.[1] || null;
+  const selectedUnit = selected?.detailType === 'apple_switch_unit' ? selected.appleSwitchUnit : null;
+  const nodeByUnitId = Object.fromEntries(
+    (Array.isArray(nodes) ? nodes : [])
+      .filter((node) => node?.detailType === 'apple_switch_unit')
+      .map((node) => [node.unitId, node])
+  );
+
+  const filterUnits = (units = []) => units.filter((unit) => {
+    if (filterKind !== 'all' && unit?.kind !== filterKind) {
+      return false;
+    }
+    if (filterDirection !== 'all') {
+      const lateMean = Number(unit?.signed_effect?.late_mean_signed_contrast_switch_coupling || 0);
+      const resolvedDirection = lateMean > 0 ? 'reverse' : 'forward';
+      if (resolvedDirection !== filterDirection) {
+        return false;
+      }
+    }
+    if (filterCircuit === 'in' && !unit?.is_final_circuit_member) {
+      return false;
+    }
+    if (filterCircuit === 'out' && unit?.is_final_circuit_member) {
+      return false;
+    }
+    if (normalizedKeyword) {
+      const haystack = [
+        unit?.unit_id,
+        unit?.role,
+        getAppleSwitchUnitRoleLabel(unit?.role),
+        unit?.kind === 'mlp_neuron' ? 'mlp 神经元' : '注意力头',
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+      if (!haystack.includes(normalizedKeyword)) {
+        return false;
+      }
+    }
+    return true;
+  });
+
+  return (
+    <div style={{ display: 'grid', gap: 10 }}>
+      <div style={cardStyle}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>苹果切换机制总览</div>
+        <div style={{ fontSize: 11, color: '#9bb3de', lineHeight: 1.7, marginBottom: 8 }}>
+          <div>{`统一资产: 已导入`}</div>
+          <div>{`峰值层匹配率: ${(toSafeNumber(appleSwitchMechanismData?.aggregate_stability?.peak_layer_match_rate, 0) * 100).toFixed(1)}%`}</div>
+          <div>{`当前聚焦模型: ${activeModel?.model_name || activeModelKey || '-'}`}</div>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: compact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(5, minmax(0, 1fr))', gap: 8, marginBottom: 10 }}>
+          <select value={filterModel} onChange={(e) => setFilterModel(e.target.value)} style={inputStyle}>
+            <option value="all">全部模型</option>
+            {modelEntries.map(([modelKey, modelPayload]) => (
+              <option key={`apple-switch-filter-model-${modelKey}`} value={modelKey}>{modelPayload?.model_name || modelKey}</option>
+            ))}
+          </select>
+          <select value={filterKind} onChange={(e) => setFilterKind(e.target.value)} style={inputStyle}>
+            <option value="all">全部类型</option>
+            <option value="attention_head">注意力头</option>
+            <option value="mlp_neuron">MLP 神经元</option>
+          </select>
+          <select value={filterDirection} onChange={(e) => setFilterDirection(e.target.value)} style={inputStyle}>
+            <option value="all">全部方向</option>
+            <option value="forward">正向支撑</option>
+            <option value="reverse">反向校正</option>
+          </select>
+          <select value={filterCircuit} onChange={(e) => setFilterCircuit(e.target.value)} style={inputStyle}>
+            <option value="all">全部回路成员</option>
+            <option value="in">仅最小回路内</option>
+            <option value="out">仅最小回路外</option>
+          </select>
+          <input
+            value={filterKeyword}
+            onChange={(e) => setFilterKeyword(e.target.value)}
+            placeholder="关键词: H:2:26 / 锚点 / 头"
+            style={inputStyle}
+          />
+        </div>
+        <div style={{ fontSize: 11, color: '#7ea2c9', lineHeight: 1.7, marginBottom: 8 }}>
+          {`筛选方式: 模型 + 类型 + 方向 + 最小回路成员 + 关键词，可同时生效。`}
+        </div>
+        <div style={{ display: 'grid', gap: 8 }}>
+          {filteredModelEntries.map(([modelKey, modelPayload]) => {
+            const visibleUnits = filterUnits(modelPayload?.core_units || []);
+            return (
+            <div
+              key={`apple-switch-model-${modelKey}`}
+              style={{
+                borderRadius: 10,
+                border: `1px solid ${APPLE_SWITCH_MODEL_COLORS[modelKey] || '#6ea8ff'}55`,
+                padding: '8px 10px',
+                background: 'rgba(255,255,255,0.03)',
+              }}
+            >
+              <div style={{ fontSize: 12, fontWeight: 700, color: APPLE_SWITCH_MODEL_COLORS[modelKey] || '#dbeafe' }}>
+                {modelPayload?.model_name || modelKey}
+              </div>
+              <div style={{ marginTop: 4, fontSize: 11, color: '#9bb3de', lineHeight: 1.7 }}>
+                <div>{`敏感层: L${toSafeNumber(modelPayload?.best_sensitive_layer?.layer_index, 0)}`}</div>
+                <div>{`共享底座最强层: L${toSafeNumber(modelPayload?.best_shared_layer?.layer_index, 0)}`}</div>
+                <div>{`核心单元: ${Array.isArray(modelPayload?.core_units) ? modelPayload.core_units.length : 0}`}</div>
+                <div>{`筛选后单元: ${visibleUnits.length}`}</div>
+                <div>{`最小回路规模: ${Array.isArray(modelPayload?.effective_circuit?.final_subset) ? modelPayload.effective_circuit.final_subset.length : 0}`}</div>
+              </div>
+              <div style={{ marginTop: 8, display: 'grid', gap: 6 }}>
+                {visibleUnits.slice(0, compact ? 4 : 8).map((unit) => {
+                  const node = nodeByUnitId[unit.unit_id];
+                  const clickable = typeof setSelected === 'function' && node;
+                  return (
+                    <button
+                      key={`apple-switch-unit-${modelKey}-${unit.unit_id}`}
+                      type="button"
+                      onClick={() => clickable && setSelected(node)}
+                      style={{
+                        width: '100%',
+                        textAlign: 'left',
+                        borderRadius: 8,
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        padding: '6px 8px',
+                        background: node?.id === selected?.id ? 'rgba(56,189,248,0.16)' : 'rgba(255,255,255,0.02)',
+                        color: '#dbeafe',
+                        cursor: clickable ? 'pointer' : 'default',
+                      }}
+                    >
+                      <div style={{ fontSize: 11, fontWeight: 700 }}>{unit.unit_id}</div>
+                      <div style={{ marginTop: 2, fontSize: 10, color: '#9bb3de' }}>
+                        {`${getAppleSwitchUnitRoleLabel(unit.role)} | 有效 ${toSafeNumber(unit?.scores?.effective_score, 0).toFixed(3)} | ${unit?.signed_effect?.direction_label || '-'}`}
+                      </div>
+                      <div style={{ marginTop: 2, fontSize: 10, color: '#7ea2c9' }}>
+                        {`${unit.kind === 'mlp_neuron' ? 'MLP 神经元' : '注意力头'} | ${unit.is_final_circuit_member ? '最小回路内' : '最小回路外'}`}
+                      </div>
+                    </button>
+                  );
+                })}
+                {visibleUnits.length === 0 ? (
+                  <div style={{ fontSize: 11, color: '#8ea5c5', lineHeight: 1.6 }}>
+                    当前筛选条件下没有命中单元，可以放宽一个条件再看。
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          );
+          })}
+        </div>
+      </div>
+
+      {activeModel ? (
+        <div style={cardStyle}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>
+            {selectedUnit ? `${selected.unitId} 逐层过程` : `${activeModel.model_name || activeModelKey} 层过程时间线`}
+          </div>
+          <div style={{ display: 'grid', gap: 6, maxHeight: compact ? 220 : 320, overflowY: 'auto' }}>
+            {selectedUnit ? (
+              (selectedUnit?.process_timeline || []).map((row) => {
+                const signedValue = toSafeNumber(row?.signed_contrast_switch_coupling, 0);
+                const relativeDrop = toSafeNumber(row?.relative_separation_drop, 0);
+                const signedWidth = Math.min(100, Math.abs(signedValue) * 650);
+                const relativeWidth = Math.min(100, Math.abs(relativeDrop) * 1800);
+                return (
+                  <div key={`apple-switch-process-${selected.unitId}-${row.layer_index}`} style={{ display: 'grid', gap: 4 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, fontSize: 11, color: '#dbeafe' }}>
+                      <span>{`L${row.layer_index}`}</span>
+                      <span>{row.direction_label}</span>
+                    </div>
+                    <div style={{ height: 5, borderRadius: 999, background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+                      <div style={{ width: `${signedWidth}%`, height: '100%', background: signedValue <= 0 ? '#38bdf8' : '#fb7185' }} />
+                    </div>
+                    <div style={{ height: 4, borderRadius: 999, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
+                      <div style={{ width: `${relativeWidth}%`, height: '100%', background: '#f59e0b' }} />
+                    </div>
+                    <div style={{ fontSize: 10, color: '#8ea5c5' }}>
+                      {`signed=${signedValue.toFixed(4)} | relative_drop=${relativeDrop.toFixed(4)} | pc1=${toSafeNumber(row?.pc1_explained_variance_ratio, 0).toFixed(3)}`}
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              (activeModel?.layer_summary || []).map((row) => {
+                const sharedWidth = Math.min(100, toSafeNumber(row?.shared_active_neuron_count, 0) * 4);
+                const splitWidth = Math.min(100, Math.abs(toSafeNumber(row?.excess_switch_drop, 0)) * 1800);
+                return (
+                  <div key={`apple-switch-layer-summary-${activeModelKey}-${row.layer_index}`} style={{ display: 'grid', gap: 4 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, fontSize: 11, color: '#dbeafe' }}>
+                      <span>{`L${row.layer_index}`}</span>
+                      <span>{row.process_label}</span>
+                    </div>
+                    <div style={{ height: 5, borderRadius: 999, background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+                      <div style={{ width: `${sharedWidth}%`, height: '100%', background: '#34d399' }} />
+                    </div>
+                    <div style={{ height: 4, borderRadius: 999, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
+                      <div style={{ width: `${splitWidth}%`, height: '100%', background: '#f59e0b' }} />
+                    </div>
+                    <div style={{ fontSize: 10, color: '#8ea5c5' }}>
+                      {`共享=${toSafeNumber(row?.shared_active_neuron_count, 0)} | 分裂强度=${toSafeNumber(row?.excess_switch_drop, 0).toFixed(4)} | Jaccard=${toSafeNumber(row?.active_jaccard, 0).toFixed(3)}`}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 const buildScanContentLabel = (data, fileMeta) => {
   const nounRecords = Array.isArray(data?.noun_records) ? data.noun_records : [];
   if (nounRecords.length > 0) {
@@ -5770,6 +6227,9 @@ const buildScanContentLabel = (data, fileMeta) => {
   }
   if (data?.bundle_id === 'agi_research_stage_bundle_v1') {
     return '阶段实验总清单';
+  }
+  if (isAppleSwitchMechanismPayload(data)) {
+    return '苹果切换机制';
   }
   if (isUnifiedDecodePayload(data)) {
     return '风格-逻辑-语法';
@@ -5821,6 +6281,8 @@ export function AppleNeuronEncodingInfoPanels({ workspace, compact = false }) {
 
   return (
     <div style={{ display: 'grid', gap: 10 }}>
+      <AppleSwitchMechanismInsightsPanel workspace={workspace} compact={compact} />
+
       <div style={cardStyle}>
         <div style={{ fontSize: 14, fontWeight: 700, color: '#d4e3ff', marginBottom: 8 }}>层级编码签名</div>
         <div style={{ display: 'grid', gap: 6, maxHeight: compact ? 130 : 170, overflowY: 'auto' }}>
@@ -5998,7 +6460,7 @@ export function AppleNeuronResearchAssetInfoPanel({ workspace, compact = false }
   const scanPreviewData = workspace?.scanPreviewData || null;
   const scanPreviewLoading = workspace?.scanPreviewLoading || false;
   const scanPreviewError = workspace?.scanPreviewError || '';
-  const analysisMode = workspace?.analysisMode || 'static';
+  const languageFocus = workspace?.languageFocus || DEFAULT_LANGUAGE_FOCUS;
   const scanPreview = useMemo(
     () => buildArtifactPreview(scanPreviewData, selectedScanPath),
     [scanPreviewData, selectedScanPath]
@@ -6026,28 +6488,37 @@ export function AppleNeuronResearchAssetInfoPanel({ workspace, compact = false }
       ) : null}
 
       <div style={{ marginTop: 10, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 10, display: 'grid', gap: 6 }}>
-                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 10, display: 'grid', gap: 6 }}>
-                    <div style={{ fontSize: 12, color: '#e4f0ff', fontWeight: 700 }}>?????????</div>
-                    <div style={{ fontSize: 11, color: '#9bb3de', lineHeight: 1.7 }}>
-                      <div>{scanPreviewTheory.summary}</div>
-                      <div>{`3D ????${scanPreviewTheory.sceneHint}`}</div>
-                      <div>{`???????${languageFocus?.researchLayer || 'static_encoding'}`}</div>
-                    </div>
-                    <div style={{ display: 'grid', gap: 4 }}>
-                      {scanPreviewTheory.metrics.map((item) => (
-                        <div key={`artifact-data-${item.label}`} style={{ display: 'grid', gridTemplateColumns: '110px 1fr', gap: 8, fontSize: 11, color: '#9bb3de' }}>
-                          <span>{item.label}</span>
-                          <span style={{ color: '#dbe9ff', fontWeight: 700 }}>{item.value}</span>
-                        </div>
-                      ))}
-                    </div>
-          {scanPreview.analysisLines.map((line) => (
-            <div key={`topright-line-${line}`} style={{ fontSize: 11, color: '#8fd4ff', lineHeight: 1.6 }}>
-              {`• ${line}`}
+        <div style={{ fontSize: 12, color: '#e4f0ff', fontWeight: 700 }}>理论映射</div>
+        <div style={{ fontSize: 11, color: '#9bb3de', lineHeight: 1.7 }}>
+          <div>{scanPreviewTheory.summary}</div>
+          <div>{`3D 关注点：${scanPreviewTheory.sceneHint}`}</div>
+          <div>{`当前研究层：${languageFocus?.researchLayer || 'static_encoding'}`}</div>
+        </div>
+        <div style={{ display: 'grid', gap: 4 }}>
+          {scanPreviewTheory.metrics.map((item) => (
+            <div key={`artifact-data-${item.label}`} style={{ display: 'grid', gridTemplateColumns: '110px 1fr', gap: 8, fontSize: 11, color: '#9bb3de' }}>
+              <span>{item.label}</span>
+              <span style={{ color: '#dbe9ff', fontWeight: 700 }}>{item.value}</span>
             </div>
           ))}
         </div>
+        {scanPreview.analysisLines.map((line) => (
+          <div key={`topright-line-${line}`} style={{ fontSize: 11, color: '#8fd4ff', lineHeight: 1.6 }}>
+            {`• ${line}`}
+          </div>
+        ))}
       </div>
+      {scanPreview.metricRows.length > 0 ? (
+        <div style={{ marginTop: 10, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 10, display: 'grid', gap: 4 }}>
+          <div style={{ fontSize: 12, color: '#e4f0ff', fontWeight: 700 }}>关键指标</div>
+          {scanPreview.metricRows.map((item) => (
+            <div key={`preview-metric-${item.label}`} style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 8, fontSize: 11, color: '#9bb3de' }}>
+              <span>{item.label}</span>
+              <span style={{ color: '#dbe9ff', fontWeight: 700 }}>{item.value}</span>
+            </div>
+          ))}
+        </div>
+      ) : null}
 
       <div style={{ marginTop: 10, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 10, display: 'grid', gap: 6 }}>
         <div style={{ fontSize: 12, color: '#e4f0ff', fontWeight: 700 }}>原始数据</div>
@@ -7023,6 +7494,24 @@ export function AppleNeuronMultidimSettingsPanel({ workspace, compact = false })
     if (!selected) {
       return null;
     }
+    if (selected.detailType === 'apple_switch_unit') {
+      const unit = selected.appleSwitchUnit || {};
+      return {
+        sourceTier: '苹果切换机制资产',
+        dataGroup: 'core',
+        exactness: '角色 + 因果 + 有符号推进 + 稳定性',
+        detailRows: [
+          { label: '对象', value: selected.label },
+          { label: '模型', value: selected.modelName || selected.modelKey || '-' },
+          { label: '角色', value: selected.roleLabel || '-' },
+          { label: '类型', value: selected.unitTypeLabel || '-' },
+          { label: '真实层', value: `L${selected.actualLayer}` },
+          { label: '有效分数', value: Number(selected.effectiveScore || 0).toFixed(4) },
+          { label: 'search_drop', value: Number(unit?.causal_effect?.search_drop || 0).toFixed(4) },
+          { label: '晚层有符号耦合', value: Number(unit?.signed_effect?.late_mean_signed_contrast_switch_coupling || 0).toFixed(4) },
+        ],
+      };
+    }
     const sourceTier = selected.source === 'textbox-query-generator'
       ? '交互生成'
       : selected.source === 'multidim_encoding_probe'
@@ -7057,6 +7546,23 @@ export function AppleNeuronMultidimSettingsPanel({ workspace, compact = false })
   const selectedNodeDetails = useMemo(() => {
     if (!selected) {
       return null;
+    }
+    if (selected.detailType === 'apple_switch_unit') {
+      const unit = selected.appleSwitchUnit || {};
+      return {
+        detailRows: [
+          { label: '单元', value: selected.unitId || selected.label },
+          { label: '模型', value: selected.modelName || selected.modelKey || '-' },
+          { label: '角色', value: selected.roleLabel || '-' },
+          { label: '类型', value: selected.unitTypeLabel || '-' },
+          { label: '真实层', value: `L${selected.actualLayer}` },
+          { label: '顺向峰值层', value: `L${unit?.signed_effect?.forward_peak_layer ?? '-'}` },
+          { label: '反向峰值层', value: `L${unit?.signed_effect?.reverse_peak_layer ?? '-'}` },
+          { label: '方向', value: unit?.signed_effect?.direction_label || '-' },
+          { label: 'utility', value: Number(unit?.causal_effect?.utility || 0).toFixed(4) },
+          { label: '稳定性分数', value: Number(unit?.stability?.stability_score || 0).toFixed(4) },
+        ],
+      };
     }
     if (selected.detailType === 'parameter_state') {
       return {

@@ -1,0 +1,139 @@
+{
+  "exp1_dimension": {
+    "single_token": {
+      "L0": 8,
+      "L3": 6,
+      "L6": 7,
+      "L9": 1,
+      "L12": 1,
+      "L15": 1,
+      "L18": 1,
+      "L21": 1,
+      "L24": 1,
+      "L27": 1,
+      "L30": 1,
+      "L33": 1,
+      "L35": 1
+    },
+    "adj_noun": {
+      "L0": 8,
+      "L3": 7,
+      "L6": 8,
+      "L9": 8,
+      "L12": 8,
+      "L15": 8,
+      "L18": 8,
+      "L21": 8,
+      "L24": 8,
+      "L27": 8,
+      "L30": 8,
+      "L33": 8,
+      "L35": 8
+    },
+    "full_sentence": {
+      "L0": 2561,
+      "L3": 7,
+      "L6": 7,
+      "L9": 7,
+      "L12": 7,
+      "L15": 6,
+      "L18": 7,
+      "L21": 7,
+      "L24": 7,
+      "L27": 7,
+      "L30": 6,
+      "L33": 6,
+      "L35": 7
+    },
+    "multi_sentence": {
+      "L0": 2561,
+      "L3": 7,
+      "L6": 7,
+      "L9": 7,
+      "L12": 7,
+      "L15": 7,
+      "L18": 7,
+      "L21": 7,
+      "L24": 6,
+      "L27": 6,
+      "L30": 6,
+      "L33": 7,
+      "L35": 7
+    }
+  },
+  "exp2_cohesion": {
+    "single": {
+      "fruit": {
+        "intra": 0.3654,
+        "inter": NaN,
+        "ratio": NaN
+      },
+      "animal": {
+        "intra": 0.0353,
+        "inter": NaN,
+        "ratio": NaN
+      },
+      "color": {
+        "intra": 0.0141,
+        "inter": NaN,
+        "ratio": NaN
+      }
+    },
+    "adj_noun": {
+      "fruit": {
+        "intra": 0.1923,
+        "inter": NaN,
+        "ratio": NaN
+      },
+      "animal": {
+        "intra": 0.1784,
+        "inter": NaN,
+        "ratio": NaN
+      },
+      "color": {
+        "intra": 0.1636,
+        "inter": NaN,
+        "ratio": NaN
+      }
+    },
+    "sentence": {
+      "fruit": {
+        "intra": 0.0139,
+        "inter": NaN,
+        "ratio": NaN
+      },
+      "animal": {
+        "intra": 0.0329,
+        "inter": NaN,
+        "ratio": NaN
+      },
+      "color": {
+        "intra": 0.006,
+        "inter": NaN,
+        "ratio": NaN
+      }
+    }
+  },
+  "exp3_neurons": {
+    "single": {
+      "cv_mean": 24.8957,
+      "cv_max": 24.8957,
+      "active_ratio": 0.0
+    },
+    "adj_noun": {
+      "cv_mean": 1.3893,
+      "cv_max": 1.3893,
+      "active_ratio": 0.0
+    },
+    "sentence_river": {
+      "cv_mean": 1.4697,
+      "cv_max": 1.4697,
+      "active_ratio": 0.0
+    },
+    "sentence_finance": {
+      "cv_mean": 1.4302,
+      "cv_max": 1.4302,
+      "active_ratio": 0.0
+    }
+  }
+}

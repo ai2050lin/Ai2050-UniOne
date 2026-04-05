@@ -1,0 +1,22 @@
+{
+  "color→noun": {
+    "peak_layer": 9,
+    "peak_cos_d": 0.453
+  },
+  "size→noun": {
+    "peak_layer": 8,
+    "peak_cos_d": 0.4632
+  },
+  "speed→noun": {
+    "peak_layer": 8,
+    "peak_cos_d": 0.4146
+  },
+  "color→noun(longer)": {
+    "peak_layer": 8,
+    "peak_cos_d": 0.4647
+  },
+  "color→noun(sentence)": {
+    "peak_layer": 9,
+    "peak_cos_d": 0.283
+  }
+}

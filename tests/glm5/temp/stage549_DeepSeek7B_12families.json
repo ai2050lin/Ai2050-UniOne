@@ -1,0 +1,220 @@
+{
+  "model": "DeepSeek7B",
+  "n_layers": 28,
+  "n_families": 12,
+  "n_words": 36,
+  "sample_layers": [
+    0,
+    3,
+    6,
+    9,
+    12,
+    15,
+    18,
+    21,
+    24,
+    27
+  ],
+  "family_cohesion": {
+    "0": {
+      "intra_mean": 0.576196,
+      "inter_mean": 0.642041,
+      "intra_inter_ratio": 0.897444
+    },
+    "3": {
+      "intra_mean": 0.42342,
+      "inter_mean": 0.488986,
+      "intra_inter_ratio": 0.865914
+    },
+    "6": {
+      "intra_mean": 0.379788,
+      "inter_mean": 0.43274,
+      "intra_inter_ratio": 0.877635
+    },
+    "9": {
+      "intra_mean": 0.315865,
+      "inter_mean": 0.371465,
+      "intra_inter_ratio": 0.850322
+    },
+    "12": {
+      "intra_mean": 0.299269,
+      "inter_mean": 0.359034,
+      "intra_inter_ratio": 0.833538
+    },
+    "15": {
+      "intra_mean": 0.263664,
+      "inter_mean": 0.323377,
+      "intra_inter_ratio": 0.815344
+    },
+    "18": {
+      "intra_mean": 0.214717,
+      "inter_mean": 0.260087,
+      "intra_inter_ratio": 0.825557
+    },
+    "21": {
+      "intra_mean": 0.187459,
+      "inter_mean": 0.230335,
+      "intra_inter_ratio": 0.813855
+    },
+    "24": {
+      "intra_mean": 0.156963,
+      "inter_mean": 0.195664,
+      "intra_inter_ratio": 0.80221
+    },
+    "27": {
+      "intra_mean": 0.383654,
+      "inter_mean": 0.516624,
+      "intra_inter_ratio": 0.742617
+    }
+  },
+  "per_family_intra": {
+    "fruit": {
+      "label": "水果",
+      "intra_dist": 0.664692
+    },
+    "animal": {
+      "label": "动物",
+      "intra_dist": 0.1488
+    },
+    "tool": {
+      "label": "工具",
+      "intra_dist": 0.628618
+    },
+    "org": {
+      "label": "组织",
+      "intra_dist": 0.538653
+    },
+    "celestial": {
+      "label": "天体",
+      "intra_dist": 0.05727
+    },
+    "abstract": {
+      "label": "抽象",
+      "intra_dist": 0.565068
+    },
+    "color": {
+      "label": "颜色",
+      "intra_dist": 0.078838
+    },
+    "body": {
+      "label": "身体",
+      "intra_dist": 0.147919
+    },
+    "instrument": {
+      "label": "乐器",
+      "intra_dist": 0.232434
+    },
+    "country": {
+      "label": "国家",
+      "intra_dist": 0.743444
+    },
+    "emotion": {
+      "label": "情绪",
+      "intra_dist": 0.724836
+    },
+    "material": {
+      "label": "材料",
+      "intra_dist": 0.073277
+    }
+  },
+  "info_geometry": {
+    "0": {
+      "effective_dim_90": 29
+    },
+    "3": {
+      "effective_dim_90": 1
+    },
+    "6": {
+      "effective_dim_90": 1
+    },
+    "9": {
+      "effective_dim_90": 1
+    },
+    "12": {
+      "effective_dim_90": 1
+    },
+    "15": {
+      "effective_dim_90": 1
+    },
+    "18": {
+      "effective_dim_90": 1
+    },
+    "21": {
+      "effective_dim_90": 1
+    },
+    "24": {
+      "effective_dim_90": 1
+    },
+    "27": {
+      "effective_dim_90": 7
+    }
+  },
+  "center_distances": {
+    "fruit-animal": 0.2509,
+    "fruit-tool": 0.1086,
+    "fruit-org": 0.2012,
+    "fruit-celestial": 0.2965,
+    "fruit-abstract": 0.1562,
+    "fruit-color": 0.2722,
+    "fruit-body": 0.2974,
+    "fruit-instrument": 0.4566,
+    "fruit-country": 0.3212,
+    "fruit-emotion": 0.3678,
+    "fruit-material": 0.5747,
+    "animal-tool": 0.2118,
+    "animal-org": 0.2664,
+    "animal-celestial": 0.0443,
+    "animal-abstract": 0.2217,
+    "animal-color": 0.034,
+    "animal-body": 0.0459,
+    "animal-instrument": 0.9593,
+    "animal-country": 0.5723,
+    "animal-emotion": 0.4246,
+    "animal-material": 0.3567,
+    "tool-org": 0.1341,
+    "tool-celestial": 0.2185,
+    "tool-abstract": 0.0919,
+    "tool-color": 0.222,
+    "tool-body": 0.2246,
+    "tool-instrument": 0.5039,
+    "tool-country": 0.2929,
+    "tool-emotion": 0.3765,
+    "tool-material": 0.5562,
+    "org-celestial": 0.2529,
+    "org-abstract": 0.0579,
+    "org-color": 0.2836,
+    "org-body": 0.2875,
+    "org-instrument": 0.5203,
+    "org-country": 0.234,
+    "org-emotion": 0.4809,
+    "org-material": 0.7104,
+    "celestial-abstract": 0.2115,
+    "celestial-color": 0.0385,
+    "celestial-body": 0.0215,
+    "celestial-instrument": 0.9605,
+    "celestial-country": 0.5192,
+    "celestial-emotion": 0.4073,
+    "celestial-material": 0.3404,
+    "abstract-color": 0.2297,
+    "abstract-body": 0.2372,
+    "abstract-instrument": 0.5311,
+    "abstract-country": 0.2333,
+    "abstract-emotion": 0.4184,
+    "abstract-material": 0.6494,
+    "color-body": 0.033,
+    "color-instrument": 0.968,
+    "color-country": 0.5482,
+    "color-emotion": 0.4035,
+    "color-material": 0.3211,
+    "body-instrument": 0.9597,
+    "body-country": 0.5323,
+    "body-emotion": 0.3411,
+    "body-material": 0.2657,
+    "instrument-country": 0.3592,
+    "instrument-emotion": 0.6175,
+    "instrument-material": 1.0409,
+    "country-emotion": 0.441,
+    "country-material": 0.7507,
+    "emotion-material": 0.1931
+  }
+}

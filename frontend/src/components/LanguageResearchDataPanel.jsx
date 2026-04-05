@@ -61,6 +61,17 @@ function renderHoverDetail(info) {
   if (info.type === 'manifold') {
     return `流形点 ${info.index}，PC1/2/3 = ${info.pc1?.toFixed?.(2) || '-'}, ${info.pc2?.toFixed?.(2) || '-'}, ${info.pc3?.toFixed?.(2) || '-'}`;
   }
+  if (info.detailType === 'apple_switch_unit') {
+    return [
+      info.unitId ? `单元 ${info.unitId}` : null,
+      info.modelName ? `模型 ${info.modelName}` : null,
+      info.roleLabel ? `角色 ${info.roleLabel}` : null,
+      info.unitTypeLabel ? `类型 ${info.unitTypeLabel}` : null,
+      typeof info.actualLayer === 'number' ? `真实层 L${info.actualLayer}` : null,
+      typeof info.effectiveScore === 'number' ? `有效分数 ${info.effectiveScore.toFixed(4)}` : null,
+      info.directionLabel ? `方向 ${info.directionLabel}` : null,
+    ].filter(Boolean).join(' | ');
+  }
   if (info.type?.startsWith?.('encoding3d_') || info.type?.startsWith?.('layerfirst_')) {
     return [
       info.label ? `名称 ${info.label}` : null,
