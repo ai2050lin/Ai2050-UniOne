@@ -37384,3 +37384,675 @@ python tests/codex/stage507_gemma4_hooking_smoke.py
 - 把 `GLM4` 和 `Gemma4` 也补到同口径的多家族结构模板泛化协议。
 - 从家族级规律继续推进到“个体级独有残差预测”。
 - 最终做“新名词结构预测”实验：给定家族骨干与少量描述，预测其神经元级结构字段。
+
+## 2026-04-05 22:42 阶段推进：GLM5 语言方案最新记录评估与后续总计划
+
+### 本轮执行命令
+- `rg --files -g "AGI_GLM5_LANGUAGE.md" -g "AGI_GLM5_MEMO.md"`
+- `Get-ChildItem -Force`
+- `Get-Content -Path "research\glm5\docs\AGI_GLM5_LANGUAGE.md" -Tail 220`
+- `Get-Content -Path "research\glm5\docs\AGI_GLM5_MEMO.md" -Tail 260`
+- `Get-Content -Path "research\glm5\docs\AGI_GLM5_LANGUAGE.md" -Encoding utf8 -Tail 220`
+- `Get-Content -Path "research\glm5\docs\AGI_GLM5_MEMO.md" -Encoding utf8 -Tail 260`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+- `Test-Path "research\gpt5\docs\AGI_GPT5_MEMO.md"`
+- `Get-Content -Path "research\gpt5\docs\AGI_GPT5_MEMO.md" -Encoding utf8 -Tail 80`
+
+### 本轮核心判断
+- 这套方案当前已经不是“纯猜想”，而是进入了“强经验规律 + 局部闭式方程 + 多模型比较”的中期阶段。
+- 最可靠的成果集中在“多义消歧”这条主线上，尤其是：
+  - 残差流闭式表达
+  - `hidden -> logit`（隐藏态到输出分数）统一方程
+  - 极低维消歧子空间
+  - `GLM4 / Qwen3 / DS7B / Gemma4`（四模型）差异归因
+- 但距离“语言背后编码机制”的第一性原理（从最基础出发、可生成、可判伪、可统一）还差关键一步：
+  - 现在主要解释了“观测到的现象如何组织起来”
+  - 还没有解释“这些现象为什么必然这样产生”
+
+### 可行性评估
+- `高`：把语言中的某类能力压缩成低维结构、并研究其在网络中的传播与读出，这条路线是可行的。
+- `中高`：从消歧切入，再扩展到语法、关系、风格、任务路由，这个扩张路径是合理的。
+- `中`：想直接从这些结果跳到“超越现有数学体系的新数学结构”，目前证据还远远不够。
+- `中低`：想在短期内得到统一全部语言能力的唯一方程，风险很高，容易过拟合于当前任务集。
+
+### 当前方案的主要问题
+- 研究对象偏窄：现在最强证据基本围绕“消歧”，不等于“语言整体”。
+- 任务口径偏单一：如果主要依赖双句对比、多义词、margin（间隔）与方向几何，那么理论可能只抓住了判别过程的一部分。
+- 不变量还不够硬：已有不少所谓不变量后来被推翻，说明口径仍在变。
+- 跨模型统一性仍不足：四个模型表现出明显不同策略，当前更像“同任务下的多种实现”，还不是单一机制。
+- 因果仍不够闭环：已有注入和消融，但更像“局部因果”，不是“机制级因果”。
+- 数学层级仍停留在描述方程：离“生成方程”“约束方程”“最优性原理”还有距离。
+
+### 理论数学上的真实进度
+- 已经到达：
+  - 局部状态变量定义：`h_l`、`delta_l`、`d_l`
+  - 局部守恒/演化表达：残差累加、方向旋转、低维有效秩
+  - 局部读出方程：`logit_margin ≈ cos(d, delta_u) × ||d||`
+- 还没有到达：
+  - 最小编码基元
+  - 编码复杂度定理
+  - 路由函数与绑定函数的统一数学形式
+  - 跨任务共享不变量的必要充分条件
+  - 能生成语言结构而非只解释结果的第一性原理
+
+### 下一阶段最理想的大研究计划
+- 第一大任务：把“消歧理论”升级为“多能力统一编码理论”
+  - 同口径扩展到：语法、指代、关系抽取、风格保持、组合泛化、跨句推理
+  - 检查同一套 `h/d/delta`（隐藏态/差异方向/层增量）变量是否仍成立
+- 第二大任务：建立“最小编码基元”搜索协议
+  - 不再只看方向与子空间
+  - 要找最小可组合单元：是方向、局部流形（局部弯曲空间）、路径、门控模式，还是多者组合
+- 第三大任务：把“描述方程”推进成“生成方程”
+  - 目标不是解释已有 hidden state（隐藏态）
+  - 而是从输入结构直接预测中层与末层编码骨架
+- 第四大任务：做严格判伪
+  - 预注册一批会失败的预测
+  - 明确什么结果一出现，当前理论必须被推翻或重写
+- 第五大任务：建立跨模型比较框架
+  - 区分哪些是架构特例，哪些才是语言编码本体
+  - 把“模型风格”与“语言不变量”硬分离
+
+### 最严格的结论
+- 这条研究路线值得继续，而且已经形成了一个强中层理论雏形。
+- 但它目前更像“消歧编码动力学理论”，还不能直接宣称已经逼近“语言背后的终极编码机制”。
+- 真正的突破点不再是多做几个局部实验，而是把研究对象从“一个强现象”升级为“一组共享原理”，并用严格判伪把理论逼硬。
+
+## 2026-04-05 22:49 阶段推进：详细计划落地 + stage638 多能力统一协议首轮执行
+
+### 本轮执行命令
+- `Get-ChildItem -Path "research\glm5\docs" | Select-Object Name,LastWriteTime,Length`
+- `Get-ChildItem -Path "tests\codex" | Sort-Object Name | Select-Object -Last 40 -ExpandProperty Name`
+- `Get-ChildItem -Path "tests\glm5" | Sort-Object Name | Select-Object -Last 30 -ExpandProperty Name`
+- `Get-Content -Path "tests\glm5\stage634_635_636_637_bottleneck_deep.py" -Encoding utf8 -TotalCount 220`
+- `Get-Content -Path "tests\codex\multimodel_language_shared.py" -Encoding utf8 -TotalCount 260`
+- `Get-Content -Path "tests\glm5\stage631_632_633_closed_form_optimal.py" -Encoding utf8 -TotalCount 220`
+- `python -m py_compile "tests\codex\stage638_multicapability_unified_protocol.py"`
+- `python "tests\codex\stage638_multicapability_unified_protocol.py" --model qwen3 --dry-run --max-pairs 1`
+- `python "tests\codex\stage638_multicapability_unified_protocol.py" --model qwen3 --max-pairs 1`
+- `python -m py_compile "tests\codex\stage638_multicapability_unified_protocol.py"`
+- `python "tests\codex\stage638_multicapability_unified_protocol.py" --model qwen3 --max-pairs 1`
+- `Get-Content -Path "tests\codex_temp\stage638_multicapability_unified_protocol_qwen3_20260405_2248\summary.json" -Encoding utf8 -TotalCount 220`
+- `Get-Content -Path "tests\codex_temp\stage638_multicapability_unified_protocol_qwen3_20260405_2248\REPORT.md" -Encoding utf8 -TotalCount 220`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+- `Get-ChildItem -Path "tests\codex_temp\stage638_multicapability_unified_protocol_qwen3_20260405_2249" | Select-Object Name,Length`
+
+### 新增文件
+- `research/glm5/docs/AGI_GLM5_NEXT_STAGE_PLAN_20260405.md`
+- `tests/codex/stage638_multicapability_unified_protocol.py`
+- `tests/codex_temp/stage638_multicapability_unified_protocol_qwen3_20260405_2248/summary.json`
+- `tests/codex_temp/stage638_multicapability_unified_protocol_qwen3_20260405_2248/REPORT.md`
+- `tests/codex_temp/stage638_multicapability_unified_protocol_qwen3_20260405_2249/summary.json`
+- `tests/codex_temp/stage638_multicapability_unified_protocol_qwen3_20260405_2249/REPORT.md`
+
+### 本轮核心动作
+- 把“下一阶段最理想研究计划”从口头建议落成了明确文档，拆成五个任务包：
+  - 统一测量协议
+  - 跨能力共享不变量
+  - 最小编码基元
+  - 生成方程
+  - 严格判伪
+- 新增 `stage638`，第一次把同一套测量口径同时用于：
+  - 多义消歧
+  - 语法一致性
+  - 关系抽取
+  - 指代消解
+  - 风格控制
+- 修正了一个关键口径问题：
+  - 原先 `final_alignment` 会被正负样本互相抵消，摘要错误显示为 `0.0`
+  - 现已改为同时记录：
+    - `avg_abs_final_alignment`
+    - `signed_avg_final_alignment`
+
+### qwen3 首轮小样本结果
+- 运行范围：五类能力各 `1` 对样本
+- 总体：
+  - `overall_pair_accuracy = 0.60`
+  - `overall_mean_margin = 4.6665`
+  - `overall_mean_d_norm_growth = 339.31`
+  - `overall_mean_rotation_deg = 37.93`
+  - `overall_mean_abs_final_alignment = 0.1679`
+- 分能力：
+  - `syntax`
+    - `pair_accuracy = 1.0`
+    - `mean_d_norm_growth = 155.02`
+    - `mean_abs_final_alignment = 0.3559`
+  - `relation`
+    - `pair_accuracy = 1.0`
+    - `mean_d_norm_growth = 572.70`
+    - `mean_abs_final_alignment = 0.1912`
+  - `coref`
+    - `pair_accuracy = 1.0`
+    - `mean_d_norm_growth = 366.74`
+    - `mean_abs_final_alignment = 0.0698`
+  - `disamb`
+    - `pair_accuracy = 0.0`
+    - `mean_d_norm_growth = 251.49`
+    - `mean_abs_final_alignment = 0.1159`
+  - `style`
+    - `pair_accuracy = 0.0`
+    - `mean_d_norm_growth = 350.61`
+    - `mean_abs_final_alignment = 0.1066`
+
+### 理论数学进度
+- 这是一个关键推进：变量体系第一次从“单能力消歧”开始试探性扩展到“多能力统一协议”。
+- 初步信号是积极的：
+  - 即使只有五个小样本，语法 / 关系 / 指代都出现了明显的 `d_norm`（差异向量范数）放大与逐层旋转
+  - 这说明“差异方向动力学”不只存在于消歧，至少有机会扩展为更一般的语言编码变量
+- 但当前还不能下强结论：
+  - `disamb` 与 `style` 在这个首轮口径上失败，说明协议样本、提示形式和候选构造还需打磨
+  - 五类能力的峰值层目前都落在末层，可能反映真实共性，也可能说明现在取的是“最后 token（最后一个词元）读出位点”，口径仍偏粗
+- 因而现阶段最严格的表述应当是：
+  - **“多能力共享编码理论”已经有了可执行的实验接口，但还没有得到足够硬的支持证据。**
+
+### 严格问题与瓶颈
+- `style` 任务当前更像提示跟随，不一定能干净代表“风格编码”本体。
+- `disamb` 样本里一个方向成功、一个方向失败，说明候选词与提示模板仍可能混入表面词频偏置。
+- `avg_abs_final_alignment` 目前整体偏低，说明“方向对齐”在多能力协议下仍然是薄弱信号，后续可能需要：
+  - 改成代表词组方向
+  - 改成句级对比方向
+  - 或加入中层对齐而非只看末层
+
+### 下一步执行顺序
+- 先不急着跑四模型全量。
+- 下一步更合理的是：
+  1. 扩充 `stage638` 每类到 `3-5` 对样本
+  2. 优化 `disamb` 与 `style` 的提示和候选构造
+  3. 用修正后的协议先跑完整 `qwen3`
+  4. 再按显存串行顺序跑：
+     - `deepseek7b`
+     - `gemma4`
+     - `glm4`
+
+## 2026-04-05 22:55 阶段推进：stage638 四模型完整首轮跑通
+
+### 本轮执行命令
+- `Get-Content -Path "tests\codex\stage638_multicapability_unified_protocol.py" -Encoding utf8 -TotalCount 260`
+- `Get-Content -Path "tests\codex_temp\stage638_multicapability_unified_protocol_qwen3_20260405_2249\summary.json" -Encoding utf8 | Select-Object -First 260`
+- `python -m py_compile "tests\codex\stage638_multicapability_unified_protocol.py"`
+- `python "tests\codex\stage638_multicapability_unified_protocol.py" --model qwen3 --capability disamb`
+- `python "tests\codex\stage638_multicapability_unified_protocol.py" --model qwen3 --capability style`
+- `python -m py_compile "tests\codex\stage638_multicapability_unified_protocol.py"`
+- `python "tests\codex\stage638_multicapability_unified_protocol.py" --model qwen3`
+- `python "tests\codex\stage638_multicapability_unified_protocol.py" --model deepseek7b`
+- `python "tests\codex\stage638_multicapability_unified_protocol.py" --model gemma4`
+- `python "tests\codex\stage638_multicapability_unified_protocol.py" --model glm4`
+- `Get-Content -Path "tests\codex_temp\stage638_multicapability_unified_protocol_qwen3_20260405_225340\summary.json" -Encoding utf8 -TotalCount 120`
+- `Get-Content -Path "tests\codex_temp\stage638_multicapability_unified_protocol_deepseek7b_20260405_225340\summary.json" -Encoding utf8 -TotalCount 120`
+- `Get-Content -Path "tests\codex_temp\stage638_multicapability_unified_protocol_gemma4_20260405_225504\summary.json" -Encoding utf8 -TotalCount 120`
+- `Get-Content -Path "tests\codex_temp\stage638_multicapability_unified_protocol_glm4_20260405_225418\summary.json" -Encoding utf8 -TotalCount 120`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+- `Get-ChildItem -Path "tests\codex_temp\stage638_multicapability_unified_protocol_qwen3_20260405_225340" | Select-Object Name,Length`
+- `Get-ChildItem -Path "tests\codex_temp\stage638_multicapability_unified_protocol_deepseek7b_20260405_225340" | Select-Object Name,Length`
+- `Get-ChildItem -Path "tests\codex_temp\stage638_multicapability_unified_protocol_gemma4_20260405_225504" | Select-Object Name,Length`
+- `Get-ChildItem -Path "tests\codex_temp\stage638_multicapability_unified_protocol_glm4_20260405_225418" | Select-Object Name,Length`
+
+### 本轮代码与结果文件
+- 更新：
+  - `tests/codex/stage638_multicapability_unified_protocol.py`
+- 新增结果目录：
+  - `tests/codex_temp/stage638_multicapability_unified_protocol_qwen3_20260405_225340/`
+  - `tests/codex_temp/stage638_multicapability_unified_protocol_deepseek7b_20260405_225340/`
+  - `tests/codex_temp/stage638_multicapability_unified_protocol_gemma4_20260405_225504/`
+  - `tests/codex_temp/stage638_multicapability_unified_protocol_glm4_20260405_225418/`
+- 新增比较报告：
+  - `tests/codex_temp/stage638_cross_model_comparison_20260405_2255/REPORT.md`
+
+### 工程修正
+- 修正了 `stage638` 的两个关键口径问题：
+  1. `final_alignment` 由“正负抵消的平均”改为同时记录：
+     - `avg_abs_final_alignment`
+     - `signed_avg_final_alignment`
+  2. 时间戳精度从“分钟”提升到“秒”，避免连续运行覆盖结果目录
+
+### 四模型总体结果
+- `qwen3`
+  - `overall_pair_accuracy = 0.70`
+  - `overall_mean_margin = 5.2824`
+  - `overall_mean_d_norm_growth = 385.88`
+  - `overall_mean_rotation_deg = 37.67`
+- `deepseek7b`
+  - `overall_pair_accuracy = 0.70`
+  - `overall_mean_margin = 4.7858`
+  - `overall_mean_d_norm_growth = 226.73`
+  - `overall_mean_rotation_deg = 35.55`
+- `gemma4`
+  - `overall_pair_accuracy = 0.20`
+  - `overall_mean_margin = 0.7918`
+  - `overall_mean_d_norm_growth = 4.22`
+  - `overall_mean_rotation_deg = 52.91`
+- `glm4`
+  - `overall_pair_accuracy = 0.80`
+  - `overall_mean_margin = 4.8011`
+  - `overall_mean_d_norm_growth = 6870.73`
+  - `overall_mean_rotation_deg = 34.35`
+
+### 第一轮跨模型结论
+- 共享趋势已经出现：
+  - `syntax / relation / coref` 在 `qwen3 / deepseek7b / glm4` 上都比较稳定
+  - 这些能力都出现了明显的 `d_norm`（差异向量范数）放大与逐层旋转
+- 分化趋势也很明显：
+  - `glm4` 是“持续放大”策略最强者
+  - `gemma4` 是“高旋转 + 低放大 + 早峰值”代表
+  - `qwen3 / deepseek7b` 位于中间带
+- `style` 在四模型上都弱：
+  - 说明当前协议还没有真正抓住“风格编码”
+  - 这不该被粉饰成统一理论成功，反而说明当前理论仍有明确边界
+
+### 理论数学进度
+- 一个重要突破已经形成：
+  - `h_l / delta_l / d_l` 不再只是“多义消歧专用变量”
+  - 它们已经开始对语法、关系、指代显示出跨能力解释力
+- 但同样必须严格承认：
+  - 当前变量体系更接近“离散判别型语言能力动力学”
+  - 还不是“完整语言编码统一理论”
+- 现在最可靠的中期结论应改写为：
+  - **语言中的若干离散判别能力，可能共享一套“差异方向放大 + 逐层旋转 + 末层读出”的动力学框架。**
+
+### 当前硬伤与瓶颈
+- `style` 协议仍然过弱，当前更像提示跟随任务，而不是风格本体。
+- 各模型峰值层几乎都固定在末层或固定层位，说明“只看最后 token”口径过粗，下一轮必须加入中层读出指标。
+- `disamb` 仍然只有部分稳定，说明样本数和候选构造还不够硬。
+
+### 下一阶段最合理的执行方向
+- 不再先扩模型数量，而是先扩协议质量：
+  1. 每类样本扩到 `5` 对以上
+  2. `style` 改为短句改写 / 正式度等级 / 礼貌层级协议
+  3. 增加中层对齐与中层读出指标
+  4. 在此基础上再复跑四模型，检查本轮出现的共享趋势是否仍成立
+
+## 2026-04-05 23:08 阶段推进：stage638 第二轮协议强化 + 四模型完整复测
+
+### 本轮执行命令
+- `Get-Content -Path "tests\codex\stage638_multicapability_unified_protocol.py" -Encoding utf8`
+- `Get-Content -Path "tests\codex_temp\stage638_cross_model_comparison_20260405_2255\REPORT.md" -Encoding utf8`
+- `python -m py_compile "tests\codex\stage638_multicapability_unified_protocol.py"`
+- `python "tests\codex\stage638_multicapability_unified_protocol.py" --model qwen3 --dry-run`
+- `python "tests\codex\stage638_multicapability_unified_protocol.py" --model qwen3`
+- `python "tests\codex\stage638_multicapability_unified_protocol.py" --model deepseek7b`
+- `python "tests\codex\stage638_multicapability_unified_protocol.py" --model gemma4`
+- `python "tests\codex\stage638_multicapability_unified_protocol.py" --model glm4`
+- `Get-ChildItem -Path "tests\codex_temp" | Sort-Object LastWriteTime -Descending | Select-Object -First 12 Name,LastWriteTime`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+- `Get-ChildItem -Force -Path "tests\codex_temp\stage638_multicapability_unified_protocol_qwen3_20260405_230448"`
+- `Get-ChildItem -Force -Path "tests\codex_temp\stage638_multicapability_unified_protocol_deepseek7b_20260405_230447"`
+- `Get-ChildItem -Force -Path "tests\codex_temp\stage638_multicapability_unified_protocol_gemma4_20260405_230447"`
+- `Get-ChildItem -Force -Path "tests\codex_temp\stage638_multicapability_unified_protocol_glm4_20260405_230448"`
+- `Get-Content -Path "tests\codex_temp\stage638_multicapability_unified_protocol_qwen3_20260405_230624\summary.json" -Encoding utf8 -TotalCount 140`
+- `Get-Content -Path "tests\codex_temp\stage638_multicapability_unified_protocol_deepseek7b_20260405_230650\summary.json" -Encoding utf8 -TotalCount 140`
+- `Get-Content -Path "tests\codex_temp\stage638_multicapability_unified_protocol_gemma4_20260405_230717\summary.json" -Encoding utf8 -TotalCount 140`
+- `Get-Content -Path "tests\codex_temp\stage638_multicapability_unified_protocol_glm4_20260405_230747\summary.json" -Encoding utf8 -TotalCount 140`
+
+### 工程过程与关键修正
+- 第二轮没有沿用第一轮协议，而是做了实质性增强：
+  1. 每个能力从 `2` 对样本扩到 `5` 对，总样本数从 `10` 增加到 `25`
+  2. `style` 不再只依赖单个形式词，而是加入：
+     - 正式 / 口语词汇选择
+     - 请求措辞
+     - 道歉措辞
+     - 离场动词正式度
+  3. 新增中层指标：
+     - `mid_d_norm`
+     - `avg_abs_mid_alignment`
+  4. 四模型第二轮测试严格按顺序串行执行：
+     - `qwen3`
+     - `deepseek7b`
+     - `gemma4`
+     - `glm4`
+- 期间出现过一次系统级失败：
+  - 我错误地并行启动四模型，触发页面文件不足（`os error 1455`）
+  - 随后改回严格串行，全部成功完成
+- 这也验证了用户约束是必要的：
+  - 四模型测试必须一个跑完再跑下一个，否则系统内存和显存都可能出问题
+
+### 第二轮四模型结果
+- `qwen3`
+  - `pair_accuracy = 0.76`
+  - `mean_margin = 4.4263`
+  - `d_norm_growth = 401.60`
+  - `rotation_deg = 35.97`
+- `deepseek7b`
+  - `pair_accuracy = 0.76`
+  - `mean_margin = 4.2954`
+  - `d_norm_growth = 182.76`
+  - `rotation_deg = 33.63`
+- `gemma4`
+  - `pair_accuracy = 0.32`
+  - `mean_margin = 0.5762`
+  - `d_norm_growth = 3.48`
+  - `rotation_deg = 52.90`
+- `glm4`
+  - `pair_accuracy = 0.80`
+  - `mean_margin = 4.5284`
+  - `d_norm_growth = 5848.25`
+  - `rotation_deg = 33.52`
+
+### 第二轮分能力结论
+- `syntax`
+  - `qwen3 / deepseek7b / glm4 = 1.0`
+  - `gemma4 = 0.0`
+- `disamb`
+  - `qwen3 / deepseek7b / glm4 = 0.8`
+  - `gemma4 = 0.0`
+- `relation`
+  - `qwen3 = 1.0`
+  - `deepseek7b = 0.8`
+  - `glm4 = 1.0`
+  - `gemma4 = 0.6`
+- `coref`
+  - `qwen3 = 0.6`
+  - `deepseek7b = 0.8`
+  - `glm4 = 0.8`
+  - `gemma4 = 0.6`
+- `style`
+  - `qwen3 / deepseek7b / glm4 = 0.4`
+  - `gemma4 = 0.4`
+
+### 理论数学进度
+- 第二轮比第一轮更重要，因为它回答了三个更硬的问题：
+  1. **扩样本后，共享规律还在不在？**
+     - 还在，而且更清晰
+  2. **style 是否完全不在当前理论里？**
+     - 不是完全不在，但仍然是最弱能力
+  3. **Gemma4 的异常是否只是小样本噪声？**
+     - 不是，第二轮复现了其“高旋转、低放大、弱判别”的稳定风格
+- 新增的中层指标还揭示了一个重要现象：
+  - `qwen3 / deepseek7b` 的中层差异强度明显高于 `glm4`
+  - 但 `glm4` 的末层放大最强
+  - 说明 `glm4` 的优势更可能来自**后层持续放大机制**，而不是中层已经很强
+
+### 当前最严格的结论
+- 现在已经可以比上一轮更严谨地说：
+  - `h_l / delta_l / d_l` 这组变量，对多义消歧、语法一致性、关系抽取、部分指代消解，已经显示出稳定的跨能力解释力
+- 但还必须保留边界：
+  - `style` 只被部分捕捉，不能说已经被统一解释
+  - 因而当前理论最稳妥的名字仍应是：
+    - **离散判别型语言能力的编码动力学框架**
+  - 还不是完整语言统一理论，更不是最终第一性原理
+
+### 测试原理与过程说明（为后续对外表述准备）
+- 原理：
+  - 对每个能力构造成对样本 `A/B`
+  - 让模型在每个样本上对“正确候选”和“错误候选”打分
+  - 同时提取每一层最后 token 的 hidden state（隐藏状态）
+  - 构造层间差异向量 `d_l = h_l^A - h_l^B`
+  - 计算：
+    - 末层判别能力 `margin`
+    - 差异信号放大倍数 `d_norm_growth`
+    - 差异方向逐层旋转角 `rotation_deg`
+    - 中层 / 末层差异与候选读出方向的对齐度
+- 过程：
+  1. 先做 `dry-run` 检查协议样本是否正确
+  2. 用 hook（钩子）抓取每层 hidden state
+  3. 逐模型前向测试
+  4. 每跑完一个模型立即释放
+  5. 保存：
+     - `summary.json`
+     - `REPORT.md`
+  6. 最后做跨模型比较报告
+
+### 下一步任务
+- 在 `syntax / relation / coref` 上做组件级因果验证：
+  - `attn`（注意力）零化
+  - `mlp`（多层感知机）零化
+  - 差异方向注入
+- 给 `style` 单独设计更像真实风格控制的协议：
+  - 短句改写
+  - 礼貌等级
+  - 书面 / 口语转换
+- 增加中层读出代理，不只看“中层有没有差异”，还要看“中层能不能直接读出”
+
+## 2026-04-05 23:22 阶段推进：stage639 组件级因果验证完成
+
+### 本轮执行命令
+- `Get-Content -Path "tests\codex\multimodel_language_shared.py" -Encoding utf8`
+- `Get-Content -Path "tests\codex\qwen3_language_shared.py" -Encoding utf8`
+- `rg -n "ablate_layer_component|restore_layer_component|ZeroModule|evenly_spaced_layers" tests`
+- `python -m py_compile "tests\codex\stage639_component_causal_validation.py"`
+- `python "tests\codex\stage639_component_causal_validation.py" --model qwen3`
+- `Get-Process | Where-Object { $_.ProcessName -like 'python*' } | Select-Object ProcessName,Id,WorkingSet64,StartTime`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+- `python "tests\codex\stage639_component_causal_validation.py" --model deepseek7b`
+- `python "tests\codex\stage639_component_causal_validation.py" --model gemma4`
+- `python "tests\codex\stage639_component_causal_validation.py" --model glm4`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+- `Get-Content -Path "tests\codex_temp\stage639_component_causal_validation_qwen3_20260405_231940\summary.json" -Encoding utf8 -TotalCount 120`
+- `Get-Content -Path "tests\codex_temp\stage639_component_causal_validation_deepseek7b_20260405_232044\summary.json" -Encoding utf8 -TotalCount 120`
+- `Get-Content -Path "tests\codex_temp\stage639_component_causal_validation_gemma4_20260405_232122\summary.json" -Encoding utf8 -TotalCount 120`
+- `Get-Content -Path "tests\codex_temp\stage639_component_causal_validation_glm4_20260405_232205\summary.json" -Encoding utf8 -TotalCount 120`
+
+### 新增文件
+- `tests/codex/stage639_component_causal_validation.py`
+- `tests/codex_temp/stage639_component_causal_validation_qwen3_20260405_231940/summary.json`
+- `tests/codex_temp/stage639_component_causal_validation_qwen3_20260405_231940/REPORT.md`
+- `tests/codex_temp/stage639_component_causal_validation_deepseek7b_20260405_232044/summary.json`
+- `tests/codex_temp/stage639_component_causal_validation_deepseek7b_20260405_232044/REPORT.md`
+- `tests/codex_temp/stage639_component_causal_validation_gemma4_20260405_232122/summary.json`
+- `tests/codex_temp/stage639_component_causal_validation_gemma4_20260405_232122/REPORT.md`
+- `tests/codex_temp/stage639_component_causal_validation_glm4_20260405_232205/summary.json`
+- `tests/codex_temp/stage639_component_causal_validation_glm4_20260405_232205/REPORT.md`
+- `tests/codex_temp/stage639_cross_model_component_report_20260405_2323/REPORT.md`
+
+### 测试原理
+- 这一轮测试不再只看“能力能不能测出来”，而是看：
+  - **把哪个组件掐掉，能力真的会坏。**
+- 做法是：
+  1. 在 `syntax / relation / coref` 中各选 `3` 个代表样本
+  2. 对每个模型抽样 `5` 层代表层
+  3. 在每个代表层上分别把：
+     - `attn` 模块零化
+     - `mlp` 模块零化
+  4. 重新计算样本的 `margin`
+  5. 看零化后相对基线下降多少
+- 如果零化某类组件后 `margin` 系统性下降，就说明这类组件对当前能力具有更强的组件级因果贡献
+
+### 过程中的工程问题
+- 这轮再次暴露出一个严格纪律：
+  - 四模型不能并行起跑
+  - 否则会出现页面文件不足（`os error 1455`）
+- 我最开始并行发起了 `deepseek7b / gemma4 / glm4`
+  - 导致再次触发系统级失败
+- 随后重新切回严格串行：
+  - `deepseek7b`
+  - `gemma4`
+  - `glm4`
+- 最终全部成功
+
+### 四模型组件级结果
+- `qwen3`
+  - `syntax`
+    - `attn_drop = 1.1137`
+    - `mlp_drop = 1.1547`
+  - `relation`
+    - `attn_drop = 1.1604`
+    - `mlp_drop = 1.9001`
+  - `coref`
+    - 基线偏弱，组件因果信号不稳
+- `deepseek7b`
+  - `syntax`
+    - `attn_drop = 1.1766`
+    - `mlp_drop = 1.0117`
+  - `relation`
+    - `attn_drop = 1.2391`
+    - `mlp_drop = 0.2163`
+  - `coref`
+    - `attn_drop = 0.8410`
+    - `mlp_drop = -0.6707`
+- `gemma4`
+  - `syntax`
+    - 基线已经接近失败，不能做强结论
+  - `relation`
+    - 组件消融结果不稳定
+  - `coref`
+    - `attn_drop = 0.5250`
+    - `mlp_drop = -0.2680`
+- `glm4`
+  - `syntax`
+    - `attn_drop = 0.4771`
+    - `mlp_drop = 1.1471`
+  - `relation`
+    - `attn_drop = 0.7151`
+    - `mlp_drop = 1.5119`
+  - `coref`
+    - `attn_drop = 0.8035`
+    - `mlp_drop = 1.4346`
+
+### 新的理论结论
+- 这一轮非常关键，因为它第一次把“共享变量”与“共享组件实现”分开了。
+- 目前最稳的结论是：
+  - `h_l / delta_l / d_l` 这组变量可能是跨模型共享的
+  - 但负责实现这些变量传播的组件，不一定跨模型共享
+- 更具体地说：
+  - `qwen3 / glm4` 在这轮中更偏 `mlp` 主导
+  - `deepseek7b` 在 `relation / coref` 上更偏 `attn` 主导
+  - `gemma4` 因为基线太弱，组件级因果图样仍然不稳定
+
+### 当前最严格的表述
+- 现在可以再前进一步，但必须说得更严格：
+  - **跨模型共享的是编码动力学变量，不一定是组件级实现细节。**
+- 也就是说：
+  - 同一种语言能力可以由不同模型通过不同组件分工实现
+  - 但最后都落到相似的差异方向放大与读出框架上
+
+### 下一步建议
+- 下一步最有价值的是 `stage640`：
+  - 不只做零化
+  - 还要做“方向注入恢复”
+- 如果在组件被零化后，只靠差异方向注入就能部分恢复 `margin`
+  - 那就能更强地说明：
+    - 当前变量不只是描述变量
+    - 而是接近真正的机制变量
+
+## 2026-04-05 23:34 阶段推进：stage640 差异方向注入恢复完成
+
+### 本轮执行命令
+- `rg -n "register_forward_hook|forward_pre_hook|inject|patch|hidden state|hook_fn" tests/codex tests/glm5`
+- `Get-Content -Path "tests\glm5\stage588_causal_intervention.py" -Encoding utf8 -TotalCount 260`
+- `Get-Content -Path "tests\codex\stage559_causal_tracing.py" -Encoding utf8 -TotalCount 260`
+- `python -m py_compile "tests\codex\stage640_direction_injection_recovery.py"`
+- `python "tests\codex\stage640_direction_injection_recovery.py" --model qwen3`
+- `python -m py_compile "tests\codex\stage640_direction_injection_recovery.py"`
+- `python "tests\codex\stage640_direction_injection_recovery.py" --model qwen3`
+- `python "tests\codex\stage640_direction_injection_recovery.py" --model deepseek7b`
+- `python "tests\codex\stage640_direction_injection_recovery.py" --model gemma4`
+- `python "tests\codex\stage640_direction_injection_recovery.py" --model glm4`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+- `Get-Content -Path "tests\codex_temp\stage640_direction_injection_recovery_qwen3_20260405_233229\summary.json" -Encoding utf8 -TotalCount 120`
+- `Get-Content -Path "tests\codex_temp\stage640_direction_injection_recovery_deepseek7b_20260405_233254\summary.json" -Encoding utf8 -TotalCount 120`
+- `Get-Content -Path "tests\codex_temp\stage640_direction_injection_recovery_gemma4_20260405_233328\summary.json" -Encoding utf8 -TotalCount 120`
+- `Get-Content -Path "tests\codex_temp\stage640_direction_injection_recovery_glm4_20260405_233404\summary.json" -Encoding utf8 -TotalCount 120`
+
+### 新增文件
+- `tests/codex/stage640_direction_injection_recovery.py`
+- `tests/codex_temp/stage640_direction_injection_recovery_qwen3_20260405_233229/summary.json`
+- `tests/codex_temp/stage640_direction_injection_recovery_qwen3_20260405_233229/REPORT.md`
+- `tests/codex_temp/stage640_direction_injection_recovery_deepseek7b_20260405_233254/summary.json`
+- `tests/codex_temp/stage640_direction_injection_recovery_deepseek7b_20260405_233254/REPORT.md`
+- `tests/codex_temp/stage640_direction_injection_recovery_gemma4_20260405_233328/summary.json`
+- `tests/codex_temp/stage640_direction_injection_recovery_gemma4_20260405_233328/REPORT.md`
+- `tests/codex_temp/stage640_direction_injection_recovery_glm4_20260405_233404/summary.json`
+- `tests/codex_temp/stage640_direction_injection_recovery_glm4_20260405_233404/REPORT.md`
+- `tests/codex_temp/stage640_cross_model_recovery_report_20260405_2335/REPORT.md`
+
+### 测试原理
+- 这轮实验是目前最接近“机制恢复验证”的一步。
+- 逻辑链条如下：
+  1. 先对每个样本找出“最伤”的组件消融点
+     - 也就是在抽样层和 `attn / mlp` 中，谁让 `margin` 降得最多
+  2. 在 clean（未破坏）条件下，提取该层两种语境的差异方向
+     - `direction = h_A - h_B`
+  3. 再在“组件已被消融”的情况下，把这条 `direction` 注入回同一层
+  4. 比较：
+     - 消融后 `margin`
+     - 注入后的 `margin`
+  5. 若 `margin` 被明显拉回，说明这条差异方向不只是“观察量”，而是开始表现出恢复能力
+
+### 过程中的关键修正
+- 一开始注入恢复几乎全是 `0`
+- 原因不是理论失败，而是我把注入位置放到了“整条输入序列的最后一个 token（词元）”
+- 对于候选打分任务，正确位置应是：
+  - **提示词末尾，也就是候选开始前的边界位点**
+- 修正后恢复信号立刻出现
+- 这说明：
+  - 注入实验对位点极其敏感
+  - 后续必须更认真地区分：
+    - prompt 边界
+    - 中间层边界
+    - 真实读出位点
+
+### 四模型恢复结果
+- `qwen3`
+  - `coref`
+    - `recovery_gain = 0.9531`
+    - `recovery_ratio = 0.9425`
+  - `syntax`
+    - `recovery_gain = 1.1401`
+    - `recovery_ratio = 0.1980`
+  - `relation`
+    - 恢复几乎没有
+- `deepseek7b`
+  - `coref`
+    - `recovery_gain = 0.2731`
+    - `recovery_ratio = 0.1254`
+  - `relation`
+    - `recovery_gain = 0.2411`
+    - `recovery_ratio = 0.0509`
+  - `syntax`
+    - `recovery_gain = 0.4263`
+    - `recovery_ratio = 0.0350`
+- `gemma4`
+  - `coref`
+    - `recovery_gain = 3.3906`
+    - `recovery_ratio = 2.2879`
+  - `relation`
+    - `recovery_gain = 0.9615`
+    - `recovery_ratio = 3.3729`
+  - `syntax`
+    - `recovery_gain = 1.3262`
+    - `recovery_ratio = 2.5916`
+- `glm4`
+  - `syntax`
+    - `recovery_gain = 1.2124`
+    - `recovery_ratio = 0.2760`
+  - `relation`
+    - 恢复很弱
+  - `coref`
+    - 恢复很弱
+
+### 新的理论结论
+- 这轮实验带来了一个比 `stage639` 更强的结论：
+  - **差异方向在部分模型和任务上，已经表现出恢复能力。**
+- 这意味着：
+  - 差异方向不只是“记录了能力结果”
+  - 它开始像“机制中真正有作用的状态变量”
+- 但四模型恢复模式并不一致：
+  - `gemma4` 恢复最强
+  - `qwen3` 在 `coref` 和部分 `syntax` 上恢复明显
+  - `deepseek7b` 恢复较弱
+  - `glm4` 只有 `syntax` 恢复较明显
+
+### 现阶段最严格的解释
+- `gemma4` 的强恢复很有启发性：
+  - 它并不一定“没有编码”
+  - 更可能是“自然传播 / 自然读出策略较差”
+  - 一旦人工注入正确方向，能力就能明显回升
+- `glm4` 的弱恢复也很有启发性：
+  - 它本来就工作得比较好
+  - 被破坏后，简单方向注入不容易替代其完整传播机制
+- 因而当前最稳的表述是：
+  - **差异方向已经开始具备机制变量的性质，但这种机制性依赖模型架构和自然传播策略。**
+
+### 下一步建议
+- 下一步应该把恢复实验再细化成 `stage641`：
+  1. 比较不同注入位点：
+     - 层输出
+     - pre-MLP
+     - post-MLP
+     - attention 输出
+  2. 比较不同方向构造：
+     - clean 层差方向
+     - 中层方向
+     - 末层方向
+     - 读出方向
+  3. 做“恢复上限分析”
+     - 看注入最多能救回多少能力
+     - 这样才能判断差异方向是“主机制”还是“辅助变量”

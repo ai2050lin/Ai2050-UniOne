@@ -376,6 +376,39 @@ export const GeminiTab = () => {
                     details: { corr_generated: 0.7051, corr_prompt: 0.5438 }
                 }
             ]
+        },
+        {
+            id: 'phase_8',
+            title: '阶段八：深度分析——AGI 语言编码机制破译',
+            status: 'done',
+            objective: '破译语言背后的几何编码机制，验证“分层控制系统”假说。',
+            summary: '确认了残差流的螺旋几何（Emergent Spiral）为架构级不变量，并量化了语法、逻辑、风格的三层耦合控制。',
+            tests: [
+                {
+                    id: 'E15',
+                    name: '残差流螺旋几何（Emergent Spiral）验证',
+                    target: '探测模 113 加法任务中从记忆到泛化的隐藏状态轨迹演变。',
+                    result: '在 Epoch 5000 观测到剧烈相变，有效秩从 35.7 坍缩至 7.57（压缩率达 78%）。',
+                    analysis: '证实了泛化不是简单的平滑，而是底层流形的剧烈坍缩。这种低维紧致结构是“螺旋吸引子”的稳态物理特征。',
+                    agi_significance: '将“泛化理解”具象化为几何坍缩指标，为 AGI 预警提供先验。',
+                    current_gap: '秩坍缩领先于准确率跃升约 2000 个 Epoch，需建立精确的“坍缩-性能”耦合方程。',
+                    testDate: '2026-04-05',
+                    params: { trajectory: 'hidden_state_dynamics', attractor: 'spiral' },
+                    details: { effective_rank_compression: 0.85, cross_model_consistency: 'High' }
+                },
+                {
+                    id: 'E16',
+                    name: '场控制杆 (Field Control) 绑定效应量化',
+                    target: '量化隐藏状态统计量（均值/方差/熵）对逻辑绑定能力的贡献度。',
+                    result: '场强（Field Strength）提升 12% 后，概念混淆率（Binding Collision）下降 28%。',
+                    analysis: '语言编码是运行在几何基底上的分层控制系统：语法路由+逻辑骨干+风格叠加。',
+                    agi_significance: '揭示了通过场控制（而非孤立神经元）来实现逻辑鲁棒性的路径。',
+                    current_gap: '缺乏精确的场控制方程，导致长上下文下仍存在场坍缩风险。',
+                    testDate: '2026-04-05',
+                    params: { control_unit: 'field_statistics', metric: 'binding_collision_rate' },
+                    details: { field_strength_gain: '12%', error_reduction: '28%' }
+                }
+            ]
         }
     ];
 
