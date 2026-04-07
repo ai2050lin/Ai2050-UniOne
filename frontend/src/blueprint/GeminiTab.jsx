@@ -119,6 +119,8 @@ import DnnBrainPuzzleBridgeDashboard from './DnnBrainPuzzleBridgeDashboard';
 import DProblemAtlasDashboard from './DProblemAtlasDashboard';
 import AgiConceptS1ToS7Summary from './AgiConceptS1ToS7Summary';
 import FirstPrinciplesTheoryDashboard from './FirstPrinciplesTheoryDashboard';
+import GLM5TheorySimplifiedDashboard from './GLM5TheorySimplifiedDashboard';
+import GrokkingDynamicsDashboard from './GrokkingDynamicsDashboard';
 
 
 export const GeminiTab = () => {
@@ -487,6 +489,22 @@ export const GeminiTab = () => {
                 <div style={{ marginBottom: '28px' }}>
                     <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#10b981', marginBottom: '12px', borderBottom: '1px solid rgba(16,185,129,0.3)', paddingBottom: '8px' }}>一点八、跨越唯象局限：AGI第一性原理验证</div>
                     <FirstPrinciplesTheoryDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#6366f1', marginBottom: '12px', borderBottom: '1px solid rgba(99,102,241,0.3)', paddingBottom: '8px' }}>一点九、GLM5 语言编码理论 v5.0 深度解构 (数学核心版)</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '16px' }}>
+                        基于第一性物理还原，将流形语义、能量门控与高维几何正交性进行数学闭环演示。
+                    </div>
+                    <GLM5TheorySimplifiedDashboard />
+                </div>
+
+                <div style={{ marginBottom: '28px' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f59e0b', marginBottom: '12px', borderBottom: '1px solid rgba(245,158,11,0.3)', paddingBottom: '8px' }}>一点十、Stage 86：符号接地自发演化 (Grokking 动力推演)</div>
+                    <div style={{ color: '#d1d5db', fontSize: '13px', lineHeight: '1.7', marginBottom: '16px' }}>
+                        跟踪小规模 Transformer 在模加法任务中的自发对齐过程。展示了有效秩坍缩（Axiom 4）与几何流形形成（Axiom 1）的实证数据。
+                    </div>
+                    <GrokkingDynamicsDashboard />
                 </div>
 
                 {/* 2. 完整路线图 */}

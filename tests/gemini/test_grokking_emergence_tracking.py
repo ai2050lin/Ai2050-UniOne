@@ -92,10 +92,10 @@ def train():
             model.eval()
             with torch.no_grad():
                 train_logits = model(train_inputs)[:, -1, :P]
-                train_acc = (train_logits.argmax(dim=-1) == train_labels).float().mean().item()
+                train_acc = (train_logits.argmax(dim=-1) == train_labels).to(torch.float32).mean().item()
                 
                 test_logits = model(test_inputs)[:, -1, :P]
-                test_acc = (test_logits.argmax(dim=-1) == test_labels).float().mean().item()
+                test_acc = (test_logits.argmax(dim=-1) == test_labels).to(torch.float32).mean().item()
                 
                 # Check Effective Rank of Residual Stream
                 # We use a sample of test inputs to get residual stream
@@ -120,6 +120,9 @@ def train():
                     print(f"\n[{time.strftime('%Y-%m-%d %H:%M:%S')}] Phase Transition Detected at Epoch {epoch}!")
                     # Save model and dynamics for "Deep Analysis"
                     torch.save(model.state_dict(), f"tests/gemini/data/model_grokking_{epoch}.pt")
+    
+    # Save final model
+    torch.save(model.state_dict(), "tests/gemini/data/model_final.pt")
     
     # Save statistics
     df = pd.DataFrame(history)

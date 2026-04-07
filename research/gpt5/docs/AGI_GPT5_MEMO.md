@@ -38085,3 +38085,110 @@ python tests/codex/stage507_gemma4_hooking_smoke.py
   - P46：做 DS7B 信息瓶颈因果验证，判断超低维压缩到底是原因还是结果。
   - 建立真正的文本到方向偏移预测映射，推动理论从描述走向生成。
   - 设计预注册判伪标准，明确什么结果会迫使 v4.1 改写。
+## [2026-04-07 00:16] Codex 理论审阅：AGI_GLM5_LANGUAGE v5.0 更新复核
+
+### 时间
+- 2026-04-07 00:16:20 完成 `AGI_GLM5_LANGUAGE.md` v5.0 复读与结论整理
+
+### 本轮命令
+- `Get-Content -Encoding utf8 research/glm5/docs/AGI_GLM5_LANGUAGE.md -TotalCount 260`
+- `Get-Content -Encoding utf8 research/glm5/docs/AGI_GLM5_LANGUAGE.md | Select-Object -Last 320`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+
+### 本轮理论进度
+- v5.0 相比上一版最重要的进步，不是“结论更多”，而是主动修正了 `P43` 对“语义基底方向”的过度解释：
+  - `L0` 对齐更可能是 `embedding` 质心方向带来的高维几何效应，不是直接学习出的语义本体。
+  - `L0 -> L1` 约 `90°` 旋转主要是架构与初始化决定的宏观几何，不是逐层语义操作。
+  - 真正承载语义区分的部分，被收缩到“旋转之后的微调层 delta-h”中，这个口径比旧版更严格，也更可信。
+- 当前更稳的理论骨架应表述为：
+  - 宏观残差流几何主要由架构/初始化决定。
+  - 语义编码主要体现在后续层的小幅方向偏移与门控幅度调制。
+  - `logit` 最终由这些 `delta-h` 近线性累积决定。
+- v5.0 新增的可靠收获：
+  - `avg_logprob ≈ log(margin) - C` 中的 `C` 已被确认是任务依赖量，而非常数，这比旧版“普适常数”更真实。
+  - “effective rank=9” 已被大样本推翻，说明理论开始摆脱小样本幻觉。
+  - “编码基元=方向+门控幅度（门控主导）”是当前最有潜力继续深入的主线。
+- v5.0 仍然存在的硬伤：
+  - `P50` 的 `ANOVA F>3` 虽支持“微调层语义定位”，但统计口径仍偏弱，离强因果标准还有距离。
+  - `P54` 中 `text -> delta -> logit` 对 `logit` 有中高相关，但对 `margin` 几乎无预测力，说明生成理论仍未打通。
+  - “方向完全决定语义”表述偏强；更稳妥说法应是“在当前任务协议与读出框架下，方向是主导因子”，不能直接推广到完整语言。
+  - “门控主导”虽来自消融，但仍需跨任务、跨长度、跨生成过程验证，避免把当前协议最敏感的量误判成普适基元。
+  - 跨架构验证缺失（`P57` 未完成），因此仍不能把当前规律称为“架构无关”的第一性理论。
+  - `Gemma4 hook` 不兼容、`P66/P67` 未完成，说明关键因果和跨模型对齐环节还未真正闭环。
+- 下一阶段最优先任务应为三条主线并行：
+  - 生成化补全：把 `text -> delta` 预测从相关性推进到可用精度，尤其补上 `margin` 预测失败的问题。
+  - 因果化补全：完成 `P66` 语义方向因果干预，测试“门控+方向”是否真能恢复或改写语义输出。
+  - 跨模型化补全：完成 `P67` 与 `P57`，区分哪些规律是 `Transformer` 特有，哪些才是更高层的普适编码结构。
+## [2026-04-07 16:17] Codex 理论审阅：P96-P100 警报原因复核
+
+### 时间
+- 2026-04-07 16:17:14 完成 `P96-P100` 结果、实现细节与后续复核结论的交叉审阅
+
+### 本轮命令
+- `rg -n "P9[6-9]|P100|警报|alert|KL散度|退火|Prompt对比|偏置项|条件W_l|b_l|W_l" .`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 research/gpt5/docs/AGI_GPT5_LANGUAGE.md -TotalCount 260`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; rg -n "P96|P97|P98|P99|P100|KL散度引导生成|逐步退火策略|Prompt对比实验|偏置项语义分析|条件W_l分析|警报" research tests shared -g "*.md" -g "*.py" -g "*.json"`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 research/glm5/docs/AGI_GLM5_MEMO.md | Select-Object -Skip 11960 -First 340`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 tests/glm5/stage715_phase10.py | Select-Object -Skip 560 -First 620`
+- `rg -n "guided_logits =|kl_adjustment =|target_log =|natural_log =|mixed_logits = alpha \* ctrl_logits|h_ctrl = \(\(1 - alpha\) \* h_final|h_ctrl = \(\(1 - alpha\) \* h \+ alpha \* tgt_centroid|quality = evaluate_text_quality|score = word_ratio \* 0.4|Ridge\(alpha=1.0\)|b_l = torch.tensor\(residuals.mean|pca.fit\(residuals.T\)|cat_W\[cat\] = ridge.coef_\.T|for l in range\(1, actual_layers \+ 1, max\(1, actual_layers // 15\)\)" tests/glm5/stage715_phase10.py`
+- `@' from sklearn.linear_model import Ridge; print(Ridge()); print("fit_intercept=", Ridge().fit_intercept) '@ | python -`
+- `rg -n "avg_ppl|avg_cos|delta_cos|重新审视|假象|操控无效|alpha" research/glm5/docs/AGI_GLM5_MEMO.md`
+- `rg -n "delta_cos|avg_ppl|avg_cos|操控无效|重新审视|alpha" tests/glm5/stage716_phase11.py`
+
+### 本轮理论进度
+- `P96` 触发警报的第一原因，是它名义上是 `KL` 约束，代码上却基本等价于再次做目标 `logits` 混合：
+  - `guided_logits = natural_logits + kl_w * (log softmax(target) - log softmax(natural))`
+  - 在 `softmax` 常数平移不影响分布的前提下，这会退化成“自然 `logits` 与目标 `logits` 的线性混合”，不是严格意义上的生成时 `KL` 优化。
+  - 因而 `P96` 的“优于直接混合”本身就需要高度警惕，可能只是同一种操作换了表达。
+- `P97` 触发警报的第二原因，是“退火让模型逐步接管”的叙述，与实际生效强度并不一致：
+  - 代码先在 `h-space` 做一次 `alpha` 插值，再把投影得到的 `ctrl_logits` 与自然 `logits` 再混一次。
+  - 若 `lm_head` 近似线性，则等效控制强度更接近 `alpha^2`，不是口头上的 `alpha`。
+  - 这会直接削弱实验解释力，也与后续 `Stage716` 中“`alpha=0.0` 到 `1.0`，`avg_ppl / avg_quality / avg_cos` 几乎不变”的结果互相呼应。
+- `P98` 触发警报的第三原因，是比较口径不干净，评估指标也偏启发式：
+  - `quality` 由 `word_ratio + unique_ratio + (1-special_ratio)` 构成，更像“表面可读性打分”，不是目标语义是否真的被操控成功。
+  - `Prompt`、`Natural`、`H-Ctrl` 三种方法改动的对象不同，`Prompt` 是改输入分布，`H-Ctrl` 是改读出分布，直接横比容易把“模型本来自然会写得更顺”误判成“操控更成功”。
+  - 后续 `Stage716` 已明确提出：`Phase X` 的高质量结果可能只是模型自然生成能力，不是操控效果。
+- `P99` 触发警报的第四原因，是 `b_l` 的估计方法有明显口径问题：
+  - 代码使用 `Ridge(alpha=1.0)`，而本地验证显示其默认 `fit_intercept=True`。
+  - 在这种设置下，截距已经被模型吸收，再把残差均值定义成 `b_l`，自然会得到 `||b_l||≈0`。
+  - 这不是一个轻微噪声问题，而是“定义与实现重复计入截距”的结构性问题；此时再讨论近零向量的方向、类别相关性与 `PCA`，非常容易变成数值噪声解释。
+- `P100` 触发警报的第五原因，是 `W_l` 的估计维度远高于样本量，极易不稳定：
+  - 每类只取 `15` 个样本，却要回归一个近似 `d × d` 的层变换矩阵。
+  - 在大模型隐藏维度很高的情况下，这是典型的强欠定拟合；不同类别之间的 `Frobenius` 差异很可能被估计噪声放大。
+  - 此外代码并未逐层完整扫描，而是按 `actual_layers // 15` 抽层，文档里的“全层成立”表述比实际证据更强。
+- 当前更稳的总判断应是：
+  - `P96-P100` 不是“证明理论成立”的一组实验，而是“暴露操控口径、评估指标、线性拟合定义和统计稳定性问题”的一组实验。
+  - 它们触发警报，并不说明方向完全错误；更准确地说，是这些实验把“生成操控理论还没有真正闭环”暴露得很彻底。
+- 若要把这条线推进到第一性原理级别，下一阶段不应继续堆更多现象，而应改成三项并行大任务：
+  - 先做“操控有效性判伪”：直接测控制前后 `logits` 分布差异、目标词命中率、受控语义分类器变化，而不是先看表面文本质量。
+  - 再做“参数识别重建”：把 `b_l` 与 `W_l` 的估计改成可识别、可正则、样本量足够的版本，例如显式拆分截距、先降维再估计、做留出集稳定性检验。
+  - 最后做“生成级理论闭环”：建立从内部方向变化到输出语义变化的因果链，至少要回答“什么内部量改变了，才能稳定改变文本类别与质量”。
+## [2026-04-07 16:43] Codex 理论说明：为何“五个公理能描述当前运行”仍不足以预测
+
+### 时间
+- 2026-04-07 16:43:51 完成对“描述现在”与“预测未来”差异的理论说明
+
+### 本轮命令
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+- `Get-Content -Encoding UTF8 research/gpt5/docs/AGI_GPT5_MEMO.md | Select-Object -Last 20`
+
+### 本轮理论进度
+- “能用五个公理描述现在的运行”与“能据此预测系统后续行为”之间，至少隔着五道硬门槛：
+  - 第一，`描述` 不等于 `生成`。很多公理只能压缩已观察到的现象，却不能从初始条件一步步推出后续状态。
+  - 第二，`当前拟合` 不等于 `唯一机制`。多个不同机制可以同时解释同一批现象；若机制不可识别，预测就会分叉。
+  - 第三，`局部稳定` 不等于 `全局稳定`。在当前样本、当前任务、当前模型上成立的公理，换长度、换分布、换模型后可能立刻失效。
+  - 第四，`相关结构` 不等于 `因果闭环`。如果公理没有写清楚哪些量驱动哪些量、误差如何传播、扰动如何累积，就不能做可靠外推。
+  - 第五，`观测变量` 不等于 `状态变量`。若公理描述的只是可见统计量，而非真正决定系统演化的隐藏状态，那么预测天然会失真。
+- 对当前语言机制研究来说，最关键的问题不是“公理数量不够”，而是公理类型还不够强：
+  - 现在很多结论更像“结构性描述公理”，擅长概括现象。
+  - 但要预测生成行为，还需要“动力学公理”“扰动传播公理”“读出公理”“失效边界公理”。
+- 更严格地说，一个理论要能预测，至少要同时满足四件事：
+  - 给定初始条件，能唯一推出下一步。
+  - 多步迭代后不会迅速漂离真实系统。
+  - 在未见样本上仍保持稳定。
+  - 能提前说明自己在哪些条件下会失效。
+- 因而当前真正缺的不是“再补几个漂亮公理”，而是把描述公理升级成可演化、可判伪、可跨分布外推的生成公理系统。
+- 下一阶段若要逼近第一性原理，优先级应是：
+  - 把每条公理改写成“状态更新方程”或“误差传播方程”。
+  - 给每条公理配套可证伪边界：什么结果一出现，这条公理就必须修改。
+  - 做跨任务、跨长度、跨模型外推测试，检验这些公理到底是局部描述，还是全局机制。
