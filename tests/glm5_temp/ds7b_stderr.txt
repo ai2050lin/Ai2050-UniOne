@@ -1,0 +1,20 @@
+`torch_dtype` is deprecated! Use `dtype` instead!
+Traceback (most recent call last):
+  File "D:\develop\TransformerLens-main\tests\glm5\stage735_phase30.py", line 823, in <module>
+    main()
+  File "D:\develop\TransformerLens-main\tests\glm5\stage735_phase30.py", line 720, in main
+    mdl, tok = load_model(args.model)
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\develop\TransformerLens-main\tests\glm5\stage735_phase30.py", line 71, in load_model
+    mdl = AutoModelForCausalLM.from_pretrained(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chris\AppData\Local\Programs\Python\Python312\Lib\site-packages\transformers\models\auto\auto_factory.py", line 387, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chris\AppData\Local\Programs\Python\Python312\Lib\site-packages\transformers\modeling_utils.py", line 4132, in from_pretrained
+    loading_info, disk_offload_index = cls._load_pretrained_model(model, state_dict, checkpoint_files, load_config)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chris\AppData\Local\Programs\Python\Python312\Lib\site-packages\transformers\modeling_utils.py", line 4240, in _load_pretrained_model
+    file_pointer = safe_open(file, framework="pt", device="cpu")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: 页面文件太小，无法完成操作。 (os error 1455)

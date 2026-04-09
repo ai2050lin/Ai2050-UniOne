@@ -38192,3 +38192,368 @@ python tests/codex/stage507_gemma4_hooking_smoke.py
   - 把每条公理改写成“状态更新方程”或“误差传播方程”。
   - 给每条公理配套可证伪边界：什么结果一出现，这条公理就必须修改。
   - 做跨任务、跨长度、跨模型外推测试，检验这些公理到底是局部描述，还是全局机制。
+## [2026-04-08 14:37] Codex 理论说明：项目里“每层都在旋转”是怎么计算的
+
+### 时间
+- 2026-04-08 14:37:08 完成对“旋转”计算口径与公式来源的代码核对
+
+### 本轮命令
+- `rg -n "旋转|rotation|angle|夹角|principal angle|cos=.*|cosine|delta_h|L0->L1|每层都在旋转|逐层旋转" research tests shared -g "*.md" -g "*.py"`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 research/glm5/docs/AGI_GLM5_MEMO.md | Select-String -Pattern "旋转|rotation|夹角|L0->L1|每层都在旋转|逐层旋转" -Context 3,8`
+- `rg -n "stage693|stage695|rotation angle|旋转角|L0.*L1|pairwise cos|主旋转平面|逐层追踪旋转角度|rotation vector|angle_deg|acos|arccos|cosine_similarity" tests\glm5 tests\codex research\glm5 -g "*.py"`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-ChildItem tests\glm5 | Where-Object { $_.Name -match '693|694|695|581|598|600' } | Select-Object Name,FullName`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 tests/glm5/stage693_rotation_axis.py | Select-Object -First 260`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 tests/glm5/stage695_rl_rotation.py | Select-Object -First 260`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 tests/codex/stage581_closed_form_equations.py | Select-Object -First 120`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 tests/glm5/stage609_610_611_rotation_mechanism.py | Select-Object -First 170`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 tests/glm5/stage622_623_624_disamb_propagation.py | Select-Object -First 280`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+
+### 本轮理论进度
+- 当前项目里“旋转”至少有三种不同口径，不能混成一个指标：
+  - 第一种是**相邻层隐藏态旋转**：对同一个文本的最后一个 token，取相邻两层向量 `h_l` 与 `h_{l+1}`，先算余弦，再算夹角：`theta_l = arccos( <h_l, h_{l+1}> / (||h_l|| ||h_{l+1}||) )`。
+  - 第二种是**相对 L0 的累计旋转**：拿每一层的 `h_l` 与初始层 `h_0` 比较，`theta_l = arccos( <h_l, h_0> / (||h_l|| ||h_0||) )`，于是能得到“L0→L1 是否接近 90 度”“末层总共转了多少度”。
+  - 第三种是**差异方向旋转**：对两个上下文先构造 `d_l = h_l(A) - h_l(B)`，再比较 `d_l` 与 `d_{l-1}` 的夹角：`phi_l = arccos( <d_l, d_{l-1}> / (||d_l|| ||d_{l-1}||) )`。这更接近“消歧信息在层间是否换方向”。
+- 代码层面最直接的实现就是：
+  - 先用 `cosine_similarity`
+  - 再做 `arccos`
+  - 最后把弧度换成角度
+- 因而项目里所谓“每层都在旋转”，大多数时候其实只是：
+  - 向量方向在变；
+  - 且这种变化被用“夹角”来量化；
+  - 并不等价于真的恢复出了一个完整高维旋转矩阵。
+- 其中最常见的两个实现来源是：
+  - `stage581_closed_form_equations.py`：相邻层 `h_l -> h_{l+1}` 的夹角，适合说“逐层旋转角”。
+  - `stage695_rl_rotation.py`：每一层相对 `L0` 的夹角，适合说“总旋转几乎在 L0→L1 完成”。
+- 这也解释了文档里看起来矛盾的两类说法：
+  - “每层都在旋转”通常指相邻层夹角都非零；
+  - “>92% 旋转发生在 L0→L1”指相对 `L0` 的累计总角度，第一步就几乎完成了。
+- 更严格地说：
+  - 若用相邻层夹角口径，后续层仍然会显示有小角度旋转；
+  - 若用相对 `L0` 的累计角度口径，后续层大多只是围绕新方向做小修正。
+- 当前最需要避免的理论误读是：
+  - 把“角度变化”直接当成“存在统一旋转矩阵”；
+  - 把“方向变化”直接当成“语义编码本身”；
+  - 把不同口径算出的角度混写成同一个不变量。
+## [2026-04-08 14:45] Codex 理论整理：三种“旋转”口径的统一对照
+
+### 时间
+- 2026-04-08 14:45:20 完成“旋转”三种主要定义的统一整理与理论区分
+
+### 本轮命令
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+- `Get-Content -Encoding UTF8 research/gpt5/docs/AGI_GPT5_MEMO.md | Select-Object -Last 20`
+
+### 本轮理论进度
+- 当前项目里最容易混淆的点，是把三种不同的“旋转”都叫成一件事。更稳的统一表述应是：
+  - **局部逐层旋转**：比较 `h_l` 与 `h_{l+1}` 的夹角，回答“每一步改了多少方向”。
+  - **相对初始层累计旋转**：比较 `h_l` 与 `h_0` 的夹角，回答“从初始表征到当前层总共转了多少”。
+  - **差异方向旋转**：比较 `d_l = h_l(A)-h_l(B)` 与 `d_{l-1}` 的夹角，回答“某类信息方向是否在层间换道”。
+- 这三者各自适用的理论问题不同：
+  - 局部逐层旋转适合研究层的微分几何性质和每步更新强度。
+  - 累计旋转适合研究“主干几何”是否在极早层就被重排完毕。
+  - 差异方向旋转适合研究歧义消解、语义差异、任务差异如何被传播和重编码。
+- 它们之间的关系可以统一理解为：
+  - 累计旋转 = 许多局部逐层旋转的合成结果，但不是简单角度相加。
+  - 差异方向旋转不是状态本身的旋转，而是“信息子方向”的旋转。
+- 因而文档里应避免这三种误写：
+  - 把局部逐层旋转写成“总旋转”。
+  - 把累计旋转写成“每层都发生了同量级大旋转”。
+  - 把差异方向旋转写成“整个 hidden state 的统一旋转”。
+- 更严格的统一结论应为：
+  - 若说“每层都在旋转”，默认应指**相邻层夹角非零**。
+  - 若说“90度旋转在 L0→L1 完成”，默认应指**相对 L0 的累计总角度**。
+  - 若说“消歧信息被旋转掉了”，默认应指**差异方向在后续层逐渐偏离原峰值方向**，而不是 hidden state 整体消失。
+- 对第一性原理推进的真正帮助在于：
+  - 这三种口径一旦分开，就能把“架构级主干几何”和“语义级微调信号”拆开分析。
+  - 前者更像结构约束，后者才更接近可预测、可操控的语言编码机制。
+## [2026-04-08 14:56] Codex 理论说明：夹角公式的计算过程与“是否整层参数一起算”
+
+### 时间
+- 2026-04-08 14:56:21 完成对 `theta = arccos(<u,v> / (||u|| ||v||))` 计算过程的通俗解释
+
+### 本轮命令
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+- `Get-Content -Encoding UTF8 research/gpt5/docs/AGI_GPT5_MEMO.md | Select-Object -Last 20`
+
+### 本轮理论进度
+- 这个公式本质上是在算**两个向量之间的夹角**，不是直接在算一个 layer 的全部参数。
+- 计算过程可拆成四步：
+  - 先算点积：`<u,v> = sum_i u_i v_i`
+  - 再算两个向量各自的长度：`||u|| = sqrt(sum_i u_i^2)`，`||v|| = sqrt(sum_i v_i^2)`
+  - 用点积除以长度乘积，得到余弦值：`cos(theta) = <u,v> / (||u|| ||v||)`
+  - 最后取反余弦：`theta = arccos(cos(theta))`
+- 这里最关键的是：**`u` 和 `v` 是先被定义好的两个向量**。项目里常见的定义不是“整层参数”，而是：
+  - 同一个文本在两层的 hidden state：`u=h_l, v=h_{l+1}`
+  - 同一个文本的当前层与初始层：`u=h_0, v=h_l`
+  - 两个上下文差异方向：`u=d_{l-1}, v=d_l`
+- 因而当前项目中“旋转角”的默认含义通常是：
+  - 对 hidden state 或差异方向向量算夹角；
+  - 不是把该层的 `attention`、`MLP`、`LayerNorm` 的全部参数 flatten 后一起算。
+- 只有在另一个完全不同的问题下，才会去算“参数向量夹角”：
+  - 例如把某个权重矩阵展平成一个长向量，再与另一层权重矩阵比较；
+  - 但那回答的是“参数方向是否相似”，不是“表征在传播过程中是否旋转”。
+- 因而要严格区分两类对象：
+  - **状态向量**：hidden state、delta-h、差异方向；这是当前旋转分析主角。
+  - **参数向量**：W、b、attention权重；这是网络静态结构，不是当前文档里“每层旋转”的默认对象。
+- 当前最容易发生的误解是：
+  - 看到“layer rotation”就以为把整个 layer 的所有参数拿去做角度；
+  - 实际上多数脚本是拿“这一层输出出来的表示向量”去比较。
+## [2026-04-08 14:59] Codex 理论说明：`hidden state` 在 layer 中对应哪一部分
+
+### 时间
+- 2026-04-08 14:59:39 完成对项目内 `hidden_states` 使用口径的核对
+
+### 本轮命令
+- `rg -n "output_hidden_states=True|hidden_states\\[|out.hidden_states|outputs.hidden_states" tests\\glm5 tests\\codex research\\gpt5 research\\glm5 -g "*.py"`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+- `Get-Content -Encoding UTF8 research/gpt5/docs/AGI_GPT5_MEMO.md | Select-Object -Last 20`
+
+### 本轮理论进度
+- 当前项目里通过 `model(..., output_hidden_states=True)` 取得的 `hidden_states`，默认表示的是：
+  - **embedding 输出**（索引 `0`）
+  - 然后是**每个 transformer block 处理后的整层输出**
+  - 最后常常还包含**末层归一化后的最终表示**
+- 因而这里的 `hidden state` 不是单独等于：
+  - 注意力子层输出
+  - 也不是单独等于 `MLP` 子层输出
+  - 更不是某个线性矩阵本身
+- 更准确的理解是：
+  - 它是一个 token 在该层处理完成后的**当前表示状态**。
+  - 这个状态已经混合了注意力、`MLP`、残差连接、层归一化等共同作用。
+- 这也是为什么项目里如果想区分“到底是注意力在转，还是 `MLP` 在转”，就必须另外做 hook（钩子）消融：
+  - 零化注意力输出，再看 `hidden_states` 怎么变；
+  - 零化 `MLP` 输出，再看 `hidden_states` 怎么变。
+  - 这说明 `hidden_states` 本身默认是**合成后的整层结果**，不是子模块原始输出。
+- 对当前“旋转”分析最重要的含义是：
+  - 当我们比较 `hidden_states[l]` 和 `hidden_states[l+1]` 时，
+  - 比较的是“整层表示状态如何变化”，
+  - 不是“注意力权重如何变化”或“线性矩阵如何变化”。
+- 因而更稳的术语应当是：
+  - `hidden state rotation` = 表示状态的层间方向变化
+  - 不是注意力参数旋转
+  - 也不是 `MLP` 权重旋转
+## [2026-04-08 15:16] Codex 理论审阅：AGI_GLM5_LANGUAGE 与纤维丛框架的符合度
+
+### 时间
+- 2026-04-08 15:16:33 完成 `AGI_GLM5_LANGUAGE.md` 研究进展与纤维丛理论的对照审阅
+
+### 本轮命令
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 research/glm5/docs/AGI_GLM5_LANGUAGE.md -TotalCount 320`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 research/glm5/docs/AGI_GLM5_LANGUAGE.md | Select-Object -Last 320`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+
+### 本轮理论进度
+- `AGI_GLM5_LANGUAGE.md` 当前最核心的研究进展，可以压缩成四条：
+  - 已把早期“语义基底方向”论修正为“宏观几何主要由架构+初始化决定，真正语义在旋转后微调层”。
+  - 已建立较强的流形化表述：残差流是弯曲路径、`RMSNorm` 像投影算子、后期层像决策跃迁。
+  - 已发现局部低维与局部高维并存：跨文本变化方向低维，局部切空间却可能很高维。
+  - 已明确操控困难来自结构刚性，而非单纯工程细节。
+- 从纤维丛角度看，这些结果**部分符合，但还不构成严格的纤维丛理论**。
+- 符合纤维丛直觉的部分有：
+  - 存在“底空间候选”：文本/上下文/任务条件可被看成某种外部条件空间。
+  - 存在“纤维候选”：在固定语义点附近，不同风格、语法、读出自由度可被理解成附着在该点上的局部自由度。
+  - 存在“联络候选”：层间传播、残差更新、`RMSNorm` 校正很像把表示沿着某种规则做平行运输。
+  - 存在“曲率证据”：步角大、路径弯曲、切空间维度变化，这些都很像非平坦联络下的传播。
+- 但目前还缺少纤维丛理论最关键的四个严格部件：
+  - **底空间没有被明确定义**：现在更像“文本集合”或“语义集合”，但还不是一个明确拓扑空间或流形。
+  - **纤维没有被明确定义**：还没严格说明“在同一个语义点上，哪些变化属于同一纤维内部自由度”。
+  - **局部平凡化没有建立**：纤维丛要求局部上像 `U × F`，当前没有证明模型表示空间局部上可分解成“语义基底 × 附加纤维”。
+  - **过渡函数/结构群没有建立**：没有写出不同局部坐标片之间如何变换，也没有识别出对应的群作用。
+- 因而更严格的判断应是：
+  - 当前文档与其说“符合纤维丛理论”，不如说它已经走到了**流形 + 联络雏形 + 曲率证据**这一步。
+  - 距离严格纤维丛，只差最难的那一步：把“语义主变量”和“条件/风格/语法附加自由度”真正拆成可验证的基底-纤维结构。
+- 若要把这条线推进成纤维丛理论，下一阶段最关键的大任务不是继续测曲率，而是四个更硬的识别任务：
+  - 先找**底空间变量**：什么量才是跨文本稳定的“语义主坐标”。
+  - 再找**纤维变量**：在固定语义下，风格/语法/任务变化是否形成局部等价类。
+  - 再做**局部平凡化验证**：局部邻域内能否把表示分解成“主坐标 × 附加自由度”。
+  - 最后估计**联络与 holonomy（闭路回转）**：不同路径到达同一语义点时，纤维坐标是否发生可测的路径依赖旋转。
+- 当前最稳妥的结论不是“已经证明语言编码符合纤维丛”，而是：
+  - **它强烈像一个带联络的弯曲表示空间；**
+  - **是否真是纤维丛，取决于后续能不能把基底与纤维严格拆开。**
+## [2026-04-08 16:09] Codex 理论审阅：测试体系的方法覆盖、破解潜力与新增方法建议
+
+### 时间
+- 2026-04-08 16:09:06 完成 `AGI_GLM5_LANGUAGE.md` “测试体系”部分的方法论拆解
+
+### 本轮命令
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 research/glm5/docs/AGI_GLM5_LANGUAGE.md | Select-String -Pattern "测试体系|Phase|方法|实验覆盖|研究进度|大任务规划" -Context 3,18`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 research/glm5/docs/AGI_GLM5_LANGUAGE.md | Select-Object -Skip 320 -First 260`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+
+### 本轮理论进度
+- 当前“测试体系”已经形成了六大方法簇：
+  - **几何测绘类**：SVD、PCA、参与比、有效秩、旋转角、曲率、切空间捕获率、层级结构。
+  - **读出与方程类**：hidden→logit 分解、margin 方程、delta→logit 链、读出子空间、unembed 分析。
+  - **因果干预类**：activation patching、层消融、方向移除、维度移除、token leave-one-out、跨层传播消融。
+  - **机制拆分类**：attention vs MLP 分离、RMSNorm 几何、门控幅度/子空间/方向基元消融。
+  - **操控研究类**：centroid/Fisher/LDA/PC/梯度方向注入、logit 操控、prefix、PGD、Hessian。
+  - **跨模型比较类**：四模型基底对齐、瓶颈比较、信息域/多模态差异、训练动力学比较。
+- 这些方法已经足够破解一部分“语言背后的数学结构”，但目前破解到的主要还是**宏观几何层**，还没有深入到**微观语义构造层**。
+- 目前已经比较有把握破解出的部分：
+  - 宏观表示不是词典式存储，而是高维表示空间中的路径、旋转、投影、重排。
+  - 末层读出与中间传播之间存在强烈断裂，说明“内部计算空间”和“最终决策空间”不是同一层数学对象。
+  - 残差连接、`RMSNorm`、`MLP`、attention 并非独立部件，而是一个共同塑造轨迹的动力系统。
+  - hidden state 加法操控困难，不是简单方法不够好，而是结构刚性、归一化投影、后续层修复共同造成。
+- 但它们还不足以真正“破解语言数学结构”的原因有四个：
+  - **概念级编码尚未定位**：目前知道“有几何结构”，但不知道“苹果”“红色”“如果A则B”在空间里到底如何组成。
+  - **逻辑级运算尚未还原**：当前主要测的是几何与扰动响应，不是推理链条的真实中间计算。
+  - **局部描述强，生成预测弱**：很多结果能解释已发生现象，但不能稳定预测新文本如何演化。
+  - **状态级强，神经元级弱**：大多数方法分析 hidden state 整体统计量，还没深入到选择性神经元群或最小因果回路。
+- 因而更严格的判断是：
+  - 现有方法已经足够建立“语言表示是几何动力系统”这个大框架；
+  - 但还不足以单独破解“语言背后的完整数学结构”，因为缺少概念、属性、逻辑、语法在微观层面的可识别坐标系。
+- 在现有方法基础上，最值得补的新增方法分为八类：
+  - **概念-属性因果定位**：为单个概念及其属性构造最小对照集，做局部 patching、维度归因、方向归因。
+  - **逻辑过程追踪**：设计严格控制的条件推理、量词推理、指代解析、组合属性任务，逐层定位“推理在哪一层发生”。
+  - **局部坐标图方法**：对某个语义邻域做局部线性化、局部主曲率、局部 chart 拟合，验证是否存在稳定主坐标与附加自由度。
+  - **holonomy / 路径依赖实验**：让模型沿不同语义路径到达同一结论，检验表示是否产生不同的纤维残差或闭路回转。
+  - **稀疏字典/稀疏自编码器方法**：把整体 hidden state 分解成可解释原子，检验概念是单轴、稀疏组合，还是高度分布式叠加。
+  - **动态系统识别**：估计局部 Jacobian、Koopman 近似、状态转移谱，判断层传播是否可由低维控制系统逼近。
+  - **信息分解方法**：做 PID（部分信息分解）或条件互信息，区分哪些量贡献语义、哪些量贡献风格、哪些量贡献语法。
+  - **跨模型语义同构检验**：不是只比 PCA 对齐，而是比局部邻域关系、因果方向、概念间可运输性是否同构。
+- 若以“破解语言背后的数学结构”为目标，下一阶段最优先的大任务不该再平均撒网，而应按这个顺序推进：
+  - 先做**概念-属性-抽象层级**的局部编码图谱。
+  - 再做**逻辑推理路径**的逐层因果追踪。
+  - 再做**局部坐标图 + 路径依赖**，判断到底是流形、代数簇还是更接近纤维化结构。
+  - 最后再做**跨模型同构检验**，看这套结构是不是语言本身的结构，而不是某一架构的偶然产物。
+## [2026-04-08 18:37] Codex 文档落盘：AGI_GPT5_20260408 分析汇总保存
+
+### 时间
+- 2026-04-08 18:37:26 开始整理独立分析文档
+- 2026-04-08 18:37:26 确认 `research/gpt5/docs/AGI_GPT5_20260408.md` 不存在
+- 2026-04-08 18:37:26 完成 `AGI_GPT5_20260408.md` 新建与内容写入
+
+### 本轮命令
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+- `Test-Path "research\\gpt5\\docs\\AGI_GPT5_20260408.md"`
+- `Get-Content -Encoding UTF8 research/gpt5/docs/AGI_GPT5_MEMO.md | Select-Object -Last 20`
+
+### 本轮理论进度
+- 已将本轮围绕 `AGI_GLM5_LANGUAGE.md` 的多轮分析压缩为独立文档 `research/gpt5/docs/AGI_GPT5_20260408.md`，主要包含：
+  - “旋转”三种主要计算口径与公式拆解
+  - `hidden state` 在 layer 中的真实含义
+  - 当前研究进展与纤维丛理论的符合度判断
+  - “测试体系”已经使用的方法论分类
+  - 现有方法已经破解到哪一步、还缺什么
+  - 下一阶段最值得补的八类方法与四步推进顺序
+- 这份独立文档的定位不是实验流水账，而是对当前理论状态的一次结构化压缩，方便后续继续扩展成：
+  - `AGI_GPT5_LANGUAGE.md` 的新版骨架
+  - 以及更正式的“语言数学结构研究路线图”
+## [2026-04-08 22:03] Codex 理论讲解：AGI_GLM5_LANGUAGE 五个公理的原理、公式与计算过程
+
+### 时间
+- 2026-04-08 22:02:51 完成五个公理相关文档与脚本的定位
+- 2026-04-08 22:03:15 完成关键验证脚本补读
+
+### 本轮命令
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 research/glm5/docs/AGI_GLM5_LANGUAGE.md | Select-String -Pattern "### 2.1 五个公理|第一公理|第二公理|第三公理|第四公理|第五公理" -Context 0,12`
+- `rg -n "高维几何公理|信息域公理|归一化隔离公理|信号聚焦公理|Logit精确公理|INV-273|INV-305|INV-332|margin =|纠缠度|残存 ≈|聚焦比" research\\glm5\\docs tests\\glm5 -g "*.md" -g "*.py"`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 tests/glm5/stage674_training_dynamics.py -First 430`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 tests/glm5/stage675_multi_sample_validation.py -First 320`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 tests/glm5/stage671_isolation_mechanism.py -First 260`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 tests/glm5/stage677_theory_math.py -First 260`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 tests/glm5/stage678_dimension_threshold.py -First 440`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 tests/glm5/stage673_multistep_generation.py | Select-Object -Skip 220 -First 240`
+- `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Content -Encoding UTF8 tests/glm5/stage684_info_flow_dynamics.py -First 340`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+
+### 本轮理论进度
+- 对五个公理的最严格分层应是：
+  - **第五公理最硬**：它本质上是线性代数恒等式，只要 `logits = hW^T + b` 的读出成立，margin 分解就精确成立。
+  - **第一公理次硬**：它依赖高维几何和维度阈值，属于有明确适用条件的统计规律。
+  - **第四公理中等**：它更像稳定的层动力学统计规律，不是精确恒等式。
+  - **第三公理偏经验**：抓住了归一化导致隔离的主因，但具体指数公式仍更接近近似代理模型。
+  - **第二公理最弱也最重要**：它指出了信息域和训练范式对编码策略的约束，但修正因子 `f(RL,data,arch)` 仍未知。
+- 因而后续理论工作最应该避免的一点是：
+  - 把五条公理都当成同等强度的“定理”。
+  - 更准确的做法应是区分：恒等式、统计规律、近似模型、待闭式化假说。
+
+## 2026-04-08 23:20
+
+- 本轮命令：
+  - `Get-Date -Format "yyyy-MM-dd HH:mm"`
+  - `Get-Content -Tail 8 research/gpt5/docs/AGI_GPT5_MEMO.md`
+- 本轮理论数学研究进度：
+  - 回答了“如何利用现有拼图去破解语言背后的数学结构，以及如果该结构超出现有数学体系该怎么办”的问题。
+  - 当前最合理的总体路线，不是继续堆散点实验，而是把现有拼图压缩成四类对象：
+    - `state`（状态）：不同层、不同位置、不同上下文下的隐藏表示。
+    - `observable`（可观测量）：`logit`（未归一化打分）、margin（边际）、分类结果、语义判别器输出、行为表现。
+    - `invariant`（不变量）：跨提示、跨样本、跨模型都稳定的几何/动力学量，例如局部维度、旋转模式、曲率趋势、归一化后的保守量。
+    - `control`（控制量）：prompt（提示词）、hidden intervention（隐藏态干预）、读出改写、模块消融。
+  - 真正的“破解”应当把这些拼图推进成四类方程，而不是停留在现象目录：
+    - 状态更新方程：`h_{l+1} = F_l(h_l, x, c)`
+    - 扰动传播方程：`delta h_{l+1} = J_l delta h_l + higher-order terms`
+    - 读出方程：`y = R(h_L)`
+    - 约束/守恒方程：哪些量在层间传播中近似守恒、哪些量被 `RMSNorm`（均方根归一化）或残差结构强制压缩
+  - 现有拼图已经足够支撑“第一轮结构归纳”：
+    - 几何拼图说明语言表示不是词典表，而像弯曲流形上的轨道。
+    - 归一化与消融拼图说明网络存在强结构刚性，很多外部操控会被吸收或修复。
+    - 读出拼图说明最终决策并非神秘黑箱，至少末端读出有清晰线性代数骨架。
+    - 跨模型拼图可以用于筛掉“某个模型偶然学到的现象”，保留更可能接近语言本体结构的部分。
+  - 如果要从这些拼图走向理论，最关键的不是再追求更多“现象成立”，而是做三件事：
+    - 找最小生成变量：哪些内部变量一旦确定，就足以预测主要语言行为。
+    - 找闭环因果链：从概念、属性、关系到句子输出，能否写出可重复的传播链。
+    - 找失效边界：理论在哪些任务、长度、语域、模型族上失效。
+  - 如果语言背后的数学结构超出现有数学体系，最稳妥的办法不是空泛宣称“需要新数学”，而是走“操作性新数学”路线：
+    - 先定义可复现实验对象，而不是先定义宏大哲学名词。
+    - 先收集不变量、组合规律、闭路效应、局部坐标失真，再倒逼新公理。
+    - 允许理论暂时是不完全形式化的，但必须能预测新实验并区分竞争理论。
+    - 把“新数学”理解成：从现有线性代数、微分几何、信息论、动力系统理论中长出新的混合对象，而不是完全抛弃旧数学。
+  - 当前最大的硬伤仍然有四个：
+    - 还没有找到“概念、属性、关系、逻辑”这四类对象的统一状态坐标。
+    - 还没有把描述性几何规律升级成强预测动力学。
+    - 还没有证明现象在多模型、多语言、多任务下具有统一同构结构。
+    - 还没有形成真正的局部坐标图与过渡律，因此“流形/纤维化”仍停留在强直觉阶段。
+- 下一阶段的大任务不应再按零散脚本推进，而应按四个总任务组织：
+  - 语义对象测绘：建立概念-属性-关系-逻辑的最小对照数据和因果追踪流程。
+  - 动力学识别：局部 `Jacobian`（雅可比矩阵）、谱结构、路径依赖、闭路回转。
+  - 跨模型同构：比较不同模型是否共享局部坐标、因果方向与读出规律。
+  - 新公理压缩：把成功实验压缩成少数可计算公理，并要求它们能预测未见实验。
+
+## 2026-04-08 23:37
+
+- 本轮命令：
+  - `Get-Date -Format "yyyy-MM-dd HH:mm"`
+  - `rg -n "apple|fruit|neuron|activation patch|patching|SAE|sparse|concept|attribute|apple|水果|苹果|颜色|味道" tests research/glm5/docs research/gpt5/docs -S`
+  - `Get-Content research/gpt5/docs/AGI_GPT5_LANGUAGE.md -TotalCount 140`
+  - `Get-Content tests/codex/stage549_noun_family_neuron_structure_protocol.py -TotalCount 220`
+  - `Get-Content tests/codex/stage548_topology_field_neuron_algorithm.py -TotalCount 220`
+  - `rg -n "global_backbone|family_backbone|noun_unique_residual|task_bridge_adapter|cross_task_causal_core|apple|fruit|attribute_channel|noun_attribute_bridge|size|color|taste" research/gpt5/docs/AGI_GPT5_LANGUAGE.md -S`
+  - `rg -n "equation|algorithm_steps|topology_recovery|field_estimation|field_to_neuron_projection|mixed_causal_search|strong_control_validation|global_backbone_count|apple_fruit_shared_count" tests/codex/stage548_topology_field_neuron_algorithm.py tests/codex/stage549_noun_family_neuron_structure_protocol.py -S`
+- 本轮理论数学研究进度：
+  - 用户提出了一个更聚焦的问题：如果语言背后的数学结构首先要从“编码机制”突破，那么能否为 `apple（苹果）`、`fruit（水果）`、`color（颜色）`、`taste（味道）` 设计神经元级测试。
+  - 仓库里已经有可复用的结构原型：
+    - `noun_encoding = global_backbone + family_backbone + noun_unique_residual + task_bridge_adapter + cross_task_causal_core`
+    - 这说明现有研究已经不再把“苹果”看成单块静态编码，而是看成共享骨干与局部偏置的组合结构。
+    - 另有一条更底层的算法主线是：先恢复拓扑，再恢复场，再把场投影回注意力头、MLP神经元和残差方向，最后做混合因果搜索。
+  - 基于现有拼图，最合理的新测试不应直接问“哪个神经元代表苹果”，而应拆成四个可检验对象：
+    - `fruit family backbone（水果家族骨干）`
+    - `apple concept offset（苹果概念偏置）`
+    - `attribute channel（属性通道，如颜色/味道/大小）`
+    - `noun-attribute bridge（名词-属性桥接回路）`
+  - 推荐的神经元级破解协议应至少包含五层：
+    - 最小对照数据：`apple/banana/pear/orange` 对 `cat/dog`，再叠加 `red/green/sweet/sour` 属性，严格区分概念、家族、属性、上下文。
+    - 群体签名提取：不要先找单神经元，而要先抽出跨prompt稳定的群体签名，比较苹果与水果的共享子集和独有子集。
+    - 因果消融与注入：分别打掉家族骨干、苹果偏置、颜色通道、味道通道，看输出是失去“水果性”、失去“苹果性”，还是只失去某个属性。
+    - 组合泛化验证：把 `red` 注入 `apple`、`banana`、`car`，看颜色通道是否具有跨名词复用性；把“苹果偏置”转移到别的水果骨干，看是否得到接近“梨/香蕉”的结构迁移。
+    - 读出与局部动力学：在关键层记录 `delta-h`（层间变化）与 `logit margin` 联动，避免只做静态相似度统计。
+  - 这个协议真正要回答的不是“苹果有没有专属神经元”，而是更严格的四个问题：
+    - 苹果是否主要由“水果家族骨干 + 苹果独有偏置”构成。
+    - 颜色、味道等属性是否存在跨名词复用的属性通道。
+    - 名词和属性之间是否存在独立桥接回路，而不是简单线性叠加。
+    - 这些结构是集中在少量尖锐控制单元，还是分布在宽带场式编码里。
+  - 判断测试成功的标准不应是“找到了几个高分神经元”，而应是拿到以下四种证据同时成立：
+    - 共享/独有结构可稳定复现。
+    - 消融结果具有类别特异性，而不是仅仅让语言能力整体下降。
+    - 属性通道能跨对象迁移，但迁移效果受桥接回路约束。
+    - 结论在多prompt、多句式、多模型下保持同构趋势。
+  - 当前最大的硬伤与风险：
+    - 单神经元解释很可能是错觉，真正编码大概率是群体图样。
+    - prompt模板泄漏会把“语言习惯”误判成“概念编码”。
+    - 属性词本身有多义性，例如 `red` 既可能是颜色，也可能带情感或品牌联想。
+    - 如果只看末层静态激活，很容易漏掉关键桥接层和过渡层。
+  - 下一步的大任务应升级为“概念-家族-属性-桥接”统一协议：
+    - 不再只追苹果个案，而要同时做水果、动物、工具、组织等多家族。
+    - 不再只做相似度，而要加入注入、转移、读出、时间传播四类因果检验。
+    - 如果该协议在四模型上都成立，就能逼近“编码机制是语言数学结构核心入口”这一主张。
