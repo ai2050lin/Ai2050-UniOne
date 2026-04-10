@@ -38557,3 +38557,742 @@ python tests/codex/stage507_gemma4_hooking_smoke.py
     - 不再只追苹果个案，而要同时做水果、动物、工具、组织等多家族。
     - 不再只做相似度，而要加入注入、转移、读出、时间传播四类因果检验。
     - 如果该协议在四模型上都成立，就能逼近“编码机制是语言数学结构核心入口”这一主张。
+
+## 2026-04-09 18:51
+
+- 本轮命令：
+  - `Get-Date -Format "yyyy-MM-dd HH:mm"`
+  - `Get-Content -Tail 10 research/gpt5/docs/AGI_GPT5_MEMO.md`
+- 本轮理论数学研究进度：
+  - 用户继续追问编码公式中的三个关键项：`A_red / A_sweet`、`G(...)`、`C_context` 的定义与数学区别。
+  - 当前更清晰的统一写法可整理为：
+    - `h = B_global + B_family + E_concept + A_attr + G(concept, attr, role) + C_context`
+  - 三者在数学上的本质区别应明确分层：
+    - `A_attr` 是属性主效应项：
+      - 表示颜色、味道、大小等属性本身带来的可迁移方向。
+      - 理想上应具有跨对象复用性，例如 `red` 不只作用于苹果，也可作用于车、花、旗子。
+      - 更像一个“可重复调用的属性通道”或“共享因子方向”。
+    - `G(...)` 是组合/绑定项：
+      - 不是属性本身，也不是概念本身，而是“这个属性如何挂到这个对象上”的交互项。
+      - 数学上更接近非加性项或高阶项；如果没有它，`apple + red` 会被误当成两个独立向量的简单相加。
+      - 它负责解释为何有些属性可自然绑定到某些对象，有些绑定则不自然或会被系统修正。
+    - `C_context` 是上下文条件项：
+      - 反映句法位置、话题、指代、任务要求、前文约束、文体等背景条件。
+      - 它不等于属性，也不等于桥接，而是对当前整体编码状态施加条件化偏移。
+      - 同一个“红苹果”，放在食谱、商业、诗歌、品牌歧义、否定句里，其表示都会被 `C_context` 调整。
+  - 如果用统计建模语言类比：
+    - `A_attr` 类似主效应（main effect，主效应）
+    - `G(...)` 类似交互效应（interaction term，交互项）
+    - `C_context` 类似条件项/背景项（conditioning term，条件化项）
+  - 如果用更直接的可检验标准区分：
+    - 能跨对象迁移的那部分，更像 `A_attr`
+    - 只在“某对象×某属性”组合上额外出现的那部分，更像 `G(...)`
+    - 随句子、任务、前文、位置变化而整体漂移的那部分，更像 `C_context`
+  - 最关键的理论提醒：
+    - 这三项在真实网络里大概率不是严格正交的，也未必能被唯一拆分。
+    - 因而它们更像“最小可解释分解”，而不是已经被证明唯一存在的自然基底。
+    - 后续实验必须靠迁移、消融、注入、上下文置换去逼近这三项，而不能只靠一次回归拟合就宣称拆分成功。
+
+## 2026-04-09 19:00
+
+- 本轮命令：
+  - `Get-Date -Format "yyyy-MM-dd HH:mm"`
+  - `Get-Content -Tail 12 research/gpt5/docs/AGI_GPT5_MEMO.md`
+- 本轮理论数学研究进度：
+  - 用户继续追问：如何基于“家族骨干 + 概念偏置 + 属性通道 + 桥接 + 上下文”的理论，真正破解苹果的神经元级编码原理，并进一步计算其他水果的编码。
+  - 当前最可执行的统一表达应写成：
+    - `h_apple = B_global + B_fruit + E_apple + ΣA_attr + ΣG(apple, attr_i) + C_context + ε`
+  - 这个表达的核心价值有两点：
+    - 解释性：它说明“苹果为什么这样编码”不是偶然，而是复用与组合的结果。
+    - 计算性：它允许把“香蕉、梨、橙子”的编码写成同构形式，只替换家族内偏置和属性配置。
+  - “为什么模型会这样编码”的当前最合理解释：
+    - 参数效率：共享 `B_fruit` 比为每个水果单独记一整套编码更省参数。
+    - 组合效率：颜色、味道、大小等属性可以通过 `A_attr` 在多对象间复用。
+    - 鲁棒性：`G(...)` 让属性不是机械叠加，而是受对象约束绑定，减少非法组合。
+    - 动力学稳定性：残差流和归一化更容易保留“共享骨干 + 局部修正”这种结构，而不是极端离散的独立码。
+    - 读出便利：末层若接近线性读出，分解式编码更容易被稳定映射到词与语义判别边界。
+  - 如果要真正“破解苹果编码”，应把任务拆成四个估计问题：
+    - 估计 `B_global`：大量名词平均后得到全局名词共享骨干。
+    - 估计 `B_fruit`：水果均值减去 `B_global` 得到水果家族骨干。
+    - 估计 `E_apple`：苹果均值减去 `B_global + B_fruit` 后的剩余项。
+    - 估计 `A_attr / G / C_context`：靠属性迁移、组合残差、上下文置换三类实验分离。
+  - 一个更清晰的近似估计流程：
+    - `B_global ≈ mean(h(noun_set))`
+    - `B_fruit ≈ mean(h(fruit_set)) - B_global`
+    - `E_apple ≈ mean(h(apple_prompts)) - B_global - B_fruit`
+    - `A_red ≈ mean(h(red object_prompts) - h(object_prompts))`，再在多对象上求共享部分
+    - `G(apple, red) ≈ h(red apple) - [B_global + B_fruit + E_apple + A_red + C_context]`
+  - 所谓“神经元级破解”不应理解成找到一个苹果神经元，而应理解成：
+    - 找到哪些神经元/头/残差方向稳定承载 `B_fruit`
+    - 哪些单元更偏向 `E_apple`
+    - 哪些单元承担 `A_red / A_sweet`
+    - 哪些单元主要在组合时出现，从而构成 `G(...)`
+  - 判定某个神经元群属于哪一类，不能只看激活高低，必须同时满足：
+    - 跨prompt稳定
+    - 跨近义模板稳定
+    - 对目标读出有因果影响
+    - 对无关任务损伤较小
+  - 在这套框架下，“其他水果可计算”就有了明确含义：
+    - `h_banana = B_global + B_fruit + E_banana + ΣA_attr + ΣG(banana, attr_i) + C_context`
+    - `h_pear = B_global + B_fruit + E_pear + ...`
+    - `h_orange = B_global + B_fruit + E_orange + ...`
+    - 真正变化的不是整个系统，而是家族内偏置 `E_concept` 和各属性绑定项 `G(...)`
+  - 因而一个很强的预测是：
+    - 同属水果的概念，应共享大块 `B_fruit`
+    - 家族内差异主要压缩在较小的 `E_concept`
+    - 颜色/味道方向应部分跨水果共享
+    - 但“绿苹果”“酸橙子”“甜香蕉”的组合自然度不同，说明 `G(...)` 不同
+  - 当前这套理论最大的硬伤：
+    - 分解未必唯一，可能存在多个数学等价分解。
+    - 神经元级映射大概率是群体性的，不会整齐落在少量单元上。
+    - `C_context` 容易吸收过多残差，导致把很多未解释机制都推给上下文项。
+    - 若不加入因果消融与迁移验证，任何漂亮分解都可能只是回归拟合幻觉。
+  - 下一步真正的大任务不是只做苹果一个个案，而是做“水果家族可计算编码图谱”：
+    - 同时估计 `apple / banana / pear / orange`
+    - 比较它们的 `B_fruit` 共享量、`E_concept` 差异量、属性通道共享量、桥接项差异量
+    - 如果这个图谱能稳定预测未见水果或未见属性组合，才说明编码理论开始具备生成力
+
+## 2026-04-09 19:03
+
+- 本轮命令：
+  - `Get-Date -Format "yyyy-MM-dd HH:mm"`
+  - `Get-Content -Tail 12 research/gpt5/docs/AGI_GPT5_MEMO.md`
+- 本轮理论数学研究进度：
+  - 用户追问：代词、副词、介词，以及逻辑推理，怎样并入当前“家族骨干 + 概念偏置 + 属性通道 + 桥接 + 上下文”的理论。
+  - 当前最合理的扩展方向，不是继续把所有词都视为“概念”，而是把语言编码对象升级为六类：
+    - `object`（对象项）：名词、实体、概念。
+    - `attribute`（属性项）：颜色、味道、大小、温度等。
+    - `relation/frame`（关系/框架项）：介词、角色关系、空间框架、事件槽位。
+    - `reference`（指代项）：代词、回指、共指链、说话者/听话者视角。
+    - `modifier`（修饰项）：副词、程度、频率、方式、时间修饰。
+    - `reasoning state`（推理状态项）：中间结论、约束集、候选世界状态、冲突消解状态。
+  - 这样一来，原始方程应从“名词中心式”升级成“结构化句义状态”：
+    - `h = ΣB_object + ΣA_attr + ΣR_relation + ΣP_reference + ΣM_modifier + Q_reasoning + G_bind + C_context + ε`
+  - 四类新对象的理论位置：
+    - 代词：
+      - 不是普通概念词，更像“引用指针”或“变量槽位”。
+      - 数学上可写成 `P_reference`，它不直接提供实体内容，而是把当前词绑定到前文某个对象状态。
+      - 例如 `he` 的主要任务不是编码“男人”本身，而是编码“指向当前 discourse state（篇章状态）里哪个候选对象”。
+    - 副词：
+      - 更像对事件、动作、判断强度的修饰算子，而不是对象属性。
+      - 数学上可写成 `M_modifier`，作用对象通常是谓词、事件或整句命题，而不是单个名词。
+      - 例如 `quickly`（快速地）更像改变动作轨迹，`probably`（大概）更像改变命题置信度，`very`（非常）更像放大某个性质。
+    - 介词：
+      - 更像关系框架或坐标变换，不只是一个词向量。
+      - 数学上可写成 `R_relation/frame`，负责把对象放进某个空间、角色或事件结构中。
+      - 例如 `on the table`（在桌子上）不是给“桌子”加属性，而是建立“物体-桌子”的空间关系框架。
+    - 逻辑推理：
+      - 不能只当上下文噪声，应作为单独的 `Q_reasoning`（推理状态）进入理论。
+      - 它表示当前系统已经持有哪些前提、生成了哪些中间结论、排除了哪些候选解释。
+      - 因而推理不是一个词，而是一个沿层传播、不断更新的隐状态链。
+  - 一个更完整的句义编码式可写为：
+    - `h_t = O_t + A_t + R_t + P_t + M_t + Q_t + G_t + C_t`
+    - 其中 `O_t` 是对象集合，`A_t` 是属性集合，`R_t` 是关系/框架集合，`P_t` 是指代映射，`M_t` 是修饰算子，`Q_t` 是推理状态，`G_t` 是绑定/交互项，`C_t` 是上下文条件项。
+  - 对应地，逻辑推理应被理解成“状态更新”，而不是静态成分：
+    - `Q_{l+1} = F(Q_l, O_l, R_l, P_l, M_l, C_l)`
+    - 也就是说，推理是在层间更新中把对象、关系、指代、修饰统合成新的结论状态。
+  - 这样接入之后，词类分工会更清楚：
+    - 名词：提供对象骨干
+    - 形容词：提供对象属性
+    - 代词：提供对象引用与变量重用
+    - 介词：提供关系框架与角色槽位
+    - 副词：提供事件/命题级修饰
+    - 连词、量词、否定词：更接近推理状态更新的控制符
+  - 最重要的收益：
+    - 逻辑推理终于不是“附属现象”，而是整个句义状态中的一类核心隐变量。
+    - 代词、介词、副词也不需要勉强塞进“概念-属性”二分法里。
+    - 这使得理论可以从“名词编码理论”升级为“结构化语言计算理论”。
+  - 当前最大硬伤：
+    - 这些对象类型之间边界未必清晰，例如某些副词会影响推理置信度，某些介词也带抽象逻辑关系。
+    - `Q_reasoning` 很容易变成新的“大兜底项”，如果没有中间结论追踪实验，就会失去可证伪性。
+    - 代词和逻辑变量的对应是否真的存在稳定独立回路，还需要专门的指代/量词/否定实验验证。
+  - 下一步的大任务应升级为：
+    - “对象-属性-关系-指代-修饰-推理状态”六类编码对象的统一协议
+    - 专门设计代词共指、介词框架、副词修饰、逻辑链路四类最小对照实验
+    - 把推理从静态句向量解释推进到逐层状态更新方程
+
+## 2026-04-09 19:15
+
+- 本轮命令：
+  - `Get-ChildItem tests/codex | Sort-Object Name | Select-Object -Last 20 | ForEach-Object { $_.Name }`
+  - `rg -n "stage55[0-9]|fruit|causal encoding|co-reference|coreference|preposition|adverb|logic chain|state update" tests/codex research/gpt5/docs research/glm5/docs -S`
+  - `rg --files tests/codex | rg "stage55[1-9]|stage56[0-9]"`
+  - `Get-Content research/gpt5/docs/AGI_GPT5_LANGUAGE.md -Tail 80`
+  - `python tests/codex/stage570_fruit_minimal_causal_encoding_protocol.py`
+  - `python tests/codex/stage571_unified_language_state_update_protocol.py`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm"`
+  - `Get-Content -Tail 16 research/gpt5/docs/AGI_GPT5_MEMO.md`
+  - `Get-ChildItem tests/codex_temp/stage570_fruit_minimal_causal_encoding_protocol_20260409, tests/codex_temp/stage571_unified_language_state_update_protocol_20260409 | Select-Object FullName`
+- 本轮理论数学研究进度：
+  - 按用户要求，正式完成了两个任务，并把结果落成仓库内可复用脚本与文档，而不再只是对话结论。
+  - 已新增协议脚本：
+    - `tests/codex/stage570_fruit_minimal_causal_encoding_protocol.py`
+    - `tests/codex/stage571_unified_language_state_update_protocol.py`
+  - 已新增总结文档：
+    - `research/gpt5/docs/AGI_GPT5_20260409_LANGUAGE_COMPUTATION_PROTOCOL.md`
+  - `stage570` 解决的任务：
+    - 把“苹果神经元”问题正式改写成“水果最小因果编码结构”问题。
+    - 统一写成：
+      - `h_concept ~= B_global + B_family + E_concept + sum(A_attr) + sum(G_bind(concept, attr_i)) + C_context + eps`
+      - `h_apple ~= B_global + B_fruit + E_apple + A_red + A_sweet + G_bind(apple, red) + G_bind(apple, sweet) + C_context + eps`
+    - 明确了六类核心组件：全局名词骨干、家族骨干、概念偏置、属性通道、绑定桥接、上下文修正。
+    - 把“如何估计、如何干预、如何可证伪、如何外推到 banana/pear/orange”都压成正式协议。
+  - `stage571` 解决的任务：
+    - 把代词、介词、副词、逻辑推理并入同一套语言状态更新方程。
+    - 统一写成：
+      - `S_t,l = (O_t,l, A_t,l, R_t,l, P_t,l, M_t,l, Q_t,l, G_t,l, C_t,l)`
+      - `S_t,l+1 = F_l(S_t,l)`
+      - `Q_t,l+1 = F_reason(Q_t,l, O_t,l, R_t,l, P_t,l, M_t,l, C_t,l)`
+    - 明确了四类最小实验：
+      - 代词共指实验
+      - 介词关系框架实验
+      - 副词修饰范围实验
+      - 逻辑链路逐层追踪实验
+    - 把这四类实验统一到一个共享词汇表：对象、属性、关系、指代、修饰、推理状态、绑定、上下文。
+  - 两个脚本已成功执行，并生成正式结果文件：
+    - `tests/codex_temp/stage570_fruit_minimal_causal_encoding_protocol_20260409/summary.json`
+    - `tests/codex_temp/stage570_fruit_minimal_causal_encoding_protocol_20260409/REPORT.md`
+    - `tests/codex_temp/stage571_unified_language_state_update_protocol_20260409/summary.json`
+    - `tests/codex_temp/stage571_unified_language_state_update_protocol_20260409/REPORT.md`
+  - 当前阶段最重要的推进，不是“已经破解苹果编码”或“已经证明统一语言计算理论”，而是：
+    - 已经把两个关键目标从口头研究方向压成了正式协议对象。
+    - 后续可以直接据此补实证层：神经元/头/残差方向的因果消融、注入、逐层追踪、跨模型验证。
+  - 当前最严格的硬伤仍在于：
+    - 这两份脚本目前是研究协议，不是大模型实测结果。
+    - `B_family / E_concept / A_attr / G_bind / C_context` 的分解未必唯一。
+    - `Q_t` 与 `C_t` 很容易成为大兜底项，必须用真正的逐层实验去逼窄。
+    - 若四类最小实验不能在四模型上都打出相同结构趋势，统一状态更新方程就仍只是候选理论。
+  - 下一阶段的大任务已被压得更清楚：
+    - 先用 `Qwen3` 串行跑 `stage570` 的实证版，确认水果家族骨干、概念偏置、属性通道、绑定桥接是否可稳定测得。
+    - 再用四类最小实验做 `stage571` 的实证版，验证 `P_t / R_t / M_t / Q_t` 是否能被独立追踪。
+    - 最后跨 `DeepSeek7B / GLM4 / Gemma4` 做同构比较，决定这是不是语言本体结构，而不是单模型风格。
+
+## 2026-04-09 20:07
+
+- 本轮命令：
+  - `Get-Date -Format "yyyy-MM-dd HH:mm"`
+  - `rg -n "AutoModelForCausalLM|cuda|device_map|Qwen|DeepSeek|Gemma|GLM4|from_pretrained|output_hidden_states" tests/codex tests/glm5 -S`
+  - `rg --files tests/codex | rg "probe|lib|helper|model|load|hook|causal"`
+  - `Get-Content tests/codex/multimodel_language_shared.py -TotalCount 260`
+  - `Get-Content tests/glm5/phase_xli_apple_fruit_attribute_protocol.py -TotalCount 220`
+  - `Get-Content tests/codex/stage426_pronoun_minimal_causal_mechanism.py -TotalCount 220`
+  - `Get-Content tests/codex/stage122_adverb_context_route_shift_probe.py -TotalCount 220`
+  - `Get-Content tests/codex/qwen3_language_shared.py -TotalCount 260`
+  - `Get-Content tests/codex/stage423_qwen3_deepseek_wordclass_layer_distribution.py -TotalCount 220`
+  - `Get-Content tests/codex/stage425_sentence_context_wordclass_causal.py -TotalCount 220`
+  - `@(path...) | ForEach-Object { ... Test-Path ... }`
+  - `@" ... import torch ... "@ | python -`
+  - `python tests/codex/stage573_fruit_minimal_causal_encoding_empirical.py --models qwen3`
+  - `python tests/codex/stage573_fruit_minimal_causal_encoding_empirical.py --models deepseek7b`
+  - `python tests/codex/stage573_fruit_minimal_causal_encoding_empirical.py --models glm4`
+  - `python tests/codex/stage573_fruit_minimal_causal_encoding_empirical.py --models gemma4`
+  - `$models = 'qwen3','deepseek7b','glm4','gemma4'; foreach ($m in $models) { python tests/codex/stage573_fruit_minimal_causal_encoding_empirical.py --models $m }`
+  - `$models = 'qwen3','deepseek7b','glm4','gemma4'; foreach ($m in $models) { python tests/codex/stage574_unified_language_state_update_empirical.py --models $m }`
+  - `python tests/codex/stage574_unified_language_state_update_empirical.py --models gemma4`
+  - `Get-Content tests/codex_temp/stage573_fruit_minimal_causal_encoding_empirical_20260409/summary.json`
+  - `Get-Content tests/codex_temp/stage574_unified_language_state_update_empirical_20260409/summary.json`
+  - `Get-Content -Tail 20 research/gpt5/docs/AGI_GPT5_MEMO.md`
+- 本轮理论数学研究进度：
+  - 已新增并完成两套真实四模型实测脚本：
+    - `tests/codex/stage573_fruit_minimal_causal_encoding_empirical.py`
+    - `tests/codex/stage574_unified_language_state_update_empirical.py`
+  - 运行方式遵守了串行 CUDA 原则：`qwen3 -> deepseek7b -> glm4 -> gemma4`，避免显存溢出。
+  - 为适配当前 Windows + CUDA 环境，对 `DeepSeek7B / GLM4 / Gemma4` 补了“先 CPU 再转 CUDA”的安全加载路径；否则 `device_map="auto"` 会出现进程级崩溃。
+  - `stage573` 的核心实测结论：
+    - 四模型都支持“水果家族骨干”存在，`apple` 对 `fruit` 骨干余弦均为正，且普遍高于对 `animal/object` 骨干。
+    - 三模型 `Qwen3 / DeepSeek7B / GLM4` 的行为 probe（`An apple is a type of ...`，`A pear is usually ...`）都强支持水果家族与典型属性读出；`Gemma4` 对水果家族读出仍对，但对 `pear -> sweet` 较弱，说明属性读出更脆。
+    - 属性通道存在跨对象复用迹象：
+      - `red` 的共享 delta 余弦约 `0.29~0.54`
+      - `sweet` 的共享 delta 余弦约 `0.40~0.71`
+    - 绑定残差显著非零：
+      - `Qwen3` 约 `0.11~0.13`
+      - `DeepSeek7B` 约 `0.25`
+      - `GLM4` 约 `0.24~0.33`
+      - `Gemma4` 约 `0.25~0.27`
+      - 这说明“名词 + 属性”并非纯线性相加，`G_bind` 有实测支撑。
+    - 但“概念偏置极小”没有被支持：
+      - `apple` 的概念偏置比例在四模型里约 `0.56 ~ 0.84`
+      - 更合理的修正是：苹果不是“几乎纯水果骨干 + 很小偏置”，而是“水果骨干明显存在 + 概念偏置并不小 + 绑定残差也不可忽略”。
+  - `stage574` 的核心实测结论：
+    - 介词关系框架最稳：
+      - 四模型 `preposition_relation` 准确率全部 `1.0`
+      - 这强支持 `R_t` 不是噪声项，而是可被独立读出的关系框架状态。
+    - 逻辑推理整体较强：
+      - `Qwen3 / DeepSeek7B / GLM4` 的 `logic_reasoning` 准确率均为 `1.0`
+      - `Gemma4` 为 `0.67`，主要在否定链路上失分
+      - 多个逻辑案例的层间 margin 呈“早期混乱、中后期增强、末层收敛”趋势，说明 `Q_t` 更像逐层形成，而不是只在末层突然出现。
+    - 代词共指中等偏弱：
+      - `Qwen3 / GLM4` 为 `1.0`
+      - `DeepSeek7B / Gemma4` 为 `0.5`
+      - 说明 `P_t` 还没有像关系框架那样稳定独立出来，至少当前最小实验还不够强。
+    - 副词修饰范围最弱：
+      - 只有 `Qwen3` 达到 `1.0`
+      - `DeepSeek7B / GLM4 / Gemma4` 都是 `0.5`
+      - 失败集中在 `probably`（认识论副词）这种“修饰命题置信度”的情况，而非 `quickly`（方式副词）这种动作修饰。
+      - 这说明 `M_t` 可能还需要拆成“事件修饰”和“命题修饰”两层，而不能只用一个副词状态项。
+  - 由此得到的理论升级：
+    - 当前统一状态更新方程已有第一轮实证支撑，但支撑强度不均衡：
+      - `R_t`（关系框架）强
+      - `Q_t`（推理状态）中强
+      - `P_t`（指代状态）中等
+      - `M_t`（副词修饰）偏弱且疑似需要再细分
+  - 走向第一性原理理论的条件被进一步逼清：
+    - 不能只满足“现象能描述”，必须满足：
+      - 少数状态变量能覆盖多类语言现象
+      - 层间更新规律可跨模型复现
+      - 干预这些状态变量能定向改变行为
+      - 理论能预测未见组合而不是只拟合已知样本
+    - 当前最接近第一性原理的雏形，不是一个静态几何定理，而是：
+      - “共享结构 + 条件绑定 + 逐层状态更新”的受控编码动力系统
+  - 对大脑编码机制的解释也更收敛了：
+    - 苹果之类概念更像“家族 patch 上的局部偏置 + 属性纤维 + 绑定桥接”，而不是单神经元标签。
+    - 关系、指代、逻辑更像群体状态更新，而不是某个词的局部附加说明。
+    - 这与大脑中“群体编码、上下文依赖、组合绑定、递进式决策”这一类解释更吻合。
+  - 当前最严格的硬伤：
+    - `stage573` 证明了骨干、通道、残差存在，但还没有把它们映射到最小神经元/头/残差因果回路。
+    - `stage574` 证明了统一方程有机会成立，但 `P_t / M_t` 还不稳，尤其副词项明显需要更细拆。
+    - 逻辑逐层 margin 虽然支持“中间状态形成”，但轨迹并不单调，说明目前还不能把 `Q_t` 写成简单线性推进律。
+    - 所有结果目前仍是“小样本高信号验证”，还不是大规模统计定律。
+  - 下一阶段的大任务应该转成三条主线：
+    - 神经元级闭环：把 `B_family / E_concept / A_attr / G_bind / P_t / R_t / M_t / Q_t` 真正投影回最小因果回路。
+    - 动力学闭式化：把逻辑、指代、修饰做成层间更新方程，而不只是最终正确率。
+    - 脑侧映射：把“家族 patch + 属性纤维 + 绑定桥接 + 状态更新”翻译成群体编码、时间窗绑定、上下文门控、回路重入这类脑机制假说。
+
+## 2026-04-09 20:25
+
+- 本轮命令：
+  - `Get-Date -Format "yyyy-MM-dd HH:mm"`
+  - `Get-Content tests/codex_temp/stage573_fruit_minimal_causal_encoding_empirical_20260409/summary.json -TotalCount 80`
+  - `Get-Content tests/codex_temp/stage574_unified_language_state_update_empirical_20260409/summary.json -TotalCount 120`
+  - `python tests/codex/stage575_first_principles_brain_bridge_assessment.py`
+  - `Get-Content tests/codex_temp/stage575_first_principles_brain_bridge_assessment_20260409/summary.json`
+  - `Get-Content tests/codex_temp/stage575_first_principles_brain_bridge_assessment_20260409/REPORT.md -TotalCount 120`
+- 本轮理论数学研究进度：
+  - 新增了正式评估器：
+    - `tests/codex/stage575_first_principles_brain_bridge_assessment.py`
+  - 同时新增了总结文档：
+    - `research/gpt5/docs/AGI_GPT5_20260409_FIRST_PRINCIPLES_BRAIN_BRIDGE.md`
+  - `stage575` 把 `stage573`（水果最小因果编码结构实测）与 `stage574`（统一语言状态更新实测）压成三类结论：
+    - 第一性原理成熟度评估
+    - 大脑编码机制桥接评估
+    - 下一阶段任务清单
+  - 当前自动评估结果：
+    - `overall_score = 0.8598`
+    - `level = strong_candidate`
+  - 这说明当前理论更准确的定位已经不是“拼图堆积”或“描述性框架”，而是：
+    - 强候选第一性原理理论
+    - 但仍不是闭式、完备、可大规模外推的成熟第一性原理理论
+  - `stage575` 给出的八个成熟度轴非常关键：
+    - `shared_structure = 0.6848`
+    - `attribute_transfer = 0.9017`
+    - `binding_nonadditivity = 1.0000`
+    - `relation_frame = 1.0000`
+    - `reasoning_state = 0.9167`
+    - `reasoning_dynamics = 1.0000`
+    - `reference_state = 0.7500`
+    - `modifier_state = 0.6250`
+  - 这组结果压出了当前理论的强弱分布：
+    - 最强：
+      - 绑定非加性
+      - 关系框架
+      - 逻辑状态与逻辑动力学
+      - 属性迁移
+    - 中等：
+      - 共享结构
+      - 指代状态
+    - 最弱：
+      - 副词/修饰状态
+  - 对大脑编码机制的桥接进一步收敛：
+    - `B_family` 最像家族级群体原型场（family patch）
+    - `E_concept` 最像 patch 内局部偏置
+    - `A_attr` 最像可复用特征通道/属性纤维
+    - `G_bind` 最像时间窗绑定或桥接回路
+    - `R_t` 最像独立关系框架状态
+    - `Q_t` 最像递进式约束传播/中间结论状态
+  - 因而当前最自然的大脑侧解释不再是“单神经元对应单概念”，而是：
+    - 群体 patch
+    - 局部偏置
+    - 特征纤维
+    - 绑定桥接
+    - 递进状态更新
+  - 当前最严格的理论判断：
+    - 已经可以说“语言能力背后存在统一编码-计算结构”的证据链在成形。
+    - 还不能说“已经得到唯一正确的第一性原理定律”。
+    - 最大卡点仍是：
+      - `P_t`（指代）不够稳
+      - `M_t`（副词/修饰）过粗
+      - 逻辑动力学虽强，但还没闭式化成真正更新律
+  - 下一步的大任务因此进一步收敛成五条：
+    - 把 `B_family / E_concept / A_attr / G_bind` 真正投影回最小因果回路
+    - 把 `pronoun / adverb` 再细拆成更小状态变量
+    - 把逻辑逐层 margin 扩成状态更新方程
+    - 把 DNN 侧结构翻译成脑侧可检验群体编码预测
+    - 扩大任务与样本，要求理论预测未见组合而不是只解释当前样本
+
+## 2026-04-09 20:25
+
+- 本轮命令：
+  - `Get-Date -Format "yyyy-MM-dd HH:mm"`
+  - `Get-Content tests/codex_temp/stage573_fruit_minimal_causal_encoding_empirical_20260409/summary.json -TotalCount 80`
+  - `Get-Content tests/codex_temp/stage574_unified_language_state_update_empirical_20260409/summary.json -TotalCount 120`
+  - `python tests/codex/stage575_first_principles_brain_bridge_assessment.py`
+  - `Get-Content tests/codex_temp/stage575_first_principles_brain_bridge_assessment_20260409/summary.json`
+  - `Get-Content tests/codex_temp/stage575_first_principles_brain_bridge_assessment_20260409/REPORT.md -TotalCount 120`
+  - `python tests/codex/stage576_reference_modifier_substate_empirical.py --models qwen3`
+  - `python tests/codex/stage576_reference_modifier_substate_empirical.py --models deepseek7b`
+  - `python tests/codex/stage576_reference_modifier_substate_empirical.py --models glm4`
+  - `python tests/codex/stage576_reference_modifier_substate_empirical.py --models gemma4`
+  - `Get-Content tests/codex_temp/stage576_reference_modifier_substate_empirical_20260409/summary.json`
+  - `Get-Content tests/codex_temp/stage576_reference_modifier_substate_empirical_20260409/REPORT.md -TotalCount 160`
+  - `python tests/codex/stage577_state_substate_upgrade_assessment.py`
+  - `Get-Content tests/codex_temp/stage577_state_substate_upgrade_assessment_20260409/summary.json`
+  - `Get-Content tests/codex_temp/stage577_state_substate_upgrade_assessment_20260409/REPORT.md -TotalCount 120`
+- 本轮理论数学研究进度：
+  - 在 `stage575` 基础上继续推进，新增了两套新工件：
+    - `tests/codex/stage576_reference_modifier_substate_empirical.py`
+    - `tests/codex/stage577_state_substate_upgrade_assessment.py`
+  - `stage576` 的目标是把当前最弱的两类状态做细拆实测：
+    - `P_t` 拆成：
+      - `P_personal`
+      - `P_reflexive`
+      - `P_demonstrative`
+    - `M_t` 拆成：
+      - `M_manner`
+      - `M_epistemic`
+      - `M_degree`
+      - `M_frequency`
+  - 四模型串行实测已完成，结果非常关键：
+    - `pronoun` 粗粒度均值从 `0.75` 提升到子状态均值 `0.9167`
+    - `pronoun_gain_mean = +0.1667`
+    - 说明 `P_t` 的确不该继续保持单一粗项，拆分后解释力明显更强
+  - `pronoun` 内部结构也被逼出来了：
+    - `pronoun_personal = 0.75`
+    - `pronoun_reflexive = 1.00`
+    - `pronoun_demonstrative = 1.00`
+    - 这说明真正难的不是“代词整体”，而是“人称共指”这一类最依赖篇章链路的状态
+  - `adverb` 的结果更有启发性：
+    - 粗粒度均值 `0.625`
+    - 子状态均值 `0.5625`
+    - `adverb_gain_mean = -0.0625`
+    - 这不是坏消息，而是说明“副词不是一个统一机制”，粗粒度把几种不同状态混在一起反而掩盖了真实结构
+  - `adverb` 内部分化非常明显：
+    - `adverb_manner = 0.875`
+    - `adverb_epistemic = 0.375`
+    - `adverb_degree = 0.50`
+    - `adverb_frequency = 0.50`
+    - 由此可见：
+      - 方式副词更像稳定的事件修饰状态
+      - 认识论副词最弱，更像命题级不确定性调制
+      - 程度副词与频率副词强烈依赖模型实现，不宜继续混成一个 `M_t`
+  - `stage577` 对比了粗粒度方程和子状态方程，得到明确结论：
+    - `P_t` 必须升级成多子状态
+    - `M_t` 也必须升级，但不是因为整体更强，而是因为它本来就包含不同机制，必须拆开才不会成为错误的兜底项
+  - 因此统一状态方程应从：
+    - `S_t,l = (O_t,l, A_t,l, R_t,l, P_t,l, M_t,l, Q_t,l, G_t,l, C_t,l)`
+    - 升级为：
+    - `S_t,l = (O_t,l, A_t,l, R_t,l, P_personal,l, P_reflexive,l, P_demonstrative,l, M_manner,l, M_epistemic,l, M_degree,l, M_frequency,l, Q_t,l, G_t,l, C_t,l)`
+  - 这一步的理论意义非常大：
+    - 统一语言状态更新理论不再只是“把所有东西塞进几个大桶”
+    - 而是开始进入“状态变量内部也有自然分解”的层次
+    - 这更接近真正的第一性原理理论，因为它在不断压缩兜底项、细化真实自由度
+  - 对大脑编码机制的解释也进一步收紧：
+    - 代词系统可能不是一个统一回路，而是至少分成：
+      - 人称共指链
+      - 反身自指绑定
+      - 指示性对象锚定
+    - 副词系统也不是一个统一修饰器，而更像：
+      - 事件速度/方式控制
+      - 命题置信度调制
+      - 属性强度放大
+      - 事件频率编码
+  - 当前最严格的结论：
+    - 第一性原理候选理论继续变强了，因为最危险的兜底项之一 `P_t / M_t` 已经开始被拆开。
+    - 但副词系统提醒我们：不是每个粗项都能通过“简单细分”直接变强，有些粗项细分后会暴露出更深的不统一性。
+  - 下一步最值得做的大任务：
+    - 针对 `pronoun_personal` 单独做更强的篇章链路追踪与因果干预
+    - 针对 `M_epistemic` 单独设计命题级不确定性与真假判断实验
+    - 把升级后的多子状态方程拿去重新拟合逻辑逐层更新链
+    - 检查这些子状态在脑侧是否也对应不同类型的群体编码与回路分工
+
+## 2026-04-09 21:19
+
+### 本轮命令记录
+- 2026-04-09 21:08: 使用 `Get-ChildItem`、`Get-Content` 检查 `stage574`、`stage576`、`stage577` 和现有研究文档，确认下一步聚焦 `P_personal` 与 `M_epistemic` 两个瓶颈。
+- 2026-04-09 21:10: 新增脚本 `tests/codex/stage578_personal_coreference_discourse_empirical.py`，用于篇章级人称共指链实测。
+- 2026-04-09 21:11: 新增脚本 `tests/codex/stage579_epistemic_uncertainty_empirical.py`，用于认识论副词与不确定性判断实测。
+- 2026-04-09 21:12: 新增脚本 `tests/codex/stage580_targeted_bottleneck_assessment.py`，用于定向瓶颈汇总评估与状态方程升级。
+- 2026-04-09 21:13: 使用 `python -m py_compile` 完成 `stage578`、`stage579`、`stage580` 语法检查。
+- 2026-04-09 21:15: 串行执行 `python tests/codex/stage578_personal_coreference_discourse_empirical.py --models qwen3/deepseek7b/glm4/gemma4`，避免 CUDA 显存冲突。
+- 2026-04-09 21:16: 串行执行 `python tests/codex/stage579_epistemic_uncertainty_empirical.py --models qwen3/deepseek7b/glm4/gemma4`，继续保持单模型串行测试。
+- 2026-04-09 21:16: 执行 `python tests/codex/stage580_targeted_bottleneck_assessment.py`，汇总 `stage576 + stage578 + stage579`。
+- 2026-04-09 21:18: 新增研究文档 `research/gpt5/docs/AGI_GPT5_20260409_TARGETED_BOTTLENECK_UPGRADE.md`。
+
+### 本轮结果文件
+- `tests/codex_temp/stage578_personal_coreference_discourse_empirical_20260409/summary.json`
+- `tests/codex_temp/stage578_personal_coreference_discourse_empirical_20260409/REPORT.md`
+- `tests/codex_temp/stage579_epistemic_uncertainty_empirical_20260409/summary.json`
+- `tests/codex_temp/stage579_epistemic_uncertainty_empirical_20260409/REPORT.md`
+- `tests/codex_temp/stage580_targeted_bottleneck_assessment_20260409/summary.json`
+- `tests/codex_temp/stage580_targeted_bottleneck_assessment_20260409/REPORT.md`
+- `research/gpt5/docs/AGI_GPT5_20260409_TARGETED_BOTTLENECK_UPGRADE.md`
+
+### 理论数学研究进度
+1. `P_personal` 的单状态假设被进一步削弱。
+   - 简单人称共指平均准确率 `simple_personal_mean = 0.75`
+   - 篇章级人称共指链平均准确率 `discourse_personal_mean = 0.625`
+   - 平均差值 `personal_gap_mean = -0.125`
+   - 最关键结论不是“整体掉了 0.125”，而是四模型出现结构性分裂：`Qwen3` 从 `1.0` 降到 `0.0`，`DeepSeek7B` 和 `Gemma4` 反而从 `0.5` 升到 `1.0`。这说明 `P_personal` 不是单一机制，而是至少包含“句内局部绑定”和“跨句链路跟踪”两层状态。
+
+2. `M_epistemic` 更像与 `Q_certainty` 耦合，而不是普通副词修饰。
+   - 前一轮粗粒度认识论副词平均准确率 `simple_epistemic_mean = 0.375`
+   - 本轮不确定性判断平均准确率 `targeted_epistemic_mean = 0.71875`
+   - 平均提升 `epistemic_gap_mean = +0.34375`
+   - `epistemic_entailment` 普遍强于 `epistemic_force`，说明模型最稳的不是给 `probably/might/certainly/definitely` 贴“修饰 statement”标签，而是判断“是否构成确定性承诺/保证性推断”。
+
+3. 统一状态方程需要继续拆大桶。
+   - 上一版：`S_t,l = (O_t,l, A_t,l, R_t,l, P_personal,l, P_reflexive,l, P_demonstrative,l, M_manner,l, M_epistemic,l, M_degree,l, M_frequency,l, Q_t,l, G_t,l, C_t,l)`
+   - 本轮候选升级：`S_t,l = (O_t,l, A_t,l, R_t,l, P_local,l, P_discourse,l, P_reflexive,l, P_demonstrative,l, M_manner,l, M_epistemic_scope,l, M_degree,l, M_frequency,l, Q_certainty,l, Q_reasoning,l, G_t,l, C_t,l)`
+   - 这一步的理论意义在于：我们没有继续堆现象，而是在持续把危险的大兜底项压缩成更自然、更可证伪的状态变量。
+
+4. 对“第一性原理理论”的推进判断。
+   - 当前理论进一步接近第一性原理，不是因为样本更多，而是因为它开始区分“局部绑定 vs 跨句链路”“修饰范围 vs 确定性判断”这类真正决定计算机制的状态变量。
+   - 但还不能称为完整第一性原理，因为 `P_discourse` 和 `Q_certainty` 目前仍然主要是行为层与层间 margin 证据，尚未闭式化成稳定的层间状态更新方程，也还没有投影到最小因果神经元回路。
+
+5. 对大脑编码机制的解释继续收敛。
+   - 人称共指更像“两类回路”：句内快速绑定回路 + 跨句工作记忆/篇章链路回路。
+   - 认识论副词更像“不确定性判断回路”的输入触发，而不是一个孤立的词性槽位。
+   - 这使当前 DNN 侧理论更接近一种“群体状态更新系统”，而不是“单神经元代表单词/词类”。
+
+6. 当前硬伤与瓶颈。
+   - `stage578` 样本量仍小，只有 6 个篇章级样本，结论强度仍有限。
+   - `Qwen3` 在篇章级共指链上从强到弱的跳变过于剧烈，既可能说明任务确实击中了它的结构偏置，也可能提示当前评分口径对长句候选比较仍有脆弱性。
+   - `stage579` 虽然支持 `Q_certainty`，但尚未把 certainty/probability/possibility/contradiction 写成统一动力学。
+   - 目前仍主要是“状态变量候选”阶段，离最小因果回路识别还差一层。
+
+7. 下一阶段大任务。
+   - `P_discourse` 大任务：三实体/四实体/干扰句/长链路共指，寻找跨句链路的最小因果回路。
+   - `Q_certainty` 大任务：certainty/probability/possibility/contradiction 的逐层动力学、闭式状态更新与失效边界。
+   - 神经元回路映射大任务：把 `P_local / P_discourse / Q_certainty` 从状态变量真正投影回最小因果模块，形成 DNN 到脑侧群体编码机制的更强桥接。
+
+## 2026-04-09 21:34
+
+### 本轮命令记录
+- 2026-04-09 21:27: 读取 `research/glm5/docs/AGI_GLM5_LANGUAGE.md` 与 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md`，对比章节结构、总纲格式与当前内容差异。
+- 2026-04-09 21:28: 使用 `rg` 提取两份文档的标题结构，确认 `AGI_GLM5_LANGUAGE.md` 已经是“总纲式系统文档”，而 `AGI_GPT5_LANGUAGE.md` 仍偏“阶段拼接式”。
+- 2026-04-09 21:30: 重构 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md`，按 `AGI_GLM5_LANGUAGE.md` 的内容组织方式，改写为“文档定位 → 研究原则 → 统一理论 → 跨模型结果 → 不变量 → 硬伤与瓶颈 → 测试体系 → 下一阶段大任务”的总纲格式。
+- 2026-04-09 21:33: 复查新文档标题、关键关键词与关键脚本引用，确认 `stage573`、`stage580`、`P_discourse`、`Q_certainty` 已写入新版本。
+
+### 本轮修改文件
+- `research/gpt5/docs/AGI_GPT5_LANGUAGE.md`
+
+### 理论数学研究进度
+1. `AGI_GPT5_LANGUAGE.md` 完成从“阶段笔记式文档”到“统一总纲式文档”的升级。
+   - 旧版更像多段研究摘要拼接，适合阶段追踪，但不适合承担总理论文档。
+   - 新版开始承担和 `AGI_GLM5_LANGUAGE.md` 对应的角色：统一组织 GPT5 线路的理论对象、稳定结论、瓶颈和路线图。
+
+2. GPT5 线路的统一理论口径被正式收束。
+   - 把神经元级工作模型稳定写成：`拓扑骨架 + 场式控制 + 小型尖锐控制杆`
+   - 把名词最小因果编码结构稳定写成：`global_backbone + family_backbone + noun_unique_residual + task_bridge_adapter + cross_task_causal_core`
+   - 把语言计算状态方程推进为含 `P_local / P_discourse / Q_certainty / Q_reasoning` 的新版候选状态方程
+
+3. 当前研究的最新实测结论被正式纳入主文档。
+   - `stage573` 的水果骨干、概念偏置、属性通道、绑定桥接
+   - `stage574-577` 的统一状态更新、指代/修饰子状态拆分
+   - `stage578-580` 的定向瓶颈升级：`P_personal` 拆成 `P_local + P_discourse`，`M_epistemic` 向 `M_epistemic_scope + Q_certainty` 耦合结构收敛
+
+4. GPT5 线路和 GLM5 线路的差异被更清楚地区分。
+   - GLM5 线路更强在“大规模统一理论、几何动力学、公理体系和多阶段判伪”的总框架。
+   - GPT5 线路当前更强在“最小因果编码结构、状态变量拆分、名词/属性/绑定/推理统一进状态方程”的机制压缩。
+   - 这意味着 GPT5 线路当前更像在为“语言计算理论”补内部状态对象，而不是继续堆广谱现象。
+
+5. 当前理论到第一性原理之间的缺口也被正式写入主文档。
+   - 还缺闭式动力学。
+   - 还缺最小因果回路闭环。
+   - 还缺 DNN 到脑侧的双向验证。
+   - 还缺对 `P_discourse` 和 `Q_certainty` 的更强大样本实测与方程化。
+
+6. 下一阶段大任务已正式收束到五条主线。
+   - `P_discourse` 长链路共指与跨句回路
+   - `Q_certainty` 确定性判断动力学
+   - 绑定桥接 `G_bind` 的闭式化
+   - DNN 到大脑的群体编码桥接
+   - 第一性原理升级：找到足以统一解释语言主要行为的最小状态变量和层间更新律
+
+## 2026-04-09 21:59
+
+### 本轮命令记录
+- 2026-04-09 21:39: 检查 `tests/codex` 现有阶段文件，确认 `stage582-584` 尚未占用，可继续围绕 `P_discourse` 与 `Q_certainty` 实验推进。
+- 2026-04-09 21:42: 新增 `tests/codex/stage582_discourse_chain_substate_empirical.py`，将跨句链路细分为 `discourse_recent_subject` 与 `discourse_long_chain` 两类实测。
+- 2026-04-09 21:45: 新增 `tests/codex/stage583_certainty_state_dynamics_empirical.py`，将确定性状态细分为 `certainty_commitment`、`certainty_guarantee`、`certainty_opposite_compatibility` 三类子任务。
+- 2026-04-09 21:47: 新增 `tests/codex/stage584_state_variable_refinement_assessment.py`，用于汇总 `stage582 + stage583` 并给出状态变量是否需要继续细化的判断。
+- 2026-04-09 21:48: 使用 `python -m py_compile` 完成 `stage582`、`stage583`、`stage584` 的语法检查。
+- 2026-04-09 21:50: 串行执行 `python tests/codex/stage582_discourse_chain_substate_empirical.py --models qwen3/deepseek7b/glm4/gemma4`。
+- 2026-04-09 21:53: 串行执行 `python tests/codex/stage583_certainty_state_dynamics_empirical.py --models qwen3/deepseek7b/glm4/gemma4`。
+- 2026-04-09 21:56: 执行 `python tests/codex/stage584_state_variable_refinement_assessment.py`，汇总状态变量细化结果。
+- 2026-04-09 21:58: 同步修改 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md`，把 `stage582-584` 的最新理论约束写回主文档。
+
+### 本轮结果文件
+- `tests/codex_temp/stage582_discourse_chain_substate_empirical_20260409/summary.json`
+- `tests/codex_temp/stage582_discourse_chain_substate_empirical_20260409/REPORT.md`
+- `tests/codex_temp/stage583_certainty_state_dynamics_empirical_20260409/summary.json`
+- `tests/codex_temp/stage583_certainty_state_dynamics_empirical_20260409/REPORT.md`
+- `tests/codex_temp/stage584_state_variable_refinement_assessment_20260409/summary.json`
+- `tests/codex_temp/stage584_state_variable_refinement_assessment_20260409/REPORT.md`
+
+### 理论数学研究进度
+1. `P_discourse` 没有如预期那样继续裂成更细子状态。
+   - `discourse_recent_mean = 0.50`
+   - `discourse_long_mean = 0.875`
+   - `discourse_gap = +0.375`
+   - 也就是说，在当前样本下，“长链回收”反而比“短链延续”更容易。这个结果不支持继续把 `P_discourse` 立即细拆成多个子状态。
+   - 更严格的解释是：当前 `P_discourse` 的测试口径仍有模板偏置，暂时只能说明“P_discourse 仍是瓶颈”，不能说明“P_discourse 的内部结构已经被当前样本稳定揭示”。
+
+2. `Q_certainty` 暂时可以保留成统一判断状态。
+   - `commitment_mean = 0.50`
+   - `guarantee_mean = 0.5625`
+   - `opposite_mean = 0.625`
+   - `certainty_spread = 0.125`
+   - 三类子任务之间的差异不大，说明在当前样本下，`Q_certainty` 还没有出现足够强的内部裂解证据。
+   - 因而更稳的理论选择不是继续打碎 `Q_certainty`，而是优先写清 `M_epistemic_scope ↔ Q_certainty` 的耦合边界。
+
+3. 当前状态变量的进一步收束。
+   - `P_discourse`：当前仍应保留为统一状态变量，但标注为“弱稳定、待更大样本复核”。
+   - `Q_certainty`：当前可作为统一判断状态保留。
+   - 因而 `stage580` 曾提出的“继续细拆 `P_discourse` 与 `Q_certainty`”在本轮后需要回收，至少不能直接上升为主结论。
+
+4. 这轮结果对第一性原理理论的意义。
+   - 第一性原理理论不是不断把状态变量拆得越细越好，而是要在“足够解释力”和“不过度复杂”之间找到最小生成集。
+   - 这轮实测的价值就在于：它强迫理论停止无根据地继续加复杂度。
+   - 当前更像是：`P_discourse` 仍是难点但不宜硬拆，`Q_certainty` 反而可以暂时收束为一个更稳定的状态对象。
+
+5. 对大脑编码机制解释的修正。
+   - 之前可以说“篇章链路可能还要继续拆分”；现在更稳的表述是：大脑侧可能存在一个统一的跨句链路状态，但当前 DNN 侧测试还不足以分辨其内部是否进一步分层。
+   - 对确定性判断则可以更稳地说：大脑侧更像存在一个相对统一的“承诺/确定性评估状态”，而认识论副词更多是这个状态的触发和调制入口，不一定本身就是独立的更高阶判断单元。
+
+6. 当前真正剩下的两个硬任务发生了变化。
+   - `P_discourse` 大任务：不是马上细拆，而是先做更自然、更大样本、更低模板偏置的测量体系。
+   - `Q_certainty` 大任务：不是继续拆子状态，而是把它写成逐层状态更新方程，并研究它与 `M_epistemic_scope`、`Q_reasoning` 的耦合。
+
+7. 对主文档的同步更新已经完成。
+   - `research/gpt5/docs/AGI_GPT5_LANGUAGE.md` 已写入 `stage582-584` 结果，并正式改写为：`P_discourse` 当前不宜继续细拆，`Q_certainty` 当前可暂时保留为统一判断状态。
+
+## 2026-04-09 22:33
+
+### 本轮命令记录
+- 2026-04-09 22:06: 读取 `stage582`、`stage583` 和 `AGI_GPT5_LANGUAGE.md`，确认继续推进的两个方向是“自然叙事跨句链路测量”和“认识论副词-确定性耦合测量”。
+- 2026-04-09 22:10: 新增 `tests/codex/stage585_naturalized_discourse_probe_empirical.py`，把 `P_discourse` 的测量改成更自然的叙事口径。
+- 2026-04-09 22:15: 新增 `tests/codex/stage586_epistemic_certainty_coupling_empirical.py`，比较显式范围识别与确定性后果判断，测试 `M_epistemic_scope ↔ Q_certainty` 的耦合。
+- 2026-04-09 22:18: 新增 `tests/codex/stage587_measurement_upgrade_assessment.py`，对比旧测量口径与新测量口径，评估是否存在模板抬高与耦合优势。
+- 2026-04-09 22:19: 使用 `python -m py_compile` 完成 `stage585`、`stage586`、`stage587` 语法检查。
+- 2026-04-09 22:22: 串行执行 `python tests/codex/stage585_naturalized_discourse_probe_empirical.py --models qwen3/deepseek7b/glm4/gemma4`。
+- 2026-04-09 22:25: 串行执行 `python tests/codex/stage586_epistemic_certainty_coupling_empirical.py --models qwen3/deepseek7b/glm4/gemma4`。
+- 2026-04-09 22:27: 执行 `python tests/codex/stage587_measurement_upgrade_assessment.py`。
+- 2026-04-09 22:30: 修改 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md`，将 `stage585-587` 的结果和更保守的理论口径写回主文档。
+
+### 本轮结果文件
+- `tests/codex_temp/stage585_naturalized_discourse_probe_empirical_20260409/summary.json`
+- `tests/codex_temp/stage585_naturalized_discourse_probe_empirical_20260409/REPORT.md`
+- `tests/codex_temp/stage586_epistemic_certainty_coupling_empirical_20260409/summary.json`
+- `tests/codex_temp/stage586_epistemic_certainty_coupling_empirical_20260409/REPORT.md`
+- `tests/codex_temp/stage587_measurement_upgrade_assessment_20260409/summary.json`
+- `tests/codex_temp/stage587_measurement_upgrade_assessment_20260409/REPORT.md`
+
+### 理论数学研究进度
+1. `P_discourse` 的测量在新旧口径下暂时收敛。
+   - 旧口径平均：`discourse_template_mean = 0.6875`
+   - 自然叙事口径平均：`discourse_natural_mean = 0.59375`
+   - 差值：`discourse_shift = -0.09375`
+   - 这个差值不够大，不支持“旧口径严重模板抬高”的强判断。当前更稳的结论是：`P_discourse` 仍是难点，但它的测量在新旧口径下暂时收敛，还不能说旧结果主要是模板假象。
+
+2. `P_discourse` 仍未显示出更强的内部裂解。
+   - `stage585` 的自然叙事口径下：`narrative_recent_actor` 与 `narrative_reactivated_actor` 差异不大，核心结论是“至少没有出现更强的内部裂解证据”。
+   - 这进一步支持：现在不该急着继续把 `P_discourse` 细拆成更多子状态，而应先统一测量框架、扩样本、降模板偏置。
+
+3. `M_epistemic_scope ↔ Q_certainty` 的强耦合还没有被当前样本硬证实。
+   - `scope_mean = 0.50`
+   - `consequence_mean = 0.375`
+   - `counter_mean = 0.5625`
+   - `certainty_new_mean = 0.4791666667`
+   - 新耦合测量没有出现“确定性后果判断明显强于显式范围识别”的稳定优势，所以“强耦合已被证明”这个说法必须降级。
+   - 更稳的说法是：`M_epistemic_scope` 与 `Q_certainty` 之间很可能存在耦合，但当前证据只够支持“值得重点研究”，不够支持“已被强证实”。
+
+4. 这轮对理论的真正价值，在于阻止理论无根据地继续加复杂度。
+   - `P_discourse`：当前不继续细拆。
+   - `Q_certainty`：当前仍可暂时保留为统一判断状态。
+   - `M_epistemic_scope ↔ Q_certainty`：当前列为“真实未解边界”，而不是“已解决模块”。
+   - 这使统一语言理论开始更像一个会被数据收紧的理论，而不是越写越复杂的解释系统。
+
+5. 对“如何破解语言背后的结构”的研究路线进一步明确。
+   - 不能靠堆更多现象，而要不断做三件事：
+     1. 用更自然口径重测状态变量，排除模板偏置。
+     2. 比较竞争性状态分解，保留最小生成集。
+     3. 把稳定状态变量推进成层间更新律和最小因果回路。
+   - 当前最可能的路线是：先恢复最小状态对象，再恢复更新方程，再恢复效率原则，最后才上升为语言数学理论。
+
+6. 对大脑-语言-数学理论关系的当前最严格表述。
+   - 如果大脑是一种特殊网络结构，而 DNN 部分还原了它，那么破解语言结构的关键不是寻找单个“语言中心”或“苹果神经元”，而是：
+     - 恢复跨任务共享骨干
+     - 恢复局部偏置与绑定桥接
+     - 恢复少量可计算状态变量
+     - 恢复这些状态的层间演化规律
+     - 最后再从这些规律中压缩出效率原则和统一数学对象
+   - 也就是说，真正的语言数学理论，不会先长成一堆华丽公式，而会先长成一组最小状态变量、最小因果回路和最小更新律。
+
+## 2026-04-10 00:15
+
+### 本轮命令记录
+- 2026-04-09 23:58: 读取 `tests/AGI.py`、`stage582`、`stage583`、`AGI_GPT5_LANGUAGE.md`，确认继续推进方向为“自然叙事跨句链路测量”和“认识论副词-确定性耦合测量”。
+- 2026-04-10 00:02: 新增 `tests/codex/stage585_naturalized_discourse_probe_empirical.py`，用于更自然叙事口径下的 `P_discourse` 测量。
+- 2026-04-10 00:06: 新增 `tests/codex/stage586_epistemic_certainty_coupling_empirical.py`，用于测试 `M_epistemic_scope ↔ Q_certainty` 的耦合口径。
+- 2026-04-10 00:09: 新增 `tests/codex/stage587_measurement_upgrade_assessment.py`，用于比较旧口径与新口径的测量差异。
+- 2026-04-10 00:10: 使用 `python -m py_compile` 完成 `stage585`、`stage586`、`stage587` 语法检查。
+- 2026-04-10 00:11: 串行执行 `python tests/codex/stage585_naturalized_discourse_probe_empirical.py --models qwen3/deepseek7b/glm4/gemma4`。
+- 2026-04-10 00:12: 串行执行 `python tests/codex/stage586_epistemic_certainty_coupling_empirical.py --models qwen3/deepseek7b/glm4/gemma4`。
+- 2026-04-10 00:13: 执行 `python tests/codex/stage587_measurement_upgrade_assessment.py`。
+- 2026-04-10 00:14: 修改 `research/gpt5/docs/AGI_GPT5_LANGUAGE.md`，将 `stage585-587` 的更保守结论写回主文档。
+
+### 本轮结果文件
+- `tests/codex_temp/stage585_naturalized_discourse_probe_empirical_20260409/summary.json`
+- `tests/codex_temp/stage585_naturalized_discourse_probe_empirical_20260409/REPORT.md`
+- `tests/codex_temp/stage586_epistemic_certainty_coupling_empirical_20260409/summary.json`
+- `tests/codex_temp/stage586_epistemic_certainty_coupling_empirical_20260409/REPORT.md`
+- `tests/codex_temp/stage587_measurement_upgrade_assessment_20260409/summary.json`
+- `tests/codex_temp/stage587_measurement_upgrade_assessment_20260409/REPORT.md`
+
+### 理论数学研究进度
+1. `P_discourse` 的新旧测量口径差距不大。
+   - `discourse_template_mean = 0.6875`
+   - `discourse_natural_mean = 0.59375`
+   - `discourse_shift = -0.09375`
+   - 这不支持“旧测量主要是模板抬高”的强结论。当前更稳的说法是：`P_discourse` 仍是瓶颈，但测量在新旧口径下暂时收敛。
+
+2. 自然叙事口径下，`P_discourse` 仍未出现更强内部裂解证据。
+   - `stage585` 的核心结论是：`narrative_recent_actor` 与 `narrative_reactivated_actor` 接近，至少没有出现更强裂解。
+   - 这进一步支持：下一步不是继续给 `P_discourse` 起更多名字，而是扩大样本、统一口径、降低模板偏置。
+
+3. `M_epistemic_scope ↔ Q_certainty` 的强耦合还没有被硬证实。
+   - `scope_mean = 0.50`
+   - `consequence_mean = 0.375`
+   - `counter_mean = 0.5625`
+   - `certainty_new_mean = 0.4791666667`
+   - 当前测量没有显示“确定性后果判断显著强于显式范围识别”的稳定优势，所以“强耦合已被证明”必须降级为“值得重点研究，但尚未强证实”。
+
+4. 这轮最重要的理论价值，是把统一语言理论进一步从“会不断增生复杂度的解释系统”拉回到“受证据约束的最小生成理论”。
+   - `P_discourse`：暂不继续细拆。
+   - `Q_certainty`：暂时保留统一状态。
+   - `M_epistemic_scope ↔ Q_certainty`：列为真实未解边界，而不是已解决模块。
+
+5. 对“如何破解语言背后的结构，形成语言数学理论”的当前最严格路线。
+   - 第一步：恢复最小状态变量，而不是先发明公式。
+   - 第二步：恢复最小因果回路，让每个状态变量都能被干预打中。
+   - 第三步：写出层间更新律，让语言理论从静态编码升级为动力系统。
+   - 第四步：从这些更新律中抽象出效率原则，例如最小计算量、最小控制量、最小检索代价。
+   - 第五步：再把这些原则上升为统一数学对象，最后才讨论是否超出现有数学体系。
+
+6. 对“大脑是特殊网络结构，DNN 只是部分还原”的理论判断继续收敛。
+   - 如果这个判断为真，那么语言理论不会首先表现为一套漂亮闭式公式，而会先表现为：
+     - 一组最小状态变量
+     - 一组最小因果回路
+     - 一组逐层更新律
+     - 一组效率约束
+   - 也就是说，语言数学理论的正确生成顺序是：`结构对象 → 因果对象 → 动力学 → 效率原则 → 数学压缩`。

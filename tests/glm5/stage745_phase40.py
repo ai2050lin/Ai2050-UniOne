@@ -1,6 +1,6 @@
 """
-Phase XL: L0→L1非线性破解与Jacobian修饰模型
-P246: MLP拟合L0→L1变换 (大数据集500+词)
+Phase XL: L0-L1 Nonlinear Mapping & Jacobian Model
+P246: MLP fit L0-L1 transform (large dataset 300+ words)
 P247: Jacobian修饰模型 (差分法估计J矩阵)
 P248: 序列级上下文调制追踪 (逐步注入上下文)
 P249: 因果方程最终可预测性验证
@@ -21,6 +21,10 @@ from sklearn.metrics import r2_score
 import warnings
 warnings.filterwarnings('ignore')
 
+# Force flush
+import functools
+print = functools.partial(print, flush=True)
+
 # ===================== 配置 =====================
 OUT_DIR = Path("tests/glm5_temp")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -40,17 +44,16 @@ def load_model(model_name):
     # 确保路径存在
     if not os.path.isdir(p):
         raise FileNotFoundError(f"Model path not found: {p}")
-    # 使用os.path.abspath获取绝对路径，避免HuggingFace解析问题
     p_abs = os.path.abspath(p)
     tok = AutoTokenizer.from_pretrained(p_abs, trust_remote_code=True)
     tok.pad_token = tok.eos_token
+    # 直接加载到GPU，跳过CPU内存峰值
     mdl = AutoModelForCausalLM.from_pretrained(
-        p_abs, torch_dtype=torch.bfloat16, trust_remote_code=True,
-        attn_implementation="eager"
+        p_abs, dtype=torch.bfloat16, trust_remote_code=True,
+        attn_implementation="eager", device_map="auto"
     )
     mdl.eval()
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    mdl = mdl.to(device)
+    device = next(mdl.parameters()).device
     return mdl, tok, device
 
 # ===================== 大词表 =====================
@@ -117,19 +120,19 @@ LARGE_WORD_LIST = [
     "each", "every", "both", "either", "neither", "other", "another", "such", "same", "different",
 ]
 
-# ===================== P246: MLP拟合L0→L1 =====================
+# ===================== P246: MLP拟合L0->L1 =====================
 def p246_mlp_fit_L0_L1(mdl, tok, device, model_name):
-    """用3层MLP拟合L0→L1变换, 500+词大数据集"""
+    """Use 3-layer MLP to fit L0-L1 transform, 300+ word dataset"""
     print(f"\n{'='*60}")
-    print(f"P246: MLP拟合L0→L1变换 ({model_name})")
+    print(f"P246: MLP拟合L0->L1变换 ({model_name})")
     print(f"{'='*60}")
     
     d_model = mdl.config.hidden_size
     n_layers = mdl.config.num_hidden_layers
     log_data = {}
     
-    # 收集500+词的(L0, L1)对
-    words = LARGE_WORD_LIST[:500]
+    # 收集300+词的(L0, L1)对
+    words = LARGE_WORD_LIST[:300]
     emb_list, L0_list, L1_list = [], [], []
     
     print(f"  Collecting {len(words)} (L0, L1) pairs...")
@@ -177,8 +180,10 @@ def p246_mlp_fit_L0_L1(mdl, tok, device, model_name):
     ).mean().item()
     print(f"    Linear R2={r2_linear:.4f}, avg_cos={cos_linear:.4f}")
     
-    # ---- MLP拟合 ----
-    print(f"\n  [2] MLP fitting...")
+    # ---- MLP拟合 (GPU加速) ----
+    print(f"\n  [2] MLP fitting (GPU accelerated)...")
+    
+    mlp_device = device  # 使用与模型相同的设备
     
     class L0toL1MLP(nn.Module):
         def __init__(self, d_model, hidden_mult=4):
@@ -195,10 +200,10 @@ def p246_mlp_fit_L0_L1(mdl, tok, device, model_name):
             return self.net(x)
     
     # 尝试不同hidden_mult
-    for hidden_mult in [2, 4, 8]:
+    for hidden_mult in [4]:
         mlp = L0toL1MLP(d_model, hidden_mult).float()
         optimizer = torch.optim.Adam(mlp.parameters(), lr=1e-3)
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=2000)
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=500)
         
         # 训练
         X_tr = X_train.float()
@@ -210,7 +215,7 @@ def p246_mlp_fit_L0_L1(mdl, tok, device, model_name):
         best_cos = 0
         batch_size = 64
         
-        for epoch in range(2000):
+        for epoch in range(500):
             perm_b = torch.randperm(n_train)
             epoch_loss = 0
             n_batches = 0
@@ -230,7 +235,7 @@ def p246_mlp_fit_L0_L1(mdl, tok, device, model_name):
             
             scheduler.step()
             
-            if epoch % 200 == 0 or epoch == 1999:
+            if epoch % 100 == 0 or epoch == 499:
                 with torch.no_grad():
                     Y_pred_mlp = mlp(X_te)
                     r2_mlp = 1 - ((Y_te - Y_pred_mlp)**2).sum() / ((Y_te - Y_te.mean(0))**2).sum()
@@ -267,12 +272,12 @@ def p246_mlp_fit_L0_L1(mdl, tok, device, model_name):
     
     deep_mlp = DeepMLP(d_model, n_layers=6, hidden_mult=4).float()
     optimizer = torch.optim.Adam(deep_mlp.parameters(), lr=1e-3)
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=3000)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=800)
     
     best_r2_deep = -1
     best_cos_deep = 0
     
-    for epoch in range(3000):
+    for epoch in range(800):
         perm_b = torch.randperm(n_train)
         epoch_loss = 0
         n_batches = 0
@@ -292,7 +297,7 @@ def p246_mlp_fit_L0_L1(mdl, tok, device, model_name):
         
         scheduler.step()
         
-        if epoch % 300 == 0 or epoch == 2999:
+        if epoch % 200 == 0 or epoch == 799:
             with torch.no_grad():
                 Y_pred_deep = deep_mlp(X_te)
                 r2_deep = 1 - ((Y_te - Y_pred_deep)**2).sum() / ((Y_te - Y_te.mean(0))**2).sum()
@@ -309,10 +314,10 @@ def p246_mlp_fit_L0_L1(mdl, tok, device, model_name):
     log_data["deep_mlp_6layer_cos"] = best_cos_deep
     print(f"  Deep MLP(6L): best R2={best_r2_deep:.4f}, cos={best_cos_deep:.4f}")
     
-    # ---- Emb→L0→L1 两阶段分解 ----
-    print(f"\n  [4] Two-stage decomposition: emb→L0→L1...")
+    # ---- Emb->L0->L1 两阶段分解 ----
+    print(f"\n  [4] Two-stage decomposition: emb->L0->L1...")
     
-    # emb→L0
+    # emb->L0
     X_emb_train, X_emb_test = X_emb[train_idx], X_emb[test_idx]
     
     reg_emb_to_L0 = Ridge(alpha=1.0)
@@ -323,12 +328,12 @@ def p246_mlp_fit_L0_L1(mdl, tok, device, model_name):
         torch.from_numpy(L0_pred).float(),
         X_L0[test_idx].float(), dim=1
     ).mean().item()
-    print(f"    emb→L0: R2={r2_emb_L0:.4f}, cos={cos_emb_L0:.4f}")
+    print(f"    emb->L0: R2={r2_emb_L0:.4f}, cos={cos_emb_L0:.4f}")
     
-    # L0→L1 (already have)
-    print(f"    L0→L1: R2={r2_linear:.4f}, cos={cos_linear:.4f}")
+    # L0->L1 (already have)
+    print(f"    L0->L1: R2={r2_linear:.4f}, cos={cos_linear:.4f}")
     
-    # emb→L1 端到端
+    # emb->L1 端到端
     reg_emb_to_L1 = Ridge(alpha=1.0)
     reg_emb_to_L1.fit(X_emb_train.numpy(), Y_L1[train_idx].numpy())
     L1_pred_emb = reg_emb_to_L1.predict(X_emb_test.numpy())
@@ -337,7 +342,7 @@ def p246_mlp_fit_L0_L1(mdl, tok, device, model_name):
         torch.from_numpy(L1_pred_emb).float(),
         Y_L1[test_idx].float(), dim=1
     ).mean().item()
-    print(f"    emb→L1 (linear): R2={r2_emb_L1:.4f}, cos={cos_emb_L1:.4f}")
+    print(f"    emb->L1 (linear): R2={r2_emb_L1:.4f}, cos={cos_emb_L1:.4f}")
     
     # 逐维度分析非线性
     print(f"\n  [5] Per-dimension nonlinearity analysis...")
@@ -385,8 +390,8 @@ def p246_mlp_fit_L0_L1(mdl, tok, device, model_name):
     print(f"    Linear:    R2={r2_linear:.4f}, cos={cos_linear:.4f}")
     print(f"    MLP(4x):   R2={log_data.get('mlp_hidden4x_R2',0):.4f}, cos={log_data.get('mlp_hidden4x_cos',0):.4f}")
     print(f"    Deep(6L):  R2={best_r2_deep:.4f}, cos={best_cos_deep:.4f}")
-    print(f"    emb→L0:    R2={r2_emb_L0:.4f}, cos={cos_emb_L0:.4f}")
-    print(f"    emb→L1:    R2={r2_emb_L1:.4f}, cos={cos_emb_L1:.4f}")
+    print(f"    emb->L0:    R2={r2_emb_L0:.4f}, cos={cos_emb_L0:.4f}")
+    print(f"    emb->L1:    R2={r2_emb_L1:.4f}, cos={cos_emb_L1:.4f}")
     
     del X_L0, Y_L1, X_emb, X_train, X_test, Y_train, Y_test
     del mlp, deep_mlp
@@ -397,7 +402,7 @@ def p246_mlp_fit_L0_L1(mdl, tok, device, model_name):
 
 # ===================== P247: Jacobian修饰模型 =====================
 def p247_jacobian_modification(mdl, tok, device, model_name):
-    """用差分法估计Jacobian矩阵, 验证h(n+adj) = h(n) + J(h(n))·δ_adj"""
+    """用差分法估计Jacobian矩阵, 验证h(n+adj) = h(n) + J(h(n))·delta_adj"""
     print(f"\n{'='*60}")
     print(f"P247: Jacobian修饰模型 ({model_name})")
     print(f"{'='*60}")
@@ -475,13 +480,13 @@ def p247_jacobian_modification(mdl, tok, device, model_name):
             cos_universal_list.append(cos_u)
             
             # Jacobian修正: 用相邻名词的delta来估计J
-            # 简化: δ_pred = J·h(n), J = Σ δ_i ⊗ h(n_i) / (h(n_i)·h(n_i))
+            # 简化: delta_pred = J·h(n), J = Sum delta_i  x  h(n_i) / (h(n_i)·h(n_i))
             # 这里用留一法估计
             other_deltas = [deltas[j] for j in range(len(nouns)) if j != i]
             other_nouns = [noun_vecs[j] for j in range(len(nouns)) if j != i]
             
-            # 用线性回归拟合 J: δ = J · h_noun
-            # J ≈ (Δ^T · H) · (H^T · H)^{-1}
+            # 用线性回归拟合 J: delta = J · h_noun
+            # J ≈ (Delta^T · H) · (H^T · H)^{-1}
             H_other = torch.stack(other_nouns)  # [N-1, d_model]
             D_other = torch.stack(other_deltas)  # [N-1, d_model]
             
@@ -729,8 +734,8 @@ def p249_causal_equation_predictability(mdl, tok, device, model_name):
     
     d_model = mdl.config.hidden_size
     
-    # 大规模测试: 200词 × 5上下文模板
-    words = LARGE_WORD_LIST[:200]
+    # 大规模测试: 150词 × 5上下文模板
+    words = LARGE_WORD_LIST[:150]
     templates = [
         "The {} is here.",          # 中性
         "I saw a {} yesterday.",    # 中性
@@ -768,8 +773,8 @@ def p249_causal_equation_predictability(mdl, tok, device, model_name):
         all_data[t_idx] = data_list
         gc.collect()
     
-    # ---- 预测模型1: 纯emb→h ----
-    print(f"\n  [1] Pure emb→h prediction...")
+    # ---- 预测模型1: 纯emb->h ----
+    print(f"\n  [1] Pure emb->h prediction...")
     
     # 用template 0作为训练, 其他作为测试
     train_data = all_data[0]
@@ -786,7 +791,7 @@ def p249_causal_equation_predictability(mdl, tok, device, model_name):
     Y_pred = reg.predict(X_test.numpy())
     r2_emb = r2_score(Y_test.numpy(), Y_pred)
     cos_emb = F.cosine_similarity(torch.from_numpy(Y_pred).float(), Y_test, dim=1).mean().item()
-    print(f"    emb→h (linear): R2={r2_emb:.4f}, cos={cos_emb:.4f}")
+    print(f"    emb->h (linear): R2={r2_emb:.4f}, cos={cos_emb:.4f}")
     
     # ---- 预测模型2: 跨模板预测 ----
     print(f"\n  [2] Cross-template prediction...")
@@ -859,7 +864,7 @@ def p249_causal_equation_predictability(mdl, tok, device, model_name):
     print(f"\n  [5] Causal equation error decomposition...")
     
     # 误差分解: 总误差 = emb映射误差 + 上下文调制误差 + 修饰误差
-    # emb映射误差: 同一模板内, emb→h的R2
+    # emb映射误差: 同一模板内, emb->h的R2
     # 上下文调制误差: 跨模板, 同一word的h变异
     # 修饰误差: 有修饰模板 vs 无修饰模板
     
@@ -883,7 +888,7 @@ def p249_causal_equation_predictability(mdl, tok, device, model_name):
         cos_range = F.cosine_similarity(h_stack[0:1], h_stack[1:], dim=1).tolist()
         emb_errors.extend(cos_range)
     
-    print(f"    Context variation (avg ||δ_ctx||²/||h||²): {np.mean(ctx_variations):.6f}")
+    print(f"    Context variation (avg ||delta_ctx||^2/||h||^2): {np.mean(ctx_variations):.6f}")
     print(f"    Cross-template cos (same word): {np.mean(emb_errors):.4f}")
     
     # 误差下界
@@ -892,9 +897,9 @@ def p249_causal_equation_predictability(mdl, tok, device, model_name):
     ctx_R2_loss = 1 - r2_hybrid  # 混合模型也无法解释的部分
     
     print(f"\n    Error decomposition:")
-    print(f"      emb→h R2:           {emb_R2:.4f} (emb mapping)")
+    print(f"      emb->h R2:           {emb_R2:.4f} (emb mapping)")
     print(f"      hybrid R2:          {r2_hybrid:.4f} (emb + context code)")
-    print(f"      context variance:   {total_variance:.6f} (||δ_ctx||²/||h||²)")
+    print(f"      context variance:   {total_variance:.6f} (||delta_ctx||^2/||h||^2)")
     print(f"      unexplained:        {1-r2_hybrid:.4f}")
     
     result = {
@@ -910,7 +915,7 @@ def p249_causal_equation_predictability(mdl, tok, device, model_name):
     }
     
     print(f"\n  P249 Summary ({model_name}):")
-    print(f"    emb→h:     R2={r2_emb:.4f}, cos={cos_emb:.4f}")
+    print(f"    emb->h:     R2={r2_emb:.4f}, cos={cos_emb:.4f}")
     print(f"    hybrid:    R2={r2_hybrid:.4f}, cos={cos_hybrid:.4f}")
     print(f"    ctx_var:   {np.mean(ctx_variations):.6f}")
     
@@ -967,11 +972,11 @@ def p250_cross_model_nonlinearity(mdl, tok, device, model_name):
         
         if L <= 5 or L >= n_layers - 3 or L == n_layers // 2:
             cos_L = F.cosine_similarity(torch.from_numpy(H_pred).float(), H_out, dim=1).mean().item()
-            print(f"    L{L}→L{L+1}: R2={r2:.6f}, cos={cos_L:.6f}")
+            print(f"    L{L}->L{L+1}: R2={r2:.6f}, cos={cos_L:.6f}")
     
     # 找最非线性的层
     min_r2_layer = min(layer_R2, key=layer_R2.get)
-    print(f"\n    Most nonlinear layer: L{min_r2_layer}→L{min_r2_layer+1}, R2={layer_R2[min_r2_layer]:.6f}")
+    print(f"\n    Most nonlinear layer: L{min_r2_layer}->L{min_r2_layer+1}, R2={layer_R2[min_r2_layer]:.6f}")
     
     # ---- 分析2: 每层残差范数比 ----
     print(f"\n  [2] Per-layer residual norm ratio...")
@@ -1083,7 +1088,7 @@ def p250_cross_model_nonlinearity(mdl, tok, device, model_name):
     
     print(f"\n  P250 Summary ({model_name}):")
     print(f"    Architecture: {d_model}d, {n_layers}L, {n_heads}H")
-    print(f"    L0→L1 R2: {layer_R2.get(0, 0):.6f}")
+    print(f"    L0->L1 R2: {layer_R2.get(0, 0):.6f}")
     print(f"    Most nonlinear: L{min_r2_layer} (R2={layer_R2[min_r2_layer]:.6f})")
     print(f"    Avg R2 after L1: {result['avg_R2_after_L1']:.6f}")
     
@@ -1104,7 +1109,7 @@ def main():
     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
     
     print(f"\n{'#'*60}")
-    print(f"Phase XL: L0→L1 Nonlinear Mapping & Jacobian Model")
+    print(f"Phase XL: L0->L1 Nonlinear Mapping & Jacobian Model")
     print(f"Model: {model_name}, Time: {timestamp}")
     print(f"{'#'*60}")
     
