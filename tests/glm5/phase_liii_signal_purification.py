@@ -298,21 +298,19 @@ def compute_signal_noise_subspaces(G_pca, Y, n_components=10):
     try:
         G_cca, Y_cca = cca.fit_transform(G_pca, Y)
     except Exception as e:
-        # 处理NaN: 用PCA + Ridge替代
+        # 处理NaN: 用Ridge替代
         L.log(f"    CCA failed ({e}), using Ridge fallback")
         ridge = Ridge(alpha=1.0)
         ridge.fit(Y, G_pca)
-        G_signal = ridge.predict(Y)
-        G_noise = G_pca - G_signal
-        # 用SVD从ridge.coef_构造投影矩阵
-        # ridge.coef_: (K, D), 转置为 (D, K)
-        U_full = ridge.coef_.T  # (D, K)
-        # 用SVD取前n_cca方向
-        u_svd, s_svd, vt_svd = np.linalg.svd(U_full, full_matrices=False)
-        U = u_svd[:, :n_cca]  # (D, n_cca)
-        P_s = U @ np.linalg.inv(U.T @ U + 1e-6 * np.eye(n_cca)) @ U.T  # (D, D)
-        G_signal = G_pca @ P_s
-        G_noise = G_pca - G_signal
+        G_signal = ridge.predict(Y)  # (N, D) — 信号预测
+        G_noise = G_pca - G_signal   # (N, D) — 噪声残差
+        # 构造投影矩阵: 用G_signal的SVD
+        # G_signal = G_pca @ P_s → P_s = G_pca^+ @ G_signal
+        try:
+            G_pca_pinv = np.linalg.pinv(G_pca)
+            P_s = G_pca_pinv @ G_signal  # (D, D)
+        except:
+            P_s = np.eye(D)  # fallback
         cca_corrs = [0.0] * n_cca
         return G_signal, G_noise, None, P_s, cca_corrs
     
@@ -668,7 +666,7 @@ def run_p307(mdl, tok, device, G_dict, key_layers, model_name, word_hs):
                     attr_operators_signal[av] = mean_signal
                     
                     # 完整G(含f_base): 先回到原始空间再加回noun_mean
-                    mean_full_centered = pca.inverse_transform(mean_signal)
+                    mean_full_centered = pca.inverse_transform(mean_signal.reshape(1, -1))[0]
                     attr_operators_full[av] = mean_full_centered
             
             # 干预实验: 选3个测试名词(未见过的组合) + 3个属性
@@ -816,14 +814,14 @@ def run_p308(mdl, tok, device, G_dict, key_layers, model_name, word_hs):
             mask = np.array([l[2] == av for l in COLOR_LABELS])
             if mask.sum() > 0:
                 mean_sig = G_signal_c[mask].mean(axis=0)
-                color_operators[av] = pca_c.inverse_transform(mean_sig)
+                color_operators[av] = pca_c.inverse_transform(mean_sig.reshape(1, -1))[0]
         
         size_operators = {}
         for av in attr_list_s:
             mask = np.array([l[2] == av for l in SIZE_LABELS])
             if mask.sum() > 0:
                 mean_sig = G_signal_s[mask].mean(axis=0)
-                size_operators[av] = pca_s.inverse_transform(mean_sig)
+                size_operators[av] = pca_s.inverse_transform(mean_sig.reshape(1, -1))[0]
         
         # 测试: "red" + "big" = "big red object"
         test_noun = "cat"
@@ -936,7 +934,7 @@ def run_p309(mdl, tok, device, G_dict, key_layers, model_name, word_hs):
             mask = np.array([l[2] == av for l in labels_fruit])
             if mask.sum() > 0:
                 mean_sig = G_signal_f[mask].mean(axis=0)
-                fruit_operators[av] = pca_f.inverse_transform(mean_sig)
+                fruit_operators[av] = pca_f.inverse_transform(mean_sig.reshape(1, -1))[0]
         
         # 注入到非水果族名词
         test_nouns = {
