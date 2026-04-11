@@ -196,9 +196,8 @@ def run_p335(model, tokenizer, device, n_layers, D, model_name):
     beta_range = [1.0, 3.0, 5.0, 10.0, 20.0, 50.0]
     alpha_fixed = 0.5
     
-    # 获取embedding层
+    # 获取embedding层(不加载全部权重, 逐属性提取)
     embed_layer = model.get_input_embeddings()
-    embed_weight = embed_layer.weight.detach().float().cpu().numpy()  # (vocab_size, D)
     
     results = {}
     
@@ -228,8 +227,8 @@ def run_p335(model, tokenizer, device, n_layers, D, model_name):
                 continue
             attr_tok_id = attr_tok_ids[0]
             
-            # 方法1: 直接用属性词的embedding
-            direction = embed_weight[attr_tok_id].copy()
+            # 方法1: 直接用属性词的embedding(逐个提取)
+            direction = embed_layer.weight[attr_tok_id:attr_tok_id+1].detach().float().cpu().numpy()[0].copy()
             
             # 归一化
             norm = np.linalg.norm(direction)
@@ -276,9 +275,8 @@ def run_p336(model, tokenizer, device, n_layers, D, model_name):
     beta_range = [0.5, 1.0, 2.0, 3.0, 5.0, 8.0, 10.0]
     alpha_fixed = 0.5
     
-    # 获取lm_head权重
+    # 获取lm_head(不加载全部权重, 逐属性提取)
     lm_head = model.lm_head if hasattr(model, 'lm_head') else model.get_output_embeddings()
-    lm_weight = lm_head.weight.detach().float().cpu().numpy()  # (vocab_size, D)
     
     results = {}
     
@@ -305,7 +303,7 @@ def run_p336(model, tokenizer, device, n_layers, D, model_name):
             attr_tok_id = attr_tok_ids[0]
             
             # lm_head的行向量就是"从隐藏状态到某词logit"的投影方向
-            direction = lm_weight[attr_tok_id].copy()
+            direction = lm_head.weight[attr_tok_id:attr_tok_id+1].detach().float().cpu().numpy()[0].copy()
             
             # 归一化
             norm = np.linalg.norm(direction)
@@ -443,11 +441,9 @@ def run_p338(model, tokenizer, device, n_layers, D, model_name, p335_res, p336_r
     beta_range = [1.0, 3.0, 5.0, 10.0, 20.0]
     alpha_fixed = 0.5
     
-    # 获取embedding和lm_head权重
+    # 获取embedding和lm_head权重(逐属性加载, 避免OOM)
     embed_layer = model.get_input_embeddings()
-    embed_weight = embed_layer.weight.detach().float().cpu().numpy()
     lm_head = model.lm_head if hasattr(model, 'lm_head') else model.get_output_embeddings()
-    lm_weight = lm_head.weight.detach().float().cpu().numpy()
     
     results = {}
     
@@ -476,14 +472,14 @@ def run_p338(model, tokenizer, device, n_layers, D, model_name, p335_res, p336_r
             # 3种方向
             directions = {}
             
-            # 1. Embedding方向
-            d1 = embed_weight[attr_tok_id].copy()
+            # 1. Embedding方向(逐个提取, 避免OOM)
+            d1 = embed_layer.weight[attr_tok_id:attr_tok_id+1].detach().float().cpu().numpy()[0].copy()
             n1 = np.linalg.norm(d1)
             if n1 > 0:
                 directions["embedding"] = d1 / n1 * 10.0
             
-            # 2. lm_head方向
-            d2 = lm_weight[attr_tok_id].copy()
+            # 2. lm_head方向(逐个提取, 避免OOM)
+            d2 = lm_head.weight[attr_tok_id:attr_tok_id+1].detach().float().cpu().numpy()[0].copy()
             n2 = np.linalg.norm(d2)
             if n2 > 0:
                 directions["lm_head"] = d2 / n2 * 10.0

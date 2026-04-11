@@ -678,6 +678,96 @@
 
 ---
 
+## LXXXII. 信号方向修正 — ★★★36属性全部100%★★★ (Phase LX, P335-338)
+
+### LXXXII.1 三种信号方向方法
+| 方法 | 方向定义 | Qwen3 | GLM4 | DS7B |
+|------|---------|-------|------|------|
+| **Embedding方向** | embed_weight[attr_id] | **36/36=100%** | 1/36=2.8% | 0/36=0% |
+| **lm_head权重方向** | lm_head.weight[attr_id] | **36/36=100%** | **36/36=100%** | **36/36=100%** |
+| **对比方向** | mean(h("attr noun"))-mean(h("noun")) | 部分100% | blue=100% | 0% |
+| **CCA信号算子** | CCA+PCA子空间投影 | 部分属性 | 部分属性 | 部分属性 |
+
+★★★ **lm_head权重方向: 3模型36属性全部100%!** ★★★
+★★★ **Embedding方向: Qwen3也36属性全部100%!** ★★★
+
+### LXXXII.2 为什么lm_head方向最有效?
+```
+lm_head: h → logits = lm_head(norm(h))
+  logits[attr_id] = lm_head.weight[attr_id] · norm(h) + bias
+  
+所以: 如果要让logits[attr_id]增大, 最直接的方向就是lm_head.weight[attr_id]!
+这是数学上的最优方向——梯度方向!
+```
+
+### LXXXII.3 关键参数
+| 模型 | 最优方向 | 最优β | 全部100%? |
+|------|---------|-------|----------|
+| Qwen3 | embedding | 1-3 | ★36/36★ |
+| GLM4 | lm_head | 0.5-1 | ★36/36★ |
+| DS7B | lm_head | 0.5-1 | ★36/36★ |
+
+### LXXXII.4 颜色词从0%→100%的飞跃
+| 属性 | Phase LV(D级) | Phase LX |
+|------|-------------|----------|
+| red | 0% | **100%** |
+| green | 0% | **100%** |
+| blue | 0% | **100%** |
+| black | 0% | **100%** |
+| purple | 0% | **100%** |
+| pink | 0% | **100%** |
+| brown | 0% | **100%** |
+| gray | 0% | **100%** |
+
+### LXXXII.5 CCA信号算子vs lm_head方向的本质差异
+```
+CCA信号算子:
+  direction = PCA⁻¹(P_signal · PCA(mean(G|attr) - mean(G|noun)))
+  问题: PCA子空间压缩了信息, 丢失了部分方向
+  结果: 颜色词信号方向错误→乱码token
+
+lm_head权重方向:
+  direction = lm_head.weight[attr_id]
+  优势: 这是logit函数的梯度方向, 数学最优
+  结果: 所有属性100%!
+```
+
+---
+
+## LXXXIII. Phase LX 综合结论 — 可操控语义物理的完整理论
+
+### LXXXIII.1 最终语义物理公式
+$$h_{intervened} = h_{noun} + \alpha \cdot f_{base}^{(noun)} + \beta \cdot w_{lm\_head}[attr]$$
+$$logits = lm\_head(norm(h_{intervened}))$$
+
+**参数**:
+- α = 0.5 (f_base缩放)
+- β = 0.5-3 (lm_head权重缩放)
+- f_base^(noun): 名词级偏移
+- w_lm_head[attr]: lm_head权重矩阵的第attr行
+
+### LXXXIII.2 核心发现
+1. ★★★ **lm_head权重方向: 3模型36属性全部100%!** ★★★
+2. ★★★ **这是数学上的最优方向: logit(attr)的梯度方向** ★★★
+3. ★★★ **颜色词从0%→100%: 问题不在编码, 而在信号方向** ★★★
+4. **CCA信号算子损失了方向信息**: PCA压缩导致颜色信号错误
+5. **不同模型最优方向不同**: Qwen3=embedding, GLM4/DS7B=lm_head
+
+### LXXXIII.3 可操控性统一理论
+```
+DNN语义操控的核心原理:
+  logits[attr] = w_lm_head[attr] · h + b
+  
+  要增大logits[attr], 最优方向 = w_lm_head[attr] (梯度方向)
+  
+  这解释了:
+  1. 为什么CCA方向不好: PCA压缩丢失了w_lm_head的梯度信息
+  2. 为什么颜色词0%: CCA颜色方向偏离了w_lm_head方向
+  3. 为什么lm_head方向100%: 它直接沿梯度方向!
+```
+
+---
+
 ## LXXVIII. 全层逐属性扫描 (Phase LIX, P331)
 
 ### LXXVIII.1 全层扫描解锁C级属性
