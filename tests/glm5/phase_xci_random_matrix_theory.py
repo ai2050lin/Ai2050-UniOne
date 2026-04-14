@@ -61,6 +61,7 @@ from model_utils import (
     collect_layer_outputs,
     compute_cos,
     compute_recoding_ratio,
+    compute_recoding_ratio_cached,
     LayerWeights,
     ModelInfo,
 )
@@ -118,18 +119,34 @@ def run_p443(model, tokenizer, device, model_info):
     n_layers = model_info.n_layers
     d_model = model_info.d_model
     W_U = get_W_U(model)  # [vocab_size, d_model]
+    wu_shape = list(W_U.shape)
+    wu_max_rank = min(W_U.shape)
+    
+    # 先获取所有属性的direction (节省后续内存)
+    attr_directions = {}
+    for attr in TEST_ATTRS:
+        direction, attr_tok_id = get_attr_direction(model, tokenizer, attr, W_U=W_U)
+        if direction is not None:
+            attr_directions[attr] = direction
     
     # Step 1: 计算W_U的有效秩(覆盖维度)
     print("  Step 1: 计算W_U有效秩...")
-    # W_U shape=[vocab, d_model], 秩最多=d_model=2560
-    # 对W_U^T做SVD更高效: W_U^T shape=[d_model, vocab]
-    # svds(W_U^T, k) 返回 W_U^T ≈ U S Vt, S是奇异值
-    # 等价于 W_U ≈ V S U^T, 所以W_U的奇异值与W_U^T相同
-    max_k = min(W_U.shape[0], W_U.shape[1]) - 2  # -2 for svds safety
+    # W_U shape=[vocab, d_model], 对W_U^T做SVD更高效
+    # W_U^T shape=[d_model, vocab]=[2560, 151936], 远小于W_U
+    # svds对W_U^T做SVD: W_U^T = U S Vt → 奇异值S相同
+    W_U_T = W_U.T.astype(np.float32)  # [d_model, vocab]
+    del W_U; import gc; gc.collect()  # 释放W_U
+    max_k = min(W_U_T.shape[0], W_U_T.shape[1]) - 2  # min(2560, 151936)-2=2558
     k_svd = min(300, max_k)
-    s_wu, _, _ = svds(W_U.astype(np.float32), k=k_svd)
-    s_wu = np.abs(s_wu)  # 确保奇异值为正
-    s_wu = np.sort(s_wu)[::-1]  # 降序排列
+    print(f"  对W_U^T做SVD, shape={W_U_T.shape}, k={k_svd}...")
+    U_wut_raw, s_wu_raw, Vt_wut_raw = svds(W_U_T, k=k_svd)
+    del W_U_T, Vt_wut_raw; gc.collect()
+    # 按奇异值降序排列
+    s_wu = np.abs(np.asarray(s_wu_raw, dtype=np.float64).ravel())
+    sort_idx = np.argsort(-s_wu)
+    s_wu = s_wu[sort_idx]
+    U_wut = np.asarray(U_wut_raw, dtype=np.float64)[:, sort_idx]  # [d_model, k] — W_U行空间基(按奇异值排序)
+    del U_wut_raw, s_wu_raw; gc.collect()
     
     # Participation Ratio (有效秩的连续版本)
     total_energy = np.sum(s_wu ** 2)
@@ -139,15 +156,15 @@ def run_p443(model, tokenizer, device, model_info):
     cum_energy = np.cumsum(s_wu ** 2) / total_energy
     k_90_in_sample = int(np.searchsorted(cum_energy, 0.90)) + 1
     
-    print(f"  W_U: shape={W_U.shape}, PR={PR:.1f}, max_rank={min(W_U.shape)}")
+    print(f"  W_U: shape={wu_shape}, PR={PR:.1f}, max_rank={wu_max_rank}")
     print(f"  SVD sample: k={k_svd}, top5 SVs={s_wu[:5].tolist()}")
     print(f"  k_90_in_sample={k_90_in_sample}, cum_energy[-1]={cum_energy[-1]:.4f}")
     print(f"  预测ratio(PR/d)={PR/d_model:.4f}")
     
     results["wu_analysis"] = {
-        "shape": list(W_U.shape),
+        "shape": wu_shape,
         "PR": float(PR),
-        "max_rank": min(W_U.shape),
+        "max_rank": wu_max_rank,
         "k_svd_used": k_svd,
         "k_90_in_sample": k_90_in_sample,
         "cum_energy_last": float(cum_energy[-1]),
@@ -162,9 +179,9 @@ def run_p443(model, tokenizer, device, model_info):
     real_ratios = {}  # {attr: {layer: ratio}}
     
     for attr in TEST_ATTRS:
-        direction, attr_tok_id = get_attr_direction(model, tokenizer, attr)
-        if direction is None:
+        if attr not in attr_directions:
             continue
+        direction = attr_directions[attr]
         
         inputs_base, inputs_interv, input_ids, pos_ids = inject_at_embed(
             model, tokenizer, device, PROMPT, direction, BETA
@@ -183,9 +200,9 @@ def run_p443(model, tokenizer, device, model_info):
             h_interv = interv_out[key][0, -1, :].numpy()
             delta_h = h_interv - h_base
             
-            rc = compute_recoding_ratio(delta_h, W_U, n_components=k_svd)
+            rc = compute_recoding_ratio_cached(delta_h, U_wut)
             attr_ratios[li] = rc
-        
+    
         real_ratios[attr] = attr_ratios
         
         if attr_ratios:
@@ -203,7 +220,7 @@ def run_p443(model, tokenizer, device, model_info):
         print("  ERROR: No real ratios available")
         return results
     
-    direction, _ = get_attr_direction(model, tokenizer, first_attr)
+    direction = attr_directions[first_attr]
     inputs_base, inputs_interv, input_ids, pos_ids = inject_at_embed(
         model, tokenizer, device, PROMPT, direction, BETA
     )
@@ -222,7 +239,7 @@ def run_p443(model, tokenizer, device, model_info):
         delta_real = BETA * direction
     
     delta_norm = np.linalg.norm(delta_real)
-    rc_real = compute_recoding_ratio(delta_real, W_U, n_components=k_svd)
+    rc_real = compute_recoding_ratio_cached(delta_real, U_wut)
     
     print(f"  真实delta: ||Δ||={delta_norm:.4f}, ratio={rc_real['ratio']:.4f}")
     
@@ -241,7 +258,7 @@ def run_p443(model, tokenizer, device, model_info):
         delta_rotated = Q @ delta_real
         
         # 测量recoding_ratio
-        rc = compute_recoding_ratio(delta_rotated, W_U, n_components=k_svd)
+        rc = compute_recoding_ratio_cached(delta_rotated, U_wut)
         random_ratios.append(rc["ratio"])
     
     mean_random_ratio = np.mean(random_ratios)
@@ -257,7 +274,7 @@ def run_p443(model, tokenizer, device, model_info):
     predicted_ratios = {
         "PR/d": PR / d_model,
         "k_90_in_sample/d": k_90_in_sample / d_model,
-        "min_shape/d": min(W_U.shape) / d_model,  # =1.0 当vocab>d_model
+        "min_shape/d": min(wu_shape) / d_model,  # =1.0 当vocab>d_model
         "d_model/d_model": 1.0,  # 上界
         "1/sqrt(d)": 1.0 / np.sqrt(d_model),
         "0.22_target": 0.22,
@@ -266,7 +283,8 @@ def run_p443(model, tokenizer, device, model_info):
     print(f"\n  理论预测对比:")
     print(f"  实测ratio={rc_real['ratio']:.4f}, 随机ratio={mean_random_ratio:.4f}")
     for name, pred in predicted_ratios.items():
-        print(f"  {name}={pred:.4f} {'✓' if abs(pred - mean_random_ratio) < 0.05 else '✗'}")
+        match = "OK" if abs(pred - mean_random_ratio) < 0.05 else "NO"
+        print(f"  {name}={pred:.4f} {match}")
     
     results["random_rotation_test"] = {
         "real_delta_ratio": rc_real["ratio"],
@@ -282,7 +300,7 @@ def run_p443(model, tokenizer, device, model_info):
     norm_ratios = {}
     for scale in [0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 20.0]:
         delta_scaled = scale * direction
-        rc = compute_recoding_ratio(delta_scaled, W_U, n_components=k_svd)
+        rc = compute_recoding_ratio_cached(delta_scaled, U_wut)
         norm_ratios[scale] = rc["ratio"]
         print(f"    scale={scale}: ratio={rc['ratio']:.4f}")
     
@@ -318,23 +336,36 @@ def run_p444(model, tokenizer, device, model_info):
     results = {}
     n_layers = model_info.n_layers
     d_model = model_info.d_model
-    W_U = get_W_U(model)
     
-    # W_U分析
-    max_k = min(W_U.shape[0], W_U.shape[1]) - 2
+    # 先获取所有属性的direction (只需要W_U的几行, 节省内存)
+    W_U = get_W_U(model)
+    attr_directions = {}
+    for attr in TEST_ATTRS:
+        direction, attr_tok_id = get_attr_direction(model, tokenizer, attr, W_U=W_U)
+        if direction is not None:
+            attr_directions[attr] = direction
+    
+    # W_U分析 — 对W_U^T做SVD更稳定
+    W_U_T = W_U.T.astype(np.float32)  # [d_model, vocab]
+    vocab_size = W_U.shape[0]
+    del W_U  # 释放W_U, 只保留W_U_T用于SVD
+    import gc; gc.collect()
+    
+    max_k = min(W_U_T.shape[0], W_U_T.shape[1]) - 2
     k_svd = min(300, max_k)
-    s_wu, _, Vt_wu = svds(W_U.astype(np.float32), k=k_svd)
-    s_wu = np.abs(s_wu)
-    s_wu = np.sort(s_wu)[::-1]
-    Vt_wu = Vt_wu[np.argsort(-s_wu)]  # 按奇异值降序排列行
+    U_wut_raw, s_wu_raw, _ = svds(W_U_T, k=k_svd)
+    s_wu = np.abs(np.asarray(s_wu_raw, dtype=np.float64).ravel())
+    sort_idx = np.argsort(-s_wu)
+    s_wu = s_wu[sort_idx]
+    U_wut_444 = np.asarray(U_wut_raw, dtype=np.float64)[:, sort_idx]  # [d_model, k] — W_U行空间基
+    del W_U_T, U_wut_raw, s_wu_raw; gc.collect()
     
     total_energy = np.sum(s_wu ** 2)
-    cum_energy = np.cumsum(s_wu ** 2) / max(total_energy, 1e-20)
     PR_wu = (np.sum(s_wu) ** 2) / max(total_energy, 1e-20)
     
     results["wu_summary"] = {
         "d_model": d_model,
-        "vocab_size": W_U.shape[0],
+        "vocab_size": vocab_size,
         "PR": float(PR_wu),
         "predicted_ratio_PR_over_d": PR_wu / d_model,
     }
@@ -349,9 +380,9 @@ def run_p444(model, tokenizer, device, model_info):
     all_layer_cos = {li: [] for li in sample_layers}
     
     for attr in TEST_ATTRS:
-        direction, attr_tok_id = get_attr_direction(model, tokenizer, attr)
-        if direction is None:
+        if attr not in attr_directions:
             continue
+        direction = attr_directions[attr]
         
         inputs_base, inputs_interv, _, pos_ids = inject_at_embed(
             model, tokenizer, device, PROMPT, direction, BETA
@@ -369,8 +400,8 @@ def run_p444(model, tokenizer, device, model_info):
             h_interv = interv_out[key][0, -1, :].numpy()
             delta_h = h_interv - h_base
             
-            # recoding_ratio
-            rc = compute_recoding_ratio(delta_h, W_U, n_components=k_svd)
+            # recoding_ratio (使用预计算的U_wut)
+            rc = compute_recoding_ratio_cached(delta_h, U_wut_444)
             all_layer_ratios[li].append(rc["ratio"])
             all_layer_gains[li].append(rc["gain"])
             
@@ -416,7 +447,7 @@ def run_p444(model, tokenizer, device, model_info):
             k_w = min(10, lw.W_up.shape[0] - 1, lw.W_up.shape[1] - 1)
             try:
                 s_up = svds(lw.W_up.astype(np.float32), k=k_w, return_singular_vectors=False)
-                w_up_spectral = float(np.max(s_up))
+                w_up_spectral = float(np.max(np.abs(s_up)))
             except:
                 w_up_spectral = float(np.linalg.norm(lw.W_up[:100, :], ord=2))
         else:
@@ -427,7 +458,7 @@ def run_p444(model, tokenizer, device, model_info):
             try:
                 k_w = min(10, lw.W_down.shape[0] - 1, lw.W_down.shape[1] - 1)
                 s_down = svds(lw.W_down.astype(np.float32), k=k_w, return_singular_vectors=False)
-                w_down_spectral = float(np.max(s_down))
+                w_down_spectral = float(np.max(np.abs(s_down)))
             except:
                 w_down_spectral = float(np.linalg.norm(lw.W_down[:100, :], ord=2))
         else:
@@ -440,7 +471,7 @@ def run_p444(model, tokenizer, device, model_info):
         try:
             k_w = min(10, W_o.shape[0] - 1, W_o.shape[1] - 1)
             s_o = svds(W_o.astype(np.float32), k=k_w, return_singular_vectors=False)
-            w_o_spectral = float(np.max(s_o))
+            w_o_spectral = float(np.max(np.abs(s_o)))
         except:
             w_o_spectral = 0
         
@@ -483,15 +514,24 @@ def run_p445(model, tokenizer, device, model_info):
     results = {}
     n_layers = model_info.n_layers
     d_model = model_info.d_model
-    W_U = get_W_U(model)
     layers = get_layers(model)
     
-    # W_U的PR
-    max_k = min(W_U.shape[0], W_U.shape[1]) - 2
+    # 先获取direction (节省内存)
+    W_U = get_W_U(model)
+    direction, _ = get_attr_direction(model, tokenizer, "red", W_U=W_U)
+    
+    # W_U的PR — 对W_U^T做SVD (预计算用于cached ratio)
+    W_U_T = W_U.T.astype(np.float32)
+    del W_U; import gc; gc.collect()
+    max_k = min(W_U_T.shape[0], W_U_T.shape[1]) - 2
     k_svd = min(300, max_k)
-    s_wu = svds(W_U.astype(np.float32), k=k_svd, return_singular_vectors=False)
-    s_wu = np.abs(s_wu)
-    s_wu = np.sort(s_wu)[::-1]
+    U_wut_raw_445, s_wu_raw_445, _ = svds(W_U_T, k=k_svd)
+    del W_U_T; gc.collect()
+    s_wu = np.abs(np.asarray(s_wu_raw_445, dtype=np.float64).ravel())
+    sort_idx_445 = np.argsort(-s_wu)
+    s_wu = s_wu[sort_idx_445]
+    U_wut_445 = np.asarray(U_wut_raw_445, dtype=np.float64)[:, sort_idx_445]  # [d_model, k]
+    del U_wut_raw_445, s_wu_raw_445; gc.collect()
     PR_wu = float((np.sum(s_wu) ** 2) / max(np.sum(s_wu ** 2), 1e-20))
     
     # 1. 计算每层权重谱指标
@@ -530,8 +570,7 @@ def run_p445(model, tokenizer, device, model_info):
     # 2. 计算每层recoding_gain
     print("  计算每层recoding_gain...")
     
-    # 用red属性作为标准
-    direction, _ = get_attr_direction(model, tokenizer, "red")
+    # direction已在前面获取
     if direction is None:
         return results
     
@@ -553,7 +592,7 @@ def run_p445(model, tokenizer, device, model_info):
         delta_h = h_interv - h_base
         
         # recoding指标
-        rc = compute_recoding_ratio(delta_h, W_U, n_components=k_svd)
+        rc = compute_recoding_ratio_cached(delta_h, U_wut_445)
         
         gain_data.append({
             "layer": li,
@@ -651,10 +690,11 @@ def run_p446(model, tokenizer, device, model_info):
     results = {}
     n_layers = model_info.n_layers
     d_model = model_info.d_model
-    W_U = get_W_U(model)
     layers = get_layers(model)
     
-    direction, _ = get_attr_direction(model, tokenizer, "red")
+    # 先获取direction和W_U SVD
+    W_U = get_W_U(model)
+    direction, _ = get_attr_direction(model, tokenizer, "red", W_U=W_U)
     if direction is None:
         return results
     
@@ -666,8 +706,18 @@ def run_p446(model, tokenizer, device, model_info):
     
     base_out = collect_layer_outputs(model, inputs_base, pos_ids, n_layers)
     interv_out = collect_layer_outputs(model, inputs_interv, pos_ids, n_layers)
-    
-    k_svd = min(200, min(W_U.shape[0], W_U.shape[1]) - 2)
+
+    # 预计算W_U^T的SVD (用于cached ratio)
+    W_U_T_446 = W_U.T.astype(np.float32)
+    del W_U; import gc; gc.collect()
+    max_k_446 = min(W_U_T_446.shape[0], W_U_T_446.shape[1]) - 2
+    k_svd_446 = min(200, max_k_446)
+    U_wut_raw_446, s_wut_raw_446, _ = svds(W_U_T_446, k=k_svd_446)
+    del W_U_T_446; gc.collect()
+    s_wut_446 = np.abs(np.asarray(s_wut_raw_446, dtype=np.float64).ravel())
+    sort_idx_446 = np.argsort(-s_wut_446)
+    U_wut_446 = np.asarray(U_wut_raw_446, dtype=np.float64)[:, sort_idx_446]  # [d_model, k]
+    del U_wut_raw_446, s_wut_raw_446; gc.collect()
     
     real_ratios = {}
     for li in [0, 1, 2, n_layers // 2, n_layers - 1]:
@@ -679,7 +729,7 @@ def run_p446(model, tokenizer, device, model_info):
         h_base = base_out[key][0, -1, :].numpy()
         h_interv = interv_out[key][0, -1, :].numpy()
         delta_h = h_interv - h_base
-        rc = compute_recoding_ratio(delta_h, W_U, n_components=k_svd)
+        rc = compute_recoding_ratio_cached(delta_h, U_wut_446)
         real_ratios[li] = rc["ratio"]
         print(f"    L{li}: ratio={rc['ratio']:.4f}")
     
@@ -747,14 +797,14 @@ def run_p446(model, tokenizer, device, model_info):
                 print(f"    L{li}: NaN detected!")
                 continue
             
-            rc = compute_recoding_ratio(delta_h, W_U, n_components=k_svd)
+            rc = compute_recoding_ratio_cached(delta_h, U_wut_446)
             random_ratios[li] = rc["ratio"]
             print(f"    L{li}: ratio={rc['ratio']:.4f}")
         
         results["random_weight_ratios"] = random_ratios
         
         # 对比
-        print(f"\n  ★★★ 真实 vs 随机权重 recoding_ratio ★★★")
+        print(f"\n  *** 真实 vs 随机权重 recoding_ratio ***")
         for li in real_ratios:
             real_r = real_ratios[li]
             rand_r = random_ratios.get(li, "N/A")
@@ -811,7 +861,7 @@ def run_p446(model, tokenizer, device, model_info):
                     h_interv = interv_out_wup[key][0, -1, :].numpy()
                     delta_h = h_interv - h_base
                     if not np.any(np.isnan(delta_h)):
-                        rc = compute_recoding_ratio(delta_h, W_U, n_components=k_svd)
+                        rc = compute_recoding_ratio_cached(delta_h, U_wut_446)
                         wup_ratios[li] = rc["ratio"]
                         print(f"    L{li}: ratio={rc['ratio']:.4f}")
             

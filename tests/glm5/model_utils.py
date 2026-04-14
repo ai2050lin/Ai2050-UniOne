@@ -239,10 +239,12 @@ def get_W_U(model) -> np.ndarray:
     获取lm_head权重矩阵(即W_U)
     
     Returns:
-        W_U: [vocab_size, d_model] numpy数组
+        W_U: [vocab_size, d_model] numpy数组 (float32)
     """
     if hasattr(model, "lm_head"):
-        return model.lm_head.weight.detach().cpu().float().numpy()
+        w = model.lm_head.weight.detach().cpu()
+        # 优先用float16节省内存, SVD时再cast到float32
+        return w.float().numpy()
     raise ValueError(f"Cannot find lm_head in {type(model).__name__}")
 
 
@@ -264,7 +266,7 @@ def get_sample_layers(n_layers: int, n_samples: int = 10) -> List[int]:
     return sorted(set(layers))
 
 
-def get_attr_direction(model, tokenizer, attr: str) -> Tuple[Optional[np.ndarray], Optional[int]]:
+def get_attr_direction(model, tokenizer, attr: str, W_U: Optional[np.ndarray] = None) -> Tuple[Optional[np.ndarray], Optional[int]]:
     """
     获取属性的W_lm方向(归一化)
     
@@ -272,6 +274,7 @@ def get_attr_direction(model, tokenizer, attr: str) -> Tuple[Optional[np.ndarray
         model: 模型对象
         tokenizer: 分词器
         attr: 属性词字符串 (如 "red")
+        W_U: 可选预加载的W_U矩阵, 避免重复加载节省内存
     
     Returns:
         (direction_np, token_id) — direction_np为归一化的numpy数组[d_model]
@@ -280,7 +283,8 @@ def get_attr_direction(model, tokenizer, attr: str) -> Tuple[Optional[np.ndarray
     if len(attr_tok_ids) == 0:
         return None, None
     attr_tok_id = attr_tok_ids[0]
-    W_U = get_W_U(model)  # [vocab_size, d_model]
+    if W_U is None:
+        W_U = get_W_U(model)  # [vocab_size, d_model]
     direction = W_U[attr_tok_id].copy()
     norm = np.linalg.norm(direction)
     if norm > 0:
@@ -395,21 +399,60 @@ def compute_recoding_ratio(delta_h: np.ndarray, W_U: np.ndarray, n_components: i
     if delta_norm < 1e-10:
         return {"ratio": 0, "gain": 0, "cos_inject_wu": 0, "proj_energy": 0, "top10_energy": 0}
     
-    # SVD of W_U: Vt的行=W_U行空间的基
-    k = min(n_components, min(W_U.shape[0], W_U.shape[1]) - 2)
-    k = max(k, 1)  # 至少1个分量
-    _, _, Vt = svds(W_U.astype(np.float32), k=k)
+    # SVD of W_U^T: 更稳定, W_U^T shape=[d_model, vocab] 远小于W_U
+    # svds(W_U^T, k) → U [d_model, k] S [k] Vt [k, vocab]
+    # W_U^T = U S Vt → W_U = Vt^T S U^T
+    # W_U的行空间基 = Vt^T的列 (每个列是d_model维... 不对, Vt^T是[vocab, k])
+    # W_U的行空间在R^d_model中, 由U的列张成
+    # 因为W_U = Vt^T S U^T, 行空间 = {W_U x = Vt^T S U^T x} 
+    #   W_U的值域(R^vocab)的预像在R^d_model中 = U^T的值域 = U的列空间
+    # 所以delta在W_U行空间中的投影 = U @ (U^T @ delta)
+    W_U_T = W_U.T.astype(np.float32)
+    k = min(n_components, min(W_U_T.shape[0], W_U_T.shape[1]) - 2)
+    k = max(k, 1)
+    U_wut, s_wut, _ = svds(W_U_T, k=k)
+    U_wut = np.asarray(U_wut, dtype=np.float64)  # [d_model, k]
     
     # delta在W_U行空间中的投影
-    proj = Vt @ delta_h  # [k]
-    proj_energy = np.sum(proj ** 2)
+    proj_coeffs = U_wut.T @ delta_h  # [k] — delta在U各列上的投影系数
+    proj_energy = np.sum(proj_coeffs ** 2)
     
     # recoding_ratio = ||proj||^2 / ||delta||^2
-    # 注意: 因为只用了k个SVD分量, ratio可能<1
     ratio = min(proj_energy / max(delta_norm ** 2, 1e-20), 1.0)
-    gain = float(np.linalg.norm(proj))
+    gain = float(np.linalg.norm(proj_coeffs))
     
-    top10_energy = float(np.sum(np.sort(proj ** 2)[-10:])) if len(proj) >= 10 else float(np.sum(proj ** 2))
+    top10_energy = float(np.sum(np.sort(proj_coeffs ** 2)[-10:])) if len(proj_coeffs) >= 10 else float(np.sum(proj_coeffs ** 2))
+    
+    return {
+        "ratio": float(ratio),
+        "gain": gain,
+        "proj_energy": float(proj_energy),
+        "top10_energy": top10_energy,
+    }
+
+
+def compute_recoding_ratio_cached(delta_h: np.ndarray, U_wut: np.ndarray) -> Dict:
+    """
+    计算delta_h在W_U行空间中的投影比(使用预计算的SVD结果)
+    
+    Args:
+        delta_h: 信号差 [d_model]
+        U_wut: svds(W_U^T, k)返回的U矩阵 [d_model, k] — W_U行空间基
+    
+    Returns:
+        dict: {ratio, gain, proj_energy, top10_energy}
+    """
+    delta_norm = np.linalg.norm(delta_h)
+    if delta_norm < 1e-10:
+        return {"ratio": 0, "gain": 0, "proj_energy": 0, "top10_energy": 0}
+    
+    proj_coeffs = U_wut.T @ delta_h  # [k]
+    proj_energy = np.sum(proj_coeffs ** 2)
+    
+    ratio = min(proj_energy / max(delta_norm ** 2, 1e-20), 1.0)
+    gain = float(np.linalg.norm(proj_coeffs))
+    
+    top10_energy = float(np.sum(np.sort(proj_coeffs ** 2)[-10:])) if len(proj_coeffs) >= 10 else float(np.sum(proj_coeffs ** 2))
     
     return {
         "ratio": float(ratio),
