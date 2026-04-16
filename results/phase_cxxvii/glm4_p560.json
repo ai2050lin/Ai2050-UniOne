@@ -1,0 +1,9 @@
+{
+  "model": "glm4",
+  "ratio_by_role": {
+    "subject": {},
+    "object": {},
+    "modifier": {},
+    "function": {}
+  }
+}
