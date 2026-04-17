@@ -1,61 +1,30 @@
 [model_utils] Loading glm4...
-Loading weights:   0%|          | 0/443 [00:00<?, ?it/s]Loading weights: 100%|##########| 443/443 [00:00<00:00, 5756.84it/s]
-[model_utils] glm4 loaded, device=cuda:0, class=GlmForCausalLM
-Model: glm4, L=40, H=32, d=4096
-Sample layers: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 39]
-
-=== P890: Functional Signal per Layer ===
-L0 (0%): {'syntax': '0.1424', 'semantic': '0.0898', 'polarity': '0.1895', 'logic': '0.9491'}
-L6 (15%): {'syntax': '0.4679', 'semantic': '0.2276', 'polarity': '0.3227', 'logic': '0.7505'}
-L12 (30%): {'syntax': '0.5700', 'semantic': '0.3797', 'polarity': '0.3980', 'logic': '0.7626'}
-L18 (45%): {'syntax': '0.5148', 'semantic': '0.3510', 'polarity': '0.3968', 'logic': '0.7707'}
-L24 (60%): {'syntax': '0.3680', 'semantic': '0.2978', 'polarity': '0.3255', 'logic': '0.6991'}
-L30 (75%): {'syntax': '0.3099', 'semantic': '0.2498', 'polarity': '0.2695', 'logic': '0.6140'}
-L36 (90%): {'syntax': '0.2563', 'semantic': '0.2551', 'polarity': '0.2248', 'logic': '0.4517'}
-L39 (98%): {'syntax': '0.3115', 'semantic': '0.3303', 'polarity': '0.3332', 'logic': '0.4876'}
-
-=== P891: Linear Separability ===
-L0: {'syntax': 'full=0.67, pca5=0.67', 'semantic': 'full=0.50, pca5=0.50', 'polarity': 'full=0.67, pca5=0.67', 'logic': 'full=0.86, pca5=0.64'}
-L10: {'syntax': 'full=1.00, pca5=1.00', 'semantic': 'full=1.00, pca5=1.00', 'polarity': 'full=1.00, pca5=1.00', 'logic': 'full=1.00, pca5=0.50'}
-L20: {'syntax': 'full=1.00, pca5=1.00', 'semantic': 'full=1.00, pca5=1.00', 'polarity': 'full=1.00, pca5=1.00', 'logic': 'full=1.00, pca5=0.57'}
-L30: {'syntax': 'full=1.00, pca5=1.00', 'semantic': 'full=1.00, pca5=1.00', 'polarity': 'full=1.00, pca5=1.00', 'logic': 'full=1.00, pca5=0.57'}
-L39: {'syntax': 'full=1.00, pca5=1.00', 'semantic': 'full=1.00, pca5=1.00', 'polarity': 'full=1.00, pca5=1.00', 'logic': 'full=1.00, pca5=0.64'}
-
-=== P892: Cross-Function Orthogonality ===
-L0: {'syntax_vs_logic': 'cos=-0.0134', 'semantic_vs_logic': 'cos=-0.0254', 'polarity_vs_logic': 'cos=-0.0102'}
-L10: {'syntax_vs_logic': 'cos=-0.0143', 'semantic_vs_logic': 'cos=0.0293', 'polarity_vs_logic': 'cos=0.0719'}
-L20: {'syntax_vs_logic': 'cos=0.0466', 'semantic_vs_logic': 'cos=-0.0102', 'polarity_vs_logic': 'cos=0.0692'}
-L30: {'syntax_vs_logic': 'cos=0.0264', 'semantic_vs_logic': 'cos=0.0435', 'polarity_vs_logic': 'cos=0.0328'}
-L39: {'syntax_vs_logic': 'cos=-0.0019', 'semantic_vs_logic': 'cos=0.0736', 'polarity_vs_logic': 'cos=0.0544'}
-
-=== Composite Signals per Layer ===
-L0 (0%): logic=0.9491, attr_mean=0.1406, ratio=6.75
-L6 (15%): logic=0.7505, attr_mean=0.3394, ratio=2.21
-L12 (30%): logic=0.7626, attr_mean=0.4492, ratio=1.70
-L18 (45%): logic=0.7707, attr_mean=0.4209, ratio=1.83
-L24 (60%): logic=0.6991, attr_mean=0.3304, ratio=2.12
-L30 (75%): logic=0.6140, attr_mean=0.2764, ratio=2.22
-L36 (90%): logic=0.4517, attr_mean=0.2454, ratio=1.84
-L39 (98%): logic=0.4876, attr_mean=0.3250, ratio=1.50
-
-Results saved to results\phase_cxc\glm4_results.json
-
-=== SUMMARY ===
-Logic signal peak: L0 = 0.9491
-Logic/Attr ratio range: 1.50 - 6.75
-Mean Logic/Attr ratio: 2.28
->> Logic signal is COMPARABLE to attribute signals - logic is NOT dark matter!
-
-Logic vs Attribute Orthogonality:
-  L10 syntax_vs_logic: cos=-0.0143 [ORTHOGONAL]
-  L10 semantic_vs_logic: cos=0.0293 [ORTHOGONAL]
-  L10 polarity_vs_logic: cos=0.0719 [ORTHOGONAL]
-  L20 syntax_vs_logic: cos=0.0466 [ORTHOGONAL]
-  L20 semantic_vs_logic: cos=-0.0102 [ORTHOGONAL]
-  L20 polarity_vs_logic: cos=0.0692 [ORTHOGONAL]
-  L30 syntax_vs_logic: cos=0.0264 [ORTHOGONAL]
-  L30 semantic_vs_logic: cos=0.0435 [ORTHOGONAL]
-  L30 polarity_vs_logic: cos=0.0328 [ORTHOGONAL]
-[model_utils] GPU memory released
-
-Phase CXC PASSED for glm4
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "D:\Ai2050\TransformerLens-Project\tests\glm5\phase_cxc_logic_dark_matter.py", line 386, in <module>
+    main()
+  File "D:\Ai2050\TransformerLens-Project\tests\glm5\phase_cxc_logic_dark_matter.py", line 198, in main
+    model, tokenizer, device = load_model(args.model)
+                               ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Ai2050\TransformerLens-Project\tests\glm5\model_utils.py", line 99, in load_model
+    model = AutoModelForCausalLM.from_pretrained(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\27876\AppData\Local\Programs\Python\Python312\Lib\site-packages\transformers\models\auto\auto_factory.py", line 604, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\27876\AppData\Local\Programs\Python\Python312\Lib\site-packages\transformers\modeling_utils.py", line 277, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\27876\AppData\Local\Programs\Python\Python312\Lib\site-packages\transformers\modeling_utils.py", line 5048, in from_pretrained
+    ) = cls._load_pretrained_model(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\27876\AppData\Local\Programs\Python\Python312\Lib\site-packages\transformers\modeling_utils.py", line 5468, in _load_pretrained_model
+    _error_msgs, disk_offload_index = load_shard_file(args)
+                                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\27876\AppData\Local\Programs\Python\Python312\Lib\site-packages\transformers\modeling_utils.py", line 831, in load_shard_file
+    state_dict = load_state_dict(
+                 ^^^^^^^^^^^^^^^^
+  File "C:\Users\27876\AppData\Local\Programs\Python\Python312\Lib\site-packages\transformers\modeling_utils.py", line 484, in load_state_dict
+    with safe_open(checkpoint_file, framework="pt") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: No such file or directory: D:/develop/model/hub/models--zai-org--GLM-4-9B-Chat-HF/snapshots/8599336fc6c125203efb2360bfaf4c80eef1d1bf\model-00001-of-00004.safetensors
