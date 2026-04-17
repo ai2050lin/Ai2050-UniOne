@@ -39296,3 +39296,321 @@ python tests/codex/stage507_gemma4_hooking_smoke.py
      - 一组逐层更新律
      - 一组效率约束
    - 也就是说，语言数学理论的正确生成顺序是：`结构对象 → 因果对象 → 动力学 → 效率原则 → 数学压缩`。
+
+---
+
+## 2026年04月17日 11时16分 研究记录追加
+
+### 本轮执行命令
+- `rg --files -g "*AGI_GLM5_LANGUAGE.md" -g "*AGI_GPT5_LANGUAGE.md" -g "*AGI_GLM5_MEMO.md" -g "*AGI_GPT5_MEMO.md"`
+- `Get-ChildItem -Path research -Recurse -File | Select-Object -ExpandProperty FullName`
+- `Get-Content -Path "research/glm5/docs/AGI_GLM5_LANGUAGE.md"`
+- `Get-Content -Path "research/glm5/docs/AGI_GLM5_PROGRESS_REPORT.md"`
+- `Get-Content -Path "research/glm5/docs/AGI_GLM5_NEXT_PHASE_PLAN.md"`
+- `Get-Content -Path "research/glm5/docs/AGI_GLM5_PROCESS.md"`
+- `Get-Content -Path "research/glm5/docs/AGI_GLM5_LANGUAGE.md" -Encoding UTF8 | Select-Object -First 220`
+- `Get-Content -Path "research/glm5/docs/AGI_GLM5_NEXT_PHASE_PLAN.md" -Encoding UTF8 | Select-Object -First 220`
+- `Get-Content -Path "research/glm5/docs/AGI_GLM5_LANGUAGE.md" -Encoding UTF8 | Select-Object -Skip 220 -First 260`
+- `Get-Content -Path "research/glm5/docs/AGI_GLM5_PROGRESS_REPORT.md" -Encoding UTF8 | Select-Object -First 260`
+- `Get-Content -Path "research/glm5/docs/AGI_GLM5_PROCESS.md" -Encoding UTF8 | Select-Object -First 220`
+- `rg -n "随机|baseline|A1|功能方向|orthog|Q/K/V|功能子空间|bootstrap|attention" research/glm5/experiments research/glm5/docs`
+- `Get-ChildItem -Path "research/glm5/experiments" -File | Select-Object -ExpandProperty Name`
+- `Get-Content -Path "research/glm5/docs/AGI_GLM5_MATH_PRINCIPLES.md" -Encoding UTF8 | Select-Object -Skip 510 -First 130`
+- `Get-Content -Path "research/glm5/docs/AGI_GLM5_PUZZLE.md" -Encoding UTF8 | Select-Object -Skip 510 -First 90`
+- `Get-Content -Path "research/glm5/docs/AGI_GLM5_LANGUAGE_20260416.md" -Encoding UTF8 | Select-Object -Skip 1328 -First 40`
+- `Get-Content -Path "research/glm5/docs/AGI_GLM5_LANGUAGE.md" -Encoding UTF8 | Select-Object -Skip 455 -First 110`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+- `Get-Content -Path "research/gpt5/docs/AGI_GPT5_MEMO.md" -Encoding UTF8 | Select-Object -Last 20`
+
+### 本轮理论数学研究进展
+1. 已确认 `AGI_GLM5_LANGUAGE.md` 的当前主框架，已经从早期“频谱力学主导解释”推进到 `功能-内容双层分离` 框架。
+   - 当前文档把语言编码拆成 `h_func ⊕ h_nonfunc`。
+   - 核心新命题是：功能维度低维、近正交、并通过残差旁路传播；内容主要走注意力与 FFN 主路径。
+
+2. 已确认项目存在明显的“科学化收缩”迹象，这说明研究成熟度在提升，但也说明此前不少结论并不稳。
+   - 早期文档曾把总体完成度评到 `约75%`。
+   - 当前总览把“第一性原理完成度”下调到 `约35%`。
+   - 这不是坏事，反而说明研究开始把“描述性闭合”和“第一性解释”严格分开。
+
+3. 已识别出当前路线的最大优点：它终于把“最关键判别实验”放在理论中心，而不是继续堆叠解释。
+   - 当前最关键实验被明确指定为 `A1: 随机基线对照`。
+   - 这一步是在判断：功能子空间与 Q/K/V 的近正交，究竟是训练产物，还是高维随机几何的统计假象。
+
+4. 已识别出当前路线的最大硬伤：核心新框架仍然可能建立在高维统计假象之上。
+   - 文档自己已经指出：`5/4096 ≈ 0.12%`，与 Q/K/V 功能对齐度处于同一数量级。
+   - 旧文档中还出现了“随机方向与语义方向余弦分布统计上无法区分”“正交可能只是高维几何必然”的记录。
+   - 这意味着：如果 A1 失败，那么“功能-内容双层分离”不能直接当作语言第一性结构。
+
+5. 已识别出第二个结构性风险：功能方向定义本身可能不纯。
+   - 当前功能方向来自句子对差分。
+   - 但很多句子对同时混合时态、数量、语法、语义等变化。
+   - 这会导致“线性功能方向”本身可能是混合物，不是可解释的基础坐标。
+
+6. 已识别出第三个结构性风险：项目文档中存在代际结论冲突，说明路线仍处在高频重写阶段。
+   - 例如 `recoding_ratio≈0.22 恒定` 已被后续文档推翻，改成 `ratio(k)` 是 SVD 截断函数。
+   - 又如部分旧阶段对 `P52` 的“线性累积精确成立”也出现过后续推翻记录。
+   - 这表明当前项目更像“高速探索期”，不是“稳定定理化阶段”。
+
+7. 当前最合理的路线判断：
+   - 这条路线 `可行，但只能作为假说筛选路线，不足以直接通向第一性原理`。
+   - 真正可行的部分，是把语言编码问题压缩成少数几个强判别实验。
+   - 暂时不可行的部分，是直接从现有结果跳到“正交编码必然性”“DNN 到大脑桥梁”“统一数学公式”。
+
+8. 接下来最应该做的事已经收敛成一个非常明确的先后顺序：
+   - 第一优先级：做 `A1 随机基线对照`，排除统计假象。
+   - 第二优先级：做 `A3 功能方向稳定性`，验证方向是否真实可重复。
+   - 第三优先级：做 `A2 扩充功能维度`，验证“功能极薄”是否只是维度覆盖不足。
+   - 第四优先级：改成 `eager attention`，直接测实际前向中的 Q/K/V 与 attention pattern，而不是只看权重矩阵。
+   - 第五优先级：只有在以上四步通过后，才值得进入信息论/率失真/最小干扰原理的数学推导。
+
+9. 对 AGI 总路线的最新收敛判断：
+   - 当前项目已经比较擅长发现“结构现象”和“描述方程”。
+   - 但距离“第一性原理理论”最大的缺口，不在继续发现更多现象，而在建立 `能被一条反例直接打掉的核心命题`。
+   - 因此后续研究必须从“多做新分析”转向“少数高杀伤力判别实验 + 通过后再理论压缩”。
+
+---
+
+## 2026年04月17日 11时41分 研究记录追加
+
+### 本轮执行命令
+- `Get-Content -Path "research/gpt5/docs/AGI_GPT5_MEMO.md" -Encoding UTF8 | Select-Object -First 320`
+- `Get-Content -Path "research/gpt5/docs/AGI_GPT5_LANGUAGE.md" -Encoding UTF8 | Select-Object -First 260`
+- `rg -n "路线|阶段任务|第一性原理|统一状态方程|最小因果|状态变量|核心判断|下一步|瓶颈|理论" research/gpt5/docs/AGI_GPT5_MEMO.md research/gpt5/docs/AGI_GPT5_LANGUAGE.md`
+- `Get-Content -Path "research/gpt5/docs/AGI_GPT5_MEMO.md" -Encoding UTF8 | Select-Object -Last 260`
+- `Get-Content -Path "research/gpt5/docs/AGI_GPT5_LANGUAGE.md" -Encoding UTF8 | Select-Object -Skip 300 -First 380`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+
+### 本轮理论数学研究进展
+1. 已将 `GPT5` 路线和 `GLM5` 路线放到同一评价框架下比较：
+   - 判伪性
+   - 变量压缩能力
+   - 实验闭环程度
+   - 对统计假象的敏感性
+   - 下一步可执行性
+
+2. `GPT5` 路线当前更可行的核心原因已经进一步明确。
+   - 它的主线不是先假定一个漂亮几何框架，再去补证据。
+   - 它是先把语言拆成少量 `状态变量 + 最小因果结构 + 层间更新任务`，再不断用瓶颈实验收缩状态集合。
+   - 这条路线更接近“先找最小生成集，再逼近第一性原理”的科学推进顺序。
+
+3. `GPT5` 路线在方法论上更稳的三点。
+   - 第一，它持续把粗粒度大桶拆细后再尝试收回，例如 `P_discourse` 和 `Q_certainty` 都经过细拆、复测、再收缩。
+   - 第二，它接受负结果，并把负结果写回主文档，防止理论无根据增生复杂度。
+   - 第三，它把“结构对象”“行为对象”“状态变量”“因果干预”放在同一框架里，比纯几何解释更接近可验证理论。
+
+4. `GLM5` 路线当前更不稳的根因也更清楚了。
+   - 它的最新统一框架 `功能-内容双层分离` 虽然很有启发性，但最核心支点仍可能是高维随机几何假象。
+   - 文档自己已经承认：若 `A1 随机基线对照` 失败，则整个主框架都需要重审。
+   - 这意味着 `GLM5` 当前更像“强探索性路线”，不是“高稳定性主路线”。
+
+5. 两条路线在“理论跳跃幅度”上的差异。
+   - `GPT5`：从名词最小因果结构 → 统一状态变量 → 定向瓶颈 → 更新律候选，属于逐层压缩。
+   - `GLM5`：从频谱与几何现象 → 功能/内容分离 → 信息论/率失真/脑桥接，跨越更大。
+   - 因此在相同证据强度下，`GPT5` 的外推风险更低。
+
+6. 两条路线在“下一步是否能直接开工”上的差异。
+   - `GPT5` 下一步任务已经很明确：继续做 `P_discourse`、`Q_certainty`、`G_bind` 的统一测量、回路恢复和更新律化。
+   - `GLM5` 下一步虽然也明确，但第一件事必须先做“排除主框架失效”的关键判伪实验。
+   - 所以从资源投入效率看，`GPT5` 更适合作为当前主线，`GLM5` 更适合作为高风险假说支线。
+
+7. 当前最严格的综合判断。
+   - 如果目标是“尽快形成能持续累积、可被约束、可逐步方程化的语言理论骨架”，`GPT5` 路线更有可行性。
+   - 如果目标是“赌一个可能非常深但也可能整体失效的几何大框架”，`GLM5` 路线更激进，也更高风险。
+
+8. 对项目总路线的建议收敛为：
+   - 以 `GPT5` 为主线：负责最小状态变量、最小因果回路、层间更新律。
+   - 以 `GLM5` 为支线：负责验证“功能-内容双层分离”是否真实存在。
+   - 只有当 `GLM5` 的关键判伪实验通过后，才值得把它重新抬升为主理论竞争者。
+
+---
+
+## 2026年04月17日 11时41分 理论比较追加
+
+### 本轮执行命令
+- `Get-Content -Path "research/glm5/docs/AGI_GLM5_LANGUAGE_20260416.md" -Encoding UTF8 | Select-Object -First 320`
+- `rg -n "核心|瓶颈|风险|下一步|路线|随机|判伪|第一性原理|功能|正交|attention|A1|P_discourse|Q_certainty|状态变量" research/glm5/docs/AGI_GLM5_LANGUAGE_20260416.md research/gpt5/docs/AGI_GPT5_LANGUAGE.md research/gpt5/docs/AGI_GPT5_MEMO.md`
+- `Get-Content -Path "research/glm5/docs/AGI_GLM5_LANGUAGE_20260416.md" -Encoding UTF8 | Select-Object -Skip 6380 -First 220`
+- `Get-Content -Path "research/glm5/docs/AGI_GLM5_LANGUAGE_20260416.md" -Encoding UTF8 | Select-Object -Skip 6848 -First 80`
+
+### 本轮理论数学研究进展
+1. 已确认 `AGI_GLM5_LANGUAGE_20260416.md` 的核心定位是 `v16.0 频谱力学 + 因果力学框架`。
+   - 它把主线放在 `频谱传播规律`、`logit_gap 加法传播`、`方向贡献分解`、`W_U 与 W_embed 同构` 上。
+   - 文档自己的最终判断也很关键：`频谱力学是“声学”而非“语言学”`。
+
+2. 与当前 `GPT5` 路线相比，`20260416` 版本真正有可行性的部分主要是“低层描述工具”，不是“总理论主线”。
+   - 可行部分：
+     - `ratio(k)` 作为频谱分布函数，而不是固定常数。
+     - `logit_gap` 的加法传播。
+     - `logit_gap -> prob` 的稳定非线性映射。
+     - `W_U = W_embed` 的结构同构分析。
+     - 从“整体频谱”转向“方向级建模”的转向。
+   - 这些都适合作为分析工具和中间层描述方程保留。
+
+3. `20260416` 版本中可行性明显不足的部分，是把频谱力学继续外推成“语言统一主理论”。
+   - 文档自己已经承认：当前瓶颈在 `频谱 -> logit_gap`，且 `sign(c_k·Delta_k)` 接近随机。
+   - 这意味着它能很好描述“信号怎么传播”，但还不能解释“信号为什么形成语义行为”。
+   - 所以把它直接升成语言第一性原理，风险过高。
+
+4. `20260416` 版本里很多“正交语言空间”发现，现在更应当谨慎使用。
+   - 该文档阶段里曾大量强调 `8维 / 25维 / 55维 / 98维` 正交语言空间。
+   - 但后续版本已经越来越明确地暴露出：高维正交性本身可能只是统计几何效应，不足以直接推出真实语言机制。
+   - 因此这些发现更适合作为“候选结构线索”，不应继续当成核心主结论。
+
+5. 与最新 `GLM5 v17.0` 比较，`20260416` 版本的主进步在于：
+   - 它更清楚地完成了 `频谱传播侧` 的闭合。
+   - 但它还没有进入后续 `A1 随机基线对照` 那种真正会决定框架生死的判伪阶段。
+   - 所以它比 `v17.0` 更像“闭合描述体系”，但比 `v17.0` 更缺少对自身核心假设的严苛否证。
+
+6. 与 `GPT5` 路线比较后的最严格判断：
+   - `GPT5` 更可行的原因，是它把研究目标压缩为：
+     - 最小状态变量
+     - 最小因果回路
+     - 层间更新律
+   - `20260416` 更可行的部分，只在“提供传播学描述方程”。
+   - 一旦进入“语言语义如何产生、如何统一解释行为”这一层，`GPT5` 路线明显更稳。
+
+7. 当前应如何使用 `20260416` 路线的成果，已经可以收敛为：
+   - 保留为 `传播层分析工具箱`：
+     - 频谱分布
+     - gap 传播
+     - 方向贡献
+     - 嵌入/解码同构
+   - 不继续把它当成单独的“语言大统一理论主线”。
+   - 若要继续投入，只值得投入在“方向级桥接实验”和“频谱 -> logit_gap 缺口修复”这两个局部问题。
+
+8. 最终可行性排序进一步收敛为：
+   - 第一：`GPT5 当前路线` —— 作为总主线最可行。
+   - 第二：`GLM5 2026-04-17 v17.0` 中的关键判伪实验 —— 作为竞争性支线有价值。
+   - 第三：`GLM5 2026-04-16 v16.0` 的频谱力学框架 —— 作为局部描述工具可行，但不适合作为当前总理论主线。
+
+---
+
+## 2026年04月17日 12时00分 研究判断校正追加
+
+### 本轮执行命令
+- `rg -n "脑|兼容|独立证据|判伪|闭式|定理|解释|预测|ground|evidence|falsif|ICSPB|最弱|瓶颈|闭环" research/gpt5/docs/AGI_GPT5_ICSPB.md research/gpt5/docs/AGI_GPT5_LANGUAGE.md research/gpt5/docs/AGI_GPT5_MEMO.md research/glm5/docs/AGI_GLM5_LANGUAGE.md research/glm5/docs/AGI_GLM5_LANGUAGE_20260416.md`
+- `Get-Content -Path "research/gpt5/docs/AGI_GPT5_ICSPB.md" -Encoding UTF8 | Select-Object -First 260`
+- `Get-Content -Path "research/gpt5/docs/AGI_GPT5_ICSPB.md" -Encoding UTF8 | Select-Object -Skip 260 -First 260`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+- `Get-Content -Path "research/gpt5/docs/AGI_GPT5_MEMO.md" -Encoding UTF8 | Select-Object -Last 30`
+
+### 本轮理论数学研究进展
+1. 用户给出的两组“硬伤总结”总体方向正确，但有若干措辞需要精确化，否则会把真正断裂位置说偏。
+
+2. 对 `GLM5` 路线的校正判断：
+   - “频谱到 `logit_gap` 路径预测力极差”这一点基本正确。
+   - 但“因果链中后段断裂”这个表述不够精确。
+   - 更准确的说法应是：
+     - `W_down -> h频谱`、`h频谱 -> 不动点`、`logit_gap -> prob` 已有较强闭合。
+     - 真正断裂的是：
+       - `频谱 -> logit_gap`
+       - `ΔW -> Δh` 前半段
+       - `sign(c_k·Delta_k)` 的符号解释
+   - 所以它不是“整个中后段都断了”，而是“桥接语义决策的关键一跳断了”。
+
+3. 对 `GLM5` 的“推理能力枯竭”表述校正：
+   - 文档支持“推理恢复率/权重级恢复率极低(<4%)”这种说法。
+   - 但不应直接写成“模型推理能力枯竭”。
+   - 更准确的说法是：
+     - `GLM5` 当前理论对推理机制的结构恢复与权重级解释能力极弱，
+     - 不是模型本身没有推理能力，而是理论尚不能把推理能力从结构中有效还原出来。
+
+4. 对 `GPT5/ICSPB` 路线的校正判断：
+   - “脑编码落地失稳”是正确的，而且文档明确给出：
+     - `weakest_axis_name = brain_grounding`
+   - “证据隔离危机”也是正确的，而且已经具体化为：
+     - `evidence_isolation_clause` 是最弱条款之一，并与脑兼容、可判伪失稳耦合。
+   - “解释性强于定理性”同样正确，文档明确写到：
+     - 当前更像 `强统一解释理论`
+     - 还不是 `严格闭式定理体系`
+
+5. 但对 `GPT5/ICSPB` 也需要补一个重要保留：
+   - 它并不是“只有解释，没有定理部件”。
+   - 更准确的表述是：
+     - 它已经形成了 `候选律 -> 定理桥 -> 最弱条款` 的过渡态，
+     - 只是还没有完成最终的脑兼容闭合与证据隔离闭合。
+   - 因此它比普通解释模型更强，但还没有升级成真正的闭式理论。
+
+6. 逐条收束后的最终判断：
+   - `GLM5` 的总结应改成：
+     - 强描述方程很多，但 `频谱 -> logit_gap` 与 `sign` 机制仍是关键黑箱；
+     - 推理的理论恢复能力很弱。
+   - `GPT5/ICSPB` 的总结应改成：
+     - 统一变量骨架较强，但脑落地、证据隔离、闭式定理化仍是最硬瓶颈。
+
+7. 当前最严格的比较口径：
+   - `GLM5` 更像“传播机制解释很强，但语义决策桥断裂”。
+   - `GPT5/ICSPB` 更像“统一解释骨架很强，但脑兼容与独立证据闭环不足”。
+   - 两者的硬伤都真实存在，只是断裂位置不同。
+
+---
+
+## [2026-04-17 16:20] ICSPB 理论对“苹果编码推其他水果编码与探针精确改属性”的可行性分析
+
+### 本轮执行命令
+- `Get-Content research/gpt5/docs/AGI_GPT5_ICSPB.md`
+- `rg -n "fruit|apple|水果|属性|probe|探针|offset|family|encoding|编码|修改|causal|最小因果|attribute|bridge" research/gpt5/docs/AGI_GPT5_LANGUAGE.md research/gpt5/docs/AGI_GPT5_MEMO.md research/gpt5/docs/AGI_GPT5_ICSPB.md tests/codex tests/codex_temp`
+- `Get-Content tests/codex_temp/stage573_fruit_minimal_causal_encoding_empirical_20260409/summary.json`
+- `Get-Date -Format "yyyy-MM-dd HH:mm:ss"`
+- `Get-Content research/gpt5/docs/AGI_GPT5_MEMO.md -Tail 30`
+
+### 本轮理论进展
+1. 对“能不能根据苹果编码直接计算其他水果编码”的严格判断：
+   - 当前证据支持的是：
+     - `fruit_x ≈ B_family + E_x + ΣA_attr + G_bind + C_context`
+   - 不支持的则是：
+     - `fruit_x = apple + fixed_delta`
+   - 也就是说，`apple（苹果）` 可以帮助恢复 `fruit family backbone（水果家族骨干）`，但不能单靠苹果编码精确推出 `banana（香蕉）`、`pear（梨）`、`orange（橙子）` 的完整编码。
+
+2. 支撑上述判断的关键原因：
+   - 在 `AGI_GPT5_LANGUAGE.md` 中，名词编码公式明确包含：
+     - `global_backbone`
+     - `family_backbone`
+     - `noun_unique_residual`
+     - `task_bridge_adapter`
+     - `cross_task_causal_core`
+   - 这说明“苹果”并不是“水果类的全部”，而是“水果骨干 + 苹果特有偏置 + 任务桥接”的组合。
+   - `stage573_fruit_minimal_causal_encoding_empirical_20260409/summary.json` 中，四个模型都显示：
+     - 其他水果存在不可忽略的 `concept_offset（概念偏置）`
+     - 这些偏置不是接近零的小修正，而是中等甚至较大的独立成分
+   - 因此更合理的结论是：
+     - 可以从苹果中抽出“水果类公共结构”，
+     - 但其他水果仍需要各自的 `concept offset（概念偏移）`，不能直接闭式推出。
+
+3. 对“能不能用探针精确做属性修改”的严格判断：
+   - 当前只能说“部分可行”，不能说“已经做到精确可控”。
+   - 可行部分是：
+     - `A_attr（属性通道）` 具有跨对象复用性，
+     - 例如 `red（红色）`、`sweet（甜）` 在不同对象上的方向一致性较高，
+     - 说明探针可以读出并部分注入属性方向。
+   - 不可夸大的部分是：
+     - 每次属性组合仍存在非零 `binding residual（绑定残差）`
+     - 这意味着属性编辑不是纯净的线性加法，
+     - 还会受到名词骨干、上下文桥接、组合耦合的影响。
+
+4. 因而对 ICSPB 的最严格定位应改成：
+   - 它当前更像“统一变量框架 + 最小因果结构候选”
+   - 不是“已完成的闭式编码计算器”
+   - 它能支持：
+     - 家族骨干抽取
+     - 属性通道复用
+     - 探针式粗粒度控制
+   - 它还不能稳定支持：
+     - 由单个实例编码精确生成同类全部成员编码
+     - 无副作用的精确属性手术式修改
+
+5. 这件事的硬伤与瓶颈：
+   - `brain_grounding（脑落地）` 仍弱，导致统一变量缺少神经实现闭环。
+   - `evidence_isolation（证据隔离）` 仍弱，导致多条证据链还没有真正独立闭合。
+   - `binding residual（绑定残差）` 非零，说明属性与对象还没有被完全拆成可精确组合的闭式元件。
+   - 当前探针更多证明“可读、可粗控”，还没有证明“可严格可逆、可精确编辑”。
+
+6. 如果要把这条线推进到第一性原理候选，下一阶段大任务应是：
+   - 做 `apple -> banana/pear/orange` 的显式映射实验，验证是否存在跨水果稳定仿射桥或低维可迁移变换。
+   - 做属性探针干预实验，直接测“加上 `sweet` 探针后，是否只改甜度而不破坏类别、颜色、语法位形”。
+   - 把 `A_attr + G_bind + E_concept` 分离成更细的最小因果回路，减少 `binding residual`。
+   - 最终目标不是证明“苹果像水果”，而是证明“编码可以被可逆分解、可控重组、可预测外推”。
+
+7. 本轮一句话收束：
+   - `ICSPB` 现在可以支持“从苹果中抽出水果公共结构，并用探针做近似属性控制”，
+   - 但还不能支持“仅凭苹果编码精确计算其他水果编码，也还不能做无副作用的精确属性修改”。

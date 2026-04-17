@@ -1,0 +1,1168 @@
+{
+  "model": "qwen3",
+  "n_layers": 36,
+  "d_model": 2560,
+  "sample_layers": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    35
+  ],
+  "P890_functional_signal": {
+    "0": {
+      "syntax": {
+        "delta_norm_mean": 1.9185479879379272,
+        "delta_norm_std": 0.5281838774681091,
+        "mean_norm_mean": 11.208724975585938,
+        "functional_signal": 0.1711655855178833,
+        "cos_pair_mean": 0.9856578707695007,
+        "cos_pair_std": 0.0030967670027166605,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 0.7218967080116272,
+        "delta_norm_std": 0.2578117251396179,
+        "mean_norm_mean": 8.923270225524902,
+        "functional_signal": 0.08090046793222427,
+        "cos_pair_mean": 0.9964063763618469,
+        "cos_pair_std": 0.0023923490662127733,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 1.5589336156845093,
+        "delta_norm_std": 0.7284747362136841,
+        "mean_norm_mean": 10.03075122833252,
+        "functional_signal": 0.15541544556617737,
+        "cos_pair_mean": 0.9870160222053528,
+        "cos_pair_std": 0.010529262013733387,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 6.265615940093994,
+        "delta_norm_std": 3.3078131675720215,
+        "mean_norm_mean": 8.943486213684082,
+        "functional_signal": 0.7005786895751953,
+        "cos_pair_mean": 0.6696707010269165,
+        "cos_pair_std": 0.20297807455062866,
+        "n_pairs": 7
+      }
+    },
+    "2": {
+      "syntax": {
+        "delta_norm_mean": 3.5707263946533203,
+        "delta_norm_std": 0.6981741189956665,
+        "mean_norm_mean": 16.838415145874023,
+        "functional_signal": 0.21205833554267883,
+        "cos_pair_mean": 0.975590705871582,
+        "cos_pair_std": 0.010862198658287525,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 1.5181283950805664,
+        "delta_norm_std": 0.3173176944255829,
+        "mean_norm_mean": 17.488489151000977,
+        "functional_signal": 0.08680729568004608,
+        "cos_pair_mean": 0.9961960911750793,
+        "cos_pair_std": 0.0012977099977433681,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 2.646341323852539,
+        "delta_norm_std": 0.6424964666366577,
+        "mean_norm_mean": 13.358283042907715,
+        "functional_signal": 0.19810490310192108,
+        "cos_pair_mean": 0.9805884957313538,
+        "cos_pair_std": 0.007607354782521725,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 11.183454513549805,
+        "delta_norm_std": 6.587419033050537,
+        "mean_norm_mean": 14.440007209777832,
+        "functional_signal": 0.7744770646095276,
+        "cos_pair_mean": 0.6723018288612366,
+        "cos_pair_std": 0.22148336470127106,
+        "n_pairs": 7
+      }
+    },
+    "4": {
+      "syntax": {
+        "delta_norm_mean": 5.9080963134765625,
+        "delta_norm_std": 1.478977918624878,
+        "mean_norm_mean": 22.758941650390625,
+        "functional_signal": 0.25959450006484985,
+        "cos_pair_mean": 0.9636947512626648,
+        "cos_pair_std": 0.017123408615589142,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 2.9348278045654297,
+        "delta_norm_std": 0.9593802690505981,
+        "mean_norm_mean": 24.59714698791504,
+        "functional_signal": 0.11931578069925308,
+        "cos_pair_mean": 0.992789089679718,
+        "cos_pair_std": 0.0038450544234365225,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 4.553252220153809,
+        "delta_norm_std": 0.034487489610910416,
+        "mean_norm_mean": 23.422704696655273,
+        "functional_signal": 0.1943948119878769,
+        "cos_pair_mean": 0.9812086224555969,
+        "cos_pair_std": 0.0016675664810463786,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 16.320159912109375,
+        "delta_norm_std": 8.901215553283691,
+        "mean_norm_mean": 22.615217208862305,
+        "functional_signal": 0.7216450572013855,
+        "cos_pair_mean": 0.6911535859107971,
+        "cos_pair_std": 0.22780664265155792,
+        "n_pairs": 7
+      }
+    },
+    "6": {
+      "syntax": {
+        "delta_norm_mean": 11.175251007080078,
+        "delta_norm_std": 3.0196847915649414,
+        "mean_norm_mean": 32.415985107421875,
+        "functional_signal": 0.34474506974220276,
+        "cos_pair_mean": 0.938513457775116,
+        "cos_pair_std": 0.026990089565515518,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 6.23487663269043,
+        "delta_norm_std": 2.1233127117156982,
+        "mean_norm_mean": 31.41240119934082,
+        "functional_signal": 0.19848455488681793,
+        "cos_pair_mean": 0.978248119354248,
+        "cos_pair_std": 0.01499200239777565,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 8.519271850585938,
+        "delta_norm_std": 0.5543377995491028,
+        "mean_norm_mean": 32.96173858642578,
+        "functional_signal": 0.2584594190120697,
+        "cos_pair_mean": 0.9664745926856995,
+        "cos_pair_std": 0.0051783048547804356,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 22.543386459350586,
+        "delta_norm_std": 11.440306663513184,
+        "mean_norm_mean": 32.91147994995117,
+        "functional_signal": 0.6849703192710876,
+        "cos_pair_mean": 0.7227081060409546,
+        "cos_pair_std": 0.1990877389907837,
+        "n_pairs": 7
+      }
+    },
+    "8": {
+      "syntax": {
+        "delta_norm_mean": 16.654436111450195,
+        "delta_norm_std": 4.300110816955566,
+        "mean_norm_mean": 42.07799530029297,
+        "functional_signal": 0.3957991898059845,
+        "cos_pair_mean": 0.9159776568412781,
+        "cos_pair_std": 0.03794684633612633,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 9.522899627685547,
+        "delta_norm_std": 2.4638187885284424,
+        "mean_norm_mean": 41.183589935302734,
+        "functional_signal": 0.23123043775558472,
+        "cos_pair_mean": 0.9729369282722473,
+        "cos_pair_std": 0.011450592428445816,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 13.29549503326416,
+        "delta_norm_std": 1.240478277206421,
+        "mean_norm_mean": 39.15483093261719,
+        "functional_signal": 0.3395620584487915,
+        "cos_pair_mean": 0.941704273223877,
+        "cos_pair_std": 0.011765578761696815,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 29.860759735107422,
+        "delta_norm_std": 12.616405487060547,
+        "mean_norm_mean": 40.206687927246094,
+        "functional_signal": 0.7426813840866089,
+        "cos_pair_mean": 0.6847542524337769,
+        "cos_pair_std": 0.19934487342834473,
+        "n_pairs": 7
+      }
+    },
+    "10": {
+      "syntax": {
+        "delta_norm_mean": 15.576637268066406,
+        "delta_norm_std": 4.277294635772705,
+        "mean_norm_mean": 41.572391510009766,
+        "functional_signal": 0.3746870756149292,
+        "cos_pair_mean": 0.9269267916679382,
+        "cos_pair_std": 0.03218290954828262,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 11.681538581848145,
+        "delta_norm_std": 3.107729911804199,
+        "mean_norm_mean": 42.60673141479492,
+        "functional_signal": 0.27417120337486267,
+        "cos_pair_mean": 0.9611234068870544,
+        "cos_pair_std": 0.019231855869293213,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 14.789176940917969,
+        "delta_norm_std": 1.8312007188796997,
+        "mean_norm_mean": 41.59648513793945,
+        "functional_signal": 0.35553911328315735,
+        "cos_pair_mean": 0.9364604949951172,
+        "cos_pair_std": 0.015327787026762962,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 29.404516220092773,
+        "delta_norm_std": 12.059703826904297,
+        "mean_norm_mean": 42.179386138916016,
+        "functional_signal": 0.697130024433136,
+        "cos_pair_mean": 0.7296156287193298,
+        "cos_pair_std": 0.17424434423446655,
+        "n_pairs": 7
+      }
+    },
+    "12": {
+      "syntax": {
+        "delta_norm_mean": 17.656442642211914,
+        "delta_norm_std": 4.277241230010986,
+        "mean_norm_mean": 45.40742492675781,
+        "functional_signal": 0.3888448476791382,
+        "cos_pair_mean": 0.9249153137207031,
+        "cos_pair_std": 0.02802536077797413,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 12.586962699890137,
+        "delta_norm_std": 3.2614123821258545,
+        "mean_norm_mean": 46.44154739379883,
+        "functional_signal": 0.271028071641922,
+        "cos_pair_mean": 0.958366870880127,
+        "cos_pair_std": 0.025328200310468674,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 16.364294052124023,
+        "delta_norm_std": 0.6449014544487,
+        "mean_norm_mean": 46.84820556640625,
+        "functional_signal": 0.3493046164512634,
+        "cos_pair_mean": 0.9396159052848816,
+        "cos_pair_std": 0.0037657259963452816,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 31.30990219116211,
+        "delta_norm_std": 11.276090621948242,
+        "mean_norm_mean": 44.63542938232422,
+        "functional_signal": 0.7014585137367249,
+        "cos_pair_mean": 0.7294593453407288,
+        "cos_pair_std": 0.15865439176559448,
+        "n_pairs": 7
+      }
+    },
+    "14": {
+      "syntax": {
+        "delta_norm_mean": 20.869522094726562,
+        "delta_norm_std": 4.663681507110596,
+        "mean_norm_mean": 48.42024612426758,
+        "functional_signal": 0.4310081899166107,
+        "cos_pair_mean": 0.9041909575462341,
+        "cos_pair_std": 0.04170079529285431,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 13.377909660339355,
+        "delta_norm_std": 5.071416854858398,
+        "mean_norm_mean": 49.91888427734375,
+        "functional_signal": 0.2679929733276367,
+        "cos_pair_mean": 0.9572758674621582,
+        "cos_pair_std": 0.033471547067165375,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 17.85387420654297,
+        "delta_norm_std": 1.4578522443771362,
+        "mean_norm_mean": 49.6553840637207,
+        "functional_signal": 0.3595556616783142,
+        "cos_pair_mean": 0.9348909258842468,
+        "cos_pair_std": 0.011823468841612339,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 35.25827407836914,
+        "delta_norm_std": 11.219584465026855,
+        "mean_norm_mean": 46.36235427856445,
+        "functional_signal": 0.7604936361312866,
+        "cos_pair_mean": 0.6965683698654175,
+        "cos_pair_std": 0.14793798327445984,
+        "n_pairs": 7
+      }
+    },
+    "16": {
+      "syntax": {
+        "delta_norm_mean": 21.66925811767578,
+        "delta_norm_std": 3.40431809425354,
+        "mean_norm_mean": 54.48200607299805,
+        "functional_signal": 0.39773237705230713,
+        "cos_pair_mean": 0.9224958419799805,
+        "cos_pair_std": 0.024323683232069016,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 14.971110343933105,
+        "delta_norm_std": 6.2594428062438965,
+        "mean_norm_mean": 56.70553970336914,
+        "functional_signal": 0.26401495933532715,
+        "cos_pair_mean": 0.9570543169975281,
+        "cos_pair_std": 0.03680230304598808,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 18.72295570373535,
+        "delta_norm_std": 1.9947562217712402,
+        "mean_norm_mean": 55.83576583862305,
+        "functional_signal": 0.33532190322875977,
+        "cos_pair_mean": 0.94303959608078,
+        "cos_pair_std": 0.012753551825881004,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 39.051231384277344,
+        "delta_norm_std": 10.18879222869873,
+        "mean_norm_mean": 52.10595703125,
+        "functional_signal": 0.7494580745697021,
+        "cos_pair_mean": 0.7061396241188049,
+        "cos_pair_std": 0.12838630378246307,
+        "n_pairs": 7
+      }
+    },
+    "18": {
+      "syntax": {
+        "delta_norm_mean": 22.632888793945312,
+        "delta_norm_std": 2.2279794216156006,
+        "mean_norm_mean": 59.61967849731445,
+        "functional_signal": 0.37962111830711365,
+        "cos_pair_mean": 0.9284406304359436,
+        "cos_pair_std": 0.017872080206871033,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 16.703386306762695,
+        "delta_norm_std": 7.6747894287109375,
+        "mean_norm_mean": 62.22536087036133,
+        "functional_signal": 0.26843374967575073,
+        "cos_pair_mean": 0.9531805515289307,
+        "cos_pair_std": 0.043471064418554306,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 20.581369400024414,
+        "delta_norm_std": 2.4874651432037354,
+        "mean_norm_mean": 61.301025390625,
+        "functional_signal": 0.33574265241622925,
+        "cos_pair_mean": 0.9427779316902161,
+        "cos_pair_std": 0.014789633452892303,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 44.58710479736328,
+        "delta_norm_std": 9.333138465881348,
+        "mean_norm_mean": 57.167240142822266,
+        "functional_signal": 0.7799415588378906,
+        "cos_pair_mean": 0.6856452822685242,
+        "cos_pair_std": 0.11793459951877594,
+        "n_pairs": 7
+      }
+    },
+    "20": {
+      "syntax": {
+        "delta_norm_mean": 26.29351234436035,
+        "delta_norm_std": 1.5670487880706787,
+        "mean_norm_mean": 74.44880676269531,
+        "functional_signal": 0.35317572951316833,
+        "cos_pair_mean": 0.9392184615135193,
+        "cos_pair_std": 0.006863605231046677,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 18.210359573364258,
+        "delta_norm_std": 8.448161125183105,
+        "mean_norm_mean": 75.77449798583984,
+        "functional_signal": 0.24032306671142578,
+        "cos_pair_mean": 0.9617260098457336,
+        "cos_pair_std": 0.035832569003105164,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 23.635908126831055,
+        "delta_norm_std": 4.515959739685059,
+        "mean_norm_mean": 74.56424713134766,
+        "functional_signal": 0.31698715686798096,
+        "cos_pair_mean": 0.9484434723854065,
+        "cos_pair_std": 0.018898341804742813,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 51.213600158691406,
+        "delta_norm_std": 10.169981002807617,
+        "mean_norm_mean": 67.73655700683594,
+        "functional_signal": 0.7560703158378601,
+        "cos_pair_mean": 0.706028163433075,
+        "cos_pair_std": 0.10296181589365005,
+        "n_pairs": 7
+      }
+    },
+    "22": {
+      "syntax": {
+        "delta_norm_mean": 30.467321395874023,
+        "delta_norm_std": 1.418931245803833,
+        "mean_norm_mean": 91.91370391845703,
+        "functional_signal": 0.33147746324539185,
+        "cos_pair_mean": 0.9454340934753418,
+        "cos_pair_std": 0.008418811485171318,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 19.443758010864258,
+        "delta_norm_std": 8.516124725341797,
+        "mean_norm_mean": 89.9607162475586,
+        "functional_signal": 0.21613609790802002,
+        "cos_pair_mean": 0.9689755439758301,
+        "cos_pair_std": 0.028586633503437042,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 27.734664916992188,
+        "delta_norm_std": 6.035756587982178,
+        "mean_norm_mean": 90.57157135009766,
+        "functional_signal": 0.3062182068824768,
+        "cos_pair_mean": 0.9512311816215515,
+        "cos_pair_std": 0.01984044536948204,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 59.77786636352539,
+        "delta_norm_std": 13.066768646240234,
+        "mean_norm_mean": 83.06108856201172,
+        "functional_signal": 0.7196855545043945,
+        "cos_pair_mean": 0.7326240539550781,
+        "cos_pair_std": 0.10351397842168808,
+        "n_pairs": 7
+      }
+    },
+    "24": {
+      "syntax": {
+        "delta_norm_mean": 39.608646392822266,
+        "delta_norm_std": 1.0884891748428345,
+        "mean_norm_mean": 134.71224975585938,
+        "functional_signal": 0.2940240800380707,
+        "cos_pair_mean": 0.9574160575866699,
+        "cos_pair_std": 0.0026826183311641216,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 25.260950088500977,
+        "delta_norm_std": 11.491597175598145,
+        "mean_norm_mean": 130.3831024169922,
+        "functional_signal": 0.19374404847621918,
+        "cos_pair_mean": 0.9733598828315735,
+        "cos_pair_std": 0.026493696495890617,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 36.58967208862305,
+        "delta_norm_std": 8.508867263793945,
+        "mean_norm_mean": 133.80267333984375,
+        "functional_signal": 0.27345994114875793,
+        "cos_pair_mean": 0.9606581330299377,
+        "cos_pair_std": 0.016893599182367325,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 81.8232192993164,
+        "delta_norm_std": 22.776098251342773,
+        "mean_norm_mean": 126.44927978515625,
+        "functional_signal": 0.6470833420753479,
+        "cos_pair_mean": 0.776620090007782,
+        "cos_pair_std": 0.10713385790586472,
+        "n_pairs": 7
+      }
+    },
+    "26": {
+      "syntax": {
+        "delta_norm_mean": 46.09651184082031,
+        "delta_norm_std": 1.208966851234436,
+        "mean_norm_mean": 172.0812225341797,
+        "functional_signal": 0.2678764760494232,
+        "cos_pair_mean": 0.9643920063972473,
+        "cos_pair_std": 0.0019328417256474495,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 30.24859619140625,
+        "delta_norm_std": 14.679230690002441,
+        "mean_norm_mean": 163.4142303466797,
+        "functional_signal": 0.18510380387306213,
+        "cos_pair_mean": 0.9755368232727051,
+        "cos_pair_std": 0.02475595846772194,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 46.76824951171875,
+        "delta_norm_std": 10.461676597595215,
+        "mean_norm_mean": 171.093505859375,
+        "functional_signal": 0.2733490765094757,
+        "cos_pair_mean": 0.9611015319824219,
+        "cos_pair_std": 0.016086949035525322,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 102.15777587890625,
+        "delta_norm_std": 30.5231990814209,
+        "mean_norm_mean": 161.1490020751953,
+        "functional_signal": 0.6339336633682251,
+        "cos_pair_mean": 0.7860550284385681,
+        "cos_pair_std": 0.10744323581457138,
+        "n_pairs": 7
+      }
+    },
+    "28": {
+      "syntax": {
+        "delta_norm_mean": 55.78925704956055,
+        "delta_norm_std": 1.6693090200424194,
+        "mean_norm_mean": 220.6702880859375,
+        "functional_signal": 0.2528172433376312,
+        "cos_pair_mean": 0.9683302044868469,
+        "cos_pair_std": 0.0019264271249994636,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 39.39315414428711,
+        "delta_norm_std": 20.336599349975586,
+        "mean_norm_mean": 204.3537139892578,
+        "functional_signal": 0.19276945292949677,
+        "cos_pair_mean": 0.9735048413276672,
+        "cos_pair_std": 0.02745121903717518,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 61.148128509521484,
+        "delta_norm_std": 15.23556900024414,
+        "mean_norm_mean": 219.96998596191406,
+        "functional_signal": 0.27798396348953247,
+        "cos_pair_mean": 0.9600086212158203,
+        "cos_pair_std": 0.0176338329911232,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 133.7587127685547,
+        "delta_norm_std": 45.78815460205078,
+        "mean_norm_mean": 206.56137084960938,
+        "functional_signal": 0.6475495100021362,
+        "cos_pair_mean": 0.7782702445983887,
+        "cos_pair_std": 0.11744856089353561,
+        "n_pairs": 7
+      }
+    },
+    "30": {
+      "syntax": {
+        "delta_norm_mean": 71.02999114990234,
+        "delta_norm_std": 0.7941510081291199,
+        "mean_norm_mean": 301.7956237792969,
+        "functional_signal": 0.23535792529582977,
+        "cos_pair_mean": 0.9724535942077637,
+        "cos_pair_std": 0.00242816936224699,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 52.40871047973633,
+        "delta_norm_std": 26.31699562072754,
+        "mean_norm_mean": 273.5546569824219,
+        "functional_signal": 0.191584050655365,
+        "cos_pair_mean": 0.9737076759338379,
+        "cos_pair_std": 0.027206972241401672,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 76.46786499023438,
+        "delta_norm_std": 18.928129196166992,
+        "mean_norm_mean": 295.6080017089844,
+        "functional_signal": 0.25867995619773865,
+        "cos_pair_mean": 0.9653390049934387,
+        "cos_pair_std": 0.01497993990778923,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 166.33494567871094,
+        "delta_norm_std": 55.809139251708984,
+        "mean_norm_mean": 286.63397216796875,
+        "functional_signal": 0.5803043842315674,
+        "cos_pair_mean": 0.822626531124115,
+        "cos_pair_std": 0.09195637702941895,
+        "n_pairs": 7
+      }
+    },
+    "32": {
+      "syntax": {
+        "delta_norm_mean": 89.614013671875,
+        "delta_norm_std": 4.520604610443115,
+        "mean_norm_mean": 400.3001403808594,
+        "functional_signal": 0.22386705875396729,
+        "cos_pair_mean": 0.9751465320587158,
+        "cos_pair_std": 0.0032768030650913715,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 69.1968002319336,
+        "delta_norm_std": 36.77547073364258,
+        "mean_norm_mean": 369.630615234375,
+        "functional_signal": 0.1872052699327469,
+        "cos_pair_mean": 0.9744203090667725,
+        "cos_pair_std": 0.027259400114417076,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 97.01720428466797,
+        "delta_norm_std": 24.496196746826172,
+        "mean_norm_mean": 397.6702880859375,
+        "functional_signal": 0.24396392703056335,
+        "cos_pair_mean": 0.9691844582557678,
+        "cos_pair_std": 0.01335893664509058,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 196.96633911132812,
+        "delta_norm_std": 59.5871696472168,
+        "mean_norm_mean": 380.33258056640625,
+        "functional_signal": 0.5178791880607605,
+        "cos_pair_mean": 0.8579416275024414,
+        "cos_pair_std": 0.07172290980815887,
+        "n_pairs": 7
+      }
+    },
+    "34": {
+      "syntax": {
+        "delta_norm_mean": 115.51897430419922,
+        "delta_norm_std": 7.615684986114502,
+        "mean_norm_mean": 621.5165405273438,
+        "functional_signal": 0.18586629629135132,
+        "cos_pair_mean": 0.9827136993408203,
+        "cos_pair_std": 0.0028193045873194933,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 102.9593505859375,
+        "delta_norm_std": 58.69595718383789,
+        "mean_norm_mean": 576.8102416992188,
+        "functional_signal": 0.1784977912902832,
+        "cos_pair_mean": 0.9767807126045227,
+        "cos_pair_std": 0.02523060142993927,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 126.46722412109375,
+        "delta_norm_std": 32.2102165222168,
+        "mean_norm_mean": 610.6514892578125,
+        "functional_signal": 0.20710213482379913,
+        "cos_pair_mean": 0.9773507118225098,
+        "cos_pair_std": 0.010703478939831257,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 241.3828887939453,
+        "delta_norm_std": 65.0497817993164,
+        "mean_norm_mean": 594.7999267578125,
+        "functional_signal": 0.4058219790458679,
+        "cos_pair_mean": 0.9136156439781189,
+        "cos_pair_std": 0.04080270975828171,
+        "n_pairs": 7
+      }
+    },
+    "35": {
+      "syntax": {
+        "delta_norm_mean": 166.92218017578125,
+        "delta_norm_std": 47.86571502685547,
+        "mean_norm_mean": 769.2959594726562,
+        "functional_signal": 0.216980442404747,
+        "cos_pair_mean": 0.9834442734718323,
+        "cos_pair_std": 0.0035863383673131466,
+        "n_pairs": 3
+      },
+      "semantic": {
+        "delta_norm_mean": 118.88314056396484,
+        "delta_norm_std": 63.84897232055664,
+        "mean_norm_mean": 716.345458984375,
+        "functional_signal": 0.16595783829689026,
+        "cos_pair_mean": 0.980783224105835,
+        "cos_pair_std": 0.020349519327282906,
+        "n_pairs": 3
+      },
+      "polarity": {
+        "delta_norm_mean": 155.5521697998047,
+        "delta_norm_std": 43.9381103515625,
+        "mean_norm_mean": 706.892822265625,
+        "functional_signal": 0.22005057334899902,
+        "cos_pair_mean": 0.9777130484580994,
+        "cos_pair_std": 0.008598297834396362,
+        "n_pairs": 3
+      },
+      "logic": {
+        "delta_norm_mean": 269.2703552246094,
+        "delta_norm_std": 65.58361053466797,
+        "mean_norm_mean": 647.4534301757812,
+        "functional_signal": 0.41589146852493286,
+        "cos_pair_mean": 0.9138664603233337,
+        "cos_pair_std": 0.037750206887722015,
+        "n_pairs": 7
+      }
+    }
+  },
+  "P891_linear_separability": {
+    "0": {
+      "syntax": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 1.0,
+        "pca_5var_explained": 0.9999999403953552,
+        "n_samples": 6
+      },
+      "semantic": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 1.0,
+        "pca_5var_explained": 0.9999999403953552,
+        "n_samples": 6
+      },
+      "polarity": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 1.0,
+        "pca_5var_explained": 1.0,
+        "n_samples": 6
+      },
+      "logic": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 0.7142857142857143,
+        "pca_5var_explained": 0.714677095413208,
+        "n_samples": 14
+      }
+    },
+    "9": {
+      "syntax": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 1.0,
+        "pca_5var_explained": 1.0000001192092896,
+        "n_samples": 6
+      },
+      "semantic": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 1.0,
+        "pca_5var_explained": 0.9999999403953552,
+        "n_samples": 6
+      },
+      "polarity": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 1.0,
+        "pca_5var_explained": 1.0,
+        "n_samples": 6
+      },
+      "logic": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 0.6428571428571429,
+        "pca_5var_explained": 0.6777201294898987,
+        "n_samples": 14
+      }
+    },
+    "18": {
+      "syntax": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 1.0,
+        "pca_5var_explained": 1.0,
+        "n_samples": 6
+      },
+      "semantic": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 1.0,
+        "pca_5var_explained": 1.0,
+        "n_samples": 6
+      },
+      "polarity": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 1.0,
+        "pca_5var_explained": 1.0,
+        "n_samples": 6
+      },
+      "logic": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 0.5714285714285714,
+        "pca_5var_explained": 0.6502119302749634,
+        "n_samples": 14
+      }
+    },
+    "27": {
+      "syntax": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 1.0,
+        "pca_5var_explained": 1.0,
+        "n_samples": 6
+      },
+      "semantic": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 1.0,
+        "pca_5var_explained": 1.0,
+        "n_samples": 6
+      },
+      "polarity": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 1.0,
+        "pca_5var_explained": 0.9999999403953552,
+        "n_samples": 6
+      },
+      "logic": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 0.7142857142857143,
+        "pca_5var_explained": 0.6846069097518921,
+        "n_samples": 14
+      }
+    },
+    "35": {
+      "syntax": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 1.0,
+        "pca_5var_explained": 1.0,
+        "n_samples": 6
+      },
+      "semantic": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 1.0,
+        "pca_5var_explained": 1.0,
+        "n_samples": 6
+      },
+      "polarity": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 1.0,
+        "pca_5var_explained": 0.9999998807907104,
+        "n_samples": 6
+      },
+      "logic": {
+        "accuracy_full": 1.0,
+        "accuracy_pca5": 0.6428571428571429,
+        "pca_5var_explained": 0.6980094909667969,
+        "n_samples": 14
+      }
+    }
+  },
+  "P892_cross_function_orthogonality": {
+    "0": {
+      "syntax_vs_semantic": {
+        "cos": -0.028354914858937263,
+        "orthogonality": 0.9716450572013855
+      },
+      "syntax_vs_polarity": {
+        "cos": -0.05004240572452545,
+        "orthogonality": 0.9499576091766357
+      },
+      "syntax_vs_logic": {
+        "cos": -0.020579757168889046,
+        "orthogonality": 0.9794202446937561
+      },
+      "semantic_vs_polarity": {
+        "cos": -0.0009001411381177604,
+        "orthogonality": 0.999099850654602
+      },
+      "semantic_vs_logic": {
+        "cos": 0.03116077184677124,
+        "orthogonality": 0.9688392281532288
+      },
+      "polarity_vs_logic": {
+        "cos": -0.016491034999489784,
+        "orthogonality": 0.9835089445114136
+      }
+    },
+    "9": {
+      "syntax_vs_semantic": {
+        "cos": 0.005134375765919685,
+        "orthogonality": 0.9948655962944031
+      },
+      "syntax_vs_polarity": {
+        "cos": -0.016637498512864113,
+        "orthogonality": 0.9833624958992004
+      },
+      "syntax_vs_logic": {
+        "cos": 0.035744767636060715,
+        "orthogonality": 0.9642552137374878
+      },
+      "semantic_vs_polarity": {
+        "cos": -0.012721509672701359,
+        "orthogonality": 0.9872784614562988
+      },
+      "semantic_vs_logic": {
+        "cos": 0.049544088542461395,
+        "orthogonality": 0.950455904006958
+      },
+      "polarity_vs_logic": {
+        "cos": -0.008882792666554451,
+        "orthogonality": 0.9911171793937683
+      }
+    },
+    "18": {
+      "syntax_vs_semantic": {
+        "cos": 0.07531464099884033,
+        "orthogonality": 0.9246853590011597
+      },
+      "syntax_vs_polarity": {
+        "cos": 0.006733538117259741,
+        "orthogonality": 0.9932664632797241
+      },
+      "syntax_vs_logic": {
+        "cos": 0.11829933524131775,
+        "orthogonality": 0.8817006349563599
+      },
+      "semantic_vs_polarity": {
+        "cos": 0.0039649647660553455,
+        "orthogonality": 0.9960350394248962
+      },
+      "semantic_vs_logic": {
+        "cos": 0.040922559797763824,
+        "orthogonality": 0.9590774178504944
+      },
+      "polarity_vs_logic": {
+        "cos": 0.06308162212371826,
+        "orthogonality": 0.9369183778762817
+      }
+    },
+    "27": {
+      "syntax_vs_semantic": {
+        "cos": -0.029337171465158463,
+        "orthogonality": 0.9706628322601318
+      },
+      "syntax_vs_polarity": {
+        "cos": 0.04513828456401825,
+        "orthogonality": 0.9548617005348206
+      },
+      "syntax_vs_logic": {
+        "cos": 0.02144736424088478,
+        "orthogonality": 0.9785526394844055
+      },
+      "semantic_vs_polarity": {
+        "cos": -0.005738159641623497,
+        "orthogonality": 0.9942618608474731
+      },
+      "semantic_vs_logic": {
+        "cos": 0.05626874417066574,
+        "orthogonality": 0.9437312483787537
+      },
+      "polarity_vs_logic": {
+        "cos": -0.029410172253847122,
+        "orthogonality": 0.970589816570282
+      }
+    },
+    "35": {
+      "syntax_vs_semantic": {
+        "cos": -0.3511907160282135,
+        "orthogonality": 0.6488093137741089
+      },
+      "syntax_vs_polarity": {
+        "cos": 0.4169159233570099,
+        "orthogonality": 0.5830841064453125
+      },
+      "syntax_vs_logic": {
+        "cos": 0.10705922544002533,
+        "orthogonality": 0.8929407596588135
+      },
+      "semantic_vs_polarity": {
+        "cos": -0.21429108083248138,
+        "orthogonality": 0.7857089042663574
+      },
+      "semantic_vs_logic": {
+        "cos": -0.005482899025082588,
+        "orthogonality": 0.9945170879364014
+      },
+      "polarity_vs_logic": {
+        "cos": 0.06750616431236267,
+        "orthogonality": 0.9324938058853149
+      }
+    }
+  },
+  "composite_signals": {
+    "0": {
+      "syntax": 0.1711655855178833,
+      "semantic": 0.08090046793222427,
+      "polarity": 0.15541544556617737,
+      "logic": 0.7005786895751953,
+      "logic_vs_attr_ratio": 5.157868697841396,
+      "attr_mean": 0.13582716633876166
+    },
+    "2": {
+      "syntax": 0.21205833554267883,
+      "semantic": 0.08680729568004608,
+      "polarity": 0.19810490310192108,
+      "logic": 0.7744770646095276,
+      "logic_vs_attr_ratio": 4.675189037084443,
+      "attr_mean": 0.165656844774882
+    },
+    "4": {
+      "syntax": 0.25959450006484985,
+      "semantic": 0.11931578069925308,
+      "polarity": 0.1943948119878769,
+      "logic": 0.7216450572013855,
+      "logic_vs_attr_ratio": 3.776235723307518,
+      "attr_mean": 0.19110169758399329
+    },
+    "6": {
+      "syntax": 0.34474506974220276,
+      "semantic": 0.19848455488681793,
+      "polarity": 0.2584594190120697,
+      "logic": 0.6849703192710876,
+      "logic_vs_attr_ratio": 2.563226944552369,
+      "attr_mean": 0.2672296812136968
+    },
+    "8": {
+      "syntax": 0.3957991898059845,
+      "semantic": 0.23123043775558472,
+      "polarity": 0.3395620584487915,
+      "logic": 0.7426813840866089,
+      "logic_vs_attr_ratio": 2.3050520550783475,
+      "attr_mean": 0.32219722867012024
+    },
+    "10": {
+      "syntax": 0.3746870756149292,
+      "semantic": 0.27417120337486267,
+      "polarity": 0.35553911328315735,
+      "logic": 0.697130024433136,
+      "logic_vs_attr_ratio": 2.0822336750263726,
+      "attr_mean": 0.3347991307576497
+    },
+    "12": {
+      "syntax": 0.3888448476791382,
+      "semantic": 0.271028071641922,
+      "polarity": 0.3493046164512634,
+      "logic": 0.7014585137367249,
+      "logic_vs_attr_ratio": 2.0852381930991912,
+      "attr_mean": 0.33639251192410785
+    },
+    "14": {
+      "syntax": 0.4310081899166107,
+      "semantic": 0.2679929733276367,
+      "polarity": 0.3595556616783142,
+      "logic": 0.7604936361312866,
+      "logic_vs_attr_ratio": 2.155274855991563,
+      "attr_mean": 0.3528522749741872
+    },
+    "16": {
+      "syntax": 0.39773237705230713,
+      "semantic": 0.26401495933532715,
+      "polarity": 0.33532190322875977,
+      "logic": 0.7494580745697021,
+      "logic_vs_attr_ratio": 2.2549830386645278,
+      "attr_mean": 0.33235641320546466
+    },
+    "18": {
+      "syntax": 0.37962111830711365,
+      "semantic": 0.26843374967575073,
+      "polarity": 0.33574265241622925,
+      "logic": 0.7799415588378906,
+      "logic_vs_attr_ratio": 2.378360005994408,
+      "attr_mean": 0.3279325067996979
+    },
+    "20": {
+      "syntax": 0.35317572951316833,
+      "semantic": 0.24032306671142578,
+      "polarity": 0.31698715686798096,
+      "logic": 0.7560703158378601,
+      "logic_vs_attr_ratio": 2.4912091612279452,
+      "attr_mean": 0.303495317697525
+    },
+    "22": {
+      "syntax": 0.33147746324539185,
+      "semantic": 0.21613609790802002,
+      "polarity": 0.3062182068824768,
+      "logic": 0.7196855545043945,
+      "logic_vs_attr_ratio": 2.528667524844816,
+      "attr_mean": 0.2846105893452962
+    },
+    "24": {
+      "syntax": 0.2940240800380707,
+      "semantic": 0.19374404847621918,
+      "polarity": 0.27345994114875793,
+      "logic": 0.6470833420753479,
+      "logic_vs_attr_ratio": 2.5501556019673894,
+      "attr_mean": 0.2537426898876826
+    },
+    "26": {
+      "syntax": 0.2678764760494232,
+      "semantic": 0.18510380387306213,
+      "polarity": 0.2733490765094757,
+      "logic": 0.6339336633682251,
+      "logic_vs_attr_ratio": 2.6183727440773303,
+      "attr_mean": 0.24210978547732034
+    },
+    "28": {
+      "syntax": 0.2528172433376312,
+      "semantic": 0.19276945292949677,
+      "polarity": 0.27798396348953247,
+      "logic": 0.6475495100021362,
+      "logic_vs_attr_ratio": 2.684808323570954,
+      "attr_mean": 0.2411902199188868
+    },
+    "30": {
+      "syntax": 0.23535792529582977,
+      "semantic": 0.191584050655365,
+      "polarity": 0.25867995619773865,
+      "logic": 0.5803043842315674,
+      "logic_vs_attr_ratio": 2.539173662718442,
+      "attr_mean": 0.22854064404964447
+    },
+    "32": {
+      "syntax": 0.22386705875396729,
+      "semantic": 0.1872052699327469,
+      "polarity": 0.24396392703056335,
+      "logic": 0.5178791880607605,
+      "logic_vs_attr_ratio": 2.3718344604926,
+      "attr_mean": 0.21834541857242584
+    },
+    "34": {
+      "syntax": 0.18586629629135132,
+      "semantic": 0.1784977912902832,
+      "polarity": 0.20710213482379913,
+      "logic": 0.4058219790458679,
+      "logic_vs_attr_ratio": 2.1304250179704547,
+      "attr_mean": 0.19048874080181122
+    },
+    "35": {
+      "syntax": 0.216980442404747,
+      "semantic": 0.16595783829689026,
+      "polarity": 0.22005057334899902,
+      "logic": 0.41589146852493286,
+      "logic_vs_attr_ratio": 2.0691500302093884,
+      "attr_mean": 0.20099628468354544
+    }
+  }
+}
