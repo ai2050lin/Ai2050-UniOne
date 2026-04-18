@@ -35,7 +35,7 @@ MODEL_CONFIGS = {
         "mlp_type": "merged_gate_up",  # gate_up_proj 合并
     },
     "deepseek7b": {
-        "path": "D:/develop/model/hub/models--deepseek-ai--DeepSeek-R1-Distill-Qwen-7B/snapshots/916b56a44061fd5cd7d6a8fb632557ed4f724f60",
+        "path": "D:/develop/model/hub/modelscope_cache/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
         "arch": "Qwen2ForCausalLM",
         "mlp_type": "split_gate_up",  # gate_proj + up_proj 分开
     },
