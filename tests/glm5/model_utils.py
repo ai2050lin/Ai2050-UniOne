@@ -30,7 +30,7 @@ MODEL_CONFIGS = {
         "mlp_type": "split_gate_up",  # gate_proj + up_proj 分开
     },
     "glm4": {
-        "path": "D:/develop/model/hub/models--zai-org--GLM-4-9B-Chat-HF/snapshots/8599336fc6c125203efb2360bfaf4c80eef1d1bf",
+        "path": "D:/develop/model/hub/modelscope_cache/ZhipuAI/glm-4-9b-chat-hf",
         "arch": "GlmForCausalLM",  # 也可能是Glm4ForCausalLM
         "mlp_type": "merged_gate_up",  # gate_up_proj 合并
     },

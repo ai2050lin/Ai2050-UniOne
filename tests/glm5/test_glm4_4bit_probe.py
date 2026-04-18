@@ -28,7 +28,7 @@ from datetime import datetime
 sys.path.insert(0, r'd:\Ai2050\TransformerLens-Project')
 
 # ===== 配置 =====
-GLM4_MODEL_PATH = r'D:\develop\model\hub\models--zai-org--glm-4-9b-chat-hf\snapshots\8599336fc6c125203efb2360bfaf4c80eef1d1bf'
+GLM4_MODEL_PATH = r'D:\develop\model\hub\modelscope_cache\ZhipuAI\glm-4-9b-chat-hf'
 QWEN3_MODEL_PATH = r'D:\develop\model\hub\models--Qwen--Qwen3-4B\snapshots\1cfa9a7208912126459214e8b04321603b3df60c'
 RESULTS_DIR = r'd:\Ai2050\TransformerLens-Project\results\phase_glm4_4bit_probe'
 

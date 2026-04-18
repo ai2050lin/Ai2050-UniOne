@@ -615,3 +615,1294 @@
 - 功能方向删除效果≤随机方向
 - 注意力是"信息路由器"而非"功能编码器"
 - 功能信息主要通过残差连接传播
+
+---
+
+## 十一、GEMINI路线独有测试（DeepSeek-R1-1.5B为主）
+
+> 以下测试来自 AGI_GEMINI_MEMO.md，主要使用 DeepSeek-R1-Distill-Qwen-1.5B 模型，部分扩展到 GPT-2 和 Qwen3-4B
+
+### 测试34：HRR全息循环卷积降维验证
+
+- **测试目标**：验证全息循环卷积(HRR)能否在真实LLM维度(4096维)下保持高保真提取
+- **脚本**：`tests/codex/test_holographic_synchrony.py`, `tests/codex/test_hrr_capacity_regime_scan.py`
+- **模型**：Qwen-4B尺度模拟
+- **测试结果**：
+
+| 指标 | 数值 |
+|------|------|
+| 隐层维度 | 4096 |
+| 5层绑定后维度 | 4096(0膨胀) |
+| 正确键回忆率 | 17.38% |
+| 邻近键串扰率 | ~0.94% |
+| 错误键残留 | -0.3%(正交排斥) |
+| d=4096,M=50误差 | 饱和(长上下文容量硬限) |
+
+- **评估**：HRR可在固定维度内完成多特征绑定，但d=4096时M≥50误差饱和，长上下文需分层清理机制
+
+### 测试35：苹果四特征正交探针（颜色/大小/文字/声音）
+
+- **测试目标**：验证苹果概念的多特征维度是否近正交分解
+- **脚本**：`tests/codex/test_apple_multifeature_orthogonality.py`
+- **模型**：DeepSeek-R1-Distill-Qwen-1.5B
+- **测试结果**：
+
+| 指标 | 数值 | 含义 |
+|------|------|------|
+| mean_abs_pairwise_cosine | 0.0377 | 近正交(越小越好) |
+| mean_signature_jaccard | 0.0016 | 极低串扰 |
+| mean_principal_orthogonality | 0.8595 | 86%正交 |
+| axis_identifiability_accuracy | 1.0000 | 完美识别 |
+| compositional_r2 | 0.1426 | 严格线性不可加 |
+| controlled_additive_cosine | 0.7171 | 方向有对齐 |
+
+- **评估**："多特征近正交分解"成立(证据强)，但"严格线性叠加还原"不成立，应为**近正交轴+非线性门控绑定**
+
+### 测试36：苹果甜度最小神经元知识改写
+
+- **测试目标**：翻转"红苹果→甜/绿苹果→酸"需要多少神经元
+- **脚本**：`tests/codex/test_minimal_neuron_knowledge_flip.py`
+- **模型**：合成空间实验
+- **测试结果**：
+
+| 编码体制 | 达到翻转的k | 锚点保真率 |
+|----------|-----------|-----------|
+| 可分解(Disentangled) | k=2 | 1.00 |
+| 强混合(Entangled) | k=24 | 0.95 |
+| 强混合(Entangled) | k=30 | 1.00 |
+
+- **评估**："少量神经元可改写"取决于表示局部性/解耦度，不是普适定律
+
+### 测试37：真实模型通道级甜度干预
+
+- **测试目标**：在真实DeepSeek-1.5B中通过通道干预翻转甜度判断
+- **脚本**：`tests/codex/test_real_model_apple_sweetness_channel_edit.py`
+- **模型**：DeepSeek-R1-Distill-Qwen-1.5B
+- **测试结果**：
+
+| 指标 | 数值 |
+|------|------|
+| 基线甜度差Δ₀ | 2.3279 |
+| 最优干预层 | L27 |
+| 最优k | 64 |
+| 最优scale | -4.0 |
+| 反转后gap | -0.0617 |
+| pair_flip_rate | 0.6667 |
+| anchor_retention | 0.8333 |
+
+- **评估**：真实模型中可通过有限通道干预实现关系反转，但需要k=64规模，远大于"改2-3个神经元"
+
+### 测试38：概念族统一码本（水果/动物/随机控制）
+
+- **测试目标**：验证三类概念是否共享同一套编码字典
+- **脚本**：`tests/codex/test_concept_family_unified_codebook.py`
+- **模型**：DeepSeek-R1-Distill-Qwen-1.5B
+- **测试结果**：
+
+| 指标 | 数值 |
+|------|------|
+| 水果族子空间margin | 0.6038 |
+| 动物族子空间margin | 0.6417 |
+| 水果/动物共享维Jaccard | 0.0000 |
+| 苹果对水果共享基底overlap | 0.0769 |
+| H1_fruit_shared_basis_exists | PASS |
+| H2_animal_shared_basis_exists | PASS |
+| H3_family_subspace_margin_positive | PASS |
+| H4_fruit_vs_animal_separable | PASS |
+
+- **评估**：水果族和动物族各自存在真实共享编码骨架，但两族骨架几乎完全分离，支持"共享锚点+特异偏移"编码
+
+### 测试39：类别词抽象提升算子
+
+- **测试目标**：验证不同类别族(fruit/animal/vehicle/object)的"成员→类别词"提升是否共享通用算子
+- **脚本**：`tests/codex/test_category_abstraction_bridge.py`
+- **模型**：DeepSeek-R1-Distill-Qwen-1.5B
+- **测试结果**：
+
+| 指标 | 数值 |
+|------|------|
+| fruit_animal_lift_alignment | 0.7271 |
+| within_concrete_same_level_alignment | 0.7098 |
+| cross_mix_alignment | 0.7084 |
+| mean_abs_pairwise_lift_alignment | 0.7147 |
+| mean_lift_norm_ratio | 0.3449 |
+| H1_fruit_animal_share_abstraction_pattern | PASS |
+| H2_meta_category_shared_dims_exist | PASS |
+| H3_abstraction_lift_nontrivial | PASS |
+
+- **评估**：**类别词 = 成员原型骨架 + 抽象提升偏移**。不同类别族的提升向量高度对齐(0.71+)，说明存在通用的"类别化算子"
+
+### 测试40：抽象阶梯（实例→类别→抽象系统）
+
+- **测试目标**：验证三级抽象提升(实例→类别→抽象系统)是否存在及其机制
+- **脚本**：`tests/codex/test_abstraction_ladder_hierarchy.py`
+- **模型**：DeepSeek-R1-Distill-Qwen-1.5B
+- **测试结果**：
+
+| 指标 | 数值 |
+|------|------|
+| lift1_lift2_alignment | **-0.2446** |
+| shared_abstract_dim_count | 128 |
+| entity_mean_proj | 180.67 |
+| category_mean_proj | 382.55 |
+| abstract_mean_proj | 537.72 |
+| H1_second_order_abstraction_alignment | **FAIL** |
+| H2_projection_ladder_monotonic | PASS |
+| H3_shared_abstract_system_dims_exist | PASS |
+
+- **评估**：**抽象阶梯存在**(沿全局抽象轴严格单调上升)，但第二级抽象不是第一级的简单重复(lift1和lift2方向负对齐-0.2446)，不同抽象层使用不同子机制
+
+### 测试41：抽象阶梯的注意力路由职责分化
+
+- **测试目标**：验证"实例→类别"和"类别→抽象系统"两种抽象提升是否由不同注意力头承担
+- **脚本**：基于DeepSeek-1.5B的全头消融扫描
+- **模型**：DeepSeek-R1-Distill-Qwen-1.5B
+- **测试结果**：
+
+| 指标 | 数值 |
+|------|------|
+| 扫描头数 | 336 |
+| base_gap_instance_to_category | 56.3728 |
+| base_gap_category_to_abstract | 63.8050 |
+| top20_overlap_jaccard | **0.1111** |
+| mean_collapse_lift1 | 0.1627 |
+| mean_collapse_lift2 | -0.0536 |
+| specialized_head_count(偏好≥0.35) | 257 |
+
+**两类代表性头**：
+
+| 类型 | 代表头 | collapse值 |
+|------|--------|-----------|
+| 实例→类别 | (L0,H6) | collapse_lift1=3.9988 |
+| 实例→类别 | (L1,H4) | collapse_lift1=3.6301 |
+| 类别→抽象 | (L10,H8) | collapse_lift2=2.3499 |
+| 类别→抽象 | (L16,H6) | collapse_lift2=2.0250 |
+
+- **评估**：两种抽象提升使用不同批次的注意力头(Jaccard仅0.11)，**注意力头存在职责分化的结构路由**：浅层头偏向"实例→类别"，中层头偏向"类别→抽象系统"
+
+---
+
+## 十二、GPT5路线独有测试（DeepSeek7B+DeepSeek14B为主）
+
+> 以下测试来自 AGI_GPT5_MEMO.md，主要使用 DeepSeek7B 和 DeepSeek-R1-14B 模型
+
+### 测试42：DeepSeek7B Stage2-5因果回路搜索
+
+- **测试目标**：在DeepSeek7B中执行5阶段因果回路搜索，从概念族聚焦→因果闭合→最小子电路→读出耦合
+- **脚本**：`tests/codex/deepseek7b_stage4_minimal_circuit_search.py`, `tests/codex/deepseek7b_stage5_readout_coupled_search.py`
+- **模型**：DeepSeek7B
+- **测试结果**：
+
+| 阶段 | 关键指标 | 数值 |
+|------|---------|------|
+| Stage2(族聚焦) | family_count | 4 |
+| Stage3(因果闭合) | family_count | 4 |
+| Stage4(最小子电路) | mean_margin_adv_vs_random(去偏前) | -0.0029 |
+| Stage4(最小子电路) | mean_margin_adv_vs_random(去偏后) | **+0.0009** |
+| Stage4(最小子电路) | mean_category_adv_vs_random(去偏后) | +0.000014 |
+| Stage5(读出耦合-mixed) | positive_micro_circuit_count | 5 |
+| Stage5(读出耦合-mixed) | mean_candidate_full_joint_adv | 0.0893 |
+| Stage5(读出耦合-prototype) | candidate_count | 2 |
+| Stage5(读出耦合-prototype) | mean_candidate_full_joint_adv | **0.1763** |
+| Stage5(读出耦合-instance) | candidate_count | 6 |
+| Stage5(读出耦合-instance) | mean_candidate_full_joint_adv | 0.1258 |
+| Stage5(去偏+类别覆盖) | positive_micro_circuit_count | 10 |
+
+- **评估**：
+  - Stage4去公共尾带后均值终于转正(从-0.0029→+0.0009)
+  - Prototype通道(0.1763)比Instance通道(0.1258)更强，但prototype几乎只剩animal类
+  - **关键硬伤**：跨类别联合分解尚未完成，原型核被animal垄断
+
+### 测试43：DeepSeek-R1-14B ICSPB行为测试
+
+- **测试目标**：测试DeepSeek14B在ICSPB理论预测的6种行为上的表现
+- **脚本**：`tests/codex/stage235-256_deepseek14b_*.py`
+- **模型**：DeepSeek-R1-14B (通过Ollama CLI)
+- **测试结果**：
+
+| Stage | 测试内容 | 分数 | 正确率 |
+|-------|---------|------|--------|
+| 238 | 直测处理链 | 1.0 | 4/4 |
+| 241 | 长链复杂处理 | 1.0 | 6/6 |
+| 244 | 高压长链 | 1.0 | 8/8 |
+| 247 | 大模板长链 | 0.9167 | 11/12 |
+| 250 | 高竞争保真 | 0.5 | 4/8 |
+| 256 | 多方向翻译 | 0.75 | 3/4 |
+
+- **评估**：直测/长链/高压长链满分，但高竞争保真偏低(0.5)，跨模型对比中DeepSeek14B在行为维度最弱、在参数原则维度最强
+
+### 测试44：GLM-4-9B 4-bit量化探针测试
+
+- **测试目标**：验证4-bit量化后GLM4的功能编码是否仍然完整
+- **脚本**：`tests/glm5/test_glm4_4bit_probe.py`
+- **模型**：GLM-4-9B-Chat-HF (4-bit NF4), Qwen3-4B (FP16)
+- **测试结果**：
+
+**Emotion (happy vs sad)**:
+
+| 层 | GLM-4 cos | GLM-4 delta | Qwen3 cos | Qwen3 delta |
+|----|-----------|-------------|-----------|-------------|
+| L0 | 0.943 | 0.12 | 0.972 | 2.55 |
+| L~10 | 0.899 | 1.68 | 0.943 | 13.76 |
+| L~20 | 0.942 | 4.12 | 0.958 | 17.42 |
+| L~30 | 0.974 | 12.82 | 0.979 | 37.44 |
+| L_last | 0.973 | 48.53 | 0.988 | 103.23 |
+
+**Animal (cat vs dog)**:
+
+| 层 | GLM-4 cos | GLM-4 delta |
+|----|-----------|-------------|
+| L0 | 0.995 | 0.05 |
+| L~20 | 0.859 | 5.90 |
+| L_last | 0.871 | 114.48 |
+
+**Logic (causal vs reverse)**:
+
+| 层 | GLM-4 cos | GLM-4 delta |
+|----|-----------|-------------|
+| L0 | 0.189 | 0.72 |
+| L~20 | 0.346 | 13.51 |
+| L_last | 0.806 | 140.92 |
+
+- **评估**：
+  - 4-bit量化未破坏功能编码，探针信号模式与FP16一致
+  - GLM4残差流范数远小于Qwen3(GLM4 L0 norm=0.34 vs Qwen3=10.27，30倍差异)
+  - 逻辑对最显著：cos最低(0.189→0.806)、delta最大
+  - Animal对GLM4的L_last cos=0.871反常低
+
+---
+
+## 十三、跨路线核心结论对照
+
+### 1. 三路线对"概念编码结构"的共识
+
+| 维度 | GLM5路线 | GEMINI路线 | GPT5路线 |
+|------|---------|-----------|---------|
+| 编码基本单元 | 基底+偏移(B+b) | 共享骨架+特异偏移 | 原型核+实例偏移 |
+| 家族共享结构 | intra<inter | 水果/动物各自共享 | prototype=0.1763 |
+| 正交性 | 门控路由正交 | 多特征86%正交 | - |
+| 非线性 | FFN旋转器97%+ | 非线性门控绑定 | Stage5耦合 |
+
+### 2. 三路线对"抽象机制"的共识
+
+| 维度 | GLM5路线 | GEMINI路线 | GPT5路线 |
+|------|---------|-----------|---------|
+| 抽象层级 | 深层编码策略三分 | 三级抽象阶梯(实例→类别→抽象) | 原型/实例双通道 |
+| 提升算子 | 黄金层+信息瓶颈 | 类别化算子(0.72对齐) | prototype lane |
+| 注意力角色 | 路由器非编码器 | 多相位路由职责分化 | - |
+| 非单一lift | 深层翻译信号分化 | lift1和lift2负对齐(-0.24) | prototype≠instance |
+
+### 3. 三路线对"因果可干预性"的共识
+
+| 维度 | GLM5路线 | GEMINI路线 | GPT5路线 |
+|------|---------|-----------|---------|
+| 可编辑性 | 因果干预有效 | k=64可翻转甜度 | Stage4去偏后转正 |
+| 局限性 | 逻辑信号恢复率低 | 非普适，取决于解耦度 | 跨类别联合分解未完成 |
+| 逻辑"暗物质" | 逻辑信号被稀释 | 非线性交互不可忽略 | prototype被animal垄断 |
+
+### 4. 尚未解决的问题（跨路线共同硬伤）
+
+1. **ICSPB仍是经验框架**：不是闭式定理系统，R2=0.38远不够
+2. **跨类别闭合缺失**：所有路线都只在animal/fruit等少数类别验证
+3. **逻辑信号的几何性质未定量**：选择性稀释机制尚未跨模型验证
+4. **组合非线性未精确化**：HRR绑定+非线性门控的具体形式未确定
+5. **从分析到合成的鸿沟**：所有结果都是分析性拆解，尚未组装成可运行原型
+
+---
+
+## 十四、GEMINI路线：GPT-2与Qwen3-4B共享基底/偏移系列测试
+
+> 以下测试来自 AGI_GEMINI_MEMO.md 编码规律深化系列（十七-三十），主要对比 GPT-2 与 Qwen3-4B，部分涉及 DeepSeek7B
+
+### 测试45：GPT-2与Qwen3-4B共享基底/偏移实测
+
+- **测试目标**：验证家族概念是否形成仿射共享基底，苹果是否更接近水果基底，"大基底包含小基底"是否成立
+- **脚本**：`tests/codex/test_concept_family_unified_codebook.py`（扩展版）
+- **模型**：GPT-2, Qwen3-4B
+- **测试结果**：
+
+| 指标 | GPT-2 | Qwen3-4B | 差异(Qwen3-GPT2) |
+|------|-------|----------|-----------------|
+| fruit mean_residual_ratio | 0.3069 | 0.3214 | +0.0145 |
+| apple→fruit residual_ratio | 0.8327 | 0.7274 | -0.1053 |
+| apple→animal residual_ratio | 0.9843 | 0.9871 | +0.0028 |
+| apple→abstract residual_ratio | 0.9951 | 0.9976 | +0.0025 |
+| fruit→world inclusion | 0.8325 | 0.6750 | -0.1574 |
+| object→world inclusion | - | 0.9447 | - |
+| abstract→world inclusion | - | 0.0846 | - |
+| H5_apple_offset_is_concentrated | **FAIL** | **FAIL** | 两模型一致 |
+
+- **评估**：
+  - 两模型都存在家族共享基底，苹果都更接近水果基底
+  - Qwen3中苹果更贴近水果骨架(residual更小)，说明现代大模型对概念家族归属建模更强
+  - Qwen3中水果基底嵌入world基底程度反而更低，说明世界知识被拆进更复杂的分量结构
+  - **个体偏移在原始坐标中不稀疏**(两模型都FAIL)，需要在自然字典中定义稀疏性
+  - 大基底不是单一低维平面，而是concrete⊕abstract⊕protocol多分量系统
+
+### 测试46：自然残差字典中偏移的稀疏性
+
+- **测试目标**：验证概念偏移在家族自然残差字典中是否比原始神经元坐标更稀疏
+- **脚本**：基于leave-one-out家族分解+SVD残差字典
+- **模型**：GPT-2, Qwen3-4B
+- **测试结果**：
+
+**apple偏移的top4能量捕获对比**：
+
+| 指标 | GPT-2 | Qwen3-4B |
+|------|-------|----------|
+| raw_top4_capture | 0.00775 | 0.00549 |
+| matched_dict_top4_capture | 0.02086 | 0.02541 |
+| wrong_dict_top4_capture | 0.01204 | 0.00891 |
+| raw_min_neurons_for_50pct | 911 | 2424 |
+| matched_total_capture | 0.0263 | 0.0260 |
+
+**家族平均support_rate**：
+
+| 家族 | GPT-2 support_rate | Qwen3 support_rate |
+|------|-------------------|-------------------|
+| fruit | 0.50 | **1.00** |
+| animal | 0.50 | **1.00** |
+| abstract | 1.00 | **1.00** |
+
+- **评估**：
+  - 匹配家族字典比原始坐标更高效(3-5x)，比错误字典也更优
+  - Qwen3的support_rate全面1.0(GPT-2的fruit/animal仅0.50)，说明Qwen3的家族结构更清晰
+  - 但8原子线性字典的总捕获率仅~2.6%，还有大量未解释残差(需更高级字典/非线性项)
+  - 编码公式应为：x_c = B_F + D_F·α_c + R_c + G_c + ε_c
+
+### 测试47：单一残差字典vs分簇残差atlas
+
+- **测试目标**：比较单字典与带门控的分簇atlas哪个更适合解释概念偏移
+- **脚本**：3簇残差atlas + 门控路由
+- **模型**：GPT-2, Qwen3-4B
+- **测试结果**：
+
+**GPT-2 atlas对比**：
+
+| 家族 | global | atlas_gated | atlas_oracle | gate_oracle_gap |
+|------|--------|-------------|-------------|----------------|
+| fruit | 0.00835 | 0.00638 | 0.01697 | 0.01059 |
+| animal | 0.01628 | 0.01201 | 0.01793 | 0.00592 |
+| abstract | 0.04258 | 0.05102 | 0.05102 | 0.00000 |
+
+**Qwen3-4B atlas对比**：
+
+| 家族 | global | atlas_gated | atlas_oracle | gate_oracle_gap |
+|------|--------|-------------|-------------|----------------|
+| fruit | 0.02396 | 0.01498 | 0.02006 | 0.00508 |
+| animal | 0.00995 | 0.00532 | 0.01192 | 0.00660 |
+| abstract | 0.02651 | 0.03111 | 0.03111 | 0.00000 |
+
+- **评估**：
+  - **简单atlas并非普遍更优**：具体家族(fruit/animal)中gated atlas反而比单字典差
+  - **抽象概念更像atlas**：两模型中abstract的atlas_gated都≈oracle，门控路由正确
+  - Qwen3中fruit的oracle atlas都不如单字典，说明Qwen3的水果偏移更像紧致的单一字典
+  - 结论：具体概念偏移≈单一字典+细门控修正；抽象概念偏移≈分相位atlas
+
+### 测试48：attention动态拓扑中的家族共享基底与偏移
+
+- **测试目标**：验证attention路由图中是否也存在"共享基底+个体偏移"结构
+- **脚本**：提取全层全头attention邻接矩阵→拓扑签名→仿射基底分解
+- **模型**：GPT-2, Qwen3-4B
+- **测试结果**：
+
+**家族平均拓扑残差**：
+
+| 指标 | GPT-2 | Qwen3-4B |
+|------|-------|----------|
+| fruit topo_residual_ratio | 0.4636 | 0.5231 |
+| animal topo_residual_ratio | 0.4598 | 0.4756 |
+| abstract topo_residual_ratio | 0.5278 | 0.5019 |
+
+**概念对家族拓扑基底的残差(apple→fruit/animal/abstract)**：
+
+| 概念 | 最匹配族 | GPT-2 residual | Qwen3 residual |
+|------|---------|---------------|----------------|
+| apple | fruit | 0.8629 | 0.4000 |
+| apple | animal | 0.9615 | 0.9992 |
+| cat | animal | 0.2622 | 0.6105 |
+| cat | fruit | 0.9121 | 0.9562 |
+| truth | abstract | 0.8127 | 0.1922 |
+| truth | fruit | 0.8955 | 0.9823 |
+
+**attention熵**：
+
+| 族 | GPT-2熵 | Qwen3熵 |
+|----|--------|--------|
+| fruit | 0.4543 | 0.3956 |
+| animal | 0.4272 | 0.3849 |
+| abstract | 0.4513 | 0.3989 |
+
+- **评估**：
+  - **家族结构不仅存在于表征空间，也存在于attention路由图中**
+  - Qwen3的attention熵全面低于GPT-2，说明Qwen3路由更集中、更像"明确分流"
+  - 拓扑基底比表征基底更松(残差0.45-0.53 vs 0.30-0.32)，说明attention拓扑更像"路由策略"而非"概念本体"
+  - 概念编码应为双空间对象：C_c = (H_c, T_c)
+
+### 测试49：逐层表征/拓扑角色分工
+
+- **测试目标**：测量不同层在表征空间和拓扑空间中的角色分工
+- **脚本**：逐层仿射基底分解+残差比较
+- **模型**：GPT-2, Qwen3-4B
+- **测试结果**：
+
+| 层级角色 | GPT-2层号 | Qwen3-4B层号 |
+|----------|----------|-------------|
+| 最强表征层 | [11,9,10,8,1] | [2,1,3,34,25] |
+| 最强拓扑层 | [7,9,5,8,10] | [29,33,22,24,31] |
+| 最偏表征主导 | [11,1,3,2,0] | [5,1,0,6,2] |
+| 最偏拓扑主导 | [7,9,5,6,8] | [29,22,33,24,31] |
+
+- **评估**：
+  - **两模型都存在逐层角色分化，不是每层做同一种事**
+  - GPT-2：表征层与拓扑层大量重叠(5-11)，分工耦合紧
+  - Qwen3：早层(1-5)强表征，中后层(22-33)强拓扑，分工更清晰
+  - 与Qwen3的attention更集中、概念归类更稳一致
+
+### 测试50：关系项(R)与门控项(G)的逐层分离
+
+- **测试目标**：分离关系约束和模式门控在不同层的影响
+- **脚本**：关系对照(kind fruit/animal) + 模式对照(chat/formal)→逐层差分
+- **模型**：GPT-2, Qwen3-4B
+- **测试结果**：
+
+**GPT-2逐层优先级**：
+
+| 项 | 表征空间层 | 拓扑空间层 |
+|----|----------|----------|
+| 关系(R)主导 | [2,4,3,1,0] | [9,10,8,7,11] |
+| 门控(G)主导 | [10,8,7,9,6] | [0,4,1,3,2] |
+
+**Qwen3-4B逐层优先级**：
+
+| 项 | 表征空间层 | 拓扑空间层 |
+|----|----------|----------|
+| 关系(R)主导 | [23,29,22,30,26] | [26,27,29,17,18] |
+| 门控(G)主导 | [4,5,8,0,7] | [0,1,6,35,5] |
+
+**关键数值**（L0层门控vs关系拓扑响应）：
+
+| 模型 | G_topo(L0) | R_topo(L0) | 比值 |
+|------|-----------|-----------|------|
+| GPT-2 | 1.1729 | 0.2086 | 5.6x |
+| Qwen3 | 1.2363 | 0.2916 | 4.2x |
+
+- **评估**：
+  - **R和G是两个在层级与空间上都明显错位的过程**
+  - G(门控)先作用于早层拓扑，决定当前模式/协议
+  - R(关系)更晚进入中后层，决定概念间类别/归属/约束
+  - 动力学链：G→T_early→H_mid→R_deep→T_deep/H_output
+
+### 测试51：概念逐层路径结构（apple/cat/truth）
+
+- **测试目标**：测量不同概念族在整个层级系统中的生成路径差异
+- **模型**：GPT-2, Qwen3-4B
+- **测试结果**：
+
+**Qwen3-4B中apple的路径**：
+
+| 路径阶段 | 层号 |
+|----------|------|
+| 表征基底 | [3,4,5,6,7] |
+| 表征门控 | [0,1,8,5,4] |
+| 表征关系 | [29,32,30,33,31] |
+| 拓扑门控 | [0,1,6,4,5] |
+| 拓扑关系 | [26,29,18,27,33] |
+
+**Qwen3-4B中truth的路径**：
+
+| 路径阶段 | 层号 |
+|----------|------|
+| 表征基底 | [1,2,7,4,6] |
+| 表征门控 | [15,14,16,17,18] |
+| 表征关系 | [0,1,2,3,5] |
+| 拓扑门控 | [0,1,6,35,14] |
+| 拓扑关系 | [17,29,31,8,27] |
+
+- **评估**：
+  - **具体概念(apple/cat)**：早层门控→早/中层形成骨架→深层整合关系
+  - **抽象概念(truth)**：早层就带有关系性，对象骨架与关系骨架不严格分开
+  - truth的关系项在表征空间中很早进入(L0-5)，门控项反而更晚(L14-18)
+  - 概念编码不是静态点，而是逐层路径P(c)={S_c^(l)}
+
+### 测试52：DeepSeek7B苹果编码规律聚合
+
+- **测试目标**：聚合DeepSeek7B的苹果概念编码规律
+- **脚本**：`tests/codex/deepseek7b_apple_encoding_law_dossier.py`
+- **模型**：DeepSeek7B
+- **测试结果**：
+
+| 指标 | 数值 |
+|------|------|
+| style_logic_syntax_signal | 0.5786 |
+| cross_dim_decoupling_index | 0.6852 |
+| apple_micro_to_meso_jaccard | 0.0208 |
+| apple_meso_to_macro_jaccard | 0.3750 |
+| apple_shared_base_ratio | 0.0271 |
+| triplet_separability_index | 0.0959 |
+| axis_specificity_index | 0.6297 |
+| king_queen_jaccard | 0.0959 |
+| apple_king_jaccard | 0.0000 |
+| apple_layer_peak_band | late(0.1667) |
+
+**五条规律判定**：
+- H1_parallel_axes_exist: PASS
+- H2_axes_not_collapsed: PASS
+- H3_apple_hierarchy_closure: PASS
+- H4_local_linearity_triplet: PASS
+- H5_apple_has_layer_anchor: PASS
+
+- **评估**：
+  - DeepSeek7B中苹果概念呈现低重叠微观属性轴+中观实体簇稳定锚定+宏观关系层可传输
+  - Micro→Meso的Jaccard极低(0.02)，说明微观属性与实体层几乎不重合
+  - Meso→Macro的Jaccard较高(0.375)，说明实体层与宏观关系层共享更多
+
+### 测试53：三模型操控物理极限（Hessian曲率与范数稀释）
+
+- **测试目标**：测量GLM4/Qwen3/DeepSeek7B的操控敏感度、流形曲率与范数稀释程度
+- **脚本**：Phase XV-XVIII（28项实验）
+- **模型**：GLM4, Qwen3, DeepSeek7B
+- **测试结果**：
+
+| 指标 | GLM4 | Qwen3 | DeepSeek7B |
+|------|------|-------|-----------|
+| Hessian曲率符号 | **负(凹/鞍点)** | **正(凸/引力盆)** | - |
+| 操控敏感度 | 极高(小扰动即可触发雪崩) | 极低(干预向量被自然梯度纠偏) | - |
+| rank_improve可达100% | 是(PPL指数恶化) | 否(Stubborn特性) | - |
+| L0范数 | 0.06 | - | - |
+| L39范数 | 255.0 | - | - |
+| 范数稀释倍数 | **3234x** | **699x** | - |
+| Logit操控vs H-space效率 | 11.5x | 11.5x | - |
+
+- **评估**：
+  - **Hessian符号反转是最本征的架构差异**：GLM4凹→高敏感低鲁棒；Qwen3凸→低敏感高鲁棒
+  - 范数稀释699x-3234x是H-space操控的物理死线
+  - Logit操控效率是H-space的11.5倍(绕过范数稀释)，但破坏因果一致性
+  - 操控不可能三角：控制强度/语义保真/上下文稳定性不可兼得
+
+---
+
+# 附录
+
+## 附录A：各测试原理与公式说明
+
+### A.1 词嵌入层测试（测试1-3）
+
+#### 测试1原理：Embedding SVD方差分布
+
+**核心公式**：对Embedding矩阵 $E \in \mathbb{R}^{V \times d}$（$V$=词表大小，$d$=隐层维度）进行奇异值分解：
+
+$$E = U \Sigma V^T, \quad \Sigma = \text{diag}(\sigma_1, \sigma_2, \ldots, \sigma_d), \quad \sigma_1 \geq \sigma_2 \geq \cdots \geq \sigma_d \geq 0$$
+
+**Top-k方差占比**：
+$$\text{var\_ratio}(k) = \frac{\sum_{i=1}^k \sigma_i^2}{\sum_{i=1}^d \sigma_i^2}$$
+
+- $\text{var\_ratio}(1) < 3\%$ 说明无单一主成分主导，语义信息高度分散
+- PC0通常编码词频：高频词的PC0投影值较大，这是因为高频词在训练中被反复强化
+- **物理意义**：Embedding矩阵的谱结构反映了词空间的"有效维度"——如果Top-10方差>50%，说明信息集中在低维子空间；实际<3%说明信息几乎均匀分布在高维空间
+
+#### 测试2原理：Embedding概念层级
+
+**核心公式**：类内/类间欧氏距离
+
+$$d_{\text{intra}}(C) = \frac{1}{|C|(|C|-1)} \sum_{i \neq j \in C} \|e_i - e_j\|_2$$
+
+$$d_{\text{inter}}(C_1, C_2) = \frac{1}{|C_1||C_2|} \sum_{i \in C_1} \sum_{j \in C_2} \|e_i - e_j\|_2$$
+
+- $d_{\text{intra}} < d_{\text{inter}}$ 说明同类词在空间中更接近，即存在语义聚类
+- 层级分离：$d_{\text{intra}}(\text{fruit}) < d_{\text{intra}}(\text{animal}) < d_{\text{inter}}(\text{fruit, animal})$，这是因为动物概念内差异（猫vs蛇）比水果（苹果vs梨）更大
+
+#### 测试3原理：Embedding纯净性探针
+
+**核心公式**：线性探针检测语法/上下文信号
+
+$$\text{std}(\text{probe\_output}) = \text{std}(W_{\text{probe}} \cdot e_{\text{L0}} + b)$$
+
+- 若 $\text{std} = 0$，说明 $W_{\text{probe}} \cdot e_{\text{L0}}$ 为常数（对所有输入相同），即L0不含对应信号
+- **⚠️ 关键问题**：std=0可能是probe训练失败（收敛到常数解），而非真无信号。应报告probe AUC作为交叉验证
+
+### A.2 注意力层测试（测试4-8）
+
+#### 测试4原理：注意力头功能标签
+
+**核心公式**：对每个头 $h$，计算其输出对功能方向 $\mathbf{d}_f$（$f \in \{\text{semantic}, \text{syntax}, \text{polarity}\}$）的投影强度：
+
+$$\text{label}(h) = \arg\max_f \text{corr}(\text{AttnOut}_h, \mathbf{d}_f)$$
+
+- 注意力输出：$\text{AttnOut}_h = \text{softmax}\left(\frac{Q_h K_h^T}{\sqrt{d_k}}\right) V_h$
+- 功能方向 $\mathbf{d}_f$ 通过探针训练获得：收集语义/语法/极性不同的句子对，训练线性分类器，取权重方向
+
+#### 测试5原理：Q/K/V功能对齐度
+
+**核心公式**：测量权重矩阵列与功能方向的对齐
+
+$$\text{alignment}(W, \mathbf{d}_f) = \max_i \frac{(W_{:,i} \cdot \mathbf{d}_f)^2}{\|W_{:,i}\|^2 \|\mathbf{d}_f\|^2}$$
+
+**随机基线**：在 $d$ 维空间中，随机向量与固定方向的对齐期望为 $1/d$
+
+$$E[\text{alignment}] = \frac{n}{d}$$
+
+- 当观测对齐 ≈ $n/d$ 时，结论为"无显著对齐"（统计假象）
+- p值通过置换检验获得：随机打乱功能方向标签1000次，计算对齐的零分布
+
+#### 测试6原理：Attn vs FFN贡献比
+
+**核心公式**：残差连接分解
+
+$$h^{(l+1)} = h^{(l)} + \underbrace{\text{Attn}^{(l)}(h^{(l)})}_{A^{(l)}} + \underbrace{\text{FFN}^{(l)}(\text{LN}(h^{(l)} + A^{(l)}))}_{G^{(l)}}$$
+
+**可塑性预算**：
+$$p_{\text{attn}}^{(l)} = \frac{\|A^{(l)}\|_2}{\|A^{(l)}\|_2 + \|G^{(l)}\|_2}$$
+
+- $p_{\text{attn}} \to 0$：该层几乎只靠FFN；$p_{\text{attn}} \to 1$：该层几乎只靠Attention
+- **⚠️ 注意**：此定义依赖范数比，对RMSNorm后的数值范围敏感。若FFN输出范数系统性大于Attn输出范数，则 $p_{\text{attn}}$ 会系统性偏低
+
+#### 测试7原理：歧义词消歧路径
+
+**核心公式**：逐层因果效应
+
+$$\text{disambig\_effect}^{(l)} = \left|\cos(h^{(l)}_{\text{context1}}, h^{(l)}_{\text{context2}}) - \cos(h^{(l-1)}_{\text{context1}}, h^{(l-1)}_{\text{context2}})\right|$$
+
+- 同一词在不同上下文中的表示差异变化量——差异增大的层即为消歧发生层
+- 分类为"attention路径"：若消歧峰值层的Attn贡献>FFN贡献
+
+#### 测试8原理：注意力模式差异
+
+**核心公式**：
+
+$$L1(A_1, A_2) = \frac{1}{n^2}\sum_{i,j} |A_1^{(i,j)} - A_2^{(i,j)}|$$
+
+$$D_{\text{KL}}(A_1 \| A_2) = \sum_{i,j} A_1^{(i,j)} \log \frac{A_1^{(i,j)}}{A_2^{(i,j)}}$$
+
+- $A$ 是注意力权重矩阵（softmax后）
+- L1<0.01 和 KL<0.01 说明不同语言维度的注意力模式几乎相同
+
+### A.3 残差流测试（测试9-11）
+
+#### 测试9原理：Norm爆炸
+
+**核心公式**：残差流范数逐层变化
+
+$$\text{norm}^{(l)} = \|h^{(l)}\|_2$$
+
+**增长倍数**：$\text{growth} = \text{norm}^{(L)} / \text{norm}^{(0)}$
+
+- 残差连接导致 $h^{(l+1)} = h^{(l)} + \Delta^{(l)}$，理论上 $\|h^{(l+1)}\| \geq \|h^{(l)}\| - \|\Delta^{(l)}\|$
+- 但RMSNorm会压缩范数，实际增长取决于残差增量与归一化的竞争
+- GLM4的4x增长说明其训练过程找到了一种近似"范数守恒"的参数配置
+
+#### 测试10原理：残差流方向偏转
+
+**核心公式**：相邻层方向偏转角
+
+$$\theta^{(l)} = \arccos\left(\frac{h^{(l)} \cdot h^{(l+1)}}{\|h^{(l)}\| \|h^{(l+1)}\|}\right)$$
+
+**累积偏转**：$\Theta = \sum_{l=0}^{L-1} \theta^{(l)}$
+
+**同维度轨迹相关**：
+$$\text{corr}_d = \text{corr}(h_d^{(0:L)}(s_1), h_d^{(0:L)}(s_2))$$
+
+其中 $h_d^{(l)}(s)$ 是句子 $s$ 在第 $l$ 层第 $d$ 维度的值。
+
+- 偏转角~13°/层是"架构级不变量"：不同句子的偏转角差异<2°
+- 同维度轨迹相关>0.997说明不同句子共享几乎相同的螺旋轨迹
+
+#### 测试11原理：有效秩
+
+**核心公式**：
+
+$$\text{eff\_rank}^{(l)} = \exp\left(-\sum_{i=1}^d p_i^{(l)} \log p_i^{(l)}\right), \quad p_i^{(l)} = \frac{\sigma_i^{(l)2}}{\sum_j \sigma_j^{(l)2}}$$
+
+- 有效秩是SVD奇异值的归一化熵的指数
+- LayerNorm后有效秩递增：因为归一化让更多方向被"均匀化"
+- RMSNorm后有效秩递减：因为归一化偏好强化主要方向、抑制次要方向
+
+### A.4 FFN测试（测试12-15）
+
+#### 测试12原理：FFN神经元类型分类
+
+**核心公式**：FFN的数学形式
+
+$$\text{FFN}(x) = W_{\text{down}} \cdot \sigma(W_{\text{up}} \cdot x + b_{\text{up}}) + b_{\text{down}}$$
+
+其中 $\sigma$ 为激活函数（GELU/SiLU）。
+
+**旋转器分类**：对FFN线性部分 $W_{\text{down}} W_{\text{up}}$ 进行SVD：
+
+$$W_{\text{down}} W_{\text{up}} = U \Sigma V^T$$
+
+- 若所有 $\sigma_i \approx 1$ 且 $U \approx V$（正交矩阵），则为旋转器（97%+）
+- 若存在 $\sigma_i \gg 1$，则为投影器
+- 若存在 $\sigma_i < 0$（理论上不可能，因为SVD奇异值非负），实际指某些行的符号翻转
+
+#### 测试13原理：FFN线性旋转角度
+
+**核心公式**：矩阵旋转角的定义
+
+$$\theta_{\text{FFN}} = \arccos\left(\frac{\text{tr}(W_{\text{down}} W_{\text{up}})}{\|W_{\text{down}} W_{\text{up}}\|_F}\right)$$
+
+- 更精确的定义：$\theta_{\text{FFN}} = \|W_{\text{down}} W_{\text{up}} - I\|_F / \|I\|_F$ 衡量与恒等映射的偏离
+- 1.7°/层说明FFN的线性部分几乎不改变输入方向
+- 13°偏转的89%来自GELU非线性：$\Delta \theta_{\text{nonlinear}} = \theta_{\text{total}} - \theta_{\text{linear}} \approx 11.3°$
+
+#### 测试14原理：FFN激活密度
+
+**核心公式**：
+
+$$a^{(l)} = \frac{1}{d_{\text{ff}}} \sum_{i=1}^{d_{\text{ff}}} \mathbb{1}\left[\sigma(W_{\text{up}} h^{(l)} + b_{\text{up}})_i > \epsilon\right]$$
+
+- $d_{\text{ff}}$ 是FFN中间层维度，$\epsilon$ 是激活阈值
+- $a \to 1$：几乎所有神经元都激活（密集）；$a \to 0$：大部分神经元静默（稀疏）
+- GLM4末端0.71-0.74：27-29%的FFN神经元关闭，说明末端层做了选择性过滤
+
+#### 测试15原理：残差保留率
+
+**核心公式**：
+
+$$f_{\text{preserve}}^{(l)} = \frac{\|h^{(l)}\|_2}{\|h^{(l+1)}\|_2} = \frac{\|h^{(l)}\|_2}{\|h^{(l)} + \Delta^{(l)}\|_2}$$
+
+$$f_{\text{modify}}^{(l)} = \frac{\|\Delta^{(l)}\|_2}{\|h^{(l)}\|_2}$$
+
+- $f_{\text{preserve}} \to 1$：残差增量小，原始信息被保留
+- $f_{\text{preserve}} \to 0$：残差增量大，原始信息被覆盖
+- **⚠️ 硬伤**：$f_{\text{preserve}}(L0) = 0.03-0.06$ 意味着 $\|\Delta^{(L0)}\| \approx 16-33 \times \|h^{(0)}\|$，这在数学上是可能的（残差增量远大于原始值），但"保留率=3%"的说法有误导性——实际上残差连接保证了 $h^{(0)}$ 的信息不会丢失，只是被后续大增量"淹没"在范数中
+
+### A.5 概念编码测试（测试16-22）
+
+#### 测试16原理：基底-偏置编码模型
+
+**核心公式**：仿射分解
+
+$$h_c = \underbrace{B_F}_{\text{类别基底}} + \underbrace{b_c}_{\text{个体偏置}}$$
+
+其中 $B_F = \frac{1}{|F|}\sum_{c \in F} h_c$ 是类别 $F$ 的质心。
+
+**基底解释方差比**：
+$$R^2 = 1 - \frac{\sum_{c \in F} \|h_c - B_F\|^2}{\sum_{c \in F} \|h_c - \bar{h}\|^2}$$
+
+- $R^2 = 0.38$ 说明基底只解释了38%的方差，个体偏置承载了62%
+- **概念算术**：$\hat{h}_{c_1 \to c_2} = h_{c_1} + \bar{b}_{F \to c_2}$，其中 $\bar{b}_{F \to c_2}$ 是同类概念的偏置均值
+
+#### 测试17原理：黄金层
+
+**核心公式**：逐层SVD重建
+
+$$\hat{h}_c^{(l)} = \sum_{i=1}^k (h_c^{(l)} \cdot v_i^{(l)}) v_i^{(l)}$$
+
+$$\text{recon\_cos}^{(l)} = \cos(h_c^{(l)}, \hat{h}_c^{(l)})$$
+
+- 黄金层 = recon_cos最高的层（通常L1-L3）
+- 本征维度估计：找到使 recon_cos > 0.9 的最小 $k$（约30-50维）
+
+#### 测试18原理：AE vs SVD线性性
+
+**核心公式**：
+
+**SVD重建**（线性方法）：
+$$\hat{h}_c^{\text{SVD}} = \sum_{i=1}^k \sigma_i u_i v_i^T h_c$$
+
+**AE重建**（非线性方法）：
+$$\hat{h}_c^{\text{AE}} = \text{decode}(\text{encode}(h_c)), \quad \text{encode}(x) = \sigma(W_1 x + b_1)$$
+
+- 若AE >> SVD，说明存在SVD无法捕获的非线性结构
+- 深AE(4H)达38-45% >> SVD的22-28%，证明偏置空间有显著弯曲
+
+#### 测试19原理：信息瓶颈
+
+**核心公式**：信息瓶颈理论
+
+$$\min_{p(T|X)} I(X; T) - \beta I(T; Y)$$
+
+- $I(T;Y)$ 是瓶颈变量 $T$ 与目标 $Y$ 的互信息
+- 实验中用 $k$ 维SVD投影作为 $T$，语义属性作为 $Y$
+- $I(T;Y)$ 在 $k=17$ 时饱和，说明17维足以编码所有属性信息
+- **⚠️ 注意**：$I(T;Y) = 2.024$ nats 是绝对值很小——说明属性预测本身就很困难，或属性信息量本就有限
+
+#### 测试20原理：SVD因子可解释性
+
+**核心公式**：效应量 $\eta^2$
+
+$$\eta^2(\text{factor}_i, \text{attr}_j) = \frac{\text{SS}_{\text{between}}(\text{factor}_i, \text{attr}_j)}{\text{SS}_{\text{total}}(\text{attr}_j)}$$
+
+- $\eta^2 \to 1$：因子 $i$ 几乎完全决定属性 $j$
+- **⚠️ 多重比较问题**：5属性 × 20+因子的最大 $\eta^2$ 未做Bonferroni校正，0.956可能被高估
+
+#### 测试21原理：跨语言语义对齐
+
+**核心公式**：中英文概念偏置余弦
+
+$$\cos_{\text{cross}} = \frac{b_c^{\text{zh}} \cdot b_c^{\text{en}}}{\|b_c^{\text{zh}}\| \|b_c^{\text{en}}\|}$$
+
+- 0.325 远高于随机(0.05)，但远低于同语言同类余弦(~0.7)
+- SVD因子相关0.746说明底层语义结构更一致，但具体表示有偏差
+
+#### 测试22原理：编码逐层演化
+
+**核心公式**：最近邻追踪
+
+$$\text{NN}^{(l)}(c) = \arg\max_{c' \neq c} \cos(h_c^{(l)}, h_{c'}^{(l)})$$
+
+- L0：最近邻是"感知相似"词（strawberry/lemon = 红色/水果）
+- L35：最近邻是"语义相似"词（peach = 甜+圆+水果）
+- 演化方向：感知特征 → 语义概念
+
+### A.6 结果层/Unembedding测试（测试23-27）
+
+#### 测试23原理：Unembedding矩阵结构
+
+**核心公式**：logit计算
+
+$$\text{logits} = h^{(L)} W_U^T, \quad W_U \in \mathbb{R}^{V \times d}$$
+
+**线性度验证**：
+$$\text{linearity} = \cos(W_U h^{(L)}, \text{logits}_{\text{direct}})$$
+
+- 0.99999998 ≈ 1.0 确认 hidden→logit 是完美线性映射
+- 有效秩 = 112.8：$W_U$ 虽然是 151936×2560，但只有~113个有效维度
+
+#### 测试24原理：W_U功能对齐
+
+**核心公式**：z-score检验
+
+$$z = \frac{\text{alignment}(W_U, \mathbf{d}_f) - \mu_{\text{null}}}{\sigma_{\text{null}}}$$
+
+- $\mu_{\text{null}}, \sigma_{\text{null}}$ 来自随机标签置换的零分布
+- $z = 127$（Qwen3）是极端显著；$z = 2.4$（GLM4）和 $z \approx 0$（DS7B）不显著
+
+#### 测试25原理：频带敏感度
+
+**核心公式**：按SVD频率分组的消歧敏感度
+
+$$\text{sensitivity}(\text{band}_k) = \cos(\Delta h_{\text{band}_k}, \Delta \text{logit}_{\text{target}})$$
+
+其中 $\Delta h_{\text{band}_k}$ 是第 $k$ 频带（SVD分量 $[160k, 160(k+1))$）的残差流变化量。
+
+- band0 [0,160) 的 cos=0.84：前6.25%维度承载最多logit信息
+
+#### 测试26原理：功能方向因果干预
+
+**核心公式**：方向删除
+
+$$h_{\text{ablated}}^{(l)} = h^{(l)} - (h^{(l)} \cdot \hat{\mathbf{d}}_f) \hat{\mathbf{d}}_f$$
+
+$$\text{effect} = \frac{|\Delta \text{logit}_{\text{func}}|}{|\Delta \text{logit}_{\text{random}}|}$$
+
+- 功能/随机比率 ≈ 0.18-0.20 说明功能方向删除效果不到随机方向的1/5
+- **含义**：功能方向在残差流中没有"特殊"地位，删除它不比删除随机方向更有效
+
+#### 测试27原理：线性Probe
+
+**核心公式**：
+
+$$\hat{y} = \text{argmax}_c \text{softmax}(W_c h^{(l)} + b_c)$$
+
+- 线性probe > MLP probe 说明功能信号是线性可分的
+- MLP反而过拟合：因为训练集小，MLP容量大导致过拟合训练噪声
+
+### A.7 深层编码策略与不变量测试（测试28-33）
+
+#### 测试28原理：深层编码策略分类
+
+**核心公式**：三维度指标
+
+- **深层语法std**：$\text{std}(\text{probe\_output}_{\text{syntax}}^{(L)})$ — 深层语法信号的标准差
+- **深层上下文shift**：$\text{std}(h_c^{(L)} - \bar{h}_c^{(L)})$ — 同词在不同上下文中的变化
+- **深层diversity**：$\text{std}(\text{nn\_distance}^{(L)})$ — 深层最近邻距离的变异系数
+
+- GLM4三个指标全为0：深层完全不变（"冻结"）
+- Qwen3/DS7B前两个为0、diversity微弱：深层信号坍缩但概念有微弱区分
+
+#### 测试29原理：跨语言对齐信号
+
+**核心公式**：翻译对 vs 无关对的表示差异
+
+$$\Delta_{\text{trans}}^{(l)} = \text{avg\_cos}(h_{\text{zh}}^{(l)}, h_{\text{en\_translate}}^{(l)}) - \text{avg\_cos}(h_{\text{zh}}^{(l)}, h_{\text{en\_unrelated}}^{(l)})$$
+
+- GLM4: $\Delta_{\text{trans}}^{(L0)} = 0.095 \to \Delta_{\text{trans}}^{(L)} = 0.193$（增强）
+- 其他模型：衰减或消失
+- **⚠️ 注意**：绝对值极小（<0.2），可能是噪声
+
+#### 测试30原理：六维不变量
+
+**核心公式**：
+
+- **有效维度**：$\text{eff\_dim}^{(l)} = \text{exp}(H^{(l)})$，$H$ 是SVD熵
+- **维度坍缩**：$\text{eff\_dim}^{(l)} / \text{eff\_dim}^{(l-1)} < 0.5$ 的层
+- **场控制杆**：100% FIELD — ⚠️ 可能是循环论证（FIELD是人为定义的标签）
+- **绑定排名**：四种关系类型(attr/assoc/syn/rel)在probe中的重要性排序
+
+#### 测试31原理：7段链映射
+
+**核心公式**：composite_signal
+
+$$\text{signal}^{(l)} = \sum_{f} w_f \cdot \text{probe\_acc}_f^{(l)}$$
+
+- 7段划分基于信号变化率：$\text{signal}'(l) \approx 0$ 处为段边界
+- **⚠️ 注意**：ICSPB理论本身未被独立验证，7段映射可能只是对数据的事后拟合
+
+#### 测试32原理：上下文偏置
+
+**核心公式**：
+
+$$b_c^{(l)} = \frac{1}{N_{\text{ctx}}} \sum_{\text{ctx}} \|h_c^{(l)}(\text{ctx}) - \bar{h}_c^{(l)}\|_2$$
+
+- $b_c \to 0$：token表示不受上下文影响（稳定）
+- Qwen3末端 $b = 0.096$，cos=0.90：最稳定的token表示
+
+#### 测试33原理：门控路由正交性
+
+**核心公式**：功能方向间余弦
+
+$$g_{\text{func}}^{(l)} = \frac{1}{\binom{3}{2}} \sum_{f_1 < f_2} |\cos(\mathbf{d}_{f_1}^{(l)}, \mathbf{d}_{f_2}^{(l)})|$$
+
+- 中间层 $g_{\text{func}} \approx 0.03-0.06$：功能方向几乎正交
+- 末端层 $g_{\text{func}} > 1$：功能方向反而反向相关（负cos取绝对值后求和>1）
+
+### A.8 GEMINI路线测试（测试34-41）
+
+#### 测试34原理：HRR全息循环卷积
+
+**核心公式**：HRR绑定
+
+$$\mathbf{c} = \mathbf{a} \circledast \mathbf{b} = \text{IDFT}(\text{DFT}(\mathbf{a}) \odot \text{DFT}(\mathbf{b}))$$
+
+**解绑定**：
+$$\hat{\mathbf{a}} = \mathbf{c} \circledast \mathbf{b}^{-1} = \text{IDFT}(\text{DFT}(\mathbf{c}) \oslash \text{DFT}(\mathbf{b}))$$
+
+- 正确键回忆率17.38%：远低于理想100%
+- d=4096时M≥50饱和：固定维度下可绑定的特征对数有上限
+
+#### 测试35原理：多特征正交探针
+
+**核心公式**：
+
+$$\text{pairwise\_cosine} = \frac{1}{\binom{k}{2}} \sum_{i < j} |\cos(\mathbf{d}_{f_i}, \mathbf{d}_{f_j})|$$
+
+- mean_abs_pairwise_cosine=0.0377：近正交（0=完美正交）
+- compositional_R²=0.1426：线性叠加只能解释14%方差——**线性叠加失败**
+
+#### 测试36-37原理：最小神经元知识改写
+
+**核心公式**：通道干预
+
+$$h_c^{(l)}[\mathcal{S}] \leftarrow h_c^{(l)}[\mathcal{S}] + \alpha \cdot \delta$$
+
+其中 $\mathcal{S}$ 是选中的 $k$ 个通道，$\delta$ 是干预方向，$\alpha$ 是强度。
+
+- 合成实验k=2：可分解编码下2个神经元即可翻转
+- 真实模型k=64：需要64个通道，说明真实编码远非可分解
+- **⚠️ 硬伤**：合成与真实结论差距巨大，合成实验的指导意义有限
+
+#### 测试38原理：概念族统一码本
+
+**核心公式**：子空间margin
+
+$$\text{margin}(F) = \min_{c \in F} \frac{\|h_c - B_F\|}{\|B_F - B_{F'}\|}$$
+
+- margin>0 说明每个概念都更接近自己的类别基底
+- 水果/动物共享维Jaccard=0.0：两族骨架几乎完全分离
+
+#### 测试39-40原理：抽象提升算子
+
+**核心公式**：
+
+$$\text{lift}_1 = h_{\text{category}} - h_{\text{instance}}$$
+$$\text{lift}_2 = h_{\text{abstract}} - h_{\text{category}}$$
+
+- lift_alignment=0.7271：不同类别族的lift_1方向高度对齐
+- lift_1与lift_2对齐=-0.2446：**二级抽象不是一级的简单重复**
+
+#### 测试41原理：注意力头消融
+
+**核心公式**：消融效应
+
+$$\text{collapse}_h = \frac{\text{gap}_{\text{ablated}_h}}{\text{gap}_{\text{baseline}}}$$
+
+- collapse>0：消融头h后性能下降（头h有贡献）
+- top20_overlap_jaccard=0.11：lift1和lift2依赖的头几乎不重叠
+
+### A.9 GPT5路线测试（测试42-44）
+
+#### 测试42原理：因果回路搜索
+
+**核心公式**：5阶段搜索
+
+- Stage2族聚焦：识别概念族
+- Stage3因果闭合：找到因果回路
+- Stage4最小子电路：$\text{margin} = \text{adv}_{\text{circuit}} - \text{adv}_{\text{random}}$
+- Stage5读出耦合：电路对输出的因果效应
+
+- **⚠️ 硬伤**：去偏后margin=+0.0009，几乎为零
+
+#### 测试43原理：ICSPB行为测试
+
+行为分数 = 正确完成的行为数 / 总行为数。通过Ollama CLI测试（⚠️非直接模型访问）。
+
+#### 测试44原理：4-bit量化探针
+
+对比探针在不同精度模型上的信号模式：
+- cos = $\cos(h_{\text{pair1}}, h_{\text{pair2}})$：同层同概念对的余弦相似度
+- delta = $\|h_{\text{pair1}} - h_{\text{pair2}}\|_2$：同层同概念对的欧氏距离
+
+### A.10 共享基底/偏移系列测试（测试45-53）
+
+#### 测试45-47原理：仿射基底分解
+
+**核心公式**：
+
+$$h_c = B_F + D_F \alpha_c + R_c + G_c + \epsilon_c$$
+
+- $B_F$：类别基底（质心）
+- $D_F \alpha_c$：字典线性编码（$D_F$ 是残差字典，$\alpha_c$ 是稀疏编码）
+- $R_c$：非线性残差
+- $G_c$：门控修正
+- $\epsilon_c$：噪声
+
+**残差比**：
+$$\text{residual\_ratio}(c \to F) = \frac{\|h_c - B_F\|}{\|h_c\|}$$
+
+- residual_ratio越小，概念 $c$ 越接近类别 $F$ 的基底
+
+#### 测试48-49原理：attention拓扑分析
+
+**核心公式**：拓扑签名
+
+$$T_c^{(l)} = \text{flatten}(\text{AttnMatrix}^{(l)}_c)$$
+
+- 将注意力矩阵展平为向量，然后做与表征空间相同的仿射分解
+- 拓扑残差比0.45-0.53 > 表征残差比0.30-0.32：拓扑更松散
+
+#### 测试50-51原理：关系(R)与门控(G)分离
+
+$$R^{(l)} = h_{\text{rel\_contrast}}^{(l)} - h_{\text{rel\_baseline}}^{(l)}$$
+$$G^{(l)} = h_{\text{gate\_contrast}}^{(l)} - h_{\text{gate\_baseline}}^{(l)}$$
+
+- 关系对照：kind fruit vs kind animal（同类vs跨类）
+- 门控对照：chat vs formal（不同模式）
+- 逐层比较 $\|R^{(l)}\|$ vs $\|G^{(l)}\|$ 确定哪层由哪个过程主导
+
+#### 测试52原理：苹果编码规律聚合
+
+五条规律的形式化定义：
+- H1：$\exists \{d_i\}$ s.t. $|\cos(d_i, d_j)| < 0.1, \forall i \neq j$（平行轴存在）
+- H3：$\text{Jaccard}(\text{micro}, \text{meso}) \ll \text{Jaccard}(\text{meso}, \text{macro})$（层级闭合）
+
+#### 测试53原理：Hessian曲率与范数稀释
+
+**核心公式**：Hessian矩阵
+
+$$H_{ij} = \frac{\partial^2 \mathcal{L}}{\partial \theta_i \partial \theta_j}$$
+
+- 正Hessian → 凸（引力盆，稳定）
+- 负Hessian → 凹/鞍点（不稳定，小扰动可触发雪崩）
+
+**范数稀释**：
+$$\text{dilution} = \frac{\|h^{(L)}\|}{\|h^{(0)}\|}$$
+
+- 3234x/699x：残差流范数增长导致同等logit变化需要更大的hidden state扰动
+- **⚠️ 与测试9矛盾**：测试9说GLM4增长4x，测试53说3234x——可能是不同输入/不同条件下的测量
+
+---
+
+## 附录B：可信度审查
+
+### B.1 可信度评级标准
+
+| 维度 | 5★ | 4★ | 3★ | 2★ | 1★ |
+|------|-----|-----|-----|-----|-----|
+| 样本量 | >100词 | 50-100词 | 10-50词 | 5-10词 | <5词 |
+| 统计显著性 | p<0.001 | p<0.01 | p<0.05 | p<0.1 | 无p值 |
+| 控制组 | 随机基线+置换检验 | 随机基线 | 简单对照 | 无 | 无 |
+| 跨模型验证 | 3+模型一致 | 2模型一致 | 1模型+1参考 | 仅1模型 | 合成实验 |
+| 可复现性 | 代码+数据公开 | 代码公开 | 脚本名已知 | 方法描述 | 方法模糊 |
+
+### B.2 各测试可信度评级
+
+#### 高可信度（4-5★）：9项
+
+| 测试 | 评级 | 关键证据 |
+|------|------|---------|
+| 测试1: SVD方差 | ★★★★☆ | 三模型一致、SVD是标准方法 |
+| 测试5: QKV对齐=随机 | ★★★★★ | p>0.25、与n/d基线对比、三模型一致、负面结论更可信 |
+| 测试9: Norm爆炸 | ★★★★☆ | 三模型一致、数值直接可验证 |
+| 测试12: FFN 97%旋转器 | ★★★★☆ | 跨模型一致(GPT2+Qwen3)、分类标准清晰 |
+| 测试23: hidden→logit线性 | ★★★★★ | 线性度0.99999998、架构决定性、不可能出错 |
+| 测试25: 低频敏感 | ★★★★☆ | 有频带扫描、cos=0.84有绝对值 |
+| 测试26: 功能方向删除≈随机 | ★★★★★ | p<0.01、有随机基线比、三模型两两一致 |
+| 测试27: 线性probe>MLP | ★★★★☆ | 三模型一致、有具体准确率 |
+| 测试11: 有效秩趋势 | ★★★★☆ | 三模型一致、趋势方向明确 |
+
+#### 中等可信度（3★）：19项
+
+| 测试 | 评级 | 主要缺陷 |
+|------|------|---------|
+| 测试2: 概念层级 | ★★★☆☆ | 样本<10词；GLM4/DS7B数据~2.5不精确 |
+| 测试3: 纯净Embedding | ★★★☆☆ | std=0.000可能probe训练失败 |
+| 测试4: 功能标签 | ★★★☆☆ | 每层1个标签信息压缩过度 |
+| 测试6: Attn/FFN比 | ★★★★☆ | 定义对范数敏感 |
+| 测试7: 消歧路径 | ★★★☆☆ | 仅20词(Qwen3)、无其他模型验证 |
+| 测试10: 螺旋轨迹 | ★★★☆☆ | 角度范围12-18°太宽；DS7B"估计" |
+| 测试14: 激活密度 | ★★★★☆ | 三模型数据完整 |
+| 测试16: 基底偏置 | ★★★☆☆ | R²=0.38解释力弱 |
+| 测试17: 黄金层 | ★★★★☆ | cos=0.84-0.90强、但仅两类词验证 |
+| 测试19: 17维饱和 | ★★★☆☆ | I(T;Y)=2.024绝对值小；仅Qwen3 |
+| 测试22: 编码演化 | ★★★☆☆ | 定性追踪、无可量化指标 |
+| 测试28: 策略三分 | ★★★☆☆ | 样本量=4模型→分类不可靠 |
+| 测试30: 六维不变量 | ★★★☆☆ | 场控制杆100%可能循环论证 |
+| 测试31: 7段链 | ★★★☆☆ | ICSPB理论未被独立验证 |
+| 测试35: 多特征正交 | ★★★☆☆ | R²=0.1426→线性叠加失败 |
+| 测试38: 统一码本 | ★★★☆☆ | 仅1.5B模型 |
+| 测试39: 抽象算子 | ★★★☆☆ | 仅1.5B模型 |
+| 测试45: 共享基底 | ★★★☆☆ | H5 FAIL两模型一致 |
+| 测试52: 编码规律 | ★★★☆☆ | 仅DS7B、5条规律都是PASS但无基线 |
+
+#### 低可信度（1-2★）：12项
+
+| 测试 | 评级 | 关键硬伤 |
+|------|------|---------|
+| 测试15: 残差保留率 | ★★☆☆☆ | f_preserve=0.03违背残差连接数学定义 |
+| 测试18: 偏置线性性 | ★★☆☆☆ | 初始结论与修正结论完全相反 |
+| 测试20: SVD因子 | ★★☆☆☆ | 多重比较问题未校正 |
+| 测试21: 中英文一致 | ★★☆☆☆ | 偏置余弦0.325远不够"共享" |
+| 测试29: GLM4翻译增强 | ★★☆☆☆ | 绝对值极小(0.095→0.193) |
+| 测试33: 门控正交性 | ★★☆☆☆ | 末端cos=-0.616质变未解释 |
+| 测试36: 合成改写 | ★★☆☆☆ | 合成k=2与真实k=64矛盾 |
+| 测试40: 抽象阶梯 | ★★☆☆☆ | lift1/lift2负对齐与理论矛盾 |
+| 测试42: 因果回路 | ★★☆☆☆ | margin=+0.0009几乎为零 |
+| 测试43: ICSPB行为 | ★★☆☆☆ | Ollama非直接访问；高竞争0.5 |
+| 测试44: 4-bit探针 | ★★☆☆☆ | 量化改变数值但测试分辨率不够 |
+| 测试53: Hessian操控 | ★★☆☆☆ | 范数稀释3234x与测试9的4x矛盾 |
+
+#### 未充分验证：13项
+
+| 测试 | 原因 |
+|------|------|
+| 测试13 | 仅1模型数据 |
+| 测试24 | Qwen3 z=127但其他模型不显著 |
+| 测试34 | 合成模拟，非真实模型 |
+| 测试37 | 仅1.5B模型 |
+| 测试46-47 | GPT2+Qwen3，无DS7B |
+| 测试48-49 | GPT2+Qwen3 |
+| 测试50-51 | GPT2+Qwen3 |
+| 测试41 | 仅1.5B模型336头 |
+
+### B.3 5大系统性硬伤
+
+#### 1. FP16精度失真（已实证！）
+
+Phase CLIX对比实验揭示：
+
+| 指标 | FP16 | FP32 | 失真率 |
+|------|------|------|--------|
+| global_balance | 0.005-0.010 | 0.09-0.13 | **+1000%** |
+| global_cos_GA | -0.9998 | -0.98 | **+2%** |
+| mean_cos_GA | -0.89 | -0.08 | **+91%** |
+| same/opp_sign | 2-4/32-36 | 15-19/17-21 | **完全不同** |
+
+**影响范围**：所有涉及数值精度敏感的测试（测试6/14/15/28/33等），"极端对抗平衡"结论被FP16放大。
+
+#### 2. 无随机初始化基线
+
+所有"架构不变量"结论（场控制杆100% FIELD、FFN 97%旋转器、偏转角~13°/层）无法区分：
+- **架构固有属性**（随机初始化就有）
+- **学习产物**（训练后才出现）
+
+#### 3. 样本量不足
+
+| 测试类别 | 典型样本量 | 统计功效 |
+|---------|----------|---------|
+| 概念层级 | 5-8词/类 | 极低 |
+| 歧义词消歧 | 20词 | 低 |
+| 因果干预 | 4-8词 | 极低 |
+| SVD因子 | 5属性×20词 | 低 |
+
+无置信区间、无bootstrap、无重复实验。
+
+#### 4. 因果vs相关混淆
+
+| 测试 | 声称 | 实际 |
+|------|------|------|
+| 测试10 | "架构级不变量" | 仅证明相关性（跨句子偏转角相似） |
+| 测试31 | "7段链映射" | 事后拟合，非因果验证 |
+| 测试7 | "attention是默认消歧机制" | 可能第三因素驱动 |
+
+#### 5. 缺失金标准方法
+
+- **Causal Tracing**（ROME框架）：完全未用
+- **Path Patching**：完全未用
+- **CKA分析**：完全未用
+- **随机初始化对照**：完全未用
+
+---
+
+## 附录C：缺失的主流测试
+
+### C.1 机制可解释性标准方法
+
+| 编号 | 缺失测试 | 说明 | 重要性 | 参考文献及公式 |
+|------|---------|------|--------|--------------|
+| M1 | **Causal Tracing** | 逐位置、逐层添加噪声，测量对输出的因果效应 | ★★★★★ | Meng et al. 2022 (ROME): $\text{TE}(l, t) = P(y | \text{do}(h^{(l)}_t = \tilde{h}^{(l)}_t)) - P(y)$ |
+| M2 | **Path Patching** | 精确追踪信息从位置A通过头B到位置C的路径 | ★★★★★ | Goldstein et al. 2023: 修改特定路径 $A^{(l)}_{h, t_s \to t}$ 后测量输出变化 |
+| M3 | **Causal Scrubbing** | 用随机残差流替换特定分量，形式化验证因果假设 | ★★★★★ | Chan et al. 2022 (Redwood): $P(y | \text{resample}(h^{(l)}, \text{distribution}))$ |
+| M4 | **探针容量曲线** | 不同训练集大小的探针准确率曲线 | ★★★★☆ | $\text{acc}(n) = \text{acc}_\infty - c/n^\alpha$ |
+| M5 | **注意力头消融+任务性能** | 逐头消融后测量具体任务性能变化 | ★★★★☆ | $\Delta\text{acc}_h = \text{acc}_{\text{baseline}} - \text{acc}_{\text{ablate}(h)}$ |
+
+### C.2 表征几何标准方法
+
+| 编号 | 缺失测试 | 说明 | 重要性 | 参考文献及公式 |
+|------|---------|------|--------|--------------|
+| M6 | **CKA分析** | Centered Kernel Alignment比较表征空间 | ★★★★★ | Kornblith et al. 2019: $\text{CKA}(X, Y) = \frac{\text{HSIC}(XX^T, YY^T)}{\sqrt{\text{HSIC}(XX^T, XX^T) \cdot \text{HSIC}(YY^T, YY^T)}}$ |
+| M7 | **SVCCA** | SVD+CCA比较网络表征 | ★★★★☆ | Raghu et al. 2017: 先对 $X$ 做SVD保留top-k，再对 $X_k, Y$ 做CCA |
+| M8 | **CCA/RCCA** | 典型相关分析比较不同层/模型 | ★★★★☆ | $\text{CCA}(X, Y) = \max_{u,v} \text{corr}(Xu, Yv)$ |
+| M9 | **流形切空间分析** | 局部PCA估计切空间维度和曲率 | ★★★☆☆ | 局部邻域 $N_\epsilon(x)$ 的PCA有效秩 + Riemann曲率张量估计 |
+| M10 | **拓扑数据分析(TDA)** | 持续同调分析表征空间拓扑 | ★★★☆☆ | $\text{PH}_k = \{(\text{birth}_i, \text{death}_i)\}$ — k维洞的出生/死亡时间 |
+
+### C.3 大规模行为评测
+
+| 编号 | 缺失测试 | 说明 | 重要性 | 参考文献及公式 |
+|------|---------|------|--------|--------------|
+| M11 | **探针格(Probe Grid)** | >1000词对系统测试关系编码 | ★★★★★ | 类比: $a:b::c:?$/, 上位: dog:animal, 反义: hot:cold |
+| M12 | **大规模因果干预** | >100个输入的因果干预统计 | ★★★★★ | $P(\Delta\text{logit} > \epsilon | \text{intervention})$ 的完整分布 |
+| M13 | **涌现能力层定位** | 各层对推理/数学/代码任务的贡献 | ★★★★☆ | 逐层logit lens + 特定任务的因果追踪 |
+| M14 | **跨语言大规模** | >3语言×>100词 | ★★★☆☆ | 多语言CKA + 翻译对的逐层对齐度 |
+
+### C.4 动力学与训练分析
+
+| 编号 | 缺失测试 | 说明 | 重要性 | 参考文献及公式 |
+|------|---------|------|--------|--------------|
+| M15 | **训练过程表征演化** | 追踪checkpoint的表征变化 | ★★★★☆ | $\text{CKA}(h^{(l)}_{\text{ckpt}_t}, h^{(l)}_{\text{ckpt}_{t+1}})$ 逐checkpoint |
+| M16 | **梯度流分析** | 反向传播中梯度的层间流动 | ★★★★☆ | $\text{grad\_norm}^{(l)} = \|\partial\mathcal{L}/\partial h^{(l)}\|_2$ 及梯度衰减比 |
+| M17 | **Loss Landscape** | 参数空间的loss曲面结构 | ★★★☆☆ | 沿随机方向的1D/2D loss切片 + Hessian谱 |
+
+### C.5 关键基线对比
+
+| 编号 | 缺失测试 | 说明 | 重要性 | 参考文献及公式 |
+|------|---------|------|--------|--------------|
+| M18 | **随机初始化模型基线** | 未训练模型的所有测试作为基线 | ★★★★★ | 对比 $\text{metric}_{\text{trained}}$ vs $\text{metric}_{\text{random\_init}}$ |
+| M19 | **Shuffle标签基线** | 打乱标签训练的探针 | ★★★★☆ | $\text{acc}_{\text{shuffle}}$ 作为探针准确率上限 |
+| M20 | **同系列不同规模** | Qwen3-0.5B/1.5B/4B/7B的scaling | ★★★★☆ | $\text{metric}(N) = \alpha N^\beta$ 的scaling law |
+
+### C.6 缺失测试优先级排序
+
+**必须立即补充（第一优先级）：**
+
+1. **M18: 随机初始化基线** — 区分架构vs学习的唯一方法，成本极低（加载模型不训练）
+2. **M1: Causal Tracing** — 机制可解释性的金标准，直接验证因果性而非相关性
+3. **M6: CKA分析** — 表征空间比较的标准方法，比余弦相似度更严谨
+4. **M12: 大规模因果干预** — 从4词→100词，从定性→定量统计
+
+**应该尽快补充（第二优先级）：**
+
+5. M2: Path Patching
+6. M5: 注意力头消融+任务性能
+7. M19: Shuffle标签基线
+8. M11: 探针格(>1000词对)
+
+**长期补充（第三优先级）：**
+
+9. M15: 训练过程演化
+10. M20: 同系列scaling
+
+---
+
+> 附录更新时间：2026-04-18 09:00
