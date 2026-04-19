@@ -4118,3 +4118,131 @@ S3归一化Gram矩阵(200对/特征,14层采样):
   3. DS7B归一化PC1=39.6%仍远高于Qwen3(11.9%)和GLM4(9.6%) → DS7B确实有特殊结构
   4. 特征间PC-cos: DS7B semantic vs tense=-0.9255, sentiment vs tense=-0.9767 → 近正交
      Qwen3: polarity vs tense=-0.6876, semantic vs tense=-0.5134 → 中等分离
+
+[2026-04-19 13:42] Phase CCIV: 8bit量化模型Head Hook因果定位完成! ★★★核心突破★★★
+
+问题: 4bit量化的GLM4/DS7B的W_o返回8M×1压缩张量,无法分离head → 8bit量化W_o形状正确!
+
+8bit量化可行性:
+  RTX 5070 11.9GB → DS7B 8bit占10GB ✓, GLM4 8bit+CPU offload占9.5GB ✓
+  8bit W_o: DS7B [3584,3584] ✓, GLM4 [4096,4096] ✓ (4bit时是8M×1 ✗)
+  8bit W_o可dequantize为float32,正确分离为28/32个head子空间
+
+S1-8bit 因果PCA (验证8bit与4bit一致性, 150对/特征):
+  DS7B 8bit: PC1=53.4%, PC2=13.8%, 前20PC=83.1%  ← vs 4bit: PC1=58%, PC2=13.2%, 前20PC=85.6% → 一致!
+  DS7B 归一化: PC1=37.5% ← vs 4bit: 39.6% → 一致!
+  GLM4 8bit: PC1=8.0%, PC2=7.3%, 前20PC=47.1% ← vs 4bit: PC1=9.0%, PC2=7.2%, 前20PC=46.8% → 一致!
+  GLM4 归一化: PC1=9.7% ← vs 4bit: 9.6% → 一致!
+  ★★★ 8bit与4bit的PCA结果高度一致 → 量化精度不影响因果空间结构 ★★★
+
+S2-8bit Head Hook因果定位 (W_o投影法, 800差分向量, 10层采样):
+
+  DS7B — ★★★L27因果汇聚确认★★★:
+    L0:  top h6=+0.306 (polarity主导)
+    L5:  top h2=+0.200
+    L10: top h27=+0.221
+    L15: top h5=+0.218
+    L20: top h5=+0.218
+    L23: top h23=+0.224
+    L24: top h7=+0.215
+    L25: top h5=+0.218
+    L26: top h23=+0.224
+    L27: ★★★ top h12=+0.509!, h10=+0.502!, h13=+0.500!, h11=+0.461!, h7=+0.428 ★★★
+    → L27 head cos从0.2跳到0.5! 与Gram 90%突变完全吻合!
+    → h10-h13形成因果汇聚cluster(4个连续head),且各特征cos几乎相等(~0.51)
+    → 这意味着L27的因果汇聚是跨特征的,不是某个特征专用
+
+  GLM4 (L36-L39被CPU offload到meta device,无法读取W_o):
+    L0:  top h1=+0.188
+    L8:  top h6=+0.203
+    L16: top h26=+0.227
+    L24: top h15=+0.183
+    L32: top h14=+0.225 (sentiment=0.308最高)
+    L35: top h1=+0.198
+    → GLM4没有DS7B那种突变,head cos在0.15-0.23范围,较为均匀
+    → L32 h14有弱汇聚(sentiment=0.308),但不如Qwen3/DS7B强
+
+三模型对比:
+  Qwen3 L35: h12=+0.932 ★★★ (整体attn cos仅+0.032!)
+  DS7B L27:  h12=+0.509, h10=+0.502, h13=+0.500 (4-head cluster)
+  GLM4:      无明显汇聚head,最高仅L32 h14=+0.225
+
+  ★★★ 关键洞察: 因果汇聚强度 Qwen3(0.93) >> DS7B(0.50) >> GLM4(0.23) ★★★
+  这与因果空间低秩程度完全一致: DS7B PC1=58% >> GLM4 PC1=9%
+  但Qwen3是反例: PC1=14.8%不高,但head汇聚最强 → 汇聚不等于低秩!
+
+硬伤:
+  1. GLM4 L36-L39 meta device → 最后4层W_o无法读取(最关键层!)
+  2. DS7B L27 h12/h10/h13各特征cos几乎相等(~0.51) → 是通用因果汇聚还是head空间太低维?
+  3. W_o投影法是间接的 → 差分向量经过W_o投影后cos=0.5可能因为W_o子空间重叠
+  4. 需要直接在attention内部hook head输出(如Qwen3的fix_s2方法)验证
+
+[2026-04-19 17:50] Phase CCV: 鐩存帴Head杈撳嚭Hook + W_o SVD鍒嗘瀽瀹屾垚! 鈽呪槄鈽呭叧閿獊鐮粹槄鈽呪槄
+
+闂: Phase CCIV鐨刉_o鎶曞奖娉曟槸闂存帴鐨? cos=0.5鍙兘鍥犱负W_o瀛愮┖闂撮噸鍙?鏂规: 鐩存帴hook o_proj鐨刬nput 鈫?鑾峰彇姣忎釜head鐨勭嫭绔嬭緭鍑?[n_heads*d_head]
+鏍锋湰: 800 pairs/鐗瑰緛 = 22400-25600 head绾у樊鍒嗗悜閲?(澶ф牱鏈?)
+
+S1 鐩存帴Head鍥犳灉涓€鑷存€?(22400-25600涓猦ead绾у樊鍒嗗悜閲? 10灞傞噰鏍?:
+
+  DS7B 鈥?鈽呪槄鈽匧27鍥犳灉姹囪仛纭鈽呪槄鈽?
+    L0:  top h15=0.462 (tense=1.000!)
+    L5:  top h24=0.313
+    L10: top h5=0.300
+    L15: top h24=0.288
+    L20: top h5=0.283
+    L23: top h10=0.371 (sentiment=0.892)
+    L24: top h6=0.262
+    L25: top h24=0.314
+    L26: top h20=0.368 (tense=0.962)
+    L27: 鈽呪槄鈽?top h12=0.511 (tense=0.956, polarity=0.922, number=0.911)
+             h13=0.486 (number=0.932, tense=0.861)
+             h10=0.477 (polarity=0.932, tense=0.837)
+             h11=0.470 (polarity=0.918)
+    鈫?L27 head alignment浠?.26-0.37璺冲埌0.47-0.51! 鍥犳灉姹囪仛纭!
+    鈫?h12=tense姹囪仛(0.956), h10=polarity姹囪仛(0.932), h13=number姹囪仛(0.932) 鈫?鐗瑰緛鐗瑰紓鎬?
+    鈫?h10-h13杩炵画4-head cluster, 鍚勬湁鐗瑰緛鐗瑰紓鎬?
+
+  Qwen3:
+    L0:  top h4=0.391 (tense=0.996!)
+    L35: 鈽呪槄鈽?top h0=0.874 (polarity=0.996!, tense=0.961, number=0.930)
+             h1=0.836 (polarity=0.994!)
+             h29=0.756 (sentiment=0.995!)
+    鈫?Qwen3 L35 鏈?涓瀬寮烘眹鑱歨ead: h0(polarity), h1(polarity), h29(sentiment)
+    鈫?娉ㄦ剰: 涔嬪墠W_o鎶曞奖娉曞彂鐜癶12=0.932, 鐩存帴hook娉曞彂鐜癶0=0.874
+      鈫?涓ょ鏂规硶缁欏嚭涓嶅悓鐨則op head! 鍥犱负W_o鎶曞奖娉曞拰鐩存帴hook娉曠殑搴﹂噺涓嶅悓
+
+  GLM4:
+    L0:  top h27=0.461 (tense=0.957)
+    L32: top h14=0.658 (sentiment=0.995!, tense=0.938)
+    L35: top h1=0.437 (鍚勭壒寰佸潎鍖€)
+    鈫?GLM4 L32 h14 alignment=0.658! 姣斾箣鍓峎_o鎶曞奖鐨?.225楂樺緱澶?
+    鈫?GLM4纭疄鏈夊洜鏋滄眹鑱? 鍙槸W_o鎶曞奖娉曚綆浼颁簡瀹?
+
+  鈽呪槄鈽?涓夋ā鍨媋lignment瀵规瘮 鈽呪槄鈽?
+    Qwen3 L35 h0: 0.874 (polarity=0.996)
+    GLM4 L32 h14: 0.658 (sentiment=0.995)
+    DS7B L27 h12: 0.511 (tense=0.956)
+    鈫?鎵€鏈夋ā鍨嬬殑鏈眰閮芥湁鍥犳灉姹囪仛head! 浣嗗己搴︿笉鍚?    鈫?鍗曠壒寰乤lignment閮?0.93! 鈫?head杈撳嚭鏂瑰悜鐨勫洜鏋滀俊鍙锋瀬寮?
+
+S2 W_o SVD鍒嗘瀽:
+  DS7B L27: top1 S^2=18.8%, eff_rank_90=727, cond=35.8, head_corr=0.022
+    鈫?W_o鏄弧绉╃殑! 涓嶅瓨鍦╓_o鍧嶇缉!
+    鈫?cos=0.5涓嶆槸鍥犱负W_o瀛愮┖闂撮噸鍙?
+  DS7B鍏朵粬灞? top1 S^2绾?6-18%, eff_rank_90绾?00-740
+    鈫?L27鐨刉_o SVD涓庡叾浠栧眰鏃犳槑鏄惧樊寮?
+  鈽呪槄鈽?L27鍥犳灉姹囪仛鍙戠敓鍦╤ead杈撳嚭绌洪棿, 鑰屼笉鏄疻_o瀛愮┖闂?鈽呪槄鈽?
+S3 Head-Feature鐗瑰紓鎬х煩闃?(鍥犳灉鍘熷瓙瀹氫綅):
+  DS7B L27: 
+    h10 鈫?polarity(0.214), h12 鈫?tense(0.192), h13 鈫?number(0.152), h11 鈫?sentiment(0.107)
+    鈫?4-head cluster鍚勬湁鐗瑰緛鐗瑰紓鎬? 杩欐槸鍥犳灉鍘熷瓙!
+    鈫?h10 norm=24097, h12 norm=27583 (鍥犳灉鑼冩暟姣斿叾浠杊ead澶?0鍊?)
+  Qwen3 L35:
+    h0 鈫?polarity(0.141), h29 鈫?sentiment(0.130)
+    鈫?2涓猦ead鏈夊急鐗瑰紓鎬? 浣嗗ぇ閮ㄥ垎鐗瑰緛鍏变韩head
+  GLM4 L32:
+    h14 鈫?sentiment(0.302, tense=0.284, semantic=0.263)
+    鈫?h14鏄€氱敤鍥犳灉head, 涓嶅尯鍒嗙壒寰?
+鍏抽敭娲炲療:
+  1. 鈽呪槄鈽?head鍥犳灉alignment = head杈撳嚭鐨勫樊鍒嗘柟鍚戜竴鑷存€?鈽呪槄鈽?     杩欐槸姣擶_o鎶曞奖娉曟洿鐩存帴銆佹洿鍑嗙‘鐨勫洜鏋滄眹鑱氬害閲?  2. 鈽呪槄鈽?鍗曠壒寰乤lignment > 0.93, 浣嗚法鐗瑰緛alignment浠?.3-0.5 鈽呪槄鈽?     鈫?head瀵瑰崟涓壒寰佺殑鍥犳灉鏂瑰悜楂樺害涓€鑷? 浣嗕笉鍚岀壒寰佺殑宸垎鏂瑰悜涓嶅悓
+     鈫?鎵€浠ヨ法鐗瑰緛alignment琚?绋€閲?浜? 涓嶆槸head涓嶅姹囪仛, 鑰屾槸鐗瑰緛鏂瑰悜涓嶅悓
+  3. 鈽呪槄鈽?鍥犳灉鍘熷瓙: DS7B L27鐨刪10=polarity, h12=tense, h13=number 鈽呪槄鈽?     杩欐槸绗竴娆″彂鐜癶ead绾х殑鍥犳灉鍘熷瓙! 涓嶅悓head璐熻矗涓嶅悓璇硶鐗瑰緛!
