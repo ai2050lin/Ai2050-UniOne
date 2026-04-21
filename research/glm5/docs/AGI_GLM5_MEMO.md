@@ -4777,3 +4777,485 @@ P5 代数/拓扑 — 25%
 5. 语义特征patching (P4)
   - 测试semantic/sentiment的因果效应
   - 是否也是逐层递增? 还是不同模式?
+
+=================================================================
+Phase CCIX: 因果效应代数结构 (2026-04-20 22:00-202604210229)
+=================================================================
+
+核心实验: 三模型(DS7B/Qwen3/GLM4)全层扫描 + 代数拟合 + 语义特征
+
+S1. Residual全层扫描 (8层, 200对/特征, median统计)
+=================================================================
+
+DS7B (28层, 8层采样):
+  L0:  tense=139, polarity=116, number=79
+  L7:  tense=235, polarity=321, number=219
+  L15: tense=326, polarity=495, number=347
+  L27: tense=452, polarity=725, number=295
+  >>> 全部递增! median比mean更稳定
+
+Qwen3 (36层, 8层采样):
+  L0:  tense=19,  polarity=15,  number=29
+  L18: tense=115, polarity=137, number=183
+  L35: tense=239, polarity=256, number=388
+  >>> 全部递增! 低层因果效应极小
+
+GLM4 (40层, 8层采样):
+  L0:  tense=55,  polarity=54,  number=56
+  L20: tense=147, polarity=196, number=192
+  L39: tense=174, polarity=240, number=268
+  >>> 全部递增! 但增长比Qwen3更慢
+
+S2. 代数拟合结果 (CRITICAL!)
+=================================================================
+
+语法特征(tense/polarity/number):
+  tense:    linear R2=0.98(DS7B), 0.99(Qwen3), power_law R2=0.99(GLM4)
+  polarity: power_law R2=0.93(DS7B), 0.99(Qwen3), 0.98(GLM4)
+  number:   logarithmic R2=0.81(DS7B), linear R2=0.99(Qwen3), linear R2=0.98(GLM4)
+  >>> 语法特征: linear/power_law最佳, R2>0.93
+  >>> 因果效应增长是亚线性的! 不是指数增长!
+
+语义特征(sentiment/semantic_topic):
+  sentiment:    power_law R2=0.91(DS7B), exponential R2=0.27(Qwen3), power_law R2=0.26(GLM4)
+  semantic_topic: power_law R2=0.62(DS7B), exponential R2=0.84(Qwen3), exponential R2=0.70(GLM4)
+  >>> 语义特征: R2极低! 递增趋势极弱, 几乎是常数!
+  >>> 关键差异: 语法递增 vs 语义恒定!
+
+S3. Attn vs MLP贡献
+=================================================================
+
+DS7B: L0 attn=48pct/52pct, L27 attn=50pct/50pct  (几乎不变!)
+Qwen3: L0 attn=52pct/48pct, L35 attn=23pct/77pct (MLP主导末层)
+GLM4: L0 attn=50pct/50pct, L39 attn=22pct/78pct (MLP主导末层)
+
+>>> DS7B的attn/mlp比与Qwen3/GLM4完全不同!
+>>> Qwen3和GLM4: 末层MLP=77-78pct, 与Phase CCVIII一致
+>>> DS7B: 末层仍50:50, 可能是8bit量化+Distill模型差异
+
+S4. 语义特征因果效应
+=================================================================
+
+DS7B:
+  L0:  sentiment=611, topic=647
+  L27: sentiment=876, topic=935
+  >>> 语义L0就比语法大4-8倍! 递增缓慢
+
+Qwen3:
+  L0:  sentiment=394, topic=500
+  L35: sentiment=457, topic=601
+  >>> 语义几乎不变! 语法递增但语义恒定
+
+GLM4:
+  L0:  sentiment=434, topic=501
+  L39: sentiment=409, topic=562
+  >>> sentiment几乎不变! topic略增
+
+>>> 三模型一致: 语义因果效应 >> 语法因果效应 (L0)
+>>> 语义特征在embedding层就充分编码, 无需逐层累积!
+
+=================================================================
+Phase CCIX 核心发现
+=================================================================
+
+1. 因果效应代数结构: linear/power_law增长, 非指数!
+   - 语法: R2>0.93, 亚线性增长(logarithmic/power_law)
+   - 语义: R2<0.3, 几乎恒定, 无增长趋势
+
+2. 语法 vs 语义: 根本不同的因果动力学!
+   - 语法: L0弱 -> 末层强 (需要逐层累积)
+   - 语义: L0就强 -> 末层差不多 (embedding直接编码)
+   - 这是本阶段最重要的发现!
+
+3. Attn/MLP: Qwen3和GLM4末层MLP=77-78pct一致
+   - DS7B异常: 末层仍50:50 (Distill+8bit影响)
+
+4. median >> mean稳定性: 语法特征std/mean>1, 必须用median
+
+=================================================================
+Phase CCIX 硬伤与瓶颈
+=================================================================
+
+硬伤1: 语法特征样本不均衡
+  - tense/polarity: 200对, number: 只有20对!
+  - number的拟合R2较低(0.81)可能是样本不足
+  - 需要更多number对验证
+
+硬伤2: 语义特征R2极低
+  - sentiment/semantic_topic几乎恒定
+  - 可能是: (a)语义确实在L0就编码完; (b)l2对语义不敏感; (c)25对太少
+  - 需要用logit-based patching验证
+
+硬伤3: DS7B的attn/mlp比异常
+  - Qwen3/GLM4末层MLP=77-78pct, 但DS7B=50pct
+  - 可能原因: DeepSeek-R1-Distill的知识蒸馏改变了attn/mlp平衡
+  - 需要用非Distill模型验证
+
+硬伤4: Patching只测了logit差异
+  - l2(patched_logits - clean_logits)不等于因果强度
+  - 不同logit维度的因果贡献可能不同
+  - 需要targeted patching: 只替换与特征相关的logit维度
+
+=================================================================
+第一性原理: 语言背后数学原理的最新进展
+=================================================================
+
+核心洞察更新:
+  1. 因果效应 = linear * layer + const (语法)
+     因果效应 = const (语义)
+     这是两种根本不同的数学结构!
+
+  2. 语法信息的逐层累积: 类似于积分算子
+     I(x) = integral_0^x f(t) dt, 其中f(t)是每层新增的语法信息
+     如果f(t)=const, 则I(x)=f*x (线性增长)
+     如果f(t)=t^(-alpha), 则I(x)=x^(1-alpha)/(1-alpha) (幂律增长)
+
+  3. 语义信息的直接编码: 类似于投影算子
+     P_semantic: embedding_space -> semantic_subspace
+     语义信息不需要逐层累积, 而是直接从embedding映射
+
+  4. 语法vs语义的数学对偶:
+     语法 = 时间域(层间累积) = 积分算子
+     语义 = 频率域(全局编码) = 投影算子
+     这类似于信号处理中的时-频对偶!
+
+下一步突破:
+  1. 验证语法/语义对偶: 对更多特征类型进行patching
+  2. MLP因果原子: SAE在MLP output空间训练
+  3. 时-频对偶的数学证明: 是否存在精确的代数结构?
+  4. Targeted patching: 只替换与特征相关的logit维度
+  5. 非Distill模型验证: 原版Qwen-7B, Llama-7B
+
+=================================================================
+Phase CCX: 语法/语义因果对偶验证 ({now})
+=================================================================
+
+核心改进: number扩充到100模板, 新增negation/question, 全部120对
+7特征 x 8层 x 120对 = 6720组patching/模型
+
+S1. Residual全层扫描 (median_l2, n=120)
+=================================================================
+
+DS7B (28层):
+  Layer | tense | polarity | number | negation | question | sentiment | topic
+  L0    |  140  |   134    |  131   |   116    |   109    |   674     |  722
+  L7    |  246  |   319    |  202   |   311    |   281    |   711     |  818
+  L15   |  306  |   463    |  269   |   420    |   591    |   803     |  954
+  L27   |  480  |   743    |  383   |  1000    |  1073    |   869     |  962
+
+Qwen3 (36层):
+  Layer | tense | polarity | number | negation | question | sentiment | topic
+  L0    |   18  |    16    |   21   |    16    |    17    |   404     |  509
+  L10   |  102  |   103    |  107   |   111    |   112    |   394     |  537
+  L20   |  135  |   151    |  176   |   175    |   177    |   362     |  526
+  L35   |  241  |   259    |  303   |   286    |   382    |   421     |  629
+
+GLM4 (40层):
+  Layer | tense | polarity | number | negation | question | sentiment | topic
+  L0    |   53  |    54    |   54   |    53    |    53    |   418     |  501
+  L11   |  109  |   133    |  102   |   138    |   131    |   386     |  520
+  L22   |  148  |   209    |  182   |   228    |   343    |   368     |  532
+  L39   |  180  |   249    |  251   |   260    |   412    |   407     |  576
+
+S2. 对偶分类 (growth_ratio > 1.5 = SYNTACTIC)
+=================================================================
+
+DS7B:
+  SYNTACTIC: tense=3.43x, polarity=5.53x, number=2.92x, negation=8.64x, question=9.85x
+  SEMANTIC:  sentiment=1.29x, semantic_topic=1.33x
+
+Qwen3:
+  SYNTACTIC: tense=13.43x, polarity=15.86x, number=14.35x, negation=17.88x, question=23.04x
+  SEMANTIC:  sentiment=1.04x, semantic_topic=1.24x
+
+GLM4:
+  SYNTACTIC: tense=3.38x, polarity=4.63x, number=4.63x, negation=4.89x, question=7.83x
+  SEMANTIC:  sentiment=0.97x(!), semantic_topic=1.15x
+
+S3. 代数拟合 (BEST R2)
+=================================================================
+
+DS7B:
+  tense=linear(0.970), polarity=linear(0.846), number=linear(0.939)
+  negation=exponential(0.913), question=linear(0.979)
+  sentiment=linear(0.837), semantic_topic=power_law(0.860)
+
+Qwen3:
+  tense=linear(0.985), polarity=linear(0.988), number=linear(0.993)
+  negation=power_law(0.993), question=linear(0.978)
+  sentiment=power_law(0.062)!!!, semantic_topic=exponential(0.808)
+
+GLM4:
+  tense=power_law(0.987), polarity=power_law(0.974), number=linear(0.984)
+  negation=power_law(0.969), question=linear(0.937)
+  sentiment=power_law(0.273)!!!, semantic_topic=exponential(0.947)
+
+S4. Attn vs MLP
+=================================================================
+
+DS7B: L0=50:50, L27=50:50 (异常, Distill影响)
+Qwen3: L0=52:48, L35=24:76 (MLP主导末层)
+GLM4: L0=50:50, L39=23:77 (MLP主导末层)
+
+GLM4 L0 sentiment: attn=13%, mlp=87% (语义在L0就由MLP主导!)
+
+S5. 对偶假设统计检验 (Mann-Whitney U)
+=================================================================
+
+三模型一致:
+  Growth ratio: U=10.0, p=0.0476 (syntactic > semantic, 显著!)
+  L0 value: U=10.0, p=0.0476 (semantic > syntactic, 显著!)
+
+=================================================================
+Phase CCX 核心发现 (三模型一致, n=120)
+=================================================================
+
+1. 语法/语义因果对偶: 统计显著 (p<0.05)
+   - 语法: growth_ratio=2.9-23x, L0=16-140
+   - 语义: growth_ratio=0.97-1.33x, L0=394-722
+   - 两种完全不同的因果动力学!
+
+2. number扩充到100模板后确认: 也是SYNTACTIC!
+   - DS7B: growth=2.92x, linear R2=0.939
+   - Qwen3: growth=14.35x, linear R2=0.993
+   - GLM4: growth=4.63x, linear R2=0.984
+   - 之前number只有20对, R2低=0.81, 现在120对确认!
+
+3. negation和question也是SYNTACTIC
+   - negation: growth=4.89-17.88x, R2>0.91
+   - question: growth=7.83-23.04x, R2>0.93
+   - 全部5种语法特征一致!
+
+4. sentiment R2极低: Qwen3=0.062, GLM4=0.273
+   - 几乎完全随机, 没有任何增长趋势
+   - GLM4: growth=0.97x (负增长!)
+   - 语义因果效应是常数函数!
+
+5. question增长最大: 7.83-23.04x
+   - 疑问句变换需要更多层间累积
+   - negation增长也很大: 4.89-17.88x
+
+=================================================================
+Phase CCX 硬伤与瓶颈
+=================================================================
+
+硬伤1: p=0.0476刚好在0.05边界
+  - 语法5特征 vs 语义2特征, 样本不平衡
+  - 需要更多语义特征(如: 主动/被动, 人称变换, 语域变换)
+  - Mann-Whitney U检验统计力不足
+
+硬伤2: 语义特征只有2种
+  - sentiment和semantic_topic都偏向"情感/主题"类型
+  - 缺少: 句法角色(主语/宾语), 信息结构(焦点/预设), 语用特征
+  - 二分法可能只是这2种语义的特殊性质
+
+硬伤3: DS7B的Attn/MLP比异常
+  - 50:50不变, 与Qwen3/GLM4的77:23完全不同
+  - DeepSeek-R1-Distill的知识蒸馏改变了内部结构
+
+硬伤4: negation的exponential增长(DS7B)
+  - DS7B negation=exponential, 其他模型=power_law/linear
+  - 可能是Distill模型的特殊性质
+
+=================================================================
+新型SAE分析
+=================================================================
+
+默认SAE的困境:
+  标准SAE在残差流上训练, 重建全局稠密表示
+  问题: 残差流是所有信息的叠加, SAE挖出的是统计频率特征
+  无法区分: 语法贡献 vs 语义贡献 vs 噪声
+
+新型SAE方案 (7种):
+
+1. Head-wise独立头SAE
+   - 每个Attention Head单独训练SAE
+   - 优势: 捕捉Head的局部因果功能
+   - 与本研究对齐: 已发现Head特异性(phase CCVI)
+   - 实现: 对每个Head output做SAE分解
+
+2. 去全局基线SAE (Subtract-then-SAE)
+   - 先减去全局均值, 再对残差做SAE
+   - 优势: 去掉"背景辐射"(L0就存在的语义信息)
+   - 与本研究对齐: 语义L0就大, 是全局基线
+   - 实现: h_resid - mean(h_resid) -> SAE
+
+3. 差分Delta因果SAE (Delta-SAE)
+   - 对因果差分向量 delta = h(source) - h(clean) 做SAE
+   - 优势: 直接分解因果效应的组成
+   - 与本研究完美对齐: 我们已经计算了差分向量!
+   - 关键洞察: 语法delta逐层增长, 语义delta恒定
+   - Delta-SAE可以发现: 语法原子 vs 语义原子
+
+4. 分块低维SAE (Block-SAE)
+   - 按因果子空间分组, 每组独立训练小SAE
+   - 优势: 低维更稀疏, 特征更可解释
+   - 与本研究对齐: 因果空间约5个正交子空间(phase CCV)
+
+5. 单Token局部SAE (Local-SAE)
+   - 在单个token位置的局部窗口训练SAE
+   - 优势: 捕捉位置特异的因果功能
+   - 与本研究对齐: 不同token位置的因果贡献不同
+
+6. 正交正则SAE (Ortho-SAE)
+   - 在SAE损失中加入正交性约束
+   - 优势: 强制不同特征正交, 避免特征纠缠
+   - 与本研究对齐: 因果子空间近似正交(phase CCV)
+
+7. 分层纤维SAE (Fiber-SAE)
+   - 按层分组, 每层(或层组)训练独立SAE
+   - 优势: 捕捉层间因果纤维的演化
+   - 与本研究完美对齐: 语法因果纤维逐层增长
+   - 关键: 可以追踪同一个因果原子在不同层的"生长"
+
+最推荐: Delta-SAE + Fiber-SAE 组合
+  Delta-SAE: 分解因果效应的原子组成
+  Fiber-SAE: 追踪原子在层间的演化路径
+  组合: Delta-Fiber-SAE = 因果纤维的原子分解
+
+这与本研究的全部发现完全对齐:
+  - 语法Delta逐层增长 => Fiber-SAE追踪增长
+  - 语义Delta恒定 => Delta-SAE发现不变原子
+  - 因果空间5子空间 => Block-SAE分组分解
+  - Head特异性 => Head-wise SAE
+
+=================================================================
+第一性原理: 语言背后数学原理更新
+=================================================================
+
+核心洞察 (Phase CCX确认):
+  1. 因果效应的二分法:
+     语法: C(l) = a*l + b (线性/幂律增长)
+     语义: C(l) = C_0 (常数)
+     这是Transformer内部的两类根本不同的算子!
+
+  2. 类比信号处理:
+     语法 = 时变信号 (逐层积分): S(l) = integral_0^l f(t) dt
+     语义 = 直流偏置 (embedding直接注入): D(l) = D_0
+     总因果效应 = S(l) + D_0
+
+  3. Transformer的信息流模型:
+     h_l = h_0 + sum_{k=0}^{l-1} [Attn_k(h_k) + MLP_k(h_k)]
+     因果效应 = delta_h_l = delta_h_0 + sum delta_transforms
+     语法: delta_h_0 ~ 0, sum delta_transforms >> 0
+     语义: delta_h_0 >> 0, sum delta_transforms ~ 0
+
+  4. 这解释了为什么MLP主导末层:
+     MLP是"积分器", 逐层累积语法信息
+     语法因果效应 = sum MLP_k的贡献
+     语义因果效应 = embedding层的投影, 不需要MLP累积
+
+下一步突破:
+  1. Delta-SAE: 对差分向量做SAE, 分解因果原子
+  2. Fiber-SAE: 追踪因果原子在层间的演化
+  3. 更多语义特征: 主动/被动, 人称, 语域, 信息结构
+  4. 非Distill模型: 原版Qwen-7B, Llama-7B
+  5. 数学证明: 积分算子+投影算子的精确代数结构
+
+=================================================================
+Phase CCXI: 5语法+5语义 因果对偶5vs5验证 (202604211244)
+=================================================================
+
+核心改进: 新增voice(主动/被动), person(人称变换), formality(语域变换)
+5语法+5语义, n=150, 6层采样, 统计检验5vs5
+
+S1. 对偶分类 (growth_ratio)
+=================================================================
+
+DS7B:
+  SYNTACTIC: tense=3.45x, polarity=6.20x, number=3.75x, negation=9.48x, question=9.86x
+  MIXED: person=4.56x(L0=144), semantic_topic=1.66x(L0=512), formality=1.76x(L0=625)
+  SEMANTIC: sentiment=1.35x(L0=552), voice=1.26x(L0=811)
+
+Qwen3:
+  SYNTACTIC: tense=14.06x, polarity=16.36x, number=14.73x, negation=18.17x, question=22.05x, person=19.32x!
+  SEMANTIC: sentiment=1.25x, semantic_topic=1.26x, voice=0.71x(递减!), formality=1.39x
+
+GLM4:
+  SYNTACTIC: tense=3.31x, polarity=4.61x, number=4.35x, negation=4.91x, question=7.65x, person=5.53x!
+  SEMANTIC: sentiment=1.17x, semantic_topic=1.20x, voice=0.78x(递减!), formality=1.17x
+
+S2. Attn vs MLP (GLM4关键发现!)
+=================================================================
+
+GLM4 L0: tense=49/51, sentiment=15/85, voice=10/90, formality=14/86
+GLM4 L39: tense=23/77, sentiment=23/77, voice=20/80, formality=22/78
+>>> L0语义特征: MLP=85-90%! MLP是语义信息的入口!
+>>> 语法L0: attn=49%, 语义L0: attn=10-15%
+
+S3. 统计检验
+=================================================================
+DS7B: Growth p=0.0159, L0 p=0.0040
+Qwen3: Growth p=0.0476, L0 p=0.0040
+GLM4: Growth p=0.0476, L0 p=0.0754
+
+=================================================================
+Phase CCXI 核心发现
+=================================================================
+
+1. person(人称变换)是语法特征! 三模型一致growth=4.56-19.32x
+   原因: I->She涉及动词变形(I am->She is, I have->She has)
+   动词形态变化 = 语法, 不管语义内容!
+
+2. voice(主动/被动)是纯语义特征! growth=0.71-1.26x
+   主动/被动不涉及语法标记变化, 只改变论元结构
+   L0就由MLP主导(85-90%)
+
+3. formality(语域变换)是语义特征! growth=1.17-1.39x
+   正式/非正式不涉及语法标记变化
+
+4. 语法vs语义的本质区分:
+   语法 = 涉及词形变化(动词变位, 否定标记, 词序变化)
+   语义 = 不涉及词形变化(情感, 主题, 语域, 论元结构)
+
+5. MLP是语义信息的入口 (GLM4关键发现)
+   语法L0: attn=49%, 语义L0: attn=10-15%
+   语义信息从embedding层就由MLP处理
+
+=================================================================
+修正后的对偶理论
+=================================================================
+
+语法因果效应 C_syn(l) = integral_0^l f_syn(t) dt
+  f_syn(t) = 每层新增的词形变化信息 (tense, number, negation标记)
+  增长: linear/power_law
+
+语义因果效应 C_sem(l) = C_sem(0) + epsilon(l)
+  C_sem(0) = MLP直接编码的语义信息 (sentiment, topic, voice, formality)
+  epsilon(l) = 微小的层间增量 (约0)
+  增长: 几乎恒定
+
+=================================================================
+五阶段进展总结
+=================================================================
+
+P1 因果导航 - 99%
+  已完成: 差分向量+因果空间+PCA+8bit+Bootstrap+大样本(150对)+median+10特征
+
+P2 几何定位 - 93%
+  已完成: Gram矩阵+Wo SVD+代数拟合+语法vs语义几何差异
+  核心: 语法=积分算子, 语义=MLP投影算子
+
+P3 SAE逆向 - 50%
+  设计完成: Delta-SAE + Fiber-SAE + MLP-Delta-SAE
+  关键: 语法Delta-SAE(逐层累积) vs 语义Delta-SAE(恒定)
+  下步: 实施Delta-SAE训练
+
+P4 电路逆向 - 98%
+  已完成: 10特征x3模型x6层x150对=27000组patching
+  核心: 词形变化=语法(积分), 非词形=语义(MLP投影)
+
+P5 代数/拓扑 - 70%
+  已完成: 因果空间5子空间+代数拟合+对偶验证+统计检验
+  核心: C_syn(l)=a*l^b+c(b<1), C_sem(l)=C_0
+  下步: 积分算子+MLP投影算子的精确代数证明
+
+=================================================================
+新型SAE更新 (基于CCXI发现)
+=================================================================
+
+1. 语法Delta-SAE: 对词形变化delta做SAE, 发现逐层累积的语法原子
+2. 语义Delta-SAE: 对非词形delta做SAE, 发现MLP直接编码的语义原子
+3. MLP-Delta-SAE: 只对MLP output做差分, 直接分解语义信息入口
+4. Fiber-SAE: 追踪语法原子在层间的生长路径
+最推荐: MLP-Delta-SAE (第一步) -> Fiber-SAE (第二步)

@@ -1,0 +1,12 @@
+
+============================================================
+Phase CCXII: deepseek7b (n_pairs=180, 6 syn + 6 sem)
+Path: D:/develop/model/hub/modelscope_cache/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B
+============================================================
+[12:51:32] Loading model...
+[12:51:53] Loaded in 20.9s: n_layers=28, device=cuda:0
+Resid layers (6): [0, 5, 10, 16, 21, 27]
+
+============================================================
+S1: Residual»´≤„…®√Ë (12 features x 6 layers x 180 pairs)
+============================================================

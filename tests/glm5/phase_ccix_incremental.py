@@ -1,7 +1,7 @@
 """
 Phase CCIX: 因果效应代数结构 + Median统计 + 语义特征
-基于成功运行的causal_circuit_batch.py改写
-关键: 使用本地模型路径 + BitsAndBytesConfig + local_files_only
+增量保存版本: 每层完成后保存, 防止崩溃丢失数据
+日志同时输出到文件
 """
 import os, sys, gc, time, json, argparse
 import numpy as np
@@ -9,14 +9,24 @@ import torch
 from pathlib import Path
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
-# 本地模型路径 (与成功脚本一致)
+# 日志输出到文件
+class Logger:
+    def __init__(self, path):
+        self.terminal = sys.stdout
+        self.log = open(path, 'w', buffering=1)
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+    def flush(self):
+        self.terminal.flush()
+        self.log.flush()
+
 PATHS = {
     "qwen3": "D:/develop/model/hub/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c",
     "glm4": "D:/develop/model/hub/modelscope_cache/ZhipuAI/glm-4-9b-chat-hf",
     "deepseek7b": "D:/develop/model/hub/modelscope_cache/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
 }
 
-# ===== 语法特征对 (25对/特征, 与成功脚本相同) =====
 TENSE = [
     ("The cat sat quietly on the mat", "The cat sits quietly on the mat"),
     ("She walked to the store yesterday", "She walks to the store today"),
@@ -96,7 +106,6 @@ NUMBER = [
     ("A bridge crosses the river", "The bridges cross the river"),
 ]
 
-# 语义/情感特征对
 SENTIMENT = [
     ("I love this amazing product", "I hate this terrible product"),
     ("The experience was wonderful", "The experience was awful"),
@@ -152,7 +161,6 @@ PREFIXES = ["Actually, ", "In fact, ", "Indeed, ", "Clearly, ", "Surely, ",
             "Perhaps, ", "Maybe, ", "Certainly, ", "Obviously, ", "Naturally, "]
 SUFFIXES = [" right now", " today", " this time", " as expected", " for sure"]
 
-
 def gen_pairs(templates, n, seed=42):
     np.random.seed(seed)
     pairs = list(templates)
@@ -166,73 +174,63 @@ def gen_pairs(templates, n, seed=42):
         else: pairs.append((a, b))
     return pairs[:n]
 
-
 def fit_algebraic_model(layers, l2_values):
-    """Fit linear, exponential, power-law, and logarithmic models."""
     x = np.array(layers, dtype=float)
     y = np.array(l2_values, dtype=float)
     results = {}
-
-    # Linear: y = a*x + b
-    try:
-        coeffs = np.polyfit(x, y, 1)
-        y_pred = np.polyval(coeffs, x)
-        ss_res = np.sum((y - y_pred)**2)
-        ss_tot = np.sum((y - np.mean(y))**2)
-        r2 = 1 - ss_res / ss_tot if ss_tot > 0 else 0
-        results["linear"] = {"a": float(coeffs[0]), "b": float(coeffs[1]), "r2": float(r2)}
-    except:
-        results["linear"] = {"a": 0, "b": 0, "r2": 0}
-
-    # Exponential: y = a * exp(b * x)
-    try:
-        y_pos = np.maximum(y, 1e-6)
-        log_y = np.log(y_pos)
-        coeffs = np.polyfit(x, log_y, 1)
-        y_pred = np.exp(coeffs[1]) * np.exp(coeffs[0] * x)
-        ss_res = np.sum((y - y_pred)**2)
-        ss_tot = np.sum((y - np.mean(y))**2)
-        r2 = 1 - ss_res / ss_tot if ss_tot > 0 else 0
-        results["exponential"] = {"a": float(np.exp(coeffs[1])), "b": float(coeffs[0]), "r2": float(r2)}
-    except:
-        results["exponential"] = {"a": 0, "b": 0, "r2": 0}
-
-    # Power law: y = a * x^b
-    try:
-        x_pos = np.maximum(x, 1.0)
-        y_pos = np.maximum(y, 1e-6)
-        log_x = np.log(x_pos)
-        log_y = np.log(y_pos)
-        valid = np.isfinite(log_x) & np.isfinite(log_y)
-        if valid.sum() >= 2:
-            coeffs = np.polyfit(log_x[valid], log_y[valid], 1)
-            y_pred = np.exp(coeffs[1]) * x_pos ** coeffs[0]
-            ss_res = np.sum((y[valid] - y_pred[valid])**2)
-            ss_tot = np.sum((y[valid] - np.mean(y[valid]))**2)
-            r2 = 1 - ss_res / ss_tot if ss_tot > 0 else 0
-            results["power_law"] = {"a": float(np.exp(coeffs[1])), "b": float(coeffs[0]), "r2": float(r2)}
-        else:
-            results["power_law"] = {"a": 0, "b": 0, "r2": 0}
-    except:
-        results["power_law"] = {"a": 0, "b": 0, "r2": 0}
-
-    # Logarithmic: y = a * ln(x+1) + b
-    try:
-        log_x = np.log(x + 1)
-        valid = np.isfinite(log_x) & np.isfinite(y)
-        if valid.sum() >= 2:
-            coeffs = np.polyfit(log_x[valid], y[valid], 1)
-            y_pred = coeffs[0] * log_x + coeffs[1]
-            ss_res = np.sum((y[valid] - y_pred[valid])**2)
-            ss_tot = np.sum((y[valid] - np.mean(y[valid]))**2)
-            r2 = 1 - ss_res / ss_tot if ss_tot > 0 else 0
-            results["logarithmic"] = {"a": float(coeffs[0]), "b": float(coeffs[1]), "r2": float(r2)}
-        else:
-            results["logarithmic"] = {"a": 0, "b": 0, "r2": 0}
-    except:
-        results["logarithmic"] = {"a": 0, "b": 0, "r2": 0}
-
+    for name, fit_fn in [
+        ("linear", lambda: _polyfit(x, y, 1)),
+        ("quadratic", lambda: _polyfit(x, y, 2)),
+        ("exponential", lambda: _exp_fit(x, y)),
+        ("power_law", lambda: _power_fit(x, y)),
+        ("logarithmic", lambda: _log_fit(x, y)),
+    ]:
+        try:
+            results[name] = fit_fn()
+        except:
+            results[name] = {"r2": 0}
     return results
+
+def _polyfit(x, y, deg):
+    coeffs = np.polyfit(x, y, deg)
+    y_pred = np.polyval(coeffs, x)
+    r2 = 1 - np.sum((y-y_pred)**2) / np.sum((y-np.mean(y))**2) if np.sum((y-np.mean(y))**2) > 0 else 0
+    return {"coeffs": [float(c) for c in coeffs], "r2": float(r2)}
+
+def _exp_fit(x, y):
+    y_pos = np.maximum(y, 1e-6)
+    log_y = np.log(y_pos)
+    coeffs = np.polyfit(x, log_y, 1)
+    y_pred = np.exp(coeffs[1]) * np.exp(coeffs[0] * x)
+    r2 = 1 - np.sum((y-y_pred)**2) / np.sum((y-np.mean(y))**2) if np.sum((y-np.mean(y))**2) > 0 else 0
+    return {"a": float(np.exp(coeffs[1])), "b": float(coeffs[0]), "r2": float(r2)}
+
+def _power_fit(x, y):
+    x_pos = np.maximum(x, 1.0)
+    y_pos = np.maximum(y, 1e-6)
+    log_x = np.log(x_pos)
+    log_y = np.log(y_pos)
+    valid = np.isfinite(log_x) & np.isfinite(log_y)
+    if valid.sum() < 2: return {"r2": 0}
+    coeffs = np.polyfit(log_x[valid], log_y[valid], 1)
+    y_pred = np.exp(coeffs[1]) * x_pos ** coeffs[0]
+    r2 = 1 - np.sum((y[valid]-y_pred[valid])**2) / np.sum((y[valid]-np.mean(y[valid]))**2) if np.sum((y[valid]-np.mean(y[valid]))**2) > 0 else 0
+    return {"a": float(np.exp(coeffs[1])), "b": float(coeffs[0]), "r2": float(r2)}
+
+def _log_fit(x, y):
+    log_x = np.log(x + 1)
+    valid = np.isfinite(log_x) & np.isfinite(y)
+    if valid.sum() < 2: return {"r2": 0}
+    coeffs = np.polyfit(log_x[valid], y[valid], 1)
+    y_pred = coeffs[0] * log_x + coeffs[1]
+    r2 = 1 - np.sum((y[valid]-y_pred[valid])**2) / np.sum((y[valid]-np.mean(y[valid]))**2) if np.sum((y[valid]-np.mean(y[valid]))**2) > 0 else 0
+    return {"a": float(coeffs[0]), "b": float(coeffs[1]), "r2": float(r2)}
+
+
+def save_incremental(out_dir, all_results):
+    """Incremental save after each layer."""
+    with open(out_dir / 'full_results.json', 'w') as f:
+        json.dump(all_results, f, indent=2, default=str)
 
 
 def main():
@@ -241,14 +239,20 @@ def main():
     parser.add_argument('--n_pairs', type=int, default=200)
     args = parser.parse_args()
 
+    # Setup logging
+    out_dir = Path(f"results/causal_fiber/{args.model}_ccix")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    sys.stdout = Logger(out_dir / 'run.log')
+
     path = PATHS[args.model]
     print(f"\n{'='*60}")
     print(f"Phase CCIX: {args.model}")
     print(f"Path: {path}")
+    print(f"N_pairs: {args.n_pairs}")
     print(f"{'='*60}")
 
-    # 加载模型 (与成功脚本一致!)
-    print(f"[{time.strftime('%H:%M:%S')}] Loading model...")
+    # Load model (与成功脚本一致!)
+    print(f"[{time.strftime('%H:%M:%S')}] Loading model...", flush=True)
     t0 = time.time()
     tokenizer = AutoTokenizer.from_pretrained(path, trust_remote_code=True, local_files_only=True, use_fast=False)
     if tokenizer.pad_token is None:
@@ -269,22 +273,15 @@ def main():
     model.eval()
     device = next(model.parameters()).device
     n_layers = model.config.num_hidden_layers
-    print(f"[{time.strftime('%H:%M:%S')}] Loaded in {time.time()-t0:.1f}s: n_layers={n_layers}, device={device}")
+    print(f"[{time.strftime('%H:%M:%S')}] Loaded in {time.time()-t0:.1f}s: n_layers={n_layers}, device={device}", flush=True)
 
-    out_dir = Path(f"results/causal_fiber/{args.model}_ccix")
-    out_dir.mkdir(parents=True, exist_ok=True)
-
-    # 全层扫描 (8层, 比5层更密)
     N = args.n_pairs
-    # 均匀采样8层
     resid_layers = [int(i * (n_layers - 1) / 7) for i in range(8)]
-    # 组件分析5层
     comp_layers = [0, n_layers//4, n_layers//2, 3*n_layers//4, n_layers-1]
 
     print(f"Resid layers: {resid_layers}")
-    print(f"Comp layers: {comp_layers}")
+    print(f"Comp layers: {comp_layers}", flush=True)
 
-    # 生成样本对
     tense_pairs = gen_pairs(TENSE, N)
     polarity_pairs = gen_pairs(POLARITY, N)
     number_pairs = gen_pairs(NUMBER, min(N, len(NUMBER)))
@@ -292,28 +289,24 @@ def main():
     topic_pairs = gen_pairs(SEMANTIC_TOPIC, min(N, len(SEMANTIC_TOPIC)))
 
     feature_data = {
-        'tense': tense_pairs,
-        'polarity': polarity_pairs,
-        'number': number_pairs,
-        'sentiment': sentiment_pairs,
+        'tense': tense_pairs, 'polarity': polarity_pairs,
+        'number': number_pairs, 'sentiment': sentiment_pairs,
         'semantic_topic': topic_pairs,
     }
 
     all_results = {}
 
-    # ===== S1: Residual全层扫描 (关键! 更多层 = 更好的拟合) =====
-    print(f"\n{'='*60}")
-    print(f"S1: Residual全层扫描 ({len(resid_layers)}层, {N}对/特征)")
-    print(f"{'='*60}")
-
+    # ===== S1: Residual全层扫描 =====
+    print(f"\n{'='*60}\nS1: Residual全层扫描\n{'='*60}", flush=True)
     resid_results = {}
+
     for layer_idx in resid_layers:
         layer_name = f'L{layer_idx}'
         resid_results[layer_name] = {}
 
         for feature, pairs in feature_data.items():
             n_test = min(len(pairs), N)
-            l2s, coss = [], []
+            l2s = []
 
             print(f"  {layer_name} {feature}: {n_test}...", end=' ', flush=True)
             t_start = time.time()
@@ -323,10 +316,8 @@ def main():
                 try:
                     src_ids = tokenizer(a_text, return_tensors='pt')['input_ids'].to(device)
                     clean_ids = tokenizer(b_text, return_tensors='pt')['input_ids'].to(device)
-
                     layer = model.model.layers[layer_idx]
 
-                    # Capture source
                     src_val = {}
                     def cap(mod, inp, out):
                         if isinstance(out, tuple):
@@ -337,16 +328,12 @@ def main():
                     h = layer.register_forward_hook(cap)
                     with torch.no_grad(): _ = model(src_ids)
                     h.remove()
-
-                    if 'h' not in src_val:
-                        continue
+                    if 'h' not in src_val: continue
                     sv = src_val['h']
 
-                    # Clean logits
                     with torch.no_grad():
                         clean_logits = model(clean_ids).logits[0, -1].detach().cpu().float()
 
-                    # Patched logits
                     def phook(mod, inp, out, _sv=sv):
                         if isinstance(out, tuple):
                             out[0][0, -1, :] = _sv.to(out[0].device)
@@ -360,72 +347,26 @@ def main():
 
                     diff = patched_logits - clean_logits
                     l2s.append(torch.norm(diff).item())
-                    coss.append(torch.nn.functional.cosine_similarity(
-                        clean_logits.unsqueeze(0), patched_logits.unsqueeze(0)
-                    ).item())
                 except Exception as e:
-                    pass
+                    print(f"E({e})", end='', flush=True)
 
             elapsed = time.time() - t_start
             if l2s:
                 resid_results[layer_name][feature] = {
-                    'mean_l2': float(np.mean(l2s)),
-                    'median_l2': float(np.median(l2s)),
-                    'std_l2': float(np.std(l2s)),
-                    'mean_cos': float(np.mean(coss)),
-                    'n': len(l2s),
+                    'mean_l2': float(np.mean(l2s)), 'median_l2': float(np.median(l2s)),
+                    'std_l2': float(np.std(l2s)), 'n': len(l2s),
                 }
-                print(f"mean={np.mean(l2s):.1f}, med={np.median(l2s):.1f}, t={elapsed:.1f}s")
+                print(f"mean={np.mean(l2s):.1f}, med={np.median(l2s):.1f}, t={elapsed:.1f}s", flush=True)
             else:
-                print(f"FAILED")
+                print(f"FAILED", flush=True)
 
-    all_results['resid'] = resid_results
+        # 增量保存
+        all_results['resid'] = resid_results
+        save_incremental(out_dir, all_results)
+        print(f"  [Saved after {layer_name}]", flush=True)
 
-    # ===== S1.5: 代数拟合 =====
-    print(f"\n{'='*60}")
-    print(f"S1.5: 代数拟合")
-    print(f"{'='*60}")
-
-    algebraic_fits = {}
-    for feature in feature_data.keys():
-        layers_x = []
-        l2_means = []
-        l2_medians = []
-        for layer_idx in resid_layers:
-            key = f'L{layer_idx}'
-            if key in resid_results and feature in resid_results[key]:
-                layers_x.append(float(layer_idx))
-                l2_means.append(resid_results[key][feature]['mean_l2'])
-                l2_medians.append(resid_results[key][feature]['median_l2'])
-
-        if len(layers_x) >= 3:
-            fits = {
-                "mean": fit_algebraic_model(layers_x, l2_means),
-                "median": fit_algebraic_model(layers_x, l2_medians),
-            }
-            algebraic_fits[feature] = fits
-            print(f"\n  {feature} (mean):")
-            for mtype, vals in fits["mean"].items():
-                if vals["r2"] > 0:
-                    print(f"    {mtype}: R²={vals['r2']:.4f}, a={vals['a']:.2f}, b={vals['b']:.4f}")
-            print(f"  {feature} (median):")
-            for mtype, vals in fits["median"].items():
-                if vals["r2"] > 0:
-                    print(f"    {mtype}: R²={vals['r2']:.4f}, a={vals['a']:.2f}, b={vals['b']:.4f}")
-
-            # Best fit
-            best_mean = max(fits["mean"].items(), key=lambda x: x[1]["r2"])
-            best_med = max(fits["median"].items(), key=lambda x: x[1]["r2"])
-            print(f"  >>> BEST (mean): {best_mean[0]} R²={best_mean[1]['r2']:.4f}")
-            print(f"  >>> BEST (median): {best_med[0]} R²={best_med[1]['r2']:.4f}")
-
-    all_results['algebraic_fits'] = algebraic_fits
-
-    # ===== S2: Attn/MLP贡献 =====
-    print(f"\n{'='*60}")
-    print(f"S2: Attn/MLP贡献分析 ({len(comp_layers)}层, 150对)")
-    print(f"{'='*60}")
-
+    # ===== S2: Attn/MLP =====
+    print(f"\n{'='*60}\nS2: Attn/MLP\n{'='*60}", flush=True)
     N_comp = min(N, 150)
     comp_results = {}
 
@@ -441,7 +382,7 @@ def main():
                 n_test = min(len(pairs), N_comp)
                 l2s = []
 
-                print(f"  {component} {layer_name} {feature}: {n_test}...", end=' ', flush=True)
+                print(f"  {component} {layer_name} {feature}...", end=' ', flush=True)
                 t_start = time.time()
 
                 for i in range(n_test):
@@ -449,14 +390,9 @@ def main():
                     try:
                         src_ids = tokenizer(a_text, return_tensors='pt')['input_ids'].to(device)
                         clean_ids = tokenizer(b_text, return_tensors='pt')['input_ids'].to(device)
-
                         layer = model.model.layers[layer_idx]
-                        if component == 'attn':
-                            target = layer.self_attn
-                        else:
-                            target = layer.mlp
+                        target = layer.self_attn if component == 'attn' else layer.mlp
 
-                        # Capture source
                         src_val = {}
                         def cap(mod, inp, out):
                             if isinstance(out, tuple):
@@ -467,16 +403,12 @@ def main():
                         h = target.register_forward_hook(cap)
                         with torch.no_grad(): _ = model(src_ids)
                         h.remove()
-
-                        if 'h' not in src_val:
-                            continue
+                        if 'h' not in src_val: continue
                         sv = src_val['h']
 
-                        # Clean logits
                         with torch.no_grad():
                             clean_logits = model(clean_ids).logits[0, -1].detach().cpu().float()
 
-                        # Patched logits
                         def phook(mod, inp, out, _sv=sv):
                             if isinstance(out, tuple):
                                 out[0][0, -1, :] = _sv.to(out[0].device)
@@ -496,158 +428,140 @@ def main():
                 elapsed = time.time() - t_start
                 if l2s:
                     comp_results[component][layer_name][feature] = {
-                        'mean_l2': float(np.mean(l2s)),
-                        'median_l2': float(np.median(l2s)),
+                        'mean_l2': float(np.mean(l2s)), 'median_l2': float(np.median(l2s)),
                         'n': len(l2s),
                     }
-                    print(f"mean={np.mean(l2s):.1f}, med={np.median(l2s):.1f}, t={elapsed:.1f}s")
+                    print(f"med={np.median(l2s):.1f}, t={elapsed:.1f}s", flush=True)
                 else:
-                    print(f"FAILED")
+                    print(f"FAILED", flush=True)
 
-    # 计算贡献比
-    print(f"\n--- 贡献比分析 (基于median_l2) ---")
+            all_results['components'] = comp_results
+            save_incremental(out_dir, all_results)
+
+    # Contribution
+    print(f"\n--- 贡献比 ---", flush=True)
     contrib = {}
     for layer_idx in comp_layers:
-        layer_name = f'L{layer_idx}'
-        contrib[layer_name] = {}
+        ln = f'L{layer_idx}'
+        contrib[ln] = {}
         for feat in ['tense', 'polarity', 'number']:
-            a = comp_results['attn'].get(layer_name, {}).get(feat, {}).get('median_l2', 0)
-            m = comp_results['mlp'].get(layer_name, {}).get(feat, {}).get('median_l2', 0)
+            a = comp_results['attn'].get(ln, {}).get(feat, {}).get('median_l2', 0)
+            m = comp_results['mlp'].get(ln, {}).get(feat, {}).get('median_l2', 0)
             total = a + m if (a + m) > 0 else 1
-            contrib[layer_name][feat] = {
-                'attn_l2': a, 'mlp_l2': m,
-                'attn_pct': round(a / total * 100, 1),
-                'mlp_pct': round(m / total * 100, 1),
-            }
-            print(f"  {layer_name} {feat}: attn={a:.1f}({a/total*100:.0f}%), mlp={m:.1f}({m/total*100:.0f}%)")
-
-    all_results['components'] = comp_results
+            contrib[ln][feat] = {'attn_l2': a, 'mlp_l2': m,
+                'attn_pct': round(a/total*100,1), 'mlp_pct': round(m/total*100,1)}
+            print(f"  {ln} {feat}: attn={a:.1f}({a/total*100:.0f}%), mlp={m:.1f}({m/total*100:.0f}%)")
     all_results['contribution'] = contrib
+    save_incremental(out_dir, all_results)
 
-    # ===== S3: 语义特征 (sentiment + topic) =====
-    print(f"\n{'='*60}")
-    print(f"S3: 语义特征 ({len(comp_layers)}层)")
-    print(f"{'='*60}")
-
+    # ===== S3: 语义特征 =====
+    print(f"\n{'='*60}\nS3: 语义特征\n{'='*60}", flush=True)
     sem_results = {}
-    for layer_idx in comp_layers:
-        layer_name = f'L{layer_idx}'
-        sem_results[layer_name] = {}
-
+    for layer_idx in resid_layers:
+        ln = f'L{layer_idx}'
+        sem_results[ln] = {}
         for feature in ['sentiment', 'semantic_topic']:
             pairs = feature_data[feature]
             n_test = min(len(pairs), N)
             l2s = []
-
-            print(f"  {layer_name} {feature}: {n_test}...", end=' ', flush=True)
+            print(f"  {ln} {feature}...", end=' ', flush=True)
             t_start = time.time()
-
             for i in range(n_test):
                 a_text, b_text = pairs[i]
                 try:
                     src_ids = tokenizer(a_text, return_tensors='pt')['input_ids'].to(device)
                     clean_ids = tokenizer(b_text, return_tensors='pt')['input_ids'].to(device)
-
                     layer = model.model.layers[layer_idx]
-
                     src_val = {}
                     def cap(mod, inp, out):
                         if isinstance(out, tuple):
                             src_val['h'] = out[0][0, -1, :].detach().clone()
                         else:
                             src_val['h'] = out[0, -1, :].detach().clone()
-
                     h = layer.register_forward_hook(cap)
                     with torch.no_grad(): _ = model(src_ids)
                     h.remove()
-
-                    if 'h' not in src_val:
-                        continue
+                    if 'h' not in src_val: continue
                     sv = src_val['h']
-
                     with torch.no_grad():
                         clean_logits = model(clean_ids).logits[0, -1].detach().cpu().float()
-
                     def phook(mod, inp, out, _sv=sv):
                         if isinstance(out, tuple):
                             out[0][0, -1, :] = _sv.to(out[0].device)
                         else:
                             out[0, -1, :] = _sv.to(out.device)
-
                     h = layer.register_forward_hook(phook)
                     with torch.no_grad():
                         patched_logits = model(clean_ids).logits[0, -1].detach().cpu().float()
                     h.remove()
-
                     diff = patched_logits - clean_logits
                     l2s.append(torch.norm(diff).item())
                 except:
                     pass
-
             elapsed = time.time() - t_start
             if l2s:
-                sem_results[layer_name][feature] = {
-                    'mean_l2': float(np.mean(l2s)),
-                    'median_l2': float(np.median(l2s)),
+                sem_results[ln][feature] = {
+                    'mean_l2': float(np.mean(l2s)), 'median_l2': float(np.median(l2s)),
                     'n': len(l2s),
                 }
-                print(f"mean={np.mean(l2s):.1f}, med={np.median(l2s):.1f}, t={elapsed:.1f}s")
+                print(f"med={np.median(l2s):.1f}, t={elapsed:.1f}s", flush=True)
             else:
-                print(f"FAILED")
+                print(f"FAILED", flush=True)
+        all_results['semantic'] = sem_results
+        save_incremental(out_dir, all_results)
 
-    # 语义特征代数拟合
-    print(f"\n--- 语义特征代数拟合 ---")
-    for feature in ['sentiment', 'semantic_topic']:
-        layers_x = []
-        l2_medians = []
+    # ===== S4: 代数拟合 =====
+    print(f"\n{'='*60}\nS4: 代数拟合\n{'='*60}", flush=True)
+    algebraic_fits = {}
+    for feature in list(feature_data.keys()):
+        layers_x, l2_means, l2_medians = [], [], []
         for layer_idx in resid_layers:
             key = f'L{layer_idx}'
-            if key in sem_results and feature in sem_results[key]:
+            if key in resid_results and feature in resid_results[key]:
                 layers_x.append(float(layer_idx))
-                l2_medians.append(sem_results[key][feature]['median_l2'])
+                l2_means.append(resid_results[key][feature]['mean_l2'])
+                l2_medians.append(resid_results[key][feature]['median_l2'])
         if len(layers_x) >= 3:
-            fits = fit_algebraic_model(layers_x, l2_medians)
-            best = max(fits.items(), key=lambda x: x[1]["r2"])
-            print(f"  {feature}: best={best[0]} R²={best[1]['r2']:.4f}")
-            algebraic_fits[feature] = {"median": fits}
+            fits = {"mean": fit_algebraic_model(layers_x, l2_means),
+                    "median": fit_algebraic_model(layers_x, l2_medians)}
+            algebraic_fits[feature] = fits
+            best_mean = max(fits["mean"].items(), key=lambda x: x[1].get("r2", 0))
+            best_med = max(fits["median"].items(), key=lambda x: x[1].get("r2", 0))
+            print(f"  {feature} best: mean={best_mean[0]} R²={best_mean[1].get('r2',0):.4f}, median={best_med[0]} R²={best_med[1].get('r2',0):.4f}")
+            for mtype, vals in fits["median"].items():
+                if vals.get("r2", 0) > 0:
+                    print(f"    {mtype}: R²={vals['r2']:.4f}")
 
-    all_results['semantic'] = sem_results
+    all_results['algebraic_fits'] = algebraic_fits
+    save_incremental(out_dir, all_results)
 
-    # Save all
-    with open(out_dir / 'full_results.json', 'w') as f:
-        json.dump(all_results, f, indent=2, default=str)
-
-    # ===== 最终汇总 =====
-    print(f"\n{'='*60}")
-    print(f"FINAL SUMMARY: {args.model}")
-    print(f"{'='*60}")
-
-    print(f"\n--- Residual l2 (mean / median) ---")
-    for layer_name in sorted(resid_results.keys()):
+    # ===== FINAL SUMMARY =====
+    print(f"\n{'='*60}\nFINAL: {args.model}\n{'='*60}", flush=True)
+    print(f"\nResidual l2 (mean/median):")
+    for ln in sorted(resid_results.keys()):
         parts = []
         for feat in ['tense', 'polarity', 'number', 'sentiment', 'semantic_topic']:
-            if feat in resid_results[layer_name]:
-                d = resid_results[layer_name][feat]
+            if feat in resid_results[ln]:
+                d = resid_results[ln][feat]
                 parts.append(f"{feat}={d['mean_l2']:.0f}/{d['median_l2']:.0f}")
-        print(f"  {layer_name}: {', '.join(parts)}")
+        print(f"  {ln}: {', '.join(parts)}")
 
-    print(f"\n--- Best Algebraic Fit ---")
+    print(f"\nBest Algebraic Fit:")
     for feat, fits in algebraic_fits.items():
         if "median" in fits:
-            best = max(fits["median"].items(), key=lambda x: x[1]["r2"])
-            print(f"  {feat}: {best[0]} R²={best[1]['r2']:.4f}")
+            best = max(fits["median"].items(), key=lambda x: x[1].get("r2", 0))
+            print(f"  {feat}: {best[0]} R²={best[1].get('r2',0):.4f}")
 
-    print(f"\n--- Attn vs MLP (median) ---")
-    for layer_name in sorted(contrib.keys()):
+    print(f"\nAttn vs MLP:")
+    for ln in sorted(contrib.keys()):
         parts = []
         for feat in ['tense', 'polarity', 'number']:
-            if feat in contrib[layer_name]:
-                d = contrib[layer_name][feat]
-                parts.append(f"{feat}: {d['attn_pct']:.0f}/{d['mlp_pct']:.0f}")
-        print(f"  {layer_name}: {', '.join(parts)} (attn/mlp%)")
+            if feat in contrib[ln]:
+                d = contrib[ln][feat]
+                parts.append(f"{feat}:{d['attn_pct']:.0f}/{d['mlp_pct']:.0f}")
+        print(f"  {ln}: {', '.join(parts)} (attn/mlp%)")
 
-    print(f"\nAll saved to {out_dir}")
-    print("DONE!")
+    print(f"\nDONE! Saved to {out_dir}", flush=True)
 
 
 if __name__ == '__main__':
