@@ -10,3 +10,6 @@ Resid layers (6): [0, 5, 10, 16, 21, 27]
 ============================================================
 S1: Residual»´≤„…®√Ë (12 features x 6 layers x 180 pairs)
 ============================================================
+  L0 [860s]: tense=164(n=180), polarity=111(n=180), number=99(n=180), negation=138(n=180), question=132(n=180), person=116(n=180), sentiment=557(n=180), semantic_topic=503(n=180), voice=798(n=180), formality=625(n=180), definiteness=107(n=180), info_structure=96(n=180)
+  L5 [863s]: tense=191(n=180), polarity=207(n=180), number=136(n=180), negation=242(n=180), question=220(n=180), person=201(n=180), sentiment=459(n=180), semantic_topic=606(n=180), voice=880(n=180), formality=664(n=180), definiteness=109(n=180), info_structure=192(n=180)
+  L10 [885s]: tense=254(n=180), polarity=426(n=180), number=256(n=180), negation=512(n=180), question=403(n=180), person=372(n=180), sentiment=587(n=180), semantic_topic=642(n=180), voice=954(n=180), formality=627(n=180), definiteness=188(n=180), info_structure=298(n=180)
