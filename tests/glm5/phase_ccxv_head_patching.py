@@ -647,19 +647,21 @@ def run_phase_ccxv(model_name, n_pairs=120):
                     'pc2_std': float(feat_proj[:, 1].std()),
                 }
         
-        # 子空间正交性
+        # 子空间正交性 - 用centroid余弦相似度代替SVD (更省内存)
         k = min(5, len(syn_deltas), len(sem_deltas))
         subspace_overlap = None
         if k >= 3:
-            syn_mat = np.array(syn_deltas, dtype=np.float32)
-            sem_mat = np.array(sem_deltas, dtype=np.float32)
-            U_syn, _, _ = np.linalg.svd(syn_mat, full_matrices=False)
-            U_sem, _, _ = np.linalg.svd(sem_mat, full_matrices=False)
-            U_syn_k = U_syn[:, :k]
-            U_sem_k = U_sem[:, :k]
-            overlap_matrix = U_syn_k.T @ U_sem_k
-            subspace_overlap = float(np.linalg.norm(overlap_matrix, 'fro') / np.sqrt(k))
-            log(f"  L{l} subspace_overlap(k={k}): {subspace_overlap:.4f}")
+            # 用PC空间中的centroid距离作为正交性度量
+            syn_centroid = np.mean(syn_proj[:, :5], axis=0)
+            sem_centroid = np.mean(sem_proj[:, :5], axis=0)
+            n1 = np.linalg.norm(syn_centroid)
+            n2 = np.linalg.norm(sem_centroid)
+            if n1 > 1e-8 and n2 > 1e-8:
+                cos_sim = np.dot(syn_centroid, sem_centroid) / (n1 * n2)
+                subspace_overlap = float(abs(cos_sim))
+            else:
+                subspace_overlap = 0.0
+            log(f"  L{l} centroid_cos_sim(PC1-5): {subspace_overlap:.4f}")
         
         # 逐特征分离度
         # 计算每个语法特征与所有语义特征的PC1 centroid距离
@@ -705,7 +707,13 @@ def run_phase_ccxv(model_name, n_pairs=120):
     
     for l in layer_indices:
         try:
-            W_o = model.model.layers[l].self_attn.o_proj.weight.detach().float().cpu().numpy()
+            w = model.model.layers[l].self_attn.o_proj.weight
+            # 8bit模型需要dequantize
+            if hasattr(w, 'CB') or hasattr(w, 'SCB'):  # 8bit quantized
+                log(f"  L{l}: W_o is 8bit quantized, dequantizing...")
+                W_o = w.dequantize().detach().float().cpu().numpy()
+            else:
+                W_o = w.detach().float().cpu().numpy()
         except Exception as e:
             log(f"  L{l}: W_o unavailable ({e})")
             continue
