@@ -9,6 +9,7 @@
 更直接地说，这个仓库不是主要在做“再训练一个更强模型”，而是在做：
 
 - 语言结构的原理分析
+- **大脑神经网络的结构与运行机制逆向破解**（最新突破）
 - 大脑编码机制的逆向压缩
 - 通向 `AGI（通用人工智能）` 的第一性原理理论探索
 
@@ -27,9 +28,45 @@
 - `q / b`：上下文条件化与偏置
 - `p / h / m / c`：可塑性、稳态偏差、拥塞负载与传送成本
 
+## 2. 【最新突破】从语言能力逆向破解大脑神经网络
+
+基于对语言数学原理的深入分析，结合**兴奋-抑制平衡与神经元可塑性**的神经科学机制，我们建立了从语言能力逆向破解大脑网络结构的系统性框架。
+
+### 核心命题
+
+**语言是人脑神经网络的产物，而人脑神经网络基于兴奋神经元和抑制神经元，以及神经元可塑性机制。通过语言能力与神经系统的交叉分析，可以破解大脑网络结构与运行机制。**
+
+### 三个关键对应关系
+
+#### 2.1 微观尺度：仿射变换 ↔ 方向神经元
+- 1维仿射群对应方向选择神经元
+- 否定差分向量对应兴奋-抑制平衡
+- $\alpha \in \{0,1\}$ 对应神经元放电阈值机制
+
+#### 2.2 中观尺度：正交子空间 ↔ 神经元集群  
+- 语法特征占据3维正交子空间对应不同语法功能的专用神经元集群
+- 子空间正交性对应集群间抑制性连接
+
+#### 2.3 宏观尺度：纤维丛 ↔ 皮层层级
+- 纤维丛结构对应皮层层级组织(V1→V2→V4→IT)
+- 底空间对应高级语义皮层，纤维对应低级特征提取皮层
+
+### 统一数学框架：神经信息几何
+- **神经表示流形** $\mathcal{M}$：大脑状态空间，度量由突触连接强度定义
+- **兴奋-抑制联络** $\nabla$：描述E-I平衡的稳定性
+- **正交编码最优性定理**：在能量约束下，正交编码使信息传输率最大化
+- **频谱分工振荡定理**：不同频段对应不同耦合强度的振荡集群
+
+### 逆向破解策略
+1. **从正交编码推导神经元集群结构**：语言的正交编码 → 神经集群的抑制性连接
+2. **从频谱分解推导振荡频率分工**：Band1-5频谱 → θ/α/β/γ神经振荡  
+3. **从可塑性规律推导学习规则**：紫牛效应 → 扩展赫布规则 $\Delta w_{ij} \propto \frac{pre_i \cdot post_j}{\sqrt{f_{ij}}}$
+
 当前项目的核心判断是：
 
 **语言原理、大脑编码、智能数学原理，不是三套彼此无关的理论，而是同一个分布式动力系统的三种读法。**
+
+**最新补充**：**语言本身是大脑信息处理机制的"结晶"，通过分析语言的数学结构，可以反向推导大脑的计算原理。**
 
 ---
 
@@ -132,14 +169,17 @@
 - `tests/codex_temp/`
   - 所有阶段性输出、临时摘要和实验结果
 
-- `research/gpt5/docs/AGI_GPT5_ICSPB.md`
+- `research/glm5/docs/AGI_GLM5_FRAMEWORK_v5.md`
   - 当前最新完整理论总稿
 
-- `research/gpt5/docs/AGI_GPT5_MEMO.md`
+- `research/glm5/docs/AGI_GLM5_MEMO.md`
   - 按时间追加的研究备忘录
 
-- `research/gpt5/docs/AGI_GPT5_REASONING.md`
+- `research/glm5/docs/AGI_GLM5_REASONING.md`
   - 原始数据、推理链条、问题与关键结论的总整理
+
+- `research/glm5/docs/BRAIN_NETWORK_FROM_LANGUAGE.md` (**最新突破**)
+  - 从语言能力逆向破解大脑神经网络结构与运行机制的统一理论框架
 
 ---
 
@@ -147,40 +187,78 @@
 
 如果想快速进入当前主线，建议按这个顺序：
 
-1. [research/gpt5/docs/AGI_GPT5_ICSPB.md](research/gpt5/docs/AGI_GPT5_ICSPB.md)
-2. `tests/codex/stage71_first_principles_unification.py`
-3. `tests/codex/stage72_language_projection_covariance.py`
-4. `tests/codex/stage77_brain_grounded_route_scaling.py`
-5. `tests/codex/stage79_route_conflict_native_measure.py`
-6. `tests/codex/stage81_forward_backward_unification.py`
-7. `tests/codex/stage82_novelty_generalization_repair.py`
-8. `tests/codex/stage89_law_margin_separation.py`
-9. `tests/codex/stage90_independent_observation_planes.py`
-10. `tests/codex/stage91_counterexample_attack_suite.py`
-11. `tests/codex/stage92_brain_grounding_counterexample_pack.py`
-12. `tests/codex/stage93_law_to_theorem_bridge.py`
-13. `tests/codex/stage94_cross_plane_failure_coupling_map.py`
-14. `tests/codex/stage95_external_distribution_counterexample_pack.py`
-15. `tests/codex/stage96_independent_evidence_core.py`
-16. `tests/codex/stage97_brain_compatible_theorem_kernel.py`
-17. `tests/codex/stage98_external_to_internal_failure_alignment.py`
-18. `tests/codex/stage99_real_external_data_counterexample_pack.py`
-19. `research/gpt5/docs/AGI_GPT5_REASONING.md`
+### 6.1 理论基础入门
+1. **[research/glm5/docs/BRAIN_NETWORK_FROM_LANGUAGE.md](research/glm5/docs/BRAIN_NETWORK_FROM_LANGUAGE.md)** (**最新突破**)
+   - 从语言能力逆向破解大脑神经网络结构与运行机制的统一理论框架
+
+2. **[research/glm5/docs/AGI_GLM5_FRAMEWORK_v5.md](research/glm5/docs/AGI_GLM5_FRAMEWORK_v5.md)**
+   - 当前最新完整理论总稿
+
+### 6.2 实验与代码验证
+3. `tests/codex/stage71_first_principles_unification.py`
+4. `tests/codex/stage72_language_projection_covariance.py`
+5. `tests/codex/stage77_brain_grounded_route_scaling.py`
+6. `tests/codex/stage79_route_conflict_native_measure.py`
+7. `tests/codex/stage81_forward_backward_unification.py`
+8. `tests/codex/stage82_novelty_generalization_repair.py`
+9. `tests/codex/stage89_law_margin_separation.py`
+10. `tests/codex/stage90_independent_observation_planes.py`
+11. `tests/codex/stage91_counterexample_attack_suite.py`
+12. `tests/codex/stage92_brain_grounding_counterexample_pack.py`
+13. `tests/codex/stage93_law_to_theorem_bridge.py`
+14. `tests/codex/stage94_cross_plane_failure_coupling_map.py`
+15. `tests/codex/stage95_external_distribution_counterexample_pack.py`
+16. `tests/codex/stage96_independent_evidence_core.py`
+17. `tests/codex/stage97_brain_compatible_theorem_kernel.py`
+18. `tests/codex/stage98_external_to_internal_failure_alignment.py`
+19. `tests/codex/stage99_real_external_data_counterexample_pack.py`
+
+### 6.3 综合理解
+20. **[research/glm5/docs/AGI_GLM5_REASONING.md](research/glm5/docs/AGI_GLM5_REASONING.md)**
+   - 原始数据、推理链条、问题与关键结论的总整理
+
+21. **[research/glm5/docs/AGI_GLM5_MEMO.md](research/glm5/docs/AGI_GLM5_MEMO.md)**
+   - 按时间追加的研究备忘录，包含最新进展
 
 ---
 
 ## 7. 当前最合理的下一步
 
-接下来最应该直接推进的是：
+基于最新的大脑神经网络理论突破，接下来应该同时推进两条主线：
 
-1. `Stage100`：`backfeed_suppression_hardening（回灌抑制强化块）`
-2. `Stage101`：`brain_evidence_joint_closure（脑兼容与证据独立联合闭合块）`
-3. `Stage102`：`real_world_falsification_bridge（真实世界判伪桥）`
+### 7.1 理论深化与实验验证
+
+1. **大脑神经网络的数学证明**：
+   - 完善神经信息几何理论，建立严格的微分几何框架
+   - 证明正交编码最优性定理和频谱分工振荡定理
+
+2. **实验验证路线图**：
+   - 设计验证正交编码神经基础的fMRI/EEG实验
+   - 验证语法处理的神经元集群结构假说
+   - 测试罕见词强编码的神经基础
+
+### 7.2 技术实现与算法开发
+
+3. **Stage100+系列**：
+   - `Stage100`：`backfeed_suppression_hardening（回灌抑制强化块）`
+   - `Stage101`：`brain_evidence_joint_closure（脑兼容与证据独立联合闭合块）`
+   - `Stage102`：`real_world_falsification_bridge（真实世界判伪桥）`
+   - `Stage103`：`neural_orthogonal_encoding_validation（神经正交编码验证块）`
+   - `Stage104`：`brain_network_reverse_engineering（大脑网络逆向工程块）`
+
+### 7.3 跨学科整合
+
+4. **神经科学合作**：
+   - 与神经科学实验室合作验证理论预测
+   - 设计基于理论的神经影像实验方案
+   - 建立DNN-大脑的定量映射数据库
 
 如果这些阶段成立，项目就会从：
 
 - 强统一解释前沿区
+- **大脑神经网络逆向破解前沿区**
 
 继续逼近：
 
 - 第一性原理理论主核区
+- **神经信息几何的统一理论框架**
