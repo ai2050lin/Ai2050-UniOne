@@ -439,3 +439,147 @@ S4: PC1方向的logit解码 — PC1编码了什么语义?
     tense: 150/200
     tense: 200/200
   收集 polarity (200对)...
+    polarity: 50/200
+    polarity: 100/200
+    polarity: 150/200
+    polarity: 200/200
+  收集 voice (189对)...
+    voice: 50/189
+    voice: 100/189
+    voice: 150/189
+  收集 semantic_valence (178对)...
+    semantic_valence: 50/178
+    semantic_valence: 100/178
+    semantic_valence: 150/178
+  收集 semantic_topic (174对)...
+    semantic_topic: 50/174
+    semantic_topic: 100/174
+    semantic_topic: 150/174
+  tense: PC1方差=51.0%
+  polarity: PC1方差=48.1%
+  voice: PC1方差=42.0%
+  semantic_valence: PC1方差=34.9%
+  semantic_topic: PC1方差=56.1%
+
+  全局PC1方差=49.0%
+
+  --- PC1方向在SVD空间上的投影分析 ---
+
+  PC1_tense:
+    PC1方差: 51.0%
+    SVD投影系数: SVD[0]=0.3414, SVD[1]=0.4511, SVD[2]=-0.1252, SVD[3]=0.1031, SVD[4]=-0.1111, SVD[5]=-0.0174, SVD[6]=0.0112, SVD[7]=-0.0379, SVD[8]=-0.0104, SVD[9]=0.0256
+    主导分量: SVD[1] (cos=0.4511)
+    前5分量能量: 0.3587, 前10分量能量: 0.3613
+    语义标签: INDEPENDENT_SEMANTIC (超出SVD前10方向)
+
+  PC1_polarity:
+    PC1方差: 48.1%
+    SVD投影系数: SVD[0]=0.3353, SVD[1]=0.4441, SVD[2]=-0.1234, SVD[3]=0.0997, SVD[4]=-0.1135, SVD[5]=-0.0180, SVD[6]=0.0061, SVD[7]=-0.0410, SVD[8]=-0.0064, SVD[9]=0.0334
+    主导分量: SVD[1] (cos=0.4441)
+    前5分量能量: 0.3477, 前10分量能量: 0.3509
+    语义标签: INDEPENDENT_SEMANTIC (超出SVD前10方向)
+
+  PC1_voice:
+    PC1方差: 42.0%
+    SVD投影系数: SVD[0]=0.3860, SVD[1]=0.5143, SVD[2]=-0.1168, SVD[3]=0.0883, SVD[4]=-0.0998, SVD[5]=-0.0003, SVD[6]=0.0100, SVD[7]=-0.0380, SVD[8]=-0.0076, SVD[9]=0.0136
+    主导分量: SVD[1] (cos=0.5143)
+    前5分量能量: 0.4448, 前10分量能量: 0.4466
+    语义标签: INDEPENDENT_SEMANTIC (超出SVD前10方向)
+
+  PC1_semantic_valence:
+    PC1方差: 34.9%
+    SVD投影系数: SVD[0]=0.4602, SVD[1]=0.6431, SVD[2]=-0.0946, SVD[3]=0.0829, SVD[4]=-0.0327, SVD[5]=0.0322, SVD[6]=0.0014, SVD[7]=-0.0117, SVD[8]=0.0066, SVD[9]=0.0200
+    主导分量: SVD[1] (cos=0.6431)
+    前5分量能量: 0.6422, 前10分量能量: 0.6438
+    语义标签: DISTRIBUTED_SEMANTIC (分散在多个SVD方向)
+
+  PC1_semantic_topic:
+    PC1方差: 56.1%
+    SVD投影系数: SVD[0]=0.4010, SVD[1]=0.5416, SVD[2]=-0.1105, SVD[3]=0.0833, SVD[4]=-0.0783, SVD[5]=0.0098, SVD[6]=0.0140, SVD[7]=-0.0288, SVD[8]=-0.0001, SVD[9]=0.0161
+    主导分量: SVD[1] (cos=0.5416)
+    前5分量能量: 0.4794, 前10分量能量: 0.4808
+    语义标签: INDEPENDENT_SEMANTIC (超出SVD前10方向)
+
+  PC1_global:
+    (全局PC1)
+    SVD投影系数: SVD[0]=0.4025, SVD[1]=0.5382, SVD[2]=-0.1159, SVD[3]=0.0906, SVD[4]=-0.0916, SVD[5]=0.0020, SVD[6]=0.0112, SVD[7]=-0.0341, SVD[8]=-0.0033, SVD[9]=0.0207
+    主导分量: SVD[1] (cos=0.5382)
+    前5分量能量: 0.4817, 前10分量能量: 0.4835
+    语义标签: INDEPENDENT_SEMANTIC (超出SVD前10方向)
+
+============================================================
+S5: SVD方向间的语义独立性 + PC1→SVD间接对比
+============================================================
+
+  SVD方向间的token集Jaccard (前5个方向):
+
+  PC1→SVD语义对比 (基于cosine投影系数):
+  如果PC1与SVD[k]的cosine高 → PC1编码类似SVD[k]的语义
+
+  PC1_tense:
+    #3 SVD[2] (cos=-0.1252): 正→2 4 inconsist 3 1, 负→=?, "w "h %X $max
+
+  PC1_polarity:
+    #3 SVD[2] (cos=-0.1234): 正→2 4 inconsist 3 1, 负→=?, "w "h %X $max
+
+  PC1_voice:
+    #3 SVD[2] (cos=-0.1168): 正→2 4 inconsist 3 1, 负→=?, "w "h %X $max
+
+  PC1_semantic_valence:
+    #3 SVD[2] (cos=-0.0946): 正→2 4 inconsist 3 1, 负→=?, "w "h %X $max
+
+  PC1_semantic_topic:
+    #3 SVD[2] (cos=-0.1105): 正→2 4 inconsist 3 1, 负→=?, "w "h %X $max
+
+  PC1_global:
+    #3 SVD[2] (cos=-0.1159): 正→2 4 inconsist 3 1, 负→=?, "w "h %X $max
+
+============================================================
+S6: SVD方向语义标签总结
+============================================================
+
+  基于top token的语义标签推测:
+  (需要人工确认, 以下为自动推测)
+  SVD[0] (σ=178.7): CHECK_MANUALLY
+    正方向示例:  , ( 1 .
+  SVD[1] (σ=37.1): CHECK_MANUALLY
+    负方向示例: 地區  全國 そういう しっかり
+  SVD[2] (σ=24.1): CHECK_MANUALLY
+    正方向示例: 2 4 inconsist 3 1
+    负方向示例: =?, "w "h %X $max
+  SVD[3] (σ=18.1): CHECK_MANUALLY
+    正方向示例: ?): promot __( isr withd
+    负方向示例: and &  <｜end▁of▁sentence｜> 
+  SVD[4] (σ=14.1): CHECK_MANUALLY
+    正方向示例: 's Communist if re Marxist
+    负方向示例: Crafting Invoke Assertions Saying Portions
+  SVD[5] (σ=12.4): CHECK_MANUALLY
+    正方向示例: Worse Alloc Leads Losing Incre
+    负方向示例: SPD Sharia OSS Caucasian PLA
+  SVD[6] (σ=12.0): CHECK_MANUALLY
+    正方向示例: ” …” . . $
+    负方向示例: ， 和 不 为 对
+  SVD[7] (σ=11.6): CHECK_MANUALLY
+    正方向示例: Uvs Jvm Ymd /Dk Mvc
+    负方向示例: xdd xab xcc bluetooth xaf
+  SVD[8] (σ=11.2): CHECK_MANUALLY
+    正方向示例: /Dk Uvs Slf IFn Jvm
+    负方向示例: . ..." ...) irres /workspace
+  SVD[9] (σ=11.0): CHECK_MANUALLY
+    正方向示例: 鋆 珣 弢 嫚 燚
+    负方向示例: 烨 璇 婧 :[ 祺
+
+============================================================
+S7: 汇总与判断
+============================================================
+
+  === PC1→SVD对齐度 ===
+  tense: 最对齐SVD[1] (cos=0.4511), SVD[0] cos=0.3414
+  polarity: 最对齐SVD[1] (cos=0.4441), SVD[0] cos=0.3353
+  voice: 最对齐SVD[1] (cos=0.5143), SVD[0] cos=0.3860
+  semantic_valence: 最对齐SVD[1] (cos=0.6431), SVD[0] cos=0.4602
+  semantic_topic: 最对齐SVD[1] (cos=0.5416), SVD[0] cos=0.4010
+
+  === 关键判断 ===
+  平均PC1→SVD[0]对齐度: 0.3848
+  ★ PC1与SVD[0]低对齐 → 1D流形独立于频率方向 → 纯语义方向
