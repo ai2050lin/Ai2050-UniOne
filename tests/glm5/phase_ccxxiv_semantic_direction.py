@@ -1,20 +1,20 @@
 """
-Phase CCXXIII: 输出汇聚验证 — 验证1D流形是否与lm_head对齐
+Phase CCXXIV: 语义主方向解码 — 理解lm_head SVD各方向编码了什么
 ================================================================
 核心目标:
-1. 计算lm_head的SVD主方向 (前10个奇异向量)
-2. 在最后一层收集per-feature PCA的PC1方向
-3. 检查PC1是否与lm_head的某个主奇异方向对齐
-4. 在最后一层做Interchange Intervention验证因果效应
-5. 分析"输出汇聚"的层间演化 (最后3层)
+1. 提取lm_head权重并做SVD (复用CCXXIII逻辑)
+2. 对每个SVD方向, 沿该方向移动激活, 看logit变化最大的token
+3. 分析SVD[0]是否编码"token频率"等非语义信息
+4. 分析SVD[1]是否编码语义方向
+5. 用PC1方向做同样分析, 对比PC1 vs SVD的语义内容
+6. 统计各方向的token频率偏度 (高频词vs低频词)
 
 关键假设:
-  "输出汇聚": 最后一层的1D流形方向 = lm_head的主奇异方向
-  → 如果PC1与SVD第1方向对齐 → "输出汇聚"成立
-  → 如果PC1与SVD其他方向对齐 → 部分汇聚
-  → 如果PC1与所有SVD方向都不对齐 → 1D流形有独立语义意义
+  SVD[0]编码"token频率/激活幅度" (非语义)
+  SVD[1]编码"语义主方向" (如formality/valence)
+  PC1编码"因果语义方向" (跨特征共享)
 
-样本量: 150对/特征 (增加样本量提高统计可靠性)
+样本量: 200对/特征 (增加样本量提高统计可靠性)
 特征: tense, polarity, voice, semantic_valence, semantic_topic
 """
 
@@ -25,7 +25,7 @@ import sys
 import time
 import numpy as np
 from datetime import datetime
-from scipy import stats
+from collections import Counter
 
 import torch
 
@@ -187,6 +187,70 @@ FEATURE_PAIRS = {
             ("The light shines in the dark", "The light shone in the dark"),
             ("I mean what I say", "I meant what I said"),
             ("The dog deals with the situation", "The dog dealt with the situation"),
+            ("The girl blows out the candles", "The girl blew out the candles"),
+            ("The crowd cheers loudly", "The crowd cheered loudly"),
+            ("The water freezes quickly", "The water froze quickly"),
+            ("He draws a circle", "He drew a circle"),
+            ("The machine prints the document", "The machine printed the document"),
+            ("She hangs the picture on the wall", "She hung the picture on the wall"),
+            ("The leaves fall from the tree", "The leaves fell from the tree"),
+            ("The child swings high", "The child swung high"),
+            ("The wind howls at night", "The wind howled at night"),
+            ("She holds the baby gently", "She held the baby gently"),
+            ("The man digs a hole", "The man dug a hole"),
+            ("The cat leaps onto the table", "The cat leapt onto the table"),
+            ("The girl slams the door", "The girl slammed the door"),
+            ("The dog bites the bone", "The dog bit the bone"),
+            ("The horse trots along the path", "The horse trotted along the path"),
+            ("She knits a sweater", "She knitted a sweater"),
+            ("The boy grins widely", "The boy grinned widely"),
+            ("The wind scatters the leaves", "The wind scattered the leaves"),
+            ("He grinds the coffee beans", "He ground the coffee beans"),
+            ("The girl spins around", "The girl spun around"),
+            ("The thunder rumbles in the distance", "The thunder rumbled in the distance"),
+            ("She strikes the match", "She struck the match"),
+            ("The dog weaves through the poles", "The dog wove through the poles"),
+            ("The boy clings to the rope", "The boy clung to the rope"),
+            ("She spreads the butter", "She spread the butter"),
+            ("The bird swoops down", "The bird swooped down"),
+            ("He splits the wood", "He split the wood"),
+            ("The baby claps her hands", "The baby clapped her hands"),
+            ("She binds the book", "She bound the book"),
+            ("The dog creeps forward", "The dog crept forward"),
+            ("He hangs his coat on the hook", "He hung his coat on the hook"),
+            ("The light flickers briefly", "The light flickered briefly"),
+            ("She bids farewell", "She bade farewell"),
+            ("The dog leaps over the log", "The dog leapt over the log"),
+            ("He wrings the towel", "He wrung the towel"),
+            ("The bell tolls at sunset", "The bell tolled at sunset"),
+            ("She seeks the answer", "She sought the answer"),
+            ("The dog shrinks back", "The dog shrank back"),
+            ("He slits the envelope", "He slit the envelope"),
+            ("The dog bounds across the yard", "The dog bounded across the yard"),
+            ("She dwells in the cottage", "She dwelt in the cottage"),
+            ("The light gleams softly", "The light gleamed softly"),
+            ("He foresees the problem", "He foresaw the problem"),
+            ("The vine clings to the wall", "The vine clung to the wall"),
+            ("She rends the fabric", "She rent the fabric"),
+            ("The dog springs forward", "The dog sprang forward"),
+            ("He misleads the crowd", "He misled the crowd"),
+            ("The water overflows the basin", "The water overflowed the basin"),
+            ("She spins the wheel", "She spun the wheel"),
+            ("The tree sheds its leaves", "The tree shed its leaves"),
+            ("He overcomes the obstacle", "He overcame the obstacle"),
+            ("The dog undergoes training", "The dog underwent training"),
+            ("She undertakes the task", "She undertook the task"),
+            ("The wind uproots the tree", "The wind uprooted the tree"),
+            ("He withstands the pressure", "He withstood the pressure"),
+            ("The river undercuts the bank", "The river undercut the bank"),
+            ("She weaves the basket", "She wove the basket"),
+            ("The dog resists the temptation", "The dog resisted the temptation"),
+            ("He misreads the signal", "He misread the signal"),
+            ("The sun overheats the roof", "The sun overheated the roof"),
+            ("She rewinds the tape", "She rewound the tape"),
+            ("The dog outlasts the competition", "The dog outlasted the competition"),
+            ("He foretells the future", "He foretold the future"),
+            ("The wind overspreads the sky", "The wind overspread the sky"),
         ]
     },
     'polarity': {
@@ -337,6 +401,62 @@ FEATURE_PAIRS = {
             ("She dances beautifully", "She does not dance beautifully"),
             ("The coffee tastes good", "The coffee does not taste good"),
             ("He can cook", "He cannot cook"),
+            ("The student completed the assignment", "The student did not complete the assignment"),
+            ("The scientist proved the hypothesis", "The scientist did not prove the hypothesis"),
+            ("The company achieved its goal", "The company did not achieve its goal"),
+            ("The athlete broke the record", "The athlete did not break the record"),
+            ("The artist painted a masterpiece", "The artist did not paint a masterpiece"),
+            ("The writer finished the novel", "The writer did not finish the novel"),
+            ("The programmer solved the bug", "The programmer did not solve the bug"),
+            ("The doctor cured the disease", "The doctor did not cure the disease"),
+            ("The teacher explained the concept", "The teacher did not explain the concept"),
+            ("The musician composed a symphony", "The musician did not compose a symphony"),
+            ("The engineer designed the system", "The engineer did not design the system"),
+            ("The chef created the recipe", "The chef did not create the recipe"),
+            ("The detective found the clue", "The detective did not find the clue"),
+            ("The pilot landed safely", "The pilot did not land safely"),
+            ("The architect built the tower", "The architect did not build the tower"),
+            ("The singer hit the note", "The singer did not hit the note"),
+            ("The player scored the point", "The player did not score the point"),
+            ("The driver avoided the accident", "The driver did not avoid the accident"),
+            ("The manager approved the budget", "The manager did not approve the budget"),
+            ("The researcher published the paper", "The researcher did not publish the paper"),
+            ("The student passed the exam", "The student did not pass the exam"),
+            ("The team won the championship", "The team did not win the championship"),
+            ("The baby learned to walk", "The baby did not learn to walk"),
+            ("The plant survived the winter", "The plant did not survive the winter"),
+            ("The car passed inspection", "The car did not pass inspection"),
+            ("The movie received awards", "The movie did not receive awards"),
+            ("The experiment produced results", "The experiment did not produce results"),
+            ("The bridge withstood the earthquake", "The bridge did not withstand the earthquake"),
+            ("The vaccine prevented the disease", "The vaccine did not prevent the disease"),
+            ("The software met expectations", "The software did not meet expectations"),
+            ("The satellite reached orbit", "The satellite did not reach orbit"),
+            ("The recipe turned out well", "The recipe did not turn out well"),
+            ("The surgery succeeded", "The surgery did not succeed"),
+            ("The project finished on time", "The project did not finish on time"),
+            ("The negotiation reached agreement", "The negotiation did not reach agreement"),
+            ("The invention changed the world", "The invention did not change the world"),
+            ("The plan worked perfectly", "The plan did not work perfectly"),
+            ("The election produced a winner", "The election did not produce a winner"),
+            ("The cure saved the patient", "The cure did not save the patient"),
+            ("The rocket launched successfully", "The rocket did not launch successfully"),
+            ("The discovery changed science", "The discovery did not change science"),
+            ("The treatment reduced symptoms", "The treatment did not reduce symptoms"),
+            ("The mission achieved its objective", "The mission did not achieve its objective"),
+            ("The investment yielded profit", "The investment did not yield profit"),
+            ("The construction met standards", "The construction did not meet standards"),
+            ("The training improved performance", "The training did not improve performance"),
+            ("The diet improved health", "The diet did not improve health"),
+            ("The policy reduced crime", "The policy did not reduce crime"),
+            ("The innovation increased efficiency", "The innovation did not increase efficiency"),
+            ("The campaign raised awareness", "The campaign did not raise awareness"),
+            ("The reform improved education", "The reform did not improve education"),
+            ("The strategy captured market", "The strategy did not capture market"),
+            ("The procedure cured the illness", "The procedure did not cure the illness"),
+            ("The merger created value", "The merger did not create value"),
+            ("The therapy healed the wound", "The therapy did not heal the wound"),
+            ("The upgrade fixed the problem", "The upgrade did not fix the problem"),
         ]
     },
     'voice': {
@@ -491,6 +611,46 @@ FEATURE_PAIRS = {
             ("The clerk processes the order", "The order is processed by the clerk"),
             ("The driver transports the goods", "The goods are transported by the driver"),
             ("The teacher corrects the paper", "The paper is corrected by the teacher"),
+            ("The mayor addressed the crowd", "The crowd was addressed by the mayor"),
+            ("The company launched the product", "The product was launched by the company"),
+            ("The team implemented the solution", "The solution was implemented by the team"),
+            ("The government announced the policy", "The policy was announced by the government"),
+            ("The school organized the event", "The event was organized by the school"),
+            ("The hospital treated the victims", "The victims were treated by the hospital"),
+            ("The court ruled the case", "The case was ruled by the court"),
+            ("The bank approved the loan", "The loan was approved by the bank"),
+            ("The university awarded the degree", "The degree was awarded by the university"),
+            ("The council passed the law", "The law was passed by the council"),
+            ("The agency investigated the claim", "The claim was investigated by the agency"),
+            ("The committee reviewed the proposal", "The proposal was reviewed by the committee"),
+            ("The institute published the report", "The report was published by the institute"),
+            ("The department issued the guidelines", "The guidelines were issued by the department"),
+            ("The museum exhibited the painting", "The painting was exhibited by the museum"),
+            ("The orchestra performed the concerto", "The concerto was performed by the orchestra"),
+            ("The lab analyzed the sample", "The sample was analyzed by the lab"),
+            ("The factory produced the component", "The component was produced by the factory"),
+            ("The studio released the film", "The film was released by the studio"),
+            ("The network broadcast the show", "The show was broadcast by the network"),
+            ("The publisher printed the magazine", "The magazine was printed by the publisher"),
+            ("The firm designed the campaign", "The campaign was designed by the firm"),
+            ("The bureau collected the data", "The data was collected by the bureau"),
+            ("The station transmitted the signal", "The signal was transmitted by the station"),
+            ("The manufacturer recalled the device", "The device was recalled by the manufacturer"),
+            ("The authority regulated the industry", "The industry was regulated by the authority"),
+            ("The organization distributed the aid", "The aid was distributed by the organization"),
+            ("The board approved the budget", "The budget was approved by the board"),
+            ("The commission investigated the fraud", "The fraud was investigated by the commission"),
+            ("The corporation developed the technology", "The technology was developed by the corporation"),
+            ("The institute trained the staff", "The staff was trained by the institute"),
+            ("The agency enforced the regulation", "The regulation was enforced by the agency"),
+            ("The ministry coordinated the response", "The response was coordinated by the ministry"),
+            ("The panel evaluated the proposal", "The proposal was evaluated by the panel"),
+            ("The society published the journal", "The journal was published by the society"),
+            ("The foundation funded the research", "The research was funded by the foundation"),
+            ("The center hosted the conference", "The conference was hosted by the center"),
+            ("The union negotiated the contract", "The contract was negotiated by the union"),
+            ("The office managed the project", "The project was managed by the office"),
+            ("The division handled the complaint", "The complaint was handled by the division"),
         ]
     },
     'semantic_valence': {
@@ -640,6 +800,40 @@ FEATURE_PAIRS = {
             ("She felt secure confidence", "She felt anxious worry"),
             ("The gentle slope descended", "The steep slope descended"),
             ("He spoke with clear logic", "He spoke with confused illogic"),
+            ("The noble hero sacrificed", "The cowardly hero sacrificed"),
+            ("She offered authentic praise", "She offered hollow praise"),
+            ("The vibrant city thrived", "The decaying city thrived"),
+            ("He showed genuine warmth", "He showed cold indifference"),
+            ("The serene lake reflected", "The turbulent lake reflected"),
+            ("She found profound meaning", "She found shallow meaning"),
+            ("The magnificent view inspired", "The dismal view inspired"),
+            ("He maintained steadfast hope", "He maintained desperate despair"),
+            ("The pure water refreshed", "The contaminated water refreshed"),
+            ("She expressed deep gratitude", "She expressed shallow ingratitude"),
+            ("The elegant solution worked", "The clumsy solution worked"),
+            ("He possessed quiet strength", "He possessed noisy weakness"),
+            ("The beautiful music resonated", "The ugly music resonated"),
+            ("She showed genuine care", "She showed fake care"),
+            ("The bright future promised", "The dark future promised"),
+            ("He felt profound peace", "He felt deep unrest"),
+            ("The delicious feast delighted", "The terrible feast delighted"),
+            ("She maintained dignified silence", "She maintained undignified noise"),
+            ("The gentle spirit guided", "The harsh spirit guided"),
+            ("He demonstrated noble character", "He demonstrated base character"),
+            ("The warm sunshine comforted", "The cold rain comforted"),
+            ("She felt immense pride", "She felt deep shame"),
+            ("The harmonious music played", "The discordant music played"),
+            ("He showed genuine interest", "He showed fake interest"),
+            ("The beautiful garden flourished", "The ugly garden flourished"),
+            ("She gave genuine encouragement", "She gave false encouragement"),
+            ("The peaceful morning arrived", "The chaotic morning arrived"),
+            ("He earned genuine admiration", "He earned false admiration"),
+            ("The pure intention motivated", "The corrupt intention motivated"),
+            ("She displayed graceful elegance", "She displayed clumsy awkwardness"),
+            ("The sweet victory rewarded", "The bitter defeat rewarded"),
+            ("He maintained honorable conduct", "He maintained dishonorable conduct"),
+            ("The vibrant colors inspired", "The dull colors inspired"),
+            ("She showed tender care", "She showed harsh neglect"),
         ]
     },
     'semantic_topic': {
@@ -788,6 +982,37 @@ FEATURE_PAIRS = {
             ("The artist chose the colors", "The designer chose the materials"),
             ("The doctor monitored the recovery", "The scientist monitored the experiment"),
             ("The teacher evaluated the progress", "The manager evaluated the performance"),
+            ("The minister addressed the congregation", "The principal addressed the students"),
+            ("The captain commanded the ship", "The director commanded the stage"),
+            ("The philosopher pondered existence", "The scientist pondered the hypothesis"),
+            ("The poet composed verses", "The musician composed melodies"),
+            ("The general deployed the troops", "The manager deployed the resources"),
+            ("The chef seasoned the broth", "The teacher seasoned the explanation"),
+            ("The engineer calibrated the instrument", "The musician calibrated the tuning"),
+            ("The doctor prescribed the medication", "The judge prescribed the punishment"),
+            ("The novelist crafted the story", "The architect crafted the blueprint"),
+            ("The botanist cultivated the garden", "The farmer cultivated the field"),
+            ("The programmer optimized the code", "The athlete optimized the technique"),
+            ("The psychologist evaluated the patient", "The teacher evaluated the student"),
+            ("The sculptor shaped the clay", "The leader shaped the policy"),
+            ("The biologist studied the organism", "The economist studied the market"),
+            ("The musician arranged the score", "The florist arranged the bouquet"),
+            ("The chemist synthesized the compound", "The composer synthesized the harmony"),
+            ("The geologist examined the rock", "The art critic examined the painting"),
+            ("The pilot steered the aircraft", "The politician steered the policy"),
+            ("The physicist calculated the velocity", "The accountant calculated the revenue"),
+            ("The librarian sorted the collection", "The chef sorted the ingredients"),
+            ("The astronomer observed the star", "The reporter observed the event"),
+            ("The neurologist studied the brain", "The sociologist studied the community"),
+            ("The carpenter polished the furniture", "The speaker polished the speech"),
+            ("The pharmacist prepared the remedy", "The chef prepared the sauce"),
+            ("The electrician wired the circuit", "The diplomat wired the message"),
+            ("The mathematician proved the theorem", "The lawyer proved the case"),
+            ("The journalist reported the news", "The scientist reported the findings"),
+            ("The surgeon repaired the organ", "The mechanic repaired the engine"),
+            ("The teacher inspired the student", "The coach inspired the athlete"),
+            ("The detective solved the mystery", "The engineer solved the problem"),
+            ("The historian documented the era", "The biologist documented the species"),
         ]
     },
 }
@@ -822,7 +1047,7 @@ MODEL_CONFIGS = {
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, required=True, choices=['qwen3', 'deepseek7b', 'glm4'])
-    parser.add_argument('--n_pairs', type=int, default=150)
+    parser.add_argument('--n_pairs', type=int, default=200)
     args = parser.parse_args()
     
     model_key = args.model
@@ -830,7 +1055,7 @@ def main():
     config = MODEL_CONFIGS[model_key]
     
     # 输出目录
-    out_dir = f'results/causal_fiber/{model_key}_ccxxiii'
+    out_dir = f'results/causal_fiber/{model_key}_ccxxiv'
     os.makedirs(out_dir, exist_ok=True)
     log_path = f'{out_dir}/run.log'
     
@@ -844,7 +1069,7 @@ def main():
             pass
     
     log(f"=" * 70)
-    log(f"Phase CCXXIII: 输出汇聚验证 — {config['name']}")
+    log(f"Phase CCXXIV: 语义主方向解码 — {config['name']}")
     log(f"  n_pairs={n_pairs}, 时间={datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     log(f"=" * 70)
     
@@ -854,7 +1079,7 @@ def main():
     log(f"\n--- 加载模型 ---")
     
     from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
-    from sklearn.decomposition import PCA
+    from sklearn.decomposition import PCA, TruncatedSVD
     
     path = config['path']
     t0 = time.time()
@@ -879,26 +1104,20 @@ def main():
     device = next(model.parameters()).device
     n_layers = model.config.num_hidden_layers
     d_model = model.config.hidden_size
+    vocab_size = len(tokenizer)
     log(f"  加载完成: {time.time()-t0:.0f}s")
-    log(f"  n_layers={n_layers}, d_model={d_model}, device={device}")
+    log(f"  n_layers={n_layers}, d_model={d_model}, vocab_size={vocab_size}, device={device}")
     
     last_layer = n_layers - 1
-    # 分析最后3层 + 1个中间层做对比
-    analysis_layers = [last_layer - 2, last_layer - 1, last_layer]
-    if n_layers >= 10:
-        mid_layer = n_layers // 2
-        analysis_layers.append(mid_layer)
-    analysis_layers = sorted(set(analysis_layers))
-    log(f"  分析层: {analysis_layers}")
     
     # ============================================================
     # S1: 提取lm_head权重矩阵并做SVD
     # ============================================================
     log(f"\n{'='*60}")
-    log(f"S1: 提取lm_head权重矩阵并做SVD")
+    log(f"S1: 提取lm_head权重矩阵并做截断SVD")
     log(f"{'='*60}")
     
-    # 找到lm_head (不同模型名字不同)
+    # 找到lm_head
     lm_head = None
     if hasattr(model, 'lm_head'):
         lm_head = model.lm_head
@@ -908,7 +1127,6 @@ def main():
         lm_head = model.output
     
     if lm_head is None:
-        # 搜索
         for name, module in model.named_modules():
             if 'lm_head' in name or 'embed_out' in name:
                 lm_head = module
@@ -916,98 +1134,197 @@ def main():
                 break
     
     if lm_head is None:
-        log("  !!! 无法找到lm_head, 尝试get_output_embeddings")
         lm_head = model.get_output_embeddings()
+    
+    # 提取权重
+    svd_directions = None
+    svd_singular = None
+    W_full = None
     
     if lm_head is not None:
         try:
-            # 分步提取权重，避免内存峰值
             log(f"  正在提取lm_head权重...")
             w = lm_head.weight.detach()
             
-            # 处理meta tensor (8bit量化模型的权重可能未加载)
             if w.is_meta:
-                log(f"  lm_head权重是meta tensor, 尝试从原始模型文件加载...")
-                # 从原始文件加载lm_head权重
+                log(f"  lm_head权重是meta tensor, 从safetensors加载...")
                 from safetensors import safe_open
                 import glob
                 
-                # 查找safetensors文件
                 model_dir = config['path']
                 safetensor_files = glob.glob(os.path.join(model_dir, '*.safetensors'))
                 
                 if safetensor_files:
                     W_parts = []
-                    vocab_found = False
                     for sf in safetensor_files:
-                        with safe_open(sf, framework='pt') as f:  # 用pt而非numpy
+                        with safe_open(sf, framework='pt') as f:
                             for key in f.keys():
                                 if 'lm_head' in key or 'embed_out' in key or 'output.weight' in key:
                                     log(f"    找到权重: {key} in {os.path.basename(sf)}")
                                     W_parts.append(f.get_tensor(key))
-                                    vocab_found = True
                     
                     if W_parts:
-                        # 用torch加载而非numpy (支持bfloat16)
                         W_torch = torch.cat(W_parts, dim=0) if len(W_parts) > 1 else W_parts[0]
-                        W = W_torch.float().numpy()
+                        W_full = W_torch.float().numpy()
                         del W_torch
-                        log(f"    从safetensors加载: shape={W.shape}, dtype={W.dtype}")
-                    else:
-                        raise ValueError("未找到lm_head权重key")
+                        log(f"    从safetensors加载: shape={W_full.shape}")
                 else:
                     raise ValueError("未找到safetensors文件")
             else:
-                # 正常加载
                 w = w.cpu()
-                W = w.float().numpy()
+                W_full = w.float().numpy()
                 del w
-            log(f"  lm_head权重形状: {W.shape}")
             
-            # 使用截断SVD (只计算前20个分量, 节省内存)
-            from sklearn.decomposition import TruncatedSVD
-            n_svd_comp = 20
+            log(f"  lm_head权重形状: {W_full.shape}")
+            
+            # 截断SVD
+            n_svd_comp = 30  # 多计算一些方向
             t_svd = time.time()
             svd_model = TruncatedSVD(n_components=n_svd_comp)
-            svd_model.fit(W)  # W: (vocab, d_model)
+            svd_model.fit(W_full)  # W: (vocab, d_model)
             S = svd_model.singular_values_
             Vt = svd_model.components_  # (n_svd_comp, d_model)
-            del W, svd_model  # 释放内存
-            log(f"  截断SVD完成: {time.time()-t_svd:.0f}s, S={S.shape}, Vt={Vt.shape}")
+            del svd_model
+            log(f"  截断SVD完成: {time.time()-t_svd:.0f}s")
             
-            # 前20个奇异值 (方差比例用S^2近似)
-            total_energy = np.sum(S**2) * (d_model / n_svd_comp)  # 近似总能量
-            log(f"  前20个奇异值:")
-            cum_var = 0
-            for i in range(min(20, len(S))):
-                cum_var += S[i]**2
+            # 前30个奇异值
+            log(f"  前30个奇异值:")
+            for i in range(min(30, len(S))):
                 log(f"    S[{i}] = {S[i]:.1f}")
-            log(f"  前20分量累积能量: {np.sum(S**2):.0f}")
             
-            # 保存前20个右奇异向量 (d_model维)
-            n_svd = 20
-            svd_directions = Vt[:n_svd]  # (20, d_model)
-            svd_singular = S[:n_svd]
-            log(f"  保存前{n_svd}个SVD主方向")
+            svd_directions = Vt  # (30, d_model)
+            svd_singular = S
+            n_svd = len(S)
+            
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
         except Exception as e:
             log(f"  !!! lm_head权重提取/SVD失败: {e}")
-            svd_directions = None
-            svd_singular = None
+            import traceback
+            traceback.print_exc()
     else:
-        log("  !!! 无法找到lm_head! 跳过SVD分析")
-        svd_directions = None
+        log("  !!! 无法找到lm_head!")
     
     # ============================================================
-    # S2: 在最后3层+中间层收集差分向量并做PCA
+    # S2: SVD方向解码 — 沿每个SVD方向, logit变化最大的token
     # ============================================================
     log(f"\n{'='*60}")
-    log(f"S2: 收集差分向量并做PCA ({n_pairs}对/特征 × {len(analysis_layers)}层)")
+    log(f"S2: SVD方向解码 — 沿SVD[k]移动, logit变化最大的token")
     log(f"{'='*60}")
     
-    layer_deltas = {l: {f: [] for f in feature_names} for l in analysis_layers}
-    layer_pca = {}  # layer -> feat -> {pc1_dir, pc1_var, explained_var}
+    if svd_directions is not None and W_full is not None:
+        # W_full: (vocab, d_model), svd_directions: (n_svd, d_model)
+        # logit = W @ h + b
+        # 沿SVD[k]方向移动 δh 时: Δlogit = W @ (δh * v_k) = δh * (W @ v_k)
+        
+        log(f"  计算 W @ Vt (logit敏感度矩阵)...")
+        logit_sensitivity = W_full @ svd_directions.T  # (vocab, n_svd)
+        log(f"  logit_sensitivity形状: {logit_sensitivity.shape}")
+        
+        # ===== S2+3: 一次性完成SVD解码 + 频率分析 + 保存top token集 =====
+        n_top_tokens = 30
+        n_freq_analysis = 500
+        svd_decoded = {}
+        svd_top_token_sets = {}  # 保存SVD方向的top-100 token索引, 用于S5的Jaccard
+        
+        # token频率排名 (用权重L2范数近似)
+        token_norms = np.linalg.norm(W_full, axis=1)
+        token_freq_rank = np.argsort(-token_norms)
+        # 建立反向索引: token_idx -> freq_rank
+        freq_rank_map = np.zeros(len(token_norms), dtype=int)
+        for rank_val, idx in enumerate(token_freq_rank):
+            freq_rank_map[idx] = rank_val
+        
+        for k in range(min(10, n_svd)):
+            sensitivity_k = logit_sensitivity[:, k]
+            
+            # --- S2: top token解码 ---
+            top_pos_idx = np.argsort(sensitivity_k)[-n_top_tokens:][::-1]
+            top_neg_idx = np.argsort(sensitivity_k)[:n_top_tokens]
+            
+            top_pos_tokens = [(tokenizer.decode([idx]).strip(), float(sensitivity_k[idx])) for idx in top_pos_idx]
+            top_neg_tokens = [(tokenizer.decode([idx]).strip(), float(sensitivity_k[idx])) for idx in top_neg_idx]
+            
+            svd_decoded[k] = {
+                'pos_tokens': top_pos_tokens,
+                'neg_tokens': top_neg_tokens,
+                'sensitivity_stats': {
+                    'mean': float(np.mean(np.abs(sensitivity_k))),
+                    'std': float(np.std(sensitivity_k)),
+                    'max': float(np.max(sensitivity_k)),
+                    'min': float(np.min(sensitivity_k)),
+                }
+            }
+            
+            # --- 保存top-100 token集 (用于S5 Jaccard) ---
+            abs_sens = np.abs(sensitivity_k)
+            top_100_pos = set(np.argsort(-sensitivity_k)[:100])
+            top_100_neg = set(np.argsort(sensitivity_k)[:100])
+            svd_top_token_sets[k] = (top_100_pos, top_100_neg)
+            
+            # --- S3: 频率分析 ---
+            top_idx = np.argsort(-abs_sens)[:n_freq_analysis]
+            freq_ranks = freq_rank_map[top_idx]
+            
+            mean_rank = np.mean(freq_ranks)
+            median_rank = np.median(freq_ranks)
+            high_freq_ratio = np.sum(freq_ranks < 1000) / len(freq_ranks)
+            low_freq_ratio = np.sum(freq_ranks > len(token_norms)//2) / len(freq_ranks)
+            
+            pos_top = np.argsort(-sensitivity_k)[:n_freq_analysis]
+            neg_top = np.argsort(sensitivity_k)[:n_freq_analysis]
+            pos_high = np.sum(freq_rank_map[pos_top] < 1000) / len(pos_top)
+            neg_high = np.sum(freq_rank_map[neg_top] < 1000) / len(neg_top)
+            
+            # --- 输出S2 ---
+            log(f"\n  SVD[{k}] (σ={svd_singular[k]:.1f}):")
+            log(f"    正方向 (logit增加) Top-15:")
+            for tok, val in top_pos_tokens[:15]:
+                log(f"      '{tok}' → {val:.2f}")
+            log(f"    负方向 (logit减少) Top-15:")
+            for tok, val in top_neg_tokens[:15]:
+                log(f"      '{tok}' → {val:.2f}")
+            
+            # --- 输出S3 ---
+            log(f"    --- 频率分析 ---")
+            log(f"    最敏感{n_freq_analysis}个token: 平均排名={mean_rank:.0f}/{len(token_norms)}, "
+                f"中位排名={median_rank:.0f}")
+            log(f"    前1000高频词占比: {high_freq_ratio*100:.1f}%, "
+                f"后50%低频词占比: {low_freq_ratio*100:.1f}%")
+            log(f"    正方向高频词占比: {pos_high*100:.1f}%, 负方向高频词占比: {neg_high*100:.1f}%")
+            
+            if k < 3:
+                pvals = np.percentile(freq_ranks, [10, 25, 50, 75, 90])
+                log(f"    频率排名分位数: P10={pvals[0]:.0f}, P25={pvals[1]:.0f}, "
+                    f"P50={pvals[2]:.0f}, P75={pvals[3]:.0f}, P90={pvals[4]:.0f}")
+        
+        # ★ 关键: 在这里释放W_full和logit_sensitivity, 释放大量内存
+        del logit_sensitivity, W_full, token_norms, token_freq_rank, freq_rank_map
+        W_full = None  # 标记为已释放
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        log(f"\n  ★ W_full已释放, 节省内存")
+    else:
+        log("  跳过 (无SVD方向)")
+        svd_decoded = {}
+        svd_top_token_sets = {}
+    
+    # ============================================================
+    # S3: (已合并到S2中, 频率分析与解码同时完成)
+    # ============================================================
+    log(f"\n{'='*60}")
+    log(f"S3: (已合并到S2)")
+    log(f"{'='*60}")
+    
+    # ============================================================
+    # S4: PC1方向的logit解码
+    # ============================================================
+    log(f"\n{'='*60}")
+    log(f"S4: PC1方向的logit解码 — PC1编码了什么语义?")
+    log(f"{'='*60}")
+    
+    # 先收集最后一层的差分向量并做PCA
+    analysis_layers = [last_layer]
     
     def make_hook(layer_idx, store):
         def hook_fn(module, input, output):
@@ -1017,6 +1334,9 @@ def main():
                 out = output
             store[layer_idx] = out.detach().cpu().clone()
         return hook_fn
+    
+    layer_deltas = {l: {f: [] for f in feature_names} for l in analysis_layers}
+    layer_pca = {}
     
     cap_store = {}
     handles = []
@@ -1029,31 +1349,24 @@ def main():
         log(f"  收集 {feat} ({len(all_pairs)}对)...")
         
         for i, (s1, s2) in enumerate(all_pairs):
-            if (i+1) % 30 == 0:
+            if (i+1) % 50 == 0:
                 log(f"    {feat}: {i+1}/{len(all_pairs)}")
             
             with torch.no_grad():
-                # s1
                 tokens1 = tokenizer(s1, return_tensors='pt').to(device)
                 out1 = model(**tokens1)
+                act1 = cap_store.get(layer, None)
+                if act1 is not None:
+                    act1_np = act1[0, -1].float().numpy()
                 
-                act1_by_layer = {}
-                for layer in analysis_layers:
-                    if layer in cap_store:
-                        act1_by_layer[layer] = cap_store[layer][0, -1].float().numpy()
-                
-                # s2
                 tokens2 = tokenizer(s2, return_tensors='pt').to(device)
                 out2 = model(**tokens2)
+                act2 = cap_store.get(layer, None)
+                if act2 is not None:
+                    act2_np = act2[0, -1].float().numpy()
                 
-                act2_by_layer = {}
-                for layer in analysis_layers:
-                    if layer in cap_store:
-                        act2_by_layer[layer] = cap_store[layer][0, -1].float().numpy()
-            
-            for layer in analysis_layers:
-                if layer in act1_by_layer and layer in act2_by_layer:
-                    delta = act2_by_layer[layer] - act1_by_layer[layer]
+                if act1 is not None and act2 is not None:
+                    delta = act2_np - act1_np
                     layer_deltas[layer][feat].append(delta)
             
             del out1, out2
@@ -1063,299 +1376,253 @@ def main():
     for h in handles:
         h.remove()
     
-    log(f"\n  PCA计算...")
-    for layer in analysis_layers:
-        layer_pca[layer] = {}
-        for feat in feature_names:
-            deltas = np.array(layer_deltas[layer][feat])
-            if len(deltas) < 5:
-                continue
-            pca = PCA(n_components=min(5, len(deltas)))
-            pca.fit(deltas)
-            layer_pca[layer][feat] = {
-                'pc1_dir': pca.components_[0],  # PC1方向
-                'pc1_var': pca.explained_variance_ratio_[0],
-                'explained_var': pca.explained_variance_ratio_[:5],
-                'n_samples': len(deltas),
-            }
-            log(f"  L{layer} {feat}: PC1方差={pca.explained_variance_ratio_[0]*100:.1f}%, "
-                f"PC1-5={np.sum(pca.explained_variance_ratio_[:5])*100:.1f}%")
+    # PCA
+    layer_pca[layer] = {}
+    for feat in feature_names:
+        deltas = np.array(layer_deltas[layer][feat])
+        if len(deltas) < 5:
+            continue
+        pca = PCA(n_components=min(5, len(deltas)))
+        pca.fit(deltas)
+        layer_pca[layer][feat] = {
+            'pc1_dir': pca.components_[0],
+            'pc1_var': pca.explained_variance_ratio_[0],
+            'n_samples': len(deltas),
+        }
+        log(f"  {feat}: PC1方差={pca.explained_variance_ratio_[0]*100:.1f}%")
     
-    # ============================================================
-    # S3: PC1方向 vs lm_head SVD主方向的对齐度
-    # ============================================================
-    log(f"\n{'='*60}")
-    log(f"S3: PC1方向 vs lm_head SVD主方向的对齐度")
-    log(f"{'='*60}")
+    # 计算跨特征共享PC1
+    all_deltas = []
+    for feat in feature_names:
+        if feat in layer_pca[layer]:
+            all_deltas.extend(layer_deltas[layer][feat])
     
-    if svd_directions is not None:
-        for layer in analysis_layers:
-            log(f"\n  --- Layer {layer} ---")
-            for feat in feature_names:
-                if feat not in layer_pca[layer]:
-                    continue
-                pc1 = layer_pca[layer][feat]['pc1_dir']
-                
-                # 计算与每个SVD主方向的cosine对齐度
-                cosines = []
-                for k in range(n_svd):
-                    cos_val = abs(np.dot(pc1, svd_directions[k]) / 
-                                (np.linalg.norm(pc1) * np.linalg.norm(svd_directions[k])))
-                    cosines.append(cos_val)
-                
-                # 找最大对齐的SVD方向
-                best_k = np.argmax(cosines)
-                best_cos = cosines[best_k]
-                
-                # 计算PC1在前K个SVD方向上的投影比例
-                proj_top1 = cosines[0]**2
-                proj_top3 = sum(c**2 for c in cosines[:3])
-                proj_top5 = sum(c**2 for c in cosines[:5])
-                proj_top10 = sum(c**2 for c in cosines[:10])
-                proj_top20 = sum(c**2 for c in cosines[:20])
-                
-                log(f"  {feat}: PC1方差={layer_pca[layer][feat]['pc1_var']*100:.1f}%")
-                log(f"    最对齐SVD方向: SVD[{best_k}] (cos={best_cos:.4f})")
-                log(f"    SVD[0] cos={cosines[0]:.4f}, SVD[1] cos={cosines[1]:.4f}, "
-                    f"SVD[2] cos={cosines[2]:.4f}")
-                log(f"    投影比例: top1={proj_top1:.4f}, top3={proj_top3:.4f}, "
-                    f"top5={proj_top5:.4f}, top10={proj_top10:.4f}, top20={proj_top20:.4f}")
-        
-        # 跨特征PC1对齐度 (确认CCXXII的发现)
-        log(f"\n  --- 跨特征PC1对齐度 ---")
-        for layer in analysis_layers:
-            log(f"  Layer {layer}:")
-            pc1_dirs = {}
-            for feat in feature_names:
-                if feat in layer_pca[layer]:
-                    pc1_dirs[feat] = layer_pca[layer][feat]['pc1_dir']
-            
-            for f1 in feature_names:
-                for f2 in feature_names:
-                    if f1 >= f2:
-                        continue
-                    if f1 not in pc1_dirs or f2 not in pc1_dirs:
-                        continue
-                    cos_val = abs(np.dot(pc1_dirs[f1], pc1_dirs[f2]) / 
-                             (np.linalg.norm(pc1_dirs[f1]) * np.linalg.norm(pc1_dirs[f2]) + 1e-10))
-                    star = "★" if cos_val > 0.8 else ""
-                    log(f"    {f1}↔{f2}: cos={cos_val:.4f} {star}")
+    if len(all_deltas) > 10:
+        all_deltas_arr = np.array(all_deltas)
+        pca_global = PCA(n_components=5)
+        pca_global.fit(all_deltas_arr)
+        global_pc1 = pca_global.components_[0]
+        log(f"\n  全局PC1方差={pca_global.explained_variance_ratio_[0]*100:.1f}%")
     else:
-        log("  跳过 (无lm_head SVD)")
+        global_pc1 = None
     
-    # ============================================================
-    # S4: 差分向量与SVD方向的投影分析 (轻量版, 避免OOM)
-    # ============================================================
-    log(f"\n{'='*60}")
-    log(f"S4: 差分向量与SVD方向的投影分析")
-    log(f"{'='*60}")
+    # 对每个per-feature PC1和global PC1做SVD空间投影分析
+    # (W_full已释放, 不能直接做logit解码, 改用PC1在SVD空间上的投影间接推断)
+    log(f"\n  --- PC1方向在SVD空间上的投影分析 ---")
     
-    layer = last_layer
+    pc1_svd_decomposition = {}  # PC1在SVD方向上的投影系数
+    
+    directions_to_analyze = {}
     for feat in feature_names:
-        if feat not in layer_pca[layer] or svd_directions is None:
-            continue
-        
-        deltas = np.array(layer_deltas[layer][feat])
-        pc1 = layer_pca[layer][feat]['pc1_dir']
-        
-        # 每个差分向量在PC1方向的投影
-        pc1_projs = np.array([np.dot(d, pc1) for d in deltas])
-        
-        # 每个差分向量在SVD[0]和SVD[1]方向的投影
-        svd0_projs = np.array([np.dot(d, svd_directions[0]) for d in deltas])
-        svd1_projs = np.array([np.dot(d, svd_directions[1]) for d in deltas])
-        
-        # 差分向量范数
-        norms = np.array([np.linalg.norm(d) for d in deltas])
-        
-        # 计算投影比的统计量
-        # |proj_pc1| / norm vs |proj_svd0| / norm vs |proj_svd1| / norm
-        pc1_ratio = np.mean(np.abs(pc1_projs) / (norms + 1e-10))
-        svd0_ratio = np.mean(np.abs(svd0_projs) / (norms + 1e-10))
-        svd1_ratio = np.mean(np.abs(svd1_projs) / (norms + 1e-10))
-        
-        log(f"  {feat} (L{layer}):")
-        log(f"    差分向量在PC1方向投影比: {pc1_ratio:.4f}")
-        log(f"    差分向量在SVD[0]方向投影比: {svd0_ratio:.4f}")
-        log(f"    差分向量在SVD[1]方向投影比: {svd1_ratio:.4f}")
-        log(f"    PC1投影比 / SVD[0]投影比 = {pc1_ratio/svd0_ratio:.2f}x")
-        log(f"    PC1投影比 / SVD[1]投影比 = {pc1_ratio/svd1_ratio:.2f}x")
-        log(f"    SVD[1]投影比 / SVD[0]投影比 = {svd1_ratio/svd0_ratio:.2f}x")
+        if feat in layer_pca[layer]:
+            directions_to_analyze[f'PC1_{feat}'] = layer_pca[layer][feat]['pc1_dir']
+    if global_pc1 is not None:
+        directions_to_analyze['PC1_global'] = global_pc1
     
-    # ============================================================
-    # S5: 控制分析 — 随机方向 vs PC1 vs SVD
-    # ============================================================
-    log(f"\n{'='*60}")
-    log(f"S5: 控制分析 — 随机方向 vs PC1 vs SVD")
-    log(f"{'='*60}")
-    
-    n_random = 100
-    layer = last_layer
-    
-    for feat in feature_names:
-        if feat not in layer_pca[layer]:
-            continue
+    for dir_name, dir_vec in directions_to_analyze.items():
+        # PC1在各SVD方向上的投影系数
+        proj_coeffs = []
+        for k in range(min(10, n_svd)):
+            coeff = np.dot(dir_vec, svd_directions[k]) / (np.linalg.norm(dir_vec) * np.linalg.norm(svd_directions[k]) + 1e-10)
+            proj_coeffs.append(coeff)
         
-        pc1 = layer_pca[layer][feat]['pc1_dir']
-        deltas = np.array(layer_deltas[layer][feat])
+        # PC1的重构: 用SVD前10方向重构PC1, 看重构质量
+        proj_top5_energy = sum(c**2 for c in proj_coeffs[:5])
+        proj_top10_energy = sum(c**2 for c in proj_coeffs[:10])
         
-        # PC1方向的投影比
-        pc1_projs = [abs(np.dot(d, pc1)) for d in deltas]
+        # 找最主导的SVD分量
+        abs_coeffs = [abs(c) for c in proj_coeffs]
+        dominant_k = np.argmax(abs_coeffs)
         
-        # 随机方向的投影比
-        rand_projs_all = []
-        for _ in range(n_random):
-            rand_dir = np.random.randn(d_model)
-            rand_dir /= np.linalg.norm(rand_dir)
-            rand_projs = [abs(np.dot(d, rand_dir)) for d in deltas]
-            rand_projs_all.append(np.mean(rand_projs))
+        pc1_svd_decomposition[dir_name] = {
+            'proj_coeffs': proj_coeffs,
+            'proj_top5_energy': proj_top5_energy,
+            'proj_top10_energy': proj_top10_energy,
+            'dominant_svd_k': int(dominant_k),
+            'dominant_coeff': float(proj_coeffs[dominant_k]),
+        }
         
-        # SVD前3方向的投影
-        if svd_directions is not None:
-            svd_projs = {}
-            for k in [0, 1, 2]:
-                svd_projs[k] = [abs(np.dot(d, svd_directions[k])) for d in deltas]
+        log(f"\n  {dir_name}:")
+        log(f"    PC1方差: {layer_pca[layer].get(dir_name.replace('PC1_',''), {}).get('pc1_var', 0)*100:.1f}%"
+            if dir_name.replace('PC1_','') in layer_pca[layer] else f"    (全局PC1)")
+        log(f"    SVD投影系数: " + ", ".join([f"SVD[{k}]={c:.4f}" for k, c in enumerate(proj_coeffs[:10])]))
+        log(f"    主导分量: SVD[{dominant_k}] (cos={proj_coeffs[dominant_k]:.4f})")
+        log(f"    前5分量能量: {proj_top5_energy:.4f}, 前10分量能量: {proj_top10_energy:.4f}")
         
-        log(f"\n  {feat} (L{layer}):")
-        log(f"    PC1方向: mean_proj={np.mean(pc1_projs):.6f}")
-        log(f"    随机方向: mean_proj={np.mean(rand_projs_all):.6f} ± {np.std(rand_projs_all):.6f}")
-        log(f"    PC1/Random = {np.mean(pc1_projs)/np.mean(rand_projs_all):.2f}x")
-        
-        if svd_directions is not None:
-            for k in [0, 1, 2]:
-                log(f"    SVD[{k}]方向: mean_proj={np.mean(svd_projs[k]):.6f}, "
-                    f"SVD[{k}]/Random = {np.mean(svd_projs[k])/np.mean(rand_projs_all):.2f}x")
-            
-            # PC1方向与SVD方向的投影比对比
-            # 如果PC1/Random >> SVD[0]/Random, 说明PC1不是简单地被SVD[0]主导
-            # 如果PC1/Random ≈ SVD[0]/Random, 说明PC1 ≈ SVD[0]
-            log(f"    PC1/Random vs SVD[0]/Random: "
-                f"{np.mean(pc1_projs)/np.mean(rand_projs_all):.2f}x vs "
-                f"{np.mean(svd_projs[0])/np.mean(rand_projs_all):.2f}x")
-    
-    # ============================================================
-    # S6: 汇总与判断
-    # ============================================================
-    log(f"\n{'='*60}")
-    log(f"S6: 汇总与判断")
-    log(f"{'='*60}")
-    
-    if svd_directions is not None:
-        log(f"\n  === PC1 vs SVD主方向对齐度汇总 (Layer {last_layer}) ===")
-        header = f"  {'Feature':>20} {'PC1_var':>8} {'Best_SVD':>8} {'Best_cos':>8} {'SVD0_cos':>8} {'Proj_top1':>10} {'Proj_top5':>10} {'Proj_top20':>10}"
-        log(header)
-        
-        for feat in feature_names:
-            if feat not in layer_pca[last_layer]:
-                continue
-            pc1 = layer_pca[last_layer][feat]['pc1_dir']
-            cosines = []
-            for k in range(n_svd):
-                cos_val = abs(np.dot(pc1, svd_directions[k]) / 
-                            (np.linalg.norm(pc1) * np.linalg.norm(svd_directions[k])))
-                cosines.append(cos_val)
-            best_k = np.argmax(cosines)
-            
-            proj_top1 = cosines[0]**2
-            proj_top5 = sum(c**2 for c in cosines[:5])
-            proj_top20 = sum(c**2 for c in cosines[:20])
-            
-            log(f"  {feat:>20} {layer_pca[last_layer][feat]['pc1_var']*100:>7.1f}% "
-                f"{'SVD['+str(best_k)+']':>8} {cosines[best_k]:>8.4f} {cosines[0]:>8.4f} "
-                f"{proj_top1:>10.4f} {proj_top5:>10.4f} {proj_top20:>10.4f}")
-        
-        log(f"\n  === 层间对比: PC1→SVD[0]对齐度 ===")
-        header = f"  {'Feature':>20}"
-        for layer in analysis_layers:
-            header += f" {'L'+str(layer):>8}"
-        log(header)
-        
-        for feat in feature_names:
-            line = f"  {feat:>20}"
-            for layer in analysis_layers:
-                if feat in layer_pca[layer]:
-                    pc1 = layer_pca[layer][feat]['pc1_dir']
-                    cos0 = abs(np.dot(pc1, svd_directions[0]) / 
-                              (np.linalg.norm(pc1) * np.linalg.norm(svd_directions[0])))
-                    line += f" {cos0:>8.4f}"
-                else:
-                    line += f" {'N/A':>8}"
-            log(line)
-        
-        # 判断输出汇聚假设
-        log(f"\n  === 输出汇聚假设判断 ===")
-        
-        # 收集最后一层的对齐数据
-        last_aligns = []
-        for feat in feature_names:
-            if feat in layer_pca[last_layer]:
-                pc1 = layer_pca[last_layer][feat]['pc1_dir']
-                cos0 = abs(np.dot(pc1, svd_directions[0]) / 
-                          (np.linalg.norm(pc1) * np.linalg.norm(svd_directions[0])))
-                last_aligns.append(cos0)
-        
-        mean_last_align = np.mean(last_aligns) if last_aligns else 0
-        
-        # 收集中间层的对齐数据
-        mid_aligns = []
-        for layer in analysis_layers[:-1]:
-            for feat in feature_names:
-                if feat in layer_pca[layer]:
-                    pc1 = layer_pca[layer][feat]['pc1_dir']
-                    cos0 = abs(np.dot(pc1, svd_directions[0]) / 
-                              (np.linalg.norm(pc1) * np.linalg.norm(svd_directions[0])))
-                    mid_aligns.append(cos0)
-        
-        mean_mid_align = np.mean(mid_aligns) if mid_aligns else 0
-        
-        log(f"  最后一层PC1→SVD[0]平均对齐度: {mean_last_align:.4f}")
-        log(f"  前面层PC1→SVD[0]平均对齐度: {mean_mid_align:.4f}")
-        log(f"  对齐度提升: {mean_last_align - mean_mid_align:.4f}")
-        
-        if mean_last_align > 0.7:
-            log(f"  ★★★ 强输出汇聚: 最后一层PC1高度对齐SVD[0]!")
-            log(f"  → 1D流形方向 = lm_head的主奇异方向")
-            log(f"  → '输出汇聚'假设成立: 网络主动将信息对齐到lm_head")
-        elif mean_last_align > 0.4:
-            log(f"  ★★ 部分输出汇聚: 最后一层PC1中等对齐SVD[0]")
-            log(f"  → 1D流形方向与lm_head有关, 但不完全是SVD[0]")
+        # 基于SVD投影间接推断PC1的语义内容
+        # 如果PC1主要由SVD[0]主导 → 受频率/幅度影响
+        # 如果PC1主要由SVD[1]主导 → 受语义方向影响
+        # 如果PC1在多个SVD方向上分散 → 混合语义方向
+        if abs_coeffs[0] > 0.5:
+            pc1_semantic_label = "FREQUENCY/AMPLITUDE (受SVD[0]主导)"
+        elif proj_top5_energy > 0.7:
+            pc1_semantic_label = "SEMI-SEMANTIC (SVD前5方向可重构)"
+        elif proj_top10_energy > 0.5:
+            pc1_semantic_label = "DISTRIBUTED_SEMANTIC (分散在多个SVD方向)"
         else:
-            log(f"  ★ 无输出汇聚: 最后一层PC1与SVD[0]不对齐")
-            log(f"  → 1D流形方向独立于lm_head → 有语义意义")
-        
-        # 投影比对比
-        log(f"\n  === PC1/Random vs SVD[0]/Random ===")
-        log(f"  如果PC1/Random ≈ SVD[0]/Random → PC1方向被SVD[0]主导 (trivial)")
-        log(f"  如果PC1/Random >> SVD[0]/Random → PC1方向有独立因果效应 (非trivial)")
-    else:
-        log("  跳过汇总 (无lm_head SVD)")
+            pc1_semantic_label = "INDEPENDENT_SEMANTIC (超出SVD前10方向)"
+        log(f"    语义标签: {pc1_semantic_label}")
     
-    # 保存结果
+    # ============================================================
+    # S5: SVD方向间的token集Jaccard + PC1→SVD间接对比
+    # ============================================================
+    log(f"\n{'='*60}")
+    log(f"S5: SVD方向间的语义独立性 + PC1→SVD间接对比")
+    log(f"{'='*60}")
+    
+    if svd_directions is not None and len(svd_top_token_sets) > 0:
+        # SVD方向间的Jaccard (确认不同SVD方向编码不同信息)
+        log(f"\n  SVD方向间的token集Jaccard (前5个方向):")
+        for k1 in range(min(5, len(svd_top_token_sets))):
+            for k2 in range(k1+1, min(5, len(svd_top_token_sets))):
+                set1 = svd_top_token_sets[k1][0] | svd_top_token_sets[k1][1]
+                set2 = svd_top_token_sets[k2][0] | svd_top_token_sets[k2][1]
+                jaccard = len(set1 & set2) / len(set1 | set2) if len(set1 | set2) > 0 else 0
+                log(f"    SVD[{k1}]↔SVD[{k2}]: {jaccard:.4f}")
+        
+        # PC1→SVD的间接对比: 基于cosine投影系数
+        # 如果PC1的cosine与某个SVD[k]的top token集有显著关系,
+        # 可以推断PC1编码了类似SVD[k]的语义
+        log(f"\n  PC1→SVD语义对比 (基于cosine投影系数):")
+        log(f"  如果PC1与SVD[k]的cosine高 → PC1编码类似SVD[k]的语义")
+        
+        for dir_name, decomp in pc1_svd_decomposition.items():
+            log(f"\n  {dir_name}:")
+            proj_coeffs = decomp['proj_coeffs']
+            # 列出与PC1最对齐的3个SVD方向及其语义标签
+            sorted_k = np.argsort([-abs(c) for c in proj_coeffs])
+            for rank_idx, k in enumerate(sorted_k[:3]):
+                cos_val = proj_coeffs[k]
+                # 从svd_decoded获取该SVD方向的top token作为语义参考
+                if k in svd_decoded:
+                    pos_toks = [t for t, v in svd_decoded[k]['pos_tokens'][:5]]
+                    neg_toks = [t for t, v in svd_decoded[k]['neg_tokens'][:5]]
+                    log(f"    #{rank_idx+1} SVD[{k}] (cos={cos_val:.4f}): "
+                        f"正→{' '.join(pos_toks)}, 负→{' '.join(neg_toks)}")
+    else:
+        log("  跳过 (无SVD方向数据)")
+    
+    # ============================================================
+    # S6: SVD方向的语义标签 — 人工辅助分析
+    # ============================================================
+    log(f"\n{'='*60}")
+    log(f"S6: SVD方向语义标签总结")
+    log(f"{'='*60}")
+    
+    if svd_decoded is not None:
+        log(f"\n  基于top token的语义标签推测:")
+        log(f"  (需要人工确认, 以下为自动推测)")
+        
+        # 简单的启发式: 检查top token中是否有特定模式
+        for k in range(min(10, n_svd)):
+            pos_toks = [t for t, v in svd_decoded[k]['pos_tokens']]
+            neg_toks = [t for t, v in svd_decoded[k]['neg_tokens']]
+            all_toks = pos_toks + neg_toks
+            
+            # 检查是否主要是标点/特殊token
+            special_count = sum(1 for t in all_toks if t in ['<', '>', '[', ']', '|', '.', ',', '!', '?', ';', ':', '"', "'", '-', '(', ')', '#', '@', '&', '*', '%', '$', '^', '~', '`', '\\', '/', '{', '}', '=', '+', '_'])
+            special_ratio = special_count / len(all_toks) if all_toks else 0
+            
+            # 检查是否主要是子词碎片 (以##或Ġ开头)
+            subword_count = sum(1 for t in all_toks if t.startswith('##') or t.startswith('Ġ') or t.startswith('▁'))
+            subword_ratio = subword_count / len(all_toks) if all_toks else 0
+            
+            label = "UNKNOWN"
+            if special_ratio > 0.3:
+                label = "SPECIAL_TOKENS/PUNCT"
+            elif subword_ratio > 0.5:
+                label = "SUBWORD_FRAGMENTS"
+            else:
+                # 检查常见语义模式
+                pos_str = ' '.join(pos_toks[:10])
+                neg_str = ' '.join(neg_toks[:10])
+                label = f"CHECK_MANUALLY"
+            
+            log(f"  SVD[{k}] (σ={svd_singular[k]:.1f}): {label}")
+            log(f"    正方向示例: {' '.join(pos_toks[:5])}")
+            log(f"    负方向示例: {' '.join(neg_toks[:5])}")
+    
+    # ============================================================
+    # S7: 汇总与判断
+    # ============================================================
+    log(f"\n{'='*60}")
+    log(f"S7: 汇总与判断")
+    log(f"{'='*60}")
+    
+    # 保存关键结果
     results = {
         'model': model_key,
         'n_pairs': n_pairs,
-        'analysis_layers': analysis_layers,
-        'last_layer': last_layer,
-        'svd_singular_top20': svd_singular.tolist() if svd_directions is not None else None,
-        'layer_pca_summary': {},
+        'phase': 'CCXXIV',
+        'svd_singular_top30': svd_singular.tolist() if svd_singular is not None else None,
+        'svd_decoded_summary': {},
+        'pc1_decoded_summary': {},
+        'pc1_vs_svd_jaccard': {},
     }
     
-    for layer in analysis_layers:
-        results['layer_pca_summary'][str(layer)] = {}
+    if svd_decoded is not None:
+        for k in range(min(10, n_svd)):
+            results['svd_decoded_summary'][str(k)] = {
+                'singular_value': float(svd_singular[k]),
+                'pos_top5': svd_decoded[k]['pos_tokens'][:5],
+                'neg_top5': svd_decoded[k]['neg_tokens'][:5],
+            }
+    
+    if 'pc1_svd_decomposition' in dir() and pc1_svd_decomposition is not None:
+        for dir_name, decomp in pc1_svd_decomposition.items():
+            results['pc1_decoded_summary'][dir_name] = {
+                'proj_coeffs_top10': decomp['proj_coeffs'][:10],
+                'proj_top5_energy': float(decomp['proj_top5_energy']),
+                'proj_top10_energy': float(decomp['proj_top10_energy']),
+                'dominant_svd_k': int(decomp['dominant_svd_k']),
+                'dominant_coeff': float(decomp['dominant_coeff']),
+            }
+    
+    # PC1 vs SVD 对齐度 (复用CCXXIII逻辑)
+    if svd_directions is not None:
+        log(f"\n  === PC1→SVD对齐度 ===")
         for feat in feature_names:
             if feat in layer_pca[layer]:
-                results['layer_pca_summary'][str(layer)][feat] = {
-                    'pc1_var': float(layer_pca[layer][feat]['pc1_var']),
-                    'explained_var_top5': layer_pca[layer][feat]['explained_var'].tolist(),
+                pc1 = layer_pca[layer][feat]['pc1_dir']
+                cosines = []
+                for k in range(min(n_svd, len(svd_directions))):
+                    cos_val = abs(np.dot(pc1, svd_directions[k]) / 
+                                (np.linalg.norm(pc1) * np.linalg.norm(svd_directions[k]) + 1e-10))
+                    cosines.append(cos_val)
+                best_k = np.argmax(cosines)
+                log(f"  {feat}: 最对齐SVD[{best_k}] (cos={cosines[best_k]:.4f}), SVD[0] cos={cosines[0]:.4f}")
+                
+                results['pc1_vs_svd_jaccard'][feat] = {
+                    'best_svd_k': int(best_k),
+                    'best_cos': float(cosines[best_k]),
+                    'svd0_cos': float(cosines[0]),
                 }
+        
+        # 关键判断
+        log(f"\n  === 关键判断 ===")
+        avg_svd0_cos = np.mean([results['pc1_vs_svd_jaccard'][f]['svd0_cos'] 
+                               for f in results['pc1_vs_svd_jaccard']])
+        log(f"  平均PC1→SVD[0]对齐度: {avg_svd0_cos:.4f}")
+        
+        if avg_svd0_cos > 0.7:
+            log(f"  ★★★ PC1与SVD[0]高度对齐 → 1D流形可能受token频率主导")
+        elif avg_svd0_cos > 0.4:
+            log(f"  ★★ PC1与SVD[0]部分对齐 → 1D流形与频率和语义都有关")
+        else:
+            log(f"  ★ PC1与SVD[0]低对齐 → 1D流形独立于频率方向 → 纯语义方向")
     
     with open(f'{out_dir}/results.json', 'w') as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
     
     log(f"\n结果已保存到 {out_dir}/results.json")
     log(f"\n{'='*70}")
-    log(f"CCXXIII 完成!")
+    log(f"CCXXIV 完成!")
     log(f"{'='*70}")
+    
+    # 释放模型
+    del model
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
 
 
 if __name__ == '__main__':
