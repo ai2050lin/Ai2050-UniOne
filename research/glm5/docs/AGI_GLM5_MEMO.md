@@ -6091,7 +6091,7 @@ GLM4 L39: question > voice > info_structure > negation > formality
    → 可能是Qwen3特有效应, 不是普遍性质
 
 
-## CCXVIII 精细层扫描 + CCA + 跨层旋转追踪 [2026-04-23 00:37]
+## Phase CCXVIII 精细层扫描 + CCA + 跨层旋转追踪 [2026-04-23 00:37]
 
 修复问题: CCXVIII脚本使用了HuggingFace远程路径(而非本地路径), 导致GLM4无法加载GPU
 → 已修复为使用MODEL_CONFIGS本地路径 + BitsAndBytesConfig(load_in_8bit=True, llm_int8_enable_fp32_cpu_offload=True)
@@ -6291,3 +6291,693 @@ Growth: syn=51.45x vs sem=55.97x, p=1.000 (完全不显著)
   Phase CCXXI: 几何代数分析 (PC旋转的数学分解)
 
 [CCXVIII完成时间标记: 2026年04月23日00时39分] 三模型CCXVIII精细扫描完成, 发现PC旋转现象(瓶颈层PC1旋转32-97%), GLM4为反例(无瓶颈)
+
+
+## Phase CCXIX 因果干预实验 [2026-04-23 01:32]
+
+
+实验设计:
+  S1: 收集瓶颈层+关键层差分向量 (100对/特征, 9特征)
+  S2: 全局PCA + Per-feature PCA
+  S3: PC投影比例分析 (差分信号在PC1 vs PC2-5 vs Random上的承载)
+  S4: PC1跨特征一致性 (不同特征的PC1方向对齐度)
+  S5: 残差分析 (消除PC1后的语法/语义可分性)
+  S6: Hook干预 (PC1消藻对输出logit的因果效应)
+
+瓶颈层: Qwen3 L6, DS7B L4, GLM4 L30
+
+=== Qwen3-4B (BF16, L6瓶颈) ===
+全局PCA: PC1=99.62% (极高!)
+Per-feature PCA: formality PC1=99.9%, 其余6-32% (formality独占全局PC1!)
+PC投影比: PC1=0.022, PC2-5=0.364, Random=0.016 → PC1/Random=1.44x (微弱!)
+PC1跨特征对齐: SYN-SYN=0.10, SEM-SEM=0.21, SYN-SEM=0.16 (几乎不对齐!)
+  → 只有formality与全局PC1对齐(cos=1.0), 其余<0.06
+残差分析: 消除PC1后保留99%信号 → PC1几乎不承载任何特征的差分
+Hook干预: PC1消藻效应=3.8% of baseline, Causal ratio=0.50x
+  → PC1因果效应极小! 甚至不如PC2-5!
+
+关键发现: Qwen3的全局PC1=99.62%是formality特征的"独占方向"!
+  → formality的差分范数(179)远大于其他特征(9-20), 主导了全局PCA
+  → 但formality的PC1对其他8个特征几乎无贡献
+  → 这解释了为什么PC1方差极高但因果效应极低
+
+=== DS7B (8bit, L4瓶颈) ===
+全局PCA: PC1=99.52% (极高!)
+Per-feature PCA: 所有特征PC1>68%, formality=99.75%, tense=96.95%
+PC投影比: PC1=0.289, PC2-5=0.379, Random=0.013 → PC1/Random=23.01x!
+PC1跨特征对齐: SYN-SYN=0.99, SEM-SEM=0.97, SYN-SEM=0.98 (高度对齐!)
+  → 所有特征PC1几乎平行! (cos>0.94)
+残差分析: PC1解释18-64%方差 → PC1确实承载大量差分信号
+Hook干预: PC1消藻效应=27.3% of baseline, Causal ratio=3.21x
+  → PC1因果效应显著! 是单个PC2-5方向的3.21倍
+
+关键发现: DS7B的全局PC1是"共享方向"!
+  → 所有9个特征的PC1方向高度对齐(cos>0.94)
+  → PC1承载了每个特征约25-51%的差分信号
+  → PC1的因果效应是PC2-5的3.21倍 → 真正的因果方向!
+
+=== GLM4-9B-Chat (8bit, L30对照) ===
+全局PCA: PC1=5.72% (极低! 无瓶颈)
+Per-feature PCA: 所有特征PC1=5-17% (高度分散)
+PC投影比: PC1=0.153, PC2-5=0.363, Random=0.013 → PC1/Random=11.66x
+PC1跨特征对齐: SYN-SYN=0.07, SEM-SEM=0.49, SYN-SEM=0.18 (低对齐!)
+  → 语法特征的PC1几乎正交(cos=0.07), 语义略好(0.49)
+Hook干预: PC1消藻效应=12.1% of baseline, Causal ratio=5.33x
+  → PC1因果效应中等, 但PC2-5效应也很低(9.1%)
+
+
+六阶段总结 (CCXIV → CCXIX) [2026-04-23 01:32]
+
+
+阶段1 (CCXIV): 基础差分向量收集
+  - 建立了12个语法/语义特征对, 每特征20对
+  - 验证了差分向量作为"因果纤维"的可行性
+  - 发现差分范数随层深增长(语法>语义倾向)
+
+阶段2 (CCXV): 信息瓶颈假说
+  - 发现差分PCA的PC1在中间层达到峰值(>99%)
+  - 提出"信息瓶颈"概念: 网络在特定层将信息压缩到1D
+  - PC1峰值位置: DS7B L4, Qwen3 L8
+
+阶段3 (CCXVI): Head Hook验证
+  - 用TransformerLens hook直接提取每层激活
+  - 验证了head-level差分向量可行
+  - 发现"超级Head"现象: 2-3个Head贡献远超其他
+  - 超级Head对所有特征贡献比例相同→非功能专化
+
+阶段4 (CCXVII): 全层PCA扫描 + Head-Feature矩阵
+  - 每隔4层采样, 12特征×40对×全层
+  - 确认信息瓶颈位置: DS7B L4, Qwen3 L8
+  - centroid_cos在瓶颈处最低→语法/语义最正交
+  - Head聚类max_ratio≈1.0-1.1→Head不按语法/语义分
+
+阶段5 (CCXVIII): 精细层扫描 + CCA + PC旋转
+  - 每2层采样, 12特征×80对×全层
+  - CCA更稳定(0.23-0.50), centroid_cos不稳定
+  - PC旋转: Qwen3 L4→L6旋转97%, DS7B L2→L4旋转32%
+  → 信息瓶颈不仅是压缩, 更是"坐标系变换"
+
+阶段6 (CCXIX): 因果干预实验 ★★★ 核心转折点!
+  - 100对/特征, Hook消藻实验
+  - 关键发现1: Qwen3的PC1=99.62%是formality的"独占方向"!
+    → formality差分范数远大于其他特征, 主导全局PCA
+    → 但formality的PC1对其他8个特征几乎无贡献
+    → PC1因果效应极低(3.8%)
+  - 关键发现2: DS7B的PC1=99.52%是"共享方向"!
+    → 所有9个特征的PC1方向高度对齐(cos>0.94)
+    → PC1因果效应显著(27.3%), 是PC2-5的3.21倍
+  - 关键发现3: GLM4无瓶颈但PC1因果效应仍存在(12.1%)
+    → PC1跨特征不对齐, 但因果效应比=5.33x(最高!)
+  - ★★★ 核心洞察: PC1高方差 ≠ PC1因果效应!
+    → 方差由差分范数最大的特征主导(formality)
+    → 因果效应由PC1方向的跨特征一致性决定
+    → DS7B: 高一致性 → 高因果效应
+    → Qwen3: 低一致性(formality独占) → 低因果效应
+
+
+关键洞察与硬伤审视 [2026-04-23 01:32]
+
+
+核心发现: "方差陷阱"!
+  全局PCA的PC1方差被formality的巨大差分范数主导
+  → PC1=99.62%看起来像"信息瓶颈", 实际上是formality的独占方向
+  → 真正的因果信号分散在多个PC上, 不集中在PC1
+
+  DS7B没有这个问题, 因为:
+  1. DS7B的formality差分范数相对更小(不像Qwen3那么极端)
+  2. DS7B所有特征的PC1方向高度对齐(cos>0.94)
+  → DS7B的全局PC1确实是"共享因果方向"
+
+  GLM4没有瓶颈, 但:
+  1. PC1因果效应比=5.33x(最高!)
+  2. 但PC1方差只有5.72%
+  → GLM4的信息更分散, 但每个PC方向的因果效应更强
+
+硬伤:
+1. ★★★ "信息瓶颈"可能是formality的假象!
+   Qwen3的PC1=99.62%可能只是formality的独占方向
+   → 之前CCXV/CCXVII的"瓶颈"结论可能被formality主导
+   → 需要排除formality后重新验证
+
+2. ★★ Hook干预只修改了瓶颈层的激活
+   → 可能需要修改多个层才能看到完整因果效应
+   → 单层PC1消藻效应3.8%可能因为信息在其他层有备份
+
+3. ★ 样本多样性仍然不足
+   → 所有句子都是简单英语
+   → 需要更多语言和更复杂的语法结构
+
+
+下一步: 突破"方差陷阱" [2026-04-23 01:32]
+
+
+1. [排除formality重新分析] — 排除formality特征后重新做全局PCA
+   → 如果PC1方差从99.62%骤降到<50%: 瓶颈是formality假象
+   → 如果PC1方差仍然>90%: 瓶颈是真实的
+
+2. [Per-feature因果干预] — 对每个特征独立做PC1消藻
+   → 比较formality的PC1消藻效应 vs tense的PC1消藻效应
+   → 如果formality的PC1效应远大于tense: 证实"方差陷阱"
+
+3. [多架构验证] — 测试LLaMA/Mistral/Phi
+   → 验证"共享PC1"vs"独占PC1"是否是Qwen架构族特有
+
+阶段性大任务:
+  Phase CCXX:  排除formality + Per-feature因果干预
+  Phase CCXXI: 多架构验证 (LLaMA, Mistral, Phi)
+  Phase CCXXII: 几何代数分析 (PC旋转的数学分解)
+
+
+## Phase CCXX 方差陷阱验证 [2026-04-23 02:18]
+
+
+实验设计:
+  S1: 收集瓶颈层差分向量 (120对/特征, 7特征含formality)
+  S2: 排除formality vs 包含formality的全局PCA对比
+  S3: 范数归一化后的全局PCA (消除formality范数主导)
+  S4: Per-feature PCA (每个特征独立PC1方差)
+  S5: Per-feature PC1投影比 (差分在各PC1方向上的承载)
+  S6: 跨特征PC1对齐度分析
+  S7: 方差陷阱判断
+
+=== Qwen3-4B (L6) ★★★ 方差陷阱完全确认! ===
+范数统计:
+  tense=18.41, polarity=19.18, number=17.31, voice=18.24
+  semantic_valence=31.28, semantic_topic=18.35, formality=151.91!
+
+全局PCA对比:
+  包含formality: PC1=99.64% → 排除formality: PC1=6.32% !!!
+  PC1下降93.7%! → 方差陷阱完全确认!
+
+范数归一化后:
+  PC1=7.35% (包含form), PC1=8.61% (排除form) → 几乎无差别
+  → formality的巨大范数(151 vs 17-31)主导了全局PCA!
+
+Per-feature PC1方差:
+  tense=19.5%, polarity=27.3%, number=9.5%, voice=12.8%
+  semantic_valence=7.5%, semantic_topic=8.5%, formality=99.9%!
+  → 只有formality有>50%的PC1, 其余特征高度分散
+
+Per-feature PC1投影比 (差分在per-feat PC1上的承载):
+  tense:  Per-feat/Random=5.58x, Global/Random=0.90x (!)
+  polarity: Per-feat/Random=12.77x, Global/Random=0.85x (!)
+  number:  Per-feat/Random=7.00x, Global/Random=0.65x (!)
+  → 全局PC1对非formality特征的投影比<随机方向! 方差陷阱极端!
+
+formality PC1与全局PC1对齐度: 1.0000 → 完全相同!
+formality与其他特征PC1对齐度: 均值<0.06 → 几乎正交!
+
+=== DS7B (L4) — 方差陷阱部分成立, 但瓶颈部分真实 ===
+范数统计:
+  tense=55.59, polarity=47.26, number=42.27, voice=99.27
+  semantic_valence=103.11, semantic_topic=80.43, formality=890.15!
+
+全局PCA对比:
+  包含formality: PC1=99.54% → 排除formality: PC1=86.49%
+  PC1仅下降13.1%! → formality贡献小, 瓶颈部分真实!
+
+Per-feature PC1方差:
+  tense=96.8%, polarity=95.5%, number=92.2%, voice=69.4%
+  semantic_valence=65.9%, semantic_topic=76.2%, formality=99.7%
+  → 所有特征PC1都>65% → 真正的1D压缩!
+
+Per-feature PC1投影比:
+  tense:  Per-feat/Random=17.10x, Global/Random=16.62x → 几乎相同!
+  polarity: Per-feat/Random=33.26x, Global/Random=32.37x → 几乎相同!
+  → 全局PC1和per-feat PC1承载等量信号 → 共享方向!
+
+跨特征PC1对齐度:
+  所有特征间cos>0.94 → 高度对齐! formality也>0.94!
+  → 所有特征的PC1几乎平行 → 真正的共享1D方向!
+
+=== GLM4-9B (L30) — 无瓶颈, 信息分散 ===
+范数统计:
+  各特征范数均匀: tense=27.69, formality=54.25 (差异最小)
+
+全局PCA对比:
+  包含formality: PC1=5.67% → 排除formality: PC1=5.92%
+  PC1反而微升(-4.5%)! → formality完全不影响全局PCA!
+
+Per-feature PC1方差:
+  tense=15.7%, polarity=16.3%, number=6.5%, voice=8.4%
+  → 所有特征PC1<17% → 高度分散, 无瓶颈
+
+Per-feature PC1投影比:
+  平均Per-feat/Random=10.79x, Global/Random=8.34x
+  → 全局PC1承载信号弱于per-feat PC1 → 信息不集中
+
+跨特征PC1对齐度:
+  语法特征cos<0.05 (几乎正交), 语义特征cos=0.47
+  → 语法特征完全独立, 语义有弱对齐
+
+
+三模型对比总结 [2026-04-23 02:18]
+
+
+| 指标 | Qwen3 | DS7B | GLM4 |
+|------|-------|------|------|
+| 全局PC1(含form) | 99.64% | 99.54% | 5.67% |
+| 全局PC1(无form) | 6.32% | 86.49% | 5.92% |
+| PC1下降率 | 93.7% | 13.1% | -4.5% |
+| 方差陷阱 | ★★★完全确认 | 部分成立 | 不成立 |
+| form范数/其余 | 8.5x | 11.6x | 1.6x |
+| Per-feat PC1方差 | 7-27% | 66-97% | 6-16% |
+| 跨特征PC1对齐 | <0.06 | >0.94 | <0.45 |
+| Per-feat/Random | 5.73x | 23.25x | 10.79x |
+| Global/Random | 0.85x | 22.5x | 8.34x |
+
+核心发现:
+1. Qwen3的"信息瓶颈"完全是formality的方差陷阱!
+   → formality范数=151, 其余=17-31, 差8倍!
+   → 排除formality后PC1从99.64%→6.32%, 瓶颈消失
+   → 全局PC1对非formality特征的投影比<随机方向!
+
+2. DS7B的"信息瓶颈"是真实的!
+   → 虽然formality范数更大(890 vs 55-103), 但排除后PC1仍=86.49%
+   → 所有特征PC1高度对齐(cos>0.94) → 共享1D方向
+   → Per-feat PC1和全局PC1承载等量信号 → 真正的因果方向
+
+3. GLM4无瓶颈, 信息分散在各PC上
+   → formality对全局PCA无影响(PC1=5.67%→5.92%)
+   → Per-feat PC1方差仅6-16% → 信息高度分散
+
+
+关键洞察: "方差陷阱"的三种模式 [2026-04-23 02:18]
+
+
+模式1: 方差陷阱型 (Qwen3)
+  特征: 某特征范数远大于其余 → 主导全局PCA → PC1不代表公共信号
+  判断: 排除该特征后PC1骤降
+  本质: formality的差分方向"污染"了全局PCA
+  后果: 全局PC1对其他特征无因果效应
+
+模式2: 共享方向型 (DS7B)
+  特征: 所有特征PC1高度对齐 → 共享1D方向 → 真正的瓶颈
+  判断: 排除formality后PC1仍高 + 跨特征对齐>0.94
+  本质: 网络确实将多种特征压缩到1D流形
+  后果: 全局PC1对所有特征有因果效应
+
+模式3: 分散型 (GLM4)
+  特征: 各特征PC1独立 → 无共享方向 → 无瓶颈
+  判断: PC1方差极低(5-6%) + 排除formality无影响
+  本质: 信息分散存储, 无压缩
+  后果: 需要多个PC联合干预
+
+
+硬伤与下一步 [2026-04-23 02:18]
+
+
+硬伤:
+1. ★★★ Qwen3之前的"信息瓶颈"结论需要修正!
+   CCXV-CCXIX的PC1=99%结论被formality主导, 但这不意味着:
+   a) 所有模型都有方差陷阱 (DS7B没有)
+   b) 瓶颈概念无效 (DS7B的瓶颈是真实的)
+   → 需要对每个模型单独检验方差陷阱
+
+2. ★★ Hook干预仍不够直接
+   S5用的是投影比而非真正的激活修改
+   → 需要真正的interchange intervention
+
+3. ★ 特征覆盖仍不足
+   只有7个特征, 且都是英语简单句
+   → 需要更多语言和更复杂的语法结构
+
+下一步大任务:
+  Phase CCXXI: 真正的Interchange Intervention + 方向识别
+    → 在DS7B上做真正的激活替换干预
+    → 识别1D流形的几何方向(是否与formality对齐)
+    → 验证"共享PC1"的数学本质
+
+  Phase CCXXII: 跨层流形追踪
+    → 追踪1D流形从输入到输出的演化路径
+    → 分析"坐标系变换"(PC旋转)的数学分解
+    → 建立流形的微分几何描述
+
+  Phase CCXXIII: 多语言/多架构验证
+    → 测试LLaMA/Mistral/Phi
+    → 测试中文/日文语法特征
+    → 验证方差陷阱是否为Qwen族特有
+
+[CCXX完成时间标记: 2026年04月23日02时18分] 三模型CCXX方差陷阱验证完成, Qwen3的瓶颈是formality假象(PC1从99.64%→6.32%), DS7B的瓶颈是真实的(排除formality后PC1仍=86.49%), GLM4无瓶颈
+
+
+## Phase CCXXI Interchange Intervention [2026-04-23 04:08]
+
+
+实验设计:
+  S1: 收集瓶颈层差分向量+logit (150对/特征, 5特征无formality)
+  S2: Per-feature PCA + 排除formality全局PCA
+  S3: Interchange Intervention — 差分投影比 + Top-k logit效应
+  S4: 排除formality的全局PC1干预
+  S5: 跨特征Interchange — PC1方向迁移
+  S6: 激活替换验证 (仅BF16模型)
+
+=== DS7B (L4) ★★★ 核心发现! ===
+Per-feature PCA:
+  tense=96.5%, polarity=98.0%, voice=65.7%, valence=59.3%, topic=76.7%
+  排除formality全局PCA: PC1=89.97% → 1D流形确认!
+
+Interchange Intervention (lm_head线性近似, Top-50 logit):
+  tense:    PC1效应=803%, PC2=14%, Random=1.4%, PC1/Random=559x!
+  polarity: PC1效应=1375%, PC2=14%, Random=1.0%, PC1/Random=1320x!
+  voice:    PC1效应=139%, PC2=5.6%, Random=0.4%, PC1/Random=311x!
+  valence:  PC1效应=155%, PC2=9.7%, Random=1.1%, PC1/Random=140x!
+  topic:    PC1效应=322%, PC2=7.6%, Random=0.7%, PC1/Random=480x!
+  平均PC1/Random = 594x!!! → PC1方向有极强因果效应!
+
+排除formality全局PC1 vs Per-feature PC1:
+  tense:    805% vs 803% → ratio=1.00 → 几乎相同!
+  polarity: 1378% vs 1375% → ratio=1.00 → 几乎相同!
+  voice:    127% vs 139% → ratio=0.92 → 接近!
+  valence:  154% vs 155% → ratio=1.00 → 几乎相同!
+  topic:    315% vs 322% → ratio=0.98 → 几乎相同!
+  → 全局PC1和per-feature PC1承载等量因果效应 → 共享1D方向确认!
+
+跨特征Interchange (PC1方向迁移):
+  tense←voice: 810% vs self 803% → transfer=1.01
+  polarity←tense: 1373% vs self 1375% → transfer=1.00
+  voice←topic: 130% vs self 139% → transfer=0.94
+  valence←voice: 155% vs self 155% → transfer=1.00
+  topic←voice: 324% vs self 322% → transfer=1.01
+  → 跨特征迁移率0.94-1.01 → 任何特征的PC1可干预任何其他特征!
+
+因果判断:
+  PC1/Random=594x > 10 → PC1有强因果效应!
+  排除formalityPC1=90% > 50% → 1D流形真实存在!
+
+=== Qwen3 (L6) — 方差陷阱对照 ===
+Per-feature PCA:
+  tense=19.5%, polarity=27.3%, voice=12.8%, valence=7.5%, topic=8.5%
+  排除formality全局PCA: PC1=6.32% → 无1D流形!
+
+Interchange Intervention (lm_head线性近似):
+  tense:    PC1效应=3.3%, PC2=10.3%, Random=0.4%, PC1/Random=8.3x
+  polarity: PC1效应=11.8%, PC2=7.6%, Random=0.6%, PC1/Random=21.1x
+  voice:    PC1效应=11.2%, PC2=5.4%, Random=0.3%, PC1/Random=35.6x
+  valence:  PC1效应=11.0%, PC2=8.6%, Random=1.0%, PC1/Random=10.9x
+  topic:    PC1效应=3.6%, PC2=5.5%, Random=0.3%, PC1/Random=13.5x
+  平均PC1/Random = 17.9x → 中等因果效应, 远低于DS7B!
+
+排除formality全局PC1 vs Per-feature PC1:
+  tense:    4.6% vs 3.3% → ratio=1.40 → 全局PC1略强
+  polarity: 3.6% vs 11.8% → ratio=0.30 → 全局PC1远弱于per-feat!
+  voice:    17.0% vs 11.2% → ratio=1.51 → 全局PC1略强
+  valence:  5.2% vs 11.0% → ratio=0.47 → 全局PC1弱于per-feat!
+  topic:    3.5% vs 3.6% → ratio=1.00 → 相同
+  → 全局PC1和per-feat PC1不一致 → 无共享方向!
+
+跨特征Interchange:
+  tense←valence: 2.6% vs self 3.3% → transfer=0.77
+  polarity←valence: 5.3% vs self 11.8% → transfer=0.44
+  voice←topic: 7.7% vs self 11.2% → transfer=0.68
+  valence←voice: 3.6% vs self 11.0% → transfer=0.33
+  topic←voice: 3.3% vs self 3.6% → transfer=0.94
+  → 跨特征迁移率0.33-0.94 → 迁移不完整, 方向不共享!
+
+=== GLM4 (L30) — 无瓶颈对照 ===
+Per-feature PCA:
+  tense=13.8%, polarity=14.9%, voice=10.1%, valence=11.3%, topic=6.3%
+  排除formality全局PCA: PC1=5.58% → 极度分散!
+
+差分投影比:
+  tense:    PC1=5.2%, PC2=5.7%, Random=1.4%, PC1/Random=3.7x
+  polarity: PC1=17.6%, PC2=15.1%, Random=1.3%, PC1/Random=13.5x
+  voice:    PC1=24.8%, PC2=18.4%, Random=1.2%, PC1/Random=20.3x
+  valence:  PC1=17.3%, PC2=12.7%, Random=1.4%, PC1/Random=12.5x
+  topic:    PC1=17.6%, PC2=15.6%, Random=1.3%, PC1/Random=13.7x
+  平均PC1/Random = 12.7x → 弱因果效应
+
+
+三模型对比 [2026-04-23 04:08]
+
+
+| 指标 | DS7B | Qwen3 | GLM4 |
+|------|------|-------|------|
+| 排除form PC1方差 | 89.97% | 6.32% | 5.58% |
+| 1D流形 | ★★★确认 | 不存在 | 不存在 |
+| PC1/Random (logit) | 594x! | 17.9x | 12.7x(投影) |
+| NoForm/PerFeat PC1 | 0.92-1.00 | 0.30-1.51 | 0.68-1.82 |
+| 跨特征迁移率 | 0.94-1.01 | 0.33-0.94 | — |
+| 共享方向 | ★★★完全共享 | 不共享 | 不共享 |
+
+核心发现:
+1. ★★★ DS7B的1D流形是真正的因果方向!
+   → PC1/Random=594x, 是随机方向的594倍!
+   → 全局PC1和per-feature PC1因果效应完全相等(ratio=1.00)
+   → 任何特征的PC1可以干预任何其他特征(transfer=0.94-1.01)
+   → 这意味着DS7B将所有语法/语义特征压缩到一个共享1D方向
+
+2. Qwen3无共享方向, 但per-feature PC1仍有效应
+   → PC1/Random=17.9x, 虽远低于DS7B, 但仍显著
+   → 全局PC1对polarity的效应只有per-feat的30% → 全局方向污染
+   → 跨特征迁移不完整(0.33-0.94)
+
+3. GLM4完全分散, 信息无1D压缩
+   → PC1/Random=12.7x, 中等效应
+   → PC1方差仅5-6% → 信息高度分散
+
+
+关键洞察: "1D因果流形"的确认 [2026-04-23 04:08]
+
+
+DS7B是唯一拥有"1D因果流形"的模型:
+  1. 排除formality后PC1=90% → 1D压缩是真实的
+  2. PC1/Random=594x → PC1方向有极强因果效应
+  3. 全局PC1=per-feat PC1 → 所有特征共享同一PC1方向
+  4. 跨特征迁移率≈1.0 → 任何特征的PC1可干预任何其他特征
+
+这意味着:
+  - DS7B的网络在L4层将所有语法/语义信息编码到1D流形上
+  - 这个1D流形是一个"通用因果方向" — 沿这个方向移动激活,
+    可以同时影响所有语法/语义特征的输出
+  - 这个方向不是formality的独占方向(已排除), 而是所有特征共享的
+
+Qwen3为什么没有1D流形:
+  - formality的巨大范数(152 vs 17-31)污染了全局PCA
+  - 排除formality后PC1=6% → 信息高度分散
+  - 各特征的PC1方向不对齐(cos<0.06) → 无共享方向
+  → Qwen3可能使用了不同的信息编码策略(非1D压缩)
+
+GLM4为什么没有1D流形:
+  - 40层深度 + 无瓶颈 → 信息在各层分散编码
+  - formality范数均匀(54 vs 27-59) → 无主导特征
+  → GLM4的信息编码是高维的, 需要多个方向联合干预
+
+
+硬伤与下一步 [2026-04-23 04:08]
+
+
+硬伤:
+1. ★★★ lm_head线性近似忽略了final_layer_norm
+   → DS7B的PC1/Random=594x可能被高估
+   → 需要真正的激活替换来验证
+
+2. ★★ 只验证了瓶颈层的因果效应
+   → 需要验证: 在非瓶颈层, PC1的因果效应是否也这么强?
+   → 如果只在L4强 → L4是唯一的因果节点
+   → 如果在所有层都强 → PC1是全局因果方向
+
+3. ★ 8bit模型无法做真正的激活替换
+   → Qwen3(BF16)的S6也因hook崩溃
+   → 需要更安全的hook实现
+
+下一步大任务:
+  Phase CCXXII: 全层因果扫描
+    → 在每一层做Interchange Intervention
+    → 找到PC1因果效应的峰值层
+    → 验证瓶颈层是否是唯一的因果节点
+
+  Phase CCXXIII: 1D流形的几何分析
+    → DS7B的1D流形方向是否与formality的PC1对齐?
+    → 1D流形方向是否随层旋转?
+    → 建立流形的微分几何描述
+
+  Phase CCXXIV: 多架构验证
+    → 测试LLaMA/Mistral/Phi是否也有1D因果流形
+    → 1D流形是通用现象还是DS7B特有?
+
+[CCXXI完成时间标记: 2026年04月23日04时08分] 三模型CCXXI Interchange Intervention完成, DS7B确认1D因果流形(PC1/Random=594x, 跨特征迁移=1.0), Qwen3无共享方向(17.9x, 迁移0.33-0.94), GLM4完全分散(12.7x)
+
+
+##  CCXXII 全层因果扫描 [2026-04-23 08:40]
+
+
+实验设计:
+  S1: 逐层收集差分向量 (120对/特征 × 采样15层/13层/11层)
+  S2: 逐层Per-feature PCA + 差分投影比 (PC1/Random)
+  S3: 逐层跨特征PC1对齐度 (cosine)
+  S4: 层间PC1方向旋转分析 (相邻层PC1的cos)
+  S5: 全层汇总 — PC1因果效应曲线
+  S6: 关键发现汇总 + 1D流形判断
+
+=== DS7B (28层, 采样L0,2,4,...,26,27) ★★★ 核心发现! ===
+
+Per-feature PC1方差 (逐层):
+  L0:  avg=8.6%,   L2:  avg=10.6%,  L4:  avg=8.8%,   L6:  avg=8.7%
+  L8:  avg=7.0%,   L10: avg=6.3%,   L12: avg=6.1%,   L14: avg=6.3%
+  L16: avg=6.6%,   L18: avg=6.7%,   L20: avg=6.6%,   L22: avg=6.3%
+  L24: avg=5.8%,   L26: avg=6.0%,   L27: avg=47.1%!!! → 最后一层暴涨!
+
+PC1/Random (逐层):
+  L0:  avg=14.35x, L2:  avg=12.69x, L4:  avg=13.12x, L6:  avg=12.65x
+  L8:  avg=11.22x, L10: avg=11.71x, L12: avg=11.42x, L14: avg=11.08x
+  L16: avg=11.34x, L18: avg=11.85x, L20: avg=12.13x, L22: avg=11.26x
+  L24: avg=13.40x, L26: avg=14.25x, L27: avg=37.44x!!! → 最后一层暴涨!
+
+跨特征PC1对齐度 (逐层):
+  L0:  mean=0.085, L2:  mean=0.059, L4:  mean=0.077, L6:  mean=0.098
+  L8:  mean=0.047, L10: mean=0.056, L12: mean=0.054, L14: mean=0.052
+  L16: mean=0.049, L18: mean=0.048, L20: mean=0.048, L22: mean=0.099
+  L24: mean=0.244, L26: mean=0.261, L27: mean=0.967!!! → 最后一层暴涨!
+
+L27最后一层详细数据:
+  tense:    PC1_var=50.2%, PC1/R=33.3x
+  polarity: PC1_var=45.0%, PC1/R=37.7x
+  voice:    PC1_var=35.5%, PC1/R=19.4x
+  valence:  PC1_var=51.5%, PC1/R=41.2x
+  topic:    PC1_var=53.2%, PC1/R=55.6x
+  跨特征对齐度: 全部>0.93 (10对全★)
+
+层间PC1旋转:
+  L26→L27: tense=65.8°, polarity=76.7°, voice=83.8°, valence=69.3°, topic=70.7°
+  → 最后一层发生了70-84°的巨大旋转! 1D流形方向与前面层完全不同!
+
+★ 关键发现: 1D流形不在L4瓶颈层, 而是在L27最后一层!
+
+=== Qwen3 (36层, 采样L0,3,6,...,33,35) — 最后一层也有1D流形 ===
+
+Per-feature PC1方差:
+  L0: avg=13.1%, L6: avg=9.6%, L12: avg=7.0%, L18: avg=6.6%
+  L24: avg=7.3%, L30: avg=7.7%, L35: avg=19.9% → 最后一层提升!
+
+PC1/Random:
+  L0: avg=9.70x, L6: avg=11.19x, L12: avg=11.87x, L18: avg=14.08x
+  L24: avg=14.33x, L30: avg=13.51x, L35: avg=20.34x → 最后一层提升!
+
+跨特征PC1对齐度:
+  L0: mean=0.116, L6: mean=0.070, L12: mean=0.073, L18: mean=0.074
+  L24: mean=0.043, L30: mean=0.127, L33: mean=0.143
+  L35: mean=0.901!!! → 最后一层暴涨到0.9!
+
+L35详细: tense↔polarity=0.93, tense↔voice=0.93, tense↔valence=0.94
+  → 跨特征对齐度高, 但PC1方差仅19.9% → 弱1D流形
+
+层间PC1旋转: L33→L35: semantic_topic=86.3°! → 巨大旋转!
+
+=== GLM4 (40层, 采样L0,4,8,...,36,39) — 最后一层也有提升但弱 ===
+
+Per-feature PC1方差:
+  L0: avg=10.7%, L8: avg=5.6%, L16: avg=6.0%, L24: avg=5.8%
+  L32: avg=6.9%, L36: avg=11.7%, L39: avg=10.5% → 微升
+
+PC1/Random:
+  L0: avg=10.90x, L8: avg=13.52x, L16: avg=12.69x, L24: avg=16.80x
+  L32: avg=14.25x, L36: avg=16.07x, L39: avg=15.89x → 平稳
+
+跨特征PC1对齐度:
+  L0: mean=0.060, L8: mean=0.037, L16: mean=0.046, L24: mean=0.040
+  L32: mean=0.066, L36: mean=0.294, L39: mean=0.449 → 弱提升
+  → L39对齐度仅0.45, 远低于DS7B(0.97)和Qwen3(0.90)
+
+
+三模型对比 [2026-04-23 08:40]
+
+
+| 指标 | DS7B L27 | Qwen3 L35 | GLM4 L39 |
+|------|---------|----------|---------|
+| 最后一层PC1方差 | **47.1%** | 19.9% | 10.5% |
+| 最后一层PC1/Random | **37.4x** | 20.3x | 15.9x |
+| 最后一层对齐度 | **0.967** | 0.901 | 0.449 |
+| L-2→L-1旋转 | 65-84° | 55-86° | — |
+| 1D流形强度 | ★★★极强 | ★★中等 | ★弱 |
+| 前面层PC1方差 | 5-9% | 5-13% | 5-11% |
+| 前面层对齐度 | 0.05-0.10 | 0.04-0.12 | 0.04-0.07 |
+
+核心发现:
+1. ★★★ 所有模型的最后一层都有1D流形倾向!
+   → 这是lm_head前的信息汇聚现象
+   → 在最后一层, 所有特征被"压缩"到一个共享方向
+   → 但强度差异巨大: DS7B>>Qwen3>>GLM4
+
+2. ★★★ 之前CCXX/CCXXI的"瓶颈层L4"选择是错误的!
+   → L4的PC1方差仅8.8%, 对齐度仅0.077
+   → 真正的1D流形在L27(最后一层), PC1方差=47%, 对齐度=0.967
+   → DS7B在L4的"共享PC1"可能是formality主导的假象
+     (CCXX已确认DS7B排除formality后PC1仍=86.5% → 但那是全局PCA,
+      per-feature PCA在L4的PC1方差仅5-16%, 并不高)
+
+3. ★★ 最后一层发生了巨大的方向旋转(65-86°)
+   → L-2→L-1的PC1方向与前面层几乎正交
+   → 说明最后一层在做"坐标系变换"——将分散的信息汇聚到一个
+     与lm_head对齐的1D方向
+   → 这个1D方向可能与lm_head的某个主方向对齐
+
+4. ★ GLM4的最后一层1D流形最弱(对齐度0.45)
+   → 40层深度导致信息更分散
+   → 但仍有弱1D倾向(0.45 vs 前面层0.04-0.07)
+
+
+关键洞察: "输出汇聚"vs"信息瓶颈" [2026-04-23 08:40]
+
+
+之前的假设: 1D流形 = 信息瓶颈 (网络被迫压缩信息)
+新的理解:   1D流形 = 输出汇聚 (网络主动将信息对齐到lm_head)
+
+证据:
+  - 1D流形只出现在最后一层(或接近最后一层)
+  - 前面层的信息是分散的(PC1方差5-10%, 对齐度<0.1)
+  - 最后一层发生巨大旋转(65-86°), 说明在重定向
+  - 旋转后的方向与lm_head对齐(因为PC1/Random很高)
+
+数学解释:
+  设lm_head的权重矩阵为W (vocab×d), 其主方向为u = SVD(W)的第一左奇异向量
+  最后一层的激活a, logit = W·a
+  为了最大化logit方差, 网络将a沿u方向对齐
+  → 所有特征的差分向量都被旋转到与u对齐的方向
+  → 跨特征PC1对齐度高是因为它们都对齐到同一个lm_head方向
+
+这与"信息瓶颈"完全不同:
+  信息瓶颈: 网络被迫压缩(因为中间层容量不足)
+  输出汇聚: 网络主动对齐(因为输出层要求特定方向)
+
+
+硬伤与下一步 [2026-04-23 08:40]
+
+
+硬伤:
+1. ★★★ CCXX和CCXXI的"1D因果流形在L4"结论需要修正!
+   → 真正的1D流形在最后一层(L27), L4的"共享PC1"可能是:
+     a) formality的残留效应(虽然排除后PC1仍高, 但per-feat PC1方差不高)
+     b) lm_head的间接对齐(即使中间层也有弱的lm_head对齐)
+   → 需要在最后一层重新做Interchange Intervention
+
+2. ★★ "输出汇聚"假设需要验证
+   → 检查最后一层的PC1方向是否与lm_head的SVD主方向对齐
+   → 如果对齐 → "输出汇聚"假设成立
+   → 如果不对齐 → 需要其他解释
+
+3. ★ 最后一层1D流形是否是trivial的?
+   → 如果只是因为lm_head的线性变换导致差分向量被"拉伸"到
+     同一方向, 那么1D流形就没有信息论意义
+   → 需要区分: "线性变换导致的对齐" vs "语义层面的真正压缩"
+
+下一步大任务:
+  Phase CCXXIII: 输出汇聚验证
+    → 计算lm_head的SVD主方向
+    → 检查最后一层PC1是否与SVD主方向对齐
+    → 在最后一层做Interchange Intervention
+    → 区分"线性变换对齐" vs "语义压缩"
+
+  Phase CCXXIV: 中间层重新分析
+    → 重新审视L4的"共享PC1"——是formality残留还是真正的中间瓶颈?
+    → 在L4排除formality后重新做per-feature PCA
+    → 比较L4和L27的1D流形差异
+
+  Phase CCXXV: 多架构验证
+    → 测试LLaMA/Mistral/Phi是否也有最后一层1D流形
+    → 1D流形强度是否与模型大小/深度相关?
+
+[CCXXII完成时间标记: 2026年04月23日08时40分] 三模型CCXXII全层因果扫描完成, 核心发现:1D流形不在L4瓶颈层而在最后一层! DS7B L27: PC1方差47%, 对齐度0.97, PC1/R=37x; Qwen3 L35: PC1方差20%, 对齐度0.90; GLM4 L39: 对齐度0.45; 所有模型L-2→L-1发生65-86°巨大旋转
+
+[CCXIX完成时间标记: 2026年04月23日01时32分] 三模型CCXIX因果干预完成, 发现"方差陷阱"(formality独占全局PC1导致假瓶颈), DS7B的PC1是共享因果方向(3.21x), Qwen3的PC1是独占方向(0.50x)
+
