@@ -1,0 +1,54 @@
+=== Phase CCLV: Residual Distance Control Analysis ===
+Model: DeepSeek-R1-Distill-Qwen-7B
+Start: 2026-04-25 12:51:49
+Model loaded successfully
+Testing layers: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 26]
+
+=== Layer 1 (remaining: 27) ===
+  tense: eff=0.541, rand=0.564, E/R=0.96
+  question: eff=0.403, rand=0.393, E/R=1.02
+  Independence: cos(pred,actual)=0.338, norm_ratio=0.763
+
+=== Layer 3 (remaining: 25) ===
+  tense: eff=0.429, rand=0.486, E/R=0.88
+  question: eff=0.309, rand=0.375, E/R=0.82
+  Independence: cos(pred,actual)=0.504, norm_ratio=0.995
+
+=== Layer 5 (remaining: 23) ===
+  tense: eff=0.651, rand=0.585, E/R=1.11
+  question: eff=0.332, rand=0.378, E/R=0.88
+  Independence: cos(pred,actual)=0.700, norm_ratio=0.913
+
+=== Layer 7 (remaining: 21) ===
+  tense: eff=0.503, rand=0.513, E/R=0.98
+  question: eff=0.376, rand=0.410, E/R=0.92
+  Independence: cos(pred,actual)=0.387, norm_ratio=1.044
+
+=== Layer 9 (remaining: 19) ===
+  tense: eff=0.531, rand=0.486, E/R=1.09
+  question: eff=0.318, rand=0.425, E/R=0.75
+  Independence: cos(pred,actual)=0.502, norm_ratio=0.772
+
+=== Layer 11 (remaining: 17) ===
+  tense: eff=0.680, rand=0.523, E/R=1.30
+  question: eff=0.475, rand=0.391, E/R=1.21
+  Independence: cos(pred,actual)=0.468, norm_ratio=0.808
+
+=== Layer 13 (remaining: 15) ===
+  tense: eff=0.676, rand=0.556, E/R=1.22
+  question: eff=0.434, rand=0.357, E/R=1.21
+  Independence: cos(pred,actual)=0.793, norm_ratio=0.855
+
+=== Layer 15 (remaining: 13) ===
+  tense: eff=0.702, rand=0.500, E/R=1.41
+  question: eff=0.495, rand=0.415, E/R=1.19
+  Independence: cos(pred,actual)=0.904, norm_ratio=1.225
+
+=== Layer 17 (remaining: 11) ===
+  tense: eff=0.656, rand=0.550, E/R=1.19
+  question: eff=0.421, rand=0.400, E/R=1.05
+  Independence: cos(pred,actual)=0.919, norm_ratio=0.704
+
+=== Layer 19 (remaining: 9) ===
+  tense: eff=0.628, rand=0.486, E/R=1.29
+  question: eff=0.388, rand=0.408, E/R=0.95
