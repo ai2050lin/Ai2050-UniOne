@@ -1,5 +1,7 @@
 # 三模型（GLM4 / Qwen3 / DeepSeek7B）测试结果客观总结
 
+> ⚠️ **文档状态: 需更新** — 仅覆盖Phase CLXXIX-CLXXXIX。后续Phase CXC-CCLX的大量因果干预实验未收录。需补充更新。最后审视: 2026-04-26。
+
 > 整理自 AGI_GLM5_MEMO.md，涵盖 stage452-581, Phase CLXXIX-CLXXXIX 等全部实验
 > 整理时间：2026-04-17 23:56
 

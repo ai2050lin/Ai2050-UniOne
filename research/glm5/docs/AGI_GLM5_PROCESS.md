@@ -1,5 +1,7 @@
 # AGI_GLM5_PROCESS — 语言在深度神经网络中的运行原理
 
+> ⚠️ **文档状态: 已过时** — 本文档为v3.0，基于Phase I-CXXXVI。已被THEORY_v4(Phase I-CXLVII)取代，且THEORY_v4的核心结论"末端层gap预测力r≈0.93-0.96"也被后续CCLX实验修正(r≈-0.07~-0.41)。当前有效理论见CURRENT_THEORY.md。归档时间: 2026-04-26。
+
 > **版本**: v3.0 | **日期**: 2026-04-15 | **基于实验**: P1-P594 (Phase I-CXXXVI)
 > 
 > **核心修正** (vs v2.0): 
