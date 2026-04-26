@@ -98,7 +98,7 @@ def load_model(model_name: str, dtype=torch.bfloat16) -> Tuple:
     # 先加载到CPU, 再整体移到CUDA (比device_map="auto"更快更稳定)
     model = AutoModelForCausalLM.from_pretrained(
         cfg["path"],
-        dtype=dtype,
+        torch_dtype=dtype,
         device_map="cpu",  # 先加载到CPU
         trust_remote_code=True,
         local_files_only=True,

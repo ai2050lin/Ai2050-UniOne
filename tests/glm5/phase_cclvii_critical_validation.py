@@ -207,7 +207,7 @@ def collect_activations(model, tokenizer, sentences, layer_idx, pos=-1):
     for s in sentences:
         enc = tokenizer(s, return_tensors='pt').to(device)
         h = get_layer_output(model, enc['input_ids'], layer_idx)
-        acts.append(h[0, pos, :].float().numpy())
+        acts.append(h[0, pos, :].float().cpu().numpy())
     return np.array(acts)
 
 
@@ -369,9 +369,12 @@ def main():
         all_sents = list(set([s for p in TENSE_PAIRS+QUESTION_PAIRS for s in p] + PCA_SENTENCES))
         log(f"  PCA sentences: {len(all_sents)}")
 
-        pca_k_values = [10, 50, 100, 200]
-        if d_model < 200:
-            pca_k_values = [k for k in pca_k_values if k < d_model]
+        # Max PCA components = min(n_sentences, d_model) - 1
+        max_pca_comp = min(len(all_sents), d_model) - 1
+        pca_k_values = [k for k in [10, 50, 100, 200] if k <= max_pca_comp]
+        if not pca_k_values:
+            pca_k_values = [max_pca_comp]
+        log(f"  Max PCA components: {max_pca_comp}, testing k={pca_k_values}")
         exp2 = {}
 
         for layer in layers:
