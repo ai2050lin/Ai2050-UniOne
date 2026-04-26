@@ -7164,6 +7164,7 @@ S5控制分析 (L39):
 
 [CCXIX完成时间标记: 2026年04月23日01时32分] 三模型CCXIX因果干预完成, 发现"方差陷阱"(formality独占全局PC1导致假瓶颈), DS7B的PC1是共享因果方向(3.21x), Qwen3的PC1是独占方向(0.50x)
 
+<<<<<<< Updated upstream
 ## Phase CCXXIV: 语义主方向解码 — 三模型完整结果 [2026-04-23 14:05]
 
 ### 核心发现: PC1是纯语义方向, 三个模型一致确认
@@ -12526,3 +12527,129 @@ Phase I之前的实验设计都是"测一个统计量(dim/rank/curvature/spectru
 KN-1a(概念编码位置), KN-3a(抽象层级), LG-1a(推理因果路径), LG-1c(逻辑信号去向), GR-1a(词性编码), MG-4a/b/c/d(Unembedding+logit分布+词选择+多维度汇聚), MG-3c(三维独立性), LG-4a(逻辑调用知识), UN-1(知识×逻辑统一)
 
 [框架改进时间标记: 2026年04月26日09时53分] 拼图框架6项增强+3项基础设施完成。核心改进: (1)优先级系统12个P0格子驱动执行顺序;(2)5个定量指标定义"数学结构涌现"避免主观判断;(3)动态Phase策略+迭代回溯;(4)临界点交叉验证5条规则;(5)实验日志化+敏感性分析+可视化建议。P0填充率目标: Phase I 80%, Phase II 100%。
+
+## 【2026-04-23】深度神经网络逆向工程系统分析框架建立
+
+
+基于724+实验的积累，建立了系统的深度神经网络逆向工程分析框架，目标是通过大量测试找到各种特征拼图，最终还原语言背后的数学原理。
+
+### 框架核心设计
+
+### 语言5大维度（24子维度）：
+1. **语法维度(8子维度)**: 词类编码、时态编码、极性编码、数量编码、语态编码、词序编码、句法层级、一致性
+2. **语义维度(8子维度)**: 语义类别、语义相似性、语义场、多义性、情感极性、语义抽象度、反义关系、部分整体关系
+3. **逻辑维度(8子维度)**: 因果推理、条件推理、逻辑否定、量词逻辑、推理链、矛盾检测、类比推理、逻辑与属性的正交性
+4. **语用维度(6子维度)**: 正式度、礼貌度、语域、话语角色、上下文依赖、指代消解
+5. **形态维度(5子维度)**: 词根词缀、屈折变化、派生变化、复合词、跨语言形态
+
+### DNN特征5大维度（35子维度）：
+1. **权重结构(8子维度)**: Layer正交程度、Head极化程度、W_U频谱分布、W_O泄漏比、FFN稀疏度、权重范数分布、残差流范数、RMSNorm缩放
+2. **激活空间(8子维度)**: 差分向量方向、PC1压缩率、子空间正交性、激活流形维度、频段分工、跨层旋转、激活密度、流形曲率
+3. **因果效应(8子维度)**: Activation Patching、Interchange Intervention、Head贡献矩阵、Attn/MLP分解、层间因果链、因果原子、方差陷阱、因果流形维度
+4. **信息论(6子维度)**: 编码效率、信道容量、信息瓶颈、频段冗余、编码方程、差分保留率
+5. **动力学(5子维度)**: 训练动力学、梯度流、损失景观、相变、信号传播
+
+### 十大核心测试：
+1. 语法特征的正交编码验证 (S1-S5 × A3)
+2. 1D因果流形的跨语言维度验证 (S1-S8 × C2)
+3. 频段分工的语法/逻辑分离 (S1-S5 × A5 + L1-L8 × A5)
+4. 紫牛效应的语义维度扩展 (M1-M8 × I1)
+5. 逻辑信号的正交性与选择性稀释 (L1-L8 × A3 + C1)
+6. 多义词的子空间分裂验证 (M4 × A3-A4)
+7. 跨语言形态的频谱策略差异 (F5 × A5)
+8. Attn/MLP贡献的语言维度差异 (S1-L8 × C4)
+9. 正式度维度的方差陷阱机制 (P1 × C7)
+10. 编码方程的跨维度统一 (S1-M8 × I5)
+
+### 拼图还原策略：
+- 第一层：局部特征对应（语法→正交、语义→基底+偏移、逻辑→正交通道、频谱→频段分工）
+- 第二层：跨维度统一结构（正交统一性、频段统一性、1D流形统一性、紫牛统一性）
+- 第三层：数学原理还原（5条定理：正交编码最优性、频谱分工振荡、紫牛效应可塑性、1D因果流形信息瓶颈、语法-逻辑分离）
+
+
+## 【2026-04-24】DNN逆向工程3D可视化客户端修改方案设计
+
+
+基于逆向工程系统分析框架，设计了3D可视化客户端修改方案v2.0。核心原则：**不改变当前风格和整体布局，只改变各个小窗口的内容，3D空间不改变layer模型**。
+
+### 架构策略
+- 保持现有全屏3D画布+4个浮动SimplePanel布局不变
+- AppleNeuronSceneContent保持原样，仅叠加5种视角效果层
+- 在现有面板内替换为逆向工程内容组件
+- 新增 `analysisMode = 'reverse_engineering'` 子模式
+
+### 左上控制面板(360px)新增内容
+- 语言维度手风琴选择器: 5大维度(语法S1-S8/语义M1-M8/逻辑L1-L8/语用P1-P6/形态F1-F5) × toggle开关
+- DNN特征标签页: 5大类(权重W/激活A/因果C/信息I/动力学D) × radio选择
+- 3D视角模式选择: 结构/正交/频谱/因果/编码
+- 十大核心测试快捷入口(T1-T10)
+
+### 右上信息面板(360px)新增内容
+- 选中维度概览 + 4个关键指标卡片
+- 语言×DNN交叉矩阵迷你热力图(5×5缩略)
+- 特征详情视图(差分向量/频段分解/因果效应/编码方程)
+- 拼图进度摘要
+
+### 右下操作面板(360px)新增内容
+- 当前配置摘要
+- 跨模型对比视图
+- 拼图进度列表(T1-T10状态)
+- 实验历史 + 操作按钮
+
+### 3D叠加效果(不改AppleNeuronSceneContent)
+- 正交视图: 半透明彩色子空间平面 + 差分向量箭头
+- 频谱视图: 5频段颜色光晕叠加
+- 因果视图: 因果流线粒子 + 1D流形方向箭头
+- 编码视图: 编码方程文字标签 + R²指示器
+
+### 实施计划: 9-12天
+- Phase 1: 配置与基础设施 (1天)
+- Phase 2: 左上控制面板内容 (2-3天)
+- Phase 3: 右上面板内容 (2天)
+- Phase 4: 右下面板内容 (1-2天)
+- Phase 5: 3D叠加效果 (2-3天)
+- Phase 6: 集成与优化 (1天)
+
+### 新增文件
+- 组件目录: `src/components/reverse/` (16个新组件)
+- 配置目录: `src/config/` (4个新配置: languageDimensions/dnnFeatures/testPresets/reverseColorMaps)
+- 修改文件: `LanguageResearchControlPanel.jsx`, `LanguageResearchDataPanel.jsx`, `App.jsx`, `appleNeuronWorkspaceBridge.js`
+
+完整设计文档: `/research/glm5/docs/DNN_3D_CLIENT_DESIGN.md` (v2.0)
+
+## 2026-04-24 DNN逆向工程3D客户端 v2.0 实施完成
+已完成所有代码修改，核心变更如下：
+
+**新增文件 (20个)**:
+- 配置: `src/config/languageDimensions.js`, `dnnFeatures.js`, `testPresets.js`, `reverseColorMaps.js`
+- 控制面板组件(5): `LanguageDimensionSelector`, `DimensionGroup`, `DNNFeatureTabs`, `QuickTestPresets`, `ViewModeSelect`
+- 数据面板组件(3): `ReverseEngineeringDataPanel`, `CrossDimensionMatrix`, `FeatureDetailView`
+- 操作面板组件(3): `ReverseEngineeringOperationPanel`, `PuzzleProgressView`, `ModelComparisonView`
+- 3D叠加组件(5): `ReverseEngineeringOverlay`, `OrthogonalSubspaceOverlay`, `BandFrequencyOverlay`, `CausalFlowOverlay`, `EncodingEquationOverlay`
+
+**修改文件 (3个)**:
+- `AppleNeuron3DTab.jsx`: 新增 `reverse_engineering` analysisMode + `reverseEngineeringState` 状态 + 逆向阶段分组
+- `LanguageResearchControlPanel.jsx`: 新增逆向工程入口按钮 + 4个逆向控制区(维度选择/DNN特征/视角模式/测试预设)
+- `App.jsx`: 导入3个逆向组件 + 右上面板条件渲染ReverseEngineeringDataPanel + 右下面板条件渲染ReverseEngineeringOperationPanel + Canvas中ReverseEngineeringOverlay叠加
+
+**架构要点**:
+- 不改变现有布局(全屏Canvas+4浮动SimplePanel)
+- 不改变AppleNeuronSceneContent(仅叠加效果层)
+- 逆向工程模式通过 `analysisMode === 'reverse_engineering'` 切换
+
+### 实施路线图：
+- Phase 1(2-3周): 基础数据采集 — 24维度×3模型×全层扫描
+- Phase 2(2-3周): 因果干预验证 — Interchange/Patching
+- Phase 3(1-2周): 频段分工验证 — 全维度频段分解
+- Phase 4(2-3周): 拼图整合与数学原理还原
+
+### 科学意义
+
+这个框架的核心创新在于：**将语言维度和DNN特征维度建立系统性交叉矩阵，不是零散地做测试，而是有策略地收集拼图块，最终还原完整的语言数学原理图景。**
+
+之前的研究（Phase I-CCXXIII）主要是在"发现"——发现1D流形、发现方差陷阱、发现逻辑正交等。本框架将这些发现系统化，建立一个可操作的测试矩阵，目标是实现从"发现"到"证明"的转变。
+
+**关键缺失**：SAE因果原子（SAE尚未训练）、训练动力学checkpoint追踪、跨语言形态验证。
+
+完整框架文档：`/research/glm5/docs/DNN_REVERSE_ENGINEERING_FRAMEWORK.md`
+

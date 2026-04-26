@@ -1,6 +1,6 @@
 import { Html, Line, OrbitControls, PerspectiveCamera, Text } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Activity, ArrowRightLeft, BarChart2, CheckCircle, GitBranch, Network, Scale, Search, Sparkles, Target } from 'lucide-react';
+import { Activity, ArrowRightLeft, BarChart2, Brain, CheckCircle, GitBranch, Network, Scale, Search, Sparkles, Target } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AUDIT_3D_FOCUS_EVENT, readPersistedAudit3DFocus } from './audit3dBridge';
 import LanguageResearchControlPanel from '../components/LanguageResearchControlPanel';
@@ -172,6 +172,7 @@ const ANALYSIS_MODE_OPTIONS = [
   { id: 'counterfactual', label: '反事实编码', desc: '最小语义改动差分' },
   { id: 'robustness', label: '鲁棒不变性', desc: '扰动下稳定编码' },
   { id: 'minimal_circuit', label: '最小子回路', desc: '最小因果子集' },
+  { id: 'reverse_engineering', label: '逆向工程', desc: '语言×DNN交叉逆向分析' },
 ];
 
 
@@ -186,6 +187,7 @@ const ANALYSIS_MODE_ICONS = {
   counterfactual: GitBranch,
   robustness: CheckCircle,
   minimal_circuit: Network,
+  reverse_engineering: Brain,
 };
 
 const ANALYSIS_MODE_STAGE_GROUPS = [
@@ -212,6 +214,12 @@ const ANALYSIS_MODE_STAGE_GROUPS = [
     label: '系统',
     icon: Network,
     items: ['minimal_circuit'],
+  },
+  {
+    id: 'reverse',
+    label: '逆向',
+    icon: Brain,
+    items: ['reverse_engineering'],
   },
 ];
 
@@ -4500,6 +4508,21 @@ export function useAppleNeuronWorkspace() {
   const [basicRuntimeStep, setBasicRuntimeStep] = useState(1);
   const [layerSweepStep, setLayerSweepStep] = useState(0);
 
+  // Reverse engineering state
+  const [reverseEngineeringState, setReverseEngineeringState] = useState({
+    selectedLanguageDims: {
+      syntax: { S1: false, S2: false, S3: false, S4: false, S5: false, S6: false, S7: false, S8: false },
+      semantic: { M1: false, M2: false, M3: false, M4: false, M5: false, M6: false, M7: false, M8: false },
+      logic: { L1: false, L2: false, L3: false, L4: false, L5: false, L6: false, L7: false, L8: false },
+      pragmatic: { P1: false, P2: false, P3: false, P4: false, P5: false, P6: false },
+      morphological: { F1: false, F2: false, F3: false, F4: false, F5: false },
+    },
+    selectedDNNFeature: 'A3',
+    selectedDNNCategory: 'activation',
+    viewMode: 'structure',
+    activePreset: null,
+  });
+
   const backgroundNodes = useMemo(() => buildBackgroundNodes(), []);
   const appleCoreNodes = useMemo(() => buildAppleCoreNodes(), []);
   const fruitGeneralNodes = useMemo(() => buildFruitGeneralNodes(), []);
@@ -5840,6 +5863,8 @@ export function useAppleNeuronWorkspace() {
     basicRuntimePlaying,
     basicRuntimeStep,
     layerSweepStep,
+    reverseEngineeringState,
+    setReverseEngineeringState,
     handleBasicRuntimeStart,
     handleBasicRuntimeStop,
     handleBasicRuntimeReplay,

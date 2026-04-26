@@ -26,6 +26,9 @@ import LanguageResearchControlPanel from './components/LanguageResearchControlPa
 import LanguageResearchDataPanel from './components/LanguageResearchDataPanel';
 import DNNAnalysisControlPanel from './components/DNNAnalysisControlPanel';
 import ParameterEncoding3D from './ParameterEncoding3D';
+import ReverseEngineeringDataPanel from './components/reverse/ReverseEngineeringDataPanel';
+import ReverseEngineeringOperationPanel from './components/reverse/ReverseEngineeringOperationPanel';
+import ReverseEngineeringOverlay from './components/reverse/ReverseEngineeringOverlay';
 
 import { locales } from './locales';
 import { INPUT_PANEL_TABS, STRUCTURE_TABS_V2, COLORS } from './config/panels';
@@ -2882,6 +2885,13 @@ export default function App() {
                     </div>
                   </div>
                 ) : isAppleMainView ? (
+                  appleNeuronWorkspace.analysisMode === 'reverse_engineering' ? (
+                    <ReverseEngineeringDataPanel
+                      workspace={appleNeuronWorkspace}
+                      hoveredInfo={hoveredInfo}
+                      displayInfo={displayInfo}
+                    />
+                  ) : (
                   <LanguageResearchDataPanel
                     workspace={appleNeuronWorkspace}
                     hoveredInfo={hoveredInfo}
@@ -2896,6 +2906,7 @@ export default function App() {
                     currentAlgorithmFocus={currentAlgorithmInfo.focus}
                     structureTab={structureTab}
                   />
+                  )
                 ) : (
                   <div>
                     <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
@@ -3551,6 +3562,9 @@ export default function App() {
           {!isLayersPanelMinimized && (
             hasOperationPanelContent ? (
               isAppleMainView ? (
+                appleNeuronWorkspace.analysisMode === 'reverse_engineering' ? (
+                  <ReverseEngineeringOperationPanel workspace={appleNeuronWorkspace} />
+                ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   {showAppleConceptSets && <AppleNeuronGeneratedConceptSetsPanel workspace={appleNeuronWorkspace} compact />}
                   {showAppleMultidimSettings && <AppleNeuronMultidimSettingsPanel workspace={appleNeuronWorkspace} compact />}
@@ -3569,6 +3583,7 @@ export default function App() {
                     </div>
                   )}
                 </div>
+                )
               ) : isICSPBFunctionType ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   <div style={{
@@ -3846,22 +3861,35 @@ export default function App() {
           )}
 
           {isAppleMainView && !isEncoding3DTab ? (
-            <AppleNeuronSceneContent
-              nodes={appleNeuronWorkspace.nodes}
-              links={appleNeuronWorkspace.links}
-              selected={appleNeuronWorkspace.selected}
-              onSelect={appleNeuronWorkspace.setSelected}
-              prediction={appleNeuronWorkspace.prediction}
-              mode={appleNeuronWorkspace.analysisMode}
-              theoryObjectMeta={appleNeuronWorkspace.currentTheoryObject}
-              dimensionLayerProfile={appleNeuronWorkspace.multidimLayerProfile}
-              activeDimension={appleNeuronWorkspace.multidimActiveDimension}
-              dimensionCausal={appleNeuronWorkspace.multidimCausalData}
-              nodeDisplayEmphasis={appleNeuronWorkspace.nodeDisplayEmphasis}
-              animationMode={appleNeuronWorkspace.animationMode}
-              scanMechanismData={appleNeuronWorkspace.scanMechanismData}
-              languageFocus={appleNeuronWorkspace.languageFocus}
-            />
+            <>
+              <AppleNeuronSceneContent
+                nodes={appleNeuronWorkspace.nodes}
+                links={appleNeuronWorkspace.links}
+                selected={appleNeuronWorkspace.selected}
+                onSelect={appleNeuronWorkspace.setSelected}
+                prediction={appleNeuronWorkspace.prediction}
+                mode={appleNeuronWorkspace.analysisMode}
+                theoryObjectMeta={appleNeuronWorkspace.currentTheoryObject}
+                dimensionLayerProfile={appleNeuronWorkspace.multidimLayerProfile}
+                activeDimension={appleNeuronWorkspace.multidimActiveDimension}
+                dimensionCausal={appleNeuronWorkspace.multidimCausalData}
+                nodeDisplayEmphasis={appleNeuronWorkspace.nodeDisplayEmphasis}
+                animationMode={appleNeuronWorkspace.animationMode}
+                scanMechanismData={appleNeuronWorkspace.scanMechanismData}
+                languageFocus={appleNeuronWorkspace.languageFocus}
+              />
+              {/* Reverse Engineering 3D Overlay */}
+              {appleNeuronWorkspace.analysisMode === 'reverse_engineering' && (
+                <ReverseEngineeringOverlay
+                  viewMode={appleNeuronWorkspace.reverseEngineeringState?.viewMode}
+                  selectedLanguageDims={appleNeuronWorkspace.reverseEngineeringState?.selectedLanguageDims}
+                  selectedDNNFeature={appleNeuronWorkspace.reverseEngineeringState?.selectedDNNFeature}
+                  selectedDNNCategory={appleNeuronWorkspace.reverseEngineeringState?.selectedDNNCategory}
+                  nodes={appleNeuronWorkspace.nodes}
+                  links={appleNeuronWorkspace.links}
+                />
+              )}
+            </>
           ) : (
             <>
               {/* Standard LogitLens Visualization - Always visible if data exists */}
