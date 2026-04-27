@@ -7,6 +7,11 @@ import {
 } from '../blueprint/data/persisted_repair_replay_sample_slots_v1';
 import BasicEncodingPanel from './BasicEncodingPanel';
 import DNNAnalysisControlPanel from './DNNAnalysisControlPanel';
+import LanguageDimensionSelector from './reverse/LanguageDimensionSelector';
+import DNNFeatureTabs from './reverse/DNNFeatureTabs';
+import QuickTestPresets from './reverse/QuickTestPresets';
+import ViewModeSelect from './reverse/ViewModeSelect';
+import { applyPresetToSelection, getDefaultLanguageDimSelection } from '../config/languageDimensions';
 
 const RESEARCH_LAYERS = [
   {
@@ -663,6 +668,7 @@ export default function LanguageResearchControlPanel({
 }) {
   const [legacyOpen, setLegacyOpen] = useState(false);
   const [dnnAnalysisOpen, setDnnAnalysisOpen] = useState(false);
+  const [reverseEngineeringOpen, setReverseEngineeringOpen] = useState(false);
   const [fallbackFocus, setFallbackFocus] = useState({
     researchLayer: 'static_encoding',
     puzzleAxisFilter: 'all',
@@ -1013,6 +1019,33 @@ export default function LanguageResearchControlPanel({
               </div>
             </button>
           ))}
+
+          {/* Reverse Engineering Entry */}
+          <button
+            type="button"
+            onClick={() => {
+              setReverseEngineeringOpen(!reverseEngineeringOpen);
+              if (workspace?.setAnalysisMode) {
+                workspace.setAnalysisMode(reverseEngineeringOpen ? 'dynamic_prediction' : 'reverse_engineering');
+              }
+            }}
+            style={{
+              textAlign: 'left',
+              padding: '10px 12px',
+              borderRadius: '10px',
+              border: reverseEngineeringOpen ? '1px solid rgba(236, 72, 153, 0.55)' : '1px solid rgba(255,255,255,0.08)',
+              background: reverseEngineeringOpen ? 'rgba(236, 72, 153, 0.12)' : 'rgba(255,255,255,0.02)',
+              color: reverseEngineeringOpen ? '#eef7ff' : '#a8b7cc',
+              cursor: 'pointer',
+            }}
+          >
+            <div style={{ fontSize: '12px', fontWeight: 700, marginBottom: '3px', color: reverseEngineeringOpen ? '#ec4899' : undefined }}>
+              🔬 逆向工程
+            </div>
+            <div style={{ fontSize: '10px', lineHeight: 1.5, color: reverseEngineeringOpen ? '#f9a8d4' : '#7e91ab' }}>
+              语言×DNN交叉逆向分析，验证编码证据链。
+            </div>
+          </button>
         </div>
       </div>
 
@@ -1175,6 +1208,86 @@ export default function LanguageResearchControlPanel({
               console.log('DNN数据选择:', data);
             }}
           />
+        </div>
+      )}
+
+      {/* ==================== 逆向工程控制区 ==================== */}
+      {reverseEngineeringOpen && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {/* Language Dimension Selector */}
+          <div style={cardStyle}>
+            <LanguageDimensionSelector
+              selection={workspace?.reverseEngineeringState?.selectedLanguageDims || getDefaultLanguageDimSelection()}
+              onSelectionChange={(newSelection) => {
+                if (workspace?.setReverseEngineeringState) {
+                  workspace.setReverseEngineeringState((prev) => ({
+                    ...prev,
+                    selectedLanguageDims: newSelection,
+                  }));
+                }
+              }}
+            />
+          </div>
+
+          {/* DNN Feature Tabs */}
+          <div style={cardStyle}>
+            <DNNFeatureTabs
+              selectedCategory={workspace?.reverseEngineeringState?.selectedDNNCategory || 'activation'}
+              selectedFeature={workspace?.reverseEngineeringState?.selectedDNNFeature || 'A3'}
+              onCategoryChange={(cat) => {
+                if (workspace?.setReverseEngineeringState) {
+                  workspace.setReverseEngineeringState((prev) => ({
+                    ...prev,
+                    selectedDNNCategory: cat,
+                  }));
+                }
+              }}
+              onFeatureChange={(feat) => {
+                if (workspace?.setReverseEngineeringState) {
+                  workspace.setReverseEngineeringState((prev) => ({
+                    ...prev,
+                    selectedDNNFeature: feat,
+                  }));
+                }
+              }}
+            />
+          </div>
+
+          {/* View Mode Select */}
+          <div style={cardStyle}>
+            <ViewModeSelect
+              viewMode={workspace?.reverseEngineeringState?.viewMode || 'structure'}
+              onViewModeChange={(mode) => {
+                if (workspace?.setReverseEngineeringState) {
+                  workspace.setReverseEngineeringState((prev) => ({
+                    ...prev,
+                    viewMode: mode,
+                  }));
+                }
+              }}
+            />
+          </div>
+
+          {/* Quick Test Presets */}
+          <div style={cardStyle}>
+            <QuickTestPresets
+              activePreset={workspace?.reverseEngineeringState?.activePreset}
+              onApplyPreset={(preset) => {
+                if (workspace?.setReverseEngineeringState) {
+                  const currentSelection = workspace.reverseEngineeringState?.selectedLanguageDims || getDefaultLanguageDimSelection();
+                  const newSelection = applyPresetToSelection(preset, currentSelection);
+                  workspace.setReverseEngineeringState((prev) => ({
+                    ...prev,
+                    activePreset: preset.id,
+                    selectedLanguageDims: newSelection,
+                    selectedDNNFeature: preset.dnnFeature,
+                    selectedDNNCategory: preset.dnnFeature?.[0]?.toLowerCase() === 'w' ? 'weight' : preset.dnnFeature?.[0]?.toLowerCase() === 'a' ? 'activation' : preset.dnnFeature?.[0]?.toLowerCase() === 'c' ? 'causal' : preset.dnnFeature?.[0]?.toLowerCase() === 'i' ? 'information' : 'dynamics',
+                    viewMode: preset.viewMode,
+                  }));
+                }
+              }}
+            />
+          </div>
         </div>
       )}
     </div>
