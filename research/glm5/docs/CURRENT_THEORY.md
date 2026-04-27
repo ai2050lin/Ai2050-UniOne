@@ -29,6 +29,15 @@
 | INV-10 | 概念有效维度17-22维（随机基线21-23，差距极小） | Phase CCLIX, 三模型 | ⭐⭐ |
 | INV-11 | 抽象层级非嵌套非正交：方向cos ≈ -0.20，接近随机正交 | Phase CCLIX, 三模型 | ⭐ |
 | INV-12 | 跨模板概念特异性反相关：spec_cos = -0.15~-0.20 | Phase CCLX-Exp2, 三模型 | ⭐⭐ |
+| INV-25 | 残差流主成分由类别(category)驱动, 非模板(template): cat_R2=0.82-0.94 | Phase CCLXIII-Exp1, Qwen3/GLM4 | ⭐⭐⭐ |
+| INV-26 | 中间层存在template热点: Qwen3=L18, GLM4=L20, DS7B=L14-21 | Phase CCLXIII-Exp1, 三模型 | ⭐⭐⭐ |
+| INV-27 | 概念替换干预switch_rate: 浅层0.67-0.83, 深层0.00 | Phase CCLXI-Exp1, 三模型 | ⭐⭐⭐ |
+| INV-28 | DS7B中间层template主导(与sliding window attention相关) | Phase CCLXIII-Exp1, DS7B | ⭐⭐ |
+| INV-29 | 概念差分在浅层(L1-L5)快速衰减: delta_cos从0.8-0.95降至0.5-0.65 | Phase CCLXIV-Exp1, 三模型 | ⭐⭐⭐ |
+| INV-30 | 纠正不是"深层锁定"而是"浅层快速衰减": L2-L5是主要纠正层 | Phase CCLXIV-Exp1, 三模型 | ⭐⭐⭐ |
+| INV-31 | 干预后残差流在深层(cos>0.7)自然回归target方向 | Phase CCLXIV-Exp1, 三模型 | ⭐⭐⭐ |
+| INV-32 | GLM4差分衰减最快(中期delta_cos仅0.29), Qwen3/DS7B约0.47 | Phase CCLXIV-Exp1 | ⭐⭐ |
+| INV-33 | Template热点层消融影响输出(2/4句子改变), 但主要是标点/介词级别 | Phase CCLXIV-Exp3, 三模型 | ⭐⭐ |
 
 ### 1.3 逻辑编码层面
 
@@ -73,6 +82,8 @@
 | REF-8 | 多模态假说（Gemma4差异=多信息域） | 未验证，Gemma4数据不足 | 04-06 |
 | REF-9 | 量子声学假说（频谱→语义=量子→经典坍缩） | 纯假说，无实验验证 | 04-15 |
 | REF-10 | 概念编码是因果载体（干预可改变输出） | Phase CCLX: 深层干预无效，切换率→0 | 04-26 |
+| REF-11 | 残差流90%是模板信号 | Phase CCLXIII: PCA主成分由category驱动(cat_R2=0.82-0.94) | 04-26 |
+| REF-12 | 深层存在"锁定机制"阻止干预 | Phase CCLXIV: 纠正是浅层快速衰减(L2-L5), 非深层锁定 | 04-26 |
 
 ---
 

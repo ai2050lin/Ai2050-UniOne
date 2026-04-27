@@ -14,6 +14,16 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
-    // strictPort: true, // Removed for robustness
-  }
+    fs: {
+      strict: false,
+    },
+  },
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        'neural-vis': path.resolve(__dirname, 'neural-vis.html'),
+      },
+    },
+  },
 })

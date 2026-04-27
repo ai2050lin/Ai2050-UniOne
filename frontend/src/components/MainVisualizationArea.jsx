@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
 import axios from 'axios';
-import MultiLayer3DVisualization from './MultiLayer3DVisualization';
+import LCSVisualization from './LCSVisualization';
 
 const API_BASE_URL = 'http://localhost:8000';
 
@@ -147,7 +147,7 @@ const MainVisualizationArea = ({
             onClick={() => setViewMode(viewMode === '2d' ? '3d' : '2d')}
             disabled={loading}
           >
-            {viewMode === '2d' ? '切换到3D' : '切换到2D'}
+            {viewMode === '2d' ? '切换到LCS 3D架构' : '切换到2D'}
           </button>
           {viewMode === '2d' && (
             <>
@@ -168,19 +168,9 @@ const MainVisualizationArea = ({
             </>
           )}
           {viewMode === '3d' && (
-            <select
-              value={selectedConcept || ''}
-              onChange={(e) => setSelectedConcept(e.target.value)}
-              className="filter-select"
-              style={{ marginLeft: '10px' }}
-            >
-              <option value="">选择概念</option>
-              <option value="apple">苹果 (Apple)</option>
-              <option value="banana">香蕉 (Banana)</option>
-              <option value="orange">橙子 (Orange)</option>
-              <option value="dog">狗 (Dog)</option>
-              <option value="cat">猫 (Cat)</option>
-            </select>
+            <span style={{ marginLeft: '15px', color: '#00d2ff', fontWeight: 'bold' }}>
+              AGI GLM5 语言数学原理 (v17.0)
+            </span>
           )}
         </div>
       </div>
@@ -198,12 +188,9 @@ const MainVisualizationArea = ({
         </div>
       )}
 
-      {viewMode === '3d' && selectedConcept && !loading && !error && (
-        <div className="visualization-content">
-          <MultiLayer3DVisualization
-            concept={selectedConcept}
-            showAssociations={true}
-          />
+      {viewMode === '3d' && !loading && !error && (
+        <div className="visualization-content" style={{ height: '800px' }}>
+          <LCSVisualization />
         </div>
       )}
 
@@ -242,11 +229,10 @@ const MainVisualizationArea = ({
         </div>
       )}
 
-      {!selectedConcept && viewMode === '3d' && !loading && !error && (
+      {viewMode === '3d' && loading && !error && (
         <div className="empty-state">
           <div className="empty-icon">🎨</div>
-          <h3>3D可视化模式</h3>
-          <p>请选择一个概念来查看多层3D关联可视化</p>
+          <h3>LCS 双层几何分离架构加载中...</h3>
         </div>
       )}
     </div>
