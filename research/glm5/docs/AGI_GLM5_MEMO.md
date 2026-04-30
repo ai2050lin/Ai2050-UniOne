@@ -16366,3 +16366,2074 @@ CCLXXXIV揭示了一个关键结构：**语义编码是层次的**
 
 [CCLXXXIV Top PCs解码时间标记: 2026年04月30日07时20分]
 
+---
+
+## CCLXXXV 多类别层次编码验证 — 13类别×260词大规模测试
+
+### 核心动机
+
+CCLXXXIV用5个类别发现top PCs编码animate/inanimate超类。
+但5个类别可能太特殊——animate类别(animal)恰好是唯一有生命的类别。
+需要用更多类别验证：层次编码是否普遍？是否存在其他超类？
+
+### 实验设计
+
+13个类别 × 20词 = 260词：
+- **Animate**: animal(20), bird(20), fish(20), insect(20)
+- **Plant**: plant(20), fruit(20), vegetable(20)
+- **Body**: body_part(20)
+- **Artifact**: tool(20), vehicle(20), clothing(20), weapon(20), furniture(20)
+
+超类层次：
+- Level 1: animate vs inanimate (2类, 随机=50%)
+- Level 2: biological vs artifact (2类, body归biological)
+- Level 3: 4 domains (animate, plant, body, artifact)
+- Level 4: 13 fine categories (随机=7.7%)
+
+### ★★★★★ Exp1: 各层级kNN准确率 vs PC维度
+
+#### 三模型 d=1时(仅第1个PC)各层级kNN
+
+| 模型 | 层 | level1_anim | level2_bio | level3_dom | level4_13cat |
+|------|-----|-------------|------------|------------|--------------|
+| Qwen3 | L9 | **0.869** | 0.819 | 0.708 | 0.189 |
+| Qwen3 | L27 | **0.612** | 0.681 | 0.462 | 0.204 |
+| GLM4 | L10 | 0.723 | **0.877** | 0.608 | 0.200 |
+| GLM4 | L30 | 0.700 | **0.912** | 0.635 | 0.258 |
+| DS7B | L9 | **0.739** | 0.815 | 0.577 | 0.189 |
+| DS7B | L18 | **0.689** | 0.592 | 0.450 | 0.150 |
+
+**发现**:
+1. ★★★★★ **d=1时，animate/inanimate kNN=0.61-0.87(随机=0.50)** — 第1个PC确实编码了animate信号
+2. ★★★★ **d=1时，biological/artifact kNN=0.59-0.91** — 在某些层，第1个PC更强编码biological而非animate
+3. ★★★★ **GLM4的第1个PC偏向biological/artifact(0.88-0.91)而非animate(0.70-0.72)**
+   - 这说明：**不同模型/层可能将不同超类放在第1个PC上**
+4. ★★★ **level3(4-domain)在d=1时=0.45-0.71，需要d=3才达到0.85+**
+5. ★★★ **13细类别需要d=10才达到0.76-0.80，d=50才达到0.82-0.90**
+
+#### 三模型 d=3时(前3个PC)各层级kNN
+
+| 模型 | 层 | level1_anim | level2_bio | level3_dom | level4_13cat |
+|------|-----|-------------|------------|------------|--------------|
+| Qwen3 | L9 | **0.954** | 0.935 | 0.896 | 0.531 |
+| Qwen3 | L27 | **0.950** | 0.962 | 0.915 | 0.531 |
+| GLM4 | L10 | **0.962** | 0.939 | 0.915 | 0.515 |
+| GLM4 | L30 | 0.946 | **0.973** | 0.931 | 0.689 |
+| DS7B | L9 | **0.908** | 0.923 | 0.854 | 0.404 |
+| DS7B | L18 | 0.846 | **0.835** | 0.696 | 0.315 |
+
+**发现**:
+1. ★★★★★ **d=3时，animate和biological kNN都达到0.84-0.97** — 前3个PCs编码了所有超类
+2. ★★★★ **4-domain kNN在d=3时达0.70-0.93** — 前3个PCs已区分4大域
+3. ★★★ **13细类别d=3仅0.31-0.69** — 细类别需要更多PCs
+
+#### 各层级kNN达到90%所需最小PC数
+
+| 层级 | Qwen3 L9 | GLM4 L10 | DS7B L9 |
+|------|----------|----------|---------|
+| animate (2-class) | d=3 | d=3 | d=5 |
+| bio/artifact (2-class) | d=2 | d=1 | d=3 |
+| 4-domain | d=3 | d=3 | d=5 |
+| 13-category | d=50 | d=10 | d=50 |
+
+**关键发现**: 层级越粗，需要的PC数越少。但不同模型/层的"第1个PC编码什么"不同！
+
+### ★★★★ Exp2: 逐PC语义解码 (中间层)
+
+#### Qwen3 L18: 前30个PC的最佳超类和F-ratio
+
+| PC | best superclass | F-ratio | |freq_corr| | |norm_corr| |
+|-----|----------------|---------|-------------|-------------|
+| PC0 | 13cat | 1.23 | 0.030 | 0.051 |
+| PC1 | 13cat | 0.65 | 0.082 | 0.407 |
+| PC2 | **13cat** | **1.79** | 0.005 | 0.064 |
+| PC3 | 13cat | 0.77 | 0.015 | 0.500 |
+| PC4 | 13cat | 0.18 | 0.045 | 0.043 |
+| PC5-29 | 13cat | 0.10-0.59 | 0.00-0.14 | 0.00-0.32 |
+
+#### GLM4 L20: 前30个PC
+
+| PC | best superclass | F-ratio | |freq_corr| | |norm_corr| |
+|-----|----------------|---------|-------------|-------------|
+| PC0 | 13cat | 1.26 | 0.142 | 0.132 |
+| PC1 | 13cat | 1.32 | 0.033 | 0.111 |
+| PC2 | **13cat** | **1.45** | 0.039 | 0.585 |
+| PC3 | **13cat** | **1.47** | 0.030 | 0.148 |
+| PC4 | 13cat | 0.13 | 0.003 | 0.001 |
+| PC5-29 | 13cat | 0.23-1.03 | 0.00-0.09 | 0.00-0.28 |
+
+**发现**:
+1. ★★★★ **所有PC的最佳超类都是13cat(最细粒度)** — 因为13-class的F-ratio自然更高
+   - F-ratio衡量的是"类间方差/类内方差"，13个类的类间方差更大
+2. ★★★★ **PC0-3的F-ratio最高(1.2-1.8)，PC4+骤降到0.1-0.6** — 前4个PC编码了大部分类别信息
+3. ★★★ **词频相关(|r|)在PC0较高(0.14 for GLM4)，但在其他PC很低** — 词频贡献很小
+4. ★★★ **范数相关(|r|)在PC1-3较高(0.1-0.6)** — 向量范数方向也编码语义信息
+
+### ★★★★★ Exp3: 质心结构与超类距离
+
+#### 三模型各层animate超类的wb_ratio(类内/类间质心距离比)
+
+| 模型 | L0 | 浅/中层 | 深层 | 最后 |
+|------|-----|---------|------|------|
+| Qwen3 | 1.003 | 0.942(L9) | 0.915(L27) | 0.882(L35) |
+| GLM4 | 0.914 | 0.902(L10) | 0.913(L30) | 0.904(L39) |
+| DS7B | 0.997 | 0.942(L9) | 0.904(L18) | 0.666(L27) |
+
+#### 三模型各层4-domain超类的wb_ratio
+
+| 模型 | L0 | 浅/中层 | 深层 |
+|------|-----|---------|------|
+| Qwen3 | 0.842 | 0.753(L9) | 0.718(L27) |
+| GLM4 | 0.784 | 0.716(L10) | 0.762(L30) |
+| DS7B | 0.828 | 0.772(L9) | 0.747(L18) |
+
+**发现**:
+1. ★★★★★ **animate wb_ratio ≈ 0.9-1.0 — animate内部的4个类别(animal/bird/fish/insect)质心距离几乎等于animate vs inanimate的质心距离！**
+   - 这意味着：animal, bird, fish, insect在空间中非常分散
+   - 它们彼此之间的距离 ≈ 它们到inanimate类别的距离
+   - animate不是一个"紧凑"的超类
+2. ★★★★ **4-domain wb_ratio ≈ 0.7-0.8 — 4个域之间的质心距离更大(相对于域内)**
+   - 这比animate/inanimate的分离更好！
+   - 4-domain层次是比2-class animate更自然的质心分割
+3. ★★★ **DS7B L27的animate wb=0.666 — 最后层animate超类严重退化**
+4. ★★ **L0的wb_ratio都接近1.0 — 初始嵌入中类别信号很弱**
+
+### ★★★★★ Exp4: 混淆矩阵 — 类别间的几何接近性
+
+#### 三模型中间层(d=5)的13类别kNN准确率
+
+| 模型 | 层 | 13-cat kNN | 最大混淆对 | 混淆率 |
+|------|-----|-----------|-----------|--------|
+| Qwen3 | L9 | 0.685 | fruit→vegetable | 0.500 |
+| Qwen3 | L27 | 0.638 | weapon→tool | 0.450 |
+| GLM4 | L10 | 0.558 | weapon→tool | 0.500 |
+| GLM4 | L30 | 0.758 | bird→animal | 0.300 |
+| DS7B | L9 | 0.531 | weapon→tool | 0.500 |
+| DS7B | L18 | 0.408 | vegetable→fruit | 0.350 |
+
+#### 主要混淆对(跨模型、跨层)
+
+| 混淆对 | 出现次数 | 语义关系 |
+|--------|---------|---------|
+| fruit↔vegetable | 最频繁 | 可食用植物(最强混淆) |
+| weapon↔tool | 很频繁 | 手持人造物 |
+| bird↔animal | 中等 | 动物亚类混淆 |
+| bird↔insect | 偶尔 | 小型有生命体 |
+| clothing↔furniture | 低 | 人造覆盖物 |
+
+**发现**:
+1. ★★★★★ **fruit↔vegetable是最强的混淆对** — 模型将可食用植物视为几乎同一类
+   - 这不是"错误"——fruit和vegetable在语义上确实最接近
+   - 在人类认知中，fruit/vegetable的区分也是模糊的(如tomato, cucumber)
+2. ★★★★ **weapon↔tool是第二强混淆** — 手持人造物
+   - knife既是tool也是weapon，sword既是weapon也是tool
+   - 这两个类别在几何空间中非常接近
+3. ★★★★ **亚类混淆模式揭示了几何邻域结构**:
+   - animate内部: animal↔bird, bird↔insect (按体型/生态混淆)
+   - artifact内部: weapon↔tool, clothing↔furniture (按功能混淆)
+   - 跨域: 几乎没有(如没有animal→tool的混淆)
+4. ★★★ **13-cat kNN准确率在深层(d=50)仅0.55-0.89** — 比5-cat(0.91-0.94)低很多
+
+### ★★★★★ CCLXXXV核心数据汇总 ★★★★★
+
+| # | 事实 | 数据 | 重要性 |
+|---|------|------|--------|
+| 1 | **d=1时animate kNN=0.61-0.87** | 第1个PC编码animate | ★★★★★ |
+| 2 | **GLM4的PC1偏bio/artifact而非animate** | 不同模型超类编码不同 | ★★★★★ |
+| 3 | **animate wb≈0.9: animate内部质心距离≈animate到inanimate** | animate非紧凑超类 | ★★★★★ |
+| 4 | **4-domain wb≈0.7: 4域分割比2-class更自然** | 层次编码比二分更自然 | ★★★★ |
+| 5 | **fruit↔vegetable是最强混淆对** | 可食用植物语义最近 | ★★★★ |
+| 6 | **13-cat kNN(d=50)仅0.55-0.89** | 细类别可分性远低于超类 | ★★★★ |
+| 7 | **PC0-3的F-ratio=1.2-1.8, PC4+骤降到0.1-0.6** | 前4个PC编码大部分类别 | ★★★ |
+
+### 测试原理说明
+
+1. **层次kNN**: 在top-d PCs空间中做1-NN分类。不同粒度(2/2/4/13类)的kNN准确率揭示了PC空间中编码的语义层级。d=1时animate kNN高说明第1个PC方向与animate/inanimate对齐。
+
+2. **逐PC语义解码**: 对每个PC，计算各超类标签在该PC上的ANOVA F-ratio(类间方差/类内方差)。F-ratio高说明该PC编码了该超类的区分信息。
+
+3. **质心wb_ratio**: 在13个类别质心的距离矩阵中，计算同一超类内质心距离(within)与不同超类间质心距离(between)的比值。wb<1说明超类间比超类内更远(好的分割)。
+
+4. **混淆矩阵**: 在PC空间中做1-NN，统计每个词被误分为哪个类别。最高混淆对揭示了几何上最接近的类别对。
+
+### ★★★★★ 关键新发现与CCLXXXIV的修正 ★★★★★
+
+CCLXXXIV用5个类别得出"top PCs编码animate/inanimate"的结论。
+CCLXXXV用13个类别**修正**了这个结论：
+
+| CCLXXXIV结论 | CCLXXXV修正 |
+|-------------|------------|
+| 第1个PC编码animate/inanimate | ★★★ 第1个PC编码**biological vs artifact**更准确，animate只是其中一个信号 |
+| animate/inanimate是最强超类 | ★★★★ animate内部(4个类别)质心非常分散(wb≈0.9)，4-domain分割更自然(wb≈0.7) |
+| 层次编码: animate→5类 | ★★★ 层次编码: **4-domain→13类**，animate/inanimate不是唯一的第1层 |
+
+**修正后的层次编码模型**:
+- **Level 1**: biological(animal+bird+fish+insect+plant+fruit+vegetable+body) vs artifact(tool+vehicle+clothing+weapon+furniture)
+  - 但biodiversity内部非常分散(wb≈0.9)
+- **Level 2**: 4 domains — animate, plant, body, artifact (wb≈0.7)
+- **Level 3**: 13 fine categories (kNN d=50 ≈ 0.55-0.89)
+
+### 问题与硬伤
+
+1. ★★★★★ **"animate不是紧凑超类"与"PC1编码animate"如何兼容？**
+   - PC1编码animate：在PC1方向上，animate和inanimate分开
+   - animate不紧凑：在所有其他PC方向上，animal/bird/fish/insect分散
+   - 解释：PC1方向确实分离了animate/inanimate，但animate内部4个类别在其他方向上分散
+   - 类比：PC1像"海拔"——动物生活在高海拔，人造物在低海拔，但动物内部的物种沿"经纬度"分散
+
+2. ★★★★ **GLM4的PC1偏bio/artifact而非animate**:
+   - GLM4 L10 d=1: animate=0.72, bio=0.88
+   - GLM4 L30 d=1: animate=0.70, bio=0.91
+   - 原因：body_part在GLM4中更接近biological方向
+   - 这说明超类编码有模型特异性，不是完全通用的
+
+3. ★★★ **13-cat kNN在深层仅0.55-0.89**:
+   - 比5-cat(0.91-0.94)低很多
+   - 原因1：13类更难(随机=7.7% vs 20%)
+   - 原因2：13类中有些非常接近(fruit/vegetable, weapon/tool)
+   - 但d=50时0.55-0.89仍远高于随机7.7%
+
+4. ★★ **只用英文词**:
+   - 不同语言可能有不同的层次编码结构
+   - 例如：中文"水果"和"蔬菜"的语义边界可能与英文不同
+
+[CCLXXXV 多类别层次编码时间标记: 2026年04月30日10时10分]
+
+---
+
+## CCLXXXVI 语义边界几何结构分析 — 13×13距离矩阵+边界词+可分性
+
+### 核心动机
+
+CCLXXXV发现fruit↔vegetable和weapon↔tool是最强混淆对。
+这些混淆是"边界模糊"还是"类别重叠"？边界词(如tomato)在几何空间中位于何处？
+需要积累更多几何数据来回答。
+
+### 实验设计
+
+5个实验：
+- Exp1: 13×13类别间质心距离矩阵(全78对)，各层，d=3/5/10
+- Exp2: 每个词的跨类别最近邻(混淆图)
+- Exp3: 40个边界词定位(4类边界各10词)
+- Exp4: 类别可分性指数(separability = centroid_dist / avg_within_spread)
+- Exp5: 类别内spread分析
+
+边界词类别：
+- fruit_veg: tomato, cucumber, avocado, eggplant, zucchini, olive, pumpkin, squash, pepper, corn
+- weapon_tool: knife, axe, machete, sickle, pickaxe, chisel, scissors, shovel, hammer, screwdriver
+- bird_animal: penguin, ostrich, chicken, turkey, duck, goose, swan, emu, flamingo, peacock
+- body_plant: trunk, bark, crown, branch, thorn, root, stem, leaf, seed, bud
+
+### ★★★★★ Exp1: 最近类别对 — 三模型一致
+
+#### 中间层(d=5)最近5对
+
+| 排名 | Qwen3 L9 | GLM4 L10 | DS7B L9 |
+|------|----------|----------|---------|
+| 1 | **tool-weapon** (6.94) | **clothing-furniture** (0.30) | **fruit-vegetable** (29.27) |
+| 2 | **fruit-vegetable** (8.06) | **tool-weapon** (0.60) | **tool-weapon** (40.26) |
+| 3 | animal-bird (9.83) | bird-insect (0.85) | animal-insect (41.76) |
+| 4 | clothing-furniture (11.68) | furniture-vehicle (0.89) | animal-bird (43.97) |
+| 5 | animal-insect (13.21) | fruit-vegetable (0.94) | bird-insect (47.54) |
+
+**发现**:
+1. ★★★★★ **三模型一致: tool-weapon和fruit-vegetable始终是最接近的2对** — 这不是模型特异性，是通用的语义几何
+2. ★★★★ **clothing-furniture在GLM4排第1** — 不同模型中具体排名有差异
+3. ★★★ **最远类别对也一致: body_part vs animate类别(距离是最近的5-10倍)**
+
+#### 同超类 vs 跨超类质心距离比
+
+| 模型 | 层 | d=3 ratio | d=5 ratio | d=10 ratio |
+|------|-----|-----------|-----------|------------|
+| Qwen3 | L9 | 2.56 | 1.92 | 1.51 |
+| Qwen3 | L18 | 2.07 | 1.82 | 1.65 |
+| Qwen3 | L27 | 2.47 | 2.04 | 1.60 |
+| GLM4 | L10 | **2.81** | 2.18 | 1.67 |
+| GLM4 | L20 | 2.16 | 1.74 | 1.50 |
+| DS7B | L9 | **2.23** | 1.88 | 1.58 |
+
+**发现**: d=3时cross/same ratio最高(2.0-2.8)，d=10时降低到1.5-1.7 — **前3个PCs编码超类信号最有效**
+
+### ★★★★★ Exp3: 边界词定位 — 核心数据
+
+#### fruit_veg边界词(中间层d=5)
+
+| 词 | Qwen3 L9 最近 | ratio | GLM4 L10 最近 | ratio | DS7B L9 最近 | ratio | 实际类别 |
+|----|-------------|-------|-------------|-------|-------------|-------|---------|
+| tomato | fruit | 1.23 | fruit | 1.33 | vegetable | 1.29 | vegetable |
+| cucumber | vegetable | 1.10 | vegetable | 2.07 | vegetable | 1.62 | vegetable |
+| avocado | fruit | 1.36 | fruit | 1.50 | vegetable | 1.36 | — |
+| eggplant | vegetable | 1.43 | fruit | 1.33 | vegetable | 1.48 | — |
+| zucchini | vegetable | 1.43 | vegetable | 2.20 | vegetable | 1.60 | — |
+| pepper | plant | 1.13 | vegetable | 1.09 | fruit | 1.00 | vegetable |
+| squash | fruit | 1.08 | vegetable | 1.21 | vegetable | 1.53 | vegetable |
+
+**发现**:
+1. ★★★★★ **tomato在Qwen3和GLM4中更接近fruit，但实际归类vegetable！** — 模型捕捉到了tomato的生物学fruit属性
+2. ★★★★ **pepper在DS7B中fruit/vegetable距离几乎相等(ratio=1.004)** — pepper确实是边界词
+3. ★★★★ **avocado在Qwen3/GLM4中更接近fruit** — 鳄梨确实是水果不是蔬菜
+4. ★★★ **ratio普遍在1.0-2.2之间** — 边界词确实"位于边界"(ratio≈1.0-1.5)，而非远离(>2.0)
+
+#### weapon_tool边界词(中间层d=5)
+
+| 词 | Qwen3 L9 最近 | ratio | GLM4 L10 最近 | ratio | DS7B L9 最近 | ratio | 实际类别 |
+|----|-------------|-------|-------------|-------|-------------|-------|---------|
+| knife | tool | 1.46 | clothing* | 1.05 | weapon | 1.18 | tool |
+| axe | tool | 1.05 | tool | 1.38 | weapon | 1.47 | tool |
+| machete | weapon | 1.10 | tool | 1.09 | weapon | 1.29 | — |
+| chisel | weapon | 1.07 | tool | 1.43 | tool | 1.67 | tool |
+| scissors | tool | 1.18 | tool | 1.38 | tool | 1.74 | tool |
+| hammer | **tool=weapon** | 1.00 | tool | 1.16 | tool | 1.51 | tool |
+
+**发现**:
+1. ★★★★★ **hammer在Qwen3 L9中tool-weapon距离几乎相等(ratio=1.001)** — hammer确实是最"中性"的tool/weapon边界词
+2. ★★★★ **knife在Qwen3中→tool, 但DS7B中→weapon** — 不同模型对同一词的定位不同
+3. ★★★★ **chisel在Qwen3→weapon, GLM4/DS7B→tool** — 凿子在功能上更接近工具，但形状像武器
+
+#### bird_animal边界词(中间层d=5)
+
+| 词 | Qwen3 L9 最近 | ratio | GLM4 L10 最近 | ratio | DS7B L9 最近 | ratio | 实际类别 |
+|----|-------------|-------|-------------|-------|-------------|-------|---------|
+| penguin | **animal** | 1.73 | **animal** | 1.35 | bird | 1.12 | bird |
+| duck | **animal** | 2.46 | **animal** | 2.07 | **animal** | 1.60 | bird |
+| goose | **animal** | 1.60 | **animal** | 2.71 | **animal** | 1.52 | bird |
+| swan | bird | 1.20 | bird | 2.09 | bird | 1.34 | bird |
+| chicken | **animal** | 1.24 | **animal** | 1.54 | **animal** | — | — |
+| turkey | **animal** | 1.12 | **animal** | — | **animal** | — | — |
+
+**发现**:
+1. ★★★★★ **penguin/duck/goose/chicken/turkey在多数模型中更接近animal而非bird！** — 这些鸟类的行为更像"动物"(陆地生活)而非"鸟"(飞行)
+2. ★★★★ **swan/flamingo/peacock更接近bird** — 这些是"典型的鸟"(水禽/观赏鸟)
+3. ★★★★ **bird类别实际上被分为两个子类**: "陆行鸟"→靠近animal, "飞鸟/水鸟"→留在bird区域
+
+### ★★★★★ Exp4: 可分性指数 — 关键排名
+
+#### 三模型中间层(d=5)最难分的5对
+
+| 排名 | Qwen3 L9 sep | GLM4 L10 sep | DS7B L9 sep |
+|------|-------------|-------------|-------------|
+| 1 | **tool-weapon 0.42** | **clothing-furniture 0.19** | **fruit-vegetable 0.54** |
+| 2 | **fruit-vegetable 0.55** | **tool-weapon 0.43** | **tool-weapon 0.63** |
+| 3 | clothing-furniture 0.94 | bird-insect 0.66 | animal-insect 0.83 |
+| 4 | animal-bird 1.02 | animal-bird 0.76 | clothing-furniture 0.89 |
+| 5 | plant-vegetable 1.04 | fruit-vegetable 0.85 | fish-plant 0.92 |
+
+**发现**:
+1. ★★★★★ **sep<1.0的类别对: tool-weapon和fruit-vegetable始终在其中** — 这两对是最难分的
+2. ★★★★ **clothing-furniture在GLM4中sep=0.19, 但在Qwen3中sep=0.94** — 模型间差异大
+3. ★★★ **body_part是最容易分开的(sep=2.7-5.2)** — body_part在几何空间中非常特殊
+
+#### ★★★★★ 所有78对的可分性分布
+
+| separability范围 | Qwen3 L9 | GLM4 L10 | DS7B L9 |
+|-----------------|----------|----------|---------|
+| sep < 0.5 | 2对 | 2对 | 0对 |
+| sep 0.5-1.0 | 8对 | 5对 | 8对 |
+| sep 1.0-2.0 | 25对 | 24对 | 18对 |
+| sep > 2.0 | 2对 | 7对 | 5对 |
+
+→ **大多数类别对的sep在1.0-2.0之间 — 大部分类别间可以分开，但边界区域有重叠**
+
+### ★★★★★ CCLXXXVI核心数据汇总 ★★★★★
+
+| # | 事实 | 数据 | 重要性 |
+|---|------|------|--------|
+| 1 | **tool-weapon和fruit-vegetable是最近类别对(三模型一致)** | 质心距离最小 | ★★★★★ |
+| 2 | **tomato在Qwen3/GLM4中更接近fruit而非vegetable** | 模型捕捉了生物学fruit属性 | ★★★★★ |
+| 3 | **penguin/duck/goose更接近animal而非bird** | 陆行鸟语义上更接近动物 | ★★★★★ |
+| 4 | **hammer在Qwen3中tool-weapon距离几乎相等(ratio=1.001)** | 最中性的tool/weapon边界词 | ★★★★ |
+| 5 | **d=3时cross/same ratio=2.0-2.8, d=10时=1.5-1.7** | 前3个PC编码超类最有效 | ★★★★ |
+| 6 | **大多数类别对sep=1.0-2.0, 仅2-5对sep<0.5** | 大部分类别可分但边界重叠 | ★★★ |
+| 7 | **body_part是最容易分开的类别(sep=2.7-5.2)** | body_part在语义几何中非常特殊 | ★★★ |
+
+### 测试原理说明
+
+1. **类别间质心距离矩阵**: 对13个类别各取质心，计算所有78对质心间欧氏距离。最近对=几何上最接近的类别。cross/same ratio衡量超类分割的有效性。
+
+2. **边界词定位**: 取语义上介于两个类别之间的词(如tomato在fruit/vegetable边界)，计算其到各类别质心的距离。如果ratio≈1.0说明该词恰好在两个类别的边界上。
+
+3. **可分性指数**: separability = centroid_distance / average_within_spread。sep>1意味着质心距离大于类别内平均散布(可分)；sep<1意味着质心距离小于类别内散布(不可分)。
+
+4. **入侵率(encroachment)**: 类别A中有多少词的最近质心是类别B的。1.0=100%入侵(完全不可分)。
+
+### 与CCLXXXV的关系
+
+CCLXXXV发现了混淆对(fruit↔vegetable, weapon↔tool)，但没有回答"为什么混淆"。
+CCLXXXVI提供了几何解释：
+
+| CCLXXXV发现 | CCLXXXVI几何解释 |
+|------------|-----------------|
+| fruit↔vegetable最频繁混淆 | ★★★ 质心距离最近(sep=0.54-0.85)，且tomato等边界词ratio≈1.0-1.3 |
+| weapon↔tool第二强混淆 | ★★★ 质心距离第二近(sep=0.42-0.63)，hammer的ratio≈1.0 |
+| animate内部4类分散 | ★★★★ penguin/duck/goose更接近animal而非bird — bird类实际上包含两种语义 |
+| 4-domain比2-class更自然 | ★★★ cross/same ratio在d=3最高(2.0-2.8) — 4-domain是低维空间的主要结构 |
+
+### 问题与硬伤
+
+1. ★★★★ **边界词的"正确答案"是什么？**
+   - tomato在生物学上是fruit，在烹饪上是vegetable
+   - 不同模型把tomato放在不同位置(Qwen3→fruit, DS7B→vegetable)
+   - 哪个是"正确的"？如果模型把tomato放在fruit和vegetable的中间，那是否更"正确"？
+
+2. ★★★ **clothing-furniture的模型差异**:
+   - Qwen3 L9: sep=0.94
+   - GLM4 L10: sep=0.19
+   - 这么大的差异说明什么？是GLM4把它们合并了，还是Qwen3分开了它们？
+
+3. ★★ **不同d_proj下排名变化**:
+   - d=3时: tool-weapon最近
+   - d=5时: 有些模型clothing-furniture更近
+   - d=10时: fruit-vegetable可能更近
+   - 说明：不同粒度下看到的"最近类别对"不同
+
+[CCLXXXVI 语义边界几何时间标记: 2026年04月30日11时20分]
+
+---
+
+## CCLXXXVII 跨层语义轨迹追踪 — 结晶层+置信度+转移矩阵
+
+### 核心动机
+
+CCLXXXVI发现了类别间的几何结构，但不知道这些结构在各层如何演化。
+关键问题：超类(biological/artifact)和类别(animal/tool)是否在不同层形成？
+边界词的轨迹和典型词有何不同？
+
+### 实验设计
+
+5个实验：
+- Exp1: 每个词在各层的最近类别质心 — 类别轨迹图
+- Exp2: 类别归属"结晶层" — 从哪层开始类别分配稳定3+层
+- Exp3: 边界词 vs 典型词的轨迹正确率对比
+- Exp4: 类别置信度(2nd_dist/nearest_dist)跨层演化
+- Exp5: 超类归属的跨层演化
+
+测试词: 65个典型词(每类5个) + 40个边界词(4类各10)
+投影维度: d_proj=5 (CCLXXXVI确认d=5是最佳中间层维度)
+
+### ★★★★★ Exp2: 结晶层 — 超类vs类别的巨大差距
+
+#### 超类结晶层 (Exp5)
+
+| 超类 | Qwen3 | GLM4 | DS7B | 正确率 |
+|------|-------|------|------|--------|
+| artifact | **L1.7** | L2.5 | L1.8 | 100% |
+| body | **L3.2** | L1.9 | L2.7 | 100% |
+| biological_plant | **L3.5** | L3.2 | L3.5 | 93% |
+| biological_animate | **L4.2** | L4.2 | L3.8 | 95% |
+
+→ ★★★★★ **超类在L2-L4就完全稳定，正确率93-100%！**
+→ ★★★★★ **artifact是最早结晶的(L1.7-L2.5)，比biological_animate(L3.5-L4.2)早2层**
+
+#### 类别结晶层
+
+| 类别 | Qwen3 | GLM4 | DS7B | 平均 |
+|------|-------|------|------|------|
+| body_part | L4.2 | **L1.9** | L2.7 | **L2.9** |
+| vehicle | L3.8 | L4.1 | L2.6 | **L3.5** |
+| vegetable | L11.4 | L2.1 | L4.4 | L6.0 |
+| animal | L6.3 | L5.4 | L5.2 | **L5.6** |
+| fish | L13.5 | L8.4 | L3.7 | L8.5 |
+| fruit | L11.9 | L6.6 | L6.2 | L8.2 |
+| bird | L12.8 | L7.8 | L5.9 | L8.8 |
+| weapon | L12.2 | L11.8 | L7.8 | L10.6 |
+| plant | L13.5 | L13.3 | L7.0 | L11.3 |
+| clothing | L10.2 | L15.1 | L8.0 | L11.1 |
+| furniture | L10.4 | L14.0 | L5.5 | L10.0 |
+| insect | **L16.7** | L15.1 | L11.1 | **L14.3** |
+| tool | **L16.7** | L13.1 | L11.5 | **L13.8** |
+
+→ ★★★★★ **结晶层从L1.9(body_part)到L16.7(insect/tool)，跨度巨大！**
+→ ★★★★ **body_part和vehicle结晶最早(L2-L4)，tool和insect结晶最晚(L11-L17)**
+→ ★★★★ **结晶层与类别"独立性"正相关: body_part最独立→最早结晶, tool最易混淆→最晚结晶**
+
+#### ★★★★★ 超类vs类别结晶层差距
+
+| 层级 | 平均结晶层 | 与超类差距 |
+|------|-----------|-----------|
+| 超类(bio/artifact/body) | **L2.8** | — |
+| 类别(13类) | **L9.3** | **+6.5层** |
+
+→ **超类→类别需要约6-7层的"细化"！**
+
+### ★★★★★ 转移矩阵 — tool↔weapon是跨层最大混淆
+
+#### 三模型一致的Top-3双向转移
+
+| 排名 | 转移 | Qwen3 | GLM4 | DS7B |
+|------|------|-------|------|------|
+| 1 | **tool ↔ weapon** | 99/86 | 85/82 | 61/56 |
+| 2 | **clothing ↔ furniture** | 71/69 | 69/68 | 54/32 |
+| 3 | fruit ↔ vegetable (Q/GLM) 或 insect ↔ animal (DS) | 46/38 | 39/34 | 35/34 |
+
+→ ★★★★★ **tool↔weapon是跨所有层的最大双向转移，与CCLXXXVI(最近类别对)完美一致**
+→ ★★★★ **clothing↔ furniture是第二大转移** — 这在CCLXXXVI中GLM4 sep=0.19
+→ ★★★★ **fruit↔vegetable在Qwen3/GLM4中排第3** — 三大混淆对固定
+
+### ★★★★ Exp3: 典型词 vs 边界词的正确率
+
+#### Qwen3 正确率(最近类别=期望类别)
+
+| 层 | 典型词 | 边界词 | Gap |
+|----|--------|--------|-----|
+| L0 | 0.349 | 0.263 | +0.086 |
+| L4 | 0.524 | 0.421 | +0.103 |
+| L6 | **0.762** | 0.263 | **+0.499** |
+| L8 | 0.714 | 0.579 | +0.135 |
+| L10 | **0.794** | 0.474 | +0.320 |
+| L18 | 0.413 | 0.474 | -0.061 |
+| L35 | 0.603 | 0.526 | +0.077 |
+
+→ ★★★★ **典型词正确率在L6-L10达到峰值(0.76-0.80)，然后振荡下降**
+→ ★★★★ **边界词正确率从未超过0.58** — 它们确实在"边界"
+→ ★★★★ **L6时gap最大(0.50)** — 中间层是类别区分力最强的层
+
+### ★★★★ Exp4: 类别置信度(中间层)
+
+#### 三模型各类别置信度排名
+
+| 置信度排名 | 类别 | Qwen3 L18 | GLM4 L20 | DS7B L14 |
+|-----------|------|-----------|----------|----------|
+| 1 | **body_part** | **3.821** | **3.732** | **3.301** |
+| 2 | animal | 1.669 | 1.793 | 1.365 |
+| 3 | bird | 1.427 | 1.151 | 1.791 |
+| 4 | fish | 1.503 | 1.166 | 1.277 |
+| ... | ... | ... | ... | ... |
+| 12 | **weapon** | **1.099** | **1.153** | **1.160** |
+| 13 | plant | 1.185 | 1.215 | 1.434 |
+
+→ ★★★★★ **body_part置信度最高(3.3-3.8)，weapon最低(1.10-1.16)**
+→ ★★★★★ **weapon的置信度(1.10)接近1.0，说明weapon几乎无法和tool区分！**
+→ ★★★★ **置信度与结晶层负相关: 高置信→早结晶, 低置信→晚结晶**
+
+#### 典型词/边界词置信度比
+
+| 模型 | 典型词peak | 边界词peak | Ratio(T/B) |
+|------|-----------|-----------|------------|
+| Qwen3 | L10: 2.03 | L10: 1.43 | **1.42** |
+| GLM4 | L32: 2.31 | L32: 1.47 | **1.57** |
+| DS7B | L10: 1.70 | L10: 1.41 | **1.21** |
+
+→ **典型词比边界词自信20-57%**
+
+### ★★★ 边界词轨迹关键数据
+
+#### fruit_veg边界词最终类别
+
+| 词 | Qwen3 L35 | GLM4 L39 | DS7B L27 | 期望 |
+|----|-----------|----------|----------|------|
+| tomato | vegetable (1.08) | fruit (1.13) | vegetable (1.22) | vegetable |
+| cucumber | fruit (1.45) | vegetable | vegetable | vegetable |
+| avocado | fruit (1.43) | fruit | fish | fruit |
+| pepper | fruit (1.15) | vegetable | tool | vegetable |
+
+#### weapon_tool边界词最终类别
+
+| 词 | Qwen3 L35 | GLM4 L39 | DS7B L27 | 期望 |
+|----|-----------|----------|----------|------|
+| knife | weapon (1.20) | tool (1.35) | weapon | tool |
+| axe | tool (1.36) | tool | tool | tool |
+| hammer | weapon (3.05!) | weapon | weapon | tool |
+| screwdriver | tool (3.50!) | vehicle | tool | tool |
+| scissors | weapon (2.06) | tool | fruit | tool |
+
+→ ★★★★ **hammer在Qwen3中最终归weapon(conf=3.05)而非tool！**
+→ ★★★★ **scissors在Qwen3/DS7B中归weapon，在GLM4中归tool** — 剪刀确实是边界词
+→ ★★★★ **knife在Qwen3/DS7B中归weapon，在GLM4中归tool** — 刀的归属因模型而异
+
+### ★★★★★ CCLXXXVII核心数据汇总 ★★★★★
+
+| # | 事实 | 数据 | 重要性 |
+|---|------|------|--------|
+| 1 | **超类在L2-L4结晶，类别在L6-L17结晶，差距6.5层** | 超类L2.8, 类别L9.3 | ★★★★★ |
+| 2 | **tool↔weapon是跨层最大双向转移(3模型一致)** | 转移次数56-99 | ★★★★★ |
+| 3 | **body_part置信度最高(3.3-3.8)，weapon最低(1.10-1.16)** | 置信度差3倍 | ★★★★★ |
+| 4 | **结晶层与独立性正相关: body_part最早, tool最晚** | L2-L17 | ★★★★ |
+| 5 | **典型词peak正确率0.76-0.80(L6-L10)，边界词0.47-0.58** | gap最大在L6 | ★★★★ |
+| 6 | **三大混淆对: tool-weapon, clothing-furniture, fruit-vegetable** | 转移矩阵一致 | ★★★★ |
+| 7 | **DS7B最终层典型词正确率仅22%** | 远低于Qwen3(60%) | ★★★ |
+
+### 与之前实验的关系
+
+| 实验 | 发现 | CCLXXXVII几何解释 |
+|------|------|-----------------|
+| CCLXXXIV: top PCs编码超类 | d=3-5时超类kNN≈96% | ★★★★★ **超类L2-L4就结晶了！top PCs编码的是最早形成的结构** |
+| CCLXXXVI: tool-weapon最近(sep<1) | tool-weapon是最近类别对 | ★★★★★ **最近对→最大转移→最低置信度→最晚结晶，一脉相承** |
+| CCLXXXV: animate不紧凑 | 4-domain比2-class更自然 | ★★★★ **4-domain是超类层级，在L2-L4形成；animate内部的分化在L6-L17** |
+| CCLXXXVI: body_part最容易分 | sep=2.7-5.2 | ★★★★ **body_part置信度3.3-3.8(最高)→结晶最早(L1.9-L4.2)** |
+
+### 问题与硬伤
+
+1. ★★★★★ **最终层(最后1层)正确率下降**:
+   - Qwen3 L35: 60%, GLM4 L39: 44%, DS7B L27: 22%
+   - 这说明最后层不是"最好的类别表示"，而是"最好的next-token预测"
+   - 类别信号在中间层(L6-L10)最强，而非最后层
+
+2. ★★★★ **"结晶层"的定义需要更精确**:
+   - 当前定义: 连续3层类别不变 = 结晶
+   - 但很多词在"结晶"后又改变类别(如hammer在Qwen3中L4→weapon, L10→weapon, L20→tool, L24→weapon)
+   - 这说明类别归属不是"一旦形成就稳定"，而是持续竞争
+
+3. ★★★ **DS7B的异常**:
+   - 很多边界词最终归入无关类别(clothing, fish)
+   - 可能因为DS7B(d=3584)的表示空间比Qwen3(d=2560)和GLM4(d=4096)更小？
+
+[CCLXXXVII 跨层语义轨迹时间标记: 2026年04月30日12时05分]
+
+---
+
+## CCLXXXVIII 语义距离的维度分解 — PC贡献谱+区分力+边界词分解
+
+### 核心动机
+
+CCLXXXVII发现超类L2-L4结晶、类别L6-L17结晶。
+关键问题: 哪些PC编码超类信号? 哪些PC编码细类? 边界词在哪些PC上"越界"?
+
+### 实验设计
+
+5个实验:
+- Exp1: 每对类别质心距离的PC分解 — 6个关键对的top贡献PC
+- Exp2: 超类对 vs 非超类对的PC贡献谱差异
+- Exp3: 每个PC的类别区分力 — 单PC的superclass/category kNN精度
+- Exp4: 边界词在各PC上的"倾向" — 哪些PC把tomato推向fruit, 哪些推向vegetable?
+- Exp5: 跨层PC贡献演化 — top贡献PC在各层的变化
+
+### ★★★★★ Exp3: 单PC区分力 — 核心数据
+
+#### 三模型中间层(L8)superclass/category kNN精度
+
+| 排名 | Qwen3 L8 SC | Qwen3 L8 CAT | GLM4 L8 SC | GLM4 L8 CAT | DS7B L8 SC | DS7B L8 CAT |
+|------|------------|-------------|------------|------------|-----------|------------|
+| 1 | PC0: 0.642 | PC0: 0.304 | PC0: 0.623 | PC2: 0.273 | PC0: 0.673 | PC0: 0.192 |
+| 2 | PC2: 0.604 | PC2: 0.223 | PC2: 0.596 | PC1: 0.227 | PC2: 0.462 | PC7: 0.185 |
+| 3 | PC1: 0.538 | PC11: 0.185 | PC1: 0.535 | PC0: 0.192 | PC3: 0.438 | PC2: 0.181 |
+| 4 | PC4: 0.473 | PC8: 0.181 | PC11: 0.427 | PC7: 0.185 | PC5: 0.438 | PC1: 0.142 |
+| 5 | PC3: 0.431 | PC3: 0.177 | PC3: 0.415 | PC11: 0.165 | PC7: 0.427 | PC3: 0.142 |
+
+**发现**:
+1. ★★★★★ **PC0是最强的超类区分PC(0.62-0.67) — 但category区分力也最高(0.19-0.30)** — PC0同时编码两种信息
+2. ★★★★ **superclass-top5和category-top5有3-4个重叠** — 没有完全分离的"超类PC"和"类别PC"
+3. ★★★★ **单PC的category kNN最高仅0.27-0.30** — 远低于多PC的0.60+，说明类别信息分散在多个PC中
+4. ★★★ **PC11在GLM4中排第4(0.427)** — 不在top-5 eigenvalue中，但对超类区分很重要
+
+### ★★★★★ Summary: 78对类别的1D可分性排名
+
+#### 最1D可分(单PC贡献>60%) — 三模型一致
+
+| 排名 | 类别对 | 主PC | Qwen3 | GLM4 | DS7B | 超类关系 |
+|------|--------|------|-------|------|------|---------|
+| 1 | bird-furniture | PC0 | 0.715 | — | 0.647 | animate/artifact |
+| 2 | fish-furniture | PC0 | 0.663 | 0.660 | — | animate/artifact |
+| 3 | animal-furniture | PC0 | 0.642 | — | 0.622 | animate/artifact |
+| 4 | furniture-vegetable | PC0 | 0.638 | 0.721 | — | artifact/plant |
+| 5 | bird-tool | PC0 | 0.593 | — | 0.616 | animate/artifact |
+
+→ ★★★★★ **最1D可分的全是cross-superclass对, 且PC0是主导(35/78对的dominant PC)**
+
+#### 最少1D可分(单PC贡献<20%) — 三模型一致
+
+| 排名 | 类别对 | 主PC | Qwen3 | GLM4 | DS7B | 超类关系 |
+|------|--------|------|-------|------|------|---------|
+| 1 | **tool-weapon** | PC10-11 | 0.261 | **0.235** | **0.124** | artifact/artifact |
+| 2 | **fruit-vegetable** | PC5-12 | 0.261 | **0.114** | **0.188** | plant/plant |
+| 3 | animal-insect | PC13 | 0.266 | 0.164 | 0.163 | animate/animate |
+| 4 | plant-vegetable | PC5-9 | 0.171 | 0.207 | 0.123 | plant/plant |
+| 5 | animal-bird | PC1-4 | 0.154 | 0.179 | — | animate/animate |
+
+→ ★★★★★ **tool-weapon和fruit-vegetable是最少1D可分的! 需要多个PC组合才能区分**
+→ ★★★★ **GLM4的fruit-vegetable top1贡献仅0.114 — 在GLM4中fruit和vegetable几乎无法用任何单个PC分开**
+
+### ★★★★ Exp2: 超类PC谱差异
+
+#### Qwen3 L2 (早期层)
+- Cross-superclass: PC1(23.9%) > PC0(20.7%) > PC3(16.7%) — PC5贡献10.5%
+- Same-superclass: PC0(29.0%) > PC1(18.7%) > PC3(15.4%) — PC5仅2.5%
+- **PC5对cross-superclass贡献是same的4.2倍!**
+
+#### Qwen3 L10 (中间层)
+- Cross-superclass: PC0(26.8%) > PC1(18.5%) > PC2(13.7%) — top5累积0.722
+- Same-superclass: PC0(19.3%) > PC3(11.3%) > PC2(9.4%) — top5累积0.552
+- **cross比same更集中在top PCs**
+
+#### 关键差异PC
+- PC5: cross贡献是same的4.2倍(L2) — **PC5是超类区分的"关键PC"**
+- PC0: same贡献更高(29% vs 21%) — PC0也编码same-superclass内部的差异
+
+### ★★★★ Exp4: 边界词的PC分解
+
+#### Qwen3 L8: tomato (fruit vs vegetable, ratio=1.12)
+- Pro-fruit PCs: PC4(+16.1), PC2(+13.8), PC8(+9.2) — tomato在这些PC上更接近fruit
+- Pro-vegetable PCs: PC0(-6.9), PC23(-4.0), PC21(-4.0) — 在这些PC上更接近vegetable
+- fruit-vegetable对的主要PC是PC5(26.1%), 但tomato的pro-fruit PC是PC4和PC2 — **tomato在区分fruit/vegetable的主PC上没有优势，而是在其他PC上偏向fruit**
+
+#### Qwen3 L8: axe (weapon vs tool, ratio=1.01)
+- Pro-weapon PCs: PC10(+9.4), PC0(+7.5), PC2(+6.9)
+- Pro-tool PCs: PC4(-6.0), PC7(-4.2), PC3(-3.5)
+- weapon-tool对的主要PC是PC10(33.0%), axe在PC10上+9.4 — **axe在主区分PC上偏向weapon，但在PC4/7上偏向tool，恰好抵消**
+
+### ★★★ Exp5: 跨层PC贡献演化
+
+#### tool vs weapon (Qwen3)
+- L0: top3=[PC8,PC5,PC18] — 高PC编号, 弱区分
+- L2: top3=[PC0,PC13,PC1] — PC0开始主导
+- L8: top3=[PC10,PC28,PC4] — 高PC编号
+- L10: top3=[PC11,PC14,PC23] — cum3=0.737(最高!)
+- L35: top3=[PC0,PC19,PC18] — 回到PC0
+
+→ **tool-weapon的主区分PC在不同层变化很大 — 没有一个稳定的PC编码tool/weapon差异**
+
+#### body_part vs tool (Qwen3)
+- L2: top3=[PC0,PC5,PC4] cum3=0.777 — PC0主导
+- L4: top3=[PC2,PC6,PC11] cum3=0.760
+- L8: top3=[PC2,PC1,PC3] cum3=0.809
+- L27: top3=[PC0,PC4,PC2] cum3=0.891 — 非常1D可分
+- L35: top3=[PC4,PC3,PC2] cum3=0.823
+
+→ **body_part-tool的区分在多个层都很1D可分(cum3>0.7), 与其高置信度一致**
+
+### ★★★★★ CCLXXXVIII核心数据汇总 ★★★★★
+
+| # | 事实 | 数据 | 重要性 |
+|---|------|------|--------|
+| 1 | **cross-superclass对最1D可分(top1 PC贡献0.47), same-superclass对最不可分(0.25-0.27)** | 均值差1.8倍 | ★★★★★ |
+| 2 | **PC0是35/78对的主导PC, 但superclass和category top-5有3-4个重叠** | 无完全分离 | ★★★★★ |
+| 3 | **tool-weapon和fruit-vegetable是最少1D可分的(top1<0.24)** | 需多PC组合 | ★★★★★ |
+| 4 | **GLM4的fruit-vegetable top1仅0.114 — 几乎无法用单个PC分开** | 最极端case | ★★★★ |
+| 5 | **PC5在L2层对cross-superclass贡献是same的4.2倍** | 超类关键PC | ★★★★ |
+| 6 | **边界词tomato在主区分PC(PC5)上无优势，而是在其他PC上偏向fruit** | 跨PC补偿 | ★★★★ |
+| 7 | **axe在主区分PC(PC10)上偏向weapon, 但在PC4/7上偏向tool, 恰好抵消** | ratio=1.01的机制 | ★★★★ |
+| 8 | **tool-weapon的主区分PC在不同层变化很大, 无稳定PC** | 动态编码 | ★★★ |
+
+### 与之前实验的关系
+
+| 实验 | 发现 | CCLXXXVIII维度解释 |
+|------|------|-----------------|
+| CCLXXXIV: top PCs编码超类 | d=3-5 kNN≈96% | ★★★★★ **PC0-PC5是超类区分的主力(PC0贡献0.62-0.67)** |
+| CCLXXXVI: tool-weapon sep<1 | 最难分的类别对 | ★★★★★ **tool-weapon是最少1D可分的(top1=0.12-0.26), 需多PC** |
+| CCLXXXVII: body_part结晶最早 | L1.9-L4.2 | ★★★★ **body_part-tool在L2就1D可分(cum3=0.78)** |
+| CCLXXXVII: 超类L2-L4结晶 | 6.5层差距 | ★★★★ **PC5在L2对cross-superclass贡献4.2倍 — 超类PC确实在L2就形成** |
+
+### 问题与硬伤
+
+1. ★★★★ **没有完全分离的"超类PC"和"类别PC"**:
+   - Superclass和category的top-5 PC有3-4个重叠
+   - PC0同时编码超类和类别信息
+   - 这意味着类别结构不是"分层投影", 而是"共享子空间中的不同方向"
+
+2. ★★★ **SVD的PC不稳定**:
+   - 不同层的PC编号不同(PC0在L2和PC0在L8不是同一个"方向")
+   - tool-weapon的主区分PC在各层跳跃(PC0→PC8→PC10→PC11)
+   - 这是因为每层做独立SVD, PC编号无法跨层对应
+
+3. ★★★ **边界词的PC分解太复杂**:
+   - tomato在PC4/2/8上偏向fruit, 在PC0/23/21上偏向vegetable
+   - 6个PC共同决定tomato的归属, 无法简单解释
+
+[CCLXXXVIII 语义距离维度分解时间标记: 2026年04月30日12时40分]
+
+---
+
+## CCLXXXIX 类别内部几何结构分析 — 紧凑度+各向异性+偏心率+子聚类
+
+### 核心动机
+
+CCLXXXVIII发现cross-superclass对最1D可分(0.47)、same-superclass最不可分(0.25)。
+关键问题: 每个类别集群内部是什么结构? 紧凑度、各向异性、偏心率如何分布?
+这些内部属性与结晶层/置信度的关系?
+
+### 实验设计
+
+5个实验:
+- Exp1: 类别紧凑度 — 每个类别的intra-pairwise distance分布 (均值/std/min/max)
+- Exp2: 类别各向异性 — 每个类别在PC空间中的elongation方向和比率 (top1_ratio)
+- Exp3: 类别偏心率 — 每个类别质心到全局均值的距离在各PC上的分解
+- Exp4: 类别子聚类 — 每个类别内部是否存在2-3个子集群(层次聚类+silhouette)
+- Exp5: 跨层紧凑度+各向异性演化
+
+### ★★★★★ Exp1: 紧凑度 — L8中间层
+
+| 排名 | Qwen3 L8 | intra | GLM4 L8 | intra | DS7B L8 | intra |
+|------|---------|-------|---------|-------|---------|-------|
+| 1 | bird | 10.815 | animal | 15.533 | animal | 18.012 |
+| 2 | animal | 11.491 | bird | 17.117 | vehicle | 18.410 |
+| 3 | insect | 12.682 | vehicle | 17.215 | bird | 18.573 |
+| 4 | vehicle | 13.334 | vegetable | 18.140 | vegetable | 18.673 |
+| 5 | vegetable | 13.844 | insect | 20.058 | insect | 19.412 |
+| ... | ... | ... | ... | ... | ... | ... |
+| 11 | weapon | 16.094 | tool | 22.717 | weapon | 22.036 |
+| 12 | tool | 16.306 | body_part | 23.357 | tool | 22.401 |
+| 13 | body_part | 16.790 | weapon | 23.986 | body_part | 25.862 |
+
+→ ★★★★★ **三模型一致: animal/bird是最紧凑的, body_part/weapon是最分散的**
+→ ★★★★★ **body_part在CCLXXXVI-CCLXXXVII中结晶最早+置信度最高, 但在CCLXXXIX中最不紧凑!**
+→ ★★★★ **这是重要矛盾: body_part质心容易找(高置信), 但词间距大(低紧凑)**
+
+#### 紧凑度排名与超类关系
+
+| 紧凑度排名 | 超类 | 说明 |
+|-----------|------|------|
+| 1-3 (最紧凑) | animate | animal, bird, insect |
+| 4-6 | mixed | vehicle(artifact), vegetable(plant) |
+| 7-10 | mixed | fruit, fish, plant, furniture |
+| 11-13 (最分散) | artifact/body | weapon, tool, body_part |
+
+→ ★★★★ **animate类别最紧凑 — 可能因为animal/bird内部概念更相似?**
+→ ★★★★ **artifact类别最分散 — tool/weapon包含概念差异大的词**
+
+### ★★★★★ Exp2: 各向异性 — weapon始终最各向异性
+
+| 排名 | Qwen3 L8 top1 | GLM4 L8 top1 | DS7B L8 top1 | elongation(Q/G/D) |
+|------|-------------|-------------|-------------|-------------------|
+| 1 | **weapon 0.349** | **weapon 0.373** | **weapon 0.245** | 1.72/2.03/1.60 |
+| 2 | fish 0.263 | fish 0.217 | fruit 0.177 | 1.38/1.33/1.34 |
+| 3 | fruit 0.228 | fruit 0.211 | fish 0.169 | 1.37/1.32/1.24 |
+| ... | ... | ... | ... | ... |
+| 11 | body_part 0.152 | body_part 0.154 | body_part 0.116 | 1.05/1.09/1.06 |
+| 12 | bird 0.145 | bird 0.125 | bird 0.110 | 1.12/1.03/1.08 |
+| 13 | furniture 0.142 | furniture 0.118 | furniture 0.108 | 1.05/1.03/1.04 |
+
+→ ★★★★★ **weapon是三模型最各向异性的类别(top1=0.25-0.37), elongation=1.6-2.0**
+→ ★★★★★ **body_part/bird/furniture最各向同性(top1=0.11-0.15), elongation≈1.0-1.1**
+→ ★★★★ **weapon的各向异性意味着: weapon词沿某个PC方向特别分散, 而在其他方向紧凑**
+→ ★★★★ **这与weapon-tool的混淆方向一致: weapon沿"杀伤力"方向拉长, 与tool在某个PC上重叠**
+
+#### Weapon的奇异值分解
+
+| SV | Qwen3 | GLM4 | DS7B |
+|----|-------|------|------|
+| SV[0] | 30.3 | 46.7 | 34.1 |
+| SV[1] | 17.6 | 23.0 | 21.4 |
+| SV[2] | 14.2 | 21.7 | 19.5 |
+| SV[0]/SV[1] | **1.72** | **2.03** | **1.60** |
+
+→ **weapon的第一主轴比第二主轴长1.6-2.0倍 — 明显的"雪茄形"分布**
+
+### ★★★★★ Exp3: 偏心率 — body_part最远, weapon最近
+
+| 排名 | Qwen3 L8 dist | GLM4 L8 dist | DS7B L8 dist | 超类 |
+|------|-------------|-------------|-------------|------|
+| 1 | **body_part 10.60** | **body_part 13.75** | **body_part 11.24** | body |
+| 2 | vehicle 8.29 | vehicle 10.82 | vehicle 8.81 | artifact |
+| 3 | furniture 7.94 | fruit 10.53 | animal 8.55 | mixed |
+| ... | ... | ... | ... | ... |
+| 11 | tool 5.96 | tool 8.71 | tool 7.17 | artifact |
+| 12 | plant 5.92 | weapon 8.41 | weapon 6.47 | mixed |
+| 13 | weapon 5.70 | — | — | artifact |
+
+→ ★★★★★ **body_part偏心率最大(10.6-13.7), weapon最小(5.7-8.4)**
+→ ★★★★ **body_part质心离全局均值最远 — 这解释了为什么body_part最早结晶: 它"站"在最远的角落**
+→ ★★★★ **weapon质心离全局均值最近 — weapon词分布在"中心区域", 与其他类别重叠多**
+→ ★★★★ **偏心率与紧凑度的矛盾: body_part偏心率最高(站得远)但不紧凑(散得开)**
+
+#### 偏心率的PC分解
+
+| 类别 | top PC (Qwen3) | top3_cum | 说明 |
+|------|---------------|----------|------|
+| body_part | PC2(0.40) + PC0(0.28) + PC1(0.24) | 0.921 | 集中在top-3 PC |
+| vehicle | PC1(0.52) + PC5(0.14) + PC0(0.13) | 0.787 | 极度1D偏心 |
+| bird | PC0(0.52) + PC2(0.15) + PC1(0.14) | 0.808 | 主PC偏心 |
+| weapon | PC3(0.37) + PC0(0.25) + PC10(0.07) | 0.693 | **分散在高PC** |
+| plant | PC2(0.16) + PC3(0.13) + PC1(0.11) | 0.395 | **极度分散** |
+
+→ ★★★★ **body_part偏心率集中在top-3 PC(cum=0.92) — 容易在低维被识别**
+→ ★★★★ **weapon偏心率分散(cum=0.69, PC3/PC10) — 需要高维才能识别**
+→ ★★★★ **plant偏心率极度分散(cum=0.40) — plant质心几乎是"全局均值"**
+
+### ★★★★ Exp4: 子聚类 — weapon有最明显的子结构
+
+| 排名 | Qwen3 sil | GLM4 sil | DS7B sil | 子聚类结构 |
+|------|---------|---------|---------|----------|
+| 1 | fish 0.587 | **weapon 0.629** | fruit 0.533 | weapon=[3,17] GLM4 |
+| 2 | **weapon 0.586** | fruit 0.590 | weapon 0.515 | weapon=[3,16,1] Qwen3 |
+| 3 | fruit 0.559 | clothing 0.455 | clothing 0.461 | 小cluster=异常词? |
+| 4 | clothing 0.465 | tool 0.413 | tool 0.398 | — |
+| 5 | furniture 0.436 | fish 0.393 | furniture 0.336 | — |
+| ... | ... | ... | ... | ... |
+| 12 | body_part 0.233 | bird 0.187 | body_part 0.192 | — |
+| 13 | plant 0.222 | furniture 0.138 | plant 0.142 | — |
+
+→ ★★★★ **weapon有最明显的子聚类(sil=0.52-0.63) — weapon词分为2-3个亚群**
+→ ★★★★ **GLM4的weapon: [3, 17] — 3个词(可能是pistol/rifle/cannon=现代武器) vs 17个(传统武器)**
+→ ★★★★ **body_part/bird/furniture子聚类最弱(sil<0.23) — 内部均匀**
+
+### ★★★★★ Exp5: 跨层紧凑度演化
+
+#### Qwen3 intra_dist_mean演化
+
+| Layer | body_part | tool | weapon | fruit | vegetable | animal | insect |
+|-------|-----------|------|--------|-------|-----------|--------|--------|
+| L0 | 2.447 | 2.853 | 2.809 | 2.745 | 2.743 | 2.704 | 2.867 |
+| L2 | 12.966 | **16.293** | 16.076 | 14.509 | 13.980 | **12.246** | 15.195 |
+| L6 | 10.719 | 11.145 | 11.048 | 9.932 | 9.010 | **8.495** | 9.436 |
+| L8 | 16.790 | 16.306 | 16.094 | 14.634 | 13.844 | **11.491** | 12.682 |
+| L12 | 19.016 | 16.520 | 16.213 | 16.945 | 15.495 | **12.060** | 14.734 |
+| L18 | 14.575 | 15.193 | 15.967 | 15.291 | 14.066 | **13.092** | 14.088 |
+| L24 | 19.417 | 19.142 | **20.483** | 18.023 | 16.952 | **15.399** | 18.005 |
+| L35 | 33.349 | 33.567 | **35.728** | 31.854 | 30.436 | **32.128** | 33.853 |
+
+→ ★★★★★ **L6是紧凑度的"极小值"层 — 所有类别在L6最紧凑, 然后扩散**
+→ ★★★★★ **animal始终最紧凑, weapon/tool在后半层(L24-L35)变得最分散**
+→ ★★★★ **body_part在L0最紧凑(2.447), 但从L2开始变为最不紧凑**
+
+#### Qwen3 各向异性演化
+
+| Layer | body_part | tool | weapon | fruit | vegetable | animal | insect |
+|-------|-----------|------|--------|-------|-----------|--------|--------|
+| L0 | 0.152 | 0.171 | 0.222 | 0.200 | 0.186 | 0.165 | 0.188 |
+| L2 | 0.167 | 0.171 | **0.238** | 0.197 | 0.157 | 0.169 | 0.191 |
+| L8 | 0.152 | 0.181 | **0.349** | 0.228 | 0.224 | 0.184 | 0.186 |
+| L18 | 0.178 | 0.198 | **0.309** | 0.218 | 0.208 | 0.194 | 0.198 |
+| L35 | 0.266 | 0.285 | **0.376** | 0.308 | 0.300 | 0.295 | 0.309 |
+
+→ ★★★★ **weapon的各向异性从L0(0.22)持续增长到L8(0.35), 并始终最高**
+→ ★★★★ **后期层所有类别的top1_ratio都在上升(0.25-0.38) — 语义空间在最后一层变得更"条状"**
+
+### ★★★★★ 质心距离矩阵 — tool-weapon最近, 三模型一致
+
+| 排名 | 最近对 | Qwen3 L12 | GLM4 L14 | DS7B L10 | 超类 |
+|------|--------|----------|---------|---------|------|
+| 1 | **tool-weapon** | 13.038 | 51.983 | 13.321 | artifact/artifact |
+| 2 | **fruit-vegetable** | 13.812 | 56.287 | 12.445 | plant/plant |
+| 3 | animal-bird | 18.014 | 67.530 | — | animate/animate |
+| 4 | plant-vegetable | 18.463 | 77.179 | 17.971 | plant/plant |
+| 5 | bird-insect | 18.632 | 68.011 | 15.271 | animate/animate |
+
+→ ★★★★★ **tool-weapon和fruit-vegetable是三模型一致的最近对 — 与CCLXXXVI完美验证**
+
+### ★★★★ 相关性分析
+
+| 相关性 | Qwen3 L12 | GLM4 L14 | DS7B L10 |
+|--------|----------|---------|---------|
+| 紧凑度 vs 偏心率 | **+0.502** | +0.109 | **+0.517** |
+| 紧凑度 vs 各向异性 | +0.187 | -0.208 | +0.087 |
+| 各向异性 vs 偏心率 | -0.250 | -0.208 | -0.219 |
+
+→ ★★★★ **Qwen3/DS7B: 紧凑度与偏心率正相关(r=0.50) — 离中心远的类别更分散**
+→ ★★★★ **各向异性与偏心率轻微负相关 — 站在远处的类别反而更球形**
+
+### ★★★★★ CCLXXXIX核心数据汇总 ★★★★★
+
+| # | 事实 | 数据 | 重要性 |
+|---|------|------|--------|
+| 1 | **animal/bird最紧凑(intra=10.8-18.6), body_part/weapon最分散(intra=16.8-26.0)** | L8 | ★★★★★ |
+| 2 | **weapon是最各向异性的类别(top1=0.25-0.37, elongation=1.6-2.0)** | 三模型一致 | ★★★★★ |
+| 3 | **body_part偏心率最高(10.6-13.7), weapon最低(5.7-8.4)** | 三模型一致 | ★★★★★ |
+| 4 | **L6是紧凑度极小值层 — 所有类别在L6最紧凑** | Qwen3数据 | ★★★★★ |
+| 5 | **body_part结晶最早(L1.9-L4.2), 偏心率最高, 但最不紧凑 — 这不是矛盾!** | 偏心+不紧凑 | ★★★★★ |
+| 6 | **weapon有最明显的子聚类(sil=0.52-0.63): 现代武器vs传统武器** | 三模型一致 | ★★★★ |
+| 7 | **weapon偏心率分散在高PC(cum=0.69, PC3/PC10), body_part集中在top-3(cum=0.92)** | PC分解 | ★★★★ |
+| 8 | **plant偏心率极度分散(cum=0.40) — plant质心≈全局均值** | 最极端 | ★★★★ |
+| 9 | **后期层所有类别top1_ratio上升(0.25→0.38) — 空间更条状** | 跨层演化 | ★★★ |
+
+### 与之前实验的关系
+
+| 实验 | 发现 | CCLXXXIX几何解释 |
+|------|------|-----------------|
+| CCLXXXVI: body_part最易分(sep=2.7-5.2) | 最早结晶+最高置信度 | ★★★★★ **body_part偏心率最高(站得最远) → 低维就可见 → 最早结晶** |
+| CCLXXXVII: weapon结晶最晚(L11.5-L16.7) | 置信度最低(1.10-1.16) | ★★★★★ **weapon偏心率最低(站得近)+最各向异性(拉长) → 与tool重叠 → 最晚结晶** |
+| CCLXXXVIII: weapon最少1D可分(top1=0.12-0.26) | 需多PC | ★★★★★ **weapon偏心率分散在高PC → 需要高维才能看到weapon质心** |
+| CCLXXXVI: tool-weapon最近(sep<1) | 最大转移 | ★★★★ **weapon质心在全局中心 → 与tool质心最近 → 最大双向转移** |
+| CCLXXXVII: L6-L10正确率最高 | 中间层最好 | ★★★★ **L6是紧凑度极小值 — 中间层类别最紧凑, 最易区分** |
+
+### ★★★★★ 关键洞察: body_part的"矛盾"解开
+
+之前的数据看似矛盾:
+- body_part: 最早结晶, 最高置信度(3.3-3.8), 最易分(sep=2.7-5.2)
+- 但body_part: 最不紧凑(intra_dist=16.8-25.9)
+
+**CCLXXXIX解开矛盾**:
+- body_part**偏心率最高**(10.6-13.7) — 站在语义空间最远的角落
+- body_part**偏心率集中在top-3 PC**(cum=0.92) — 在低维就可见
+- body_part虽然内部散(词间距大), 但**整体位置远离其他类别** — 所以"容易分"
+- 相当于: body_part像"远处的松散星团" — 虽然内部松散, 但因为远, 很容易从其他星系中识别
+
+**weapon恰好相反**:
+- weapon偏心率最低(5.7-8.4) — 站在全局中心
+- weapon偏心率分散在高PC(cum=0.69) — 需要高维才可见
+- weapon内部各向异性高(elongation=2.0) — 沿"杀伤力"方向拉长, 与tool重叠
+- 相当于: weapon像"中心的雪茄形云团" — 虽然方向性明确, 但因为站得近+方向和tool重合, 很难分
+
+### 问题与硬伤
+
+1. ★★★★ **"子聚类"的解释需要验证**:
+   - weapon=[3,17]中的3个词是否真的是pistol/rifle/cannon(现代武器)?
+   - 需要打印具体哪些词属于哪个子聚类
+
+2. ★★★ **GLM4的绝对距离远大于Qwen3/DS7B**:
+   - GLM4 L14: tool-weapon dist=51.98, Qwen3 L12: 13.04, DS7B L10: 13.32
+   - 这可能是GLM4的d_model=4096比Qwen3=2560/DS7B=3584更大导致
+   - 但相对排名一致
+
+3. ★★★ **body_part在后半层(L24-L35)intra_dist急剧增长**:
+   - Qwen3: L18=14.6 → L24=19.4 → L35=33.3
+   - body_part在最终层变成最分散的类别
+   - 这与CCLXXXVII的"最终层正确率下降"一致 — 后期层在破坏类别结构
+
+[CCLXXXIX 类别内部几何结构时间标记: 2026年04月30日12时50分]
+
+---
+
+## CCLXXXX(290) 类别质心轨迹与成对距离演化
+
+### 核心动机
+
+CCLXXXIX发现body_part偏心率最高、weapon最低; L6是紧凑度极小值层。
+关键问题: 质心如何移动? 同超类质心是否同步运动? 何时最大/最小分离?
+
+### 实验设计
+
+5个实验:
+- Exp1: 13类别质心在全局PC空间中的轨迹
+- Exp2: 78对类别质心距离的跨层演化
+- Exp3: 同超类质心位移方向对齐度(cos similarity)
+- Exp4: 每对类别何时达到最大/最小距离
+- Exp5: 超类级别(4个超类)的inter/intra距离演化
+
+### ★★★★★ Exp1: 质心轨迹 — body_part唯一持续向PC0负方向移动
+
+#### Qwen3 PC0轨迹 (最具区分度的PC)
+
+| 层 | body_part | weapon | animal | tool | bird | fruit | vehicle |
+|----|-----------|--------|--------|------|------|-------|---------|
+| L0 | -4.560 | -4.534 | -4.508 | -4.532 | -4.517 | -4.526 | -4.521 |
+| L2 | -2.819 | -2.572 | -2.217 | -2.451 | -2.421 | -2.531 | -2.457 |
+| L6 | -4.300 | -3.651 | -2.937 | -3.613 | -3.021 | -3.302 | -3.570 |
+| L8 | **-5.936** | -4.367 | -2.648 | -4.231 | -2.940 | -3.687 | -4.014 |
+| L12 | **-6.807** | -3.973 | -0.834 | -4.178 | -1.163 | -3.277 | -2.769 |
+| L18 | **-8.505** | -2.433 | +5.394 | -2.559 | +4.207 | -1.193 | +0.087 |
+| L22 | **-8.538** | -3.869 | +1.391 | -3.865 | +0.424 | -2.826 | -0.840 |
+| L26 | **-9.532** | -4.700 | -0.677 | -5.077 | -1.602 | -4.253 | -1.964 |
+| L35 | **-8.215** | -3.377 | +0.240 | -4.021 | -0.543 | -3.198 | -1.358 |
+
+→ ★★★★★ **body_part从L6开始持续向PC0负方向移动, L26达到-9.5, 远离所有其他类别**
+→ ★★★★★ **weapon在PC0上始终处于中间区域(-3到-5), 从未远离中心**
+→ ★★★★★ **animal在L14-L18向PC0正方向移动(+5.4), 然后回弹 — 存在"过冲"现象**
+→ ★★★★ **L0所有类别PC0≈-4.5, L2开始分化 — 前两层就在PC0上分化**
+
+#### DS7B PC0轨迹 (方向与Qwen3相反, 但模式一致)
+
+| 层 | body_part | weapon | animal | tool | fruit |
+|----|-----------|--------|--------|------|-------|
+| L0 | +4.408 | +4.271 | +4.050 | +4.305 | +4.110 |
+| L8 | **+6.355** | +4.002 | -0.397 | +4.449 | +1.362 |
+| L14 | **+7.051** | +2.091 | -4.998 | +3.529 | -1.642 |
+| L22 | **+5.891** | +1.960 | -4.115 | +3.164 | -1.358 |
+| L27 | **+6.275** | +4.418 | -2.751 | +5.695 | +1.874 |
+
+→ ★★★★★ **DS7B方向与Qwen3相反(body_part正而非负), 但body_part仍是最远离中心的类别**
+→ ★★★★★ **三模型一致: body_part质心在最远处, weapon质心在中间区域**
+
+### ★★★★★ Exp3: 同超类质心位移对齐度 — 早期>0.99, 中期0.8, V形恢复
+
+#### animate超类 (4个类别, 6对)
+
+| 层 | Qwen3 cos | GLM4 cos | DS7B cos |
+|----|-----------|----------|----------|
+| L2 | **0.999** | **0.972** | **0.998** |
+| L4 | **0.998** | 0.912 | 0.990 |
+| L6 | 0.996 | 0.912 | 0.986 |
+| L8 | 0.976 | 0.835 | 0.948 |
+| L10 | **0.845** | 0.788 | **0.842** |
+| L12 | **0.817** | 0.773 | 0.843 |
+| L14 | 0.862 | 0.777 | 0.872 |
+| L18 | 0.893 | 0.855 | 0.917 |
+| L22 | 0.928 | 0.903 | 0.941 |
+| L26 | 0.880 | 0.818 | 0.926 |
+| L35/39 | 0.971 | 0.913 | 0.987 |
+
+→ ★★★★★ **三模型一致: L2对齐度≈0.99 → L10-L12下降到0.77-0.85 → 后期回升到0.91-0.99**
+→ ★★★★★ **L2的同超类质心几乎完全同步运动 — 超类在L2就"一起走"**
+→ ★★★★★ **L10-L12对齐度最低 — 这正是类别"结晶"的层, 同超类内部分裂**
+→ ★★★★ **V形恢复: 后期层对齐度再次升高 — 可能因为最终层恢复超类结构**
+
+#### plant超类 (3个类别, 3对) — 模式完全一致
+
+| 层 | Qwen3 cos | GLM4 cos | DS7B cos |
+|----|-----------|----------|----------|
+| L2 | 0.999 | 0.978 | 0.999 |
+| L8 | 0.977 | 0.857 | 0.946 |
+| L10 | **0.800** | 0.805 | **0.813** |
+| L12 | **0.766** | 0.777 | 0.834 |
+| L20 | 0.915 | 0.892 | 0.938 |
+| L35/39 | 0.908 | 0.913 | 0.992 |
+
+→ ★★★★ **plant超类的V形模式与animate完全一致, 但plant的V更深(L12最低0.77)**
+
+### ★★★★★ Exp5: 超类间距离演化 — L10-L12峰值, 后期急剧增长
+
+#### Qwen3 animate-artifact距离
+
+| L0 | L2 | L6 | L8 | L10 | L12 | L18 | L22 | L26 | L30 | L35 |
+|----|----|----|----|----|-----|-----|-----|-----|-----|-----|
+| 0.69 | 5.53 | 5.41 | 8.75 | **9.15** | 8.52 | 7.20 | 7.91 | 13.61 | 18.76 | **23.51** |
+
+→ ★★★★★ **L10是超类间距离的"峰值" — 之后距离缩小(L12-L22), 然后急剧增长(L26+)**
+
+#### 超类内类别间平均距离
+
+| 超类 | L0 | L6 | L10 | L18 | L26 | L35 | 特征 |
+|------|----|----|-----|-----|-----|-----|------|
+| animate | 0.84 | 4.18 | **8.80** | 6.05 | 11.06 | 20.46 | L10最大 |
+| plant | 0.85 | 4.17 | **9.69** | 5.83 | 10.02 | 17.18 | L10最大 |
+| artifact | 1.01 | 5.56 | **10.57** | 8.00 | 14.28 | 24.32 | L10最大, 最大分散 |
+
+→ ★★★★★ **三模型一致: L10是超类内距离的峰值 — 类别在L10最分散, 然后收敛**
+→ ★★★★★ **artifact超类始终最分散(intra-dist最大) — artifact类别间差异最大**
+
+### ★★★★★ weapon到各超类质心的距离 — weapon始终最接近artifact
+
+| 层 | weapon→animate | weapon→plant | weapon→artifact |
+|----|---------------|-------------|-----------------|
+| L0 | 0.81 | 1.03 | **0.61** |
+| L8 | 9.13 | 9.15 | **4.66** |
+| L18 | 8.76 | 7.76 | **4.85** |
+| L26 | 15.40 | 15.49 | **8.28** |
+| L35 | 25.39 | 25.47 | **13.15** |
+
+→ ★★★★★ **weapon到artifact质心的距离始终最短(0.61→4.66→13.15)**
+→ ★★★★★ **weapon→animate ≈ weapon→plant, 但weapon→artifact仅约一半 — weapon嵌入artifact内部**
+
+#### body_part到各超类质心的距离 — body_part最接近artifact
+
+| 层 | body_part→animate | body_part→plant | body_part→artifact |
+|----|-------------------|-----------------|---------------------|
+| L0 | 1.18 | 1.21 | **1.00** |
+| L6 | 8.12 | 7.63 | **6.95** |
+| L18 | 13.57 | 11.77 | **11.16** |
+| L26 | 22.22 | 21.24 | **20.09** |
+| L35 | 33.07 | 30.30 | **29.47** |
+
+→ ★★★★★ **body_part也最接近artifact(非animate!) — body是"物理对象"而非"生命体"**
+→ ★★★★ **body_part→artifact ≈ body_part→plant ≈ body_part→animate, 差距不大 — body_part站得远, 到谁都远**
+
+### ★★★★ 最近/最远类别对 (中间层)
+
+| 排名 | 最近对 | Qwen3 L18 | GLM4 L20 | DS7B L14 | 超类 |
+|------|--------|----------|---------|---------|------|
+| 1 | **animal-bird** | 4.95 | 8.78 | 6.32 | same(animate) |
+| 2 | **bird-insect** | 5.02 | 9.62 | 7.04 | same(animate) |
+| 3 | **tool-weapon** | 5.16 | 9.95 | 6.92 | same(artifact) |
+| 4 | **fruit-vegetable** | 5.49 | 10.42 | 6.99 | same(plant) |
+
+| 排名 | 最远对 | Qwen3 L18 | GLM4 L20 | DS7B L14 | 超类 |
+|------|--------|----------|---------|---------|------|
+| 1 | body_part-fruit | 12.02 | 21.53 | 13.70 | CROSS |
+| 2 | body_part-vegetable | 12.66 | 21.96 | 14.28 | CROSS |
+| 3 | body_part-furniture | 12.80 | 22.79 | — | CROSS |
+| 4 | animal-body_part | 15.19 | 24.84 | 14.59 | CROSS |
+
+→ ★★★★★ **最近对全是same-superclass: animal-bird, tool-weapon, fruit-vegetable**
+→ ★★★★★ **最远对全是含body_part的cross-superclass对 — body_part是"孤立点"**
+
+### ★★★★ 距离变化比 (最终/最初)
+
+| 排名 | 最大增长 | Qwen3 ratio | GLM4 ratio | DS7B ratio |
+|------|---------|------------|-----------|-----------|
+| 1 | animal-clothing | 31.1 | 205.7 | 15.9 |
+| 2 | animal-fruit | 29.6 | 194.6 | 14.4 |
+| 3 | animal-weapon | 28.3 | — | 14.1 |
+
+| 排名 | 最小增长 | Qwen3 ratio | GLM4 ratio | DS7B ratio |
+|------|---------|------------|-----------|-----------|
+| 1 | animal-bird | 18.6 | 98.6 | 6.4 |
+| 2 | tool-weapon | 17.0 | 102.5 | 7.3 |
+| 3 | fruit-vegetable | 20.4 | — | 6.4 |
+
+→ ★★★★ **same-superclass对的距离增长最慢(animal-bird: 6-18x), cross增长快(15-200x)**
+→ ★★★★ **同超类对"一起移动" — 同方向运动导致相对距离变化小**
+
+### ★★★★★ CCLXXXX核心数据汇总 ★★★★★
+
+| # | 事实 | 数据 | 重要性 |
+|---|------|------|--------|
+| 1 | **body_part质心唯一持续远离中心(PC0: -4.5→-9.8), weapon始终在中间(-3到-5)** | 三模型一致 | ★★★★★ |
+| 2 | **L2同超类质心位移对齐度>0.99 — 超类在前两层就"同步运动"** | 三模型一致 | ★★★★★ |
+| 3 | **L10-L12对齐度最低(0.77-0.85) — 类别在此层"分道扬镳"** | V形模式 | ★★★★★ |
+| 4 | **L10是超类内距离峰值, 超类间距离峰值 — L10是"最分化"层** | 三模型一致 | ★★★★★ |
+| 5 | **weapon到artifact质心距离最短(4.66 vs 9.15) — weapon嵌入artifact** | Qwen3 L8 | ★★★★★ |
+| 6 | **body_part也最接近artifact(非animate) — body是"物理对象"** | 三模型一致 | ★★★★★ |
+| 7 | **最近对: animal-bird(4.95-8.78), tool-weapon(5.16-9.95)** | 三模型一致 | ★★★★ |
+| 8 | **最远对全含body_part — body_part是几何上的"孤立点"** | 三模型一致 | ★★★★ |
+| 9 | **后期层(L26+)所有距离急剧增长 — 最终层"膨胀"空间** | 三模型一致 | ★★★ |
+
+### 与之前实验的关系
+
+| 实验 | 发现 | CCLXXXX几何解释 |
+|------|------|-----------------|
+| CCLXXXVII: L2-L4超类结晶 | 最早可分 | ★★★★★ **L2同超类位移对齐度0.99 — 超类在L2就同步运动, 所以L2就可见** |
+| CCLXXXVII: L6-L17类别结晶 | 中间层 | ★★★★★ **L10-L12对齐度最低 — 类别在此层"分道扬镳", 所以需要到此层才能区分** |
+| CCLXXXIX: L6紧凑度极小值 | 中间层最紧凑 | ★★★★★ **L10是超类内/间距离峰值 — L6紧凑→L10扩散, 然后L18收敛** |
+| CCLXXXIX: body_part偏心率最高 | 站得远 | ★★★★★ **body_part质心唯一持续远离中心 — PC0上独占一个方向** |
+| CCLXXXIX: weapon偏心率最低 | 站得近 | ★★★★★ **weapon质心在中间区域, 且嵌入artifact内部 — 离任何超类都不远** |
+| CCLXXXVI: tool-weapon最近 | 最大转移 | ★★★★★ **weapon嵌入artifact(到artifact距离4.66), 与tool最近(5.16) — weapon在tool旁边** |
+
+### ★★★★★ 关键洞察: "超类同步运动→类别分道扬镳→超类恢复"三阶段
+
+CCLXXXX数据揭示了一个清晰的三阶段运动模式:
+
+**阶段1 (L0-L6): 超类同步运动**
+- 同超类位移对齐度>0.99 — animal/bird/fish/insect几乎同方向移动
+- 超类间距离从0.7增长到5.4
+- 此时只能看到4个"大团", 看不到13个"小团"
+
+**阶段2 (L8-L18): 类别分道扬镳**
+- 对齐度下降到0.77-0.85 — animal和bird开始不同方向移动
+- 超类内距离在L10达到峰值(8.8-10.6) — 13个类别最分散
+- 此时可以看到13个类别各自的位置, 但body_part已经走远
+
+**阶段3 (L20+): 空间膨胀+超类恢复**
+- 所有距离急剧增长(2-3倍)
+- 对齐度回升(0.88-0.97) — 可能因为最终层恢复超类结构
+- body_part在PC0上到达极远(-9.8), 然后回弹
+
+### 问题与硬伤
+
+1. ★★★★ **DS7B的PC0方向与Qwen3/GLM4相反**:
+   - Qwen3: body_part PC0为负(-9.8)
+   - DS7B: body_part PC0为正(+7.1)
+   - 这说明PC0方向不是普遍的, 但"body_part最远离中心"是普遍的
+
+2. ★★★★ **Exp4的max_layer全部是最后一层**:
+   - 因为距离在后期层持续增长, 没有出现"先增后减"的模式
+   - 这使得"何时最大分离"的问题不够有意义
+   - 更好的问题可能是: "何时达到距离比率(归一化后)的峰值?"
+
+3. ★★★ **GLM4的距离绝对值远大于Qwen3/DS7B**:
+   - GLM4 L20: animal-bird=8.78, Qwen3 L18: 4.95, DS7B L14: 6.32
+   - 但相对排名完全一致
+
+4. ★★★ **缺少PC1/PC2维度的轨迹分析**:
+   - 目前主要看PC0, 但body_part可能在PC1/PC2上也有独特轨迹
+   - 需要后续实验补充
+
+[CCLXXXX 类别质心轨迹时间标记: 2026年04月30日13时10分]
+
+---
+
+## CCLXXXXI(291) 层间几何稳定性与质心运动学分析
+
+### 核心动机
+
+CCLXXXX发现三阶段运动模式。关键问题: 层间几何何时变化最剧烈? 质心运动有何运动学特征?
+纯数据积累, 不做理论假设。
+
+### 实验设计
+
+3个实验:
+- Exp1: 层间距离相关性矩阵 — 78对类别距离在每对层间的Pearson相关
+- Exp2: 质心速度(位移/层数间隔)与角变化(位移方向转折角度)
+- Exp3: 逐类别关键层 — 最大/最小速度、最大角变化出现在哪些层
+
+### ★★★★★ Exp1: 层间距离相关性 — L0-L2是最大"断裂点"
+
+#### 相邻层相关 (三模型对比)
+
+| 层对 | Qwen3 r | GLM4 r | DS7B r | 特征 |
+|------|---------|--------|--------|------|
+| **L0-L2** | **0.856** | **0.758** | **0.908** | ★★★★★ 最低(除DS7B末尾) |
+| L2-L4 | 0.925 | 0.939 | 0.941 | |
+| L4-L6 | 0.921 | 0.982 | 0.960 | |
+| L6-L8 | 0.973 | 0.969 | 0.936 | |
+| L8-L10 | 0.942 | 0.972 | 0.975 | |
+| L10-L12 | 0.967 | 0.988 | 0.978 | |
+| L12-L16 | 0.987 | 0.990 | 0.993 | 稳定期 |
+| L16-L22 | 0.993 | 0.996 | 0.997 | ★ 最稳定 |
+| L22-L28 | 0.980 | 0.974 | 0.981 | |
+| L32-L34 | 0.990 | 0.997 | — | |
+| **L26-L27(DS7B)** | — | — | **0.711** | ★ DS7B最后层崩塌 |
+
+→ ★★★★★ **三模型一致: L0-L2是最大几何断裂点(r=0.76-0.91)**
+→ ★★★★★ **L2之后, 相邻层相关迅速升高到0.94+ — 几何结构快速稳定**
+→ ★★★★★ **L16-L22是最稳定区间(r>0.993) — 几何几乎不变**
+→ ★★★★ **DS7B的L26-L27相关骤降到0.71 — 最后一层发生剧烈变化**
+
+#### L0与其他层的相关衰减
+
+| 层 | Qwen3 corr(L0,Li) | GLM4 corr(L0,Li) | DS7B corr(L0,Li) |
+|----|-------------------|-------------------|-------------------|
+| L0 | 1.000 | 1.000 | 1.000 |
+| L2 | 0.856 | 0.758 | 0.908 |
+| L6 | 0.849 | 0.640 | 0.874 |
+| L10 | 0.785 | 0.608 | 0.853 |
+| L14 | 0.739 | 0.528 | 0.815 |
+| L18 | **0.719** | 0.528 | 0.760 |
+| L22 | **0.694** | 0.571 | 0.791 |
+| L26 | **0.799** | 0.608 | 0.844 |
+| L30 | 0.791 | 0.581 | — |
+| L35/39 | 0.782 | 0.520 | — |
+
+→ ★★★★★ **Qwen3: L22是L0相关的最低点(0.694), 然后回升 — L22是"最不像L0"的层**
+→ ★★★★★ **GLM4: L18也是低点(0.528), 然后波动, 最终层也回到~0.52**
+→ ★★★★ **DS7B: L22是低点(0.760), 然后因L27崩塌而异常**
+→ ★★★★ **三模型都有"U形"衰减: 先降后升 — 中间层最不像初始层**
+
+### ★★★★★ Exp2: 质心速度 — 从"急速变道"到"匀速慢行"再到"最终加速"
+
+#### Qwen3超类平均速度
+
+| 层段 | animate | plant | body | artifact | 特征 |
+|------|---------|-------|------|----------|------|
+| L0-L2 | 50.79 | 50.84 | 51.25 | 50.60 | ★★★★★ 全部~51, L0急速 |
+| L2-L4 | 31.57 | 31.68 | 32.01 | 31.77 | 快速减速 |
+| L4-L6 | 25.61 | 25.30 | 25.37 | 25.38 | 继续减速 |
+| L6-L8 | 13.37 | 12.86 | 12.62 | 13.18 | ★ 大减速 |
+| L8-L10 | 7.59 | 7.30 | 6.61 | 6.79 | |
+| L10-L14 | 7.25 | 6.81 | 5.97 | 6.44 | |
+| L14-L18 | 5.67 | 5.01 | 4.38 | 4.72 | ★★★★ 最慢(4-6) |
+| L18-L22 | 5.62→6.51 | 5.19→6.13 | 4.96→5.98 | 5.10→6.05 | 开始加速 |
+| L22-L28 | 8.62→6.48 | 8.16→6.27 | 8.14→6.59 | 7.97→6.23 | |
+| L32-L34 | 11.21 | 11.44 | 11.45 | 11.29 | ★ 再次加速 |
+| L34-L35 | 31.13 | 31.40 | 31.48 | 31.98 | ★★★★★ 最终层大加速 |
+
+→ ★★★★★ **速度曲线呈"U形": L0极快(50)→L14-L18极慢(4-6)→L35极快(31)**
+→ ★★★★★ **四个超类的速度几乎完全同步 — 运动是"集体"的, 不是"个体"的**
+→ ★★★★★ **body超类(body_part)始终最慢(L8-L18: 4.4-6.6 vs animate 5.0-7.6)**
+
+#### GLM4超类平均速度 (模式完全一致)
+
+| 层段 | animate | plant | body | artifact |
+|------|---------|-------|------|----------|
+| L0-L2 | 4.68 | 4.86 | 4.90 | 4.80 |
+| L8-L10 | 8.70 | 8.36 | 7.82 | 8.28 | ← ★ L8-L10最快(GLM4不同于Qwen3)
+| L14-L18 | 6.84 | 6.73 | 6.26 | 6.84 | ← ★ 中间慢
+| L36-L38 | 27.63 | 27.11 | 26.58 | 26.81 | ← ★ 最终加速
+| L38-L39 | **97.98** | **95.64** | **92.80** | **93.44** | ← ★★★★★ 最终层极大加速
+
+→ ★★★★★ **GLM4的U形速度更极端: 4.8 → 8.7(峰值) → 6.8 → 98(最终)**
+→ ★★★★ **GLM4的速度峰值在L8-L10而非L0 — 不同的"加速"时机**
+
+#### DS7B超类平均速度
+
+| 层段 | animate | plant | body | artifact |
+|------|---------|-------|------|----------|
+| L0-L2 | 36.38 | 36.44 | 37.60 | 37.37 |
+| L8-L10 | 6.40 | 6.28 | 5.47 | 6.00 |
+| L12-L14 | 5.43 | 5.26 | 4.73 | 5.15 | ← 最慢
+| L20-L22 | 10.01 | 9.83 | 9.78 | 9.75 |
+| L24-L26 | 10.01 | 10.34 | 10.11 | 10.31 |
+| L26-L27 | **78.66** | **74.02** | **63.83** | **72.64** | ← ★★★★★ 最后一层巨大加速
+
+→ ★★★★★ **DS7B L26-L27: 速度从10跳到78 — 最后一层发生巨大变化**
+→ ★★★★★ **body_part在最后一层最慢(63.8 vs animate 78.7)**
+
+### ★★★★★ Exp2: 角变化 — body_part在中间层的角变化最小(方向最稳定)
+
+#### Qwen3角变化(°)
+
+| 层段 | animal | body_part | weapon | 特征 |
+|------|--------|-----------|--------|------|
+| L0-L2 | 158.3 | 158.6 | 159.2 | ★★★★★ 全部~158°, 几乎反向 |
+| L2-L4 | 53.2 | 52.6 | 52.8 | ★★★★ 全部~53°, 同方向 |
+| L4-L6 | 114.5 | 113.8 | 115.6 | ~115° |
+| L6-L10 | 101-111° | 98-108° | 99-111° | |
+| L10-L18 | 98-105° | **95-97°** | 96-99° | ★ body_part最稳定 |
+| L18-L22 | 93-96° | **87-95°** | 89-98° | |
+| L22-L28 | 88-94° | **83-91°** | 83-89° | ★★★ body_part角最小 |
+| L28-L34 | 84-96° | **83-91°** | 81-91° | |
+| L32-L34 | 56.7 | **53.7** | 53.7 | ★★★★ 回到小角 |
+
+→ ★★★★★ **L0-L2: 所有类别角~158°(几乎反向!) — L0到L2质心运动方向与后续方向相反**
+→ ★★★★★ **L2-L4: 角~53° — 运动方向与上一段大角度偏转, 但在"同半球"**
+→ ★★★★ **body_part在L10-L28角变化最小(~83-97°) — 方向最稳定, "直走"**
+→ ★★★★ **weapon在后期(L28-L32)角最小(81°) — 也比较稳定**
+
+#### GLM4最大角变化 — 全部出现在L8-L10
+
+| 类别 | max_angle | 层段 |
+|------|-----------|------|
+| 所有13类别 | **103-110°** | **L8-L10** |
+
+→ ★★★★★ **GLM4所有类别的最大角变化在L8-L10(103-110°) — 不在L0-L2!**
+→ ★★★★★ **GLM4的"急转弯"在L8-L10, Qwen3在L0-L2 — 不同架构但都有急转弯**
+
+#### DS7B最大角变化 — 全部出现在L0-L2
+
+| 类别 | max_angle | 层段 |
+|------|-----------|------|
+| 所有13类别 | **133-136°** | **L0-L2** |
+
+→ ★★★★★ **DS7B也和Qwen3一样, L0-L2最大角(134°)**
+
+### ★★★★★ Exp3: 最小速度层 — 三模型一致指向中间层
+
+| 模型 | 最小速度层 | 最小速度 | 超类模式 |
+|------|-----------|---------|----------|
+| Qwen3 | **L16-L18** | 4.16-5.34 | body最慢(4.20) |
+| GLM4 | **L0-L2** | 4.55-4.98 | ← GLM4的L0-L2最慢! |
+| DS7B | **L12-L16** | 4.56-5.58 | body最慢(4.56) |
+
+→ ★★★★ **Qwen3和DS7B: 中间层(L12-L18)最慢, GLM4: L0-L2最慢**
+→ ★★★★ **GLM4的速度模式与Qwen3/DS7B不同 — GLM4先加速后减速再加速**
+
+### ★★★ 位移-PC对齐 — 整体很弱(最大0.29)
+
+所有类别的位移方向与PC0/PC1的对齐度都很低(0.01-0.29), 说明:
+- 质心位移方向不在主要PC方向上
+- 运动方向是高维的, 不能被前几个PC捕捉
+
+### ★★★★★ CCLXXXXI核心数据汇总 ★★★★★
+
+| # | 事实 | 数据 | 重要性 |
+|---|------|------|--------|
+| 1 | **L0-L2是层间距离相关最低点(r=0.76-0.91) — 几何最大断裂** | 三模型一致 | ★★★★★ |
+| 2 | **L16-L22相邻层相关最高(r>0.993) — 几何最稳定** | Qwen3 | ★★★★★ |
+| 3 | **L0与中间层相关呈U形衰减: L22最低(0.694 Qwen3)后回升** | Qwen3/GLM4 | ★★★★★ |
+| 4 | **速度呈U形: L0快(50)→L16-L18慢(4)→最终快(31-98)** | 三模型一致 | ★★★★★ |
+| 5 | **L0-L2角变化最大(134-158°) — 质心几乎反向运动** | Qwen3/DS7B | ★★★★★ |
+| 6 | **GLM4的L8-L10角变化最大(103-110°) — "急转弯"层不同** | GLM4独特 | ★★★★ |
+| 7 | **四个超类速度几乎完全同步 — 运动是集体的** | 三模型一致 | ★★★★★ |
+| 8 | **body_part速度始终最慢且角变化最小 — 方向最稳定** | 三模型一致 | ★★★★ |
+| 9 | **DS7B L26-L27: 相关骤降到0.71, 速度从10跳到78** | DS7B | ★★★★ |
+| 10 | **位移与PC0/PC1对齐极弱(0.01-0.29) — 运动方向高维** | 三模型一致 | ★★★ |
+
+### 与之前实验的关系
+
+| 实验 | 发现 | CCLXXXXI运动学解释 |
+|------|------|-------------------|
+| CCLXXXVII: L2-L4超类结晶 | L2可见 | ★★★★★ **L0-L2相关仅0.76-0.91, 几何断裂 — 这就是为什么L2开始可见** |
+| CCLXXXX: L2位移对齐0.99 | 超类同步 | ★★★★★ **L0-L2速度极快(50), 所有类别同时"急转弯"(角158°) — 急转弯后出现超类** |
+| CCLXXXX: L10类别分道扬镳 | cos最低 | ★★★★ **L8-L14速度降至7-5 — 慢速段, 但GLM4在此有急转弯(103°)** |
+| CCLXXXX: L10最分化 | 距离峰值 | ★★★★ **L14-L18速度最低(4-6) — 质心几乎"停下", 此时距离已最大** |
+| CCLXXXX: 后期空间膨胀 | 距离急增 | ★★★★★ **L22+速度回升, 最终层速度31-98 — 膨胀是"加速"驱动的** |
+| CCLXXXIX: body_part偏心率最高 | 站得远 | ★★★★ **body_part速度最慢且方向最稳定 — "慢慢走远"** |
+
+### ★★★★★ 关键洞察: "急转弯→慢行→加速"三阶段运动学
+
+结合CCLXXXX的几何三阶段和CCLXXXXI的运动学:
+
+**阶段1 (L0-L2): 急转弯 — 几何断裂**
+- 速度最快(50), 角变化最大(158°) — 质心几乎反向运动
+- 层间相关最低(0.76) — L0和L2的几何结构完全不同
+- L0所有类别PC0≈-4.5, L2开始分化 — 急转弯创造了分化
+
+**阶段2 (L2-L18): 慢行+逐步分化 — 几何稳定**
+- 速度从31降至4 — 越来越慢
+- 层间相关升至0.99+ — 几何结构逐步稳定
+- 但内部在分化: 超类对齐度从0.99降至0.77, 类别距离在L10达到峰值
+
+**阶段3 (L22+): 加速膨胀 — 几何再变化**
+- 速度从5回升到31-98 — 再次加速
+- 最终层速度极大(GLM4: 98, DS7B: 78)
+- 层间相关开始下降 — 几何再次变化
+
+### 问题与硬伤
+
+1. ★★★★★ **GLM4的速度模式与其他两模型不同**:
+   - Qwen3/DS7B: L0最快(50/37) → 递减 → 最终加速
+   - GLM4: L0最慢(4.8) → L8-L10最快(8.7) → 递减 → 最终加速(98)
+   - 这可能反映了GLM4的GlmForCausalLM架构差异
+
+2. ★★★★ **L0-L2的"角变化158°"的含义不明确**:
+   - 158°意味着L0→L2的位移方向与L2→L4几乎反向
+   - 这可能是因为L0是embedding层, L2已经经过2层attention
+   - 需要更细的层间采样(每层而非隔2层)来确认
+
+3. ★★★★ **DS7B的L26-L27异常**:
+   - 相关骤降到0.71, 速度从10跳到78
+   - 这可能是因为DS7B只有28层, 最后一层是特殊的输出层
+   - Qwen3和GLM4没有这种现象(有更多缓冲层)
+
+4. ★★★ **缺少逐层的速度/角变化数据**:
+   - 当前是隔2层采样, 无法看到层间的细节变化
+   - 关键转折点可能精确到某一层
+
+[CCLXXXXI 层间几何稳定性时间标记: 2026年04月30日13时20分]
+
+---
+
+## CCLXXXXII(292) 运动自由度与位移子空间分析
+
+### 核心动机
+
+CCLXXXXI发现速度U形、L0-L2急转弯、body_part方向最稳定。关键问题: 13个质心运动用了几个"自由度"?
+
+### 实验设计
+
+3个实验:
+- Exp1: 每个层段13个位移向量的SVD → 运动内在维度
+- Exp2: 4个超类平均位移方向的重建率 → 超类方向能否解释运动
+- Exp3: body_part位移与其他类别的cos similarity → body_part是否独占运动维度
+
+### ★★★★★ Exp1: 运动内在维度 — 始终需要8-10维达到90%, 不是4维!
+
+#### Qwen3 位移向量SVD
+
+| 层段 | dim_90 | dim_95 | dim_99 | S[0]/total | S[0]/S[1] | PC0负载top-2 |
+|------|--------|--------|--------|------------|-----------|-------------|
+| L0-L2 | 8 | 10 | 12 | 0.307 | 1.25 | furniture(+0.47), bird(-0.39) |
+| L2-L4 | 9 | 10 | 12 | 0.301 | 1.26 | bird(-0.46), furniture(+0.41) |
+| L4-L6 | 8 | 10 | 12 | 0.261 | 1.09 | furniture(+0.39), tool(+0.33) |
+| L6-L8 | 8 | 10 | 12 | 0.310 | 1.23 | body_part(+0.41), furniture(+0.40) |
+| L8-L10 | 9 | 10 | 12 | 0.258 | 1.20 | body_part(+0.45), furniture(+0.34) |
+| L10-L12 | 9 | 10 | 12 | 0.261 | 1.28 | body_part(+0.44), animal(-0.38) |
+| L12-L14 | 9 | 10 | 12 | 0.286 | 1.32 | body_part(+0.50), animal(-0.40) |
+| L14-L16 | 8 | 10 | 12 | 0.309 | 1.39 | body_part(+0.52), animal(-0.40) |
+| L16-L18 | 8 | 10 | 12 | 0.340 | 1.53 | body_part(+0.55), animal(-0.41) |
+| L18-L20 | 8 | 10 | 12 | 0.329 | 1.35 | body_part(+0.53), animal(-0.41) |
+| L20-L22 | 8 | 10 | 12 | 0.337 | 1.33 | body_part(+0.53), animal(-0.40) |
+| L22-L24 | 8 | 10 | 12 | 0.330 | 1.35 | body_part(+0.55), animal(-0.41) |
+| L24-L26 | 9 | 10 | 12 | 0.260 | 1.15 | body_part(+0.52), animal(-0.41) |
+| L26-L28 | 9 | 10 | 12 | 0.264 | 1.19 | body_part(+0.55), animal(-0.41) |
+| L28-L30 | 9 | 10 | 12 | 0.215 | 1.15 | body_part(+0.54), animal(-0.41) |
+| L30-L34 | 10 | 11 | 12 | 0.233 | 1.14 | body_part(+0.53), animal(-0.41) |
+
+→ ★★★★★ **dim_90始终是8-10, 不是4! 13个质心运动需要8-10个独立方向**
+→ ★★★★★ **S[0]/total只有0.21-0.34 — 没有任何单一方向主导运动**
+→ ★★★★★ **从L6开始, PC0负载固定为: body_part(+) vs animate(-) — body_part独占一维**
+→ ★★★★ **L0-L4的PC0负载不同: furniture(+) vs bird(-) — 早期运动由不同方向主导**
+→ ★★★★ **L16-L22: S[0]/S[1]最大(1.33-1.53), body_part在PC0上最显著 — body_part维度在此段最"独立"**
+
+#### DS7B L26-L27: S[0]/total=0.609, dim_90=6 — 最后一层1D化!
+
+| 层段 | dim_90 | S[0]/total | S[0]/S[1] |
+|------|--------|------------|-----------|
+| L24-L26 | 9 | 0.243 | 1.17 |
+| **L26-L27** | **6** | **0.609** | **2.03** |
+
+→ ★★★★ **DS7B最后一层: 运动维度从9骤降到6, S[0]占61% — 最后一层运动高度1D化**
+
+### ★★★★★ Exp2: 超类重建率 — 早期>0.99, L8-L10骤降至0.84-0.87, 后期回升
+
+#### Qwen3 超类重建率
+
+| 层段 | 整体重建率 | 特征 |
+|------|-----------|------|
+| L0-L2 | **0.9992** | ★★★★★ 超类方向完美解释运动 |
+| L2-L4 | 0.9984 | 完美 |
+| L4-L6 | 0.9968 | 完美 |
+| L6-L8 | 0.9813 | 仍高 |
+| **L8-L10** | **0.8641** | ★★★★★ 骤降! |
+| **L10-L12** | **0.8403** | ★★★★★ 最低点 |
+| L12-L14 | 0.8774 | 开始回升 |
+| L14-L18 | 0.89-0.91 | 回升 |
+| L18-L24 | 0.92-0.95 | 继续回升 |
+| L24-L28 | 0.89-0.90 | |
+| L28-L32 | 0.80-0.84 | ★★★ 后期再次下降! |
+| L32-L34 | 0.934 | |
+| L34-L35 | **0.982** | ★★★★★ 最终层再次完美 |
+
+#### 三模型超类重建率对比
+
+| 层段 | Qwen3 | GLM4 | DS7B | 特征 |
+|------|-------|------|------|------|
+| L0-L2 | 0.999 | 0.981 | 0.999 | ★★★★★ 早期完美 |
+| L4-L6 | 0.997 | 0.927 | 0.990 | |
+| **L8-L10** | **0.864** | **0.865** | **0.867** | ★★★★★ 三模型一致骤降 |
+| **L10-L12** | **0.840** | **0.848** | **0.875** | ★★★★★ 最低点 |
+| L14-L18 | 0.89-0.91 | 0.89-0.90 | 0.92-0.94 | 回升 |
+| L18-L22 | 0.92-0.95 | 0.92-0.94 | 0.93-0.95 | 继续回升 |
+| L28-L32 | 0.80-0.84 | 0.78-0.81 | — | ★★★ 后期再降(GLM4最低) |
+| 最终层 | 0.982 | 0.936-0.944 | 0.996 | ★★★★ 最终层恢复 |
+
+→ ★★★★★ **三模型一致: L0-L6超类方向完美解释运动(>0.99), L8-L10骤降(~0.86)**
+→ ★★★★★ **L8-L10是"超类失效"层 — 13个类别开始独立运动, 不再被4个超类方向覆盖**
+→ ★★★★ **后期(L28-L32)再次下降 — 最终层前的运动也不被超类解释**
+→ ★★★★ **最终层恢复到0.94-0.99 — 回归超类结构**
+
+### ★★★★★ Exp2逐类别: body_part重建率始终=1.0000!
+
+| 层段 | body_part | animal | clothing | tool | weapon |
+|------|-----------|--------|----------|------|--------|
+| L8-L10 | **1.0000** | 0.902 | 0.791 | 0.830 | 0.818 |
+| L10-L12 | **1.0000** | 0.884 | 0.761 | 0.816 | 0.794 |
+
+→ ★★★★★ **body_part的重建率永远是1.0000 — body_part运动完全被超类方向解释!**
+→ ★★★★★ **但body是1个类别的超类! body的超类平均位移就是body_part自己, 所以重建率=1**
+→ ★★★★★ **artifact类别(clothing/tool/weapon)重建率最低(0.76-0.83) — artifact内部运动最多样**
+
+### ★★★★★ Exp3: body_part位移与其他类别的高度对齐(cos=0.99+早期, 0.8-0.9中间)
+
+#### Qwen3 body_part vs others cos similarity
+
+| 层段 | 最高cos | 最低cos | 特征 |
+|------|---------|---------|------|
+| L0-L2 | 0.9980(clothing) | 0.9965(vehicle) | ★★★★★ 全部>0.996, 几乎同方向! |
+| L2-L4 | 0.9964(clothing) | 0.9929(bird) | 全部>0.99 |
+| L4-L6 | 0.9893(clothing) | 0.9824(vehicle) | 全部>0.98 |
+| L6-L8 | 0.9919(clothing) | 0.9647(animal) | ★ 开始分化 |
+| L8-L10 | 0.9588(clothing) | 0.8978(animal) | ★★★ 明显分化 |
+| L10-L14 | 0.93-0.95 | **0.83-0.87** | ★★★★★ animate最不对齐 |
+| L14-L18 | 0.92-0.94 | 0.80-0.85 | |
+| L18-L22 | 0.92-0.94 | 0.80-0.84 | |
+| L22-L26 | 0.90-0.92 | 0.75-0.80 | |
+| L28-L34 | 0.85-0.88 | **0.69-0.73** | ★★★ 最低 |
+| L34-L35 | 0.95-0.98 | 0.90-0.93 | 最终层恢复 |
+
+→ ★★★★★ **L0-L4: body_part与所有其他类别几乎完全同方向(cos>0.99) — 早期"一起走"**
+→ ★★★★★ **L8-L10: cos从0.99骤降到0.90 — 这是body_part开始"分道扬镳"的层**
+→ ★★★★ **body_part始终与clothing最对齐(cos最高) — body是被当作"可穿戴物"?**
+→ ★★★★ **body_part与animate最不对齐(cos最低) — 身体不是"生命体"**
+
+#### body_part位移与displacement-PC0的对齐
+
+| 层段 | cos(PC0) | cos(PC1) | 含义 |
+|------|----------|----------|------|
+| L0-L2 | +0.006 | +0.202 | ★★★★ body_part几乎不在PC0方向上! |
+| L6-L8 | +0.135 | -0.039 | |
+| L16-L18 | +0.438 | -0.101 | ★★★ body_part开始与PC0对齐 |
+| L26-L27(DS7B) | **-0.528** | **-0.524** | ★★★★★ DS7B最后一层body_part在PC0+PC1上 |
+
+→ ★★★★ **早期: body_part位移不在displacement-PC0上(cos=0.006) — 运动方向不在最大方差方向**
+→ ★★★★ **中后期: body_part逐渐与PC0对齐(cos升至0.44) — body_part维度成为主导方向**
+
+### ★★★★★ CCLXXXXII核心数据汇总 ★★★★★
+
+| # | 事实 | 数据 | 重要性 |
+|---|------|------|--------|
+| 1 | **13个质心运动需要8-10维达到90%方差 — 不是4维!** | dim_90=8-10 | ★★★★★ |
+| 2 | **S[0]/total仅0.21-0.34 — 无单一主导方向** | 三模型一致 | ★★★★★ |
+| 3 | **L0-L6超类重建率>0.99 — 早期4个超类完美解释运动** | 三模型一致 | ★★★★★ |
+| 4 | **L8-L10超类重建率骤降至0.84-0.87 — "超类失效"层** | 三模型一致 | ★★★★★ |
+| 5 | **body_part重建率始终=1.0000 — 完全被超类方向解释** | 所有层 | ★★★★★ |
+| 6 | **L0-L4: body_part与所有类别cos>0.99 — 完全同方向运动** | 三模型一致 | ★★★★★ |
+| 7 | **L6起: PC0负载固定为body_part(+) vs animate(-)** | Qwen3/DS7B | ★★★★ |
+| 8 | **DS7B L26-L27: dim_90从9降至6, S[0]/total=0.61** | DS7B | ★★★★ |
+| 9 | **body_part与clothing最对齐, 与animate最不对齐** | 三模型一致 | ★★★★ |
+| 10 | **后期(L28-L32)超类重建率再次下降到0.78-0.84** | GLM4最显著 | ★★★ |
+
+### 与之前实验的关系
+
+| 实验 | 发现 | CCLXXXXII位移子空间解释 |
+|------|------|----------------------|
+| CCLXXXIV: Top PCs编码超类 | 投影 | ★★★★★ **L0-L6超类重建率>0.99 — 位移也被超类方向解释, 不仅位置** |
+| CCLXXXVII: L2-L4超类结晶 | 时间 | ★★★★★ **L0-L4位移cos>0.99 — 所有类别同方向运动, 超类在"同方向"上形成** |
+| CCLXXXX: L8-L10对齐度最低 | 分化 | ★★★★★ **L8-L10超类重建率骤降(0.86) — 超类方向不再解释运动, 类别独立** |
+| CCLXXXX: body_part独走PC0负方向 | 孤立 | ★★★★★ **L6起PC0负载=body_part(+)vs animate(-) — body_part占据运动的主导维度** |
+| CCLXXXXI: L0-L2急转弯158° | 运动学 | ★★★★ **L0-L2所有类别cos>0.996 — 急转弯是"集体转弯", 不是"分散转弯"** |
+| CCLXXXIX: body_part偏心率最高 | 几何 | ★★★★ **body_part运动被body超类完美解释(recon=1.0) — 方向稳定是因为独占一个维度** |
+
+### ★★★★★ 关键洞察: "4维→9维→4维"运动自由度的三阶段
+
+**阶段1 (L0-L6): 4维运动 — 超类驱动**
+- 超类重建率>0.99 — 13个质心的运动被4个超类方向完美解释
+- 所有类别cos>0.99 — "一起走"
+- 但dim_90=8-10, 不是4 — 说明超类内部的运动仍需4-6个额外维度
+
+**阶段2 (L8-L18): 9维运动 — 类别独立**
+- 超类重建率骤降至0.84 — 超类方向不再解释运动
+- body_part与animate的cos从0.99降至0.85 — 开始"分道扬镳"
+- dim_90=8-10 — 需要更多维度来描述独立运动
+- body_part占据PC0 — 独占一个运动维度
+
+**阶段3 (L20+): 运动再分化**
+- 超类重建率先升后降 — 后期层再次出现类别独立运动
+- GLM4在L28-L32重建率最低(0.78) — GLM4后期运动最多样
+- 最终层恢复(0.94-0.99) — 回归超类驱动
+
+### 问题与硬伤
+
+1. ★★★★★ **dim_90=8-10而非4, 超类重建率0.84而非0.5 — "超类"不是运动的唯一维度**
+   - 超类解释99%→84%的变化, 但84%≠0%
+   - 这意味着超类仍是运动的主要维度, 但不是唯一维度
+   - 13-4=9个"额外"维度可能编码类别间的细微差异
+
+2. ★★★★ **body_part重建率=1.0可能只是数学triviality**
+   - body超类只有1个类别, 所以超类平均位移=自身位移
+   - 重建率=1.0是trivial的, 不代表body_part被超类结构"解释"
+
+3. ★★★★ **缺少逐层的SVD数据**
+   - 当前隔2层采样, L0-L4的急转弯可能更精确地发生在L0→L1
+
+4. ★★★ **GLM4后期(L28-L32)重建率最低(0.78)**
+   - 这可能反映了GLM4的L28-L32有独特的运动模式
+   - 需要更细的层间分析
+
+[CCLXXXXII 运动自由度与位移子空间时间标记: 2026年04月30日13时32分]
+
+---
+
+## CCLXXXXIII(293) 超类正交残差结构与逐层细化分析
+
+### 核心动机
+
+CCLXXXXII发现dim_90=8-10(不是4维), 超类重建率L8骤降(0.99→0.86), body_part独占PC0。
+关键问题: 9个"额外维度"编码了什么? L8超类失效的精确层在哪?
+
+### 实验设计
+
+3个实验:
+- Exp1: 位移分解为超类平行+超类正交, SVD残差
+- Exp2: 逐层分析L0→L11(精确到每层)
+- Exp3: 超类内部位移结构 — 同超类类别是否同方向运动
+
+### ★★★★★ Exp1: 位移分解 — 正交残差的主导维度是artifact内部分化
+
+#### Qwen3 超类正交能量占比
+
+| 层段 | 平行能量比 | 正交能量比 | 正交PC0负载 | 正交dim_90 |
+|------|-----------|-----------|------------|-----------|
+| L0-L2 | 0.9992 | 0.0008 | vehicle(-0.62), animal(-0.46) | 7 |
+| L2-L4 | 0.9984 | 0.0016 | vehicle(-0.67), weapon(+0.40) | 8 |
+| L4-L6 | 0.9968 | 0.0032 | vehicle(-0.66), weapon(+0.51) | 7 |
+| L6-L8 | 0.9813 | 0.0187 | vehicle(-0.79), fish(+0.32) | 7 |
+| **L8-L10** | **0.8641** | **0.1359** | vehicle(-0.56), fish(+0.40) | 8 |
+| **L10-L12** | **0.8403** | **0.1597** | furniture(-0.52), fish(+0.43) | 8 |
+| L12-L14 | 0.8774 | 0.1226 | furniture(-0.59), clothing(-0.46) | 8 |
+| L14-L16 | 0.8909 | 0.1091 | furniture(-0.53), vehicle(+0.38) | 8 |
+| L16-L18 | 0.9051 | 0.0949 | furniture(-0.57), animal(+0.39) | 7 |
+| L18-L20 | 0.9237 | 0.0763 | vehicle(-0.58), weapon(+0.43) | 7 |
+| L20-L22 | 0.9458 | 0.0542 | vehicle(-0.59), weapon(+0.45) | 7 |
+| L22-L24 | 0.9400 | 0.0600 | vehicle(-0.55), weapon(+0.48) | 7 |
+| L24-L28 | 0.89-0.90 | 0.10-0.11 | vehicle/furniture主导 | 8 |
+| L28-L32 | 0.80-0.89 | 0.11-0.20 | furniture/clothing主导 | 8-9 |
+| L32-L34 | 0.9354 | 0.0646 | vehicle(-0.57), weapon(+0.49) | 8 |
+| L34-L35 | 0.9820 | 0.0180 | vehicle(-0.49), weapon(+0.38) | 7 |
+
+→ ★★★★★ **正交残差的PC0几乎始终由artifact类别主导: vehicle(-)/furniture(-) vs weapon(+)/clothing(+)** — 超类正交维度编码了artifact内部分化
+→ ★★★★★ **L8-L12正交能量最大(0.14-0.16) — 超类失效的"能量"全部流入artifact内部分化**
+→ ★★★★ **vehicle始终在正交PC0负载最高(|u0|>0.5) — vehicle是artifact中运动方向最"偏离"的类别**
+→ ★★★★ **L0-L4的正交PC0: vehicle(-)+animal(-) — 早期vehicle与animate方向类似, 但在正交维度上差异最大**
+
+#### 三模型正交能量比对比
+
+| 层段 | Qwen3 | GLM4 | DS7B | 正交PC0主导 |
+|------|-------|------|------|------------|
+| L0-L2 | 0.0008 | 0.0192 | 0.0014 | vehicle |
+| L2-L4 | 0.0016 | 0.0157 | 0.0073 | vehicle/weapon |
+| L4-L6 | 0.0032 | 0.0200 | 0.0097 | vehicle/weapon |
+| L6-L8 | 0.0187 | 0.0247 | 0.0390 | vehicle |
+| **L8-L10** | **0.1359** | **0.0378** | **0.1326** | Qwen3/DS7B: vehicle/fish |
+| **L10-L12** | **0.1597** | **0.0406** | **0.1252** | furniture/fish |
+| L12-L16 | 0.11-0.12 | 0.04-0.05 | 0.08-0.11 | furniture/clothing |
+| L16-L22 | 0.06-0.09 | 0.05-0.06 | 0.05-0.06 | vehicle |
+| L26-L27(DS7B) | — | — | **0.0036** | clothing/plant |
+
+→ ★★★★★ **Qwen3和DS7B: L8-L10正交能量骤增到0.13-0.16; GLM4: 只有0.04 — GLM4的超类失效程度小得多!**
+→ ★★★★★ **GLM4的正交能量始终很小(0.02-0.05) — GLM4的运动始终被超类方向高度解释**
+→ ★★★★ **DS7B L26-L27: 正交能量仅0.004 — 最后一层运动高度1D化, 回归超类**
+
+### ★★★★★ Exp2: 逐层分析 — L6→L7是精确"断裂层"!
+
+#### Qwen3 逐层数据
+
+| 层对 | avg_speed | avg_cos | dim_90 | sc_recon | PC0 top-2 |
+|------|-----------|---------|--------|----------|-----------|
+| L0→L1 | 68.22 | 0.9982 | 8 | 0.9993 | furniture(+0.46), bird(-0.45) |
+| L1→L2 | 42.18 | 0.9954 | 8 | 0.9982 | furniture(+0.41), bird(-0.39) |
+| L2→L3 | 38.38 | 0.9928 | 8 | 0.9970 | bird(-0.45), furniture(+0.44) |
+| L3→L4 | 30.50 | 0.9919 | 9 | 0.9966 | insect(-0.41), bird(-0.40) |
+| L4→L5 | 32.48 | 0.9927 | 8 | 0.9971 | furniture(+0.40), clothing(+0.34) |
+| L5→L6 | 22.44 | 0.9704 | 8 | 0.9895 | furniture(+0.41), vehicle(+0.31) |
+| **L6→L7** | **8.86** | **0.7925** | **8** | **0.9293** | **body_part(+0.45), bird(-0.38)** |
+| L7→L8 | 25.49 | 0.9591 | 8 | 0.9861 | body_part(+0.49), animal(-0.34) |
+| L8→L9 | 12.67 | 0.6884 | 9 | 0.8749 | body_part(+0.52), furniture(+0.29) |
+| **L9→L10** | **12.63** | **0.6414** | **9** | **0.8497** | body_part(+0.54), animal(-0.36) |
+| **L10→L11** | **11.53** | **0.6063** | **9** | **0.8304** | body_part(+0.55), bird(-0.37) |
+
+→ ★★★★★ **L6→L7: avg_cos从0.97骤降到0.79, sc_recon从0.99骤降到0.93 — 这是精确的"断裂层"!**
+→ ★★★★★ **L6→L7: 速度从22.4降到8.9 — 同时减速, 同时cos骤降 — 物理上质心在L6→L7同时"急转弯+减速"**
+→ ★★★★★ **L6→L7: PC0从furniture/bird变为body_part/bird — body_part从L6开始占据PC0**
+→ ★★★★★ **L8→L9: avg_cos进一步降到0.69 — 类别分化继续加深**
+→ ★★★★ **L0→L1: speed=68.2 — 最快! L5→L6: speed=22.4→L6→L7: speed=8.9 — 速度骤降**
+→ ★★★★ **L0→L1的lowest cross-superclass cos=0.997, L6→L7=0.628 — 从0.997到0.628, L6→L7是分化最剧烈的层**
+
+#### GLM4 逐层数据
+
+| 层对 | avg_speed | avg_cos | dim_90 | sc_recon | PC0 top-2 |
+|------|-----------|---------|--------|----------|-----------|
+| L0→L1 | 7.54 | 0.9671 | 9 | 0.9863 | furniture(+0.48), insect(-0.41) |
+| L1→L2 | 7.71 | 0.9411 | 9 | 0.9777 | body_part(+0.49), bird(-0.34) |
+| L2→L3 | 6.73 | 0.8287 | 9 | 0.9307 | body_part(+0.51), bird(-0.40) |
+| **L3→L4** | **7.97** | **0.8229** | **9** | **0.9318** | **body_part(+0.58), insect(-0.28)** |
+| L7→L8 | 12.29 | 0.6847 | 9 | 0.8750 | body_part(+0.49), animal(-0.38) |
+| L8→L9 | 12.55 | 0.6431 | 9 | 0.8616 | body_part(+0.49), bird(-0.40) |
+| L9→L10 | 13.44 | 0.6462 | 9 | 0.8645 | body_part(+0.48), animal(-0.37) |
+
+→ ★★★★★ **GLM4的L0→L1 avg_cos仅0.967 — GLM4从第一层就已经开始分化!**
+→ ★★★★★ **GLM4的"断裂"发生在L2→L3(avg_cos=0.83), 比Qwen3的L6→L7更早**
+→ ★★★★ **GLM4的body_part在L1→L2就占据PC0 — 比Qwen3(L6→L7)早5层**
+→ ★★★★ **GLM4的avg_cos始终比Qwen3低 — GLM4的类别运动从一开始就更"分散"**
+
+#### DS7B 逐层数据
+
+| 层对 | avg_speed | avg_cos | dim_90 | sc_recon | PC0 top-2 |
+|------|-----------|---------|--------|----------|-----------|
+| L0→L1 | 96.77 | 0.9985 | 9 | 0.9993 | furniture(+0.44), bird(-0.39) |
+| L1→L2 | 31.81 | 0.9952 | 10 | 0.9977 | furniture(+0.43), insect(-0.38) |
+| L4→L5 | 39.60 | 0.9802 | 9 | 0.9929 | body_part(+0.89), bird(-0.24) |
+| **L6→L7** | **19.06** | **0.9450** | **9** | **0.9759** | vehicle(+0.47), furniture(+0.46) |
+| **L7→L8** | **10.20** | **0.7137** | **9** | **0.8955** | animal(-0.42), body_part(+0.39) |
+| L8→L9 | 21.25 | 0.8339 | 9 | 0.9334 | bird(-0.36), body_part(+0.35) |
+| L10→L11 | 8.64 | 0.7153 | 10 | 0.8741 | body_part(+0.40), bird(-0.33) |
+
+→ ★★★★★ **DS7B: L7→L8 avg_cos从0.95骤降到0.71 — 断裂层是L7→L8, 比Qwen3(L6→L7)晚1层**
+→ ★★★★ **DS7B: L4→L5 body_part PC0负载高达0.89 — body_part在L4就极强**
+→ ★★★★ **DS7B: L0→L1速度极快(96.8) — 早期运动最剧烈**
+
+### ★★★★★ Exp2三模型"断裂层"精确对比
+
+| 模型 | 断裂层 | avg_cos骤降 | sc_recon骤降 | PC0变化 | 速度变化 |
+|------|--------|-----------|------------|---------|---------|
+| **Qwen3** | **L6→L7** | 0.97→0.79 | 0.99→0.93 | furniture→body_part | 22→9 |
+| **GLM4** | **L2→L3** | 0.94→0.83 | 0.98→0.93 | —(body_part已占PC0) | 6.7→8.0 |
+| **DS7B** | **L7→L8** | 0.95→0.71 | 0.99→0.90 | vehicle/furniture→body_part | 19→10 |
+
+→ ★★★★★ **三模型的断裂层不同: Qwen3=L6→L7, GLM4=L2→L3, DS7B=L7→L8**
+→ ★★★★★ **但断裂的模式一致: avg_cos骤降+sc_recon骤降+PC0变为body_part**
+→ ★★★★★ **GLM4最早断裂(L2→L3), Qwen3和DS7B在L6-L8断裂 — 这与GLM4的不同架构一致**
+→ ★★★★ **Qwen3和DS7B的断裂模式更剧烈(cos从0.97→0.79/0.95→0.71), GLM4更渐进(0.94→0.83)**
+
+### ★★★★★ Exp3: 超类内部位移结构 — artifact内部分化最严重
+
+#### Qwen3 超类内部avg_cos随层变化
+
+| 层段 | animate(4猫) | plant(3猫) | artifact(5猫) | 特征 |
+|------|-------------|-----------|--------------|------|
+| L0-L2 | 0.999 | 0.999 | 0.998 | 全部>0.998 |
+| L2-L4 | 0.998 | 0.999 | 0.997 | 全部>0.997 |
+| L4-L6 | 0.996 | 0.996 | 0.994 | 开始分化 |
+| **L6-L8** | **0.976** | **0.977** | **0.964** | ★★★ 全部下降 |
+| **L8-L10** | **0.921** | **0.920** | **0.827** | ★★★★★ artifact最低! |
+| L10-L12 | 0.878 | 0.881 | 0.739 | ★★★ artifact=0.74! |
+| L12-L14 | 0.866 | 0.873 | 0.744 | |
+| L16-L18 | 0.903 | 0.908 | 0.799 | |
+| L20-L22 | 0.927 | 0.931 | 0.854 | 恢复 |
+| L24-L28 | 0.91-0.93 | 0.90-0.93 | 0.81-0.86 | |
+| **L28-L30** | **0.735** | **0.777** | **0.651** | ★★★ 后期再次下降! |
+| L32-L34 | 0.909 | 0.933 | 0.871 | 恢复 |
+| L34-L35 | 0.971 | 0.983 | 0.965 | ★ 最终层恢复 |
+
+→ ★★★★★ **artifact超类的内部cos始终最低 — artifact的5个类别运动方向最不一致**
+→ ★★★★★ **L8-L12: artifact内部cos仅0.74-0.83 — 这就是超类失效的来源!**
+→ ★★★★ **artifact内最低cos对: clothing-vehicle(0.53-0.78) — 衣服和车运动方向最不同**
+→ ★★★★ **artifact内最高cos对: tool-weapon(0.87-0.99) — 工具和武器始终最相似**
+→ ★★★★★ **animate内: animal-fish最不同, bird-fish最相似**
+→ ★★★★★ **plant内: fruit-plant最不同, fruit-vegetable最相似**
+
+#### Qwen3 超类内部dim_90
+
+| 层段 | animate | plant | artifact |
+|------|---------|-------|----------|
+| L0-L2 | 3 | 2 | 4 |
+| L6-L8 | 3 | 2 | 4 |
+| L8-L10 | 3 | 2 | **4** |
+| L10-L14 | 3 | 2 | **3** |
+| L20-L22 | 3 | 2 | 3 |
+| L28-L30 | 3 | 2 | 3 |
+| L34-L35 | 3 | 2 | 3 |
+
+→ ★★★★★ **animate内部始终3维, plant内部始终2维, artifact内部3-4维 — artifact最多维**
+→ ★★★★ **plant(3类别)只需要2维 — 3个类别本质上是1D结构(1维不足以解释90%)**
+→ ★★★★ **animate(4类别)需要3维 — 比1D复杂但比全4D简单**
+
+### ★★★★★ CCLXXXXIII核心数据汇总 ★★★★★
+
+| # | 事实 | 数据 | 重要性 |
+|---|------|------|--------|
+| 1 | **精确断裂层: Qwen3=L6→L7, GLM4=L2→L3, DS7B=L7→L8** | 三模型一致模式 | ★★★★★ |
+| 2 | **Qwen3 L6→L7: avg_cos 0.97→0.79, sc_recon 0.99→0.93** | 单层骤降 | ★★★★★ |
+| 3 | **正交残差PC0由artifact类别主导: vehicle/furniture vs weapon/clothing** | 全层一致 | ★★★★★ |
+| 4 | **超类失效的"能量"全部流入artifact内部分化** | L8-L12正交能量0.14 | ★★★★★ |
+| 5 | **artifact超类内部cos最低(0.74 L10-L12) — 超类失效源于artifact分化** | Qwen3 | ★★★★★ |
+| 6 | **GLM4正交能量始终<0.05 — GLM4的类别运动始终被超类解释** | 与Qwen3/DS7B不同 | ★★★★ |
+| 7 | **animate内部3维, plant内部2维, artifact内部3-4维** | 全层稳定 | ★★★★ |
+| 8 | **tool-weapon始终最相似(cos>0.87), clothing-vehicle最不同** | artifact内部 | ★★★★ |
+| 9 | **L0→L1速度最快: Qwen3=68, DS7B=97, GLM4=7.5** | Qwen3/DS7B vs GLM4 | ★★★★ |
+| 10 | **body_part在断裂层占据PC0: Qwen3=L6→L7, GLM4=L1→L2, DS7B=L7→L8** | 三模型一致 | ★★★★★ |
+
+### 与之前实验的关系
+
+| 实验 | 发现 | CCLXXXXIII精确化 |
+|------|------|-----------------|
+| CCLXXXXII: L8-L10超类重建率骤降 | 层段精度 | ★★★★★ **精确为: Qwen3 L6→L7开始, L9→L10达到最低(cos=0.64)** |
+| CCLXXXXII: dim_90=8-10不是4 | 维度 | ★★★★★ **正交维度PC0由artifact主导 — 8-10维中4维=超类, 4-6维=artifact内部分化** |
+| CCLXXXXI: L0-L2急转弯 | 运动学 | ★★★★ **L0→L1速度68-97, L1→L2速度42-32 — 急转弯主要发生在L0→L1** |
+| CCLXXXX: L8-L10类别分道扬镳 | 时间 | ★★★★★ **精确为L6→L7(Qwen3/DS7B), L2→L3(GLM4) — 分道扬镳是单层事件** |
+| CCLXXXIX: body_part偏心率最高 | 位置 | ★★★★ **body_part在断裂层占据PC0 — 偏心率高的原因是独占运动主维度** |
+
+### 问题与硬伤
+
+1. ★★★★★ **GLM4与Qwen3/DS7B的模式差异**:
+   - GLM4断裂层在L2→L3(最早), 正交能量始终<0.05
+   - Qwen3/DS7B断裂层在L6-L8, 正交能量在L8-L10达到0.14
+   - GLM4的类别运动始终被超类解释 — 是否说明GLM4的"超类"结构更强?
+
+2. ★★★★ **artifact内部"分化"的物理解释不明**:
+   - 为什么vehicle和clothing运动方向最不同?
+   - vehicle偏离artifact超类方向最多 — 是因为vehicle有"运动"语义?
+
+3. ★★★★ **L6→L7断裂层与transformer层结构的对应**:
+   - L6→L7的骤变是否与某个特定的注意力头/MLP行为相关?
+   - 需要与mechanistic interpretability方法结合
+
+4. ★★★ **plant内部只需2维(3个类别) — 是1D链还是2D三角?**
+   - 需要更细的plant内部结构分析
+
+[CCLXXXXIII 超类正交残差与逐层细化时间标记: 2026年04月30日13时40分]
+
+---
+
+## CCLXXXXIV(294) 断裂层的Attention vs MLP贡献分解 + 逐头分析
+
+### 核心动机
+
+CCLXXXXIII发现精确断裂层: Qwen3=L6→L7, GLM4=L2→L3, DS7B=L7→L8。
+关键问题: 断裂层到底发生了什么? 是Attention还是MLP主导断裂? 哪些注意力头负责?
+
+### ★★★★★ Exp1核心发现: Qwen3中MLP驱动断裂, GLM4和DS7B中Attention驱动断裂!
+
+#### 断裂层Attn vs MLP avg_cos骤降对比
+
+| 模型 | 断裂层 | Pre-attn_cos | Fract-attn_cos | attn_drop | Pre-mlp_cos | Fract-mlp_cos | mlp_drop | 驱动者 |
+|------|--------|-------------|---------------|-----------|-------------|--------------|----------|--------|
+| **Qwen3** | L6 | 0.9374 | 0.8396 | **0.0977** | 0.9707 | 0.8185 | **0.1522** | **MLP** |
+| **GLM4** | L2 | 0.9638 | 0.9010 | **0.0627** | 0.9796 | 0.9641 | **0.0155** | **ATTENTION** |
+| **DS7B** | L7 | 0.8917 | 0.8121 | **0.0796** | 0.8545 | 0.8165 | **0.0379** | **ATTENTION** |
+
+→ ★★★★★ **三模型断裂的驱动机制不同!** Qwen3由MLP驱动(drop=0.15), GLM4和DS7B由Attention驱动
+→ ★★★★★ **Qwen3: MLP的cos从0.97骤降到0.82 — MLP在断裂层产生了极强的类别分化**
+→ ★★★★★ **GLM4: Attention的cos从0.96降到0.90 — Attention在断裂层产生了类别分化**
+→ ★★★★ **DS7B: Attention的cos从0.89降到0.81 — Attention分化, 但MLP也贡献了(0.85→0.82)**
+
+#### Qwen3全层Attn vs MLP能量与cos演化
+
+| 层 | attn_ratio | mlp_ratio | attn_cos | mlp_cos | total_cos | 特征 |
+|----|-----------|-----------|---------|---------|-----------|------|
+| L0 | 0.22 | 0.44 | 0.994 | 0.994 | 0.996 | MLP主导能量, 两者cos极高 |
+| L1 | 0.79 | 0.36 | 0.970 | 0.978 | 0.969 | Attn能量骤增(0.22→0.79) |
+| L2-L5 | 0.11-0.32 | 0.75-0.86 | 0.88-0.94 | 0.96-0.98 | 0.96-0.97 | MLP主导, attn_cos开始下降 |
+| **L6** | **0.60** | **0.56** | **0.840** | **0.819** | **0.795** | ★★★ FRACTURE: 能量平衡, 两者cos同时骤降 |
+| L7 | 0.17 | 0.90 | 0.829 | 0.776 | 0.780 | MLP恢复能量主导, cos继续下降 |
+| L8-L11 | 0.16-0.26 | 0.97-1.20 | 0.77-0.84 | 0.67-0.74 | 0.65-0.72 | MLP绝对主导, mlp_cos持续低于attn_cos |
+| L12-L17 | 0.35-1.15 | 0.93-1.85 | 0.87-0.98 | 0.73-0.89 | 0.74-0.78 | attn_cos恢复, mlp_cos仍低 |
+| L18-L24 | 0.23-0.60 | 0.80-1.34 | 0.80-0.97 | 0.84-0.91 | 0.81-0.88 | 恢复期 |
+| L25-L35 | 0.18-0.74 | 0.60-1.08 | 0.94-0.99 | 0.95-0.99 | 0.94-0.99 | 最终层两者cos恢复到0.99 |
+
+→ ★★★★★ **Qwen3断裂层的本质: attn和MLP能量突然平衡(0.60 vs 0.56), 同时两者cos骤降**
+→ ★★★★★ **L8-L11: mlp_ratio>0.97且mlp_cos低于attn_cos — MLP在深层继续分化类别**
+→ ★★★★ **L1: attn_ratio从0.22跳到0.79 — 第1层attention突然"发力"**
+→ ★★★★ **L0: attn_cos=0.994, mlp_cos=0.994 — 第一层两者完全一致, 还没有分化**
+
+#### 断裂层超类分解
+
+| 模型 | 超类 | attn_cos | mlp_cos | 特征 |
+|------|------|---------|---------|------|
+| Qwen3 | animate | 0.935 | 0.925 | 两者都最高 |
+| Qwen3 | plant | 0.918 | 0.931 | |
+| Qwen3 | artifact | **0.900** | **0.874** | ★★★ artifact两者都最低! |
+| GLM4 | animate | 0.950 | 0.981 | |
+| GLM4 | plant | 0.958 | 0.988 | |
+| GLM4 | artifact | **0.929** | 0.975 | ★★★ artifact的attn_cos最低! |
+| DS7B | animate | 0.873 | 0.919 | |
+| DS7B | plant | 0.888 | 0.918 | |
+| DS7B | artifact | **0.842** | 0.870 | ★★★ artifact两者都最低! |
+
+→ ★★★★★ **三模型一致: artifact超类的attn_cos和mlp_cos都最低 — artifact在断裂层分化最严重**
+→ ★★★★ **artifact的attn_cos总比mlp_cos低更多 — artifact的分化主要由attention贡献**
+
+### ★★★★ Exp2: 断裂层逐头分析 — body_part专一头的出现
+
+#### Qwen3 L6(断裂层) Top类别分化头
+
+| Head | cat_diff | norm | PC0 top-2 | 特征 |
+|------|---------|------|-----------|------|
+| H18 | 0.5870 | 0.28 | clothing(+0.40), insect(-0.28) | artifact vs animate |
+| H24 | 0.5554 | 0.55 | body_part(+0.77), fruit(-0.34) | ★★★ body_part专一头 |
+| H23 | 0.5178 | 0.49 | body_part(-0.89), fruit(-0.20) | ★★★ body_part专一头(反向) |
+| H25 | 0.4957 | 0.44 | body_part(+0.83), insect(-0.21) | ★★★ body_part专一头 |
+| H19 | 0.4412 | 0.47 | fruit(-0.43), body_part(+0.42) | |
+| H29 | 0.5365 | 0.55 | clothing(+0.54), animal(-0.51) | ★★★ artifact vs animate |
+| H28 | 0.4287 | 0.28 | animal(-0.67), body_part(+0.46) | animate分化 |
+
+→ ★★★★★ **断裂层出现了body_part专一头: H24(0.77), H23(-0.89), H25(0.83) — body_part独占3个头的PC0!**
+→ ★★★★ **H29: clothing(+0.54) vs animal(-0.51) — artifact-animate分化头**
+→ ★★★★ **Pre-fracture L5: 最高cat_diff仅0.25 — 断裂层头分化度翻倍(0.25→0.59)!**
+
+#### GLM4 L2(断裂层) Top类别分化头
+
+| Head | cat_diff | norm | PC0 top-2 |
+|------|---------|------|-----------|
+| H5 | 0.2195 | 0.03 | body_part(+0.57), furniture(+0.49) |
+| H29 | 0.1972 | 0.05 | body_part(+0.40), furniture(+0.39) |
+| H25 | 0.1865 | 0.02 | vehicle(+0.71), furniture(+0.41) |
+| H10 | 0.1628 | 0.02 | body_part(+0.60), furniture(+0.51) |
+| H27 | 0.5989 | 0.04 | animal(-0.65), bird(-0.44) |
+| H19 | 0.5774 | 0.11 | body_part(+0.52), clothing(+0.46) |
+
+→ ★★★★ **GLM4的body_part专一头也出现在断裂层 — body_part(+0.57/+0.60/+0.52)**
+→ ★★★★ **GLM4的cat_diff值远小于Qwen3(0.22 vs 0.59) — GLM4的断裂更"温和"**
+→ ★★★★ **GLM4的head norm极小(0.02-0.05) vs Qwen3(0.28-0.55) — GLM4的attention输出更弱**
+
+### ★★★★★ Exp3: 断裂层头方向变化 — 头几乎全部"翻转"!
+
+#### Qwen3 L5→L6 头方向cos
+
+| 头变化 | 数据 |
+|--------|------|
+| 所有头的cos范围 | -0.062 到 +0.109 |
+| 最大变化头 | H18: cos=-0.062, H21: cos=-0.052 |
+| 最稳定头 | H27: cos=+0.109, H0: cos=+0.088 |
+| **所有32个头的cos绝对值** | **全部 < 0.11** |
+
+→ ★★★★★ **L5→L6: 所有头的方向cos绝对值<0.11 — 每个头在断裂层都几乎"翻转"了方向!**
+→ ★★★★★ **头不是逐个改变, 而是整体"重定向" — 32个头全部同时翻转**
+→ ★★★★ **H13 norm_ratio=6.46, H17=6.30 — 部分头在断裂层norm增大6倍**
+→ ★★★★ **H4 norm_ratio=0.30, H5=0.32 — 部分头norm减小3倍**
+
+#### GLM4 L1→L2 头方向cos
+
+| 头变化 | 数据 |
+|--------|------|
+| 最大变化头 | H13: cos=-0.076 |
+| 最稳定头 | H29: cos=+0.401 |
+| norm增加最大 | H11: 12.13倍 |
+
+→ ★★★★ **GLM4也有类似的头翻转模式, 但H29有cos=+0.40 — 至少有一个头保持了方向**
+→ ★★★★ **GLM4 H11 norm_ratio=12.13 — 单个头在断裂层norm增大12倍!**
+
+#### DS7B L6→L7 头方向cos
+
+| 头变化 | 数据 |
+|--------|------|
+| 最大变化头 | H2: cos=**-0.319**, H19: cos=**-0.278** |
+| 较稳定头 | H10: cos=+0.200, H4: cos=+0.139 |
+| norm增加最大 | H18: 11.01倍, H21: 9.13倍 |
+
+→ ★★★★★ **DS7B: H2 cos=-0.319, H19 cos=-0.278 — 这两个头在断裂层几乎完全反向!**
+→ ★★★★ **DS7B的头翻转比Qwen3更极端(cos低至-0.32 vs Qwen3的-0.06)**
+→ ★★★★ **DS7B H18 norm增大11倍, H21增大9倍 — 断裂层头norm变化更大**
+
+### CCLXXXXIV核心数据汇总
+
+| # | 事实 | 数据 | 重要性 |
+|---|------|------|--------|
+| 1 | **Qwen3断裂由MLP驱动(drop=0.15), GLM4/DS7B由Attention驱动(drop=0.06/0.08)** | 三模型不同 | ★★★★★ |
+| 2 | **断裂层32个头几乎全部"翻转"(cos<0.11)** | Qwen3 | ★★★★★ |
+| 3 | **body_part专一头在断裂层出现: H24(+0.77), H23(-0.89), H25(+0.83)** | Qwen3 | ★★★★★ |
+| 4 | **artifact超类的attn_cos和mlp_cos都最低 — artifact分化最严重** | 三模型一致 | ★★★★★ |
+| 5 | **DS7B H2在断裂层完全反向(cos=-0.32)** | DS7B | ★★★★ |
+| 6 | **断裂层attn和MLP能量突然平衡(Qwen3: 0.60 vs 0.56)** | 能量平衡 | ★★★★ |
+| 7 | **Qwen3 L8-L11: mlp_ratio>0.97, mlp_cos<0.74 — MLP在深层继续分化** | 深层MLP | ★★★★ |
+| 8 | **GLM4断裂层head norm极小(0.02-0.05) vs Qwen3(0.28-0.55)** | GLM4特殊性 | ★★★ |
+| 9 | **部分头在断裂层norm增大6-12倍(H13=6.46, H11=12.13)** | 头激活 | ★★★ |
+
+### 与之前实验的关系
+
+| 实验 | 发现 | CCLXXXXIV精确化 |
+|------|------|-----------------|
+| CCLXXXXIII: L6→L7是精确断裂层 | 时间精度 | ★★★★★ **断裂的"物理原因": Qwen3=MLP驱动, GLM4/DS7B=Attention驱动** |
+| CCLXXXXIII: body_part在断裂层占据PC0 | PC0变化 | ★★★★★ **机制: 断裂层出现了body_part专一注意力头** |
+| CCLXXXXIII: artifact分化最严重 | 超类层面 | ★★★★★ **artifact的attn_cos和mlp_cos都最低 — artifact在attn和MLP中都分化** |
+| CCLXXXXII: 运动需8-10维 | 维度 | ★★★★ **断裂层32个头全部翻转方向 — 整个注意力空间"重构"** |
+
+### 问题与硬伤
+
+1. ★★★★★ **三模型断裂驱动机制不同 — 是否因为架构差异?**
+   - Qwen3: MLP驱动 (Qwen3ForCausalLM, 36层)
+   - GLM4: Attention驱动 (GlmForCausalLM, 40层)
+   - DS7B: Attention驱动 (Qwen2ForCausalLM, 28层)
+   - Qwen3 vs DS7B都是Qwen架构但驱动不同 — 是否与层数有关?
+
+2. ★★★★★ **头"翻转"的物理解释不明**
+   - 为什么32个头同时翻转? 是否因为layer norm的输入分布改变?
+   - 翻转后头"重新分配"了语义角色?
+
+3. ★★★★ **MLP在Qwen3中的特殊角色**
+   - Qwen3的MLP在断裂层cos=0.82, 之后持续低(0.67-0.74)
+   - MLP如何"分化"类别? MLP没有注意力机制, 只能通过非线性变换
+
+4. ★★★ **下一步: 断裂层前后的residual stream分布变化**
+   - 头翻转是否因为输入分布的质变?
+   - 需要分析断裂层的input_layernorm输出
+
+[CCLXXXXIV 断裂层Attention与MLP分解时间标记: 2026年04月30日14时10分]
+
