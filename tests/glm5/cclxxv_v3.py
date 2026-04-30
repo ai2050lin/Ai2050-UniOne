@@ -1,7 +1,12 @@
 """Ultra-robust CCLXXV runner - logs from line 1."""
 import sys, os
 if sys.platform == 'win32':
-    pass  # Don't reconfigure stdout yet
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
+# CRITICAL: Prevent HuggingFace from trying to go online (causes hang on import)
+os.environ['HF_HUB_OFFLINE'] = '1'
+os.environ['TRANSFORMERS_OFFLINE'] = '1'
 
 LOG = r"d:\Ai2050\TransformerLens-Project\tests\glm5_temp\cclxxv_run2.txt"
 
