@@ -667,3 +667,668 @@ Part 2: 极端语义距离类别空间维度测试
       PC2: F=1.23, separating=True, means: land=-6.37, ocean=-8.31, sky=13.56, space=1.12
       PC3: F=0.93, separating=False, means: land=-10.16, ocean=1.23, sky=7.15, space=1.78
       PC4: F=0.01, separating=False, means: land=0.29, ocean=0.87, sky=-0.94, space=-0.22
+    L38: 4class_extreme → n_classes=4, expected(N-1)=3, n_separating=2
+      PC0: F=5.75, separating=True, means: land=-39.93, ocean=38.60, sky=-32.22, space=33.55
+      PC1: F=5.04, separating=True, means: land=-2.88, ocean=43.86, sky=9.80, space=-50.78
+      PC2: F=0.83, separating=False, means: land=-20.52, ocean=-14.25, sky=25.61, space=9.16
+      PC3: F=0.87, separating=False, means: land=-21.54, ocean=1.75, sky=21.63, space=-1.84
+      PC4: F=0.03, separating=False, means: land=-2.64, ocean=3.02, sky=3.84, space=-4.21
+
+  --- 5class_extreme: ['land', 'ocean', 'sky', 'space', 'microscopic'] ---
+    L10: 5class_extreme → n_classes=5, expected(N-1)=4, n_separating=4
+      PC0: F=3.47, separating=True, means: land=-0.95, ocean=0.16, sky=-0.64, space=0.23, microscopic=1.19
+      PC1: F=4.15, separating=True, means: land=-0.13, ocean=0.75, sky=0.34, space=-0.95, microscopic=-0.02
+      PC2: F=4.11, separating=True, means: land=0.42, ocean=-0.48, sky=-0.02, space=-0.57, microscopic=0.66
+      PC3: F=1.16, separating=True, means: land=-0.27, ocean=-0.33, sky=0.68, space=-0.12, microscopic=0.04
+      PC4: F=0.48, separating=False, means: land=0.18, ocean=0.31, sky=-0.27, space=-0.12, microscopic=-0.10
+      PC5: F=0.15, separating=False, means: land=-0.26, ocean=0.06, sky=0.09, space=0.07, microscopic=0.04
+    L20: 5class_extreme → n_classes=5, expected(N-1)=4, n_separating=4
+      PC0: F=1.26, separating=True, means: land=-2.91, ocean=1.12, sky=-0.40, space=1.04, microscopic=1.16
+      PC1: F=2.63, separating=True, means: land=-0.12, ocean=1.40, sky=1.72, space=-2.03, microscopic=-0.97
+      PC2: F=5.47, separating=True, means: land=0.09, ocean=-0.44, sky=0.00, space=-1.73, microscopic=2.07
+      PC3: F=1.79, separating=True, means: land=-0.37, ocean=-1.33, sky=1.39, space=0.39, microscopic=-0.08
+      PC4: F=0.23, separating=False, means: land=0.70, ocean=0.10, sky=0.09, space=-0.23, microscopic=-0.66
+      PC5: F=0.09, separating=False, means: land=-0.41, ocean=-0.11, sky=0.43, space=0.18, microscopic=-0.10
+    L30: 5class_extreme → n_classes=5, expected(N-1)=4, n_separating=3
+      PC0: F=4.59, separating=True, means: land=-17.47, ocean=3.98, sky=-15.36, space=6.53, microscopic=22.32
+      PC1: F=2.70, separating=True, means: land=5.25, ocean=-20.38, sky=-2.26, space=14.93, microscopic=2.46
+      PC2: F=3.95, separating=True, means: land=-5.83, ocean=4.54, sky=-0.20, space=15.98, microscopic=-14.49
+      PC3: F=0.95, separating=False, means: land=4.16, ocean=7.66, sky=-13.41, space=3.28, microscopic=-1.69
+      PC4: F=0.80, separating=False, means: land=-10.13, ocean=-2.23, sky=6.32, space=3.38, microscopic=2.66
+      PC5: F=0.21, separating=False, means: land=-4.42, ocean=1.38, sky=5.16, space=-1.20, microscopic=-0.92
+    L38: 5class_extreme → n_classes=5, expected(N-1)=4, n_separating=3
+      PC0: F=9.33, separating=True, means: land=-44.34, ocean=19.79, sky=-42.43, space=10.42, microscopic=56.56
+      PC1: F=3.17, separating=True, means: land=4.14, ocean=-45.49, sky=-9.67, space=47.82, microscopic=3.21
+      PC2: F=3.77, separating=True, means: land=-19.35, ocean=23.29, sky=-4.74, space=36.37, microscopic=-35.57
+      PC3: F=0.67, separating=False, means: land=18.19, ocean=15.23, sky=-23.96, space=-3.41, microscopic=-6.05
+      PC4: F=0.50, separating=False, means: land=19.47, ocean=5.36, sky=-17.34, space=-1.61, microscopic=-5.89
+      PC5: F=0.18, separating=False, means: land=-10.38, ocean=2.53, sky=11.91, space=-5.46, microscopic=1.40
+
+  --- 6class_extreme: ['land', 'ocean', 'sky', 'space', 'microscopic', 'virtual'] ---
+    L10: 6class_extreme → n_classes=6, expected(N-1)=5, n_separating=5
+      PC0: F=4.13, separating=True, means: land=-0.99, ocean=-0.02, sky=-0.75, space=0.26, microscopic=1.11, virtual=0.39
+      PC1: F=4.91, separating=True, means: land=-0.05, ocean=0.82, sky=0.40, space=-0.32, microscopic=0.38, virtual=-1.23
+      PC2: F=5.38, separating=True, means: land=-0.20, ocean=0.01, sky=-0.01, space=0.97, microscopic=-0.43, virtual=-0.34
+      PC3: F=3.15, separating=True, means: land=0.33, ocean=-0.70, sky=0.18, space=0.11, microscopic=0.47, virtual=-0.40
+      PC4: F=1.45, separating=True, means: land=-0.40, ocean=-0.10, sky=0.65, space=-0.26, microscopic=-0.14, virtual=0.25
+      PC5: F=0.50, separating=False, means: land=0.21, ocean=0.30, sky=-0.27, space=-0.11, microscopic=-0.15, virtual=0.02
+      PC6: F=0.12, separating=False, means: land=-0.21, ocean=-0.00, sky=0.13, space=0.09, microscopic=-0.02, virtual=0.00
+    L20: 6class_extreme → n_classes=6, expected(N-1)=5, n_separating=5
+      PC0: F=1.04, separating=True, means: land=-2.39, ocean=1.66, sky=0.34, space=0.77, microscopic=1.02, virtual=-1.40
+      PC1: F=6.36, separating=True, means: land=-1.51, ocean=-1.22, sky=-2.03, space=1.36, microscopic=0.97, virtual=2.44
+      PC2: F=7.01, separating=True, means: land=-0.33, ocean=-0.02, sky=0.38, space=-2.27, microscopic=1.47, virtual=0.77
+      PC3: F=1.38, separating=True, means: land=1.06, ocean=-0.71, sky=-0.35, space=0.11, microscopic=1.14, virtual=-1.26
+      PC4: F=1.73, separating=True, means: land=-0.34, ocean=-1.33, sky=1.39, space=0.41, microscopic=-0.09, virtual=-0.03
+      PC5: F=0.35, separating=False, means: land=0.40, ocean=0.27, sky=0.15, space=-0.29, microscopic=-0.97, virtual=0.44
+      PC6: F=0.10, separating=False, means: land=-0.44, ocean=-0.12, sky=0.45, space=0.15, microscopic=-0.11, virtual=0.07
+    L30: 6class_extreme → n_classes=6, expected(N-1)=5, n_separating=5
+      PC0: F=5.38, separating=True, means: land=-17.57, ocean=-1.85, sky=-17.54, space=7.94, microscopic=19.94, virtual=9.08
+      PC1: F=3.19, separating=True, means: land=-4.79, ocean=19.61, sky=3.05, space=-7.58, microscopic=8.50, virtual=-18.79
+      PC2: F=2.37, separating=True, means: land=-4.60, ocean=13.13, sky=-8.15, space=-6.23, microscopic=-5.93, virtual=11.77
+      PC3: F=3.73, separating=True, means: land=-5.67, ocean=3.89, sky=0.17, space=16.36, microscopic=-14.11, virtual=-0.64
+      PC4: F=1.82, separating=True, means: land=8.72, ocean=2.89, sky=-10.87, space=6.31, microscopic=1.44, virtual=-8.49
+      PC5: F=0.64, separating=False, means: land=-7.98, ocean=-2.95, sky=5.07, space=4.83, microscopic=4.15, virtual=-3.11
+      PC6: F=0.23, separating=False, means: land=-4.26, ocean=0.67, sky=5.76, space=-0.64, microscopic=-0.17, virtual=-1.35
+    L38: 6class_extreme → n_classes=6, expected(N-1)=5, n_separating=4
+      PC0: F=9.65, separating=True, means: land=-42.16, ocean=-14.58, sky=-48.91, space=20.26, microscopic=31.26, virtual=54.13
+      PC1: F=5.48, separating=True, means: land=-24.46, ocean=47.28, sky=-12.62, space=-20.70, microscopic=42.80, virtual=-32.30
+      PC2: F=3.16, separating=True, means: land=-19.55, ocean=28.94, sky=-4.30, space=26.60, microscopic=-37.98, virtual=6.29
+      PC3: F=6.14, separating=True, means: land=5.60, ocean=16.90, sky=-1.89, space=-41.94, microscopic=-12.10, virtual=33.43
+      PC4: F=0.63, separating=False, means: land=-17.58, ocean=-11.51, sky=23.17, space=-5.28, microscopic=0.72, virtual=10.47
+      PC5: F=0.54, separating=False, means: land=-20.17, ocean=-6.01, sky=17.28, space=0.48, microscopic=7.79, virtual=0.62
+      PC6: F=0.13, separating=False, means: land=8.24, ocean=-2.06, sky=-9.97, space=3.46, microscopic=-3.22, virtual=3.55
+
+  --- 4class_physical: ['land', 'ocean', 'sky', 'space'] ---
+    L10: 4class_physical → n_classes=4, expected(N-1)=3, n_separating=3
+      PC0: F=2.61, separating=True, means: land=-0.83, ocean=0.50, sky=-0.44, space=0.77
+      PC1: F=7.00, separating=True, means: land=-0.25, ocean=0.80, sky=0.34, space=-0.89
+      PC2: F=1.83, separating=True, means: land=0.34, ocean=0.41, sky=-0.68, space=-0.06
+      PC3: F=0.24, separating=False, means: land=-0.29, ocean=0.01, sky=0.14, space=0.14
+      PC4: F=0.15, separating=False, means: land=-0.07, ocean=-0.13, sky=0.22, space=-0.03
+    L20: 4class_physical → n_classes=4, expected(N-1)=3, n_separating=3
+      PC0: F=1.36, separating=True, means: land=-2.73, ocean=1.50, sky=-0.02, space=1.25
+      PC1: F=4.36, separating=True, means: land=-0.01, ocean=1.03, sky=1.58, space=-2.60
+      PC2: F=2.04, separating=True, means: land=-0.37, ocean=-1.40, sky=1.38, space=0.39
+      PC3: F=0.17, separating=False, means: land=-0.68, ocean=0.05, sky=0.35, space=0.28
+      PC4: F=0.05, separating=False, means: land=0.19, ocean=0.09, sky=0.11, space=-0.39
+    L30: 4class_physical → n_classes=4, expected(N-1)=3, n_separating=3
+      PC0: F=2.46, separating=True, means: land=-15.79, ocean=15.69, sky=-10.08, space=10.17
+      PC1: F=5.90, separating=True, means: land=0.06, ocean=15.13, sky=6.13, space=-21.33
+      PC2: F=1.23, separating=True, means: land=-6.37, ocean=-8.31, sky=13.56, space=1.12
+      PC3: F=0.93, separating=False, means: land=-10.16, ocean=1.23, sky=7.15, space=1.78
+      PC4: F=0.01, separating=False, means: land=0.29, ocean=0.87, sky=-0.94, space=-0.22
+    L38: 4class_physical → n_classes=4, expected(N-1)=3, n_separating=2
+      PC0: F=5.75, separating=True, means: land=-39.93, ocean=38.60, sky=-32.22, space=33.55
+      PC1: F=5.04, separating=True, means: land=-2.88, ocean=43.86, sky=9.80, space=-50.78
+      PC2: F=0.83, separating=False, means: land=-20.52, ocean=-14.25, sky=25.61, space=9.16
+      PC3: F=0.87, separating=False, means: land=-21.54, ocean=1.75, sky=21.63, space=-1.84
+      PC4: F=0.03, separating=False, means: land=-2.64, ocean=3.02, sky=3.84, space=-4.21
+
+  --- 4class_mixed: ['land', 'ocean', 'space', 'virtual'] ---
+    L10: 4class_mixed → n_classes=4, expected(N-1)=3, n_separating=3
+      PC0: F=28.92, separating=True, means: land=-0.54, ocean=-0.89, space=0.23, virtual=1.21
+      PC1: F=1.97, separating=True, means: land=-0.96, ocean=0.56, space=0.46, virtual=-0.06
+      PC2: F=9.04, separating=True, means: land=0.16, ocean=-0.51, space=0.86, virtual=-0.50
+      PC3: F=0.15, separating=False, means: land=-0.21, ocean=0.06, space=0.19, virtual=-0.04
+      PC4: F=0.04, separating=False, means: land=-0.11, ocean=0.08, space=0.03, virtual=0.01
+    L20: 4class_mixed → n_classes=4, expected(N-1)=3, n_separating=3
+      PC0: F=1.59, separating=True, means: land=-2.10, ocean=1.99, space=1.33, virtual=-1.22
+      PC1: F=12.89, separating=True, means: land=-2.00, ocean=-1.55, space=1.20, virtual=2.34
+      PC2: F=4.37, separating=True, means: land=0.71, ocean=-1.14, space=1.75, virtual=-1.32
+      PC3: F=0.04, separating=False, means: land=-0.11, ocean=-0.07, space=0.37, virtual=-0.19
+      PC4: F=0.16, separating=False, means: land=0.49, ocean=-0.15, space=-0.56, virtual=0.22
+    L30: 4class_mixed → n_classes=4, expected(N-1)=3, n_separating=3
+      PC0: F=14.88, separating=True, means: land=7.08, ocean=21.25, space=-9.15, virtual=-19.19
+      PC1: F=3.03, separating=True, means: land=-20.03, ocean=9.18, space=10.84, virtual=0.02
+      PC2: F=5.10, separating=True, means: land=-7.99, ocean=8.77, space=-13.95, virtual=13.17
+      PC3: F=0.21, separating=False, means: land=3.21, ocean=-2.68, space=-4.54, virtual=4.01
+      PC4: F=0.01, separating=False, means: land=-0.37, ocean=0.05, space=-0.77, virtual=1.09
+    L38: 4class_mixed → n_classes=4, expected(N-1)=3, n_separating=3
+      PC0: F=16.98, separating=True, means: land=-34.23, ocean=-44.73, space=21.05, virtual=57.92
+      PC1: F=8.07, separating=True, means: land=-50.03, ocean=43.69, space=0.48, virtual=5.86
+      PC2: F=7.45, separating=True, means: land=-8.59, ocean=-9.40, space=48.42, virtual=-30.43
+      PC3: F=0.06, separating=False, means: land=-5.81, ocean=7.38, space=3.35, virtual=-4.93
+      PC4: F=0.02, separating=False, means: land=-2.78, ocean=-1.01, space=4.76, virtual=-0.97
+
+============================================================
+Part 3: 2D语义平面精确几何分析
+============================================================
+  分析层: L38
+
+  2D Geometry Results (L38):
+  Ideal angular separation for 6 classes: 60.00°
+  Actual mean angular separation: 60.00°
+  Angular uniformity: 0.4288 (1=perfect)
+  sky: center=(-45.13, -22.11), angle=-153.9°, radius=50.2532, spread=15.3530
+  land: center=(-36.39, -30.12), angle=-140.4°, radius=47.2392, spread=12.3279
+  space: center=(23.20, -16.66), angle=-35.7°, radius=28.5560, spread=9.0857
+  virtual: center=(59.66, -18.52), angle=-17.2°, radius=62.4633, spread=6.4532
+  microscopic: center=(22.98, 37.30), angle=58.4°, radius=43.8169, spread=18.3539
+  ocean: center=(-24.32, 50.10), angle=115.9°, radius=55.6865, spread=14.0456
+  PC0: F=8.81, separating=True
+  PC1: F=5.06, separating=True
+  PC2: F=3.56, separating=True
+  PC3: F=5.94, separating=True
+
+  ★ 6类n_separating_PCs = 4 (expected N-1 = 5)
+
+============================================================
+Part 4: 多比较属性验证 — heavier/lighter, faster/slower
+============================================================
+
+  --- bigger/smaller ---
+    elephant/mouse: pos_diff=2.1719, neg_diff=1.1875
+    L0: patched_diff=1.1641, change_ratio=1.0238
+    L13: patched_diff=1.5312, change_ratio=0.6508
+    L20: patched_diff=1.6641, change_ratio=0.5159
+    L26: patched_diff=1.6406, change_ratio=0.5397
+    L39: patched_diff=2.1719, change_ratio=-0.0000
+    whale/fish: pos_diff=2.9531, neg_diff=2.9375
+    L0: patched_diff=2.9062, change_ratio=3.0000
+    L13: patched_diff=1.7500, change_ratio=77.0000
+    L20: patched_diff=2.3281, change_ratio=40.0000
+    L26: patched_diff=2.0625, change_ratio=57.0000
+    L39: patched_diff=2.9531, change_ratio=-0.0000
+    horse/cat: pos_diff=1.2422, neg_diff=0.6211
+    L0: patched_diff=0.6211, change_ratio=1.0000
+    L13: patched_diff=0.3125, change_ratio=1.4969
+    L20: patched_diff=0.4570, change_ratio=1.2642
+    L26: patched_diff=0.5508, change_ratio=1.1132
+    L39: patched_diff=1.2422, change_ratio=-0.0000
+  bigger/smaller L0: mean_change=1.6746
+  bigger/smaller L13: mean_change=26.3825
+  bigger/smaller L20: mean_change=13.9267
+  bigger/smaller L26: mean_change=19.5510
+  bigger/smaller L39: mean_change=0.0000
+
+  --- heavier/lighter ---
+    elephant/mouse: pos_diff=2.1406, neg_diff=1.2109
+    L0: patched_diff=1.3125, change_ratio=0.8908
+    L13: patched_diff=1.0156, change_ratio=1.2101
+    L20: patched_diff=1.0859, change_ratio=1.1345
+    L26: patched_diff=1.0938, change_ratio=1.1261
+    L39: patched_diff=2.1406, change_ratio=-0.0000
+    whale/fish: pos_diff=-0.2812, neg_diff=-1.2500
+    L0: patched_diff=-1.3203, change_ratio=1.0726
+    L13: patched_diff=-2.0312, change_ratio=1.8065
+    L20: patched_diff=-2.1406, change_ratio=1.9194
+    L26: patched_diff=-1.8125, change_ratio=1.5806
+    L39: patched_diff=-0.2812, change_ratio=-0.0000
+    bear/fox: pos_diff=-0.8203, neg_diff=-3.3438
+    L0: patched_diff=-3.3906, change_ratio=1.0186
+    L13: patched_diff=-2.7344, change_ratio=0.7585
+    L20: patched_diff=-2.5469, change_ratio=0.6842
+    L26: patched_diff=-2.4062, change_ratio=0.6285
+    L39: patched_diff=-0.8203, change_ratio=-0.0000
+  heavier/lighter L0: mean_change=0.9940
+  heavier/lighter L13: mean_change=1.2583
+  heavier/lighter L20: mean_change=1.2460
+  heavier/lighter L26: mean_change=1.1117
+  heavier/lighter L39: mean_change=0.0000
+
+  --- faster/slower ---
+    cheetah/turtle: pos_diff=2.0625, neg_diff=2.5156
+    L0: patched_diff=2.3438, change_ratio=0.6207
+    L13: patched_diff=2.0469, change_ratio=-0.0345
+    L20: patched_diff=2.1250, change_ratio=0.1379
+    L26: patched_diff=2.0469, change_ratio=-0.0345
+    L39: patched_diff=2.0625, change_ratio=0.0000
+    eagle/snail: pos_diff=-1.4062, neg_diff=-0.9766
+    L0: patched_diff=-1.0156, change_ratio=0.9091
+    L13: patched_diff=-0.7578, change_ratio=1.5091
+    L20: patched_diff=-1.0469, change_ratio=0.8364
+    L26: patched_diff=-1.0391, change_ratio=0.8545
+    L39: patched_diff=-1.4062, change_ratio=0.0000
+    horse/slug: pos_diff=-1.1328, neg_diff=-1.5234
+    L0: patched_diff=-1.5469, change_ratio=1.0600
+    L13: patched_diff=-0.8125, change_ratio=-0.8200
+    L20: patched_diff=-0.7734, change_ratio=-0.9200
+    L26: patched_diff=-0.8203, change_ratio=-0.8000
+    L39: patched_diff=-1.1328, change_ratio=-0.0000
+  faster/slower L0: mean_change=0.8633
+  faster/slower L13: mean_change=0.2182
+  faster/slower L20: mean_change=0.0181
+  faster/slower L26: mean_change=0.0067
+  faster/slower L39: mean_change=0.0000
+
+Results saved to tests\glm5_temp\ccxxxv_residual_patching_glm4.json
+
+======================================================================
+CCXXXV(335): 残差Path Patching + 极端语义 + 2D几何 - deepseek7b
+  d_model=3584, n_layers=28
+======================================================================
+Computing W_U row space basis (500 components)...
+
+============================================================
+Part 1: 逐层残差Path Patching (核心实验)
+============================================================
+  方法: 在指定层L, 用hook替换比较词位置的残差
+  bigger句的comp_pos残差 → smaller句的comp_pos残差
+  然后从L+1层继续forward到最后一层
+  关键指标: flip_ratio随层数L的变化
+  测试层: [0, 1, 3, 5, 7, 9, 11, 13, 14, 15, 17, 18, 19, 21, 23, 25, 26, 27]
+  测试对: [('elephant', 'mouse'), ('whale', 'fish'), ('horse', 'cat'), ('lion', 'rabbit'), ('bear', 'fox'), ('cow', 'chicken')]
+
+  elephant/mouse: comp_pos=4, seq_len=8
+    Baseline: bigger_diff=1.5469, smaller_diff=1.3438
+    L0: comp_patch: diff=0.8750 flip=0.5657 change=3.3077 | last_patch: diff=1.3438 flip=0.8687 change=1.0000
+    L1: comp_patch: diff=0.8438 flip=0.5455 change=3.4615 | last_patch: diff=1.3125 flip=0.8485 change=1.1538
+    L3: comp_patch: diff=0.8750 flip=0.5657 change=3.3077 | last_patch: diff=1.3438 flip=0.8687 change=1.0000
+    L5: comp_patch: diff=0.8438 flip=0.5455 change=3.4615 | last_patch: diff=1.3438 flip=0.8687 change=1.0000
+    L7: comp_patch: diff=1.1250 flip=0.7273 change=2.0769 | last_patch: diff=1.4219 flip=0.9192 change=0.6154
+    L9: comp_patch: diff=1.1250 flip=0.7273 change=2.0769 | last_patch: diff=1.4531 flip=0.9394 change=0.4615
+    L11: comp_patch: diff=1.2812 flip=0.8283 change=1.3077 | last_patch: diff=1.3125 flip=0.8485 change=1.1538
+    L13: comp_patch: diff=1.5469 flip=1.0000 change=-0.0000 | last_patch: diff=0.9531 flip=0.6162 change=2.9231
+    L14: comp_patch: diff=1.5781 flip=1.0202 change=-0.1538 | last_patch: diff=0.9375 flip=0.6061 change=3.0000
+    L15: comp_patch: diff=1.7188 flip=1.1111 change=-0.8462 | last_patch: diff=0.8594 flip=0.5556 change=3.3846
+    L17: comp_patch: diff=1.9688 flip=1.2727 change=-2.0769 | last_patch: diff=0.6719 flip=0.4343 change=4.3077
+    L18: comp_patch: diff=1.8594 flip=1.2020 change=-1.5385 | last_patch: diff=1.1562 flip=0.7475 change=1.9231
+    L19: comp_patch: diff=1.8438 flip=1.1919 change=-1.4615 | last_patch: diff=1.2344 flip=0.7980 change=1.5385
+    L21: comp_patch: diff=1.9375 flip=1.2525 change=-1.9231 | last_patch: diff=1.0938 flip=0.7071 change=2.2308
+    L23: comp_patch: diff=1.8906 flip=1.2222 change=-1.6923 | last_patch: diff=1.1406 flip=0.7374 change=2.0000
+    L25: comp_patch: diff=2.3594 flip=1.5253 change=-4.0000 | last_patch: diff=0.5625 flip=0.3636 change=4.8462
+    L26: comp_patch: diff=1.4062 flip=0.9091 change=0.6923 | last_patch: diff=1.5312 flip=0.9899 change=0.0769
+    L27: comp_patch: diff=1.5469 flip=1.0000 change=-0.0000 | last_patch: diff=1.3438 flip=0.8687 change=1.0000
+
+  whale/fish: comp_pos=4, seq_len=8
+    Baseline: bigger_diff=4.6250, smaller_diff=3.5312
+    L0: comp_patch: diff=3.6875 flip=0.7973 change=0.8571 | last_patch: diff=4.6562 flip=1.0068 change=-0.0286
+    L1: comp_patch: diff=3.6250 flip=0.7838 change=0.9143 | last_patch: diff=4.6250 flip=1.0000 change=-0.0000
+    L3: comp_patch: diff=4.1875 flip=0.9054 change=0.4000 | last_patch: diff=4.6250 flip=1.0000 change=-0.0000
+    L5: comp_patch: diff=4.0000 flip=0.8649 change=0.5714 | last_patch: diff=4.6875 flip=1.0135 change=-0.0571
+    L7: comp_patch: diff=4.6875 flip=1.0135 change=-0.0571 | last_patch: diff=4.6875 flip=1.0135 change=-0.0571
+    L9: comp_patch: diff=4.5000 flip=0.9730 change=0.1143 | last_patch: diff=4.8125 flip=1.0405 change=-0.1714
+    L11: comp_patch: diff=4.6875 flip=1.0135 change=-0.0571 | last_patch: diff=4.9688 flip=1.0743 change=-0.3143
+    L13: comp_patch: diff=4.7500 flip=1.0270 change=-0.1143 | last_patch: diff=4.6562 flip=1.0068 change=-0.0286
+    L14: comp_patch: diff=4.8125 flip=1.0405 change=-0.1714 | last_patch: diff=4.5625 flip=0.9865 change=0.0571
+    L15: comp_patch: diff=4.9062 flip=1.0608 change=-0.2571 | last_patch: diff=4.5625 flip=0.9865 change=0.0571
+    L17: comp_patch: diff=4.9375 flip=1.0676 change=-0.2857 | last_patch: diff=4.2500 flip=0.9189 change=0.3429
+    L18: comp_patch: diff=4.9375 flip=1.0676 change=-0.2857 | last_patch: diff=4.1875 flip=0.9054 change=0.4000
+    L19: comp_patch: diff=4.9062 flip=1.0608 change=-0.2571 | last_patch: diff=4.3438 flip=0.9392 change=0.2571
+    L21: comp_patch: diff=4.9062 flip=1.0608 change=-0.2571 | last_patch: diff=3.7812 flip=0.8176 change=0.7714
+    L23: comp_patch: diff=4.8125 flip=1.0405 change=-0.1714 | last_patch: diff=3.6562 flip=0.7905 change=0.8857
+    L25: comp_patch: diff=5.4375 flip=1.1757 change=-0.7429 | last_patch: diff=2.9062 flip=0.6284 change=1.5714
+    L26: comp_patch: diff=4.5625 flip=0.9865 change=0.0571 | last_patch: diff=3.7188 flip=0.8041 change=0.8286
+    L27: comp_patch: diff=4.6250 flip=1.0000 change=-0.0000 | last_patch: diff=3.5312 flip=0.7635 change=1.0000
+
+  horse/cat: comp_pos=4, seq_len=8
+    Baseline: bigger_diff=1.1250, smaller_diff=0.6875
+    L0: comp_patch: diff=0.1875 flip=0.1667 change=2.1429 | last_patch: diff=1.1250 flip=1.0000 change=-0.0000
+    L1: comp_patch: diff=0.0000 flip=0.0000 change=2.5714 | last_patch: diff=1.1250 flip=1.0000 change=-0.0000
+    L3: comp_patch: diff=-0.1875 flip=-0.1667 change=3.0000 | last_patch: diff=1.2188 flip=1.0833 change=-0.2143
+    L5: comp_patch: diff=-0.3125 flip=-0.2778 change=3.2857 | last_patch: diff=1.1875 flip=1.0556 change=-0.1429
+    L7: comp_patch: diff=-0.1875 flip=-0.1667 change=3.0000 | last_patch: diff=1.2812 flip=1.1389 change=-0.3571
+    L9: comp_patch: diff=-0.1250 flip=-0.1111 change=2.8571 | last_patch: diff=1.3750 flip=1.2222 change=-0.5714
+    L11: comp_patch: diff=0.1250 flip=0.1111 change=2.2857 | last_patch: diff=1.0625 flip=0.9444 change=0.1429
+    L13: comp_patch: diff=0.2500 flip=0.2222 change=2.0000 | last_patch: diff=1.1250 flip=1.0000 change=-0.0000
+    L14: comp_patch: diff=0.1250 flip=0.1111 change=2.2857 | last_patch: diff=1.1250 flip=1.0000 change=-0.0000
+    L15: comp_patch: diff=0.4375 flip=0.3889 change=1.5714 | last_patch: diff=1.0000 flip=0.8889 change=0.2857
+    L17: comp_patch: diff=0.5000 flip=0.4444 change=1.4286 | last_patch: diff=1.0000 flip=0.8889 change=0.2857
+    L18: comp_patch: diff=0.5625 flip=0.5000 change=1.2857 | last_patch: diff=1.0938 flip=0.9722 change=0.0714
+    L19: comp_patch: diff=0.4375 flip=0.3889 change=1.5714 | last_patch: diff=1.2812 flip=1.1389 change=-0.3571
+    L21: comp_patch: diff=0.6250 flip=0.5556 change=1.1429 | last_patch: diff=1.1562 flip=1.0278 change=-0.0714
+    L23: comp_patch: diff=0.9375 flip=0.8333 change=0.4286 | last_patch: diff=0.7188 flip=0.6389 change=0.9286
+    L25: comp_patch: diff=1.6250 flip=1.4444 change=-1.1429 | last_patch: diff=0.1875 flip=0.1667 change=2.1429
+    L26: comp_patch: diff=1.0312 flip=0.9167 change=0.2143 | last_patch: diff=0.8750 flip=0.7778 change=0.5714
+    L27: comp_patch: diff=1.1250 flip=1.0000 change=-0.0000 | last_patch: diff=0.6875 flip=0.6111 change=1.0000
+
+  lion/rabbit: comp_pos=4, seq_len=8
+    Baseline: bigger_diff=1.8438, smaller_diff=1.0312
+    L0: comp_patch: diff=0.4688 flip=0.2542 change=1.6923 | last_patch: diff=1.9062 flip=1.0339 change=-0.0769
+    L1: comp_patch: diff=0.3750 flip=0.2034 change=1.8077 | last_patch: diff=1.8750 flip=1.0169 change=-0.0385
+    L3: comp_patch: diff=0.6250 flip=0.3390 change=1.5000 | last_patch: diff=1.7812 flip=0.9661 change=0.0769
+    L5: comp_patch: diff=0.6250 flip=0.3390 change=1.5000 | last_patch: diff=1.8438 flip=1.0000 change=-0.0000
+    L7: comp_patch: diff=0.5625 flip=0.3051 change=1.5769 | last_patch: diff=1.5625 flip=0.8475 change=0.3462
+    L9: comp_patch: diff=0.7188 flip=0.3898 change=1.3846 | last_patch: diff=1.4375 flip=0.7797 change=0.5000
+    L11: comp_patch: diff=0.8750 flip=0.4746 change=1.1923 | last_patch: diff=1.5625 flip=0.8475 change=0.3462
+    L13: comp_patch: diff=1.1562 flip=0.6271 change=0.8462 | last_patch: diff=1.2188 flip=0.6610 change=0.7692
+    L14: comp_patch: diff=1.3125 flip=0.7119 change=0.6538 | last_patch: diff=1.1250 flip=0.6102 change=0.8846
+    L15: comp_patch: diff=1.3750 flip=0.7458 change=0.5769 | last_patch: diff=1.1875 flip=0.6441 change=0.8077
+    L17: comp_patch: diff=1.4062 flip=0.7627 change=0.5385 | last_patch: diff=1.2500 flip=0.6780 change=0.7308
+    L18: comp_patch: diff=1.4375 flip=0.7797 change=0.5000 | last_patch: diff=1.2188 flip=0.6610 change=0.7692
+    L19: comp_patch: diff=1.4062 flip=0.7627 change=0.5385 | last_patch: diff=1.3125 flip=0.7119 change=0.6538
+    L21: comp_patch: diff=1.6250 flip=0.8814 change=0.2692 | last_patch: diff=1.3750 flip=0.7458 change=0.5769
+    L23: comp_patch: diff=1.8125 flip=0.9831 change=0.0385 | last_patch: diff=0.9062 flip=0.4915 change=1.1538
+    L25: comp_patch: diff=2.2500 flip=1.2203 change=-0.5000 | last_patch: diff=0.4375 flip=0.2373 change=1.7308
+    L26: comp_patch: diff=1.6562 flip=0.8983 change=0.2308 | last_patch: diff=1.2188 flip=0.6610 change=0.7692
+    L27: comp_patch: diff=1.8438 flip=1.0000 change=-0.0000 | last_patch: diff=1.0312 flip=0.5593 change=1.0000
+
+  bear/fox: comp_pos=4, seq_len=8
+    Baseline: bigger_diff=0.8750, smaller_diff=0.5000
+    L0: comp_patch: diff=-0.0312 flip=-0.0357 change=2.4167 | last_patch: diff=0.7812 flip=0.8929 change=0.2500
+    L1: comp_patch: diff=0.0000 flip=0.0000 change=2.3333 | last_patch: diff=0.7188 flip=0.8214 change=0.4167
+    L3: comp_patch: diff=-0.1562 flip=-0.1786 change=2.7500 | last_patch: diff=0.6562 flip=0.7500 change=0.5833
+    L5: comp_patch: diff=-0.0938 flip=-0.1071 change=2.5833 | last_patch: diff=0.6562 flip=0.7500 change=0.5833
+    L7: comp_patch: diff=0.3750 flip=0.4286 change=1.3333 | last_patch: diff=0.7188 flip=0.8214 change=0.4167
+    L9: comp_patch: diff=0.1250 flip=0.1429 change=2.0000 | last_patch: diff=0.8438 flip=0.9643 change=0.0833
+    L11: comp_patch: diff=0.1562 flip=0.1786 change=1.9167 | last_patch: diff=0.6250 flip=0.7143 change=0.6667
+    L13: comp_patch: diff=0.3125 flip=0.3571 change=1.5000 | last_patch: diff=0.5000 flip=0.5714 change=1.0000
+    L14: comp_patch: diff=0.3438 flip=0.3929 change=1.4167 | last_patch: diff=0.5312 flip=0.6071 change=0.9167
+    L15: comp_patch: diff=-0.0625 flip=-0.0714 change=2.5000 | last_patch: diff=0.8438 flip=0.9643 change=0.0833
+    L17: comp_patch: diff=0.4375 flip=0.5000 change=1.1667 | last_patch: diff=1.0625 flip=1.2143 change=-0.5000
+    L18: comp_patch: diff=0.4062 flip=0.4643 change=1.2500 | last_patch: diff=1.1250 flip=1.2857 change=-0.6667
+    L19: comp_patch: diff=0.3125 flip=0.3571 change=1.5000 | last_patch: diff=1.4688 flip=1.6786 change=-1.5833
+    L21: comp_patch: diff=0.3125 flip=0.3571 change=1.5000 | last_patch: diff=1.3750 flip=1.5714 change=-1.3333
+    L23: comp_patch: diff=0.5938 flip=0.6786 change=0.7500 | last_patch: diff=0.9062 flip=1.0357 change=-0.0833
+    L25: comp_patch: diff=1.0938 flip=1.2500 change=-0.5833 | last_patch: diff=0.1562 flip=0.1786 change=1.9167
+    L26: comp_patch: diff=0.5625 flip=0.6429 change=0.8333 | last_patch: diff=0.8438 flip=0.9643 change=0.0833
+    L27: comp_patch: diff=0.8750 flip=1.0000 change=-0.0000 | last_patch: diff=0.5000 flip=0.5714 change=1.0000
+
+  cow/chicken: comp_pos=4, seq_len=8
+    Baseline: bigger_diff=1.0625, smaller_diff=0.0000
+    L0: comp_patch: diff=0.1875 flip=0.1765 change=0.8235 | last_patch: diff=1.2188 flip=1.1471 change=-0.1471
+    L1: comp_patch: diff=0.2500 flip=0.2353 change=0.7647 | last_patch: diff=1.1562 flip=1.0882 change=-0.0882
+    L3: comp_patch: diff=0.6562 flip=0.6176 change=0.3824 | last_patch: diff=1.1562 flip=1.0882 change=-0.0882
+    L5: comp_patch: diff=0.4375 flip=0.4118 change=0.5882 | last_patch: diff=1.3125 flip=1.2353 change=-0.2353
+    L7: comp_patch: diff=0.5312 flip=0.5000 change=0.5000 | last_patch: diff=1.4375 flip=1.3529 change=-0.3529
+    L9: comp_patch: diff=0.8125 flip=0.7647 change=0.2353 | last_patch: diff=1.1562 flip=1.0882 change=-0.0882
+    L11: comp_patch: diff=0.6250 flip=0.5882 change=0.4118 | last_patch: diff=0.9375 flip=0.8824 change=0.1176
+    L13: comp_patch: diff=0.9688 flip=0.9118 change=0.0882 | last_patch: diff=0.3750 flip=0.3529 change=0.6471
+    L14: comp_patch: diff=1.1562 flip=1.0882 change=-0.0882 | last_patch: diff=0.5938 flip=0.5588 change=0.4412
+    L15: comp_patch: diff=1.2188 flip=1.1471 change=-0.1471 | last_patch: diff=0.7188 flip=0.6765 change=0.3235
+    L17: comp_patch: diff=1.3750 flip=1.2941 change=-0.2941 | last_patch: diff=0.3438 flip=0.3235 change=0.6765
+    L18: comp_patch: diff=1.3750 flip=1.2941 change=-0.2941 | last_patch: diff=0.5312 flip=0.5000 change=0.5000
+    L19: comp_patch: diff=1.1875 flip=1.1176 change=-0.1176 | last_patch: diff=0.0312 flip=0.0294 change=0.9706
+    L21: comp_patch: diff=1.2188 flip=1.1471 change=-0.1471 | last_patch: diff=0.6875 flip=0.6471 change=0.3529
+    L23: comp_patch: diff=1.3750 flip=1.2941 change=-0.2941 | last_patch: diff=0.5312 flip=0.5000 change=0.5000
+    L25: comp_patch: diff=1.9688 flip=1.8529 change=-0.8529 | last_patch: diff=-0.0625 flip=-0.0588 change=1.0588
+    L26: comp_patch: diff=1.2500 flip=1.1765 change=-0.1765 | last_patch: diff=-0.0625 flip=-0.0588 change=1.0588
+    L27: comp_patch: diff=1.0625 flip=1.0000 change=-0.0000 | last_patch: diff=0.0000 flip=0.0000 change=1.0000
+
+  === 残差Path Patching Summary ===
+  L0: comp_change=1.8734±0.8749, last_change=0.1662
+  L1: comp_change=1.9755±0.9409, last_change=0.2406
+  L3: comp_change=1.8900±1.1991, last_change=0.2263
+  L5: comp_change=1.9984±1.1842, last_change=0.1913
+  L7: comp_change=1.4050±0.9989, last_change=0.1019
+  L9: comp_change=1.4447±0.9949, last_change=0.0356
+  L11: comp_change=1.1762±0.8065, last_change=0.3521
+  L13: comp_change=0.7200±0.8038, last_change=0.8851
+  L14: comp_change=0.6571±0.9246, last_change=0.8833
+  L15: comp_change=0.5663±1.1498, last_change=0.8237
+  L17: comp_change=0.0795±1.1645, last_change=0.9739
+  L18: comp_change=0.1529±0.9883, last_change=0.4995
+  L19: comp_change=0.2956±1.0568, last_change=0.2466
+  L21: comp_change=0.0975±1.1074, last_change=0.4212
+  L23: comp_change=-0.1568±0.7724, last_change=0.8975
+  L25: comp_change=-1.3037±1.2233, last_change=2.2111
+  L26: comp_change=0.3086±0.3503, last_change=0.5647
+  L27: comp_change=0.0000±0.0000, last_change=1.0000
+
+  ★★★ 最大变化层: L5, change=1.9984
+  ★★★ 首次显著变化(change>0.5): L0
+
+============================================================
+Part 2: 极端语义距离类别空间维度测试
+============================================================
+  测试: land/ocean/sky/space/microscopic/virtual (6类)
+  如果仍为2维 → 2维是语义空间上限
+  如果3+维 → 之前的2维是类别相似性导致的
+  测试层: [7, 14, 21, 26]
+
+  --- 3class_original: ['land', 'ocean', 'sky'] ---
+    L7: 3class_original → n_classes=3, expected(N-1)=2, n_separating=1
+      PC0: F=0.03, separating=False, means: land=-60.05, ocean=37.01, sky=23.04
+      PC1: F=0.01, separating=False, means: land=-1.24, ocean=-0.03, sky=1.27
+      PC2: F=1.04, separating=True, means: land=6.99, ocean=-6.98, sky=-0.01
+      PC3: F=0.67, separating=False, means: land=3.05, ocean=3.10, sky=-6.15
+    L14: 3class_original → n_classes=3, expected(N-1)=2, n_separating=1
+      PC0: F=0.04, separating=False, means: land=-106.05, ocean=57.74, sky=48.31
+      PC1: F=0.03, separating=False, means: land=-3.57, ocean=-0.19, sky=3.76
+      PC2: F=1.08, separating=True, means: land=8.74, ocean=-10.68, sky=1.94
+      PC3: F=0.93, separating=False, means: land=6.02, ocean=3.04, sky=-9.06
+    L21: 3class_original → n_classes=3, expected(N-1)=2, n_separating=1
+      PC0: F=0.04, separating=False, means: land=-101.64, ocean=52.76, sky=48.88
+      PC1: F=0.03, separating=False, means: land=-3.50, ocean=-0.64, sky=4.14
+      PC2: F=0.16, separating=False, means: land=-5.26, ocean=5.89, sky=-0.62
+      PC3: F=0.66, separating=False, means: land=-8.23, ocean=9.96, sky=-1.72
+    L26: 3class_original → n_classes=3, expected(N-1)=2, n_separating=1
+      PC0: F=0.04, separating=False, means: land=-63.84, ocean=25.55, sky=38.29
+      PC1: F=0.02, separating=False, means: land=-8.30, ocean=-2.47, sky=10.76
+      PC2: F=1.82, separating=True, means: land=21.29, ocean=-43.57, sky=22.28
+      PC3: F=0.88, separating=False, means: land=27.04, ocean=-3.80, sky=-23.24
+
+  --- 4class_extreme: ['land', 'ocean', 'sky', 'space'] ---
+    L7: 4class_extreme → n_classes=4, expected(N-1)=3, n_separating=1
+      PC0: F=0.02, separating=False, means: land=-59.87, ocean=37.18, sky=23.23, space=-0.54
+      PC1: F=2.71, separating=True, means: land=7.69, ocean=3.00, sky=6.69, space=-17.38
+      PC2: F=0.20, separating=False, means: land=-3.45, ocean=-1.76, sky=-0.89, space=6.10
+      PC3: F=0.59, separating=False, means: land=5.62, ocean=-6.39, sky=-0.41, space=1.18
+      PC4: F=0.25, separating=False, means: land=-2.66, ocean=-2.26, sky=4.58, space=0.33
+    L14: 4class_extreme → n_classes=4, expected(N-1)=3, n_separating=1
+      PC0: F=0.03, separating=False, means: land=-88.00, ocean=75.80, sky=66.44, space=-54.24
+      PC1: F=0.11, separating=False, means: land=4.11, ocean=2.97, sky=6.78, space=-13.86
+      PC2: F=3.67, separating=True, means: land=-9.34, ocean=-4.53, sky=-8.16, space=22.03
+      PC3: F=0.86, separating=False, means: land=8.31, ocean=-10.23, sky=0.29, space=1.64
+      PC4: F=0.20, separating=False, means: land=-2.01, ocean=-2.24, sky=6.27, space=-2.02
+    L21: 4class_extreme → n_classes=4, expected(N-1)=3, n_separating=1
+      PC0: F=0.02, separating=False, means: land=-97.41, ocean=56.96, sky=53.13, space=-12.67
+      PC1: F=0.13, separating=False, means: land=5.78, ocean=3.32, sky=7.01, space=-16.10
+      PC2: F=3.40, separating=True, means: land=-10.40, ocean=-4.17, sky=-9.24, space=23.81
+      PC3: F=0.03, separating=False, means: land=2.50, ocean=1.18, sky=-0.23, space=-3.45
+      PC4: F=0.46, separating=False, means: land=9.23, ocean=-7.86, sky=-1.96, space=0.58
+    L26: 4class_extreme → n_classes=4, expected(N-1)=3, n_separating=2
+      PC0: F=0.03, separating=False, means: land=-64.92, ocean=23.39, sky=36.94, space=4.60
+      PC1: F=0.14, separating=False, means: land=15.38, ocean=5.57, sky=21.11, space=-42.05
+      PC2: F=1.66, separating=True, means: land=-33.17, ocean=-5.96, sky=-13.83, space=52.96
+      PC3: F=1.24, separating=True, means: land=10.93, ocean=-43.12, sky=13.55, space=18.64
+      PC4: F=0.30, separating=False, means: land=7.09, ocean=-7.82, sky=19.32, space=-18.59
+
+  --- 5class_extreme: ['land', 'ocean', 'sky', 'space', 'microscopic'] ---
+    L7: 5class_extreme → n_classes=5, expected(N-1)=4, n_separating=1
+      PC0: F=0.13, separating=False, means: land=-9.43, ocean=87.54, sky=73.66, space=49.74, microscopic=-201.52
+      PC1: F=0.78, separating=False, means: land=-8.82, ocean=-2.46, sky=-7.33, space=11.42, microscopic=7.18
+      PC2: F=0.87, separating=False, means: land=-6.09, ocean=-3.85, sky=-2.92, space=11.56, microscopic=1.29
+      PC3: F=1.38, separating=True, means: land=4.95, ocean=-0.14, sky=-0.95, space=7.63, microscopic=-11.50
+      PC4: F=0.16, separating=False, means: land=-2.02, ocean=4.49, sky=-2.42, space=-0.46, microscopic=0.41
+      PC5: F=0.14, separating=False, means: land=-0.20, ocean=-2.77, sky=2.78, space=-1.69, microscopic=1.89
+    L14: 5class_extreme → n_classes=5, expected(N-1)=4, n_separating=2
+      PC0: F=0.15, separating=False, means: land=9.49, ocean=173.18, sky=163.92, space=42.96, microscopic=-389.55
+      PC1: F=0.03, separating=False, means: land=5.69, ocean=1.35, sky=4.85, space=-9.43, microscopic=-2.46
+      PC2: F=3.43, separating=True, means: land=-13.59, ocean=-5.06, sky=-10.54, space=16.66, microscopic=12.53
+      PC3: F=2.81, separating=True, means: land=4.49, ocean=-3.86, sky=-1.67, space=16.57, microscopic=-15.53
+      PC4: F=0.02, separating=False, means: land=-0.21, ocean=-1.07, sky=0.30, space=2.15, microscopic=-1.18
+      PC5: F=0.03, separating=False, means: land=1.46, ocean=-0.46, sky=1.75, space=-1.06, microscopic=-1.69
+    L21: 5class_extreme → n_classes=5, expected(N-1)=4, n_separating=1
+      PC0: F=0.14, separating=False, means: land=-13.67, ocean=140.45, sky=136.77, space=70.58, microscopic=-334.13
+      PC1: F=0.06, separating=False, means: land=-10.66, ocean=-3.25, sky=-6.72, space=8.42, microscopic=12.20
+      PC2: F=0.11, separating=False, means: land=-4.71, ocean=0.58, sky=-0.88, space=-7.92, microscopic=12.93
+      PC3: F=2.65, separating=True, means: land=14.84, ocean=4.89, sky=12.20, space=-18.06, microscopic=-13.88
+      PC4: F=0.33, separating=False, means: land=-5.71, ocean=1.25, sky=0.43, space=-7.80, microscopic=11.83
+      PC5: F=0.59, separating=False, means: land=1.36, ocean=4.40, sky=1.63, space=-15.16, microscopic=7.77
+    L26: 5class_extreme → n_classes=5, expected(N-1)=4, n_separating=2
+      PC0: F=0.15, separating=False, means: land=-13.42, ocean=71.32, sky=86.37, space=51.10, microscopic=-195.38
+      PC1: F=0.05, separating=False, means: land=-24.15, ocean=-4.86, sky=-8.42, space=-1.69, microscopic=39.12
+      PC2: F=0.07, separating=False, means: land=17.11, ocean=4.63, sky=18.78, space=-36.18, microscopic=-4.34
+      PC3: F=0.06, separating=False, means: land=11.98, ocean=4.57, sky=4.10, space=-20.32, microscopic=-0.33
+      PC4: F=2.16, separating=True, means: land=-43.85, ocean=-6.44, sky=-19.86, space=21.11, microscopic=49.03
+      PC5: F=1.76, separating=True, means: land=-1.67, ocean=-28.74, sky=-3.32, space=48.94, microscopic=-15.22
+
+  --- 6class_extreme: ['land', 'ocean', 'sky', 'space', 'microscopic', 'virtual'] ---
+    L7: 6class_extreme → n_classes=6, expected(N-1)=5, n_separating=3
+      PC0: F=0.32, separating=False, means: land=-63.66, ocean=33.35, sky=19.41, space=-4.28, microscopic=-255.55, virtual=270.72
+      PC1: F=2.44, separating=True, means: land=11.36, ocean=8.95, sky=12.48, space=-4.67, microscopic=-4.11, virtual=-24.01
+      PC2: F=0.27, separating=False, means: land=0.55, ocean=3.88, sky=0.82, space=-1.90, microscopic=5.50, virtual=-8.86
+      PC3: F=1.39, separating=True, means: land=-8.81, ocean=-1.80, sky=-2.34, space=8.01, microscopic=9.01, virtual=-4.07
+      PC4: F=3.32, separating=True, means: land=0.79, ocean=0.15, sky=-1.99, space=13.34, microscopic=-7.69, virtual=-4.59
+      PC5: F=0.10, separating=False, means: land=-1.54, ocean=3.36, sky=-1.18, space=-2.31, microscopic=0.65, virtual=1.02
+      PC6: F=0.13, separating=False, means: land=1.75, ocean=-3.28, sky=3.09, space=-0.72, microscopic=-0.53, virtual=-0.31
+    L14: 6class_extreme → n_classes=6, expected(N-1)=5, n_separating=3
+      PC0: F=0.28, separating=False, means: land=-68.09, ocean=95.60, sky=86.30, space=-34.39, microscopic=-466.97, virtual=387.55
+      PC1: F=0.31, separating=False, means: land=12.35, ocean=10.28, sky=13.95, space=-5.11, microscopic=-1.53, virtual=-29.94
+      PC2: F=1.89, separating=True, means: land=9.34, ocean=11.58, sky=12.52, space=-6.34, microscopic=0.16, virtual=-27.25
+      PC3: F=1.75, separating=True, means: land=12.29, ocean=-0.29, sky=5.50, space=-4.28, microscopic=-18.40, virtual=5.19
+      PC4: F=4.65, separating=True, means: land=1.66, ocean=1.48, sky=2.25, space=-20.01, microscopic=7.92, virtual=6.69
+      PC5: F=0.04, separating=False, means: land=0.24, ocean=1.61, sky=-1.09, space=2.68, microscopic=-1.11, virtual=-2.33
+      PC6: F=0.05, separating=False, means: land=-0.25, ocean=0.31, sky=0.19, space=3.74, microscopic=-2.58, virtual=-1.41
+    L21: 6class_extreme → n_classes=6, expected(N-1)=5, n_separating=2
+      PC0: F=0.31, separating=False, means: land=-96.11, ocean=58.06, sky=54.32, space=-11.48, microscopic=-416.18, virtual=411.39
+      PC1: F=0.17, separating=False, means: land=15.52, ocean=10.09, sky=13.88, space=-4.68, microscopic=-12.19, virtual=-22.62
+      PC2: F=0.30, separating=False, means: land=1.29, ocean=6.82, sky=6.49, space=-9.42, microscopic=11.47, virtual=-16.65
+      PC3: F=1.47, separating=True, means: land=-12.86, ocean=-11.34, sky=-14.40, space=2.73, microscopic=7.34, virtual=28.53
+      PC4: F=0.27, separating=False, means: land=-4.98, ocean=2.56, sky=-3.75, space=0.27, microscopic=12.15, virtual=-6.25
+      PC5: F=0.74, separating=False, means: land=-12.38, ocean=-0.37, sky=-4.07, space=6.58, microscopic=14.53, virtual=-4.29
+      PC6: F=0.11, separating=False, means: land=-0.30, ocean=-0.18, sky=-1.56, space=8.19, microscopic=-3.17, virtual=-2.99
+    L26: 6class_extreme → n_classes=6, expected(N-1)=5, n_separating=2
+      PC0: F=0.30, separating=False, means: land=-60.62, ocean=25.04, sky=39.13, space=7.54, microscopic=-238.69, virtual=227.60
+      PC1: F=0.16, separating=False, means: land=-37.39, ocean=-19.50, sky=-28.89, space=-0.52, microscopic=39.07, virtual=47.23
+      PC2: F=0.10, separating=False, means: land=14.80, ocean=13.05, sky=26.10, space=-26.04, microscopic=9.14, virtual=-37.05
+      PC3: F=0.15, separating=False, means: land=-18.43, ocean=-11.81, sky=-10.64, space=20.85, microscopic=2.11, virtual=17.92
+      PC4: F=1.54, separating=True, means: land=39.37, ocean=15.38, sky=25.84, space=-14.98, microscopic=-38.02, virtual=-27.59
+      PC5: F=0.98, separating=False, means: land=-17.24, ocean=14.58, sky=8.46, space=-1.89, microscopic=34.15, virtual=-38.07
+      PC6: F=0.60, separating=False, means: land=-1.86, ocean=-29.10, sky=3.62, space=35.33, microscopic=-7.39, virtual=-0.60
+
+  --- 4class_physical: ['land', 'ocean', 'sky', 'space'] ---
+    L7: 4class_physical → n_classes=4, expected(N-1)=3, n_separating=1
+      PC0: F=0.02, separating=False, means: land=-59.87, ocean=37.18, sky=23.23, space=-0.54
+      PC1: F=2.71, separating=True, means: land=7.69, ocean=3.00, sky=6.69, space=-17.38
+      PC2: F=0.20, separating=False, means: land=-3.45, ocean=-1.76, sky=-0.89, space=6.10
+      PC3: F=0.59, separating=False, means: land=5.62, ocean=-6.39, sky=-0.41, space=1.18
+      PC4: F=0.25, separating=False, means: land=-2.66, ocean=-2.26, sky=4.58, space=0.33
+    L14: 4class_physical → n_classes=4, expected(N-1)=3, n_separating=1
+      PC0: F=0.03, separating=False, means: land=-88.00, ocean=75.80, sky=66.44, space=-54.24
+      PC1: F=0.11, separating=False, means: land=4.11, ocean=2.97, sky=6.78, space=-13.86
+      PC2: F=3.67, separating=True, means: land=-9.34, ocean=-4.53, sky=-8.16, space=22.03
+      PC3: F=0.86, separating=False, means: land=8.31, ocean=-10.23, sky=0.29, space=1.64
+      PC4: F=0.20, separating=False, means: land=-2.01, ocean=-2.24, sky=6.27, space=-2.02
+    L21: 4class_physical → n_classes=4, expected(N-1)=3, n_separating=1
+      PC0: F=0.02, separating=False, means: land=-97.41, ocean=56.96, sky=53.13, space=-12.67
+      PC1: F=0.13, separating=False, means: land=5.78, ocean=3.32, sky=7.01, space=-16.10
+      PC2: F=3.40, separating=True, means: land=-10.40, ocean=-4.17, sky=-9.24, space=23.81
+      PC3: F=0.03, separating=False, means: land=2.50, ocean=1.18, sky=-0.23, space=-3.45
+      PC4: F=0.46, separating=False, means: land=9.23, ocean=-7.86, sky=-1.96, space=0.58
+    L26: 4class_physical → n_classes=4, expected(N-1)=3, n_separating=2
+      PC0: F=0.03, separating=False, means: land=-64.92, ocean=23.39, sky=36.94, space=4.60
+      PC1: F=0.14, separating=False, means: land=15.38, ocean=5.57, sky=21.11, space=-42.05
+      PC2: F=1.66, separating=True, means: land=-33.17, ocean=-5.96, sky=-13.83, space=52.96
+      PC3: F=1.24, separating=True, means: land=10.93, ocean=-43.12, sky=13.55, space=18.64
+      PC4: F=0.30, separating=False, means: land=7.09, ocean=-7.82, sky=19.32, space=-18.59
+
+  --- 4class_mixed: ['land', 'ocean', 'space', 'virtual'] ---
+    L7: 4class_mixed → n_classes=4, expected(N-1)=3, n_separating=2
+      PC0: F=0.22, separating=False, means: land=-122.83, ocean=-25.76, space=-63.30, virtual=211.88
+      PC1: F=2.92, separating=True, means: land=-12.41, ocean=-11.71, space=2.77, virtual=21.35
+      PC2: F=0.07, separating=False, means: land=-2.29, ocean=-2.89, space=1.99, virtual=3.19
+      PC3: F=4.40, separating=True, means: land=6.72, ocean=1.28, space=-14.48, virtual=6.48
+      PC4: F=0.11, separating=False, means: land=0.64, ocean=-2.98, space=3.15, virtual=-0.81
+    L14: 4class_mixed → n_classes=4, expected(N-1)=3, n_separating=1
+      PC0: F=0.16, separating=False, means: land=-163.55, ocean=0.23, space=-129.51, virtual=292.83
+      PC1: F=0.59, separating=False, means: land=-14.57, ocean=-16.25, space=4.81, virtual=26.01
+      PC2: F=0.97, separating=False, means: land=-9.57, ocean=-11.80, space=1.00, virtual=20.36
+      PC3: F=4.04, separating=True, means: land=9.78, ocean=1.97, space=-19.12, virtual=7.36
+      PC4: F=0.02, separating=False, means: land=-1.59, ocean=1.66, space=1.40, virtual=-1.46
+    L21: 4class_mixed → n_classes=4, expected(N-1)=3, n_separating=2
+      PC0: F=0.20, separating=False, means: land=-186.95, ocean=-32.59, space=-101.87, virtual=321.42
+      PC1: F=0.38, separating=False, means: land=-14.83, ocean=-14.73, space=8.31, virtual=21.25
+      PC2: F=1.27, separating=True, means: land=-11.53, ocean=-13.75, space=-0.50, virtual=25.78
+      PC3: F=0.20, separating=False, means: land=5.46, ocean=1.97, space=-9.78, virtual=2.35
+      PC4: F=2.12, separating=True, means: land=10.19, ocean=0.66, space=-18.28, virtual=7.44
+    L26: 4class_mixed → n_classes=4, expected(N-1)=3, n_separating=1
+      PC0: F=0.21, separating=False, means: land=-114.79, ocean=-26.34, space=-41.90, virtual=183.03
+      PC1: F=0.23, separating=False, means: land=-32.54, ocean=-30.00, space=19.95, virtual=42.59
+      PC2: F=1.46, separating=True, means: land=-36.37, ocean=-27.57, space=35.76, virtual=28.17
+      PC3: F=0.78, separating=False, means: land=5.00, ocean=-3.37, space=-34.19, virtual=32.56
+      PC4: F=0.67, separating=False, means: land=-17.88, ocean=35.50, space=0.49, virtual=-18.12
+
+============================================================
+Part 3: 2D语义平面精确几何分析
+============================================================
+  分析层: L26
+
+  2D Geometry Results (L26):
+  Ideal angular separation for 6 classes: 60.00°
+  Actual mean angular separation: 60.00°
+  Angular uniformity: 0.0971 (1=perfect)
+  microscopic: center=(-193.80, -35.64), angle=-169.6°, radius=197.0551, spread=249.9653
+  space: center=(22.80, -6.07), angle=-14.9°, radius=23.5953, spread=171.9972
+  virtual: center=(174.43, -36.73), angle=-11.9°, radius=178.2562, spread=125.6416
+  sky: center=(38.11, 26.07), angle=34.4°, radius=46.1717, spread=81.4665
+  ocean: center=(19.45, 18.66), angle=43.8°, radius=26.9506, spread=133.4077
+  land: center=(-60.98, 33.72), angle=151.1°, radius=69.6850, spread=148.2343
+  PC0: F=0.20, separating=False
+  PC1: F=0.13, separating=False
+  PC2: F=0.08, separating=False
+  PC3: F=0.76, separating=False
+
+  ★ 6类n_separating_PCs = 0 (expected N-1 = 5)
+
+============================================================
+Part 4: 多比较属性验证 — heavier/lighter, faster/slower
+============================================================
+
+  --- bigger/smaller ---
+    elephant/mouse: pos_diff=1.5469, neg_diff=1.3438
+    L0: patched_diff=0.8750, change_ratio=3.3077
+    L9: patched_diff=1.1250, change_ratio=2.0769
+    L14: patched_diff=1.5781, change_ratio=-0.1538
+    L18: patched_diff=1.8594, change_ratio=-1.5385
+    L27: patched_diff=1.5469, change_ratio=-0.0000
+    whale/fish: pos_diff=4.6250, neg_diff=3.5312
+    L0: patched_diff=3.6875, change_ratio=0.8571
+    L9: patched_diff=4.5000, change_ratio=0.1143
+    L14: patched_diff=4.8125, change_ratio=-0.1714
+    L18: patched_diff=4.9375, change_ratio=-0.2857
+    L27: patched_diff=4.6250, change_ratio=-0.0000
+    horse/cat: pos_diff=1.1250, neg_diff=0.6875
+    L0: patched_diff=0.1875, change_ratio=2.1429
+    L9: patched_diff=-0.1250, change_ratio=2.8571
+    L14: patched_diff=0.1250, change_ratio=2.2857
+    L18: patched_diff=0.5625, change_ratio=1.2857
+    L27: patched_diff=1.1250, change_ratio=-0.0000
+  bigger/smaller L0: mean_change=2.1026
+  bigger/smaller L9: mean_change=1.6828
+  bigger/smaller L14: mean_change=0.6535
+  bigger/smaller L18: mean_change=-0.1795
+  bigger/smaller L27: mean_change=0.0000
+
+  --- heavier/lighter ---
+    elephant/mouse: pos_diff=0.9062, neg_diff=0.2812
+    L0: patched_diff=0.1875, change_ratio=1.1500
+    L9: patched_diff=0.6875, change_ratio=0.3500
+    L14: patched_diff=0.9375, change_ratio=-0.0500
+    L18: patched_diff=0.8125, change_ratio=0.1500
+    L27: patched_diff=0.9062, change_ratio=-0.0000
+    whale/fish: pos_diff=-3.2969, neg_diff=-4.5312
+    L0: patched_diff=-4.6250, change_ratio=1.0759
+    L9: patched_diff=-3.5625, change_ratio=0.2152
+    L14: patched_diff=-3.8594, change_ratio=0.4557
+    L18: patched_diff=-3.5000, change_ratio=0.1646
+    L27: patched_diff=-3.2969, change_ratio=-0.0000
+    bear/fox: pos_diff=-4.3750, neg_diff=-5.9375
+    L0: patched_diff=-5.5000, change_ratio=0.7200
+    L9: patched_diff=-4.5938, change_ratio=0.1400
+    L14: patched_diff=-4.5625, change_ratio=0.1200
+    L18: patched_diff=-4.4062, change_ratio=0.0200
+    L27: patched_diff=-4.3750, change_ratio=-0.0000
+  heavier/lighter L0: mean_change=0.9820
+  heavier/lighter L9: mean_change=0.2351
+  heavier/lighter L14: mean_change=0.1752
+  heavier/lighter L18: mean_change=0.1115
+  heavier/lighter L27: mean_change=0.0000
+
+  --- faster/slower ---
+    cheetah/turtle: pos_diff=2.5781, neg_diff=3.2031
+    L0: patched_diff=2.9844, change_ratio=0.6500
+    L9: patched_diff=2.6250, change_ratio=0.0750
+    L14: patched_diff=2.6562, change_ratio=0.1250
+    L18: patched_diff=3.0312, change_ratio=0.7250
+    L27: patched_diff=2.5781, change_ratio=0.0000
+    eagle/snail: pos_diff=2.2188, neg_diff=1.8438
+    L0: patched_diff=1.7500, change_ratio=1.2500
+    L9: patched_diff=1.6250, change_ratio=1.5833
+    L14: patched_diff=1.5938, change_ratio=1.6667
+    L18: patched_diff=2.0938, change_ratio=0.3333
+    L27: patched_diff=2.2188, change_ratio=-0.0000
+    horse/slug: pos_diff=0.2500, neg_diff=0.0312
+    L0: patched_diff=0.0312, change_ratio=1.0000
+    L9: patched_diff=0.1562, change_ratio=0.4286
+    L14: patched_diff=0.4062, change_ratio=-0.7143
+    L18: patched_diff=0.3438, change_ratio=-0.4286
+    L27: patched_diff=0.2500, change_ratio=-0.0000
+  faster/slower L0: mean_change=0.9667
+  faster/slower L9: mean_change=0.6956
+  faster/slower L14: mean_change=0.3591
+  faster/slower L18: mean_change=0.2099
+  faster/slower L27: mean_change=0.0000
+
+Results saved to tests\glm5_temp\ccxxxv_residual_patching_deepseek7b.json
