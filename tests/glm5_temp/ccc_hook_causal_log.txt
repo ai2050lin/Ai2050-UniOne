@@ -1,0 +1,347 @@
+
+######################################################################
+CCC(300): Hook-based Causal Intervention
+Model: qwen3
+Time: 2026-04-30 22:27:51
+######################################################################
+
+--- Step 1: Collecting gate/up activations ---
+  Collected gates/ups for 16 words
+
+======================================================================
+Step 2: Hook-based Causal Intervention
+======================================================================
+  Target layer: L18
+  Same-cat pairs: 12
+  Diff-cat pairs: 5
+  same_cat cat→shark swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat cat→shark swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat cat→shark swap_both: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat cat→horse swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat cat→horse swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat cat→horse swap_both: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat shark→horse swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat shark→horse swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat shark→horse swap_both: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat cheese→rice swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat cheese→rice swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat cheese→rice swap_both: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat cheese→bread swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat cheese→bread swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat cheese→bread swap_both: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat rice→bread swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat rice→bread swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat rice→bread swap_both: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat knife→hammer swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat knife→hammer swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat knife→hammer swap_both: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat knife→drill swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat knife→drill swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat knife→drill swap_both: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat hammer→drill swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat hammer→drill swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat hammer→drill swap_both: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat mountain→river swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat mountain→river swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat mountain→river swap_both: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat mountain→ocean swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat mountain→ocean swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat mountain→ocean swap_both: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat river→ocean swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat river→ocean swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  same_cat river→ocean swap_both: FAILED (expected scalar type BFloat16 but found Float)
+  diff_cat cat→cheese swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  diff_cat cat→cheese swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  diff_cat cat→cheese swap_both: FAILED (expected scalar type BFloat16 but found Float)
+  diff_cat cat→knife swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  diff_cat cat→knife swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  diff_cat cat→knife swap_both: FAILED (expected scalar type BFloat16 but found Float)
+  diff_cat cat→mountain swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  diff_cat cat→mountain swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  diff_cat cat→mountain swap_both: FAILED (expected scalar type BFloat16 but found Float)
+  diff_cat cheese→knife swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  diff_cat cheese→knife swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  diff_cat cheese→knife swap_both: FAILED (expected scalar type BFloat16 but found Float)
+  diff_cat cheese→mountain swap_g: FAILED (expected scalar type BFloat16 but found Float)
+  diff_cat cheese→mountain swap_u: FAILED (expected scalar type BFloat16 but found Float)
+  diff_cat cheese→mountain swap_both: FAILED (expected scalar type BFloat16 but found Float)
+
+======================================================================
+SUMMARY
+======================================================================
+
+######################################################################
+CCC(300): Hook-based Causal Intervention
+Model: qwen3
+Time: 2026-04-30 22:28:53
+######################################################################
+
+--- Step 1: Collecting gate/up activations ---
+  Collected gates/ups for 16 words
+
+======================================================================
+Step 2: Hook-based Causal Intervention
+======================================================================
+  Target layer: L18
+  Same-cat pairs: 12
+  Diff-cat pairs: 5
+  same_cat cat→shark swap_g: top1= on→ on (changed=0), margin=-13.80→-14.70 (Δ=-0.91), logit_cos=0.7179
+  same_cat cat→shark swap_u: top1= on→ in (changed=1), margin=-13.80→-15.89 (Δ=-2.10), logit_cos=0.2697
+  same_cat cat→shark swap_both: top1= on→ in (changed=1), margin=-13.80→-16.30 (Δ=-2.50), logit_cos=0.2543
+  same_cat cat→horse swap_g: top1= on→ on (changed=0), margin=-13.80→-14.75 (Δ=-0.95), logit_cos=0.7726
+  same_cat cat→horse swap_u: top1= on→ on (changed=0), margin=-13.80→-16.59 (Δ=-2.80), logit_cos=0.3840
+  same_cat cat→horse swap_both: top1= on→ on (changed=0), margin=-13.80→-18.68 (Δ=-4.89), logit_cos=0.2495
+  same_cat shark→horse swap_g: top1= a→ a (changed=0), margin=-13.12→-12.12 (Δ=1.00), logit_cos=0.9430
+  same_cat shark→horse swap_u: top1= a→ a (changed=0), margin=-13.12→-11.31 (Δ=1.81), logit_cos=0.9658
+  same_cat shark→horse swap_both: top1= a→ a (changed=0), margin=-13.12→-11.22 (Δ=1.91), logit_cos=0.9676
+  same_cat cheese→rice swap_g: top1= in→ already (changed=1), margin=-9.22→-15.69 (Δ=-6.47), logit_cos=0.3633
+  same_cat cheese→rice swap_u: top1= in→ in (changed=0), margin=-9.22→-15.12 (Δ=-5.91), logit_cos=0.3875
+  same_cat cheese→rice swap_both: top1= in→ in (changed=0), margin=-9.22→-15.98 (Δ=-6.77), logit_cos=0.2315
+  same_cat cheese→bread swap_g: top1= in→ already (changed=1), margin=-9.22→-13.14 (Δ=-3.92), logit_cos=0.6712
+  same_cat cheese→bread swap_u: top1= in→ in (changed=0), margin=-9.22→-9.28 (Δ=-0.06), logit_cos=0.9631
+  same_cat cheese→bread swap_both: top1= in→ in (changed=0), margin=-9.22→-9.00 (Δ=0.22), logit_cos=0.9734
+  same_cat rice→bread swap_g: top1= in→ in (changed=0), margin=-9.09→-12.69 (Δ=-3.59), logit_cos=0.9661
+  same_cat rice→bread swap_u: top1= in→ in (changed=0), margin=-9.09→-9.75 (Δ=-0.66), logit_cos=0.9573
+  same_cat rice→bread swap_both: top1= in→ in (changed=0), margin=-9.09→-9.62 (Δ=-0.53), logit_cos=0.9597
+  same_cat knife→hammer swap_g: top1= a→ a (changed=0), margin=-14.03→-14.00 (Δ=0.03), logit_cos=0.9879
+  same_cat knife→hammer swap_u: top1= a→ a (changed=0), margin=-14.03→-15.19 (Δ=-1.16), logit_cos=0.9807
+  same_cat knife→hammer swap_both: top1= a→ a (changed=0), margin=-14.03→-15.45 (Δ=-1.42), logit_cos=0.9804
+  same_cat knife→drill swap_g: top1= a→ a (changed=0), margin=-14.03→-13.88 (Δ=0.16), logit_cos=0.9879
+  same_cat knife→drill swap_u: top1= a→ a (changed=0), margin=-14.03→-14.17 (Δ=-0.14), logit_cos=0.9909
+  same_cat knife→drill swap_both: top1= a→ a (changed=0), margin=-14.03→-14.17 (Δ=-0.14), logit_cos=0.9909
+  same_cat hammer→drill swap_g: top1= a→ a (changed=0), margin=-11.59→-11.50 (Δ=0.09), logit_cos=0.9729
+  same_cat hammer→drill swap_u: top1= a→ a (changed=0), margin=-11.59→-11.22 (Δ=0.38), logit_cos=0.9918
+  same_cat hammer→drill swap_both: top1= a→ a (changed=0), margin=-11.59→-11.25 (Δ=0.34), logit_cos=0.9914
+  same_cat mountain→river swap_g: top1= a→ a (changed=0), margin=-10.84→-9.88 (Δ=0.97), logit_cos=0.9918
+  same_cat mountain→river swap_u: top1= a→ a (changed=0), margin=-10.84→-10.19 (Δ=0.66), logit_cos=0.9875
+  same_cat mountain→river swap_both: top1= a→ a (changed=0), margin=-10.84→-10.19 (Δ=0.66), logit_cos=0.9878
+  same_cat mountain→ocean swap_g: top1= a→ a (changed=0), margin=-10.84→-10.19 (Δ=0.66), logit_cos=0.9922
+  same_cat mountain→ocean swap_u: top1= a→ a (changed=0), margin=-10.84→-10.16 (Δ=0.69), logit_cos=0.9844
+  same_cat mountain→ocean swap_both: top1= a→ a (changed=0), margin=-10.84→-10.44 (Δ=0.41), logit_cos=0.9880
+  same_cat river→ocean swap_g: top1= → a (changed=1), margin=-16.50→-19.66 (Δ=-3.16), logit_cos=0.9210
+  same_cat river→ocean swap_u: top1= → flowing (changed=1), margin=-16.50→-28.58 (Δ=-12.08), logit_cos=0.1380
+  same_cat river→ocean swap_both: top1= → flowing (changed=1), margin=-16.50→-25.85 (Δ=-9.35), logit_cos=0.3981
+  diff_cat cat→cheese swap_g: top1= on→ on (changed=0), margin=-13.80→-14.70 (Δ=-0.91), logit_cos=0.6444
+  diff_cat cat→cheese swap_u: top1= on→ on (changed=0), margin=-13.80→-16.77 (Δ=-2.98), logit_cos=0.2071
+  diff_cat cat→cheese swap_both: top1= on→ on (changed=0), margin=-13.80→-17.73 (Δ=-3.93), logit_cos=0.2639
+  diff_cat cat→knife swap_g: top1= on→ in (changed=1), margin=-13.80→-14.08 (Δ=-0.28), logit_cos=0.7517
+  diff_cat cat→knife swap_u: top1= on→ in (changed=1), margin=-13.80→-18.96 (Δ=-5.17), logit_cos=0.2458
+  diff_cat cat→knife swap_both: top1= on→ in (changed=1), margin=-13.80→-19.63 (Δ=-5.83), logit_cos=0.1399
+  diff_cat cat→mountain swap_g: top1= on→ on (changed=0), margin=-13.80→-14.16 (Δ=-0.36), logit_cos=0.6375
+  diff_cat cat→mountain swap_u: top1= on→ in (changed=1), margin=-13.80→-15.11 (Δ=-1.31), logit_cos=0.3376
+  diff_cat cat→mountain swap_both: top1= on→ playing (changed=1), margin=-13.80→-16.15 (Δ=-2.35), logit_cos=0.2206
+  diff_cat cheese→knife swap_g: top1= in→ in (changed=0), margin=-9.22→-13.33 (Δ=-4.11), logit_cos=0.6537
+  diff_cat cheese→knife swap_u: top1= in→ in (changed=0), margin=-9.22→-9.97 (Δ=-0.75), logit_cos=0.9630
+  diff_cat cheese→knife swap_both: top1= in→ in (changed=0), margin=-9.22→-9.44 (Δ=-0.22), logit_cos=0.9735
+  diff_cat cheese→mountain swap_g: top1= in→ in (changed=0), margin=-9.22→-14.09 (Δ=-4.88), logit_cos=0.4951
+  diff_cat cheese→mountain swap_u: top1= in→ in (changed=0), margin=-9.22→-9.66 (Δ=-0.44), logit_cos=0.8910
+  diff_cat cheese→mountain swap_both: top1= in→ in (changed=0), margin=-9.22→-9.38 (Δ=-0.16), logit_cos=0.9119
+
+======================================================================
+SUMMARY
+======================================================================
+
+  swap_g:
+    Overall: top1_change_rate=0.235, avg_margin_Δ=-1.566, logit_cos=0.7924
+    Same-cat: top1_rate=0.250, margin_Δ=-1.341
+    Diff-cat: top1_rate=0.200, margin_Δ=-2.106
+
+  swap_u:
+    Overall: top1_change_rate=0.235, avg_margin_Δ=-1.883, logit_cos=0.6850
+    Same-cat: top1_rate=0.167, margin_Δ=-1.780
+    Diff-cat: top1_rate=0.400, margin_Δ=-2.129
+
+  swap_both:
+    Overall: top1_change_rate=0.235, avg_margin_Δ=-2.032, logit_cos=0.6755
+    Same-cat: top1_rate=0.167, margin_Δ=-1.839
+    Diff-cat: top1_rate=0.400, margin_Δ=-2.497
+
+  ★★★ CRITICAL JUDGMENT ★★★
+  swap_g: top1_rate=0.235, margin_Δ=-1.566
+  swap_u: top1_rate=0.235, margin_Δ=-1.883
+  → Δu and Δg have similar top-1 change rates → Both contribute to prediction
+  → Both affect confidence similarly
+
+######################################################################
+CCC(300): Hook-based Causal Intervention
+Model: glm4
+Time: 2026-04-30 22:29:37
+######################################################################
+
+--- Step 1: Collecting gate/up activations ---
+  Collected gates/ups for 16 words
+
+======================================================================
+Step 2: Hook-based Causal Intervention
+======================================================================
+  Target layer: L20
+  Same-cat pairs: 12
+  Diff-cat pairs: 5
+  same_cat cat→shark swap_g: top1= sleeping→ on (changed=1), margin=-10.88→-11.24 (Δ=-0.36), logit_cos=0.9920
+  same_cat cat→shark swap_u: top1= sleeping→ sleeping (changed=0), margin=-10.88→-11.01 (Δ=-0.13), logit_cos=0.9945
+  same_cat cat→shark swap_both: top1= sleeping→ a (changed=1), margin=-10.88→-11.02 (Δ=-0.15), logit_cos=0.9939
+  same_cat cat→horse swap_g: top1= sleeping→ on (changed=1), margin=-10.88→-11.41 (Δ=-0.53), logit_cos=0.9929
+  same_cat cat→horse swap_u: top1= sleeping→ on (changed=1), margin=-10.88→-11.48 (Δ=-0.61), logit_cos=0.9929
+  same_cat cat→horse swap_both: top1= sleeping→ on (changed=1), margin=-10.88→-11.36 (Δ=-0.49), logit_cos=0.9928
+  same_cat shark→horse swap_g: top1= a→ a (changed=0), margin=-10.97→-11.55 (Δ=-0.59), logit_cos=0.9945
+  same_cat shark→horse swap_u: top1= a→ a (changed=0), margin=-10.97→-11.62 (Δ=-0.65), logit_cos=0.9927
+  same_cat shark→horse swap_both: top1= a→ a (changed=0), margin=-10.97→-11.60 (Δ=-0.63), logit_cos=0.9933
+  same_cat cheese→rice swap_g: top1= a→ a (changed=0), margin=-11.35→-11.42 (Δ=-0.07), logit_cos=0.9953
+  same_cat cheese→rice swap_u: top1= a→ made (changed=1), margin=-11.35→-11.45 (Δ=-0.11), logit_cos=0.9953
+  same_cat cheese→rice swap_both: top1= a→ made (changed=1), margin=-11.35→-11.52 (Δ=-0.18), logit_cos=0.9955
+  same_cat cheese→bread swap_g: top1= a→ a (changed=0), margin=-11.35→-11.41 (Δ=-0.06), logit_cos=0.9956
+  same_cat cheese→bread swap_u: top1= a→ made (changed=1), margin=-11.35→-11.68 (Δ=-0.33), logit_cos=0.9944
+  same_cat cheese→bread swap_both: top1= a→ made (changed=1), margin=-11.35→-11.66 (Δ=-0.32), logit_cos=0.9949
+  same_cat rice→bread swap_g: top1= cooked→ grown (changed=1), margin=-10.72→-10.48 (Δ=0.24), logit_cos=0.9931
+  same_cat rice→bread swap_u: top1= cooked→ cooked (changed=0), margin=-10.72→-10.54 (Δ=0.18), logit_cos=0.9909
+  same_cat rice→bread swap_both: top1= cooked→ cooked (changed=0), margin=-10.72→-10.50 (Δ=0.22), logit_cos=0.9914
+  same_cat knife→hammer swap_g: top1= a→ sharp (changed=1), margin=-10.82→-11.04 (Δ=-0.22), logit_cos=0.9914
+  same_cat knife→hammer swap_u: top1= a→ sharp (changed=1), margin=-10.82→-11.37 (Δ=-0.55), logit_cos=0.9926
+  same_cat knife→hammer swap_both: top1= a→ sharp (changed=1), margin=-10.82→-11.43 (Δ=-0.62), logit_cos=0.9927
+  same_cat knife→drill swap_g: top1= a→ a (changed=0), margin=-10.82→-10.88 (Δ=-0.07), logit_cos=0.9902
+  same_cat knife→drill swap_u: top1= a→ sharp (changed=1), margin=-10.82→-11.52 (Δ=-0.70), logit_cos=0.9933
+  same_cat knife→drill swap_both: top1= a→ sharp (changed=1), margin=-10.82→-11.42 (Δ=-0.60), logit_cos=0.9940
+  same_cat hammer→drill swap_g: top1= a→ a (changed=0), margin=-9.50→-9.61 (Δ=-0.11), logit_cos=0.9898
+  same_cat hammer→drill swap_u: top1= a→ a (changed=0), margin=-9.50→-9.73 (Δ=-0.23), logit_cos=0.9932
+  same_cat hammer→drill swap_both: top1= a→ a (changed=0), margin=-9.50→-9.48 (Δ=0.02), logit_cos=0.9930
+  same_cat mountain→river swap_g: top1= so→ a (changed=1), margin=-10.54→-11.02 (Δ=-0.48), logit_cos=0.9892
+  same_cat mountain→river swap_u: top1= so→ a (changed=1), margin=-10.54→-11.03 (Δ=-0.49), logit_cos=0.9900
+  same_cat mountain→river swap_both: top1= so→ a (changed=1), margin=-10.54→-11.03 (Δ=-0.49), logit_cos=0.9895
+  same_cat mountain→ocean swap_g: top1= so→ a (changed=1), margin=-10.54→-11.05 (Δ=-0.50), logit_cos=0.9852
+  same_cat mountain→ocean swap_u: top1= so→ so (changed=0), margin=-10.54→-10.79 (Δ=-0.24), logit_cos=0.9919
+  same_cat mountain→ocean swap_both: top1= so→ so (changed=0), margin=-10.54→-10.72 (Δ=-0.18), logit_cos=0.9916
+  same_cat river→ocean swap_g: top1= a→ a (changed=0), margin=-11.07→-11.77 (Δ=-0.70), logit_cos=0.9920
+  same_cat river→ocean swap_u: top1= a→ a (changed=0), margin=-11.07→-11.20 (Δ=-0.13), logit_cos=0.9937
+  same_cat river→ocean swap_both: top1= a→ a (changed=0), margin=-11.07→-11.38 (Δ=-0.31), logit_cos=0.9939
+  diff_cat cat→cheese swap_g: top1= sleeping→ on (changed=1), margin=-10.88→-11.58 (Δ=-0.71), logit_cos=0.9921
+  diff_cat cat→cheese swap_u: top1= sleeping→ sleeping (changed=0), margin=-10.88→-11.15 (Δ=-0.28), logit_cos=0.9946
+  diff_cat cat→cheese swap_both: top1= sleeping→ sleeping (changed=0), margin=-10.88→-11.32 (Δ=-0.44), logit_cos=0.9947
+  diff_cat cat→knife swap_g: top1= sleeping→ on (changed=1), margin=-10.88→-11.66 (Δ=-0.79), logit_cos=0.9925
+  diff_cat cat→knife swap_u: top1= sleeping→ on (changed=1), margin=-10.88→-11.77 (Δ=-0.90), logit_cos=0.9926
+  diff_cat cat→knife swap_both: top1= sleeping→ on (changed=1), margin=-10.88→-12.12 (Δ=-1.24), logit_cos=0.9923
+  diff_cat cat→mountain swap_g: top1= sleeping→ on (changed=1), margin=-10.88→-11.40 (Δ=-0.52), logit_cos=0.9925
+  diff_cat cat→mountain swap_u: top1= sleeping→ sleeping (changed=0), margin=-10.88→-11.74 (Δ=-0.86), logit_cos=0.9929
+  diff_cat cat→mountain swap_both: top1= sleeping→ sleeping (changed=0), margin=-10.88→-11.76 (Δ=-0.88), logit_cos=0.9933
+  diff_cat cheese→knife swap_g: top1= a→ a (changed=0), margin=-11.35→-11.40 (Δ=-0.05), logit_cos=0.9954
+  diff_cat cheese→knife swap_u: top1= a→ a (changed=0), margin=-11.35→-12.13 (Δ=-0.79), logit_cos=0.9934
+  diff_cat cheese→knife swap_both: top1= a→ a (changed=0), margin=-11.35→-12.23 (Δ=-0.89), logit_cos=0.9938
+  diff_cat cheese→mountain swap_g: top1= a→ a (changed=0), margin=-11.35→-11.60 (Δ=-0.25), logit_cos=0.9956
+  diff_cat cheese→mountain swap_u: top1= a→ a (changed=0), margin=-11.35→-11.44 (Δ=-0.09), logit_cos=0.9931
+  diff_cat cheese→mountain swap_both: top1= a→ a (changed=0), margin=-11.35→-11.73 (Δ=-0.39), logit_cos=0.9943
+
+======================================================================
+SUMMARY
+======================================================================
+
+  swap_g:
+    Overall: top1_change_rate=0.529, avg_margin_Δ=-0.339, logit_cos=0.9923
+    Same-cat: top1_rate=0.500, margin_Δ=-0.287
+    Diff-cat: top1_rate=0.600, margin_Δ=-0.465
+
+  swap_u:
+    Overall: top1_change_rate=0.412, avg_margin_Δ=-0.407, logit_cos=0.9931
+    Same-cat: top1_rate=0.500, margin_Δ=-0.333
+    Diff-cat: top1_rate=0.200, margin_Δ=-0.583
+
+  swap_both:
+    Overall: top1_change_rate=0.471, avg_margin_Δ=-0.445, logit_cos=0.9932
+    Same-cat: top1_rate=0.583, margin_Δ=-0.310
+    Diff-cat: top1_rate=0.200, margin_Δ=-0.768
+
+  ★★★ CRITICAL JUDGMENT ★★★
+  swap_g: top1_rate=0.529, margin_Δ=-0.339
+  swap_u: top1_rate=0.412, margin_Δ=-0.407
+  → Δu and Δg have similar top-1 change rates → Both contribute to prediction
+  → Both affect confidence similarly
+
+######################################################################
+CCC(300): Hook-based Causal Intervention
+Model: deepseek7b
+Time: 2026-04-30 22:31:29
+######################################################################
+
+--- Step 1: Collecting gate/up activations ---
+  Collected gates/ups for 16 words
+
+======================================================================
+Step 2: Hook-based Causal Intervention
+======================================================================
+  Target layer: L14
+  Same-cat pairs: 12
+  Diff-cat pairs: 5
+  same_cat cat→shark swap_g: top1= a→ a (changed=0), margin=-10.44→-12.16 (Δ=-1.72), logit_cos=0.9919
+  same_cat cat→shark swap_u: top1= a→ a (changed=0), margin=-10.44→-12.19 (Δ=-1.75), logit_cos=0.9978
+  same_cat cat→shark swap_both: top1= a→ a (changed=0), margin=-10.44→-12.69 (Δ=-2.25), logit_cos=0.9956
+  same_cat cat→horse swap_g: top1= a→ sitting (changed=1), margin=-10.44→-9.00 (Δ=1.44), logit_cos=0.9745
+  same_cat cat→horse swap_u: top1= a→ a (changed=0), margin=-10.44→-11.25 (Δ=-0.81), logit_cos=0.9964
+  same_cat cat→horse swap_both: top1= a→ a (changed=0), margin=-10.44→-10.81 (Δ=-0.38), logit_cos=0.9935
+  same_cat shark→horse swap_g: top1= a→ a (changed=0), margin=-13.44→-14.12 (Δ=-0.69), logit_cos=0.9882
+  same_cat shark→horse swap_u: top1= a→ a (changed=0), margin=-13.44→-14.44 (Δ=-1.00), logit_cos=0.9915
+  same_cat shark→horse swap_both: top1= a→ a (changed=0), margin=-13.44→-14.81 (Δ=-1.38), logit_cos=0.9953
+  same_cat cheese→rice swap_g: top1= placed→  (changed=1), margin=-10.75→-10.94 (Δ=-0.19), logit_cos=0.9987
+  same_cat cheese→rice swap_u: top1= placed→  (changed=1), margin=-10.75→-10.69 (Δ=0.06), logit_cos=0.9991
+  same_cat cheese→rice swap_both: top1= placed→ \( (changed=1), margin=-10.75→-9.81 (Δ=0.94), logit_cos=0.9986
+  same_cat cheese→bread swap_g: top1= placed→  (changed=1), margin=-10.75→-12.31 (Δ=-1.56), logit_cos=0.9947
+  same_cat cheese→bread swap_u: top1= placed→ placed (changed=0), margin=-10.75→-8.88 (Δ=1.88), logit_cos=0.9971
+  same_cat cheese→bread swap_both: top1= placed→ placed (changed=0), margin=-10.75→-9.56 (Δ=1.19), logit_cos=0.9987
+  same_cat rice→bread swap_g: top1= →  (changed=0), margin=-13.70→-15.44 (Δ=-1.73), logit_cos=0.5892
+  same_cat rice→bread swap_u: top1= →  (changed=0), margin=-13.70→-12.66 (Δ=1.05), logit_cos=0.1855
+  same_cat rice→bread swap_both: top1= →  (changed=0), margin=-13.70→-13.75 (Δ=-0.05), logit_cos=0.2290
+  same_cat knife→hammer swap_g: top1= → a (changed=1), margin=-15.77→-13.61 (Δ=2.16), logit_cos=0.5718
+  same_cat knife→hammer swap_u: top1= → a (changed=1), margin=-15.77→-16.88 (Δ=-1.11), logit_cos=0.9938
+  same_cat knife→hammer swap_both: top1= → a (changed=1), margin=-15.77→-16.39 (Δ=-0.62), logit_cos=0.9885
+  same_cat knife→drill swap_g: top1= → a (changed=1), margin=-15.77→-15.18 (Δ=0.58), logit_cos=0.8124
+  same_cat knife→drill swap_u: top1= → a (changed=1), margin=-15.77→-14.73 (Δ=1.04), logit_cos=0.8253
+  same_cat knife→drill swap_both: top1= → a (changed=1), margin=-15.77→-15.39 (Δ=0.38), logit_cos=0.9130
+  same_cat hammer→drill swap_g: top1= a→ a (changed=0), margin=-16.30→-19.44 (Δ=-3.14), logit_cos=0.8670
+  same_cat hammer→drill swap_u: top1= a→ a (changed=0), margin=-16.30→-17.09 (Δ=-0.80), logit_cos=0.9876
+  same_cat hammer→drill swap_both: top1= a→ a (changed=0), margin=-16.30→-19.03 (Δ=-2.73), logit_cos=0.9136
+  same_cat mountain→river swap_g: top1= → a (changed=1), margin=-15.25→-13.88 (Δ=1.38), logit_cos=0.4741
+  same_cat mountain→river swap_u: top1= → a (changed=1), margin=-15.25→-14.38 (Δ=0.88), logit_cos=0.6145
+  same_cat mountain→river swap_both: top1= → a (changed=1), margin=-15.25→-13.64 (Δ=1.61), logit_cos=0.4899
+  same_cat mountain→ocean swap_g: top1= → a (changed=1), margin=-15.25→-13.69 (Δ=1.56), logit_cos=0.3757
+  same_cat mountain→ocean swap_u: top1= → a (changed=1), margin=-15.25→-14.26 (Δ=0.99), logit_cos=0.3982
+  same_cat mountain→ocean swap_both: top1= → a (changed=1), margin=-15.25→-14.46 (Δ=0.79), logit_cos=0.4947
+  same_cat river→ocean swap_g: top1= a→ a (changed=0), margin=-12.79→-14.29 (Δ=-1.50), logit_cos=0.9808
+  same_cat river→ocean swap_u: top1= a→ a (changed=0), margin=-12.79→-13.59 (Δ=-0.79), logit_cos=0.9875
+  same_cat river→ocean swap_both: top1= a→ a (changed=0), margin=-12.79→-14.03 (Δ=-1.23), logit_cos=0.9925
+  diff_cat cat→cheese swap_g: top1= a→ sitting (changed=1), margin=-10.44→-9.00 (Δ=1.44), logit_cos=0.9811
+  diff_cat cat→cheese swap_u: top1= a→ a (changed=0), margin=-10.44→-11.31 (Δ=-0.88), logit_cos=0.9973
+  diff_cat cat→cheese swap_both: top1= a→ a (changed=0), margin=-10.44→-11.44 (Δ=-1.00), logit_cos=0.9965
+  diff_cat cat→knife swap_g: top1= a→ sitting (changed=1), margin=-10.44→-9.31 (Δ=1.12), logit_cos=0.9775
+  diff_cat cat→knife swap_u: top1= a→ a (changed=0), margin=-10.44→-13.00 (Δ=-2.56), logit_cos=0.9844
+  diff_cat cat→knife swap_both: top1= a→ a (changed=0), margin=-10.44→-13.06 (Δ=-2.62), logit_cos=0.9660
+  diff_cat cat→mountain swap_g: top1= a→ sitting (changed=1), margin=-10.44→-9.06 (Δ=1.38), logit_cos=0.9800
+  diff_cat cat→mountain swap_u: top1= a→ a (changed=0), margin=-10.44→-11.44 (Δ=-1.00), logit_cos=0.9961
+  diff_cat cat→mountain swap_both: top1= a→ a (changed=0), margin=-10.44→-11.19 (Δ=-0.75), logit_cos=0.9960
+  diff_cat cheese→knife swap_g: top1= placed→  (changed=1), margin=-10.75→-11.50 (Δ=-0.75), logit_cos=0.9983
+  diff_cat cheese→knife swap_u: top1= placed→  (changed=1), margin=-10.75→-11.31 (Δ=-0.56), logit_cos=0.9988
+  diff_cat cheese→knife swap_both: top1= placed→ initially (changed=1), margin=-10.75→-11.00 (Δ=-0.25), logit_cos=0.9991
+  diff_cat cheese→mountain swap_g: top1= placed→  (changed=1), margin=-10.75→-11.75 (Δ=-1.00), logit_cos=0.9977
+  diff_cat cheese→mountain swap_u: top1= placed→  (changed=1), margin=-10.75→-11.75 (Δ=-1.00), logit_cos=0.9971
+  diff_cat cheese→mountain swap_both: top1= placed→ a (changed=1), margin=-10.75→-11.25 (Δ=-0.50), logit_cos=0.9985
+
+======================================================================
+SUMMARY
+======================================================================
+
+  swap_g:
+    Overall: top1_change_rate=0.706, avg_margin_Δ=-0.072, logit_cos=0.8561
+    Same-cat: top1_rate=0.583, margin_Δ=-0.285
+    Diff-cat: top1_rate=1.000, margin_Δ=0.438
+
+  swap_u:
+    Overall: top1_change_rate=0.412, avg_margin_Δ=-0.375, logit_cos=0.8793
+    Same-cat: top1_rate=0.417, margin_Δ=-0.031
+    Diff-cat: top1_rate=0.400, margin_Δ=-1.200
+
+  swap_both:
+    Overall: top1_change_rate=0.412, avg_margin_Δ=-0.521, logit_cos=0.8799
+    Same-cat: top1_rate=0.417, margin_Δ=-0.312
+    Diff-cat: top1_rate=0.400, margin_Δ=-1.025
+
+  ★★★ CRITICAL JUDGMENT ★★★
+  swap_g: top1_rate=0.706, margin_Δ=-0.072
+  swap_u: top1_rate=0.412, margin_Δ=-0.375
+  → Δg changes top-1 MORE than Δu → UNEXPECTED! Need investigation
+  → Δu affects confidence MORE → Δu=DIRECTION, Δg=GAIN
