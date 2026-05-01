@@ -370,7 +370,6 @@ def run_experiment(model_name):
     # Step 5: 关系数vs维度的核心分析
     log("\n--- Step 5: 关系数 vs 维度 核心分析 ---")
 
-    # 对所有层, 收集 (关系数, 有效维度) 数据
     scaling_data = {}
     for li in test_layers:
         scaling_data[li] = {}
@@ -380,17 +379,17 @@ def run_experiment(model_name):
                 scaling_data[li][len(rel_list)] = results[key]["significant_modes_F10"]
 
     log("\n  关系数 → 有效维度(F>10):")
-    log(f"  {'层':>6s}", end="")
+    header = "  层    "
     for n_rel in [4, 6, 8, 10]:
-        log(f"  {n_rel}rel", end="")
-    log("")
+        header += f"  {n_rel}rel"
+    log(header)
 
     for li in test_layers:
-        log(f"  L{li:>4d}", end="")
+        row = f"  L{li:>4d}"
         for n_rel in [4, 6, 8, 10]:
             dim = scaling_data.get(li, {}).get(n_rel, "?")
-            log(f"  {str(dim):>5s}", end="")
-        log("")
+            row += f"  {str(dim):>5s}"
+        log(row)
 
     # 判断: 3维是否普适?
     log("\n--- 核心判断 ---")

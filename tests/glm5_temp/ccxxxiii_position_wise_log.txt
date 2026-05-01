@@ -1,0 +1,60 @@
+CCXXXIII(333): Position-wise + LayerNorm + 3维语义解码 - glm4
+
+======================================================================
+CCXXXIII(333): Position-wise + LayerNorm + 3维语义解码 - glm4
+  d_model=4096, n_layers=40
+======================================================================
+Computing W_U row space basis (200 components)...
+  Done.
+
+============================================================
+Part 1: Position-wise残差分析
+============================================================
+
+  Position-wise summary (average across pairs):
+    L0 pos0([gMASK]): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L0 pos1(<sop>): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L0 pos2(The): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L0 pos3( elephant): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L0 pos4( is): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L0 pos5( bigger): diff_norm=0.4549, diff_in_row=0.0624, bigger_logit=0.0002, smaller_logit=-0.0029
+    L0 pos6( than): diff_norm=0.0834, diff_in_row=0.0535, bigger_logit=-0.0001, smaller_logit=0.0002
+    L10 pos0([gMASK]): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L10 pos1(<sop>): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L10 pos2(The): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L10 pos3( elephant): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L10 pos4( is): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L10 pos5( bigger): diff_norm=2.2848, diff_in_row=0.0647, bigger_logit=-0.0026, smaller_logit=-0.0158
+    L10 pos6( than): diff_norm=1.8683, diff_in_row=0.0663, bigger_logit=0.0084, smaller_logit=-0.0006
+    L20 pos0([gMASK]): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L20 pos1(<sop>): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L20 pos2(The): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L20 pos3( elephant): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L20 pos4( is): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L20 pos5( bigger): diff_norm=6.6134, diff_in_row=0.0660, bigger_logit=0.0615, smaller_logit=-0.0455
+    L20 pos6( than): diff_norm=4.6539, diff_in_row=0.0539, bigger_logit=-0.0077, smaller_logit=0.0162
+    L30 pos0([gMASK]): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L30 pos1(<sop>): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L30 pos2(The): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L30 pos3( elephant): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L30 pos4( is): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L30 pos5( bigger): diff_norm=26.8394, diff_in_row=0.0614, bigger_logit=0.2827, smaller_logit=-0.2974
+    L30 pos6( than): diff_norm=18.0894, diff_in_row=0.0676, bigger_logit=-0.0018, smaller_logit=-0.2614
+    L38 pos0([gMASK]): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L38 pos1(<sop>): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L38 pos2(The): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L38 pos3( elephant): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L38 pos4( is): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L38 pos5( bigger): diff_norm=66.1116, diff_in_row=0.0539, bigger_logit=0.7560, smaller_logit=-0.1629
+    L38 pos6( than): diff_norm=53.3248, diff_in_row=0.0620, bigger_logit=-0.0203, smaller_logit=-0.5595
+    L39 pos0([gMASK]): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L39 pos1(<sop>): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L39 pos2(The): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L39 pos3( elephant): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L39 pos4( is): diff_norm=0.0000, diff_in_row=0.0000, bigger_logit=0.0000, smaller_logit=0.0000
+    L39 pos5( bigger): diff_norm=80.2320, diff_in_row=0.0481, bigger_logit=0.7495, smaller_logit=-0.4115
+    L39 pos6( than): diff_norm=75.5593, diff_in_row=0.0804, bigger_logit=0.6561, smaller_logit=0.3430
+
+============================================================
+Part 2: LayerNorm前后对比
+============================================================

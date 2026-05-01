@@ -57,7 +57,9 @@ def run(model_name):
     info = get_model_info(model, model_name)
     layers = get_layers(model)
     n_layers, d_model = info.n_layers, info.d_model
-    n_heads = layers[0].self_attn.num_heads
+    # Get n_heads from config (different models use different attr names)
+    cfg = model.config
+    n_heads = getattr(cfg, 'num_attention_heads', getattr(cfg, 'n_heads', d_model // getattr(cfg, 'head_dim', 64)))
     d_head = d_model // n_heads
 
     all_words, word_hab = [], {}
