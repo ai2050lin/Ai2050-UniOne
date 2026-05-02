@@ -998,7 +998,7 @@ def run_exp4(model, tokenizer, device, model_info, concepts):
             # 两种注入: wu_only 和 dark_only
             for itype, idir in [("wu", delta_wu), ("dark", delta_dark)]:
                 injected_states = inject_and_collect(
-                    model, tokenizer, device, inject_l, idir, alpha, capture_layers
+                    model, tokenizer, device, inject_layer, idir, alpha, capture_layers
                 )
 
                 # 追踪每层的W_U投影比变化
