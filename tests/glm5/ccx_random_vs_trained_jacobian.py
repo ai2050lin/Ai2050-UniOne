@@ -58,6 +58,50 @@ from tests.glm5.model_utils import (
 
 TEMP = Path("tests/glm5_temp")
 
+
+def safe_get_weight(param):
+    """安全提取权重 (兼容8bit量化模型)"""
+    try:
+        # 普通tensor
+        w = param.detach().cpu().float().numpy()
+        return w
+    except (NotImplementedError, RuntimeError):
+        # 8bit量化tensor: 需要先dequantize
+        try:
+            w = param.detach().dequantize().cpu().float().numpy()
+            return w
+        except Exception:
+            # 如果dequantize也失败, 尝试直接用数据
+            try:
+                w = param.data.cpu().float().numpy()
+                return w
+            except Exception:
+                return None
+
+
+def safe_get_layer_mlp_weights(layer, d_model, mlp_type):
+    """安全提取MLP权重 (兼容8bit量化)"""
+    mlp = layer.mlp
+    W_up = W_gate = W_down = None
+    
+    if mlp_type == "split_gate_up":
+        if hasattr(mlp, 'up_proj'):
+            W_up = safe_get_weight(mlp.up_proj.weight)
+        if hasattr(mlp, 'gate_proj'):
+            W_gate = safe_get_weight(mlp.gate_proj.weight)
+        if hasattr(mlp, 'down_proj'):
+            W_down = safe_get_weight(mlp.down_proj.weight)
+    elif mlp_type == "merged_gate_up":
+        if hasattr(mlp, 'gate_up_proj'):
+            W_gate_up = safe_get_weight(mlp.gate_up_proj.weight)
+            if W_gate_up is not None:
+                W_gate = W_gate_up[:W_gate_up.shape[0]//2]
+                W_up = W_gate_up[W_gate_up.shape[0]//2:]
+        if hasattr(mlp, 'down_proj'):
+            W_down = safe_get_weight(mlp.down_proj.weight)
+    
+    return W_gate, W_up, W_down
+
 # 复用CCIX的领域定义
 ANIMAL50 = {
     "dog": ["dog", "puppy", "hound", "canine", "pooch"],
@@ -276,14 +320,14 @@ def analyze_random_vs_trained_jacobian(model, model_name, emb_matrix, mlp_inputs
         if mlp_input is None or not isinstance(mlp_input, np.ndarray):
             continue
         
-        lw = get_layer_weights(layers[li], d_model, model_info.mlp_type)
-        if lw.W_gate is None or lw.W_up is None or lw.W_down is None:
+        W_gate, W_up, W_down = safe_get_layer_mlp_weights(layers[li], d_model, model_info.mlp_type)
+        if W_gate is None or W_up is None or W_down is None:
             print(f"  L{li}: MLP权重不完整, 跳过")
             continue
         
-        W_gate = lw.W_gate.astype(np.float32)
-        W_up = lw.W_up.astype(np.float32)
-        W_down = lw.W_down.astype(np.float32)
+        W_gate = W_gate.astype(np.float32)
+        W_up = W_up.astype(np.float32)
+        W_down = W_down.astype(np.float32)
         
         x_mean = mlp_input.mean(axis=0).astype(np.float32)
         
@@ -399,13 +443,13 @@ def analyze_swiglu_eigenvalues(model, model_name, mlp_inputs, sample_layers, N):
         if mlp_input is None or not isinstance(mlp_input, np.ndarray):
             continue
         
-        lw = get_layer_weights(layers[li], d_model, model_info.mlp_type)
-        if lw.W_gate is None or lw.W_up is None or lw.W_down is None:
+        W_gate, W_up, W_down = safe_get_layer_mlp_weights(layers[li], d_model, model_info.mlp_type)
+        if W_gate is None or W_up is None or W_down is None:
             continue
         
-        W_gate = lw.W_gate.astype(np.float32)
-        W_up = lw.W_up.astype(np.float32)
-        W_down = lw.W_down.astype(np.float32)
+        W_gate = W_gate.astype(np.float32)
+        W_up = W_up.astype(np.float32)
+        W_down = W_down.astype(np.float32)
         
         x_mean = mlp_input.mean(axis=0).astype(np.float32)
         
@@ -555,13 +599,13 @@ def analyze_partial_randomization(model, model_name, mlp_inputs, sample_layers, 
         if mlp_input is None or not isinstance(mlp_input, np.ndarray):
             continue
         
-        lw = get_layer_weights(layers[li], d_model, model_info.mlp_type)
-        if lw.W_gate is None or lw.W_up is None or lw.W_down is None:
+        W_gate, W_up, W_down = safe_get_layer_mlp_weights(layers[li], d_model, model_info.mlp_type)
+        if W_gate is None or W_up is None or W_down is None:
             continue
         
-        W_gate = lw.W_gate.astype(np.float32)
-        W_up = lw.W_up.astype(np.float32)
-        W_down = lw.W_down.astype(np.float32)
+        W_gate = W_gate.astype(np.float32)
+        W_up = W_up.astype(np.float32)
+        W_down = W_down.astype(np.float32)
         
         x_mean = mlp_input.mean(axis=0).astype(np.float32)
         
@@ -640,7 +684,25 @@ def main():
     print(f"CCX: 随机 vs 训练MLP Jacobian对比分析 — {model_name}")
     print(f"{'='*70}")
     
-    model, tokenizer, device = load_model(model_name)
+    # 加载模型: GLM4用8bit量化避免OOM
+    if model_name == "glm4":
+        from transformers import BitsAndBytesConfig, AutoModelForCausalLM, AutoTokenizer
+        cfg = MODEL_CONFIGS[model_name]
+        tokenizer = AutoTokenizer.from_pretrained(
+            cfg["path"], trust_remote_code=True, local_files_only=True, use_fast=False,
+        )
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+        bnb_config = BitsAndBytesConfig(load_in_8bit=True, llm_int8_enable_fp32_cpu_offload=True)
+        model = AutoModelForCausalLM.from_pretrained(
+            cfg["path"], quantization_config=bnb_config, device_map="auto",
+            trust_remote_code=True, local_files_only=True,
+        )
+        model.eval()
+        device = next(model.parameters()).device
+        print(f"  [CCX] {model_name} loaded with 8bit quantization, device={device}")
+    else:
+        model, tokenizer, device = load_model(model_name)
     model_info = get_model_info(model, model_name)
     print(f"  d_model={model_info.d_model}, n_layers={model_info.n_layers}")
     
