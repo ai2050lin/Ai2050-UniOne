@@ -373,6 +373,17 @@ def collect_layer_outputs(model, inputs_embeds, position_ids, n_layers: int,
     return captured
 
 
+def safe_decode(tokenizer, token_id):
+    """Safely decode a token ID, handling tokenizer quirks."""
+    try:
+        result = tokenizer.decode([token_id])
+        if result is None:
+            return f"<tok_{token_id}>"
+        return result
+    except Exception:
+        return f"<tok_{token_id}>"
+
+
 def compute_cos(vec: np.ndarray, direction: np.ndarray) -> float:
     """计算向量与方向的余弦相似度"""
     norm = np.linalg.norm(vec)
