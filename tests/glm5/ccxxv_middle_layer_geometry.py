@@ -2,26 +2,27 @@
 CCXXV(373): 中间层几何学 — 大规模概念扫描
 目标: 系统验证 eff_dim = f(n_concepts) 的精确形式
 
-核心假设:
-  - 中间层 eff_dim_95 ≈ c × n_concepts (线性关系)
-  - c ≈ 0.84 (之前50概念的结果)
-  
-实验设计:
-  Exp1: 200+概念的大规模扫描, 测量不同概念数下的eff_dim
-  Exp2: 概念语义分类对eff_dim的影响 (同类vs混合)
-  Exp3: 中间层概念向量之间的角度分布和正交分组
+关键改进: 使用句子上下文 "The word is X" 代替单独的词X
+  - 单词表示被token embedding主导, 余弦相似度≈1.0
+  - 句子上下文让注意力机制工作, 产生有意义的区分度
 """
 
-import sys
-import os
-import argparse
-import json
+import sys, os, argparse, json, gc, time, warnings
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+warnings.filterwarnings('ignore')
+
 import numpy as np
-from datetime import datetime
+import torch
+from sklearn.decomposition import PCA
+from pathlib import Path
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+from tests.glm5.model_utils import load_model, get_layers, get_model_info, release_model
 
-# 200+概念的系统列表, 按语义类别分组
+TEMP = Path("tests/glm5_temp")
+
+# 246概念, 10个语义类别
 CONCEPTS_BY_CATEGORY = {
     "animals": [
         "cat", "dog", "bird", "fish", "horse", "cow", "pig", "sheep", 
@@ -42,7 +43,7 @@ CONCEPTS_BY_CATEGORY = {
     "materials": [
         "wood", "stone", "metal", "glass", "paper", "cloth", "leather", "rubber",
         "plastic", "ceramic", "concrete", "brick", "copper", "iron", "steel", "aluminum",
-        "gold_metal", "silver_metal", "diamond", "marble", "granite", "sand", "clay", "silk"
+        "diamond", "marble", "granite", "sand", "clay", "silk", "cotton", "wool"
     ],
     "weather": [
         "rain", "snow", "wind", "storm", "fog", "cloud", "sun", "frost",
@@ -55,14 +56,14 @@ CONCEPTS_BY_CATEGORY = {
         "toe", "knee", "elbow", "shoulder", "wrist", "ankle", "spine", "rib"
     ],
     "foods": [
-        "bread", "rice", "meat", "fish_food", "fruit", "vegetable", "cheese", "egg",
+        "bread", "rice", "meat", "fruit", "vegetable", "cheese", "egg",
         "milk", "water", "wine", "beer", "cake", "cookie", "soup", "salad",
-        "pasta", "noodle", "steak", "chicken", "potato", "tomato", "onion", "garlic"
+        "pasta", "noodle", "steak", "chicken", "potato", "tomato", "onion", "garlic", "pepper"
     ],
     "tools": [
         "hammer", "saw", "drill", "nail", "screw", "wrench", "pliers", "knife",
         "scissors", "axe", "shovel", "rake", "hoe", "chisel", "file", "clamp",
-        "ruler", "compass_tool", "level", "wedge", "lever", "pulley", "gear", "spring"
+        "ruler", "compass", "level", "wedge", "lever", "pulley", "gear", "spring"
     ],
     "abstract": [
         "time", "space", "energy", "matter", "force", "motion", "speed", "weight",
@@ -76,7 +77,6 @@ CONCEPTS_BY_CATEGORY = {
     ]
 }
 
-# 展平的概念列表
 ALL_CONCEPTS = []
 CONCEPT_CATEGORIES = {}
 for cat, concepts in CONCEPTS_BY_CATEGORY.items():
@@ -84,433 +84,395 @@ for cat, concepts in CONCEPTS_BY_CATEGORY.items():
         ALL_CONCEPTS.append(c)
         CONCEPT_CATEGORIES[c] = cat
 
-print(f"Total concepts: {len(ALL_CONCEPTS)}")
-print(f"Categories: {len(CONCEPTS_BY_CATEGORY)}")
-print(f"Concepts per category: {[f'{k}={len(v)}' for k, v in CONCEPTS_BY_CATEGORY.items()]}")
+print(f"Total concepts: {len(ALL_CONCEPTS)}, Categories: {len(CONCEPTS_BY_CATEGORY)}")
 
 
-def run_exp1(model_name, n_concepts_list=None):
-    """Exp1: 大规模概念扫描 — 测量 eff_dim = f(n_concepts)"""
-    from tests.glm5.model_utils import load_model, get_model_info, release_model
-    import torch
+def extract_concept_reps(model_name, concepts, target_layers, model=None, tokenizer=None, device=None):
+    """从指定层提取概念表示 (使用句子上下文)"""
+    if model is None:
+        model, tokenizer, device = load_model(model_name)
+        own_model = True
+    else:
+        own_model = False
     
-    if n_concepts_list is None:
-        n_concepts_list = [10, 20, 30, 50, 75, 100, 150, 200, len(ALL_CONCEPTS)]
+    model_info = get_model_info(model, model_name)
+    n_layers = model_info.n_layers
+    d_model = model_info.d_model
+    layers_list = get_layers(model)
+    embed_layer = model.get_input_embeddings()
     
-    print(f"\n{'='*60}")
-    print(f"CCXXV Exp1: Large-scale concept scan for {model_name}")
-    print(f"{'='*60}")
+    print(f"Model: {model_name}, layers={n_layers}, d_model={d_model}")
+    print(f"Target layers: {target_layers}")
+    print(f"Extracting {len(concepts)} concepts with sentence context...")
     
-    model, tokenizer, device = load_model(model_name)
-    info = get_model_info(model)
-    n_layers = info['n_layers']
-    d_model = info['d_model']
+    reps_by_layer = {l: {} for l in target_layers}
     
-    # 选择中间层
-    mid_layer = n_layers // 2
-    print(f"Model: {model_name}, layers={n_layers}, d_model={d_model}, mid_layer={mid_layer}")
-    
-    # 获取所有概念的中间层表示
-    print(f"Extracting representations for {len(ALL_CONCEPTS)} concepts...")
-    concept_reps = {}
-    
-    for i, concept in enumerate(ALL_CONCEPTS):
+    for i, concept in enumerate(concepts):
         if i % 50 == 0:
-            print(f"  Processing concept {i}/{len(ALL_CONCEPTS)}...")
+            print(f"  Concept {i}/{len(concepts)}...")
         
-        # 使用概念词作为输入
-        inputs = tokenizer(concept.replace('_', ' '), return_tensors='pt').to(device)
+        # 关键改进: 使用句子上下文!
+        prompt = f"The word is {concept}"
+        toks = tokenizer(prompt, return_tensors="pt").to(device)
+        input_ids = toks.input_ids
         
         with torch.no_grad():
-            # 获取中间层的残差流
-            _, cache = model.run_with_cache(inputs['input_ids'])
+            inputs_embeds = embed_layer(input_ids)
             
-            if hasattr(model, 'blocks'):
-                rep = cache['resid_mid', mid_layer]
-            else:
-                # 尝试不同的缓存键
-                possible_keys = [k for k in cache.keys() if 'mid' in str(k) or f'layer_{mid_layer}' in str(k)]
-                if possible_keys:
-                    rep = cache[possible_keys[0]]
-                else:
-                    # 回退: 使用resid_post
-                    rep = cache['resid_post', mid_layer]
+            captured = {}
+            def make_hook(key):
+                def hook(module, input, output):
+                    if isinstance(output, tuple):
+                        captured[key] = output[0].detach().float().cpu().numpy()
+                    else:
+                        captured[key] = output.detach().float().cpu().numpy()
+                return hook
+            
+            hooks = []
+            for li in target_layers:
+                if li < len(layers_list):
+                    hooks.append(layers_list[li].register_forward_hook(make_hook(f"L{li}")))
+            
+            _ = model(inputs_embeds=inputs_embeds)
+            
+            for h in hooks:
+                h.remove()
             
             # 取最后一个token的表示
-            concept_reps[concept] = rep[0, -1, :].detach().cpu().float().numpy()
+            for li in target_layers:
+                key = f"L{li}"
+                if key in captured:
+                    reps_by_layer[li][concept] = captured[key][0, -1, :]
+    
+    if own_model:
+        release_model(model)
+    print("Model released." if own_model else "Done extracting.")
+    return reps_by_layer, n_layers, d_model
+
+
+def compute_pca_stats(X):
+    """计算PCA统计信息"""
+    pca = PCA()
+    pca.fit(X)
+    
+    cum_var = np.cumsum(pca.explained_variance_ratio_)
+    eff_dim_90 = int(np.argmax(cum_var >= 0.90) + 1)
+    eff_dim_95 = int(np.argmax(cum_var >= 0.95) + 1)
+    eff_dim_99 = int(np.argmax(cum_var >= 0.99) + 1)
+    
+    top1 = pca.explained_variance_ratio_[0]
+    top5 = np.sum(pca.explained_variance_ratio_[:5])
+    top10 = np.sum(pca.explained_variance_ratio_[:10])
+    
+    # 幂律指数
+    s = pca.singular_values_
+    log_s = np.log10(s[s > 0])
+    log_k = np.log10(np.arange(1, len(log_s) + 1))
+    n_fit = min(len(log_s) // 2, 25)
+    if n_fit > 2:
+        coeffs = np.polyfit(log_k[:n_fit], log_s[:n_fit], 1)
+        alpha = -coeffs[0]
+    else:
+        alpha = 0
+    
+    return {
+        'eff_dim_90': eff_dim_90,
+        'eff_dim_95': eff_dim_95,
+        'eff_dim_99': eff_dim_99,
+        'top1': float(top1),
+        'top5': float(top5),
+        'top10': float(top10),
+        'alpha': float(alpha),
+        'ratio_95': float(eff_dim_95 / X.shape[0]),
+        'ratio_90': float(eff_dim_90 / X.shape[0]),
+    }
+
+
+# ================================================================
+# Exp1: 大规模概念扫描 — eff_dim = f(n_concepts)
+# ================================================================
+
+def run_exp1(model_name):
+    print(f'\n{"="*60}')
+    print(f'CCXXV Exp1: Large-scale concept scan ({model_name})')
+    print(f'{"="*60}')
+    
+    # 加载模型一次
+    model, tokenizer, device = load_model(model_name)
+    info = get_model_info(model, model_name)
+    mid_layer = info.n_layers // 2
+    
+    # 提取所有概念的中间层表示
+    reps_by_layer, n_layers, d_model = extract_concept_reps(
+        model_name, ALL_CONCEPTS, target_layers=[mid_layer],
+        model=model, tokenizer=tokenizer, device=device
+    )
     
     # 释放模型
     release_model(model)
-    print("Model released. Computing PCA...")
     
-    # 构建表示矩阵
+    concept_reps = reps_by_layer[mid_layer]
     concept_names = list(concept_reps.keys())
-    X = np.array([concept_reps[c] for c in concept_names])  # shape: (n_concepts, d_model)
-    print(f"Representation matrix shape: {X.shape}")
+    X_all = np.array([concept_reps[c] for c in concept_names])
+    print(f"Total extracted: {X_all.shape}")
     
     # 对不同概念数计算eff_dim
+    n_list = [10, 20, 30, 50, 75, 100, 150, 200, len(concept_names)]
     results = {}
     
-    for n_target in n_concepts_list:
+    for n_target in n_list:
         if n_target > len(concept_names):
             continue
         
-        # 随机选择n_target个概念 (用固定种子保证可复现)
-        rng = np.random.RandomState(42)
-        indices = rng.choice(len(concept_names), n_target, replace=False)
-        X_sub = X[indices]
+        # 多次采样取平均
+        n_trials = 5 if n_target < 100 else 3
+        trial_stats = []
         
-        # PCA
-        from sklearn.decomposition import PCA
+        for trial in range(n_trials):
+            rng = np.random.RandomState(42 + trial)
+            indices = rng.choice(len(concept_names), n_target, replace=False)
+            X_sub = X_all[indices]
+            stats = compute_pca_stats(X_sub)
+            trial_stats.append(stats)
         
-        # 中心化
-        X_centered = X_sub - X_sub.mean(axis=0, keepdims=True)
+        # 平均
+        avg = {}
+        std = {}
+        for key in trial_stats[0]:
+            vals = [s[key] for s in trial_stats]
+            if isinstance(vals[0], int):
+                avg[key] = int(round(np.mean(vals)))
+            else:
+                avg[key] = float(np.mean(vals))
+            std[key + '_std'] = float(np.std(vals))
         
-        # SVD计算
-        U, s, Vt = np.linalg.svd(X_centered, full_matrices=False)
-        total_energy = np.sum(s**2)
-        cum = np.cumsum(s**2) / total_energy
+        results[str(n_target)] = {**avg, **std}
         
-        # 有效维度
-        eff_dims = {}
-        for threshold_pct in [50, 80, 90, 95, 99]:
-            idx = int(np.argmax(cum >= threshold_pct / 100.0) + 1)
-            eff_dims[f'rank_{threshold_pct}'] = int(idx)
-        
-        # top-k方差占比
-        top_k_energy = {}
-        for k in [1, 5, 10, 20, 50]:
-            if k <= len(s):
-                top_k_energy[f'top{k}'] = float(np.sum(s[:k]**2) / total_energy)
-        
-        # 幂律拟合 (前50个奇异值)
-        n_fit = min(50, len(s))
-        s_fit = s[:n_fit]
-        s_fit = s_fit[s_fit > 0]
-        if len(s_fit) > 5:
-            log_r = np.log(np.arange(1, len(s_fit) + 1))
-            log_s = np.log(s_fit)
-            alpha = -np.polyfit(log_r, log_s, 1)[0]
-        else:
-            alpha = 0
-        
-        result = {
-            'n_concepts': int(n_target),
-            'eff_dims': eff_dims,
-            'top_k_energy': top_k_energy,
-            'alpha': float(alpha),
-            'ratio_95': float(eff_dims['rank_95'] / n_target),
-            'ratio_90': float(eff_dims['rank_90'] / n_target),
-            'singular_values_top20': [float(x) for x in s[:20]],
-        }
-        results[str(n_target)] = result
-        
-        print(f"  n={n_target}: rank95={eff_dims['rank_95']}, ratio={eff_dims['rank_95']/n_target:.3f}, "
-              f"rank90={eff_dims['rank_90']}, α={alpha:.3f}")
+        print(f"  n={n_target}: rank95={avg['eff_dim_95']}+-{std['eff_dim_95_std']:.1f}, "
+              f"ratio={avg['ratio_95']:.3f}, top1={avg['top1']:.3f}, a={avg['alpha']:.3f}")
     
-    # 线性回归: rank95 = a * n + b
-    n_values = np.array([int(k) for k in results.keys()])
-    rank95_values = np.array([results[k]['rank_95'] for k in results.keys()])
+    # 线性拟合
+    n_vals = np.array([int(k) for k in results.keys()])
+    rank95_vals = np.array([results[k]['eff_dim_95'] for k in results.keys()])
     
-    if len(n_values) >= 3:
-        coeffs = np.polyfit(n_values, rank95_values, 1)
+    if len(n_vals) >= 3:
+        coeffs = np.polyfit(n_vals, rank95_vals, 1)
         slope, intercept = coeffs
+        predicted = np.polyval(coeffs, n_vals)
+        ss_res = np.sum((rank95_vals - predicted)**2)
+        ss_tot = np.sum((rank95_vals - rank95_vals.mean())**2)
+        r2 = 1 - ss_res / ss_tot if ss_tot > 0 else 0
+        
         print(f"\n  Linear fit: rank95 = {slope:.3f} * n + {intercept:.3f}")
-        print(f"  Slope (dim/concept): {slope:.3f}")
-        print(f"  R²: {1 - np.sum((rank95_values - np.polyval(coeffs, n_values))**2) / np.sum((rank95_values - rank95_values.mean())**2):.4f}")
+        print(f"  R-squared = {r2:.4f}")
+        print(f"  Slope (dim/concept at 95%) = {slope:.3f}")
+        
+        # 也做rank90的拟合
+        rank90_vals = np.array([results[k]['eff_dim_90'] for k in results.keys()])
+        coeffs90 = np.polyfit(n_vals, rank90_vals, 1)
+        print(f"  Linear fit (rank90): rank90 = {coeffs90[0]:.3f} * n + {coeffs90[1]:.3f}")
+        
+        linear_fit = {
+            'slope_95': float(slope), 'intercept_95': float(intercept), 'r2_95': float(r2),
+            'slope_90': float(coeffs90[0]), 'intercept_90': float(coeffs90[1]),
+        }
+    else:
+        linear_fit = {}
     
-    # 保存结果
+    # 保存
     output = {
         'model': model_name,
         'n_layers': n_layers,
         'd_model': d_model,
         'mid_layer': mid_layer,
         'total_concepts': len(ALL_CONCEPTS),
+        'n_concepts_extracted': len(concept_names),
         'results_by_n': results,
-        'linear_fit': {
-            'slope': float(slope) if len(n_values) >= 3 else None,
-            'intercept': float(intercept) if len(n_values) >= 3 else None,
-        },
-        'concept_categories': {k: len(v) for k, v in CONCEPTS_BY_CATEGORY.items()},
+        'linear_fit': linear_fit,
     }
     
-    out_path = f'tests/glm5_temp/ccxxv_exp1_{model_name}_results.json'
-    with open(out_path, 'w', encoding='utf-8') as f:
+    outpath = TEMP / f"ccxxv_exp1_{model_name}_results.json"
+    with open(outpath, 'w', encoding='utf-8') as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
-    print(f"Results saved to {out_path}")
+    print(f"Saved to {outpath}")
     
     return output
 
 
+# ================================================================
+# Exp2: 语义分类对eff_dim的影响
+# ================================================================
+
 def run_exp2(model_name):
-    """Exp2: 语义分类对eff_dim的影响 — 同类vs混合"""
-    from tests.glm5.model_utils import load_model, get_model_info, release_model
-    import torch
-    from sklearn.decomposition import PCA
-    
-    print(f"\n{'='*60}")
-    print(f"CCXXV Exp2: Category effect for {model_name}")
-    print(f"{'='*60}")
+    print(f'\n{"="*60}')
+    print(f'CCXXV Exp2: Category effect ({model_name})')
+    print(f'{"="*60}')
     
     model, tokenizer, device = load_model(model_name)
-    info = get_model_info(model)
-    n_layers = info['n_layers']
-    d_model = info['d_model']
-    mid_layer = n_layers // 2
+    info = get_model_info(model, model_name)
+    mid_layer = info.n_layers // 2
     
-    print(f"Model: {model_name}, mid_layer={mid_layer}")
-    
-    # 获取所有概念的表示
-    print(f"Extracting representations...")
-    concept_reps = {}
-    
-    for i, concept in enumerate(ALL_CONCEPTS):
-        if i % 50 == 0:
-            print(f"  Processing concept {i}/{len(ALL_CONCEPTS)}...")
-        inputs = tokenizer(concept.replace('_', ' '), return_tensors='pt').to(device)
-        with torch.no_grad():
-            _, cache = model.run_with_cache(inputs['input_ids'])
-            if hasattr(model, 'blocks'):
-                rep = cache['resid_mid', mid_layer]
-            else:
-                rep = cache['resid_post', mid_layer]
-            concept_reps[concept] = rep[0, -1, :].detach().cpu().float().numpy()
-    
+    reps_by_layer, n_layers, d_model = extract_concept_reps(
+        model_name, ALL_CONCEPTS, target_layers=[mid_layer],
+        model=model, tokenizer=tokenizer, device=device
+    )
     release_model(model)
-    print("Model released. Computing category effects...")
+    concept_reps = reps_by_layer[mid_layer]
     
     results = {}
     
-    # 对每个类别单独计算eff_dim
+    # 每个类别单独
     for cat, concepts in CONCEPTS_BY_CATEGORY.items():
         valid = [c for c in concepts if c in concept_reps]
         if len(valid) < 5:
             continue
-        
         X_cat = np.array([concept_reps[c] for c in valid])
-        X_centered = X_cat - X_cat.mean(axis=0, keepdims=True)
-        U, s, Vt = np.linalg.svd(X_centered, full_matrices=False)
-        total_energy = np.sum(s**2)
-        cum = np.cumsum(s**2) / total_energy
-        
-        rank_95 = int(np.argmax(cum >= 0.95) + 1)
-        rank_90 = int(np.argmax(cum >= 0.90) + 1)
-        
-        results[cat] = {
-            'n_concepts': len(valid),
-            'rank_95': rank_95,
-            'rank_90': rank_90,
-            'ratio_95': rank_95 / len(valid),
-            'ratio_90': rank_90 / len(valid),
-            'top1_energy': float(s[0]**2 / total_energy),
-            'top5_energy': float(np.sum(s[:5]**2) / total_energy) if len(s) >= 5 else float(np.sum(s**2) / total_energy),
-        }
-        
-        print(f"  {cat}: n={len(valid)}, rank95={rank_95}, ratio={rank_95/len(valid):.3f}, top1={results[cat]['top1_energy']:.3f}")
+        stats = compute_pca_stats(X_cat)
+        results[cat] = {'n_concepts': len(valid), **stats}
+        print(f"  {cat}: n={len(valid)}, rank95={stats['eff_dim_95']}, ratio={stats['ratio_95']:.3f}, top1={stats['top1']:.3f}")
     
-    # 混合类别: 随机从每个类别选相同数量
+    # 混合类别
     rng = np.random.RandomState(42)
     n_per_cat = 10
-    mixed_concepts = []
+    mixed = []
     for cat, concepts in CONCEPTS_BY_CATEGORY.items():
         selected = rng.choice(concepts, min(n_per_cat, len(concepts)), replace=False).tolist()
-        mixed_concepts.extend(selected)
+        mixed.extend(selected)
+    valid_mixed = [c for c in mixed if c in concept_reps]
+    X_mixed = np.array([concept_reps[c] for c in valid_mixed])
+    stats_mixed = compute_pca_stats(X_mixed)
+    results['mixed_10percat'] = {'n_concepts': len(valid_mixed), **stats_mixed}
+    print(f"  mixed_10percat: n={len(valid_mixed)}, rank95={stats_mixed['eff_dim_95']}, ratio={stats_mixed['ratio_95']:.3f}")
     
-    if len(mixed_concepts) >= 10:
-        X_mixed = np.array([concept_reps[c] for c in mixed_concepts if c in concept_reps])
-        X_centered = X_mixed - X_mixed.mean(axis=0, keepdims=True)
-        U, s, Vt = np.linalg.svd(X_centered, full_matrices=False)
-        total_energy = np.sum(s**2)
-        cum = np.cumsum(s**2) / total_energy
-        
-        rank_95 = int(np.argmax(cum >= 0.95) + 1)
-        results['mixed_10percat'] = {
-            'n_concepts': len(X_mixed),
-            'rank_95': rank_95,
-            'rank_90': int(np.argmax(cum >= 0.90) + 1),
-            'ratio_95': rank_95 / len(X_mixed),
-            'top1_energy': float(s[0]**2 / total_energy),
-            'top5_energy': float(np.sum(s[:5]**2) / total_energy) if len(s) >= 5 else float(np.sum(s**2) / total_energy),
-        }
-        print(f"  mixed_10percat: n={len(X_mixed)}, rank95={rank_95}, ratio={rank_95/len(X_mixed):.3f}")
+    # 全部
+    X_all = np.array([concept_reps[c] for c in concept_reps.keys()])
+    stats_all = compute_pca_stats(X_all)
+    results['all'] = {'n_concepts': len(concept_reps), **stats_all}
+    print(f"  all: n={len(concept_reps)}, rank95={stats_all['eff_dim_95']}, ratio={stats_all['ratio_95']:.3f}")
     
-    # 保存结果
     output = {
         'model': model_name,
         'mid_layer': mid_layer,
         'category_results': results,
     }
     
-    out_path = f'tests/glm5_temp/ccxxv_exp2_{model_name}_results.json'
-    with open(out_path, 'w', encoding='utf-8') as f:
+    outpath = TEMP / f"ccxxv_exp2_{model_name}_results.json"
+    with open(outpath, 'w', encoding='utf-8') as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
-    print(f"Results saved to {out_path}")
+    print(f"Saved to {outpath}")
     
     return output
 
 
+# ================================================================
+# Exp3: 角度分布和正交分组
+# ================================================================
+
 def run_exp3(model_name):
-    """Exp3: 中间层概念向量之间的角度分布和正交分组"""
-    from tests.glm5.model_utils import load_model, get_model_info, release_model
-    import torch
-    
-    print(f"\n{'='*60}")
-    print(f"CCXXV Exp3: Angle distribution and orthogonal grouping for {model_name}")
-    print(f"{'='*60}")
+    print(f'\n{"="*60}')
+    print(f'CCXXV Exp3: Angle distribution ({model_name})')
+    print(f'{"="*60}')
     
     model, tokenizer, device = load_model(model_name)
-    info = get_model_info(model)
-    n_layers = info['n_layers']
-    d_model = info['d_model']
-    mid_layer = n_layers // 2
+    info = get_model_info(model, model_name)
+    mid_layer = info.n_layers // 2
     
-    print(f"Model: {model_name}, mid_layer={mid_layer}")
-    
-    # 获取所有概念的表示
-    print(f"Extracting representations...")
-    concept_reps = {}
-    
-    for i, concept in enumerate(ALL_CONCEPTS):
-        if i % 50 == 0:
-            print(f"  Processing concept {i}/{len(ALL_CONCEPTS)}...")
-        inputs = tokenizer(concept.replace('_', ' '), return_tensors='pt').to(device)
-        with torch.no_grad():
-            _, cache = model.run_with_cache(inputs['input_ids'])
-            if hasattr(model, 'blocks'):
-                rep = cache['resid_mid', mid_layer]
-            else:
-                rep = cache['resid_post', mid_layer]
-            concept_reps[concept] = rep[0, -1, :].detach().cpu().float().numpy()
-    
+    reps_by_layer, _, _ = extract_concept_reps(
+        model_name, ALL_CONCEPTS, target_layers=[mid_layer],
+        model=model, tokenizer=tokenizer, device=device
+    )
     release_model(model)
-    print("Model released. Computing angles...")
+    concept_reps = reps_by_layer[mid_layer]
     
-    # 中心化
     concept_names = list(concept_reps.keys())
     X = np.array([concept_reps[c] for c in concept_names])
     X_centered = X - X.mean(axis=0, keepdims=True)
     
-    # 计算角度矩阵
+    # 角度矩阵
     norms = np.linalg.norm(X_centered, axis=1, keepdims=True)
     norms = np.maximum(norms, 1e-10)
-    X_normalized = X_centered / norms
+    X_norm = X_centered / norms
+    cos_sim = X_norm @ X_norm.T
+    angles = np.degrees(np.arccos(np.clip(cos_sim, -1, 1)))
     
-    cosine_sim = X_normalized @ X_normalized.T
-    
-    # 角度 (弧度)
-    angles = np.arccos(np.clip(cosine_sim, -1, 1))
-    angle_degrees = np.degrees(angles)
-    
-    # 统计
     n = len(concept_names)
-    upper_tri = angle_degrees[np.triu_indices(n, k=1)]
+    upper_tri = angles[np.triu_indices(n, k=1)]
     
     angle_stats = {
         'mean': float(np.mean(upper_tri)),
         'median': float(np.median(upper_tri)),
         'std': float(np.std(upper_tri)),
-        'min': float(np.min(upper_tri)),
-        'max': float(np.max(upper_tri)),
-        'pct_near_orthogonal': float(np.mean(upper_tri > 80)),  # 角度 > 80度
-        'pct_near_parallel': float(np.mean(upper_tri < 10)),    # 角度 < 10度
+        'pct_near_orthogonal': float(np.mean(upper_tri > 80)),
+        'pct_near_parallel': float(np.mean(upper_tri < 10)),
         'pct_45_90': float(np.mean((upper_tri > 45) & (upper_tri < 90))),
     }
     
-    print(f"  Angle statistics (degrees):")
-    print(f"    Mean: {angle_stats['mean']:.1f}, Median: {angle_stats['median']:.1f}")
-    print(f"    Near-orthogonal (>80°): {angle_stats['pct_near_orthogonal']:.3f}")
-    print(f"    Near-parallel (<10°): {angle_stats['pct_near_parallel']:.3f}")
-    print(f"    45-90°: {angle_stats['pct_45_90']:.3f}")
+    print(f"  Angle stats (degrees): mean={angle_stats['mean']:.1f}, median={angle_stats['median']:.1f}")
+    print(f"    Near-orthogonal (>80): {angle_stats['pct_near_orthogonal']:.3f}")
+    print(f"    Near-parallel (<10): {angle_stats['pct_near_parallel']:.3f}")
     
-    # 类内和类间角度比较
-    within_cat_angles = []
-    between_cat_angles = []
-    
+    # 类内vs类间
+    within = []
+    between = []
     for i in range(n):
         for j in range(i + 1, n):
-            cat_i = CONCEPT_CATEGORIES.get(concept_names[i], 'unknown')
-            cat_j = CONCEPT_CATEGORIES.get(concept_names[j], 'unknown')
+            cat_i = CONCEPT_CATEGORIES.get(concept_names[i], '?')
+            cat_j = CONCEPT_CATEGORIES.get(concept_names[j], '?')
             if cat_i == cat_j:
-                within_cat_angles.append(angle_degrees[i, j])
+                within.append(angles[i, j])
             else:
-                between_cat_angles.append(angle_degrees[i, j])
+                between.append(angles[i, j])
     
-    cat_angle_stats = {
-        'within_mean': float(np.mean(within_cat_angles)),
-        'within_std': float(np.std(within_cat_angles)),
-        'between_mean': float(np.mean(between_cat_angles)),
-        'between_std': float(np.std(between_cat_angles)),
-        'separation_ratio': float(np.mean(between_cat_angles) / max(np.mean(within_cat_angles), 1e-10)),
+    cat_stats = {
+        'within_mean': float(np.mean(within)),
+        'within_std': float(np.std(within)),
+        'between_mean': float(np.mean(between)),
+        'between_std': float(np.std(between)),
+        'separation_ratio': float(np.mean(between) / max(np.mean(within), 1e-10)),
     }
     
-    print(f"  Within-category angle: {cat_angle_stats['within_mean']:.1f} ± {cat_angle_stats['within_std']:.1f}")
-    print(f"  Between-category angle: {cat_angle_stats['between_mean']:.1f} ± {cat_angle_stats['between_std']:.1f}")
-    print(f"  Separation ratio: {cat_angle_stats['separation_ratio']:.3f}")
+    print(f"  Within-cat angle: {cat_stats['within_mean']:.1f} +- {cat_stats['within_std']:.1f}")
+    print(f"  Between-cat angle: {cat_stats['between_mean']:.1f} +- {cat_stats['between_std']:.1f}")
+    print(f"  Separation ratio: {cat_stats['separation_ratio']:.3f}")
     
-    # 每个类别的平均内角
-    cat_internal_angles = {}
+    # 每个类别内角
+    cat_internal = {}
     for cat in CONCEPTS_BY_CATEGORY:
         cat_concepts = [c for c in concept_names if CONCEPT_CATEGORIES.get(c) == cat]
         if len(cat_concepts) < 2:
             continue
-        cat_indices = [concept_names.index(c) for c in cat_concepts]
+        cat_idx = [concept_names.index(c) for c in cat_concepts]
         internal = []
-        for idx_i, i in enumerate(cat_indices):
-            for j in cat_indices[idx_i + 1:]:
-                internal.append(angle_degrees[i, j])
-        cat_internal_angles[cat] = {
+        for idx_i, i in enumerate(cat_idx):
+            for j in cat_idx[idx_i + 1:]:
+                internal.append(angles[i, j])
+        cat_internal[cat] = {
             'mean': float(np.mean(internal)),
             'std': float(np.std(internal)),
             'n': len(cat_concepts),
         }
-        print(f"    {cat}: mean_angle={cat_internal_angles[cat]['mean']:.1f}° (n={len(cat_concepts)})")
+        print(f"    {cat}: mean={cat_internal[cat]['mean']:.1f} deg (n={len(cat_concepts)})")
     
-    # 正交分组分析: 找出高度正交的概念对
-    near_orthogonal_pairs = []
-    for i in range(n):
-        for j in range(i + 1, n):
-            if angle_degrees[i, j] > 85:
-                near_orthogonal_pairs.append({
-                    'c1': concept_names[i],
-                    'c2': concept_names[j],
-                    'angle': float(angle_degrees[i, j]),
-                    'cat1': CONCEPT_CATEGORIES.get(concept_names[i], 'unknown'),
-                    'cat2': CONCEPT_CATEGORIES.get(concept_names[j], 'unknown'),
-                })
-    
-    # 统计正交对中同类vs异类的比例
-    same_cat_orth = sum(1 for p in near_orthogonal_pairs if p['cat1'] == p['cat2'])
-    diff_cat_orth = len(near_orthogonal_pairs) - same_cat_orth
-    
-    print(f"\n  Near-orthogonal pairs (>85°): {len(near_orthogonal_pairs)}")
-    print(f"    Same category: {same_cat_orth}")
-    print(f"    Different category: {diff_cat_orth}")
-    
-    # 保存结果
     output = {
         'model': model_name,
         'mid_layer': mid_layer,
         'n_concepts': n,
         'angle_stats': angle_stats,
-        'category_angle_stats': cat_angle_stats,
-        'category_internal_angles': cat_internal_angles,
-        'near_orthogonal_pairs_count': len(near_orthogonal_pairs),
-        'same_cat_orthogonal': same_cat_orth,
-        'diff_cat_orthogonal': diff_cat_orth,
-        'near_orthogonal_pairs_sample': near_orthogonal_pairs[:20],  # 只保存前20个
+        'category_angle_stats': cat_stats,
+        'category_internal_angles': cat_internal,
     }
     
-    out_path = f'tests/glm5_temp/ccxxv_exp3_{model_name}_results.json'
-    with open(out_path, 'w', encoding='utf-8') as f:
+    outpath = TEMP / f"ccxxv_exp3_{model_name}_results.json"
+    with open(outpath, 'w', encoding='utf-8') as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
-    print(f"Results saved to {out_path}")
+    print(f"Saved to {outpath}")
     
     return output
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', type=str, required=True, 
+    parser.add_argument('--model', type=str, required=True,
                        choices=['qwen3', 'glm4', 'deepseek7b'])
     parser.add_argument('--exp', type=int, required=True, choices=[1, 2, 3])
     args = parser.parse_args()
