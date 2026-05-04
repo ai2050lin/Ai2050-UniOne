@@ -24,6 +24,7 @@ import CausalChainRenderer from './renderers/CausalChainRenderer';
 import DarkMatterFlowRenderer from './renderers/DarkMatterFlowRenderer';
 import SceneHelpers from './components/SceneHelpers';
 import HoverTooltip from './components/HoverTooltip';
+import PuzzlePanel from './components/PuzzlePanel';
 import useVisData from './hooks/useVisData';
 import { CATEGORY_COLORS, deltaCosToColor, cosWuToColor, SUBSPACE_COLORS } from './utils/constants';
 
@@ -49,6 +50,7 @@ export default function NeuralVis3DApp() {
   const [hoveredInfo, setHoveredInfo] = useState(null);
   const [selectedLayers, setSelectedLayers] = useState(null);
   const [viewMode, setViewMode] = useState('all');
+  const [rightPanel, setRightPanel] = useState('puzzle');
   const fileInputRef = useRef();
 
   useEffect(() => { loadDataManifest(); }, [loadDataManifest]);
@@ -68,6 +70,7 @@ export default function NeuralVis3DApp() {
     grammar_role_matrix: visualizations.filter(v => v.type === 'grammar_role_matrix'),
     causal_chain: visualizations.filter(v => v.type === 'causal_chain'),
     dark_matter_flow: visualizations.filter(v => v.type === 'dark_matter_flow'),
+    puzzle_progress: visualizations.filter(v => v.type === 'puzzle_progress'),
   };
 
   // 根据视图模式过滤
@@ -357,78 +360,112 @@ export default function NeuralVis3DApp() {
         </Canvas>
       </div>
 
-      {/* 右侧详情面板 */}
-      <div style={{ width: 260, padding: 16, borderLeft: '1px solid #1e293b', overflowY: 'auto', flexShrink: 0 }}>
-        <h3 style={{ fontSize: 13, color: '#94a3b8', marginBottom: 12 }}>详情</h3>
-        {hoveredInfo ? (
-          <div style={{ fontSize: 12, lineHeight: 1.8 }}>
-            {hoveredInfo.token && <div style={{ color: '#60a5fa', fontWeight: 'bold', fontSize: 14 }}>{hoveredInfo.token}</div>}
-            {hoveredInfo.source && <div><span style={{ color: '#94a3b8' }}>from:</span> {hoveredInfo.source}</div>}
-            {hoveredInfo.layer !== undefined && <div><span style={{ color: '#94a3b8' }}>Layer:</span> {hoveredInfo.layer}</div>}
-            {hoveredInfo.delta_cos !== undefined && (
-              <div>
-                <span style={{ color: '#94a3b8' }}>δ_cos:</span>{' '}
-                <span style={{ color: deltaCosToColor(hoveredInfo.delta_cos) }}>{hoveredInfo.delta_cos.toFixed(4)}</span>
-              </div>
-            )}
-            {hoveredInfo.cos_with_target !== undefined && <div><span style={{ color: '#94a3b8' }}>cos(target):</span> {hoveredInfo.cos_with_target.toFixed(4)}</div>}
-            {hoveredInfo.cos_with_wu !== undefined && (
-              <div>
-                <span style={{ color: '#94a3b8' }}>cos(W_U):</span>{' '}
-                <span style={{ color: cosWuToColor(hoveredInfo.cos_with_wu) }}>{hoveredInfo.cos_with_wu.toFixed(4)}</span>
-              </div>
-            )}
-            {hoveredInfo.norm !== undefined && <div><span style={{ color: '#94a3b8' }}>norm:</span> {hoveredInfo.norm.toFixed(1)}</div>}
-            {hoveredInfo.category && (
-              <div>
-                <span style={{ color: '#94a3b8' }}>category:</span>{' '}
-                <span style={{ color: CATEGORY_COLORS[hoveredInfo.category] || '#888' }}>{hoveredInfo.category}</span>
-              </div>
-            )}
-            {hoveredInfo.subspace && (
-              <div>
-                <span style={{ color: '#94a3b8' }}>subspace:</span>{' '}
-                <span style={{ color: SUBSPACE_COLORS[hoveredInfo.subspace] || '#888' }}>
-                  {hoveredInfo.subspace === 'w_u' ? 'W_U' : 'W_U⊥'}
-                </span>
-              </div>
-            )}
-            {hoveredInfo.isCorrection && <div style={{ color: '#fbbf24', fontWeight: 'bold' }}>⚡ 纠正层</div>}
-            {hoveredInfo.growth_rate !== undefined && <div><span style={{ color: '#94a3b8' }}>growth_rate:</span> {hoveredInfo.growth_rate.toFixed(3)}</div>}
-            {hoveredInfo.role_pair && <div><span style={{ color: '#94a3b8' }}>角色对:</span> <span style={{ color: '#ffe66d' }}>{hoveredInfo.role_pair}</span></div>}
-            {hoveredInfo.cosine !== undefined && <div><span style={{ color: '#94a3b8' }}>cosine:</span> {hoveredInfo.cosine.toFixed(4)}</div>}
-            {hoveredInfo.kl_divergence !== undefined && <div><span style={{ color: '#94a3b8' }}>KL:</span> {hoveredInfo.kl_divergence.toFixed(2)}</div>}
-            {hoveredInfo.classification_flip !== undefined && <div><span style={{ color: '#94a3b8' }}>flip:</span> {(hoveredInfo.classification_flip * 100).toFixed(1)}%</div>}
-            {hoveredInfo.w_u_signal !== undefined && <div><span style={{ color: SUBSPACE_COLORS.w_u }}>W_U:</span> {(hoveredInfo.w_u_signal * 100).toFixed(0)}%</div>}
-            {hoveredInfo.w_u_perp_signal !== undefined && <div><span style={{ color: SUBSPACE_COLORS.w_u_perp }}>W_U⊥:</span> {(hoveredInfo.w_u_perp_signal * 100).toFixed(0)}%</div>}
-          </div>
-        ) : (
-          <div style={{ fontSize: 12, color: '#64748b' }}>悬停3D对象查看详情</div>
-        )}
+      {/* 右侧面板: 拼图面板 + 详情切换 */}
+      <div style={{ width: 320, borderLeft: '1px solid #1e293b', overflowY: 'auto', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
+        {/* 面板切换按钮 */}
+        <div style={{ display: 'flex', borderBottom: '1px solid #1e293b', flexShrink: 0 }}>
+          {[
+            { key: 'puzzle', label: '🧩 拼图面板' },
+            { key: 'detail', label: '📋 详情' },
+          ].map(t => (
+            <button
+              key={t.key}
+              onClick={() => setRightPanel(t.key)}
+              style={{
+                flex: 1, padding: '8px 4px',
+                background: rightPanel === t.key ? 'rgba(96, 165, 250, 0.1)' : 'transparent',
+                border: 'none', borderBottom: rightPanel === t.key ? '2px solid #60a5fa' : '2px solid transparent',
+                color: rightPanel === t.key ? '#60a5fa' : '#64748b',
+                cursor: 'pointer', fontSize: 11, fontWeight: 'bold',
+              }}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
 
-        {/* 当前数据的可视化对象列表 */}
-        {visualizations.length > 0 && (
-          <div style={{ marginTop: 20 }}>
-            <h3 style={{ fontSize: 13, color: '#94a3b8', marginBottom: 8 }}>可视化对象 ({visualizations.length})</h3>
-            {visualizations.map((v, i) => (
-              <div key={i} style={{ padding: '4px 8px', fontSize: 11, color: '#94a3b8', borderBottom: '1px solid #1e293b' }}>
-                <span style={{ color: '#60a5fa' }}>{v.type}</span> {v.label || v.id}
-              </div>
-            ))}
+        {/* 拼图面板 */}
+        {rightPanel === 'puzzle' && (
+          <div style={{ flex: 1, overflowY: 'auto', padding: 12 }}>
+            <PuzzlePanel puzzleData={byType.puzzle_progress?.[0]} />
           </div>
         )}
 
-        {/* 类型统计 */}
-        {visualizations.length > 0 && (
-          <div style={{ marginTop: 16 }}>
-            <h3 style={{ fontSize: 13, color: '#94a3b8', marginBottom: 8 }}>类型统计</h3>
-            <div style={{ fontSize: 11, lineHeight: 1.8 }}>
-              {Object.entries(byType).filter(([_, arr]) => arr.length > 0).map(([type, arr]) => (
-                <div key={type}>
-                  <span style={{ color: '#60a5fa' }}>{type}</span>: {arr.length}
+        {/* 详情面板 */}
+        {rightPanel === 'detail' && (
+          <div style={{ flex: 1, overflowY: 'auto', padding: 16 }}>
+            <h3 style={{ fontSize: 13, color: '#94a3b8', marginBottom: 12 }}>详情</h3>
+            {hoveredInfo ? (
+              <div style={{ fontSize: 12, lineHeight: 1.8 }}>
+                {hoveredInfo.token && <div style={{ color: '#60a5fa', fontWeight: 'bold', fontSize: 14 }}>{hoveredInfo.token}</div>}
+                {hoveredInfo.source && <div><span style={{ color: '#94a3b8' }}>from:</span> {hoveredInfo.source}</div>}
+                {hoveredInfo.layer !== undefined && <div><span style={{ color: '#94a3b8' }}>Layer:</span> {hoveredInfo.layer}</div>}
+                {hoveredInfo.delta_cos !== undefined && (
+                  <div>
+                    <span style={{ color: '#94a3b8' }}>δ_cos:</span>{' '}
+                    <span style={{ color: deltaCosToColor(hoveredInfo.delta_cos) }}>{hoveredInfo.delta_cos.toFixed(4)}</span>
+                  </div>
+                )}
+                {hoveredInfo.cos_with_target !== undefined && <div><span style={{ color: '#94a3b8' }}>cos(target):</span> {hoveredInfo.cos_with_target.toFixed(4)}</div>}
+                {hoveredInfo.cos_with_wu !== undefined && (
+                  <div>
+                    <span style={{ color: '#94a3b8' }}>cos(W_U):</span>{' '}
+                    <span style={{ color: cosWuToColor(hoveredInfo.cos_with_wu) }}>{hoveredInfo.cos_with_wu.toFixed(4)}</span>
+                  </div>
+                )}
+                {hoveredInfo.norm !== undefined && <div><span style={{ color: '#94a3b8' }}>norm:</span> {hoveredInfo.norm.toFixed(1)}</div>}
+                {hoveredInfo.category && (
+                  <div>
+                    <span style={{ color: '#94a3b8' }}>category:</span>{' '}
+                    <span style={{ color: CATEGORY_COLORS[hoveredInfo.category] || '#888' }}>{hoveredInfo.category}</span>
+                  </div>
+                )}
+                {hoveredInfo.subspace && (
+                  <div>
+                    <span style={{ color: '#94a3b8' }}>subspace:</span>{' '}
+                    <span style={{ color: SUBSPACE_COLORS[hoveredInfo.subspace] || '#888' }}>
+                      {hoveredInfo.subspace === 'w_u' ? 'W_U' : 'W_U⊥'}
+                    </span>
+                  </div>
+                )}
+                {hoveredInfo.isCorrection && <div style={{ color: '#fbbf24', fontWeight: 'bold' }}>⚡ 纠正层</div>}
+                {hoveredInfo.growth_rate !== undefined && <div><span style={{ color: '#94a3b8' }}>growth_rate:</span> {hoveredInfo.growth_rate.toFixed(3)}</div>}
+                {hoveredInfo.role_pair && <div><span style={{ color: '#94a3b8' }}>角色对:</span> <span style={{ color: '#ffe66d' }}>{hoveredInfo.role_pair}</span></div>}
+                {hoveredInfo.cosine !== undefined && <div><span style={{ color: '#94a3b8' }}>cosine:</span> {hoveredInfo.cosine.toFixed(4)}</div>}
+                {hoveredInfo.kl_divergence !== undefined && <div><span style={{ color: '#94a3b8' }}>KL:</span> {hoveredInfo.kl_divergence.toFixed(2)}</div>}
+                {hoveredInfo.classification_flip !== undefined && <div><span style={{ color: '#94a3b8' }}>flip:</span> {(hoveredInfo.classification_flip * 100).toFixed(1)}%</div>}
+                {hoveredInfo.w_u_signal !== undefined && <div><span style={{ color: SUBSPACE_COLORS.w_u }}>W_U:</span> {(hoveredInfo.w_u_signal * 100).toFixed(0)}%</div>}
+                {hoveredInfo.w_u_perp_signal !== undefined && <div><span style={{ color: SUBSPACE_COLORS.w_u_perp }}>W_U⊥:</span> {(hoveredInfo.w_u_perp_signal * 100).toFixed(0)}%</div>}
+              </div>
+            ) : (
+              <div style={{ fontSize: 12, color: '#64748b' }}>悬停3D对象查看详情</div>
+            )}
+
+            {/* 当前数据的可视化对象列表 */}
+            {visualizations.length > 0 && (
+              <div style={{ marginTop: 20 }}>
+                <h3 style={{ fontSize: 13, color: '#94a3b8', marginBottom: 8 }}>可视化对象 ({visualizations.length})</h3>
+                {visualizations.map((v, i) => (
+                  <div key={i} style={{ padding: '4px 8px', fontSize: 11, color: '#94a3b8', borderBottom: '1px solid #1e293b' }}>
+                    <span style={{ color: '#60a5fa' }}>{v.type}</span> {v.label || v.id}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* 类型统计 */}
+            {visualizations.length > 0 && (
+              <div style={{ marginTop: 16 }}>
+                <h3 style={{ fontSize: 13, color: '#94a3b8', marginBottom: 8 }}>类型统计</h3>
+                <div style={{ fontSize: 11, lineHeight: 1.8 }}>
+                  {Object.entries(byType).filter(([_, arr]) => arr.length > 0).map(([type, arr]) => (
+                    <div key={type}>
+                      <span style={{ color: '#60a5fa' }}>{type}</span>: {arr.length}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
           </div>
         )}
       </div>

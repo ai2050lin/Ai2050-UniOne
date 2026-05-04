@@ -601,6 +601,32 @@ def export_dark_matter_flow(phase, model, experiment_id, signal_path, cascade_tr
     }
 
 
+def export_puzzle_progress(phase, model, experiment_id, categories_data):
+    """导出puzzle_progress类型数据 (Schema v2.0)
+
+    拼图面板进度数据，用于3D可视化客户端的拼图面板显示。
+
+    Args:
+        categories_data: list of dict, 每项包含:
+            - id: str, 分类ID (KN/LG/GR/MG/SE/WE/TD/UN)
+            - label: str, 分类名
+            - fill_rate: float, 填充率(0-1)
+            - subcategories: list of {id, label, cells}
+            - cells: list of {id, question, priority, status, detail}
+              status: "✓" / "◐" / "□"
+
+    Returns:
+        dict: 标准puzzle_progress可视化对象
+    """
+    return {
+        "type": "puzzle_progress",
+        "id": f"{model}_puzzle_{experiment_id}",
+        "label": f"拼图进度 ({model})",
+        "total_cells": sum(len(sc.get("cells", [])) for c in categories_data for sc in c.get("subcategories", [])),
+        "categories": categories_data,
+    }
+
+
 # ==================== 保存函数 ====================
 
 def save_vis_file(phase, model, experiment, visualizations, model_info, summary=None, schema_version="2.0"):
@@ -621,7 +647,7 @@ def save_vis_file(phase, model, experiment, visualizations, model_info, summary=
     VIS_DATA_DIR.mkdir(parents=True, exist_ok=True)
     
     # 检查是否包含v2.0类型
-    v2_types = {"subspace_decomposition", "force_line", "grammar_role_matrix", "causal_chain", "dark_matter_flow"}
+    v2_types = {"subspace_decomposition", "force_line", "grammar_role_matrix", "causal_chain", "dark_matter_flow", "puzzle_progress"}
     has_v2 = any(v.get("type") in v2_types for v in visualizations)
     if has_v2:
         schema_version = "2.0"

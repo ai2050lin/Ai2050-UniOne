@@ -1,5 +1,5 @@
-import { BookOpen, Code, Database, Brain, Sparkles, CheckCircle, AlertCircle, Layers, Target, Puzzle, Trophy, TrendingUp, Zap, ChevronDown, ChevronUp } from 'lucide-react';
-import { useState } from 'react';
+import { BookOpen, Code, Database, Brain, Sparkles, AlertCircle, Layers, Target, Puzzle, Trophy, TrendingUp, Zap, ChevronDown, ChevronUp, Box, Flame, Atom, Microscope, Sigma, GitBranch, TestTube } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 /**
  * 语言分析标签页
@@ -7,297 +7,58 @@ import { useState } from 'react';
  * 采用从上到下的垂直布局，不使用tab切换
  */
 export const LanguageAnalysisTab = () => {
-  const [expandedSection, setExpandedSection] = useState(null);
   const [expandedPuzzle, setExpandedPuzzle] = useState(null);
   const [expandedPreparation, setExpandedPreparation] = useState(null);
+  const [expandedCategory, setExpandedCategory] = useState(null);
+  const [puzzleData, setPuzzleData] = useState(null);
 
-  // 语言核心特性数据
-  const languageCharacteristics = [
-    {
-      id: 'encoding_mechanism',
-      title: '编码机制 Encoding Mechanism',
-      icon: <Database size={20} />,
-      status: 'verified',
-      statusText: '已验证 Verified',
-      description: '语言通过参数级的编码机制实现语义表示',
-      keyFindings: [
-        '共享承载 -> 偏置偏转 -> 逐层放大 Shared Carrier -> Bias Deflection -> Layer Amplification',
-        '名词形成家族片区 Family Patch，属性形成属性纤维 Attribute Fiber',
-        '颜色编码：约61.1%参数共享 + 38.9%对象特异性 Color Encoding: 61.1% Shared + 38.9% Object-Specific',
-        '路径机制：共享纤维层相同，对象路由和上下文绑定层分叉 Path Mechanism: Shared at fiber layer, divergent at route and context layers',
-      ],
-      progress: 0.85,
-      confidence: 0.92,
-      evidence: '多空间角色对齐图 Stage337, 偏转流形轨迹图 Stage339',
-      latestStage: 'Stage413',
-    },
-    {
-      id: 'semantic_structure',
-      title: '语义结构 Semantic Structure',
-      icon: <Brain size={20} />,
-      status: 'in_progress',
-      statusText: '研究中 In Progress',
-      description: '语言的语义通过分层的数学结构表示',
-      keyFindings: [
-        '基础编码层：静态特征表示 Base Encoding Layer: Static Feature Representation',
-        '动态路径层：语义推理 Dynamic Path Layer: Semantic Reasoning',
-        '结果回收层：输出整合 Result Recycling Layer: Output Integration',
-        '传播编码层：跨层传播 Propagation Encoding Layer: Cross-layer Propagation',
-        '语义角色层：语法结构 Semantic Role Layer: Syntactic Structure',
-      ],
-      progress: 0.68,
-      confidence: 0.75,
-      evidence: '多空间对齐分析 Stage337, 模糊承载簇复核 Stage338',
-      latestStage: 'Stage338',
-    },
-    {
-      id: 'multi_modal_semantics',
-      title: '多模态语义 Multi-Modal Semantics',
-      icon: <Layers size={20} />,
-      status: 'research_needed',
-      statusText: '待研究 To Research',
-      description: '语言语义在不同模态间的关联和映射机制',
-      keyFindings: [
-        '语言指令可以直接关联到图片区域 "修改左边苹果颜色"',
-        '编程任务中"重构xx文件"可以进行重构操作',
-        '说明语言本身存在跨模态的语义绑定',
-        '跨模态语义绑定的神经元级机制尚未阐明',
-      ],
-      progress: 0.25,
-      confidence: 0.45,
-      evidence: '理论假设，需要实验验证',
-      latestStage: 'Planning Phase',
-    },
-    {
-      id: 'dynamic_learning',
-      title: '动态学习 Dynamic Learning',
-      icon: <Sparkles size={20} />,
-      status: 'in_progress',
-      statusText: '研究中 In Progress',
-      description: '新概念和新属性如何被编码和学习',
-      keyFindings: [
-        '可容许更新 Admissible Update机制',
-        '受限读取 Restricted Readout机制',
-        '阶段条件传输 Stage-Conditioned Transport',
-        '继承对齐传输 Successor-Aligned Transport',
-        '协议桥接 Protocol Bridge机制',
-      ],
-      progress: 0.55,
-      confidence: 0.68,
-      evidence: 'ICSPB理论框架，在线学习实验',
-      latestStage: 'Stage400-450',
-    },
-  ];
+  useEffect(() => {
+    fetch('/data/language_analysis_puzzle.json')
+      .then(res => res.json())
+      .then(data => setPuzzleData(data))
+      .catch(err => console.error('Failed to load puzzle data:', err));
+  }, []);
 
-  // 当前研究进展数据
-  const researchProgress = [
-    {
-      id: 'color_encoding',
-      title: '颜色编码分析 Color Encoding Analysis',
-      stage: 'Stage413',
-      status: 'completed',
-      date: '2026-03-29 15:16',
-      summary: '分析了"苹果的红色"和"路灯的红色"的编码机制，确认了共享参数 + 对象特异性参数的混合编码模式',
-      keyMetrics: {
-        'Shared Param Ratio': '61.1%',
-        'Object-Specific Ratio': '38.9%',
-        'Shared Fiber Strength': '0.8420',
-        'Path Similarity': '0.7120',
-      },
-      conclusions: [
-        '不同对象的红色共享核心编码，但不是完全相同的参数',
-        '路径机制相同在共享纤维层，不同在对象路由和上下文绑定层',
-        '支持"共享属性纤维 + 对象路由分叉 + 上下文绑定分叉"的理论预期',
-      ],
-      artifacts: [
-        'tests/codex_temp/test_color_pathway_mechanism_analysis.py',
-        'research/gpt5/docs/COLOR_ENCODING_MECHANISM_DEEP_ANALYSIS.md',
-        'research/gpt5/docs/COLOR_ENCODING_SUMMARY_PLAIN_CHINESE.md',
-      ],
-    },
-    {
-      id: 'noun_attribute',
-      title: '名词属性神经元特性 Noun-Attribute Neuron Characteristics',
-      stage: 'Stage414',
-      status: 'completed',
-      date: '2026-03-29 15:32',
-      summary: '分析了名词和属性在神经元参数层面的特性差异，明确了功能分化和数学特征',
-      keyMetrics: {
-        'Noun Patch Strength': '0.7542',
-        'Attribute Fiber Strength': '0.8726',
-        'Noun Active Neurons': '847',
-        'Attribute Active Neurons': '324',
-        'Within-Family Similarity': '0.8234',
-      },
-      conclusions: [
-        '名词形成稳定的局部密集片区，编码实体本身',
-        '属性形成稀疏的纤维方向，跨对象共享',
-        '支持了神经元功能分化的明确性',
-      ],
-      artifacts: [
-        'tests/codex_temp/test_noun_attribute_neuron_param_analysis.py',
-        'research/gpt5/docs/NOUN_ATTRIBUTE_NEURON_CHARACTERISTICS.md',
-      ],
-    },
-    {
-      id: 'multi_space_alignment',
-      title: '多空间角色对齐 Multi-Space Role Alignment',
-      stage: 'Stage337',
-      status: 'completed',
-      date: '2026-03-24',
-      summary: '分析了对象空间、任务空间、传播空间的原始对齐情况',
-      keyMetrics: {
-        'Overall Alignment': '0.3784',
-        'Object Space': '0.1349',
-        'Task Space': '0.4993',
-        'Propagation Space': '0.3577',
-      },
-      conclusions: [
-        '对象空间的原始对齐最清楚',
-        '任务空间和传播空间已经显影',
-        '整体厚度仍然不够，离统一多空间结构还差一段',
-      ],
-      artifacts: [
-        'tests/codex/stage337_multi_space_role_raw_alignment.py',
-      ],
-    },
-  ];
+  const iconMap = { brain: <Brain size={20} />, target: <Target size={20} />, code: <Code size={20} />, layers: <Layers size={20} />, zap: <Zap size={20} />, database: <Database size={20} />, box: <Box size={20} />, sparkles: <Sparkles size={20} /> };
 
-  // 分析拼图数据
-  const puzzleCategories = [
-    {
-      id: 'foundation_structure',
-      title: '基础结构拼图',
-      icon: <Layers size={20} />,
-      description: '沉淀基础神经元和对象族的稳定结构证据',
-      puzzles: [
-        {
-          id: 'shared_carrier',
-          title: '共享承载机制',
-          stage: 'Stage294-298',
-          evidenceStrength: 3,
-          completeness: 0.65,
-          keyData: ['跨家族共享量化', 'base_load指标分布', '因果效应初步建立'],
-          completenessCheck: ['✅ 现象描述和量化', '❌ 承载覆盖范围验证', '❌ 跨模型稳定性证据'],
-          conclusions: '不同对象族共享基础编码载体，但覆盖范围和稳定性需更大规模验证',
-        },
-        {
-          id: 'bias_deflection',
-          title: '偏置偏转机制',
-          stage: 'Stage295-299',
-          evidenceStrength: 3,
-          completeness: 0.60,
-          keyData: ['对象切换中的作用', 'selectivity杠杆指标', '品牌/类内/细粒度方向区分'],
-          completenessCheck: ['✅ 现象描述和量化', '❌ 因果干预验证', '❌ 独立性验证不足'],
-          conclusions: '偏置位实现对象间区分，但缺少真正的反事实推理验证',
-        },
-        {
-          id: 'family_patch',
-          title: '家族片区机制',
-          stage: 'Stage414',
-          evidenceStrength: 4,
-          completeness: 0.75,
-          keyData: ['名词片区强度: 0.7542', '同族相似度: 0.8234', '847个激活神经元'],
-          completenessCheck: ['✅ 量化指标成熟', '✅ 多名词验证', '⚠ 跨模型验证不足'],
-          conclusions: '名词在参数空间形成稳定的局部密集片区，编码实体本身',
-        },
-        {
-          id: 'attribute_fiber',
-          title: '属性纤维机制',
-          stage: 'Stage414',
-          evidenceStrength: 4,
-          completeness: 0.78,
-          keyData: ['属性纤维强度: 0.8726', '跨对象相似度: 0.7915', '324个激活神经元'],
-          completenessCheck: ['✅ 量化指标成熟', '✅ 多对象验证', '✅ 颜色编码深度分析'],
-          conclusions: '属性形成稀疏的纤维方向，跨对象共享，编码修饰性特征',
-        },
-      ],
-    },
-    {
-      id: 'parameter_coupling',
-      title: '参数耦合拼图',
-      icon: <Target size={20} />,
-      description: '定位参数位的可分性、塌缩和耦合裂缝',
-      puzzles: [
-        {
-          id: 'color_encoding',
-          title: '颜色编码机制',
-          stage: 'Stage413',
-          evidenceStrength: 5,
-          completeness: 0.85,
-          keyData: ['共享参数比例: 61.1%', '对象特异性: 38.9%', '路径相似度: 0.7120'],
-          completenessCheck: ['✅ 参数级量化', '✅ 路径机制分析', '✅ 理论预期验证'],
-          conclusions: '不同对象的红色共享核心编码(61.1%)，但路径在对象路由和上下文绑定层分叉',
-        },
-        {
-          id: 'layer_amplification',
-          title: '逐层放大机制',
-          stage: 'Stage319-343',
-          evidenceStrength: 2,
-          completeness: 0.45,
-          keyData: ['早层第一次放大', '中层主放大', '后层持续放大'],
-          completenessCheck: ['✅ 层次化描述', '❌ 层次划分粗糙', '❌ 每层功能验证不足'],
-          conclusions: '编码逐层放大，但层次划分过于粗糙，缺少对每层具体功能的验证',
-        },
-      ],
-    },
-    {
-      id: 'multi_space_mapping',
-      title: '多空间映射拼图',
-      icon: <Brain size={20} />,
-      description: '分析对象空间、任务空间、传播空间等不同空间的角色',
-      puzzles: [
-        {
-          id: 'space_alignment',
-          title: '多空间角色对齐',
-          stage: 'Stage337',
-          evidenceStrength: 3,
-          completeness: 0.60,
-          keyData: ['整体对齐度: 0.3784', '对象空间: 0.1349', '任务空间: 0.4993'],
-          completenessCheck: ['✅ 空间映射概念', '❌ 空间间相互作用分析不足', '❌ 因果验证深度有限'],
-          conclusions: '对象空间对齐最清楚，任务空间和传播空间已显影，整体厚度仍不够',
-        },
-        {
-          id: 'cross_model',
-          title: '跨模型验证',
-          stage: 'Stage141-159',
-          evidenceStrength: 4,
-          completeness: 0.80,
-          keyData: ['3层同构', 'embedding级共享核概念', '层同构评分算法'],
-          completenessCheck: ['✅ 跨模型验证方法成熟', '✅ 量化指标严谨', '❌ 模型数量较少'],
-          conclusions: 'GPT-2、Qwen3-4B、DeepSeek-R1-Distill-Qwen-7B三层同构，验证编码机制的普适性',
-        },
-      ],
-    },
-    {
-      id: 'semantic_structure',
-      title: '语义结构拼图',
-      icon: <Code size={20} />,
-      description: '分析语言的分层语义结构',
-      puzzles: [
-        {
-          id: 'five_layer_structure',
-          title: '五层语义结构',
-          stage: 'Stage400-450',
-          evidenceStrength: 3,
-          completeness: 0.68,
-          keyData: ['基础编码层: 静态特征', '动态路径层: 语义推理', '结果回收层: 输出整合'],
-          completenessCheck: ['✅ 五层结构识别', '⚠ 层间交互机制需深入研究', '⚠ 动态机制未阐明'],
-          conclusions: '识别五层结构：基础编码、动态路径、结果回收、传播编码、语义角色',
-        },
-        {
-          id: 'multi_modal',
-          title: '多模态语义',
-          stage: 'Planning',
-          evidenceStrength: 1,
-          completeness: 0.25,
-          keyData: ['语言指令关联图片区域', '编程任务执行重构', '跨模态语义绑定'],
-          completenessCheck: ['⚠ 现象已观察到', '❌ 神经元级机制未阐明', '❌ 需要实验验证'],
-          conclusions: '语言本身存在跨模态的语义绑定，但神经元级机制尚未阐明',
-        },
-      ],
-    },
-  ];
+  const evidenceLevelColor = { E0: '#6b7280', E1: '#6366f1', E2: '#3b82f6', E3: '#f59e0b', E4: '#10b981', E5: '#00d2ff' };
+  const evidenceLevelLabel = { E0: '无证据', E1: '相关性', E2: '可预测', E3: '干预有效', E4: '跨模型复现', E5: '机制闭环' };
+
+  // 分析拼图数据 — 从JSON加载
+  const puzzleCategories = puzzleData ? puzzleData.categories.map(cat => ({
+    id: cat.id,
+    title: `${cat.id}: ${cat.name} ${cat.nameEn}`,
+    icon: iconMap[cat.icon] || <Puzzle size={20} />,
+    description: cat.description,
+    goal: cat.goal,
+    principle: cat.principle,
+    fillRate: cat.fillRate,
+    knowledgeRate: cat.knowledgeRate,
+    causalRate: cat.causalRate,
+    cellCount: cat.cellCount,
+    interpretPower: cat.interpretPower,
+    puzzles: cat.cells.map(cell => ({
+      id: cell.id,
+      title: cell.title,
+      priority: cell.priority,
+      status: cell.status,
+      completeness: cell.fillRate,
+      knowledgeRate: cell.knowledgeRate,
+      causalRate: cell.causalRate,
+      evidenceLevel: cell.evidenceLevel || 'E0',
+      goal: cell.goal,
+      principle: cell.principle,
+      evidenceStrength: cell.priority === 'P0' ? 5 : cell.priority === 'P1' ? 3 : 2,
+      keyData: cell.keyData,
+      evidence: cell.evidence,
+      completenessCheck: cell.status === 'filled'
+        ? ['✅ 已填充', '✅ 三模型验证', '✅ 因果验证']
+        : cell.status === 'partial'
+        ? ['✅ 部分现象描述', '⚠ 因果验证不足', '❌ 跨模型验证待做']
+        : ['❌ 未填充', '❌ 无因果验证', '❌ 无跨模型验证'],
+      conclusions: cell.evidence,
+    })),
+  })) : [];
 
   // 突破准备建议
   const breakthroughPreparation = [
@@ -359,10 +120,6 @@ export const LanguageAnalysisTab = () => {
     },
   ];
 
-  const toggleSection = (sectionId) => {
-    setExpandedSection(expandedSection === sectionId ? null : sectionId);
-  };
-
   const togglePuzzle = (puzzleId) => {
     setExpandedPuzzle(expandedPuzzle === puzzleId ? null : puzzleId);
   };
@@ -371,33 +128,8 @@ export const LanguageAnalysisTab = () => {
     setExpandedPreparation(expandedPreparation === prepId ? null : prepId);
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'verified':
-      case 'completed':
-        return '#10b981';
-      case 'in_progress':
-        return '#f59e0b';
-      case 'research_needed':
-        return '#6366f1';
-      default:
-        return '#6b7280';
-    }
-  };
 
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case 'verified':
-      case 'completed':
-        return <CheckCircle size={16} />;
-      case 'in_progress':
-        return <Sparkles size={16} />;
-      case 'research_needed':
-        return <AlertCircle size={16} />;
-      default:
-        return null;
-    }
-  };
+
 
   const getEvidenceStars = (strength) => {
     const stars = '⭐'.repeat(strength) + '☆'.repeat(5 - strength);
@@ -1164,418 +896,6 @@ export const LanguageAnalysisTab = () => {
         </div>
       </div>
 
-      {/* SECTION 1: 语言核心特性 + 当前研究进展 */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', marginBottom: '40px' }}>
-        {/* Left Column: Language Characteristics */}
-        <div style={{
-          background: 'rgba(20, 20, 30, 0.6)',
-          borderRadius: '16px',
-          padding: '24px',
-          border: '1px solid rgba(255,255,255,0.08)',
-        }}>
-          <h2 style={{
-            fontSize: '20px',
-            fontWeight: 'bold',
-            color: '#fff',
-            marginBottom: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-          }}>
-            <Code size={22} color="#00d2ff" />
-            语言核心特性 Core Characteristics
-          </h2>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {languageCharacteristics.map((char) => (
-              <div
-                key={char.id}
-                style={{
-                  background: 'rgba(0,0,0,0.3)',
-                  borderRadius: '12px',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  overflow: 'hidden',
-                }}
-              >
-                <div
-                  onClick={() => toggleSection(char.id)}
-                  style={{
-                    padding: '16px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    transition: 'background 0.2s',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'transparent';
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
-                    <div style={{ color: '#00d2ff' }}>
-                      {char.icon}
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#fff', marginBottom: '4px' }}>
-                        {char.title}
-                      </div>
-                      <div style={{ fontSize: '12px', color: '#666' }}>
-                        {char.description}
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      fontSize: '12px',
-                      fontWeight: 'bold',
-                      color: getStatusColor(char.status),
-                    }}>
-                      {getStatusIcon(char.status)}
-                      {char.statusText}
-                    </div>
-                    <div style={{
-                      width: '40px',
-                      height: '6px',
-                      background: 'rgba(255,255,255,0.1)',
-                      borderRadius: '3px',
-                      overflow: 'hidden',
-                    }}>
-                      <div style={{
-                        width: `${char.progress * 100}%`,
-                        height: '100%',
-                        background: getStatusColor(char.status),
-                        borderRadius: '3px',
-                        transition: 'width 0.3s',
-                      }} />
-                    </div>
-                  </div>
-                </div>
-
-                {expandedSection === char.id && (
-                  <div style={{
-                    padding: '16px',
-                    borderTop: '1px solid rgba(255,255,255,0.06)',
-                    background: 'rgba(0,0,0,0.2)',
-                  }}>
-                    <div style={{ marginBottom: '16px' }}>
-                      <div style={{
-                        fontSize: '12px',
-                        fontWeight: 'bold',
-                        color: '#888',
-                        textTransform: 'uppercase',
-                        marginBottom: '8px',
-                        letterSpacing: '1px',
-                      }}>
-                        Key Findings 关键发现
-                      </div>
-                      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                        {char.keyFindings.map((finding, idx) => (
-                          <li
-                            key={idx}
-                            style={{
-                              fontSize: '13px',
-                              color: '#ccc',
-                              marginBottom: '6px',
-                              paddingLeft: '16px',
-                              position: 'relative',
-                            }}
-                          >
-                            <span style={{
-                              position: 'absolute',
-                              left: 0,
-                              top: '6px',
-                              width: '6px',
-                              height: '6px',
-                              borderRadius: '50%',
-                              background: '#00d2ff',
-                            }} />
-                            {finding}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(2, 1fr)',
-                      gap: '12px',
-                      marginBottom: '16px',
-                    }}>
-                      <div style={{
-                        background: 'rgba(0,0,0,0.3)',
-                        borderRadius: '8px',
-                        padding: '12px',
-                      }}>
-                        <div style={{ fontSize: '11px', color: '#666', marginBottom: '4px' }}>Progress 进展</div>
-                        <div style={{ fontSize: '18px', fontWeight: 'bold', color: getStatusColor(char.status) }}>
-                          {(char.progress * 100).toFixed(0)}%
-                        </div>
-                      </div>
-                      <div style={{
-                        background: 'rgba(0,0,0,0.3)',
-                        borderRadius: '8px',
-                        padding: '12px',
-                      }}>
-                        <div style={{ fontSize: '11px', color: '#666', marginBottom: '4px' }}>Confidence 置信度</div>
-                        <div style={{ fontSize: '18px', fontWeight: 'bold', color: getStatusColor(char.status) }}>
-                          {(char.confidence * 100).toFixed(0)}%
-                        </div>
-                      </div>
-                    </div>
-
-                    <div style={{
-                      display: 'flex',
-                      gap: '12px',
-                      fontSize: '12px',
-                    }}>
-                      <div style={{
-                        flex: 1,
-                        background: 'rgba(0,100,200,0.1)',
-                        borderRadius: '6px',
-                        padding: '10px',
-                      }}>
-                        <div style={{ fontSize: '10px', color: '#666', marginBottom: '4px' }}>Evidence 证据</div>
-                        <div style={{ color: '#00d2ff', fontFamily: 'monospace' }}>
-                          {char.evidence}
-                        </div>
-                      </div>
-                      <div style={{
-                        background: 'rgba(200,100,0,0.1)',
-                        borderRadius: '6px',
-                        padding: '10px',
-                      }}>
-                        <div style={{ fontSize: '10px', color: '#666', marginBottom: '4px' }}>Stage</div>
-                        <div style={{ color: '#f59e0b', fontWeight: 'bold' }}>
-                          {char.latestStage}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right Column: Research Progress */}
-        <div style={{
-          background: 'rgba(20, 20, 30, 0.6)',
-          borderRadius: '16px',
-          padding: '24px',
-          border: '1px solid rgba(255,255,255,0.08)',
-        }}>
-          <h2 style={{
-            fontSize: '20px',
-            fontWeight: 'bold',
-            color: '#fff',
-            marginBottom: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-          }}>
-            <TrendingUp size={22} color="#00d2ff" />
-            当前研究进展 Current Progress
-          </h2>
-
-          <div style={{ position: 'relative', paddingLeft: '20px' }}>
-            <div style={{
-              position: 'absolute',
-              left: '8px',
-              top: '10px',
-              bottom: '10px',
-              width: '2px',
-              background: 'linear-gradient(to bottom, #00d2ff, rgba(0,210,255,0.2))',
-            }} />
-
-            {researchProgress.map((item) => (
-              <div key={item.id} style={{ position: 'relative', marginBottom: '20px' }}>
-                <div style={{
-                  position: 'absolute',
-                  left: '-12px',
-                  top: '16px',
-                  width: '12px',
-                  height: '12px',
-                  borderRadius: '50%',
-                  background: getStatusColor(item.status),
-                  border: '2px solid rgba(0,0,0,0.8)',
-                  boxShadow: `0 0 10px ${getStatusColor(item.status)}40`,
-                }} />
-
-                <div style={{
-                  marginLeft: '20px',
-                  background: 'rgba(0,0,0,0.3)',
-                  borderRadius: '12px',
-                  border: `1px solid ${getStatusColor(item.status)}30`,
-                  overflow: 'hidden',
-                }}>
-                  <div
-                    onClick={() => toggleSection(`progress_${item.id}`)}
-                    style={{
-                      padding: '16px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <div style={{ flex: 1 }}>
-                      <div style={{
-                        fontSize: '14px',
-                        fontWeight: 'bold',
-                        color: '#fff',
-                        marginBottom: '6px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                      }}>
-                        <span style={{
-                          fontSize: '11px',
-                          background: `${getStatusColor(item.status)}30`,
-                          color: getStatusColor(item.status),
-                          padding: '2px 8px',
-                          borderRadius: '4px',
-                          fontFamily: 'monospace',
-                        }}>
-                          {item.stage}
-                        </span>
-                        {item.title}
-                      </div>
-                      <div style={{ fontSize: '12px', color: '#888' }}>
-                        {item.summary}
-                      </div>
-                    </div>
-                    <div style={{
-                      fontSize: '11px',
-                      color: '#666',
-                      fontFamily: 'monospace',
-                      marginLeft: '12px',
-                    }}>
-                      {item.date}
-                    </div>
-                  </div>
-
-                  {expandedSection === `progress_${item.id}` && (
-                    <div style={{
-                      padding: '16px',
-                      borderTop: '1px solid rgba(255,255,255,0.06)',
-                      background: 'rgba(0,0,0,0.2)',
-                    }}>
-                      <div style={{ marginBottom: '16px' }}>
-                        <div style={{
-                          fontSize: '11px',
-                          fontWeight: 'bold',
-                          color: '#888',
-                          textTransform: 'uppercase',
-                          marginBottom: '8px',
-                          letterSpacing: '1px',
-                        }}>
-                          Key Metrics 关键指标
-                        </div>
-                        <div style={{
-                          display: 'grid',
-                          gridTemplateColumns: 'repeat(2, 1fr)',
-                          gap: '8px',
-                        }}>
-                          {Object.entries(item.keyMetrics).map(([key, value]) => (
-                            <div
-                              key={key}
-                              style={{
-                                background: 'rgba(0,0,0,0.3)',
-                                borderRadius: '6px',
-                                padding: '8px',
-                              }}
-                            >
-                              <div style={{ fontSize: '10px', color: '#666', marginBottom: '2px' }}>
-                                {key}
-                              </div>
-                              <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#00d2ff' }}>
-                                {value}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div style={{ marginBottom: '16px' }}>
-                        <div style={{
-                          fontSize: '11px',
-                          fontWeight: 'bold',
-                          color: '#888',
-                          textTransform: 'uppercase',
-                          marginBottom: '8px',
-                          letterSpacing: '1px',
-                        }}>
-                          Conclusions 结论
-                        </div>
-                        <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                          {item.conclusions.map((conclusion, idx) => (
-                            <li
-                              key={idx}
-                              style={{
-                                fontSize: '12px',
-                                color: '#ccc',
-                                marginBottom: '4px',
-                                paddingLeft: '12px',
-                                position: 'relative',
-                              }}
-                            >
-                              <span style={{
-                                position: 'absolute',
-                                left: 0,
-                                top: '6px',
-                                width: '4px',
-                                height: '4px',
-                                borderRadius: '50%',
-                                background: '#00d2ff',
-                              }} />
-                              {conclusion}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div>
-                        <div style={{
-                          fontSize: '11px',
-                          fontWeight: 'bold',
-                          color: '#888',
-                          textTransform: 'uppercase',
-                          marginBottom: '8px',
-                          letterSpacing: '1px',
-                        }}>
-                          Artifacts 产出文件
-                        </div>
-                        {item.artifacts.map((artifact, idx) => (
-                          <div
-                            key={idx}
-                            style={{
-                              fontSize: '11px',
-                              color: '#00d2ff',
-                              fontFamily: 'monospace',
-                              marginBottom: '4px',
-                              background: 'rgba(0,210,255,0.05)',
-                              padding: '6px 10px',
-                              borderRadius: '4px',
-                            }}
-                          >
-                            {artifact}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* SECTION 2: 分析拼图 */}
       <div style={{
@@ -1598,191 +918,403 @@ export const LanguageAnalysisTab = () => {
           分析拼图 Analysis Puzzles
         </h2>
 
+        {/* 总览进度条 */}
+        {puzzleData && (
+          <div style={{
+            marginBottom: '24px',
+            padding: '16px 20px',
+            background: 'rgba(0,100,200,0.1)',
+            borderRadius: '12px',
+            border: '1px solid rgba(0,210,255,0.2)',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+              <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#00d2ff' }}>
+                总填充率 Overall Fill Rate
+              </span>
+              <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#00d2ff' }}>
+                {(puzzleData.overallProgress.fillRate * 100).toFixed(0)}%
+              </span>
+            </div>
+            <div style={{
+              width: '100%',
+              height: '12px',
+              background: 'rgba(255,255,255,0.1)',
+              borderRadius: '6px',
+              overflow: 'hidden',
+              marginBottom: '12px',
+            }}>
+              <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                <div style={{
+                  position: 'absolute', left: 0, top: 0, height: '100%',
+                  width: `${puzzleData.overallProgress.knowledgeRate * 100}%`,
+                  background: 'rgba(59,130,246,0.5)',
+                  borderRadius: '6px 0 0 6px',
+                }} />
+                <div style={{
+                  position: 'absolute', left: 0, top: 0, height: '100%',
+                  width: `${puzzleData.overallProgress.causalRate * 100}%`,
+                  background: 'linear-gradient(90deg, #f59e0b, #ef4444)',
+                  borderRadius: '6px 0 0 6px',
+                  zIndex: 1,
+                }} />
+                <div style={{
+                  position: 'absolute', left: 0, top: 0, height: '100%',
+                  width: `${puzzleData.overallProgress.fillRate * 100}%`,
+                  background: 'linear-gradient(90deg, #00d2ff, #a855f7)',
+                  borderRadius: '6px',
+                  zIndex: 2,
+                  opacity: 0.85,
+                }} />
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: '#888', flexWrap: 'wrap', marginBottom: '10px' }}>
+              <span>✓ 已填充: {puzzleData.overallProgress.filled}</span>
+              <span>◐ 部分填充: {puzzleData.overallProgress.partial}</span>
+              <span>□ 未填充: {puzzleData.overallProgress.empty}</span>
+              <span>总格子: {puzzleData.overallProgress.totalCells}</span>
+              <span>P0填充率: {(puzzleData.overallProgress.p0FillRate * 100).toFixed(0)}%</span>
+            </div>
+            <div style={{ display: 'flex', gap: '16px', fontSize: '12px', flexWrap: 'wrap', marginBottom: '10px' }}>
+              <span style={{ color: '#3b82f6' }}>知识率: {(puzzleData.overallProgress.knowledgeRate * 100).toFixed(0)}%</span>
+              <span style={{ color: '#f59e0b' }}>因果率: {(puzzleData.overallProgress.causalRate * 100).toFixed(0)}%</span>
+              <span style={{ color: '#00d2ff' }}>解释力: {(puzzleData.overallProgress.interpretPower * 100).toFixed(0)}%</span>
+            </div>
+            {/* 成熟度 */}
+            {puzzleData.maturity && (
+              <div style={{ display: 'flex', gap: '12px', fontSize: '11px', padding: '8px 12px', background: 'rgba(0,0,0,0.3)', borderRadius: '6px', flexWrap: 'wrap' }}>
+                <span style={{ color: '#10b981' }}>经验规律: {(puzzleData.maturity.empiricalDiscovery * 100).toFixed(0)}%</span>
+                <span style={{ color: '#f59e0b' }}>统一理论: {(puzzleData.maturity.unifiedTheory * 100).toFixed(0)}%</span>
+                <span style={{ color: '#ef4444' }}>可预测科学: {(puzzleData.maturity.predictiveScience * 100).toFixed(0)}%</span>
+                <span style={{ color: '#888' }}>{puzzleData.maturity.stageLabel}</span>
+              </div>
+            )}
+            {/* 子空间分解地图 */}
+            <div style={{ marginTop: '12px', padding: '10px 14px', background: 'rgba(0,0,0,0.3)', borderRadius: '8px' }}>
+              <div style={{ fontSize: '11px', color: '#888', marginBottom: '6px' }}>子空间分解地图 Subspace Decomposition</div>
+              <div style={{ fontSize: '12px', color: '#00d2ff', fontFamily: 'monospace', lineHeight: '1.6' }}>
+                R^d ≈ V_WU∩V_sem ⊕ V_WU⊥∩V_syn ⊕ V_WU⊥∩V_dark ⊕ V_⊥logic ⊕ V_residual
+              </div>
+              <div style={{ display: 'flex', gap: '8px', marginTop: '6px', flexWrap: 'wrap' }}>
+                {puzzleData.subspaceDecomposition.subspaces.map((ss, idx) => (
+                  <span key={idx} style={{ fontSize: '11px', color: '#ccc', background: 'rgba(0,210,255,0.08)', padding: '3px 8px', borderRadius: '4px' }}>
+                    {ss.label}({ss.ratio})
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '30px' }}>
           {/* Left: Puzzle Categories */}
-          <div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {puzzleCategories.map((category) => (
               <div
                 key={category.id}
                 style={{
-                  marginBottom: '30px',
-                  background: 'rgba(0,0,0,0.2)',
+                  background: 'rgba(0,0,0,0.3)',
                   borderRadius: '12px',
+                  border: '1px solid rgba(255,255,255,0.06)',
                   overflow: 'hidden',
                 }}
               >
                 <div
+                  onClick={() => setExpandedCategory(expandedCategory === category.id ? null : category.id)}
                   style={{
-                    padding: '16px 20px',
-                    background: 'rgba(0,100,200,0.1)',
-                    borderBottom: '1px solid rgba(255,255,255,0.06)',
-                  }}
-                >
-                  <div style={{
+                    padding: '16px',
+                    cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '10px',
-                    marginBottom: '8px',
-                  }}>
+                    justifyContent: 'space-between',
+                    transition: 'background 0.2s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'transparent';
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
                     <div style={{ color: '#00d2ff' }}>
                       {category.icon}
                     </div>
-                    <h3 style={{
-                      fontSize: '16px',
-                      fontWeight: 'bold',
-                      color: '#fff',
-                      margin: 0,
-                    }}>
-                      {category.title}
-                    </h3>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#fff', marginBottom: '4px' }}>
+                        {category.title}
+                      </div>
+                      <div style={{ fontSize: '12px', color: '#666' }}>
+                        {category.description}
+                      </div>
+                    </div>
                   </div>
-                  <p style={{
-                    fontSize: '13px',
-                    color: '#888',
-                    margin: 0,
-                  }}>
-                    {category.description}
-                  </p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', minWidth: '100px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ fontSize: '9px', color: '#3b82f6', minWidth: '28px' }}>知识</span>
+                        <div style={{ flex: 1, height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
+                          <div style={{ width: `${(category.knowledgeRate || 0) * 100}%`, height: '100%', background: '#3b82f6', borderRadius: '2px' }} />
+                        </div>
+                        <span style={{ fontSize: '9px', color: '#3b82f6', minWidth: '24px', textAlign: 'right' }}>{((category.knowledgeRate || 0) * 100).toFixed(0)}%</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ fontSize: '9px', color: '#f59e0b', minWidth: '28px' }}>因果</span>
+                        <div style={{ flex: 1, height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
+                          <div style={{ width: `${(category.causalRate || 0) * 100}%`, height: '100%', background: '#f59e0b', borderRadius: '2px' }} />
+                        </div>
+                        <span style={{ fontSize: '9px', color: '#f59e0b', minWidth: '24px', textAlign: 'right' }}>{((category.causalRate || 0) * 100).toFixed(0)}%</span>
+                      </div>
+                    </div>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      fontSize: '12px',
+                      fontWeight: 'bold',
+                      color: category.fillRate > 0.3 ? '#10b981' : category.fillRate > 0.15 ? '#f59e0b' : '#ef4444',
+                    }}>
+                      {(category.fillRate * 100).toFixed(0)}%
+                    </div>
+                    {expandedCategory === category.id ? <ChevronUp size={16} color="#00d2ff" /> : <ChevronDown size={16} color="#666" />}
+                  </div>
                 </div>
 
-                <div style={{ padding: '16px 20px' }}>
-                  {category.puzzles.map((puzzle) => (
-                    <div
-                      key={puzzle.id}
-                      style={{
-                        marginBottom: '16px',
-                        background: 'rgba(0,0,0,0.3)',
-                        borderRadius: '10px',
-                        overflow: 'hidden',
-                      }}
-                    >
+                {expandedCategory === category.id && (
+                  <div style={{
+                    padding: '16px',
+                    borderTop: '1px solid rgba(255,255,255,0.06)',
+                    background: 'rgba(0,0,0,0.2)',
+                  }}>
+                    {/* 目标与原理 */}
+                    {category.goal && (
+                      <div style={{ marginBottom: '14px', display: 'flex', gap: '10px' }}>
+                        <div style={{
+                          flex: 1,
+                          padding: '10px 12px',
+                          background: 'rgba(0,210,255,0.06)',
+                          borderRadius: '8px',
+                          borderLeft: '3px solid #00d2ff',
+                        }}>
+                          <div style={{ fontSize: '10px', fontWeight: 'bold', color: '#00d2ff', marginBottom: '4px', letterSpacing: '0.5px' }}>
+                            目标 GOAL
+                          </div>
+                          <div style={{ fontSize: '12px', color: '#ccc', lineHeight: '1.5' }}>
+                            {category.goal}
+                          </div>
+                        </div>
+                        {category.principle && (
+                          <div style={{
+                            flex: 1,
+                            padding: '10px 12px',
+                            background: 'rgba(168,85,247,0.06)',
+                            borderRadius: '8px',
+                            borderLeft: '3px solid #a855f7',
+                          }}>
+                            <div style={{ fontSize: '10px', fontWeight: 'bold', color: '#a855f7', marginBottom: '4px', letterSpacing: '0.5px' }}>
+                              原理 PRINCIPLE
+                            </div>
+                            <div style={{ fontSize: '12px', color: '#ccc', lineHeight: '1.5' }}>
+                              {category.principle}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {category.puzzles.map((puzzle) => (
                       <div
-                        onClick={() => togglePuzzle(puzzle.id)}
+                        key={puzzle.id}
                         style={{
-                          padding: '14px 16px',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
+                          marginBottom: '12px',
+                          background: 'rgba(0,0,0,0.3)',
+                          borderRadius: '10px',
+                          overflow: 'hidden',
+                          border: '1px solid rgba(255,255,255,0.04)',
                         }}
                       >
-                        <div style={{ flex: 1 }}>
-                          <div style={{
-                            fontSize: '14px',
-                            fontWeight: 'bold',
-                            color: '#fff',
-                            marginBottom: '4px',
+                        <div
+                          onClick={() => togglePuzzle(puzzle.id)}
+                          style={{
+                            padding: '12px 14px',
+                            cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '8px',
-                          }}>
-                            <span style={{
-                              fontSize: '11px',
-                              background: 'rgba(0,210,255,0.1)',
-                              color: '#00d2ff',
-                              padding: '2px 6px',
-                              borderRadius: '4px',
-                              fontFamily: 'monospace',
-                            }}>
-                              {puzzle.stage}
-                            </span>
-                            {puzzle.title}
-                          </div>
-                          <div style={{ fontSize: '11px', color: '#888' }}>
-                            {getEvidenceStars(puzzle.evidenceStrength)} 完整性: {(puzzle.completeness * 100).toFixed(0)}%
-                          </div>
-                        </div>
-                        {expandedPuzzle === puzzle.id ? <ChevronUp size={16} color="#00d2ff" /> : <ChevronDown size={16} color="#666" />}
-                      </div>
-
-                      {expandedPuzzle === puzzle.id && (
-                        <div style={{
-                          padding: '16px',
-                          borderTop: '1px solid rgba(255,255,255,0.06)',
-                          background: 'rgba(0,0,0,0.2)',
-                        }}>
-                          <div style={{ marginBottom: '12px' }}>
-                            <div style={{
-                              fontSize: '11px',
-                              fontWeight: 'bold',
-                              color: '#888',
-                              textTransform: 'uppercase',
-                              marginBottom: '8px',
-                              letterSpacing: '1px',
-                            }}>
-                              Key Data 关键数据
-                            </div>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                              {puzzle.keyData.map((data, idx) => (
-                                <span
-                                  key={idx}
-                                  style={{
-                                    fontSize: '12px',
-                                    color: '#ccc',
-                                    background: 'rgba(0,210,255,0.05)',
-                                    padding: '4px 10px',
-                                    borderRadius: '4px',
-                                  }}
-                                >
-                                  {data}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div style={{ marginBottom: '12px' }}>
-                            <div style={{
-                              fontSize: '11px',
-                              fontWeight: 'bold',
-                              color: '#888',
-                              textTransform: 'uppercase',
-                              marginBottom: '8px',
-                              letterSpacing: '1px',
-                            }}>
-                              Completeness Check 完整性检查
-                            </div>
-                            <div style={{ fontSize: '12px', color: '#ccc', lineHeight: '1.6' }}>
-                              {puzzle.completenessCheck.map((check, idx) => (
-                                <div key={idx} style={{ marginBottom: '4px' }}>
-                                  {check}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div>
-                            <div style={{
-                              fontSize: '11px',
-                              fontWeight: 'bold',
-                              color: '#888',
-                              textTransform: 'uppercase',
-                              marginBottom: '8px',
-                              letterSpacing: '1px',
-                            }}>
-                              Conclusions 结论
-                            </div>
+                            justifyContent: 'space-between',
+                          }}
+                        >
+                          <div style={{ flex: 1 }}>
                             <div style={{
                               fontSize: '13px',
-                              color: '#00d2ff',
-                              lineHeight: '1.6',
-                              padding: '12px',
-                              background: 'rgba(0,210,255,0.05)',
-                              borderRadius: '8px',
+                              fontWeight: 'bold',
+                              color: '#fff',
+                              marginBottom: '4px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '8px',
                             }}>
-                              {puzzle.conclusions}
+                              <span style={{
+                                fontSize: '11px',
+                                background: puzzle.priority === 'P0' ? 'rgba(239,68,68,0.2)' : puzzle.priority === 'P1' ? 'rgba(245,158,11,0.2)' : 'rgba(107,114,128,0.2)',
+                                color: puzzle.priority === 'P0' ? '#ef4444' : puzzle.priority === 'P1' ? '#f59e0b' : '#6b7280',
+                                padding: '2px 6px',
+                                borderRadius: '4px',
+                                fontFamily: 'monospace',
+                              }}>
+                                {puzzle.priority}
+                              </span>
+                              <span style={{
+                                fontSize: '12px',
+                                color: puzzle.status === 'filled' ? '#10b981' : puzzle.status === 'partial' ? '#f59e0b' : '#6b7280',
+                              }}>
+                                {puzzle.status === 'filled' ? '✓' : puzzle.status === 'partial' ? '◐' : '□'}
+                              </span>
+                              {puzzle.id} {puzzle.title}
+                            </div>
+                            <div style={{ fontSize: '11px', color: '#888' }}>
+                              {getEvidenceStars(puzzle.evidenceStrength)} 知识:{(puzzle.knowledgeRate * 100).toFixed(0)}% 因果:{(puzzle.causalRate * 100).toFixed(0)}%
+                            </div>
+                            <div style={{ display: 'flex', gap: '4px', marginTop: '2px' }}>
+                              <span style={{
+                                fontSize: '9px',
+                                background: `${evidenceLevelColor[puzzle.evidenceLevel]}20`,
+                                color: evidenceLevelColor[puzzle.evidenceLevel],
+                                padding: '1px 5px',
+                                borderRadius: '3px',
+                                fontFamily: 'monospace',
+                              }}>
+                                {puzzle.evidenceLevel}: {evidenceLevelLabel[puzzle.evidenceLevel]}
+                              </span>
                             </div>
                           </div>
+                          {expandedPuzzle === puzzle.id ? <ChevronUp size={14} color="#00d2ff" /> : <ChevronDown size={14} color="#666" />}
                         </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
+
+                        {expandedPuzzle === puzzle.id && (
+                          <div style={{
+                            padding: '14px',
+                            borderTop: '1px solid rgba(255,255,255,0.06)',
+                            background: 'rgba(0,0,0,0.2)',
+                          }}>
+                            {/* 格子目标与原理 */}
+                            {(puzzle.goal || puzzle.principle) && (
+                              <div style={{ marginBottom: '12px', display: 'flex', gap: '8px' }}>
+                                {puzzle.goal && (
+                                  <div style={{
+                                    flex: 1,
+                                    padding: '8px 10px',
+                                    background: 'rgba(0,210,255,0.04)',
+                                    borderRadius: '6px',
+                                    borderLeft: '2px solid #00d2ff',
+                                  }}>
+                                    <div style={{ fontSize: '9px', fontWeight: 'bold', color: '#00d2ff', marginBottom: '2px', letterSpacing: '0.5px' }}>
+                                      目标 GOAL
+                                    </div>
+                                    <div style={{ fontSize: '11px', color: '#ccc', lineHeight: '1.5' }}>
+                                      {puzzle.goal}
+                                    </div>
+                                  </div>
+                                )}
+                                {puzzle.principle && (
+                                  <div style={{
+                                    flex: 1,
+                                    padding: '8px 10px',
+                                    background: 'rgba(168,85,247,0.04)',
+                                    borderRadius: '6px',
+                                    borderLeft: '2px solid #a855f7',
+                                  }}>
+                                    <div style={{ fontSize: '9px', fontWeight: 'bold', color: '#a855f7', marginBottom: '2px', letterSpacing: '0.5px' }}>
+                                      原理 PRINCIPLE
+                                    </div>
+                                    <div style={{ fontSize: '11px', color: '#ccc', lineHeight: '1.5' }}>
+                                      {puzzle.principle}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            <div style={{ marginBottom: '12px' }}>
+                              <div style={{
+                                fontSize: '11px',
+                                fontWeight: 'bold',
+                                color: '#888',
+                                textTransform: 'uppercase',
+                                marginBottom: '8px',
+                                letterSpacing: '1px',
+                              }}>
+                                Key Data 关键数据
+                              </div>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                {puzzle.keyData.map((data, idx) => (
+                                  <span
+                                    key={idx}
+                                    style={{
+                                      fontSize: '12px',
+                                      color: '#ccc',
+                                      background: 'rgba(0,210,255,0.05)',
+                                      padding: '4px 10px',
+                                      borderRadius: '4px',
+                                    }}
+                                  >
+                                    {data}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div style={{ marginBottom: '12px' }}>
+                              <div style={{
+                                fontSize: '11px',
+                                fontWeight: 'bold',
+                                color: '#888',
+                                textTransform: 'uppercase',
+                                marginBottom: '8px',
+                                letterSpacing: '1px',
+                              }}>
+                                Completeness Check 完整性检查
+                              </div>
+                              <div style={{ fontSize: '12px', color: '#ccc', lineHeight: '1.6' }}>
+                                {puzzle.completenessCheck.map((check, idx) => (
+                                  <div key={idx} style={{ marginBottom: '4px' }}>
+                                    {check}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div>
+                              <div style={{
+                                fontSize: '11px',
+                                fontWeight: 'bold',
+                                color: '#888',
+                                textTransform: 'uppercase',
+                                marginBottom: '8px',
+                                letterSpacing: '1px',
+                              }}>
+                                Evidence 证据
+                              </div>
+                              <div style={{
+                                fontSize: '13px',
+                                color: '#00d2ff',
+                                lineHeight: '1.6',
+                                padding: '12px',
+                                background: 'rgba(0,210,255,0.05)',
+                                borderRadius: '8px',
+                              }}>
+                                {puzzle.conclusions}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>
 
-          {/* Right: Breakthrough Preparation */}
+          {/* Right: Framework & Mainlines */}
           <div>
+            {/* 四层理论框架 */}
             <h3 style={{
               fontSize: '16px',
               fontWeight: 'bold',
@@ -1792,24 +1324,24 @@ export const LanguageAnalysisTab = () => {
               alignItems: 'center',
               gap: '10px',
             }}>
-              <Zap size={18} color="#00d2ff" />
-              突破准备 Breakthrough Prep
+              <Layers size={18} color="#00d2ff" />
+              四层理论框架 Four-Layer Framework
             </h3>
 
-            {breakthroughPreparation.map((prep) => (
+            {puzzleData && puzzleData.fourLayerFramework.map((layer) => (
               <div
-                key={prep.id}
+                key={layer.id}
                 style={{
-                  marginBottom: '20px',
+                  marginBottom: '12px',
                   background: 'rgba(0,0,0,0.3)',
                   borderRadius: '10px',
                   overflow: 'hidden',
                 }}
               >
                 <div
-                  onClick={() => togglePreparation(prep.id)}
+                  onClick={() => togglePreparation(`layer_${layer.id}`)}
                   style={{
-                    padding: '14px 16px',
+                    padding: '12px 14px',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -1821,127 +1353,434 @@ export const LanguageAnalysisTab = () => {
                       fontSize: '14px',
                       fontWeight: 'bold',
                       color: '#fff',
-                      marginBottom: '4px',
+                      marginBottom: '2px',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '8px',
                     }}>
-                      <div style={{ color: '#00d2ff' }}>
-                        {prep.icon}
-                      </div>
-                      {prep.title}
+                      {layer.name} {layer.nameEn}
                       <span style={{
-                        fontSize: '10px',
-                        background: `${getPriorityColor(prep.priority)}30`,
-                        color: getPriorityColor(prep.priority),
-                        padding: '2px 6px',
-                        borderRadius: '4px',
-                        marginLeft: 'auto',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        color: layer.fillRate > 0.3 ? '#10b981' : layer.fillRate > 0.15 ? '#f59e0b' : '#ef4444',
                       }}>
-                        {prep.priority.toUpperCase()}
+                        {(layer.fillRate * 100).toFixed(0)}%
                       </span>
                     </div>
-                    <div style={{ fontSize: '12px', color: '#888' }}>
-                      {prep.timeline}
+                    <div style={{ fontSize: '11px', color: '#888' }}>
+                      {layer.question}
                     </div>
                   </div>
-                  {expandedPreparation === prep.id ? <ChevronUp size={16} color="#00d2ff" /> : <ChevronDown size={16} color="#666" />}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{
+                      width: '50px',
+                      height: '5px',
+                      background: 'rgba(255,255,255,0.1)',
+                      borderRadius: '3px',
+                      overflow: 'hidden',
+                    }}>
+                      <div style={{
+                        width: `${layer.fillRate * 100}%`,
+                        height: '100%',
+                        background: layer.fillRate > 0.3 ? '#10b981' : layer.fillRate > 0.15 ? '#f59e0b' : '#ef4444',
+                        borderRadius: '3px',
+                      }} />
+                    </div>
+                    {expandedPreparation === `layer_${layer.id}` ? <ChevronUp size={14} color="#00d2ff" /> : <ChevronDown size={14} color="#666" />}
+                  </div>
                 </div>
 
-                {expandedPreparation === prep.id && (
+                {expandedPreparation === `layer_${layer.id}` && (
                   <div style={{
-                    padding: '16px',
+                    padding: '12px 14px',
                     borderTop: '1px solid rgba(255,255,255,0.06)',
                     background: 'rgba(0,0,0,0.2)',
                   }}>
-                    <div style={{ marginBottom: '12px' }}>
-                      <div style={{
-                        fontSize: '11px',
-                        fontWeight: 'bold',
-                        color: '#888',
-                        textTransform: 'uppercase',
-                        marginBottom: '8px',
-                        letterSpacing: '1px',
-                      }}>
-                        Description 描述
-                      </div>
-                      <div style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.6' }}>
-                        {prep.description}
-                      </div>
+                    <div style={{ fontSize: '12px', color: '#888', marginBottom: '6px' }}>
+                      工具: {layer.tools}
                     </div>
-
-                    <div style={{ marginBottom: '12px' }}>
-                      <div style={{
-                        fontSize: '11px',
-                        fontWeight: 'bold',
-                        color: '#888',
-                        textTransform: 'uppercase',
-                        marginBottom: '8px',
-                        letterSpacing: '1px',
-                      }}>
-                        Tasks 任务
-                      </div>
-                      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                        {prep.tasks.map((task, idx) => (
-                          <li
-                            key={idx}
-                            style={{
-                              fontSize: '12px',
-                              color: '#ccc',
-                              marginBottom: '4px',
-                              paddingLeft: '12px',
-                              position: 'relative',
-                            }}
-                          >
-                            <span style={{
-                              position: 'absolute',
-                              left: 0,
-                              top: '6px',
-                              width: '4px',
-                              height: '4px',
-                              borderRadius: '50%',
-                              background: '#00d2ff',
-                            }} />
-                            {task}
-                          </li>
-                        ))}
-                      </ul>
+                    <div style={{ fontSize: '12px', color: '#ccc', marginBottom: '6px' }}>
+                      规律: {layer.relatedRules.join(', ')}
                     </div>
+                    {layer.note && (
+                      <div style={{ fontSize: '12px', color: '#f59e0b', padding: '6px 10px', background: 'rgba(245,158,11,0.1)', borderRadius: '6px' }}>
+                        {layer.note}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
 
-                    <div>
-                      <div style={{
-                        fontSize: '11px',
-                        fontWeight: 'bold',
-                        color: '#888',
-                        textTransform: 'uppercase',
-                        marginBottom: '8px',
-                        letterSpacing: '1px',
+            {/* 三条研究主线 */}
+            <h3 style={{
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: '#fff',
+              margin: '24px 0 16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+            }}>
+              <Target size={18} color="#00d2ff" />
+              三条研究主线 Research Mainlines
+            </h3>
+
+            {puzzleData && puzzleData.mainlines.map((mainline) => (
+              <div
+                key={mainline.id}
+                style={{
+                  marginBottom: '12px',
+                  background: 'rgba(0,0,0,0.3)',
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                }}
+              >
+                <div
+                  onClick={() => togglePreparation(`mainline_${mainline.id}`)}
+                  style={{
+                    padding: '12px 14px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <div>
+                    <div style={{
+                      fontSize: '14px',
+                      fontWeight: 'bold',
+                      color: '#fff',
+                      marginBottom: '2px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                    }}>
+                      <span style={{
+                        fontSize: '12px',
+                        background: mainline.id === 'A' ? 'rgba(239,68,68,0.2)' : mainline.id === 'B' ? 'rgba(16,185,129,0.2)' : 'rgba(168,85,247,0.2)',
+                        color: mainline.id === 'A' ? '#ef4444' : mainline.id === 'B' ? '#10b981' : '#a855f7',
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                        fontFamily: 'monospace',
                       }}>
-                        Dependencies 依赖
+                        主线{mainline.id}
+                      </span>
+                      {mainline.name}
+                      <span style={{ fontSize: '11px', color: '#888', fontWeight: 'normal' }}>
+                        {mainline.nameEn}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: '11px', color: '#888' }}>
+                      目标: {mainline.target}
+                    </div>
+                  </div>
+                  {expandedPreparation === `mainline_${mainline.id}` ? <ChevronUp size={14} color="#00d2ff" /> : <ChevronDown size={14} color="#666" />}
+                </div>
+
+                {expandedPreparation === `mainline_${mainline.id}` && (
+                  <div style={{
+                    padding: '12px 14px',
+                    borderTop: '1px solid rgba(255,255,255,0.06)',
+                    background: 'rgba(0,0,0,0.2)',
+                  }}>
+                    {mainline.steps.map((step) => (
+                      <div key={step.id} style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        padding: '6px 0',
+                        borderBottom: '1px solid rgba(255,255,255,0.04)',
+                      }}>
+                        <span style={{
+                          fontSize: '11px',
+                          fontFamily: 'monospace',
+                          color: '#00d2ff',
+                          minWidth: '28px',
+                        }}>
+                          {step.id}
+                        </span>
+                        <span style={{ fontSize: '12px', color: '#ccc', flex: 1 }}>
+                          {step.title}
+                        </span>
+                        <span style={{ fontSize: '10px', color: '#888' }}>
+                          {step.priority}
+                        </span>
+                        <span style={{
+                          fontSize: '10px',
+                          color: step.status === 'completed' ? '#10b981' : step.status === 'in_progress' ? '#f59e0b' : '#6b7280',
+                          background: step.status === 'completed' ? 'rgba(16,185,129,0.1)' : step.status === 'in_progress' ? 'rgba(245,158,11,0.1)' : 'rgba(107,114,128,0.1)',
+                          padding: '1px 6px',
+                          borderRadius: '3px',
+                        }}>
+                          {step.status === 'completed' ? '✓' : step.status === 'in_progress' ? '◐' : '□'}
+                        </span>
                       </div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                        {prep.dependencies.map((dep, idx) => (
-                          <span
-                            key={idx}
-                            style={{
-                              fontSize: '11px',
-                              color: '#00d2ff',
-                              background: 'rgba(0,210,255,0.1)',
-                              padding: '4px 8px',
-                              borderRadius: '4px',
-                            }}
-                          >
-                            {dep}
-                          </span>
-                        ))}
-                      </div>
+                    ))}
+                    <div style={{ marginTop: '8px', fontSize: '11px', color: '#888' }}>
+                      填充格子: {mainline.steps.flatMap(s => s.cells).join(', ')}
                     </div>
                   </div>
                 )}
               </div>
             ))}
 
+            {/* 10大硬伤 */}
+            <h3 style={{
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: '#fff',
+              margin: '24px 0 16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+            }}>
+              <AlertCircle size={18} color="#ef4444" />
+              10大硬伤 Hard Issues
+            </h3>
+
+            {puzzleData && puzzleData.hardIssues.map((issue) => (
+              <div key={issue.id} style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '8px',
+                marginBottom: '8px',
+                padding: '6px 10px',
+                background: 'rgba(239,68,68,0.05)',
+                borderRadius: '6px',
+                borderLeft: `3px solid ${issue.severity >= 5 ? '#ef4444' : issue.severity >= 4 ? '#f59e0b' : '#6b7280'}`,
+              }}>
+                <span style={{
+                  fontSize: '11px',
+                  fontWeight: 'bold',
+                  color: issue.severity >= 5 ? '#ef4444' : issue.severity >= 4 ? '#f59e0b' : '#6b7280',
+                  minWidth: '16px',
+                }}>
+                  {issue.severity >= 5 ? '★★★★★' : issue.severity >= 4 ? '★★★★' : '★★★'}
+                </span>
+                <span style={{ fontSize: '12px', color: '#ccc' }}>
+                  {issue.title}
+                </span>
+              </div>
+            ))}
+
+            {/* 5条定律候选池 */}
+            <h3 style={{
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: '#fff',
+              margin: '24px 0 16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+            }}>
+              <Sigma size={18} color="#a855f7" />
+              定律候选池 Candidate Laws
+            </h3>
+
+            {puzzleData && puzzleData.candidateLaws && puzzleData.candidateLaws.map((law) => (
+              <div key={law.id} style={{
+                marginBottom: '10px',
+                background: 'rgba(168,85,247,0.08)',
+                borderRadius: '10px',
+                overflow: 'hidden',
+                borderLeft: '3px solid #a855f7',
+              }}>
+                <div
+                  onClick={() => togglePreparation(`law_${law.id}`)}
+                  style={{ padding: '10px 14px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                >
+                  <div>
+                    <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#fff', marginBottom: '2px' }}>
+                      {law.name}
+                      <span style={{ fontSize: '10px', color: '#888', fontWeight: 'normal', marginLeft: '4px' }}>{law.nameEn}</span>
+                    </div>
+                    <div style={{ fontSize: '10px', color: '#a855f7', fontFamily: 'monospace' }}>{law.formula}</div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ fontSize: '9px', background: `${evidenceLevelColor[law.evidenceLevel] || '#6b7280'}20`, color: evidenceLevelColor[law.evidenceLevel] || '#6b7280', padding: '2px 5px', borderRadius: '3px', fontFamily: 'monospace' }}>
+                      {law.evidenceLevel}
+                    </span>
+                    {expandedPreparation === `law_${law.id}` ? <ChevronUp size={14} color="#a855f7" /> : <ChevronDown size={14} color="#666" />}
+                  </div>
+                </div>
+                {expandedPreparation === `law_${law.id}` && (
+                  <div style={{ padding: '10px 14px', borderTop: '1px solid rgba(168,85,247,0.15)', background: 'rgba(0,0,0,0.2)' }}>
+                    <div style={{ fontSize: '11px', color: '#ccc', marginBottom: '6px' }}>{law.description}</div>
+                    {law.testablePredictions && (
+                      <div style={{ fontSize: '10px', color: '#10b981', marginBottom: '4px' }}>
+                        预测: {law.testablePredictions.join('; ')}
+                      </div>
+                    )}
+                    <div style={{ fontSize: '10px', color: '#888' }}>支撑: {law.supportedBy.join(', ')} | 格子: {law.cellsAffected.join(', ')}</div>
+                    {law.note && <div style={{ fontSize: '10px', color: '#f59e0b', marginTop: '4px', padding: '4px 8px', background: 'rgba(245,158,11,0.1)', borderRadius: '4px' }}>{law.note}</div>}
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {/* 预测系统 */}
+            <h3 style={{
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: '#fff',
+              margin: '24px 0 16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+            }}>
+              <TestTube size={18} color="#10b981" />
+              预测系统 Predictions
+            </h3>
+
+            {puzzleData && puzzleData.predictions && puzzleData.predictions.map((pred) => (
+              <div key={pred.id} style={{
+                display: 'flex', flexDirection: 'column', gap: '4px',
+                marginBottom: '8px', padding: '8px 10px',
+                background: 'rgba(16,185,129,0.05)',
+                borderRadius: '6px',
+                borderLeft: `3px solid ${pred.priority === 'P0' ? '#ef4444' : pred.priority === 'P1' ? '#f59e0b' : '#6b7280'}`,
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '10px', fontFamily: 'monospace', color: '#10b981' }}>{pred.id} [{pred.lawRef}]</span>
+                  <span style={{ fontSize: '9px', background: pred.status === 'untested' ? 'rgba(107,114,128,0.2)' : 'rgba(16,185,129,0.2)', color: pred.status === 'untested' ? '#6b7280' : '#10b981', padding: '1px 5px', borderRadius: '3px' }}>
+                    {pred.status === 'untested' ? '待验证' : '已验证'}
+                  </span>
+                </div>
+                <div style={{ fontSize: '11px', color: '#ccc' }}>
+                  <span style={{ color: '#10b981' }}>IF</span> {pred.if} → <span style={{ color: '#f59e0b' }}>THEN</span> {pred.then}
+                </div>
+              </div>
+            ))}
+
+            {/* 未解悖论 */}
+            <h3 style={{
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: '#fff',
+              margin: '24px 0 16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+            }}>
+              <Flame size={18} color="#ef4444" />
+              未解悖论 Unresolved Paradoxes
+            </h3>
+
+            {puzzleData && puzzleData.unresolvedParadoxes && puzzleData.unresolvedParadoxes.map((px) => (
+              <div key={px.id} style={{
+                marginBottom: '8px', padding: '8px 10px',
+                background: 'rgba(239,68,68,0.06)',
+                borderRadius: '6px',
+                borderLeft: `3px solid ${px.severity >= 5 ? '#ef4444' : '#f59e0b'}`,
+              }}>
+                <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#fff', marginBottom: '2px' }}>
+                  {px.title}
+                  <span style={{ fontSize: '10px', color: px.severity >= 5 ? '#ef4444' : '#f59e0b', marginLeft: '6px' }}>
+                    {'★'.repeat(px.severity)}
+                  </span>
+                </div>
+                <div style={{ fontSize: '11px', color: '#ccc' }}>{px.description}</div>
+              </div>
+            ))}
+
+            {/* 跨模型验证矩阵 */}
+            <h3 style={{
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: '#fff',
+              margin: '24px 0 16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+            }}>
+              <GitBranch size={18} color="#3b82f6" />
+              跨模型矩阵 Cross-Model
+            </h3>
+
+            {puzzleData && puzzleData.crossModelMatrix && (
+              <div style={{ marginBottom: '12px' }}>
+                <div style={{ display: 'flex', gap: '4px', marginBottom: '6px', flexWrap: 'wrap' }}>
+                  {puzzleData.crossModelMatrix.models.map((m, i) => (
+                    <span key={i} style={{ fontSize: '10px', color: '#3b82f6', background: 'rgba(59,130,246,0.1)', padding: '2px 6px', borderRadius: '3px' }}>{m}</span>
+                  ))}
+                </div>
+                {puzzleData.crossModelMatrix.findings.map((f, i) => (
+                  <div key={i} style={{
+                    display: 'flex', alignItems: 'center', gap: '6px',
+                    padding: '5px 8px', marginBottom: '3px',
+                    background: 'rgba(0,0,0,0.2)', borderRadius: '4px',
+                  }}>
+                    <span style={{ fontSize: '10px', color: f.universal ? '#10b981' : '#f59e0b', fontFamily: 'monospace', minWidth: '40px' }}>
+                      {f.universal ? '✓ Universal' : '✗ Specific'}
+                    </span>
+                    <span style={{ fontSize: '11px', color: '#ccc', flex: 1 }}>{f.finding}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* 训练动态 */}
+            <h3 style={{
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: '#fff',
+              margin: '24px 0 16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+            }}>
+              <Atom size={18} color="#f59e0b" />
+              训练动态 Training Dynamics
+            </h3>
+
+            {puzzleData && puzzleData.trainingDynamics && Object.entries(puzzleData.trainingDynamics).map(([key, phase]) => (
+              <div key={key} style={{
+                marginBottom: '8px', padding: '8px 10px',
+                background: 'rgba(245,158,11,0.05)',
+                borderRadius: '6px',
+                borderLeft: '3px solid #f59e0b',
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#fff' }}>{phase.name}</span>
+                  <span style={{ fontSize: '9px', background: `${evidenceLevelColor[phase.confidence] || '#6b7280'}20`, color: evidenceLevelColor[phase.confidence] || '#6b7280', padding: '1px 5px', borderRadius: '3px', fontFamily: 'monospace' }}>
+                    {phase.confidence}
+                  </span>
+                </div>
+                <div style={{ fontSize: '10px', color: '#888', marginBottom: '2px' }}>{phase.nameEn} | {phase.layerRange}</div>
+                <div style={{ fontSize: '11px', color: '#ccc' }}>{phase.description}</div>
+                {phase.note && <div style={{ fontSize: '10px', color: '#f59e0b', marginTop: '2px' }}>{phase.note}</div>}
+              </div>
+            ))}
+
+            {/* 证据等级说明 */}
+            <h3 style={{
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: '#fff',
+              margin: '24px 0 16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+            }}>
+              <Microscope size={18} color="#6366f1" />
+              证据等级 Evidence Levels
+            </h3>
+
+            {puzzleData && puzzleData.evidenceLevel && Object.entries(puzzleData.evidenceLevel).map(([key, level]) => (
+              <div key={key} style={{
+                display: 'flex', alignItems: 'center', gap: '8px',
+                padding: '4px 8px', marginBottom: '3px',
+                background: `${evidenceLevelColor[key] || '#6b7280'}10`,
+                borderRadius: '4px',
+              }}>
+                <span style={{ fontSize: '10px', fontFamily: 'monospace', color: evidenceLevelColor[key] || '#6b7280', fontWeight: 'bold', minWidth: '20px' }}>{key}</span>
+                <span style={{ fontSize: '11px', color: '#ccc', flex: 1 }}>{level.label}</span>
+                <span style={{ fontSize: '9px', color: '#888' }}>{'★'.repeat(level.strength)}</span>
+              </div>
+            ))}
             <div style={{
+              marginTop: '20px',
               padding: '16px',
               background: 'rgba(0,210,255,0.05)',
               borderRadius: '10px',

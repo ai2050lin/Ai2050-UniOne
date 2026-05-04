@@ -13877,3 +13877,292 @@ v2.0: + subspace / force_line / grammar / causal / dark_matter
 
 [路线图评估与框架升级时间标记: 2026年05月04日02时25分]
 
+---
+
+## ★★★ 拼图面板实现 [2026-05-04 14:50]
+
+### 改动内容
+
+```
+右侧面板改造: "理论分析-语言分析" → 拼图面板
+
+1. 新增 PuzzlePanel.jsx 组件 (530行)
+   - 3个Tab: 🧩拼图 / 📐规律 / 🔬理论
+   - 拼图Tab: 总览进度条 + 8大分类(98格子) + 每格状态+详情
+   - 规律Tab: 18条已破解规律(四层) + 28条不变量 + 11条推翻假说
+   - 理论Tab: 四层框架 + 子空间分解地图 + 三条主线 + 临界点
+
+2. index.jsx 更新:
+   - 右侧面板: 拼图面板/详情 切换
+   - 新增 rightPanel state
+   - PuzzlePanel 导入和集成
+   - puzzle_progress 类型支持
+
+3. vis_data_exporter.py 更新:
+   - 新增 export_puzzle_progress() 导出函数
+   - v2_types 增加 puzzle_progress
+
+4. 数据: 内嵌默认拼图数据(与PUZZLE_FRAMEWORK.md同步)
+   - 支持外部JSON puzzle_progress数据覆盖
+```
+
+### 拼图面板UI结构
+
+```
+┌──────────────────────────────────┐
+│ 🧩 拼图面板 │ 📋 详情           │ ← 切换按钮
+├──────────────────────────────────┤
+│ [拼图Tab]                         │
+│ ┌─ 拼图总览 ──────────────────┐  │
+│ │ 总进度 18%  ████░░░░░░░░░░ │  │
+│ │ ✓5  ◐25  □68  P0: 48%    │  │
+│ └─────────────────────────────┘  │
+│ 🧠 知识网络  ████░ 25%    ▼   │
+│   概念编码                       │
+│   ┌──────┐ ┌──────┐             │
+│   │KN-1a◐│ │KN-1b◐│             │
+│   └──────┘ └──────┘             │
+│   ...                            │
+│ ⚡ 逻辑推理  ██░░░ 10%    ▼   │
+│ 📝 语法体系  ███░░ 35%    ▼   │
+│ 🎛️ 多维生成  ██░░░ 15%    ▼   │
+│ ⚙️ 系统效率  ██░░░ 15%    ▼   │
+│ 🔢 词嵌入   ███░░ 22%    ▼   │
+│ 🧬 3D-1D映射 █░░░░ 0%     ▼   │
+│ 🔗 统合格子  █░░░░ 5%     ▼   │
+│                                  │
+│ [选中格子详情]                   │
+│ ┌─ GR-1a ───────────────────┐  │
+│ │ P0  ◐  词性信息如何编码?   │  │
+│ │ W_U⊥分类CV=100%          │  │
+│ └────────────────────────────┘  │
+│                                  │
+│ [规律Tab]                        │
+│ 📐 18条已破解规律(四层体系)     │
+│ 第0层: R1-R5 (DNN组件编码)      │
+│ 第1层: R6-R10 (几何动力学)      │
+│ 第2层: R11-R15 (概念编码)       │
+│ 第3层: R16-R18 (语法-语义解耦)  │
+│ 28条不变量 / 11条推翻假说        │
+│                                  │
+│ [理论Tab]                        │
+│ Language = Geometry+Algebra+     │
+│   Dynamics+Information           │
+│ 子空间分解地图                   │
+│ 三条研究主线                     │
+│ 临界点: 18%→60%                 │
+└──────────────────────────────────┘
+```
+
+[拼图面板实现时间标记: 2026年05月04日14时50分]
+
+---
+
+## ★★★ 修正: LanguageAnalysisTab.jsx拼图面板 [2026-05-04 15:00]
+
+### 问题
+之前修改的是3D可视化面板(neural_vis/index.jsx)的右侧面板，
+但用户看到的是"理论分析-语言分析"界面，它在LanguageAnalysisTab.jsx中。
+
+### 修正
+```
+1. 重写 LanguageAnalysisTab.jsx (~500行)
+   - 3个Tab: 🧩拼图模块 / 🔬四层框架 / 📐规律体系
+   - 拼图Tab: 总览进度(18%) + 8大分类(KN/LG/GR/MG/SE/WE/TD/UN) + 98格子
+   - 每个格子: 状态(✓/◐/□) + 优先级(P0/P1/P2) + 问题 + 详情
+   - 四层Tab: Geometry+Algebra+Dynamics+InfoTheory + 填充率 + 证据
+   - 规律Tab: 18条规律(4层) + 铁律3条 + 关键教训
+
+2. 数据完全来自系统方案设计.md和PUZZLE_FRAMEWORK.md
+   - 子空间分解地图: V_WU∩V_sem ⊕ V_WU⊥∩V_syn ⊕ V_WU⊥∩V_dark ⊕ V_⊥logic
+   - 三条研究主线: A语法数学 / B语义数学 / C逻辑数学
+   - 临界点路径: 18%→代数层→信息论层→60%→统一理论
+```
+
+[LanguageAnalysisTab拼图面板修正时间标记: 2026年05月04日15时00分]
+
+---
+
+## ★★★ LanguageAnalysisTab拼图面板JSON化改造 [2026-05-04 15:15]
+
+### 改造内容
+```
+1. 创建 frontend/public/data/language_analysis_puzzle.json
+   - 8大类(KN/LG/GR/MG/SE/WE/TD/UN) 98格子完整数据
+   - 每个格子: id/title/priority/status/fillRate/evidence/keyData
+   - 四层框架: Geometry/Algebra/Dynamics/InfoTheory 填充率
+   - 三条主线: A语法数学/B语义数学/C逻辑数学 步骤
+   - 10大硬伤/18条规律/子空间分解地图/临界点指标
+
+2. 修改 LanguageAnalysisTab.jsx 拼图部分
+   - 使用 useEffect+fetch 从JSON读取数据
+   - 总览进度条: 18%填充率 + 98格子统计 + 子空间分解地图
+   - 每个分类: 填充率进度条 + 颜色编码(>30%绿/>15%黄/<15%红)
+   - 每个格子: P0/P1/P2优先级标签 + ✓/◐/□状态 + 证据+关键数据
+   - 右侧栏: 四层框架填充率 + 三条主线步骤 + 10大硬伤
+
+3. 保持原有界面风格不变
+   - 相同的配色方案(#00d2ff/#a855f7/暗色背景)
+   - 相同的展开/收起交互模式
+   - 相同的字体/间距/圆角
+```
+
+### 设计原则
+- 数据与展示分离: JSON文件独立管理，界面只负责渲染
+- 语义维度分类: 按知识网络/逻辑推理/语法体系等8维度组织
+- 进度可视化: 每个维度和格子都有明确的填充率
+
+[LanguageAnalysisTab拼图面板JSON化改造时间标记: 2026年05月04日15时15分]
+
+---
+
+## ★★★ LanguageAnalysisTab理论升级v4.0 — 从拼图收集到定律提出 [2026-05-04 15:30]
+
+### 5个关键缺陷修复
+```
+① formalObjects: 8个统一数学对象定义
+   S_l(x)语义向量场 / G⊥语法零空间 / V_WU⊥∩V_dark暗物质子空间
+   Λ_op逻辑算子 / M_concept概念流形 / F_attr属性纤维 / Δ(l)残差传播 / Ω_lock深层锁定
+
+② evidenceLevel: E0-E5因果证据等级系统
+   E1=相关性 / E2=可预测 / E3=干预有效 / E4=跨模型复现 / E5=机制闭环
+   → 防止probe成功误当机制发现
+
+③ trainingDynamics: 训练4阶段
+   phase1=词频统计 / phase2=语法压缩 / phase3=语义子空间 / phase4=推理回路
+   → 从解剖学(静态)升级为胚胎学(动态)
+
+④ predictions: 8条可检验预测
+   IF扩大模型70B→THEN语法容量2x / IF移除LayerNorm→THEN语法泄露下降 / etc.
+   → 伟大理论必须能预测
+
+⑤ candidateLaws: 5条定律候选
+   Law1子空间分工 / Law2深层锁定 / Law3冗余转导 / Law4组合代数 / Law5残差传播
+   → 从开普勒(规律发现)→牛顿(统一公式)
+```
+
+### 结构改进
+```
+A. fillRate拆分: knowledgeRate(30%)+causalRate(8%)
+   知识率≠因果率, 格子显示双进度条
+B. interpretPower数学化: explained_variance×causal_strength×reproducibility
+C. categories增加ontologyBranch本体论分类: Representation/Computation/Emergence
+D. 每个cell增加evidenceLevel标签
+```
+
+### 新增顶层模块
+```
+unresolvedParadoxes: 6个未解悖论(PX1-PX6)
+  probe有效但干预无效 / W_U⊥无logit通路却影响输出 / 深层任何方向都有效
+  → 突破点仓库
+
+benchmarkTasks: 6类任务验证覆盖度
+  翻译/问答/推理/摘要/数学/编程
+  → 防止过拟合单任务
+
+crossModelMatrix: 3模型8项发现对比
+  4项universal + 4项architecture-specific
+  → 区分普适规律vs架构特有
+```
+
+### 成熟度判断
+```
+经验规律发现: 70% (开普勒阶段)
+统一理论: 18% (5条定律候选,最低E1)
+可预测科学: 8% (8条预测,全部untested)
+```
+
+[LanguageAnalysisTab理论升级v4.0时间标记: 2026年05月04日15时30分]
+
+---
+
+## ★ 分析拼图UI风格统一 + 一级分类默认折叠 [2026-05-04 15:45]
+
+### 修改内容
+```
+1. 分析拼图UI风格 → 匹配语言核心特性模块
+   旧: 色带头部(background:rgba(0,100,200,0.1)) + 始终展开
+   新: 卡片风格(rgba(0,0,0,0.3)+border:1px solid) + 点击展开
+       - 可点击header: icon+title+description+知识率/因果率双进度条+填充率+chevron
+       - 展开内容: borderTop+深色背景(rgba(0,0,0,0.2))
+       - hover效果: rgba(255,255,255,0.02)
+       - 格子项: border+圆角+二级展开
+
+2. 一级分类默认折叠
+   新增expandedCategory状态, 初始值null(全部折叠)
+   点击分类头部切换展开/折叠
+   与语言核心特性的expandedSection交互模式完全一致
+```
+
+### UI统一性
+```
+语言核心特性 ←→ 分析拼图 分类卡片
+  icon + title              icon + title
+  description               description
+  status + progress         知识率/因果率 + 填充率
+  expandedSection           expandedCategory
+  chevron指示器             chevron指示器
+  hover高亮                 hover高亮
+```
+
+[分析拼图UI统一时间标记: 2026年05月04日15时45分]
+
+---
+
+## ★ 一级/二级目标原理说明系统 [2026-05-04 16:15]
+
+### 新增内容
+```
+1. JSON: 7个一级分类添加goal/principle字段
+   KN: 目标=揭示概念编码方式, 原理=流形+纤维+暗物质
+   LG: 目标=发现逻辑数学结构, 原理=群作用+正交扰动+2.7x信号
+   GR: 目标=理解语法编码因果路径, 原理=W_U⊥隐藏+LayerNorm泄露
+   MG: 目标=多维可控生成框架, 原理=正交分解+操控约束
+   SE: 目标=信息瓶颈和容量优化, 原理=信息隐藏+冗余编码
+   WE: 目标=词嵌入几何代数理论, 原理=近正交+旋转断裂+能量转移
+   TD: 目标=连续→离散映射理论, 原理=加法传播+Attention主通道
+   UN: 目标=统一数学结构, 原理=低维流形+正交分解+增强对比
+
+2. JSON: 83个二级格子全部添加goal/principle字段
+   每个格子说明: 研究目标(goal) + 核心原理(principle)
+
+3. JSX: 一级分类展开后显示目标/原理双栏
+   左栏: 目标(蓝色边框#00d2ff)
+   右栏: 原理(紫色边框#a855f7)
+
+4. JSX: 二级格子展开后显示目标/原理双栏
+   更小尺寸版本, 与一级风格统一
+```
+
+[目标原理说明系统时间标记: 2026年05月04日16时15分]
+
+---
+
+## ★ 清理语言核心特性+当前研究进展模块 [2026-05-04 16:25]
+
+### 删除内容
+```
+1. 语言核心特性 Core Characteristics 模块
+   - 删除 languageCharacteristics 数据(编码机制/语义结构/多模态语义/动态学习)
+   - 删除整个左侧列渲染代码
+
+2. 当前研究进展 Current Progress (Stage413) 模块
+   - 删除 researchProgress 数据(颜色编码/名词属性/多空间对齐)
+   - 删除整个右侧列渲染代码
+
+3. 清理关联代码
+   - 删除 expandedSection 状态
+   - 删除 toggleSection 函数
+   - 删除 getStatusColor 函数
+   - 删除 getStatusIcon 函数
+   - 删除 CheckCircle import
+```
+
+### 保留模块
+```
+- 分析拼图 (SECTION 2) — 保留
+- 研究准备 (SECTION 3) — 保留
+```
+
+[清理模块时间标记: 2026年05月04日16时25分]
+

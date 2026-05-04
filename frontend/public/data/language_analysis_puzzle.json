@@ -1,0 +1,2603 @@
+{
+  "version": "4.0",
+  "lastUpdate": "2026-05-04",
+  "sourceDocs": [
+    "系统方案大纲.md v1.0",
+    "系统方案设计.md v3.0"
+  ],
+  "maturity": {
+    "empiricalDiscovery": 0.7,
+    "unifiedTheory": 0.18,
+    "predictiveScience": 0.08,
+    "stageLabel": "开普勒阶段(大量规律已发现) → 距牛顿阶段还差统一公式+动力学解释"
+  },
+  "formalObjects": [
+    {
+      "name": "Semantic Vector Field",
+      "symbol": "S_l(x)",
+      "definition": "layer l 对 token x 的语义推进向量场",
+      "relatedCells": [
+        "KN-1a",
+        "KN-3b"
+      ]
+    },
+    {
+      "name": "Grammar Nullspace",
+      "symbol": "G⊥",
+      "definition": "对 logits 不直接可见的语法编码空间 (W_U⊥子空间)",
+      "relatedCells": [
+        "GR-1a",
+        "GR-2a"
+      ]
+    },
+    {
+      "name": "Dark Matter Subspace",
+      "symbol": "V_WU⊥∩V_dark",
+      "definition": "W_U⊥中承载75-87%steering效果的暗维度",
+      "relatedCells": [
+        "KN-4a",
+        "SE-3a"
+      ]
+    },
+    {
+      "name": "Logic Operation Operator",
+      "symbol": "Λ_op",
+      "definition": "逻辑操作(如not)在表示空间中的算子",
+      "relatedCells": [
+        "LG-1a",
+        "LG-2a"
+      ]
+    },
+    {
+      "name": "Concept Manifold",
+      "symbol": "M_concept",
+      "definition": "概念在参数空间中形成的局部密集流形(≈变形单纯形)",
+      "relatedCells": [
+        "KN-3b",
+        "KN-3a"
+      ]
+    },
+    {
+      "name": "Attribute Fiber",
+      "symbol": "F_attr",
+      "definition": "属性在参数空间中形成的稀疏纤维方向(跨对象共享)",
+      "relatedCells": [
+        "KN-2b",
+        "KN-2a"
+      ]
+    },
+    {
+      "name": "Residual Propagation Law",
+      "symbol": "Δ(l)",
+      "definition": "残差流逐层传播增量: gap(l+1)=gap(l)+Δ(l), r=1.000",
+      "relatedCells": [
+        "TD-4a"
+      ]
+    },
+    {
+      "name": "Deep Locking Basin",
+      "symbol": "Ω_lock",
+      "definition": "深层输出决策进入的attractor basin(switch_rate→0.00)",
+      "relatedCells": [
+        "KN-1c"
+      ]
+    }
+  ],
+  "evidenceLevel": {
+    "E1": {
+      "label": "相关性 Correlation",
+      "description": "探针分类/余弦相似度/t-SNE可视化",
+      "strength": 1
+    },
+    "E2": {
+      "label": "可预测 Predictive",
+      "description": "探针可预测未知样本/线性探针高准确率",
+      "strength": 2
+    },
+    "E3": {
+      "label": "干预有效 Intervention",
+      "description": "steering/hook干预可改变输出",
+      "strength": 3
+    },
+    "E4": {
+      "label": "跨模型复现 Cross-model",
+      "description": "在3+模型上复现相同现象",
+      "strength": 4
+    },
+    "E5": {
+      "label": "机制闭环解释 Mechanistic",
+      "description": "完整因果链+数学模型+预测验证",
+      "strength": 5
+    }
+  },
+  "trainingDynamics": {
+    "phase1": {
+      "name": "词频统计形成",
+      "nameEn": "Word Frequency Statistics",
+      "description": "词嵌入形成近正交结构, cos(W_E[i],W_E[j])≈0.004",
+      "evidence": "INV-5",
+      "confidence": "E3",
+      "layerRange": "embedding"
+    },
+    "phase2": {
+      "name": "语法压缩形成",
+      "nameEn": "Grammar Compression",
+      "description": "语法信息被压缩到W_U⊥子空间, 对logits不可见",
+      "evidence": "R16-R18",
+      "confidence": "E2",
+      "layerRange": "L0-L6"
+    },
+    "phase3": {
+      "name": "语义子空间形成",
+      "nameEn": "Semantic Subspace Formation",
+      "description": "语义力线指数增长(100-300x), 概念流形分化",
+      "evidence": "R3, R13",
+      "confidence": "E2",
+      "layerRange": "L6-L18"
+    },
+    "phase4": {
+      "name": "推理回路形成",
+      "nameEn": "Reasoning Circuit Formation",
+      "description": "深层锁定机制, 逻辑信号峰值(L18), 输出决策收敛",
+      "evidence": "R3, INV-13/15/16",
+      "confidence": "E1",
+      "layerRange": "L18+",
+      "note": "最关键也是证据最弱阶段"
+    }
+  },
+  "candidateLaws": [
+    {
+      "id": "Law1",
+      "name": "子空间分工定律",
+      "nameEn": "Subspace Division Law",
+      "formula": "R^d ≈ V_WU∩V_sem ⊕ V_WU⊥∩V_syn ⊕ V_WU⊥∩V_dark ⊕ V_⊥logic ⊕ V_residual",
+      "description": "语义趋向可读空间(W_U), 语法趋向隐藏空间(W_U⊥)",
+      "evidenceLevel": "E4",
+      "supportedBy": [
+        "R16",
+        "R12",
+        "INV-13"
+      ],
+      "cellsAffected": [
+        "GR-1a",
+        "KN-4a",
+        "LG-1a"
+      ],
+      "testablePredictions": [
+        "70B模型W_U⊥语法容量应增加2x",
+        "移除LayerNorm后语法泄露应显著下降"
+      ]
+    },
+    {
+      "id": "Law2",
+      "name": "深层锁定定律",
+      "nameEn": "Deep Locking Law",
+      "formula": "switch_rate(l) → 0 as l → L, 进入 Ω_lock",
+      "description": "后层输出决策进入attractor basin, 替换免疫",
+      "evidenceLevel": "E2",
+      "supportedBy": [
+        "R3",
+        "INV-27"
+      ],
+      "cellsAffected": [
+        "KN-1c",
+        "KN-6a"
+      ],
+      "testablePredictions": [
+        "更深的模型attractor basin应在更早层出现",
+        "温度采样打破attractor应改变switch_rate"
+      ]
+    },
+    {
+      "id": "Law3",
+      "name": "冗余转导定律",
+      "nameEn": "Redundant Transduction Law",
+      "formula": "steering_eff(V_WU⊥) >> steering_eff(V_WU), 暗物质有效秩≈7",
+      "description": "有效控制存在低秩暗空间, 86-92%范数但操控KL仅35-43%",
+      "evidenceLevel": "E3",
+      "supportedBy": [
+        "R12"
+      ],
+      "cellsAffected": [
+        "KN-4a",
+        "KN-4b",
+        "SE-3a"
+      ],
+      "testablePredictions": [
+        "暗物质有效秩应随模型规模线性增长",
+        "仅操控7维暗物质核心应足以steering"
+      ]
+    },
+    {
+      "id": "Law4",
+      "name": "组合代数定律",
+      "nameEn": "Compositional Algebra Law",
+      "formula": "Λ_op(Λ_op'(x)) ≈ Λ_op∘op'(x)? (群作用近似)",
+      "description": "逻辑操作为近似群作用, not操作=正交扰动",
+      "evidenceLevel": "E1",
+      "supportedBy": [
+        "INV-13",
+        "INV-15"
+      ],
+      "cellsAffected": [
+        "LG-2a",
+        "LG-2b",
+        "LG-4b"
+      ],
+      "testablePredictions": [
+        "not(not X)应≈X(对合性)",
+        "德摩根律应在表示空间中近似成立"
+      ],
+      "note": "证据最弱, 当前最关键验证目标"
+    },
+    {
+      "id": "Law5",
+      "name": "残差传播定律",
+      "nameEn": "Residual Propagation Law",
+      "formula": "h_{l+1} = h_l + A_l(h) + M_l(h), gap(l+1)=gap(l)+Δ(l), r=1.000",
+      "description": "加法传播完美线性, Attention主通道(21.5x >> MLP 1.87x)",
+      "evidenceLevel": "E4",
+      "supportedBy": [
+        "INV-6",
+        "R4",
+        "R8"
+      ],
+      "cellsAffected": [
+        "TD-4a",
+        "TD-3a",
+        "WE-5a"
+      ],
+      "testablePredictions": [
+        "所有Transformer模型应满足加法传播",
+        "Attention贡献比应随模型规模增加"
+      ]
+    }
+  ],
+  "predictions": [
+    {
+      "id": "P1",
+      "if": "扩大模型到70B",
+      "then": "W_U⊥语法容量增加约2x",
+      "lawRef": "Law1",
+      "status": "untested",
+      "priority": "P0"
+    },
+    {
+      "id": "P2",
+      "if": "移除LayerNorm",
+      "then": "语法泄露显著下降(W_U⊥→W_U信息流减少)",
+      "lawRef": "Law1",
+      "status": "untested",
+      "priority": "P0"
+    },
+    {
+      "id": "P3",
+      "if": "仅操控7维暗物质核心",
+      "then": "steering效果应≈操控全部暗物质",
+      "lawRef": "Law3",
+      "status": "untested",
+      "priority": "P1"
+    },
+    {
+      "id": "P4",
+      "if": "应用not(not X)",
+      "then": "表示应≈X(对合性)",
+      "lawRef": "Law4",
+      "status": "untested",
+      "priority": "P0"
+    },
+    {
+      "id": "P5",
+      "if": "更深的模型",
+      "then": "attractor basin在更早层出现",
+      "lawRef": "Law2",
+      "status": "untested",
+      "priority": "P1"
+    },
+    {
+      "id": "P6",
+      "if": "温度采样打破attractor",
+      "then": "switch_rate应增加",
+      "lawRef": "Law2",
+      "status": "untested",
+      "priority": "P2"
+    },
+    {
+      "id": "P7",
+      "if": "验证德摩根律",
+      "then": "not(A∧B) ≈ (not A)∨(not B)在表示空间近似成立",
+      "lawRef": "Law4",
+      "status": "untested",
+      "priority": "P0"
+    },
+    {
+      "id": "P8",
+      "if": "训练早期检查点",
+      "then": "应看到词频→语法→语义→推理的4阶段形成",
+      "lawRef": "trainingDynamics",
+      "status": "untested",
+      "priority": "P1"
+    }
+  ],
+  "unresolvedParadoxes": [
+    {
+      "id": "PX1",
+      "title": "probe有效但干预无效",
+      "description": "LDA能分类语法角色(0.80-0.94)但因果≈0, 说明probe≠mechanism",
+      "severity": 5,
+      "relatedCells": [
+        "GR-2a"
+      ]
+    },
+    {
+      "id": "PX2",
+      "title": "W_U⊥无logit通路却能影响输出",
+      "description": "86-92%范数在W_U⊥, 理论上lm_head看不到, 但操控KL=35-43%",
+      "severity": 5,
+      "relatedCells": [
+        "KN-4a",
+        "GR-3a"
+      ]
+    },
+    {
+      "id": "PX3",
+      "title": "深层任何方向都有效",
+      "description": "深层nosem≈sem, 任何方向perturb都有效, 与选择性编码矛盾",
+      "severity": 5,
+      "relatedCells": [
+        "KN-1c"
+      ]
+    },
+    {
+      "id": "PX4",
+      "title": "加性perturb≠hook干预",
+      "description": "加性perturb和hook intervention得出矛盾结论",
+      "severity": 5,
+      "relatedCells": [
+        "TD-4a"
+      ]
+    },
+    {
+      "id": "PX5",
+      "title": "传递性推理深层不成立",
+      "description": "浅层cos=0.98(1维推理), 深层传递性负余弦, 推理退化?",
+      "severity": 4,
+      "relatedCells": [
+        "LG-3a"
+      ]
+    },
+    {
+      "id": "PX6",
+      "title": "三模型末端策略完全不同",
+      "description": "Qwen3=MLP/GLM4=LN/DS7B=Attn, 无统一方程",
+      "severity": 4,
+      "relatedCells": [
+        "TD-5a"
+      ]
+    }
+  ],
+  "benchmarkTasks": [
+    {
+      "id": "T1",
+      "name": "翻译 Translation",
+      "validatedRules": [
+        "R7",
+        "R10"
+      ],
+      "validatedCells": [],
+      "coverage": "low"
+    },
+    {
+      "id": "T2",
+      "name": "问答 QA",
+      "validatedRules": [
+        "R11"
+      ],
+      "validatedCells": [
+        "KN-1a"
+      ],
+      "coverage": "low"
+    },
+    {
+      "id": "T3",
+      "name": "推理 Reasoning",
+      "validatedRules": [
+        "R15"
+      ],
+      "validatedCells": [
+        "LG-3a",
+        "LG-3b"
+      ],
+      "coverage": "partial"
+    },
+    {
+      "id": "T4",
+      "name": "摘要 Summarization",
+      "validatedRules": [],
+      "validatedCells": [],
+      "coverage": "none"
+    },
+    {
+      "id": "T5",
+      "name": "数学 Math",
+      "validatedRules": [],
+      "validatedCells": [],
+      "coverage": "none"
+    },
+    {
+      "id": "T6",
+      "name": "编程 Coding",
+      "validatedRules": [],
+      "validatedCells": [],
+      "coverage": "none"
+    }
+  ],
+  "crossModelMatrix": {
+    "models": [
+      "Qwen3-4B",
+      "GLM4-9B",
+      "DeepSeek-R1-Distill-Qwen-7B"
+    ],
+    "findings": [
+      {
+        "finding": "增强对比模式",
+        "universal": true,
+        "details": "三模型收敛到相同增强对比差值0.177-0.183"
+      },
+      {
+        "finding": "语法W_U⊥编码",
+        "universal": true,
+        "details": "三模型均85%+语法角色在W_U⊥"
+      },
+      {
+        "finding": "暗物质承载steering",
+        "universal": true,
+        "details": "三模型均W_U-only几乎无效"
+      },
+      {
+        "finding": "逻辑信号2.7x属性",
+        "universal": true,
+        "details": "三模型一致"
+      },
+      {
+        "finding": "断裂层位置",
+        "universal": false,
+        "details": "Qwen3=L6/GLM4=L2/DS7B=L7"
+      },
+      {
+        "finding": "末端层策略",
+        "universal": false,
+        "details": "Qwen3=MLP/GLM4=LN/DS7B=Attn,完全不同"
+      },
+      {
+        "finding": "template热点层",
+        "universal": false,
+        "details": "Qwen3=L18/GLM4=L20/DS7B=L14-21"
+      },
+      {
+        "finding": "词嵌入近正交",
+        "universal": true,
+        "details": "cos≈0.004一致"
+      }
+    ]
+  },
+  "overallProgress": {
+    "totalCells": 98,
+    "filled": 5,
+    "partial": 25,
+    "empty": 68,
+    "fillRate": 0.18,
+    "knowledgeRate": 0.3,
+    "causalRate": 0.08,
+    "p0Total": 12,
+    "p0Filled": 2,
+    "p0Partial": 7,
+    "p0FillRate": 0.48,
+    "interpretPower": 0.18,
+    "interpretPowerFormula": "explained_variance(0.30) × causal_strength(0.08/0.30) × reproducibility(0.75) = 0.18"
+  },
+  "subspaceDecomposition": {
+    "formula": "R^d ≈ V_WU∩V_sem ⊕ V_WU⊥∩V_syn ⊕ V_WU⊥∩V_dark ⊕ V_⊥logic ⊕ V_residual",
+    "subspaces": [
+      {
+        "name": "V_WU∩V_sem",
+        "label": "语义空间",
+        "ratio": "约14%",
+        "description": "语义信息在W_U可见方向"
+      },
+      {
+        "name": "V_WU⊥∩V_syn",
+        "label": "语法空间",
+        "ratio": "可分类",
+        "description": "语法角色编码在W_U⊥子空间"
+      },
+      {
+        "name": "V_WU⊥∩V_dark",
+        "label": "暗物质空间",
+        "ratio": "86-92%",
+        "description": "承载75-87%steering效果"
+      },
+      {
+        "name": "V_⊥logic",
+        "label": "逻辑空间",
+        "ratio": "独立",
+        "description": "逻辑信号是属性信号的2.7倍"
+      },
+      {
+        "name": "V_residual",
+        "label": "余项空间",
+        "ratio": "—",
+        "description": "剩余维度"
+      }
+    ]
+  },
+  "ontology": {
+    "name": "LanguageSystem",
+    "nameEn": "Language System",
+    "branches": [
+      {
+        "id": "Representation",
+        "name": "表示层",
+        "nameEn": "Representation",
+        "subBranches": [
+          {
+            "id": "Semantic",
+            "name": "语义",
+            "nameEn": "Semantic",
+            "categories": [
+              "KN"
+            ]
+          },
+          {
+            "id": "Syntax",
+            "name": "语法",
+            "nameEn": "Syntax",
+            "categories": [
+              "GR"
+            ]
+          },
+          {
+            "id": "Logic",
+            "name": "逻辑",
+            "nameEn": "Logic",
+            "categories": [
+              "LG"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "Computation",
+        "name": "计算层",
+        "nameEn": "Computation",
+        "subBranches": [
+          {
+            "id": "Attention",
+            "name": "注意力",
+            "nameEn": "Attention",
+            "categories": [
+              "TD"
+            ]
+          },
+          {
+            "id": "FFN",
+            "name": "前馈网络",
+            "nameEn": "FFN",
+            "categories": [
+              "WE"
+            ]
+          },
+          {
+            "id": "Routing",
+            "name": "路由",
+            "nameEn": "Routing",
+            "categories": [
+              "MG"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "Emergence",
+        "name": "涌现层",
+        "nameEn": "Emergence",
+        "subBranches": [
+          {
+            "id": "Efficiency",
+            "name": "效率",
+            "nameEn": "Efficiency",
+            "categories": [
+              "SE"
+            ]
+          },
+          {
+            "id": "Unification",
+            "name": "统一",
+            "nameEn": "Unification",
+            "categories": [
+              "UN"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "fourLayerFramework": [
+    {
+      "id": "geometry",
+      "name": "几何层",
+      "nameEn": "Geometry",
+      "question": "信息位于哪些子空间？维度？流形？",
+      "tools": "PCA/SVD/CCA/流形学习",
+      "fillRate": 0.3,
+      "knowledgeRate": 0.45,
+      "causalRate": 0.1,
+      "relatedRules": [
+        "R6",
+        "R7",
+        "R9",
+        "R13",
+        "R16"
+      ],
+      "status": "partial"
+    },
+    {
+      "id": "algebra",
+      "name": "代数层",
+      "nameEn": "Algebra",
+      "question": "子空间如何组合？群/格/范畴？",
+      "tools": "群表示论/格论/范畴论",
+      "fillRate": 0.1,
+      "knowledgeRate": 0.15,
+      "causalRate": 0.02,
+      "relatedRules": [
+        "R13",
+        "R14",
+        "R15"
+      ],
+      "status": "mostly_empty",
+      "note": "90%空白—从发现现象到建立理论的关键跨越方向"
+    },
+    {
+      "id": "dynamics",
+      "name": "动力学层",
+      "nameEn": "Dynamics",
+      "question": "信息如何传播？因果链？",
+      "tools": "Patching/Causal tracing/Jacobian",
+      "fillRate": 0.4,
+      "knowledgeRate": 0.5,
+      "causalRate": 0.15,
+      "relatedRules": [
+        "R1",
+        "R3",
+        "R4",
+        "R8"
+      ],
+      "status": "partial"
+    },
+    {
+      "id": "information_theory",
+      "name": "信息论层",
+      "nameEn": "Information Theory",
+      "question": "信息如何分配？为何冗余？显式/隐式？",
+      "tools": "MI/Fisher/信息瓶颈/谱分析",
+      "fillRate": 0.15,
+      "knowledgeRate": 0.2,
+      "causalRate": 0.05,
+      "relatedRules": [
+        "R2",
+        "R12",
+        "R16"
+      ],
+      "status": "mostly_empty",
+      "note": "85%空白—暗物质转导/信息隐藏/冗余编码"
+    }
+  ],
+  "categories": [
+    {
+      "id": "KN",
+      "name": "知识网络",
+      "nameEn": "Knowledge Network",
+      "icon": "brain",
+      "ontologyBranch": "Representation.Semantic",
+      "description": "概念编码/属性绑定/抽象层级/拓扑",
+      "goal": "揭示概念、属性、抽象层级在参数空间中的编码方式和拓扑结构",
+      "goalEn": "Reveal how concepts, attributes, and abstraction hierarchies are encoded in parameter space",
+      "principle": "概念形成局部密集流形(M_concept), 属性形成跨对象共享纤维(F_attr), 暗物质(V_WU⊥∩V_dark)承载75-87%操控效果",
+      "principleEn": "Concepts form local dense manifolds, attributes form shared fibers across objects, dark matter carries 75-87% steering effects",
+      "cellCount": 16,
+      "fillRate": 0.25,
+      "knowledgeRate": 0.38,
+      "causalRate": 0.1,
+      "interpretPower": 0.22,
+      "cells": [
+        {
+          "id": "KN-1a",
+          "title": "概念编码方向",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.45,
+          "knowledgeRate": 0.6,
+          "causalRate": 0.2,
+          "evidence": "R11: 概念是层依赖向量, PCA5探针0.98",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "PCA5探针0.98-1.00",
+            "单层steering>>多层",
+            "最优α=0.5"
+          ],
+          "goal": "确定概念在参数空间中的编码方向和层依赖特性",
+          "principle": "概念是层依赖向量, PCA5探针0.98-1.00, 单层steering>>多层"
+        },
+        {
+          "id": "KN-1b",
+          "title": "概念有效维度",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.5,
+          "knowledgeRate": 0.65,
+          "causalRate": 0.15,
+          "evidence": "INV-10: eff_dim=17-22",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "有效维度17-22维",
+            "暗物质有效秩6.6-7"
+          ],
+          "goal": "测量概念编码的有效维度和暗物质有效秩",
+          "principle": "概念有效维度17-22维, 暗物质有效秩6.6-7"
+        },
+        {
+          "id": "KN-1c",
+          "title": "深层锁定机制",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.3,
+          "knowledgeRate": 0.4,
+          "causalRate": 0.1,
+          "evidence": "R3: 语义力线指数增长(100-300x)",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "浅层switch_rate=0.67-0.83",
+            "深层=0.00",
+            "语义力线指数增长"
+          ],
+          "goal": "揭示深层概念决策进入attractor basin的锁定机制",
+          "principle": "语义力线指数增长(100-300x), 浅层switch_rate=0.67-0.83→深层0.00, 进入Ω_lock"
+        },
+        {
+          "id": "KN-2a",
+          "title": "属性绑定机制",
+          "priority": "P0",
+          "status": "empty",
+          "fillRate": 0.1,
+          "knowledgeRate": 0.15,
+          "causalRate": 0.02,
+          "evidence": "完全未知",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "属性-概念绑定方向是否存在?",
+            "红色+苹果如何绑定?"
+          ],
+          "goal": "发现属性与概念绑定的编码机制",
+          "principle": "属性-概念绑定方向是否存在? 红色+苹果如何绑定? 完全未知"
+        },
+        {
+          "id": "KN-2b",
+          "title": "属性编码方向",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.35,
+          "knowledgeRate": 0.5,
+          "causalRate": 0.1,
+          "evidence": "R14: 同类正异类负",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "同类cos=+0.08~+0.27",
+            "异类cos=-0.07~-0.13"
+          ],
+          "goal": "确定属性在参数空间中的编码方向",
+          "principle": "同类cos=+0.08~+0.27(正相关), 异类cos=-0.07~-0.13(负相关), 形成属性纤维F_attr"
+        },
+        {
+          "id": "KN-2c",
+          "title": "属性因果效应",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.4,
+          "knowledgeRate": 0.5,
+          "causalRate": 0.25,
+          "evidence": "INV-17: A级属性干预99.56%",
+          "evidenceLevel": "E3",
+          "keyData": [
+            "颜色/身份干预99.56%",
+            "逻辑推理恢复率<4%"
+          ],
+          "goal": "验证属性编码的因果效应强度",
+          "principle": "A级属性(颜色/身份)干预99.56%, 但逻辑推理恢复率<4%, 属性≠推理"
+        },
+        {
+          "id": "KN-3a",
+          "title": "抽象层级拓扑",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.25,
+          "knowledgeRate": 0.35,
+          "causalRate": 0.05,
+          "evidence": "R14: 抽象cos≈-0.20(非嵌套)",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "抽象层级cos≈-0.20",
+            "非嵌套非正交"
+          ],
+          "goal": "理解抽象层级的拓扑结构(嵌套vs正交vs其他)",
+          "principle": "抽象层级cos≈-0.20(非嵌套非正交), 可能是反射关系"
+        },
+        {
+          "id": "KN-3b",
+          "title": "概念流形结构",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.55,
+          "knowledgeRate": 0.7,
+          "causalRate": 0.15,
+          "evidence": "R13: 语义流形≈变形单纯形",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "fit_r2=0.87-0.96",
+            "浅层1维→深层多维分化"
+          ],
+          "goal": "确定概念流形的几何形状",
+          "principle": "语义流形≈变形单纯形, fit_r2=0.87-0.96, 浅层1维→深层多维分化"
+        },
+        {
+          "id": "KN-3c",
+          "title": "概念间拓扑关系",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.08,
+          "causalRate": 0.01,
+          "evidence": "几乎空白",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "概念图的连通性未知",
+            "最近邻结构未知"
+          ],
+          "goal": "发现概念间的拓扑关系图",
+          "principle": "概念图的连通性未知, 最近邻结构未知"
+        },
+        {
+          "id": "KN-4a",
+          "title": "暗物质转导机制",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.2,
+          "knowledgeRate": 0.3,
+          "causalRate": 0.08,
+          "evidence": "R12: 暗物质承载75-87%steering",
+          "evidenceLevel": "E3",
+          "keyData": [
+            "86-92%在W_U⊥",
+            "W_U-only几乎无效",
+            "暗物质有效秩6.6-7"
+          ],
+          "goal": "揭示W_U⊥暗物质承载steering效果的转导机制",
+          "principle": "86-92%范数在W_U⊥, W_U-only几乎无效, 暗物质有效秩6.6-7"
+        },
+        {
+          "id": "KN-4b",
+          "title": "暗物质级联转导",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.15,
+          "knowledgeRate": 0.2,
+          "causalRate": 0.05,
+          "evidence": "W_U注入6层后衰减到25-34%",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "级联转导衰减",
+            "残差直通+非线性转导"
+          ],
+          "goal": "理解暗物质信息从W_U⊥级联转导到W_U的路径",
+          "principle": "W_U注入6层后衰减到25-34%, 残差直通+非线性转导"
+        },
+        {
+          "id": "KN-5a",
+          "title": "template热点功能",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.3,
+          "knowledgeRate": 0.4,
+          "causalRate": 0.1,
+          "evidence": "INV-26: 中间层template热点",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "Qwen3=L18, GLM4=L20, DS7B=L14-21"
+          ],
+          "goal": "确定template热点的功能角色",
+          "principle": "中间层template热点: Qwen3=L18, GLM4=L20, DS7B=L14-21"
+        },
+        {
+          "id": "KN-5b",
+          "title": "category vs template驱动",
+          "priority": "P2",
+          "status": "filled",
+          "fillRate": 0.85,
+          "knowledgeRate": 0.9,
+          "causalRate": 0.7,
+          "evidence": "INV-25/REF-11: category驱动(cat_R2=0.82-0.94)",
+          "evidenceLevel": "E3",
+          "keyData": [
+            "cat_R2=0.82-0.94",
+            "推翻90%是模板"
+          ],
+          "goal": "判断残差流是category驱动还是template驱动",
+          "principle": "category驱动(cat_R2=0.82-0.94), 推翻90%是模板的假设"
+        },
+        {
+          "id": "KN-6a",
+          "title": "概念替换传播",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.35,
+          "knowledgeRate": 0.45,
+          "causalRate": 0.15,
+          "evidence": "INV-27: switch_rate浅层0.67-0.83→深层0.00",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "浅层switch_rate高",
+            "深层免疫"
+          ],
+          "goal": "理解概念替换在层间的传播规律",
+          "principle": "浅层switch_rate高(0.67-0.83), 深层免疫(0.00), 进入attractor basin"
+        },
+        {
+          "id": "KN-7a",
+          "title": "跨模板概念特异性",
+          "priority": "P2",
+          "status": "partial",
+          "fillRate": 0.3,
+          "knowledgeRate": 0.4,
+          "causalRate": 0.08,
+          "evidence": "INV-12: spec_cos=-0.15~-0.20",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "跨模板反相关"
+          ],
+          "goal": "验证概念在不同template间的特异性编码",
+          "principle": "跨模板spec_cos=-0.15~-0.20, 呈反相关"
+        },
+        {
+          "id": "KN-8a",
+          "title": "知识网络统合",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.08,
+          "causalRate": 0.01,
+          "evidence": "几乎空白",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "概念-属性-抽象统一机制未知"
+          ],
+          "goal": "统合概念-属性-抽象的统一编码机制",
+          "principle": "概念-属性-抽象统一机制未知, 需先完成子格子"
+        }
+      ]
+    },
+    {
+      "id": "LG",
+      "name": "逻辑推理",
+      "nameEn": "Logic Reasoning",
+      "icon": "target",
+      "ontologyBranch": "Representation.Logic",
+      "description": "推理载体/条件链/传递性/因果路径",
+      "goal": "发现逻辑操作在表示空间中的数学结构和因果载体",
+      "goalEn": "Discover the mathematical structure and causal carriers of logical operations in representation space",
+      "principle": "逻辑操作是近似群作用(Λ_op), not操作=正交扰动, 逻辑信号是属性信号的2.7倍, 峰值在L18",
+      "principleEn": "Logical operations are approximate group actions, NOT=orthogonal perturbation, logic signal 2.7x attribute, peaking at L18",
+      "cellCount": 15,
+      "fillRate": 0.1,
+      "knowledgeRate": 0.18,
+      "causalRate": 0.02,
+      "interpretPower": 0.1,
+      "cells": [
+        {
+          "id": "LG-1a",
+          "title": "逻辑操作方向",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.4,
+          "knowledgeRate": 0.55,
+          "causalRate": 0.1,
+          "evidence": "INV-13: not=正交扰动, INV-15: 逻辑2.7x属性",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "not操作添加正交扰动",
+            "逻辑信号2.7x属性",
+            "逻辑峰值L18"
+          ],
+          "goal": "发现逻辑操作(not等)在表示空间中的编码方向",
+          "principle": "not操作添加正交扰动, 逻辑信号2.7x属性, 逻辑峰值L18"
+        },
+        {
+          "id": "LG-1b",
+          "title": "肯定/否定句关系",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.45,
+          "knowledgeRate": 0.6,
+          "causalRate": 0.1,
+          "evidence": "INV-14: cos(aff,neg)≈0.8-0.9",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "肯否定句高度相似",
+            "逻辑在独立正交方向"
+          ],
+          "goal": "理解肯定/否定句在表示空间中的关系",
+          "principle": "肯否定句高度相似(cos≈0.8-0.9), 逻辑编码在独立正交方向"
+        },
+        {
+          "id": "LG-1c",
+          "title": "逻辑信号峰值层",
+          "priority": "P2",
+          "status": "partial",
+          "fillRate": 0.35,
+          "knowledgeRate": 0.45,
+          "causalRate": 0.08,
+          "evidence": "INV-16: 逻辑峰值L18(50%深度)0.780",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "逻辑信号L18峰值"
+          ],
+          "goal": "定位逻辑信号最强的层级",
+          "principle": "逻辑信号在L18(50%深度)达到峰值0.780"
+        },
+        {
+          "id": "LG-2a",
+          "title": "逻辑组合律",
+          "priority": "P0",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "未测试",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "not(not X)≈X?",
+            "德摩根律?",
+            "布尔代数?"
+          ],
+          "goal": "验证逻辑组合律(对合性/德摩根律/布尔代数)",
+          "principle": "not(not X)≈X? 德摩根律? 布尔代数? 完全未测试"
+        },
+        {
+          "id": "LG-2b",
+          "title": "语法变换群",
+          "priority": "P0",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "未测试",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "nsubj↔dobj对合?",
+            "群结构?"
+          ],
+          "goal": "发现语法变换是否形成群结构",
+          "principle": "nsubj↔dobj对合? 群结构? 完全未测试"
+        },
+        {
+          "id": "LG-3a",
+          "title": "传递性推理机制",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.35,
+          "knowledgeRate": 0.5,
+          "causalRate": 0.08,
+          "evidence": "R15: 传递性深层不成立",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "浅层cos=0.98(1维推理)",
+            "深层传递性负余弦"
+          ],
+          "goal": "理解传递性推理在深层的失效机制",
+          "principle": "浅层cos=0.98(1维推理), 深层传递性负余弦, 推理退化"
+        },
+        {
+          "id": "LG-3b",
+          "title": "因果推理路径",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.15,
+          "knowledgeRate": 0.2,
+          "causalRate": 0.05,
+          "evidence": "INV-18: 推理恢复率<4%",
+          "evidenceLevel": "E3",
+          "keyData": [
+            "推理恢复率极低",
+            "深层干预无效"
+          ],
+          "goal": "追踪因果推理的表示路径",
+          "principle": "推理恢复率极低(<4%), 深层干预无效, 推理载体不明"
+        },
+        {
+          "id": "LG-4a",
+          "title": "条件链推理",
+          "priority": "P1",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "几乎空白",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "if-then编码方向未知"
+          ],
+          "goal": "发现if-then条件链的编码方式",
+          "principle": "if-then编码方向未知, 完全空白"
+        },
+        {
+          "id": "LG-4b",
+          "title": "and/or编码",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "未测试",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "and/or方向?分配律?"
+          ],
+          "goal": "理解and/or逻辑连接词的编码",
+          "principle": "and/or方向? 分配律? 完全未测试"
+        },
+        {
+          "id": "LG-5a",
+          "title": "推理因果载体",
+          "priority": "P1",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "未知: 注意力头? FFN?",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "推理的因果载体是什么?"
+          ],
+          "goal": "确定推理的因果载体(注意力头/FFN/其他)",
+          "principle": "推理的因果载体是什么? 未知"
+        },
+        {
+          "id": "LG-6a",
+          "title": "逻辑×知识交互",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "几乎空白",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "逻辑操作如何作用于知识表示?"
+          ],
+          "goal": "理解逻辑操作如何作用于知识表示",
+          "principle": "逻辑操作如何作用于知识表示? 几乎空白"
+        },
+        {
+          "id": "LG-7a",
+          "title": "跨模型逻辑一致性",
+          "priority": "P2",
+          "status": "partial",
+          "fillRate": 0.2,
+          "knowledgeRate": 0.3,
+          "causalRate": 0.05,
+          "evidence": "三模型逻辑信号均2.7x属性",
+          "evidenceLevel": "E4",
+          "keyData": [
+            "三模型一致",
+            "具体差异未细查"
+          ],
+          "goal": "验证逻辑编码的跨模型一致性",
+          "principle": "三模型逻辑信号均2.7x属性, 基本一致, 具体差异未细查"
+        },
+        {
+          "id": "LG-8a",
+          "title": "逻辑子空间容量",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "未知",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "逻辑子空间维度?容量?"
+          ],
+          "goal": "测量逻辑子空间的维度和容量",
+          "principle": "逻辑子空间维度? 容量? 未知"
+        },
+        {
+          "id": "LG-9a",
+          "title": "非经典推理",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "未测试",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "模糊推理?概率推理?"
+          ],
+          "goal": "探索非经典推理(模糊/概率)的编码",
+          "principle": "模糊推理? 概率推理? 未测试"
+        },
+        {
+          "id": "LG-10a",
+          "title": "逻辑统合",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "几乎空白",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "逻辑操作统一代数结构?"
+          ],
+          "goal": "统合所有逻辑操作的统一代数结构",
+          "principle": "逻辑操作统一代数结构? 几乎空白"
+        }
+      ]
+    },
+    {
+      "id": "GR",
+      "name": "语法体系",
+      "nameEn": "Grammar System",
+      "icon": "code",
+      "ontologyBranch": "Representation.Syntax",
+      "description": "词性编码/句式加工/依存结构/跨语言",
+      "goal": "理解语法角色的编码位置、几何结构和从隐藏空间到输出的因果路径",
+      "goalEn": "Understand where grammar roles are encoded, their geometric structure, and the causal path from hidden space to output",
+      "principle": "语法信息被压缩到W_U⊥子空间(G⊥), 对logits不可见但可操控, LayerNorm可能泄露W_U⊥信息到输出",
+      "principleEn": "Grammar is compressed into W_U⊥ nullspace, invisible to logits but steerable, LayerNorm may leak W_U⊥ info to output",
+      "cellCount": 12,
+      "fillRate": 0.35,
+      "knowledgeRate": 0.45,
+      "causalRate": 0.12,
+      "interpretPower": 0.35,
+      "cells": [
+        {
+          "id": "GR-1a",
+          "title": "语法角色W_U⊥编码",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.55,
+          "knowledgeRate": 0.7,
+          "causalRate": 0.15,
+          "evidence": "R16: 语法在W_U⊥子空间",
+          "evidenceLevel": "E4",
+          "keyData": [
+            "W_U⊥分类CV=100%",
+            "nsubj85%/dobj80%/amod92%在W_U⊥"
+          ],
+          "goal": "确认语法角色编码在W_U⊥子空间",
+          "principle": "W_U⊥分类CV=100%, nsubj85%/dobj80%/amod92%在W_U⊥, 语法隐藏在G⊥"
+        },
+        {
+          "id": "GR-1b",
+          "title": "语法角色精细几何",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.25,
+          "knowledgeRate": 0.35,
+          "causalRate": 0.05,
+          "evidence": "9A: 4角色余弦矩阵待做",
+          "evidenceLevel": "E1",
+          "keyData": [
+            "正四面体是LR artifact",
+            "真实几何结构未知"
+          ],
+          "goal": "揭示语法角色之间的精细几何结构",
+          "principle": "正四面体是LR artifact, 真实几何结构未知, 需4角色余弦矩阵"
+        },
+        {
+          "id": "GR-2a",
+          "title": "语法正交补空间",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.5,
+          "knowledgeRate": 0.65,
+          "causalRate": 0.1,
+          "evidence": "R17: LDA能分类但因果≈0",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "LDA分类0.80-0.94",
+            "因果≈0",
+            "迁移方向KL=10.6-17.5"
+          ],
+          "goal": "理解语法可分类但不可因果干预的矛盾",
+          "principle": "LDA分类0.80-0.94但因果≈0, probe≠mechanism, 迁移方向KL=10.6-17.5"
+        },
+        {
+          "id": "GR-2b",
+          "title": "语法角色高维结构",
+          "priority": "P1",
+          "status": "empty",
+          "fillRate": 0.1,
+          "knowledgeRate": 0.12,
+          "causalRate": 0.02,
+          "evidence": "9C: 扩展更多语法角色",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "iobj/ccomp/xcomp的W_U⊥占比"
+          ],
+          "goal": "扩展语法角色的高维结构分析",
+          "principle": "iobj/ccomp/xcomp的W_U⊥占比待测"
+        },
+        {
+          "id": "GR-3a",
+          "title": "LayerNorm泄露机制",
+          "priority": "P0",
+          "status": "empty",
+          "fillRate": 0.1,
+          "knowledgeRate": 0.15,
+          "causalRate": 0.02,
+          "evidence": "9B: 绕过LayerNorm操控实验",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "LayerNorm是否泄露W_U⊥信息?"
+          ],
+          "goal": "验证LayerNorm是否泄露W_U⊥语法信息到输出",
+          "principle": "LayerNorm归一化可能将W_U⊥信息旋转到W_U方向, 绕过隐身机制"
+        },
+        {
+          "id": "GR-3b",
+          "title": "语法→logits因果链",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.3,
+          "knowledgeRate": 0.4,
+          "causalRate": 0.12,
+          "evidence": "R18: W_U⊥操控翻转50-68%",
+          "evidenceLevel": "E3",
+          "keyData": [
+            "W_U⊥操控KL仅35-43%",
+            "content word rate低(0-33%)"
+          ],
+          "goal": "追踪从W_U⊥语法编码到logits输出的因果链",
+          "principle": "W_U⊥操控KL仅35-43%, content word rate低(0-33%), 因果链不完整"
+        },
+        {
+          "id": "GR-4a",
+          "title": "语法变换群",
+          "priority": "P1",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "未测试",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "nsubj↔dobj对合?群结构?"
+          ],
+          "goal": "验证语法变换是否形成群结构",
+          "principle": "nsubj↔dobj对合? 群结构? 未测试"
+        },
+        {
+          "id": "GR-5a",
+          "title": "句式加工机制",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.3,
+          "knowledgeRate": 0.4,
+          "causalRate": 0.08,
+          "evidence": "template热点可能与句式处理相关",
+          "evidenceLevel": "E1",
+          "keyData": [
+            "template方差占比98.8%"
+          ],
+          "goal": "理解句式加工的神经元机制",
+          "principle": "template方差占比98.8%, 热点可能与句式处理相关"
+        },
+        {
+          "id": "GR-6a",
+          "title": "依存结构编码",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "几乎空白",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "依存关系如何编码?"
+          ],
+          "goal": "发现依存关系的编码方式",
+          "principle": "依存关系如何编码? 几乎空白"
+        },
+        {
+          "id": "GR-7a",
+          "title": "跨语言语法共性",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "未测试",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "跨语言验证"
+          ],
+          "goal": "验证语法编码的跨语言共性",
+          "principle": "跨语言验证, 未测试"
+        },
+        {
+          "id": "GR-8a",
+          "title": "语法-语义解耦统一",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.25,
+          "knowledgeRate": 0.35,
+          "causalRate": 0.08,
+          "evidence": "R16-R18: 最新发现",
+          "evidenceLevel": "E3",
+          "keyData": [
+            "语法在W_U⊥, 语义在W_U"
+          ],
+          "goal": "建立语法-语义正交分解的统一理论",
+          "principle": "语法在W_U⊥, 语义在W_U, 子空间正交分解, 交互机制未知"
+        },
+        {
+          "id": "GR-9a",
+          "title": "语法统合",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "几乎空白",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "语法体系统一数学结构?"
+          ],
+          "goal": "统合语法体系统一数学结构",
+          "principle": "语法体系统一数学结构? 几乎空白"
+        }
+      ]
+    },
+    {
+      "id": "MG",
+      "name": "多维生成控制",
+      "nameEn": "Multi-dimensional Generation",
+      "icon": "layers",
+      "ontologyBranch": "Computation.Routing",
+      "description": "风格/逻辑/语法操控/安全约束",
+      "goal": "建立风格/逻辑/语法等多维度的可控生成理论框架",
+      "goalEn": "Build a controllable generation framework across style, logic, grammar dimensions",
+      "principle": "多维度在参数空间中近似正交分解, 操控效果受子空间位置约束, W_U⊥操控翻转50-68%语法分类",
+      "principleEn": "Multi-dimensions are approximately orthogonally decomposed, steering is constrained by subspace position, W_U⊥ flips 50-68% grammar",
+      "cellCount": 15,
+      "fillRate": 0.15,
+      "knowledgeRate": 0.2,
+      "causalRate": 0.05,
+      "interpretPower": 0.12,
+      "cells": [
+        {
+          "id": "MG-1a",
+          "title": "风格操控方向",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.25,
+          "knowledgeRate": 0.35,
+          "causalRate": 0.08,
+          "evidence": "部分steering实验",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "风格方向可识别",
+            "跨模板一致性待验证"
+          ],
+          "goal": "确定风格操控的编码方向",
+          "principle": "风格方向可识别, 跨模板一致性待验证"
+        },
+        {
+          "id": "MG-1b",
+          "title": "风格-语义分离",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "未测试",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "风格操控是否独立于语义?"
+          ],
+          "goal": "验证风格操控是否独立于语义",
+          "principle": "风格操控是否独立于语义? 未测试"
+        },
+        {
+          "id": "MG-2a",
+          "title": "语法操控因果",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.3,
+          "knowledgeRate": 0.4,
+          "causalRate": 0.12,
+          "evidence": "R18: W_U⊥操控翻转50-68%",
+          "evidenceLevel": "E3",
+          "keyData": [
+            "局部vs全局操控?"
+          ],
+          "goal": "建立语法操控的因果理论",
+          "principle": "W_U⊥操控翻转50-68%语法分类, 局部vs全局操控待区分"
+        },
+        {
+          "id": "MG-2b",
+          "title": "逻辑操控因果",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.2,
+          "knowledgeRate": 0.25,
+          "causalRate": 0.05,
+          "evidence": "逻辑推理恢复率<4%",
+          "evidenceLevel": "E3",
+          "keyData": [
+            "逻辑操控效果弱"
+          ],
+          "goal": "验证逻辑操控的因果效应",
+          "principle": "逻辑推理恢复率<4%, 逻辑操控效果弱"
+        },
+        {
+          "id": "MG-3a",
+          "title": "安全约束机制",
+          "priority": "P1",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "未测试",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "安全约束的编码位置和机制"
+          ],
+          "goal": "发现安全约束的编码位置和机制",
+          "principle": "安全约束的编码位置和机制, 未测试"
+        },
+        {
+          "id": "MG-4a",
+          "title": "多维度交互",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "未测试",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "风格×语法×逻辑交互?"
+          ],
+          "goal": "理解风格×语法×逻辑的多维度交互",
+          "principle": "风格×语法×逻辑交互? 未测试"
+        },
+        {
+          "id": "MG-5a",
+          "title": "生成可控性",
+          "priority": "P2",
+          "status": "partial",
+          "fillRate": 0.15,
+          "knowledgeRate": 0.2,
+          "causalRate": 0.05,
+          "evidence": "steering实验部分成功",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "概念steering成功率差异大"
+          ],
+          "goal": "建立生成可控性理论",
+          "principle": "概念steering成功率差异大, 部分成功"
+        },
+        {
+          "id": "MG-6a",
+          "title": "解码策略与表示",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "未测试",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "解码策略是否影响表示?"
+          ],
+          "goal": "理解解码策略对表示的影响",
+          "principle": "解码策略是否影响表示? 未测试"
+        },
+        {
+          "id": "MG-7a",
+          "title": "内容词操控率",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.25,
+          "knowledgeRate": 0.35,
+          "causalRate": 0.1,
+          "evidence": "R18: content word rate 0-33%",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "content word rate低",
+            "LayerNorm泄露W_U⊥"
+          ],
+          "goal": "理解内容词操控率低的原因",
+          "principle": "content word rate 0-33%, LayerNorm泄露W_U⊥是可能原因"
+        },
+        {
+          "id": "MG-8a",
+          "title": "多维生成统合",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "几乎空白",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "多维统一生成理论?"
+          ],
+          "goal": "统合多维生成统一理论",
+          "principle": "多维统一生成理论? 几乎空白"
+        }
+      ]
+    },
+    {
+      "id": "SE",
+      "name": "系统效率",
+      "nameEn": "System Efficiency",
+      "icon": "zap",
+      "ontologyBranch": "Emergence.Efficiency",
+      "description": "信息瓶颈/压缩策略/层功能分工/容量",
+      "goal": "理解信息瓶颈、压缩策略和容量分配的优化原理, 揭示高效编码的数学本质",
+      "goalEn": "Understand optimization principles of information bottleneck, compression, and capacity allocation",
+      "principle": "模型通过信息隐藏(W_U⊥语法)和冗余编码(暗物质)实现计算效率与表达力的平衡, W_down形成信息瓶颈",
+      "principleEn": "Model balances efficiency and expressiveness via information hiding (W_U⊥) and redundant coding (dark matter), W_down forms bottleneck",
+      "cellCount": 9,
+      "fillRate": 0.15,
+      "knowledgeRate": 0.22,
+      "causalRate": 0.05,
+      "interpretPower": 0.13,
+      "cells": [
+        {
+          "id": "SE-1a",
+          "title": "信息瓶颈机制",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.3,
+          "knowledgeRate": 0.4,
+          "causalRate": 0.08,
+          "evidence": "R2: W_down压缩掉z空间特异性",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "W_down信息瓶颈",
+            "LDA 100%改变top-1"
+          ],
+          "goal": "理解W_down形成信息瓶颈的机制",
+          "principle": "W_down压缩掉z空间特异性, LDA 100%改变top-1"
+        },
+        {
+          "id": "SE-2a",
+          "title": "层功能分工",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.4,
+          "knowledgeRate": 0.55,
+          "causalRate": 0.12,
+          "evidence": "前层:词法+概念编码, 中层:语义+语法, 后层:决策+锁定",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "L0-L9: 词法+概念",
+            "L10-L20: 语义+语法",
+            "L21+: 决策+锁定"
+          ],
+          "goal": "建立层功能分工的数学理论",
+          "principle": "前层:词法+概念, 中层:语义+语法, 后层:决策+锁定"
+        },
+        {
+          "id": "SE-3a",
+          "title": "冗余编码策略",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.2,
+          "knowledgeRate": 0.3,
+          "causalRate": 0.05,
+          "evidence": "R12: 暗物质承载75-87%steering",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "硬伤1: 任何方向perturb都有效"
+          ],
+          "goal": "理解冗余编码(暗物质)的策略和效率",
+          "principle": "暗物质承载75-87%steering效果, 但任何方向perturb都有效(硬伤1)"
+        },
+        {
+          "id": "SE-4a",
+          "title": "信息隐藏策略",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.35,
+          "knowledgeRate": 0.5,
+          "causalRate": 0.1,
+          "evidence": "R16: 语法在W_U⊥(lm_head看不到)",
+          "evidenceLevel": "E3",
+          "keyData": [
+            "语法'隐身'在W_U⊥",
+            "可读写分离机制"
+          ],
+          "goal": "揭示信息隐藏策略的数学本质",
+          "principle": "语法'隐身'在W_U⊥, 实现可读写分离机制"
+        },
+        {
+          "id": "SE-5a",
+          "title": "容量分配",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "未知",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "各子空间容量分配比例?"
+          ],
+          "goal": "测量各子空间的容量分配比例",
+          "principle": "各子空间容量分配比例? 未知"
+        },
+        {
+          "id": "SE-6a",
+          "title": "计算效率",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "未测试",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "能量最小化原则?"
+          ],
+          "goal": "验证计算效率是否遵循能量最小化原则",
+          "principle": "能量最小化原则? 未测试"
+        },
+        {
+          "id": "SE-7a",
+          "title": "子空间容量极限",
+          "priority": "P1",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "9C: W_U⊥容量极限",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "W_U⊥能容纳多少语法角色?"
+          ],
+          "goal": "测量W_U⊥子空间的语法容量极限",
+          "principle": "W_U⊥能容纳多少语法角色? 未知"
+        },
+        {
+          "id": "SE-8a",
+          "title": "频谱效率",
+          "priority": "P2",
+          "status": "partial",
+          "fillRate": 0.25,
+          "knowledgeRate": 0.35,
+          "causalRate": 0.05,
+          "evidence": "INV-21-24: 频谱传播方程",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "频谱传播r>0.89",
+            "频谱不含语义"
+          ],
+          "goal": "建立频谱传播方程",
+          "principle": "频谱传播r>0.89, 频谱不含语义, 信号逐层传播"
+        },
+        {
+          "id": "SE-9a",
+          "title": "系统效率统合",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "几乎空白",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "统一效率理论?"
+          ],
+          "goal": "统合系统效率统一理论",
+          "principle": "统一效率理论? 几乎空白"
+        }
+      ]
+    },
+    {
+      "id": "WE",
+      "name": "词嵌入数学",
+      "nameEn": "Word Embedding Math",
+      "icon": "database",
+      "ontologyBranch": "Computation.FFN",
+      "description": "正交性/距离结构/方向语义/旋转映射",
+      "goal": "建立词嵌入空间的几何和代数结构理论, 理解从嵌入到残差流的旋转映射",
+      "goalEn": "Build geometric and algebraic theory of word embedding space, understand rotation from embedding to residual stream",
+      "principle": "词嵌入近正交(cos≈0.004), L0→L1发生92%旋转断裂, 信号能量逐层向W_U行空间转移(ratio→1.0)",
+      "principleEn": "Word embeddings near-orthogonal (cos≈0.004), 92% rotation at L0→L1, signal energy shifts to W_U row space (ratio→1.0)",
+      "cellCount": 7,
+      "fillRate": 0.25,
+      "knowledgeRate": 0.35,
+      "causalRate": 0.1,
+      "interpretPower": 0.22,
+      "cells": [
+        {
+          "id": "WE-1a",
+          "title": "词嵌入正交性",
+          "priority": "P1",
+          "status": "filled",
+          "fillRate": 0.85,
+          "knowledgeRate": 0.9,
+          "causalRate": 0.7,
+          "evidence": "INV-5: cos(W_E[i],W_E[j])≈0.004",
+          "evidenceLevel": "E4",
+          "keyData": [
+            "词嵌入几乎正交"
+          ],
+          "goal": "验证词嵌入的近正交性",
+          "principle": "词嵌入几乎正交, cos(W_E[i],W_E[j])≈0.004, 跨模型一致"
+        },
+        {
+          "id": "WE-2a",
+          "title": "嵌入-残差旋转",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.55,
+          "knowledgeRate": 0.7,
+          "causalRate": 0.15,
+          "evidence": "R9: 旋转>90°=维度诅咒",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "随机θ≈91.3°",
+            "训练降低β_emb"
+          ],
+          "goal": "理解嵌入→残差流的旋转映射",
+          "principle": "随机θ≈91.3°(>90°=维度诅咒), 训练降低β_emb"
+        },
+        {
+          "id": "WE-2b",
+          "title": "L0→L1断裂",
+          "priority": "P1",
+          "status": "filled",
+          "fillRate": 0.8,
+          "knowledgeRate": 0.85,
+          "causalRate": 0.6,
+          "evidence": "INV-4: L0→L1发生非线性断裂(92%旋转)",
+          "evidenceLevel": "E3",
+          "keyData": [
+            "92%旋转在此一步"
+          ],
+          "goal": "揭示L0→L1的非线性断裂机制",
+          "principle": "L0→L1发生92%旋转断裂, 是最剧烈的单步变换"
+        },
+        {
+          "id": "WE-3a",
+          "title": "方向语义映射",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.3,
+          "knowledgeRate": 0.4,
+          "causalRate": 0.05,
+          "evidence": "词嵌入算术现象",
+          "evidenceLevel": "E1",
+          "keyData": [
+            "king-man+woman=queen",
+            "参数空间几何结构"
+          ],
+          "goal": "建立方向→语义的映射理论",
+          "principle": "词嵌入算术现象(king-man+woman=queen), 参数空间几何结构"
+        },
+        {
+          "id": "WE-4a",
+          "title": "残差流SVD模式",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.5,
+          "knowledgeRate": 0.65,
+          "causalRate": 0.15,
+          "evidence": "R6: 1-3个SVD模式控制97%输出",
+          "evidenceLevel": "E3",
+          "keyData": [
+            "深层相变",
+            "断裂层位置不同"
+          ],
+          "goal": "发现残差流的SVD主模式",
+          "principle": "1-3个SVD模式控制97%输出, 深层相变, 断裂层位置不同"
+        },
+        {
+          "id": "WE-5a",
+          "title": "W_U能量转移",
+          "priority": "P1",
+          "status": "filled",
+          "fillRate": 0.75,
+          "knowledgeRate": 0.8,
+          "causalRate": 0.55,
+          "evidence": "INV-2: 信号能量逐层向W_U行空间转移",
+          "evidenceLevel": "E3",
+          "keyData": [
+            "ratio(k_max)→1.0"
+          ],
+          "goal": "理解信号能量向W_U行空间的转移过程",
+          "principle": "信号能量逐层向W_U行空间转移, ratio(k_max)→1.0"
+        },
+        {
+          "id": "WE-6a",
+          "title": "词嵌入统合",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "几乎空白",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "词嵌入数学统一理论?"
+          ],
+          "goal": "统合词嵌入数学统一理论",
+          "principle": "词嵌入数学统一理论? 几乎空白"
+        }
+      ]
+    },
+    {
+      "id": "TD",
+      "name": "3D-1D映射",
+      "nameEn": "3D-to-1D Mapping",
+      "icon": "box",
+      "ontologyBranch": "Computation.Attention",
+      "description": "连续→离散/Logit几何/W_U结构",
+      "goal": "理解连续表示→离散token的映射机制, 建立logit几何和W_U结构理论",
+      "goalEn": "Understand continuous→discrete mapping mechanism, build logit geometry and W_U structure theory",
+      "principle": "加法传播定律(h_{l+1}=h_l+A+M, r=1.000), Attention是主通道(21.5x>>MLP 1.87x), logit_gap→prob满足sigmoid",
+      "principleEn": "Additive propagation law (r=1.000), Attention is main channel (21.5x>>MLP 1.87x), logit_gap→prob follows sigmoid",
+      "cellCount": 6,
+      "fillRate": 0.2,
+      "knowledgeRate": 0.3,
+      "causalRate": 0.08,
+      "interpretPower": 0.2,
+      "cells": [
+        {
+          "id": "TD-1a",
+          "title": "连续→离散映射",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.3,
+          "knowledgeRate": 0.4,
+          "causalRate": 0.08,
+          "evidence": "INV-7: logit_gap→prob sigmoid r>0.93",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "sigmoid映射关系"
+          ],
+          "goal": "理解连续表示→离散token的sigmoid映射",
+          "principle": "logit_gap→prob sigmoid r>0.93, 连续→离散映射关系"
+        },
+        {
+          "id": "TD-2a",
+          "title": "Logit几何结构",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.25,
+          "knowledgeRate": 0.35,
+          "causalRate": 0.05,
+          "evidence": "R3: 语义力线→W_U→Logit",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "DS7B 89%语义能量在前10个W_U奇异模式"
+          ],
+          "goal": "建立logit几何结构理论",
+          "principle": "语义力线→W_U→Logit, DS7B 89%语义能量在前10个W_U奇异模式"
+        },
+        {
+          "id": "TD-3a",
+          "title": "W_U结构分析",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.4,
+          "knowledgeRate": 0.55,
+          "causalRate": 0.12,
+          "evidence": "R3/R4: Attention主通道",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "Attn W_U增益21.5x >> MLP 1.87x"
+          ],
+          "goal": "揭示W_U的结构和Attention主通道机制",
+          "principle": "Attn W_U增益21.5x >> MLP 1.87x, Attention是语义→Logit主通道"
+        },
+        {
+          "id": "TD-4a",
+          "title": "加法传播定律",
+          "priority": "P0",
+          "status": "filled",
+          "fillRate": 0.9,
+          "knowledgeRate": 0.95,
+          "causalRate": 0.75,
+          "evidence": "INV-6: gap(l+1)=gap(l)+delta(l), r=1.000",
+          "evidenceLevel": "E4",
+          "keyData": [
+            "加法传播",
+            "r=1.000完美线性"
+          ],
+          "goal": "验证加法传播定律",
+          "principle": "gap(l+1)=gap(l)+Δ(l), r=1.000完美线性, 加法传播"
+        },
+        {
+          "id": "TD-5a",
+          "title": "末端层涌现方程",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.2,
+          "knowledgeRate": 0.25,
+          "causalRate": 0.05,
+          "evidence": "REF-3/4: 无统一方程",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "三模型策略完全不同",
+            "Qwen3=MLP/GLM4=LN/DS7B=Attn"
+          ],
+          "goal": "发现末端层的涌现方程",
+          "principle": "三模型策略完全不同: Qwen3=MLP/GLM4=LN/DS7B=Attn, 无统一方程"
+        },
+        {
+          "id": "TD-6a",
+          "title": "3D-1D统合",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "几乎空白",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "统一映射理论?"
+          ],
+          "goal": "统合3D-1D映射统一理论",
+          "principle": "统一映射理论? 几乎空白"
+        }
+      ]
+    },
+    {
+      "id": "UN",
+      "name": "统合格子",
+      "nameEn": "Unification",
+      "icon": "sparkles",
+      "ontologyBranch": "Emergence.Unification",
+      "description": "知识×逻辑/语法×语义/统一原理",
+      "goal": "发现各子系统的统一数学结构和不变量, 迈向语言的牛顿力学",
+      "goalEn": "Discover unified mathematical structures and invariants across subsystems, toward Newtonian mechanics of language",
+      "principle": "语言=低维流形上的分布式代数动力系统, 各子系统通过正交分解共存, 增强对比模式跨模型一致(0.177-0.183)",
+      "principleEn": "Language=distributed algebraic dynamical system on low-dim manifold, subsystems coexist via orthogonal decomposition",
+      "cellCount": 8,
+      "fillRate": 0.05,
+      "knowledgeRate": 0.08,
+      "causalRate": 0.01,
+      "interpretPower": 0.09,
+      "cells": [
+        {
+          "id": "UN-1",
+          "title": "知识×逻辑统一",
+          "priority": "P0",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "未测试",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "SAE特征复用率>30%?",
+            "知识/逻辑子空间关系?"
+          ],
+          "goal": "发现知识×逻辑的统一编码结构",
+          "principle": "SAE特征复用率>30%? 知识/逻辑子空间关系? 未测试"
+        },
+        {
+          "id": "UN-2",
+          "title": "语法×语义统一",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.15,
+          "knowledgeRate": 0.2,
+          "causalRate": 0.05,
+          "evidence": "R16-R18: 语法在W_U⊥, 语义在W_U",
+          "evidenceLevel": "E3",
+          "keyData": [
+            "子空间正交分解",
+            "交互机制未知"
+          ],
+          "goal": "建立语法×语义的正交分解统一理论",
+          "principle": "语法在W_U⊥, 语义在W_U, 子空间正交分解, 交互机制未知"
+        },
+        {
+          "id": "UN-3",
+          "title": "暗物质×逻辑统一",
+          "priority": "P1",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "未测试",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "暗物质转导×逻辑编码?"
+          ],
+          "goal": "理解暗物质转导×逻辑编码的统一机制",
+          "principle": "暗物质转导×逻辑编码? 未测试"
+        },
+        {
+          "id": "UN-4",
+          "title": "跨模型统一编码",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.2,
+          "knowledgeRate": 0.3,
+          "causalRate": 0.05,
+          "evidence": "三模型收敛到相同增强对比模式",
+          "evidenceLevel": "E4",
+          "keyData": [
+            "增强对比差值0.177-0.183"
+          ],
+          "goal": "验证跨模型统一编码的存在性",
+          "principle": "三模型收敛到相同增强对比模式(0.177-0.183), 存在universal规律"
+        },
+        {
+          "id": "UN-5",
+          "title": "四层框架统一",
+          "priority": "P0",
+          "status": "empty",
+          "fillRate": 0.05,
+          "knowledgeRate": 0.05,
+          "causalRate": 0.0,
+          "evidence": "几何+代数+动力学+信息论统一",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "四层交互关系未知"
+          ],
+          "goal": "建立几何+代数+动力学+信息论的四层统一框架",
+          "principle": "四层交互关系未知, 临界点未达到(18%<60%)"
+        },
+        {
+          "id": "UN-6",
+          "title": "语言统一数学理论",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.02,
+          "knowledgeRate": 0.02,
+          "causalRate": 0.0,
+          "evidence": "临界点未达到(18%<60%)",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "语言=低维流形上的分布式代数动力系统"
+          ],
+          "goal": "建立语言的统一数学理论",
+          "principle": "语言=低维流形上的分布式代数动力系统, 临界点未达到"
+        },
+        {
+          "id": "UN-7",
+          "title": "统一不变量",
+          "priority": "P1",
+          "status": "partial",
+          "fillRate": 0.15,
+          "knowledgeRate": 0.2,
+          "causalRate": 0.05,
+          "evidence": "28条已确认不变量",
+          "evidenceLevel": "E2",
+          "keyData": [
+            "跨层/跨模型一致"
+          ],
+          "goal": "发现跨层/跨模型的统一不变量",
+          "principle": "28条已确认不变量, 跨层/跨模型一致"
+        },
+        {
+          "id": "UN-8",
+          "title": "统一操作代数",
+          "priority": "P2",
+          "status": "empty",
+          "fillRate": 0.02,
+          "knowledgeRate": 0.02,
+          "causalRate": 0.0,
+          "evidence": "未测试",
+          "evidenceLevel": "E0",
+          "keyData": [
+            "所有操作是否形成统一代数?"
+          ],
+          "goal": "发现所有操作的统一代数结构",
+          "principle": "所有操作是否形成统一代数? 未测试"
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "R1",
+      "layer": 0,
+      "title": "FFN增益调制×内容方向分解",
+      "data": "gate_cos=+0.37>up_cos=+0.26, Δg⊥Δu(cos≈0.04)",
+      "confidence": 3,
+      "evidenceLevel": "E2"
+    },
+    {
+      "id": "R2",
+      "layer": 0,
+      "title": "语义特异性在d_model不在n_inter",
+      "data": "W_down压缩掉z空间特异性, LDA 100%改变top-1",
+      "confidence": 3,
+      "evidenceLevel": "E2"
+    },
+    {
+      "id": "R3",
+      "layer": 0,
+      "title": "语义力线指数增长→W_U→Logit",
+      "data": "exp(0.17~0.25*l), 100-300倍总增长",
+      "confidence": 3,
+      "evidenceLevel": "E2"
+    },
+    {
+      "id": "R4",
+      "layer": 0,
+      "title": "Attention是语义→Logit主通道",
+      "data": "DS7B: Attn 21.5x >> MLP 1.87x",
+      "confidence": 3,
+      "evidenceLevel": "E2"
+    },
+    {
+      "id": "R5",
+      "layer": 0,
+      "title": "方向反射是训练习得的",
+      "data": "随机pres≈0.002, 训练pres≈-0.5",
+      "confidence": 3,
+      "evidenceLevel": "E2"
+    },
+    {
+      "id": "R6",
+      "layer": 1,
+      "title": "1-3个SVD模式控制97%输出",
+      "data": "断裂层: Qwen3=L6/GLM4=L2/DS7B=L7",
+      "confidence": 3,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "R7",
+      "layer": 1,
+      "title": "增强对比(近更近远更远)",
+      "data": "near_sep=-0.115, far_sep=+0.021",
+      "confidence": 3,
+      "evidenceLevel": "E4"
+    },
+    {
+      "id": "R8",
+      "layer": 1,
+      "title": "三组件几何角色",
+      "data": "残差(锚1.0)+Attn(交换)+MLP(反射-0.5)",
+      "confidence": 3,
+      "evidenceLevel": "E2"
+    },
+    {
+      "id": "R9",
+      "layer": 1,
+      "title": "旋转>90°=维度诅咒",
+      "data": "随机θ≈91.3°, 训练降低β_emb",
+      "confidence": 3,
+      "evidenceLevel": "E2"
+    },
+    {
+      "id": "R10",
+      "layer": 1,
+      "title": "残差流主成分由类别信号驱动",
+      "data": "推翻90%是模板, cat_R2=0.82-0.94",
+      "confidence": 3,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "R11",
+      "layer": 2,
+      "title": "概念是层依赖向量不是轨道",
+      "data": "单层steering>>多层, 最优α=0.5",
+      "confidence": 2,
+      "evidenceLevel": "E2"
+    },
+    {
+      "id": "R12",
+      "layer": 2,
+      "title": "暗物质承载75-87%steering效果",
+      "data": "W_U-only无效(eff=0.01-0.09), 暗物质≈7维概念核",
+      "confidence": 2,
+      "evidenceLevel": "E3"
+    },
+    {
+      "id": "R13",
+      "layer": 2,
+      "title": "语义流形≈变形单纯形",
+      "data": "fit_r2=0.87-0.96, Habitat关系28-375x最强",
+      "confidence": 2,
+      "evidenceLevel": "E2"
+    },
+    {
+      "id": "R14",
+      "layer": 2,
+      "title": "同类正相关,异类负相关",
+      "data": "抽象链cos=-0.20(非嵌套)",
+      "confidence": 2,
+      "evidenceLevel": "E2"
+    },
+    {
+      "id": "R15",
+      "layer": 2,
+      "title": "传递性推理深层不成立",
+      "data": "浅层cos=0.98→深层负余弦",
+      "confidence": 2,
+      "evidenceLevel": "E2"
+    },
+    {
+      "id": "R16",
+      "layer": 3,
+      "title": "语法信息编码在W_U⊥子空间",
+      "data": "W_U⊥分类CV=100%, nsubj85%/dobj80%/amod92%在W_U⊥",
+      "confidence": 3,
+      "evidenceLevel": "E4"
+    },
+    {
+      "id": "R17",
+      "layer": 3,
+      "title": "语法正交补空间理论",
+      "data": "LDA能分类但因果≈0, 迁移方向KL=10.6-17.5",
+      "confidence": 3,
+      "evidenceLevel": "E2"
+    },
+    {
+      "id": "R18",
+      "layer": 3,
+      "title": "W_U⊥操控翻转50-68%语法分类",
+      "data": "KL仅35-43%, 正四面体是LR artifact",
+      "confidence": 2,
+      "evidenceLevel": "E3"
+    }
+  ],
+  "mainlines": [
+    {
+      "id": "A",
+      "name": "语法数学",
+      "nameEn": "Syntax Math",
+      "target": "W_U⊥子空间完整刻画",
+      "steps": [
+        {
+          "id": "9A",
+          "title": "W_U⊥精细结构",
+          "priority": "★★★★★",
+          "status": "pending",
+          "cells": [
+            "GR-1a",
+            "GR-2a"
+          ]
+        },
+        {
+          "id": "9B",
+          "title": "Final Norm泄露",
+          "priority": "★★★★★",
+          "status": "pending",
+          "cells": [
+            "GR-3a",
+            "SE-2a"
+          ]
+        },
+        {
+          "id": "9C",
+          "title": "扩展语法角色",
+          "priority": "★★★★",
+          "status": "pending",
+          "cells": [
+            "GR-1b",
+            "GR-2b"
+          ]
+        },
+        {
+          "id": "9D",
+          "title": "语法操控因果链",
+          "priority": "★★★★★",
+          "status": "pending",
+          "cells": [
+            "GR-3b",
+            "MG-2a"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "name": "语义数学",
+      "nameEn": "Semantic Math",
+      "target": "概念流形与暗物质转导",
+      "steps": [
+        {
+          "id": "B1",
+          "title": "概念流形精细结构",
+          "priority": "★★★★",
+          "status": "pending",
+          "cells": [
+            "KN-3a",
+            "KN-3c"
+          ]
+        },
+        {
+          "id": "B2",
+          "title": "暗物质转导机制",
+          "priority": "★★★★★",
+          "status": "pending",
+          "cells": [
+            "KN-4a",
+            "SE-3a"
+          ]
+        },
+        {
+          "id": "B3",
+          "title": "属性绑定机制",
+          "priority": "★★★★",
+          "status": "pending",
+          "cells": [
+            "KN-2a",
+            "KN-2b"
+          ]
+        },
+        {
+          "id": "B4",
+          "title": "深层锁定机制",
+          "priority": "★★★★",
+          "status": "pending",
+          "cells": [
+            "KN-1c",
+            "KN-2c"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "name": "逻辑数学",
+      "nameEn": "Logic Math",
+      "target": "逻辑操作的代数结构",
+      "steps": [
+        {
+          "id": "C1",
+          "title": "逻辑操作方向",
+          "priority": "★★★★",
+          "status": "pending",
+          "cells": [
+            "LG-1a"
+          ]
+        },
+        {
+          "id": "C2",
+          "title": "逻辑组合律",
+          "priority": "★★★★★",
+          "status": "pending",
+          "cells": [
+            "LG-2a"
+          ]
+        },
+        {
+          "id": "C3",
+          "title": "传递性推理机制",
+          "priority": "★★★",
+          "status": "pending",
+          "cells": [
+            "LG-3a",
+            "LG-1c"
+          ]
+        },
+        {
+          "id": "C4",
+          "title": "因果推理路径",
+          "priority": "★★★",
+          "status": "pending",
+          "cells": [
+            "LG-3b"
+          ]
+        }
+      ]
+    }
+  ],
+  "hardIssues": [
+    {
+      "id": 1,
+      "severity": 5,
+      "title": "深层nosem≈sem — 任何方向perturb都有效"
+    },
+    {
+      "id": 2,
+      "severity": 5,
+      "title": "加性perturb≠hook干预 — 矛盾结论"
+    },
+    {
+      "id": 3,
+      "severity": 5,
+      "title": "知识网络拓扑几乎空白"
+    },
+    {
+      "id": 4,
+      "severity": 5,
+      "title": "三模型机制不同, 统一性未验证"
+    },
+    {
+      "id": 5,
+      "severity": 4,
+      "title": "暗物质悖论(86-92%范数但操控KL仅35-43%)"
+    },
+    {
+      "id": 6,
+      "severity": 4,
+      "title": "正四面体被推翻, 语法真实几何结构未知"
+    },
+    {
+      "id": 7,
+      "severity": 4,
+      "title": "content word rate低(0-33%), LayerNorm泄露W_U⊥"
+    },
+    {
+      "id": 8,
+      "severity": 3,
+      "title": "单token→多token泛化未验证"
+    },
+    {
+      "id": 9,
+      "severity": 3,
+      "title": "探针过拟合(d_model >> n_samples)"
+    },
+    {
+      "id": 10,
+      "severity": 3,
+      "title": "25-50概念仍太稀疏"
+    }
+  ],
+  "criticalPoint": {
+    "conditions": [
+      "7大类核心机制格子填充率>60%",
+      "至少3个统合格子(UN)被填充",
+      "从拼图中自然涌现一致的数学结构",
+      "交叉验证通过: 跨任务+跨模型+跨初始化"
+    ],
+    "metrics": [
+      {
+        "name": "跨任务编码方向一致性",
+        "threshold": "cos>0.85",
+        "current": "未测"
+      },
+      {
+        "name": "跨模型编码结构一致性",
+        "threshold": "Spearman>0.8",
+        "current": "部分确认"
+      },
+      {
+        "name": "编码方向稳定性",
+        "threshold": "重叠度>60%",
+        "current": "未测"
+      },
+      {
+        "name": "SAE特征跨任务复用率",
+        "threshold": ">30%",
+        "current": "未测"
+      },
+      {
+        "name": "层级编码方向有序性",
+        "threshold": "Spearman>0.7",
+        "current": "部分确认"
+      },
+      {
+        "name": "解释力",
+        "threshold": ">80%",
+        "current": "~18%"
+      }
+    ]
+  }
+}
