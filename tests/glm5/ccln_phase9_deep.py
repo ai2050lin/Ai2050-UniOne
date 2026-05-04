@@ -267,20 +267,56 @@ def collect_hidden_states(model, tokenizer, device, layer_idx=-1):
     return np.array(all_h), np.array(all_labels)
 
 
-def compute_W_U_subspaces(W_U, n_components=200):
-    """计算W_U的行空间和正交子空间的投影矩阵"""
-    W_U_T = W_U.T.astype(np.float32)  # [d_model, vocab_size]
-    k = min(n_components, min(W_U_T.shape) - 2)
-    k = max(k, 1)
+def compute_W_U_subspaces(W_U, n_components=None):
+    """计算W_U的行空间和正交子空间的投影矩阵
     
-    U, s, Vt = svds(W_U_T, k=k)
-    U = np.asarray(U, dtype=np.float64)  # [d_model, k]
+    使用W_U^T @ W_U的完整特征分解, 
+    根据特征值分布选择有效阈值
+    """
+    d_model = W_U.shape[1]
+    W_U_f64 = W_U.astype(np.float64)  # [vocab_size, d_model]
     
-    # 行空间投影: P_parallel = U @ U^T
-    P_parallel = U @ U.T  # [d_model, d_model]
-    P_perp = np.eye(P_parallel.shape[0]) - P_parallel
+    # W_U^T @ W_U: [d_model, d_model]
+    print(f"  计算W_U^T @ W_U ({d_model}x{d_model})...")
+    WtW = W_U_f64.T @ W_U_f64
     
-    return U, P_parallel, P_perp, s
+    # 完整特征分解
+    eigenvalues, eigenvectors = np.linalg.eigh(WtW)
+    eigenvalues = eigenvalues[::-1]  # 降序
+    eigenvectors = eigenvectors[:, ::-1]
+    
+    # 显示特征值谱
+    print(f"  W_U^T@W_U 特征值谱:")
+    print(f"    Top-5: {eigenvalues[:5].tolist()}")
+    print(f"    Median: {np.median(eigenvalues):.2f}")
+    print(f"    Bottom-5: {eigenvalues[-5:].tolist()}")
+    print(f"    Condition number: {eigenvalues[0]/max(eigenvalues[-1],1e-20):.1f}")
+    
+    # 计算累积能量
+    total_energy = np.sum(eigenvalues)
+    cum_energy = np.cumsum(eigenvalues) / total_energy
+    for threshold in [0.5, 0.9, 0.95, 0.99, 0.999]:
+        dim = np.searchsorted(cum_energy, threshold) + 1
+        print(f"    {threshold:.1%}能量: {dim}维")
+    
+    # 使用能量阈值定义W_U行空间
+    # 取99.9%能量的维度作为"有效行空间"
+    energy_threshold = 0.999
+    par_dim = int(np.searchsorted(cum_energy, energy_threshold) + 1)
+    print(f"  W_U有效行空间维度(99.9%能量): {par_dim}")
+    
+    U_par = eigenvectors[:, :par_dim]  # [d_model, par_dim]
+    
+    # 行空间投影
+    P_parallel = U_par @ U_par.T
+    P_perp = np.eye(d_model) - P_parallel
+    
+    # 验证: P_perp的范数
+    perp_norm = np.linalg.norm(P_perp)
+    print(f"  P_perp Frobenius范数: {perp_norm:.4f}")
+    print(f"  W_U⊥维度: {d_model - par_dim}")
+    
+    return U_par, P_parallel, P_perp, eigenvalues[:200]
 
 
 # ===== Exp1: W_U⊥子空间中的语法角色几何 =====
