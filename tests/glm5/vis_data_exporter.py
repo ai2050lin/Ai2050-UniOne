@@ -2,14 +2,22 @@
 标准可视化数据导出模块
 
 将实验结果转换为3D可视化客户端可读取的标准JSON格式。
-遵循 3D_VISUALIZATION_DESIGN.md 中定义的schema v1.0规范。
+支持 Schema v1.0 和 v2.0 规范。
+
+v2.0 新增类型:
+    - subspace_decomposition: W_U/W_U⊥子空间分解
+    - force_line: 语义力线指数增长
+    - grammar_role_matrix: 语法角色余弦矩阵
+    - causal_chain: 因果链追踪
+    - dark_matter_flow: 暗物质非线性转导
 
 使用方法:
-    from vis_data_exporter import export_trajectory, export_point_cloud, save_vis_file
+    from vis_data_exporter import export_trajectory, export_subspace_decomposition, save_vis_file
     
     # 在实验脚本中收集数据后调用
     vis = export_trajectory(phase="CCLXIV", model="qwen3", ...)
-    save_vis_file("CCLXIV", "qwen3", "deep_locking", [vis], model_info)
+    subspace = export_subspace_decomposition(phase="CCL-M", model="qwen3", ...)
+    save_vis_file("CCL-M", "qwen3", "grammar_decouple", [vis, subspace], model_info)
 """
 
 import json
@@ -46,6 +54,28 @@ TRAJECTORY_COLORS = [
     "#f97316", "#34d399", "#ec4899", "#6366f1",
     "#ef4444", "#14b8a6", "#eab308", "#8b5cf6",
 ]
+
+# 语法角色颜色
+GRAMMAR_ROLE_COLORS = {
+    "nsubj": "#ff6b6b",
+    "dobj": "#4ecdc4",
+    "amod": "#ffe66d",
+    "aux": "#a855f7",
+    "iobj": "#34d399",
+    "ccomp": "#f97316",
+    "xcomp": "#ec4899",
+    "mark": "#6366f1",
+}
+
+# 子空间颜色
+SUBSPACE_COLORS = {
+    "w_u": "#4ecdc4",         # W_U可见 - 青绿
+    "w_u_perp": "#ff6b6b",    # W_U⊥ - 红色
+    "grammar": "#ffe66d",      # 语法 - 黄色
+    "semantic": "#4ecdc4",     # 语义 - 青绿
+    "logic": "#a855f7",        # 逻辑 - 紫色
+    "dark_matter": "#f97316",  # 暗物质 - 橙色
+}
 
 
 def _get_layer_function(layer, n_layers):
@@ -130,6 +160,7 @@ def export_trajectory(phase, model, experiment_id, token, source_token,
             "cos_with_target": round(d.get("cos_with_target", 0), 4),
             "cos_with_source": round(d.get("cos_with_source", 0), 4),
             "delta_cos": round(d.get("delta_cos", 0), 4),
+            "cos_with_wu": round(d.get("cos_with_wu", 0), 4) if "cos_with_wu" in d else None,
         })
     
     return {
@@ -366,6 +397,11 @@ def export_layer_stack(phase, model, experiment_id, n_layers, d_model,
         func = ls.get("function", _get_layer_function(ls["layer"], n_layers))
         ls["function"] = func
         ls["color"] = LAYER_FUNCTION_COLORS.get(func, "#888888")
+        # v2.0: W_U/W_U⊥占比 (可选)
+        if "w_u_ratio" not in ls:
+            ls["w_u_ratio"] = None
+        if "w_u_perp_ratio" not in ls:
+            ls["w_u_perp_ratio"] = None
     
     return {
         "type": "layer_stack",
@@ -378,9 +414,196 @@ def export_layer_stack(phase, model, experiment_id, n_layers, d_model,
     }
 
 
+# ==================== v2.0 新增导出函数 ====================
+
+def export_subspace_decomposition(phase, model, experiment_id, layer_data):
+    """导出subspace_decomposition类型数据 (Schema v2.0)
+    
+    Args:
+        layer_data: list of dict, 每项包含:
+            - layer: int, 层号
+            - w_u_ratio: float, W_U可见部分占比 (0-1)
+            - w_u_perp_ratio: float, W_U⊥部分占比 (0-1)
+            - grammar_in_perp: dict, {角色: 占比} 各语法角色在W_U⊥中的占比
+            - semantics_in_w_u: float, 语义能量在W_U top10奇异模式占比
+            - concept_points: 可选, list of {token, category, subspace, x, y, z}
+    
+    Returns:
+        dict: 标准subspace_decomposition可视化对象
+    """
+    layers = []
+    for ld in layer_data:
+        entry = {
+            "layer": ld["layer"],
+            "w_u_ratio": round(ld.get("w_u_ratio", 0.15), 4),
+            "w_u_perp_ratio": round(ld.get("w_u_perp_ratio", 0.85), 4),
+            "grammar_in_perp": ld.get("grammar_in_perp", {}),
+            "semantics_in_w_u": round(ld.get("semantics_in_w_u", 0), 4),
+        }
+        if "concept_points" in ld:
+            entry["concept_points"] = ld["concept_points"]
+        layers.append(entry)
+    
+    return {
+        "type": "subspace_decomposition",
+        "id": f"{model}_subspace_{experiment_id}",
+        "label": f"W_U/W_U⊥子空间分解 ({model})",
+        "layers": layers,
+    }
+
+
+def export_force_line(phase, model, experiment_id, concepts_data):
+    """导出force_line类型数据 (Schema v2.0)
+    
+    Args:
+        concepts_data: list of dict, 每项包含:
+            - concept: str, 概念名
+            - per_layer: list of {layer, norm, cos_with_wu}
+            - growth_rate: float, exp拟合系数
+    
+    Returns:
+        dict: 标准force_line可视化对象
+    """
+    concepts = []
+    for cd in concepts_data:
+        per_layer = cd.get("per_layer", [])
+        points = []
+        for i, pl in enumerate(per_layer):
+            # 3D坐标: X=层号均匀展开, Y=norm(对数缩放), Z=cos_with_wu
+            angle = i * 0.25
+            radius = 1 + np.log1p(pl.get("norm", 1)) * 0.8
+            x = radius * np.cos(angle)
+            y = np.log1p(pl.get("norm", 1)) * 2
+            z = radius * np.sin(angle)
+            exp_fit = np.exp(cd.get("growth_rate", 0.2) * pl["layer"]) if i > 0 else pl.get("norm", 1)
+            points.append({
+                "layer": pl["layer"],
+                "x": round(float(x), 4),
+                "y": round(float(y), 4),
+                "z": round(float(z), 4),
+                "norm": round(pl.get("norm", 0), 2),
+                "cos_with_wu": round(pl.get("cos_with_wu", 0), 4),
+                "exp_fit": round(float(exp_fit), 2),
+            })
+        concepts.append({
+            "concept": cd["concept"],
+            "points": points,
+            "growth_rate": round(cd.get("growth_rate", 0), 4),
+        })
+    
+    return {
+        "type": "force_line",
+        "id": f"{model}_force_line_{experiment_id}",
+        "label": f"语义力线指数增长 ({model})",
+        "concepts": concepts,
+    }
+
+
+def export_grammar_role_matrix(phase, model, experiment_id, roles, cosine_matrix,
+                                lda_accuracy=None, causal_effect=None, transfer_kl=None):
+    """导出grammar_role_matrix类型数据 (Schema v2.0)
+    
+    Args:
+        roles: list of str, 语法角色名列表
+        cosine_matrix: 2D list, 角色间余弦矩阵
+        lda_accuracy: 可选, list of float, 每个角色的LDA分类准确率
+        causal_effect: 可选, list of float, 每个角色的因果效应
+        transfer_kl: 可选, list of float, 每个角色的迁移KL散度
+    
+    Returns:
+        dict: 标准grammar_role_matrix可视化对象
+    """
+    return {
+        "type": "grammar_role_matrix",
+        "id": f"{model}_grammar_matrix_{experiment_id}",
+        "label": f"语法角色余弦矩阵 ({model})",
+        "roles": roles,
+        "cosine_matrix": [[round(v, 4) for v in row] for row in cosine_matrix],
+        "lda_accuracy": [round(v, 4) for v in (lda_accuracy or [])],
+        "causal_effect": [round(v, 4) for v in (causal_effect or [])],
+        "transfer_kl": [round(v, 4) for v in (transfer_kl or [])],
+    }
+
+
+def export_causal_chain(phase, model, experiment_id, intervention, propagation):
+    """导出causal_chain类型数据 (Schema v2.0)
+    
+    Args:
+        intervention: dict, {layer, subspace, direction} 干预信息
+        propagation: list of dict, 每项包含:
+            - layer: int
+            - kl_divergence: float
+            - classification_flip: float
+            - top_token: 可选, str
+            - prob_change: 可选, float
+    
+    Returns:
+        dict: 标准causal_chain可视化对象
+    """
+    return {
+        "type": "causal_chain",
+        "id": f"{model}_causal_chain_{experiment_id}",
+        "label": f"因果链追踪: {intervention.get('subspace','')} {intervention.get('direction','')} ({model})",
+        "intervention": intervention,
+        "propagation": [
+            {
+                "layer": p["layer"],
+                "kl_divergence": round(p.get("kl_divergence", 0), 4),
+                "classification_flip": round(p.get("classification_flip", 0), 4),
+                "top_token": p.get("top_token", ""),
+                "prob_change": round(p.get("prob_change", 0), 4),
+            }
+            for p in propagation
+        ],
+    }
+
+
+def export_dark_matter_flow(phase, model, experiment_id, signal_path, cascade_transfer=None):
+    """导出dark_matter_flow类型数据 (Schema v2.0)
+    
+    Args:
+        signal_path: list of dict, 每项包含:
+            - layer: int
+            - w_u_signal: float, W_U可见信号占比
+            - w_u_perp_signal: float, W_U⊥信号占比
+            - total_norm: float, 总范数
+        cascade_transfer: 可选, list of dict, 级联转导细节:
+            - from_layer: int
+            - to_layer: int
+            - transfer_ratio: float
+            - nonlinear_component: float
+    
+    Returns:
+        dict: 标准dark_matter_flow可视化对象
+    """
+    return {
+        "type": "dark_matter_flow",
+        "id": f"{model}_dark_matter_{experiment_id}",
+        "label": f"暗物质非线性转导 ({model})",
+        "signal_path": [
+            {
+                "layer": sp["layer"],
+                "w_u_signal": round(sp.get("w_u_signal", 0), 4),
+                "w_u_perp_signal": round(sp.get("w_u_perp_signal", 0), 4),
+                "total_norm": round(sp.get("total_norm", 0), 2),
+            }
+            for sp in signal_path
+        ],
+        "cascade_transfer": [
+            {
+                "from_layer": ct["from_layer"],
+                "to_layer": ct["to_layer"],
+                "transfer_ratio": round(ct.get("transfer_ratio", 0), 4),
+                "nonlinear_component": round(ct.get("nonlinear_component", 0), 4),
+            }
+            for ct in (cascade_transfer or [])
+        ],
+    }
+
+
 # ==================== 保存函数 ====================
 
-def save_vis_file(phase, model, experiment, visualizations, model_info, summary=None):
+def save_vis_file(phase, model, experiment, visualizations, model_info, summary=None, schema_version="2.0"):
     """保存标准可视化数据文件
     
     Args:
@@ -390,14 +613,21 @@ def save_vis_file(phase, model, experiment, visualizations, model_info, summary=
         visualizations: list of visualization objects
         model_info: dict {class, n_layers, d_model, n_heads}
         summary: 可选, 人类可读摘要
+        schema_version: "1.0" 或 "2.0" (默认2.0, 向后兼容)
     
     Returns:
         Path: 保存的文件路径
     """
     VIS_DATA_DIR.mkdir(parents=True, exist_ok=True)
     
+    # 检查是否包含v2.0类型
+    v2_types = {"subspace_decomposition", "force_line", "grammar_role_matrix", "causal_chain", "dark_matter_flow"}
+    has_v2 = any(v.get("type") in v2_types for v in visualizations)
+    if has_v2:
+        schema_version = "2.0"
+    
     data = {
-        "schema_version": "1.0",
+        "schema_version": schema_version,
         "phase": phase,
         "experiment": experiment,
         "model": model,

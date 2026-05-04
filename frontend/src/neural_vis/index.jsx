@@ -1,438 +1,45 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Stars, Text, Line, Html } from '@react-three/drei';
+/**
+ * NeuralVis3DApp — 3D可视化主组件
+ * 支持 Schema v1.0 + v2.0
+ * 
+ * 可视化类型:
+ *   v1.0: trajectory, point_cloud, heatmap_3d, flow, layer_stack
+ *   v2.0: subspace_decomposition, force_line, grammar_role_matrix, causal_chain, dark_matter_flow
+ */
+import React, { useState, useEffect, useRef } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, PerspectiveCamera, Stars, Text } from '@react-three/drei';
 import * as THREE from 'three';
 
-// ==================== 常量 ====================
-const LAYER_GAP = 3.5;
-const PLANE_SIZE = 18;
-const SPHERE_BASE_SIZE = 0.2;
-const TRAJECTORY_LINE_WIDTH = 3;
+// 模块化导入
+import TrajectoryRenderer from './renderers/TrajectoryRenderer';
+import PointCloudRenderer from './renderers/PointCloudRenderer';
+import LayerStackRenderer from './renderers/LayerStackRenderer';
+import Heatmap3DRenderer from './renderers/Heatmap3DRenderer';
+import FlowRenderer from './renderers/FlowRenderer';
+import SubspaceRenderer from './renderers/SubspaceRenderer';
+import ForceLineRenderer from './renderers/ForceLineRenderer';
+import GrammarRoleMatrixRenderer from './renderers/GrammarRoleMatrixRenderer';
+import CausalChainRenderer from './renderers/CausalChainRenderer';
+import DarkMatterFlowRenderer from './renderers/DarkMatterFlowRenderer';
+import SceneHelpers from './components/SceneHelpers';
+import HoverTooltip from './components/HoverTooltip';
+import useVisData from './hooks/useVisData';
+import { CATEGORY_COLORS, deltaCosToColor, cosWuToColor, SUBSPACE_COLORS } from './utils/constants';
 
-// ==================== 颜色方案 ====================
-const CATEGORY_COLORS = {
-  fruit: '#ff6b6b', animal: '#4ecdc4', vehicle: '#ffe66d', tool: '#a855f7',
-  nature: '#34d399', food: '#f97316', person: '#ec4899', abstract: '#6366f1',
-};
-
-const LAYER_FUNC_COLORS = {
-  lexical: '#ff6b6b', semantic: '#4ecdc4', syntactic: '#ffe66d', decision: '#a855f7',
-};
-
-function deltaCosToColor(deltaCos) {
-  const r = Math.max(0, Math.min(1, deltaCos));
-  let red, green, blue;
-  if (r > 0.5) {
-    const t = (r - 0.5) * 2;
-    red = Math.round(239 * t + 245 * (1 - t));
-    green = Math.round(68 * t + 158 * (1 - t));
-    blue = Math.round(68 * t + 11 * (1 - t));
-  } else {
-    const t = r * 2;
-    red = Math.round(245 * t + 59 * (1 - t));
-    green = Math.round(158 * t + 130 * (1 - t));
-    blue = Math.round(11 * t + 246 * (1 - t));
-  }
-  return `#${red.toString(16).padStart(2,'0')}${green.toString(16).padStart(2,'0')}${blue.toString(16).padStart(2,'0')}`;
-}
-
-// ==================== TrajectoryRenderer ====================
-function TrajectoryRenderer({ trajectory, animated, animationProgress, onHoverToken }) {
-  const points = trajectory.points || [];
-  const visibleCount = animated
-    ? Math.max(1, Math.floor(points.length * animationProgress))
-    : points.length;
-  const visiblePoints = points.slice(0, visibleCount);
-
-  if (visiblePoints.length < 2) return null;
-
-  const linePoints = visiblePoints.map(p => [p.x, p.y, p.z]);
-
-  return (
-    <group>
-      {/* 轨迹线 */}
-      <Line
-        points={linePoints}
-        color={trajectory.color || '#ffffff'}
-        lineWidth={TRAJECTORY_LINE_WIDTH}
-        transparent
-        opacity={0.7}
-      />
-      {/* 逐层标记球 */}
-      {visiblePoints.map((pt, i) => {
-        const color = deltaCosToColor(pt.delta_cos ?? 0.5);
-        const size = SPHERE_BASE_SIZE + (pt.norm || 10) * 0.0008;
-        const isCorrection = trajectory.correction_layers?.includes(pt.layer);
-        return (
-          <group key={i} position={[pt.x, pt.y, pt.z]}>
-            <mesh
-              onPointerOver={(e) => {
-                e.stopPropagation();
-                onHoverToken?.({
-                  token: trajectory.token,
-                  source: trajectory.source_token,
-                  layer: pt.layer,
-                  delta_cos: pt.delta_cos,
-                  cos_with_target: pt.cos_with_target,
-                  norm: pt.norm,
-                  isCorrection,
-                });
-              }}
-            >
-              <sphereGeometry args={[size, 16, 16]} />
-              <meshStandardMaterial
-                color={color}
-                emissive={color}
-                emissiveIntensity={0.5}
-                roughness={0.3}
-                metalness={0.6}
-              />
-            </mesh>
-            {/* 纠正层环标记 */}
-            {isCorrection && (
-              <mesh rotation={[Math.PI / 2, 0, 0]}>
-                <torusGeometry args={[size + 0.15, 0.04, 8, 32]} />
-                <meshStandardMaterial
-                  color="#fbbf24"
-                  emissive="#fbbf24"
-                  emissiveIntensity={2}
-                />
-              </mesh>
-            )}
-            {/* 层标签 (仅关键层显示) */}
-            {(i === 0 || i === visiblePoints.length - 1 || isCorrection) && (
-              <Text
-                position={[0, size + 0.4, 0]}
-                fontSize={0.35}
-                color="#e2e8f0"
-                anchorX="center"
-                anchorY="bottom"
-                outlineWidth={0.05}
-                outlineColor="#000000"
-              >
-                L{pt.layer}
-              </Text>
-            )}
-          </group>
-        );
-      })}
-    </group>
-  );
-}
-
-// ==================== PointCloudRenderer ====================
-function PointCloudRenderer({ pointCloud, onHoverToken }) {
-  const points = pointCloud.points || [];
-  const catColors = pointCloud.categories || CATEGORY_COLORS;
-
-  return (
-    <group>
-      {points.map((pt, i) => {
-        const color = catColors[pt.category] || '#888888';
-        const size = SPHERE_BASE_SIZE + (pt.norm || 10) * 0.0006;
-        return (
-          <group key={i} position={[pt.x, pt.y, pt.z]}>
-            <mesh
-              onPointerOver={(e) => {
-                e.stopPropagation();
-                onHoverToken?.({
-                  token: pt.token,
-                  category: pt.category,
-                  layer: pointCloud.layer,
-                  norm: pt.norm,
-                  activation: pt.activation,
-                });
-              }}
-            >
-              <sphereGeometry args={[size, 12, 12]} />
-              <meshStandardMaterial
-                color={color}
-                emissive={color}
-                emissiveIntensity={0.3}
-                roughness={0.4}
-                metalness={0.5}
-              />
-            </mesh>
-            {/* 悬停标签通过外部tooltip实现 */}
-          </group>
-        );
-      })}
-    </group>
-  );
-}
-
-// ==================== LayerStackRenderer ====================
-function LayerStackRenderer({ layerStack, selectedLayers, trajectoryData }) {
-  const layers = (layerStack?.layers || []).filter(
-    l => !selectedLayers || selectedLayers.includes(l.layer)
-  );
-
-  return (
-    <group>
-      {layers.map((layer, i) => {
-        const yPos = i * LAYER_GAP;
-        const color = layer.color || LAYER_FUNC_COLORS[layer.function] || '#4ecdc4';
-        return (
-          <group key={layer.layer} position={[0, yPos, 0]}>
-            {/* 透明层板 */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]}>
-              <planeGeometry args={[PLANE_SIZE, PLANE_SIZE]} />
-              <meshStandardMaterial
-                color={color}
-                transparent
-                opacity={0.06}
-                side={THREE.DoubleSide}
-                depthWrite={false}
-              />
-            </mesh>
-            {/* 层边框 */}
-            <Line
-              points={[
-                [-PLANE_SIZE/2, 0, -PLANE_SIZE/2],
-                [PLANE_SIZE/2, 0, -PLANE_SIZE/2],
-                [PLANE_SIZE/2, 0, PLANE_SIZE/2],
-                [-PLANE_SIZE/2, 0, PLANE_SIZE/2],
-                [-PLANE_SIZE/2, 0, -PLANE_SIZE/2],
-              ]}
-              color={color}
-              lineWidth={1}
-              transparent
-              opacity={0.3}
-            />
-            {/* 层标签 */}
-            <Text
-              position={[-PLANE_SIZE / 2 - 1.5, 0, 0]}
-              fontSize={0.45}
-              color={color}
-              anchorX="right"
-              anchorY="middle"
-            >
-              L{layer.layer} {layer.label || ''}
-            </Text>
-            {/* 指标摘要 */}
-            {layer.metrics && (
-              <Text
-                position={[PLANE_SIZE / 2 + 0.5, 0, 0]}
-                fontSize={0.25}
-                color="#94a3b8"
-                anchorX="left"
-                anchorY="middle"
-              >
-                {`δ=${(layer.metrics.avg_delta_cos ?? 0).toFixed(2)} sw=${(layer.metrics.switch_rate ?? 0).toFixed(2)}`}
-              </Text>
-            )}
-          </group>
-        );
-      })}
-    </group>
-  );
-}
-
-// ==================== Heatmap3DRenderer ====================
-function Heatmap3DRenderer({ heatmap }) {
-  const cells = heatmap?.cells || [];
-  const xValues = heatmap?.x_axis?.values || [];
-  const yValues = heatmap?.y_axis?.values || [];
-  const zRange = heatmap?.z_axis?.range || [0, 1];
-
-  return (
-    <group>
-      {cells.map((cell, i) => {
-        const height = ((cell.value - zRange[0]) / (zRange[1] - zRange[0] + 1e-10)) * 5;
-        const xPos = (cell.x - xValues.length / 2) * 1.2;
-        const zPos = (cell.y - yValues.length / 2) * 1.2;
-        const color = deltaCosToColor(cell.value);
-        return (
-          <group key={i} position={[xPos, height / 2, zPos]}>
-            <mesh>
-              <boxGeometry args={[0.9, Math.max(0.05, height), 0.9]} />
-              <meshStandardMaterial
-                color={color}
-                emissive={color}
-                emissiveIntensity={0.3}
-                roughness={0.5}
-              />
-            </mesh>
-          </group>
-        );
-      })}
-      {/* X轴标签 */}
-      {xValues.map((xv, i) => (
-        <Text
-          key={`x${i}`}
-          position={[(i - xValues.length / 2) * 1.2, -0.5, -(yValues.length / 2 + 1) * 1.2]}
-          fontSize={0.3}
-          color="#94a3b8"
-          anchorX="center"
-        >
-          {String(xv)}
-        </Text>
-      ))}
-    </group>
-  );
-}
-
-// ==================== FlowRenderer ====================
-function FlowRenderer({ flow, animated, animationProgress }) {
-  const flows = flow?.flows || [];
-  const nodes = flow?.node_positions || [];
-
-  // 构建node位置映射
-  const nodeMap = {};
-  nodes.forEach(n => { nodeMap[n.id] = n; });
-
-  return (
-    <group>
-      {/* 节点 */}
-      {nodes.map((node, i) => (
-        <group key={`node${i}`} position={[node.x, node.y, node.z]}>
-          <mesh>
-            <sphereGeometry args={[0.4, 16, 16]} />
-            <meshStandardMaterial color="#4ecdc4" emissive="#4ecdc4" emissiveIntensity={0.5} />
-          </mesh>
-          <Text position={[0, 0.7, 0]} fontSize={0.3} color="#e2e8f0" anchorX="center">
-            {node.token}
-          </Text>
-        </group>
-      ))}
-      {/* 注意力弧线 */}
-      {flows.map((f, i) => {
-        const src = nodeMap[f.source];
-        const tgt = nodeMap[f.target];
-        if (!src || !tgt) return null;
-        
-        // 弧线: 从source向上弯到target
-        const midY = Math.max(src.y || 0, tgt.y || 0) + 1 + f.weight * 2;
-        const curvePoints = [];
-        const segments = 20;
-        for (let s = 0; s <= segments; s++) {
-          const t = s / segments;
-          const x = (src.x || 0) * (1 - t) + (tgt.x || 0) * t;
-          const y = ((src.y || 0) * (1 - t) + (tgt.y || 0) * t) + Math.sin(t * Math.PI) * midY;
-          const z = (src.z || 0) * (1 - t) + (tgt.z || 0) * t;
-          curvePoints.push([x, y, z]);
-        }
-        
-        return (
-          <Line
-            key={`flow${i}`}
-            points={curvePoints}
-            color={f.color || '#4ecdc4'}
-            lineWidth={1 + f.weight * 4}
-            transparent
-            opacity={0.3 + f.weight * 0.5}
-          />
-        );
-      })}
-    </group>
-  );
-}
-
-// ==================== SceneHelpers ====================
-function SceneHelpers({ nLayers = 36 }) {
-  return (
-    <group>
-      {/* 地面网格 */}
-      <gridHelper args={[40, 40, '#1e293b', '#0f172a']} position={[0, -1, 0]} />
-      {/* Y轴标尺 (层号) */}
-      {Array.from({ length: Math.min(nLayers, 37) }, (_, i) => (
-        i % 6 === 0 ? (
-          <Text
-            key={`y${i}`}
-            position={[-PLANE_SIZE / 2 - 3, i * LAYER_GAP, 0]}
-            fontSize={0.3}
-            color="#64748b"
-            anchorX="right"
-          >
-            L{i}
-          </Text>
-        ) : null
-      ))}
-    </group>
-  );
-}
-
-// ==================== Tooltip ====================
-function HoverTooltip({ data }) {
-  if (!data) return null;
-  return (
-    <Html style={{ pointerEvents: 'none' }}>
-      <div style={{
-        background: 'rgba(15, 23, 42, 0.95)',
-        border: '1px solid #334155',
-        borderRadius: '8px',
-        padding: '8px 12px',
-        color: '#e2e8f0',
-        fontSize: '12px',
-        fontFamily: 'monospace',
-        whiteSpace: 'nowrap',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
-      }}>
-        {data.token && <div style={{ color: '#60a5fa', fontWeight: 'bold' }}>{data.token}</div>}
-        {data.source && <div style={{ color: '#94a3b8' }}>from: {data.source}</div>}
-        {data.layer !== undefined && <div>Layer: {data.layer}</div>}
-        {data.delta_cos !== undefined && <div>δ_cos: {data.delta_cos.toFixed(4)}</div>}
-        {data.cos_with_target !== undefined && <div>cos(target): {data.cos_with_target.toFixed(4)}</div>}
-        {data.norm !== undefined && <div>norm: {data.norm.toFixed(1)}</div>}
-        {data.category && <div style={{ color: CATEGORY_COLORS[data.category] || '#888' }}>cat: {data.category}</div>}
-        {data.isCorrection && <div style={{ color: '#fbbf24', fontWeight: 'bold' }}>⚡ Correction Layer</div>}
-      </div>
-    </Html>
-  );
-}
-
-// ==================== Data Loading Hook ====================
-function useVisData() {
-  const [dataFiles, setDataFiles] = useState([]);
-  const [activeData, setActiveData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const loadDataManifest = useCallback(async () => {
-    try {
-      const resp = await fetch('/vis_data/manifest.json');
-      const manifest = await resp.json();
-      setDataFiles(manifest.files || []);
-    } catch {
-      setDataFiles([]);
-    }
-  }, []);
-
-  const loadDataFile = useCallback(async (filepath) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const resp = await fetch(`/vis_data/${filepath}`);
-      const data = await resp.json();
-      if (data.schema_version !== '1.0') {
-        throw new Error(`Unsupported schema: ${data.schema_version}`);
-      }
-      setActiveData(data);
-    } catch (e) {
-      setError(e.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const loadLocalFile = useCallback((file) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = JSON.parse(e.target.result);
-        if (data.schema_version !== '1.0') {
-          throw new Error(`Unsupported schema: ${data.schema_version}`);
-        }
-        setActiveData(data);
-      } catch (err) {
-        setError(err.message);
-      }
-    };
-    reader.readAsText(file);
-  }, []);
-
-  return { dataFiles, activeData, loading, error, loadDataManifest, loadDataFile, loadLocalFile };
-}
+// ==================== 视图模式定义 ====================
+const VIEW_MODES = [
+  { key: 'all', label: '🔍 全部', icon: '🔍' },
+  { key: 'trajectory', label: '📈 轨迹', icon: '📈' },
+  { key: 'point_cloud', label: '⚪ 点云', icon: '⚪' },
+  { key: 'heatmap', label: '📊 热力图', icon: '📊' },
+  { key: 'flow', label: '🔀 信息流', icon: '🔀' },
+  { key: 'subspace', label: '🧬 子空间', icon: '🧬' },
+  { key: 'force_line', label: '⚡ 力线', icon: '⚡' },
+  { key: 'grammar', label: '📝 语法矩阵', icon: '📝' },
+  { key: 'causal', label: '🔗 因果链', icon: '🔗' },
+  { key: 'dark_matter', label: '🌑 暗物质', icon: '🌑' },
+];
 
 // ==================== 主组件 ====================
 export default function NeuralVis3DApp() {
@@ -441,17 +48,40 @@ export default function NeuralVis3DApp() {
   const [playing, setPlaying] = useState(false);
   const [hoveredInfo, setHoveredInfo] = useState(null);
   const [selectedLayers, setSelectedLayers] = useState(null);
-  const [viewMode, setViewMode] = useState('all'); // all | trajectory | point_cloud | heatmap | flow
+  const [viewMode, setViewMode] = useState('all');
   const fileInputRef = useRef();
 
   useEffect(() => { loadDataManifest(); }, [loadDataManifest]);
 
   const visualizations = activeData?.visualizations || [];
-  const trajectories = visualizations.filter(v => v.type === 'trajectory' && (viewMode === 'all' || viewMode === 'trajectory'));
-  const pointClouds = visualizations.filter(v => v.type === 'point_cloud' && (viewMode === 'all' || viewMode === 'point_cloud'));
-  const heatmaps = visualizations.filter(v => v.type === 'heatmap_3d' && (viewMode === 'all' || viewMode === 'heatmap'));
-  const flows = visualizations.filter(v => v.type === 'flow' && (viewMode === 'all' || viewMode === 'flow'));
-  const layerStacks = visualizations.filter(v => v.type === 'layer_stack');
+  const schemaVersion = activeData?.schema_version || '1.0';
+
+  // 按类型分类可视化对象
+  const byType = {
+    trajectory: visualizations.filter(v => v.type === 'trajectory'),
+    point_cloud: visualizations.filter(v => v.type === 'point_cloud'),
+    heatmap_3d: visualizations.filter(v => v.type === 'heatmap_3d'),
+    flow: visualizations.filter(v => v.type === 'flow'),
+    layer_stack: visualizations.filter(v => v.type === 'layer_stack'),
+    subspace_decomposition: visualizations.filter(v => v.type === 'subspace_decomposition'),
+    force_line: visualizations.filter(v => v.type === 'force_line'),
+    grammar_role_matrix: visualizations.filter(v => v.type === 'grammar_role_matrix'),
+    causal_chain: visualizations.filter(v => v.type === 'causal_chain'),
+    dark_matter_flow: visualizations.filter(v => v.type === 'dark_matter_flow'),
+  };
+
+  // 根据视图模式过滤
+  const filterByMode = (type) => viewMode === 'all' || viewMode === type;
+  const trajectories = byType.trajectory.filter(() => filterByMode('trajectory'));
+  const pointClouds = byType.point_cloud.filter(() => filterByMode('point_cloud'));
+  const heatmaps = byType.heatmap_3d.filter(() => filterByMode('heatmap'));
+  const flows = byType.flow.filter(() => filterByMode('flow'));
+  const layerStacks = byType.layer_stack;
+  const subspaceDecomps = byType.subspace_decomposition.filter(() => filterByMode('subspace'));
+  const forceLines = byType.force_line.filter(() => filterByMode('force_line'));
+  const grammarMatrices = byType.grammar_role_matrix.filter(() => filterByMode('grammar'));
+  const causalChains = byType.causal_chain.filter(() => filterByMode('causal'));
+  const darkMatterFlows = byType.dark_matter_flow.filter(() => filterByMode('dark_matter'));
 
   // 动画循环
   useEffect(() => {
@@ -464,6 +94,18 @@ export default function NeuralVis3DApp() {
     }, 50);
     return () => clearInterval(timer);
   }, [playing]);
+
+  // 获取每个模式的数量
+  const getCount = (key) => {
+    if (key === 'all') return visualizations.length;
+    if (key === 'heatmap') return byType.heatmap_3d.length;
+    if (key === 'subspace') return byType.subspace_decomposition.length;
+    if (key === 'force_line') return byType.force_line.length;
+    if (key === 'grammar') return byType.grammar_role_matrix.length;
+    if (key === 'causal') return byType.causal_chain.length;
+    if (key === 'dark_matter') return byType.dark_matter_flow.length;
+    return byType[key]?.length || 0;
+  };
 
   return (
     <div style={{ display: 'flex', height: '100vh', background: '#0f172a', color: '#e2e8f0', fontFamily: 'system-ui, sans-serif' }}>
@@ -511,24 +153,26 @@ export default function NeuralVis3DApp() {
         {/* 可视化模式 */}
         <div style={{ marginBottom: 20 }}>
           <h3 style={{ fontSize: 13, color: '#94a3b8', marginBottom: 8 }}>可视化模式</h3>
-          {['all', 'trajectory', 'point_cloud', 'heatmap', 'flow'].map(mode => (
-            <button
-              key={mode}
-              onClick={() => setViewMode(mode)}
-              style={{
-                display: 'block', width: '100%', padding: '6px 8px', marginBottom: 4,
-                background: viewMode === mode ? '#1e40af' : '#1e293b',
-                border: viewMode === mode ? '1px solid #3b82f6' : '1px solid #334155',
-                borderRadius: 4, color: viewMode === mode ? '#bfdbfe' : '#94a3b8',
-                cursor: 'pointer', textAlign: 'left', fontSize: 12,
-              }}
-            >
-              {mode === 'all' ? '🔍 全部' : mode === 'trajectory' ? '📈 轨迹' : mode === 'point_cloud' ? '⚪ 点云' : mode === 'heatmap' ? '📊 热力图' : '🔀 信息流'}
-              <span style={{ float: 'right', color: '#64748b' }}>
-                {mode === 'all' ? visualizations.length : mode === 'trajectory' ? trajectories.length : mode === 'point_cloud' ? pointClouds.length : mode === 'heatmap' ? heatmaps.length : flows.length}
-              </span>
-            </button>
-          ))}
+          {VIEW_MODES.map(mode => {
+            const count = getCount(mode.key);
+            const isActive = viewMode === mode.key;
+            return (
+              <button
+                key={mode.key}
+                onClick={() => setViewMode(mode.key)}
+                style={{
+                  display: 'block', width: '100%', padding: '6px 8px', marginBottom: 4,
+                  background: isActive ? '#1e40af' : '#1e293b',
+                  border: isActive ? '1px solid #3b82f6' : '1px solid #334155',
+                  borderRadius: 4, color: isActive ? '#bfdbfe' : '#94a3b8',
+                  cursor: 'pointer', textAlign: 'left', fontSize: 12,
+                }}
+              >
+                {mode.label}
+                <span style={{ float: 'right', color: '#64748b' }}>{count}</span>
+              </button>
+            );
+          })}
         </div>
 
         {/* 动画控制 */}
@@ -564,6 +208,7 @@ export default function NeuralVis3DApp() {
           <div>
             <h3 style={{ fontSize: 13, color: '#94a3b8', marginBottom: 8 }}>数据摘要</h3>
             <div style={{ fontSize: 11, lineHeight: 1.6 }}>
+              <div>Schema: <span style={{ color: '#60a5fa' }}>v{schemaVersion}</span></div>
               <div>Phase: <span style={{ color: '#60a5fa' }}>{activeData.phase}</span></div>
               <div>Model: <span style={{ color: '#4ecdc4' }}>{activeData.model}</span></div>
               <div>Exp: <span style={{ color: '#ffe66d' }}>{activeData.experiment}</span></div>
@@ -584,6 +229,22 @@ export default function NeuralVis3DApp() {
                 <div style={{ fontSize: 9, color: '#64748b' }}>{v.toFixed(2)}</div>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* cos(W_U) 颜色图例 */}
+        <div style={{ marginTop: 12 }}>
+          <h3 style={{ fontSize: 13, color: '#94a3b8', marginBottom: 8 }}>cos(W_U) 图例</h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            {[1, 0.75, 0.5, 0.25, 0].map(v => (
+              <div key={v} style={{ textAlign: 'center' }}>
+                <div style={{ width: 24, height: 12, background: cosWuToColor(v), borderRadius: 2 }} />
+                <div style={{ fontSize: 9, color: '#64748b' }}>{v.toFixed(2)}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ fontSize: 10, color: '#64748b', marginTop: 4 }}>
+            <span style={{ color: SUBSPACE_COLORS.w_u }}>■</span> W_U对齐 → <span style={{ color: SUBSPACE_COLORS.w_u_perp }}>■</span> W_U⊥
           </div>
         </div>
       </div>
@@ -626,7 +287,7 @@ export default function NeuralVis3DApp() {
           {/* 场景辅助 */}
           <SceneHelpers nLayers={activeData?.model_info?.n_layers} />
 
-          {/* 渲染各类型 */}
+          {/* v1.0 渲染器 */}
           {layerStacks.map(ls => (
             <LayerStackRenderer key={ls.id} layerStack={ls} selectedLayers={selectedLayers} />
           ))}
@@ -648,6 +309,51 @@ export default function NeuralVis3DApp() {
           {flows.map(fl => (
             <FlowRenderer key={fl.id} flow={fl} animated={animProgress < 1} animationProgress={animProgress} />
           ))}
+
+          {/* v2.0 新增渲染器 */}
+          {subspaceDecomps.map(sd => (
+            <SubspaceRenderer
+              key={sd.id}
+              subspaceDecomp={sd}
+              animated={animProgress < 1}
+              animationProgress={animProgress}
+              onHoverToken={setHoveredInfo}
+            />
+          ))}
+          {forceLines.map(fl => (
+            <ForceLineRenderer
+              key={fl.id}
+              forceLine={fl}
+              animated={animProgress < 1}
+              animationProgress={animProgress}
+              onHoverToken={setHoveredInfo}
+            />
+          ))}
+          {grammarMatrices.map(gm => (
+            <GrammarRoleMatrixRenderer
+              key={gm.id}
+              grammarMatrix={gm}
+              onHoverToken={setHoveredInfo}
+            />
+          ))}
+          {causalChains.map(cc => (
+            <CausalChainRenderer
+              key={cc.id}
+              causalChain={cc}
+              animated={animProgress < 1}
+              animationProgress={animProgress}
+              onHoverToken={setHoveredInfo}
+            />
+          ))}
+          {darkMatterFlows.map(dmf => (
+            <DarkMatterFlowRenderer
+              key={dmf.id}
+              darkMatterFlow={dmf}
+              animated={animProgress < 1}
+              animationProgress={animProgress}
+              onHoverToken={setHoveredInfo}
+            />
+          ))}
         </Canvas>
       </div>
 
@@ -666,6 +372,12 @@ export default function NeuralVis3DApp() {
               </div>
             )}
             {hoveredInfo.cos_with_target !== undefined && <div><span style={{ color: '#94a3b8' }}>cos(target):</span> {hoveredInfo.cos_with_target.toFixed(4)}</div>}
+            {hoveredInfo.cos_with_wu !== undefined && (
+              <div>
+                <span style={{ color: '#94a3b8' }}>cos(W_U):</span>{' '}
+                <span style={{ color: cosWuToColor(hoveredInfo.cos_with_wu) }}>{hoveredInfo.cos_with_wu.toFixed(4)}</span>
+              </div>
+            )}
             {hoveredInfo.norm !== undefined && <div><span style={{ color: '#94a3b8' }}>norm:</span> {hoveredInfo.norm.toFixed(1)}</div>}
             {hoveredInfo.category && (
               <div>
@@ -673,7 +385,22 @@ export default function NeuralVis3DApp() {
                 <span style={{ color: CATEGORY_COLORS[hoveredInfo.category] || '#888' }}>{hoveredInfo.category}</span>
               </div>
             )}
+            {hoveredInfo.subspace && (
+              <div>
+                <span style={{ color: '#94a3b8' }}>subspace:</span>{' '}
+                <span style={{ color: SUBSPACE_COLORS[hoveredInfo.subspace] || '#888' }}>
+                  {hoveredInfo.subspace === 'w_u' ? 'W_U' : 'W_U⊥'}
+                </span>
+              </div>
+            )}
             {hoveredInfo.isCorrection && <div style={{ color: '#fbbf24', fontWeight: 'bold' }}>⚡ 纠正层</div>}
+            {hoveredInfo.growth_rate !== undefined && <div><span style={{ color: '#94a3b8' }}>growth_rate:</span> {hoveredInfo.growth_rate.toFixed(3)}</div>}
+            {hoveredInfo.role_pair && <div><span style={{ color: '#94a3b8' }}>角色对:</span> <span style={{ color: '#ffe66d' }}>{hoveredInfo.role_pair}</span></div>}
+            {hoveredInfo.cosine !== undefined && <div><span style={{ color: '#94a3b8' }}>cosine:</span> {hoveredInfo.cosine.toFixed(4)}</div>}
+            {hoveredInfo.kl_divergence !== undefined && <div><span style={{ color: '#94a3b8' }}>KL:</span> {hoveredInfo.kl_divergence.toFixed(2)}</div>}
+            {hoveredInfo.classification_flip !== undefined && <div><span style={{ color: '#94a3b8' }}>flip:</span> {(hoveredInfo.classification_flip * 100).toFixed(1)}%</div>}
+            {hoveredInfo.w_u_signal !== undefined && <div><span style={{ color: SUBSPACE_COLORS.w_u }}>W_U:</span> {(hoveredInfo.w_u_signal * 100).toFixed(0)}%</div>}
+            {hoveredInfo.w_u_perp_signal !== undefined && <div><span style={{ color: SUBSPACE_COLORS.w_u_perp }}>W_U⊥:</span> {(hoveredInfo.w_u_perp_signal * 100).toFixed(0)}%</div>}
           </div>
         ) : (
           <div style={{ fontSize: 12, color: '#64748b' }}>悬停3D对象查看详情</div>
@@ -688,6 +415,20 @@ export default function NeuralVis3DApp() {
                 <span style={{ color: '#60a5fa' }}>{v.type}</span> {v.label || v.id}
               </div>
             ))}
+          </div>
+        )}
+
+        {/* 类型统计 */}
+        {visualizations.length > 0 && (
+          <div style={{ marginTop: 16 }}>
+            <h3 style={{ fontSize: 13, color: '#94a3b8', marginBottom: 8 }}>类型统计</h3>
+            <div style={{ fontSize: 11, lineHeight: 1.8 }}>
+              {Object.entries(byType).filter(([_, arr]) => arr.length > 0).map(([type, arr]) => (
+                <div key={type}>
+                  <span style={{ color: '#60a5fa' }}>{type}</span>: {arr.length}
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
