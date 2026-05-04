@@ -2,39 +2,41 @@
 import { Canvas, useFrame } from '@react-three/fiber';
 import axios from 'axios';
 import {
-  Activity, ArrowRightLeft, BarChart, BarChart2, Brain, CheckCircle, GitBranch, Globe, Globe2,
-  Grid3x3, HelpCircle, Layers, Loader2, Maximize2, Minimize2, Network, RefreshCw, RotateCcw,
-  Scale, Search, Settings, Share2, Sparkles, Target, TrendingUp, X, Bot, Zap
+  Activity, ArrowRightLeft, BarChart, BarChart2,
+  Bot,
+  Brain, CheckCircle, GitBranch, Globe, Globe2,
+  Grid3x3, HelpCircle, Layers,
+  Maximize2, Minimize2, Network, RefreshCw, RotateCcw,
+  Scale,
+  Settings, Share2, Sparkles, Target, TrendingUp, X
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import ErrorBoundary from './ErrorBoundary';
-import FlowTubesVisualizer from './FlowTubesVisualizer';
-import GlassMatrix3D from './GlassMatrix3D';
-import { GlobalTopologyDashboard } from './GlobalTopologyDashboard';
-import { HLAIBlueprint } from './HLAIBlueprint';
+import { AGIChatPanel } from './AGIChatPanel';
 import { AppleNeuronGeneratedConceptSetsPanel, AppleNeuronMultidimSettingsPanel } from './blueprint/appleNeuronInfoPanelsBridge';
 import { AppleNeuronSceneContent } from './blueprint/appleNeuronSceneBridge';
 import { useAppleNeuronWorkspace } from './blueprint/appleNeuronWorkspaceBridge';
+import ICSPBPanel from './components/FiberNetPanel';
+import LanguageResearchControlPanel from './components/LanguageResearchControlPanel';
+import LanguageResearchDataPanel from './components/LanguageResearchDataPanel';
+import ReverseEngineeringDataPanel from './components/reverse/ReverseEngineeringDataPanel';
+import ReverseEngineeringOperationPanel from './components/reverse/ReverseEngineeringOperationPanel';
+import ReverseEngineeringOverlay from './components/reverse/ReverseEngineeringOverlay';
+import ErrorBoundary from './ErrorBoundary';
+import FlowTubesVisualizer from './FlowTubesVisualizer';
+import GlassMatrix3D from './GlassMatrix3D';
+import { HLAIBlueprint } from './HLAIBlueprint';
+import ParameterEncoding3D from './ParameterEncoding3D';
 import ResonanceField3D from './ResonanceField3D';
 import { SimplePanel } from './SimplePanel';
 import { CompositionalVisualization3D, CurvatureField3D, FeatureVisualization3D, FiberBundleVisualization3D, LayerDetail3D, ManifoldVisualization3D, NetworkGraph3D, RPTVisualization3D, SNNVisualization3D, StructureAnalysisControls, ValidityVisualization3D } from './StructureAnalysisPanel';
 import TDAVisualization3D from './TDAVisualization3D';
-import { AGIChatPanel } from './AGIChatPanel';
-import ICSPBPanel from './components/FiberNetPanel';
-import LanguageResearchControlPanel from './components/LanguageResearchControlPanel';
-import LanguageResearchDataPanel from './components/LanguageResearchDataPanel';
-import DNNAnalysisControlPanel from './components/DNNAnalysisControlPanel';
-import ParameterEncoding3D from './ParameterEncoding3D';
-import ReverseEngineeringDataPanel from './components/reverse/ReverseEngineeringDataPanel';
-import ReverseEngineeringOperationPanel from './components/reverse/ReverseEngineeringOperationPanel';
-import ReverseEngineeringOverlay from './components/reverse/ReverseEngineeringOverlay';
 
-import { locales } from './locales';
-import { INPUT_PANEL_TABS, STRUCTURE_TABS_V2, COLORS } from './config/panels';
+import { DataComparisonView } from './components/shared/DataComparisonView';
 import { AnalysisDataDisplay, MetricCard } from './components/shared/DataDisplayTemplates';
 import { OperationHistoryPanel, useOperationHistory } from './components/shared/OperationHistory';
-import { DataComparisonView } from './components/shared/DataComparisonView';
+import { COLORS, INPUT_PANEL_TABS, STRUCTURE_TABS_V2 } from './config/panels';
+import { locales } from './locales';
 
 const API_BASE = (import.meta.env.VITE_API_BASE || 'http://localhost:5001').replace(/\/$/, '');
 

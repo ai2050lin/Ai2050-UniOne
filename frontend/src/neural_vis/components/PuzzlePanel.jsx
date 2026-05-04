@@ -649,7 +649,7 @@ export default function PuzzlePanel({ puzzleData }) {
                 <div><span style={{ color: '#4ecdc4' }}>信号传播</span>(7): cos→0 / W_U能量转移 / 残差保留62-71% / L0→L1断裂 / 词嵌入正交 / 加法传播定律 / sigmoid映射</div>
                 <div><span style={{ color: '#ffe66d' }}>概念编码</span>(8): PCA5探针0.98-1.00 / 同类正异类负 / eff_dim=17-22 / 抽象cos≈-0.20 / category驱动PCA / template热点 / switch_rate递减</div>
                 <div><span style={{ color: '#a855f7' }}>逻辑编码</span>(4): "not"正交扰动 / 肯否定句cos≈0.8-0.9 / 逻辑2.7x属性 / 逻辑峰值L18</div>
-                <div><span style={{ color: '#f97316' }}>因果干预</span>(4): 属性干预99.56% / 推理恢复率<4% / 深层干预无效 / 功能信号线性可分</div>
+                <div><span style={{ color: '#f97316' }}>因果干预</span>(4): 属性干预99.56% / 推理恢复率&lt;4% / 深层干预无效 / 功能信号线性可分</div>
                 <div><span style={{ color: '#34d399' }}>频谱力学</span>(5): 频谱传播方程 / W_down决定h频谱 / 频谱不含语义 / 符号噪声源</div>
               </div>
             </div>
@@ -728,7 +728,7 @@ export default function PuzzlePanel({ puzzleData }) {
             <div style={{ padding: '10px 12px', background: 'rgba(127, 29, 29, 0.2)', borderRadius: 8, marginBottom: 8, border: '1px solid #7f1d1d' }}>
               <div style={{ fontSize: 12, fontWeight: 'bold', color: '#ef4444', marginBottom: 4 }}>🎯 临界点</div>
               <div style={{ fontSize: 10, color: '#94a3b8', lineHeight: 1.6 }}>
-                条件: 填充率>60% + 3个UN格子 + 数学结构自然涌现
+                条件: 填充率&gt;60% + 3个UN格子 + 数学结构自然涌现
                 <br />当前: 填充率18% | P0填充率48% | 0个UN✓
                 <br />解释力: 18% → 目标80%
               </div>

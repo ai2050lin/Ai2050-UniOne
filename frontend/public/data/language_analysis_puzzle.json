@@ -1,10 +1,11 @@
 {
-  "version": "5.0",
+  "version": "6.0",
   "lastUpdate": "2026-05-04",
   "sourceDocs": [
     "系统方案大纲.md v1.0",
     "系统方案设计.md v3.0",
-    "AGI_GLM5_MEMO.md v5.0 (系统化填充)"
+    "AGI_GLM5_MEMO.md v5.0 (系统化填充)",
+    "AGI_GLM5_MEMO.md Phase 26-30 (属性编码突破)"
   ],
   "maturity": {
     "empiricalDiscovery": 0.7,
@@ -81,6 +82,24 @@
       "definition": "深层输出决策进入的attractor basin(switch_rate→0.00)",
       "relatedCells": [
         "KN-1c"
+      ]
+    },
+    {
+      "name": "Attribute Subspace",
+      "symbol": "V_attr",
+      "definition": "10个属性probe张成的7维正交子空间(k_95=7), 每个属性是1400+维分布式向量但共享低维结构",
+      "relatedCells": [
+        "KN-2a",
+        "KN-2d"
+      ]
+    },
+    {
+      "name": "W_U Decoder",
+      "symbol": "W_U",
+      "definition": "W_U是属性解码器: 把正交空间的属性信息\"拉回\"输出空间, Logit SNR提升5-9倍, R²从0.55→0.96",
+      "relatedCells": [
+        "KN-4a",
+        "KN-2b"
       ]
     }
   ],
@@ -252,6 +271,46 @@
         "所有Transformer模型应满足加法传播",
         "Attention贡献比应随模型规模增加"
       ]
+    },
+    {
+      "id": "L6",
+      "name": "属性子空间律",
+      "nameEn": "Attribute Subspace Law",
+      "formula": "k_95(V_attr) = n_attr - 3 (n_attr≥5时)",
+      "description": "10个属性probe只张成7维正交子空间, 差值≈3; 属性间冗余度恒定",
+      "evidenceLevel": "E3",
+      "supportedBy": [
+        "Phase30-ExpA"
+      ],
+      "cellsAffected": [
+        "KN-2a",
+        "KN-2d"
+      ],
+      "testablePredictions": [
+        "增加属性数量到15个, k_95应约为12",
+        "移除animacy后k_95应降为5-6"
+      ],
+      "note": "仅在三模型(Qwen3/GLM4/DS7B)验证, 需更大规模验证"
+    },
+    {
+      "id": "L7",
+      "name": "属性解码律",
+      "nameEn": "Attribute Decoding Law",
+      "formula": "SNR_logit / SNR_hidden ≈ 5-9",
+      "description": "W_U投影使属性信噪比提升5-9倍, W_U是解码器不是编码器",
+      "evidenceLevel": "E3",
+      "supportedBy": [
+        "Phase30-ExpC"
+      ],
+      "cellsAffected": [
+        "KN-4a",
+        "KN-2b"
+      ],
+      "testablePredictions": [
+        "更大模型的SNR提升倍数应更大",
+        "移除W_U归一化后SNR提升应降低"
+      ],
+      "note": "核心发现: W_U行空间R²极低(0.02-0.08), 但Logit R²高达0.96-0.999"
     }
   ],
   "predictions": [
@@ -318,6 +377,14 @@
       "lawRef": "trainingDynamics",
       "status": "untested",
       "priority": "P1"
+    },
+    {
+      "id": "P9",
+      "lawRef": "L6",
+      "if": "仅使用7维属性子空间进行steering",
+      "then": "steering效果应接近全空间steering的70-80%",
+      "priority": "P0",
+      "status": "untested"
     }
   ],
   "unresolvedParadoxes": [
@@ -483,19 +550,15 @@
     ]
   },
   "overallProgress": {
-    "totalCells": 84,
-    "filled": 5,
-    "partial": 47,
-    "empty": 32,
-    "fillRate": 0.26,
-    "knowledgeRate": 0.33,
-    "causalRate": 0.09,
-    "p0Total": 25,
-    "p0Filled": 1,
-    "p0Partial": 19,
-    "p0FillRate": 0.36,
+    "fillRate": 0.30352941176470594,
+    "knowledgeRate": 0.3425882352941178,
+    "causalRate": 0.09917647058823531,
     "interpretPower": 0.09,
-    "interpretPowerFormula": "explained_variance(0.33) × causal_strength(0.09/0.33) × reproducibility(0.75) = 0.07"
+    "totalCells": 85,
+    "filled": 5,
+    "partial": 48,
+    "empty": 32,
+    "p0FillRate": 0.4230769230769231
   },
   "subspaceDecomposition": {
     "formula": "R^d ≈ V_WU∩V_sem ⊕ V_WU⊥∩V_syn ⊕ V_WU⊥∩V_dark ⊕ V_⊥logic ⊕ V_residual",
@@ -706,10 +769,10 @@
       "goalEn": "Reveal how concepts, attributes, and abstraction hierarchies are encoded in parameter space",
       "principle": "概念形成局部密集流形(M_concept), 属性形成跨对象共享纤维(F_attr), 暗物质(V_WU⊥∩V_dark)承载75-87%操控效果",
       "principleEn": "Concepts form local dense manifolds, attributes form shared fibers across objects, dark matter carries 75-87% steering effects",
-      "cellCount": 17,
-      "fillRate": 0.3,
-      "knowledgeRate": 0.43,
-      "causalRate": 0.12,
+      "cellCount": 18,
+      "fillRate": 0.39444444444444443,
+      "knowledgeRate": 0.5311111111111111,
+      "causalRate": 0.16666666666666666,
       "interpretPower": 0.22,
       "cells": [
         {
@@ -839,20 +902,22 @@
           "title": "属性绑定机制",
           "priority": "P0",
           "status": "partial",
-          "fillRate": 0.15,
-          "knowledgeRate": 0.18,
-          "causalRate": 0.02,
-          "evidence": "极性方向: dim90=1, cos>0.86; 时态方向: dim90=15, base_ratio=0.81; 属性编码方式未知(加性?乘性?)",
-          "evidenceLevel": "E1",
+          "fillRate": 0.55,
+          "knowledgeRate": 0.65,
+          "causalRate": 0.15,
+          "evidence": "Phase 26: 属性维度=属性值多样性: edible=1D(cos=1.0), size=2D(cos≈0.49-0.50, PC1=65%), color=3+D(cos≈0.17-0.20, n90=3); Phase 26: 属性间部分正交: edible↔size cos≈0.26-0.29, edible↔color cos≈0.41-0.43(弱正交), size↔color cos≈0.25-0.28; Phase 27: 属性方向不独立! 红条件edible方向≠绿条件edible方向(cos≈0.15-0.30), 可食条件颜色方向≠不可食条件(cos≈-0.04~0.07近正交); Phase 27: 属性线性可分但非独立→联合编码(edible分类acc=0.90-0.95, 但交叉cos≈0.15-0.30); Phase 28: PCA正交化后属性更稳定(cos提升2-3倍: 0.15→0.3-0.7), 证明存在潜在属性坐标系; Phase 30: 10属性只覆盖7维子空间(k_95=7), 每个属性高度分布式(1400-2470维), 属性间共享低维结构",
+          "evidenceLevel": "E3",
           "keyData": [
-            "极性属性dim90=1, 跨概念cos>0.86",
-            "时态属性dim90=15, base_ratio=0.81",
-            "中文\"了\"是强纤维(base_ratio=0.20)",
-            "属性-概念绑定机制完全未知",
-            "属性是加性向量还是乘性算子?"
+            "属性维度=值多样性: edible=1D, size=2D, color=3+D",
+            "属性间部分正交: edible↔color cos≈0.42(最强交互)",
+            "属性方向上下文依赖: 跨条件cos≈0.15-0.30",
+            "PCA正交化后cos提升2-3倍(0.15→0.3-0.7)",
+            "属性子空间仅7维(k_95), 单属性1400+维分布式",
+            "线性R²≈0.20, MLP R²≈0.47-0.54(非线性2.5倍)",
+            "交互效应≈主效应40-70%, 不存在纯属性效应"
           ],
           "goal": "发现属性与概念绑定的编码机制",
-          "principle": "极性属性形成1维纤维(dim90=1, cos>0.86), 时态属性15维(dim90=15), 但属性-概念绑定机制(红色+苹果如何绑定?)完全未知; 是加性向量还是乘性算子未验证",
+          "principle": "属性编码是强非线性耦合系统: 属性方向上下文依赖(cos跨条件≈0.15-0.30), 但PCA正交化后更稳定(提升2-3倍); 属性子空间仅7维, 但每个属性分散在1400+维; 交互效应≈主效应40-70%; 数学模型 h=f(z,c)+ε, z为7维潜在属性向量, f是强非线性映射",
           "evidenceRefs": [
             {
               "refId": "INV-CLXXXII",
@@ -869,6 +934,37 @@
               "testScript": "tests/codex/stage184_tense_direction_analysis.py",
               "dataOutput": "results/stage184/",
               "memoRef": "AGI_GLM5_MEMO.md"
+            },
+            {
+              "refId": "Phase26-Exp1",
+              "summary": "属性维度=值多样性: edible=1D, size=2D, color=3+D; 属性间cos: edible↔color≈0.42",
+              "stage": "Phase 26",
+              "testScript": "tests/glm5/ccmf_phase26_attribute_encoding.py",
+              "dataOutput": "tests/glm5_temp/ccmf_exp1-4_*_results.json"
+            },
+            {
+              "refId": "Phase27-ExpA",
+              "summary": "属性方向不独立! 跨条件cos≈0.15-0.30, 但线性可分acc=0.90-0.95",
+              "stage": "Phase 27",
+              "testScript": "tests/glm5/ccmg_phase27_attribute_decoupling.py"
+            },
+            {
+              "refId": "Phase28-ExpB",
+              "summary": "PCA正交化后edible跨条件cos: 0.15→0.46(+0.29), 三模型一致提升2-3倍",
+              "stage": "Phase 28",
+              "testScript": "tests/glm5/ccmh_phase28_latent_variable.py"
+            },
+            {
+              "refId": "Phase29-ExpC",
+              "summary": "MLP R²=0.47-0.54是线性R²=0.20的2.5倍; 交互效应=主效应40-70%",
+              "stage": "Phase 29",
+              "testScript": "tests/glm5/ccmi_phase29_latent_structure.py"
+            },
+            {
+              "refId": "Phase30-ExpA",
+              "summary": "10属性k_95=7维; Probe有效维度1400-2470, Gini=0.43(极度分布式)",
+              "stage": "Phase 30",
+              "testScript": "tests/glm5/ccmj_phase30_subspace_decode.py"
             }
           ]
         },
@@ -877,20 +973,22 @@
           "title": "属性编码方向",
           "priority": "P1",
           "status": "partial",
-          "fillRate": 0.45,
-          "knowledgeRate": 0.6,
-          "causalRate": 0.1,
-          "evidence": "R14: 同类正异类负; 极性dim90=1, 时态dim90=15; 语义替换无统一方向(cat→dog和king→queen走不同路径)",
-          "evidenceLevel": "E2",
+          "fillRate": 0.65,
+          "knowledgeRate": 0.75,
+          "causalRate": 0.2,
+          "evidence": "Phase 26: is-a偏移中等平行(cos≈0.45-0.55), 不完美; 属性分类: color=1.0, size=0.74-0.89, edible方向acc不稳定(10-95%)但kNN=0.85-0.95; Phase 27: 属性线性可分但方向不独立(交叉cos≈0.15-0.30); Phase 28: 8属性只解释15%方差(R²=0.14-0.17), 交叉验证R²为负(-0.24~-0.28)→泛化失败; Phase 30: W_U是属性解码器, Logit空间SNR提升5-9倍, R²从0.55→0.96-0.999",
+          "evidenceLevel": "E3",
           "keyData": [
-            "同类cos=+0.08~+0.27(正相关)",
-            "异类cos=-0.07~-0.13(负相关)",
-            "极性纤维dim90=1(cos>0.86)",
-            "时态纤维dim90=15(base_ratio=0.81)",
-            "语义替换无统一方向: cat→dog≠king→queen路径"
+            "is-a偏移cos≈0.45-0.55, 预测: fruit 83%, animal 83%, tool 67%",
+            "edible方向acc不稳定(10-95%), 但kNN=0.85-0.95(信号存在但不在线性方向)",
+            "8属性线性R²≈0.15, 交叉验证R²为负→A@v模型不成立",
+            "W_U行空间R²: GLM4 L0仅0.02-0.08, 正交空间0.47-0.66",
+            "Logit空间R²: Hidden 0.55→Logit 0.96(提升+0.41)",
+            "SNR: Hidden 15-19→Logit 77-159(5-9倍提升)",
+            "W_U是解码器: 把正交空间属性信息\"拉回\"输出空间"
           ],
           "goal": "确定属性在参数空间中的编码方向",
-          "principle": "属性形成纤维F_attr: 同类cos=+0.08~+0.27(正相关), 异类cos=-0.07~-0.13(负相关); 极性是1维纤维, 时态是15维; 但语义替换无统一方向, 不同概念对走完全不同的路径",
+          "principle": "属性方向在观测空间不独立(cos≈0.15-0.30), 但在PCA潜在空间更稳定(提升2-3倍); 8属性只解释15%hidden方差; W_U是属性解码器, Logit空间SNR提升5-9倍; 属性不是hidden state的基底方向, 而是7维子空间中的方向",
           "evidenceRefs": [
             {
               "refId": "R14",
@@ -899,6 +997,24 @@
               "testScript": "tests/codex/stage313_shared_carrier_raw_distribution_map.py",
               "dataOutput": "results/stage313/",
               "memoRef": "AGI_GLM5_MEMO.md"
+            },
+            {
+              "refId": "Phase26-Exp4",
+              "summary": "is-a偏移cos≈0.45-0.55, 推理上下文对概念表示影响巨大(delta_BC最高7466)",
+              "stage": "Phase 26",
+              "testScript": "tests/glm5/ccmf_phase26_attribute_encoding.py"
+            },
+            {
+              "refId": "Phase28-ExpA",
+              "summary": "8属性R²≈0.15(训练), 交叉验证R²≈-0.25(泛化失败), 85%方差来自其他信息",
+              "stage": "Phase 28",
+              "testScript": "tests/glm5/ccmh_phase28_latent_variable.py"
+            },
+            {
+              "refId": "Phase30-ExpC",
+              "summary": "W_U行空间R²仅0.02-0.08(L0); Logit R²从0.55→0.96; SNR 5-9倍提升",
+              "stage": "Phase 30",
+              "testScript": "tests/glm5/ccmj_phase30_subspace_decode.py"
             }
           ]
         },
@@ -907,10 +1023,10 @@
           "title": "属性因果效应",
           "priority": "P1",
           "status": "partial",
-          "fillRate": 0.4,
-          "knowledgeRate": 0.5,
-          "causalRate": 0.25,
-          "evidence": "INV-17: A级属性干预99.56%",
+          "fillRate": 0.55,
+          "knowledgeRate": 0.65,
+          "causalRate": 0.35,
+          "evidence": "Phase 26: 属性干预效果随层级变化—浅层弱(delta≈0.02-0.04)→中层显著(delta≈0.5-1.4)→深层混乱(失去选择性); 可食性推理影响最大(delta_BC最高7466, 是其他推理100-1000倍); 推理不对称性: 肯定敏感否定不敏感; Phase 27: 最小因果子空间: 浅层1D→中层1D→深层3-5D; Phase 29: 交互效应巨大, edible×animacy=0.40-0.51, edible×color=0.36-0.88",
           "evidenceLevel": "E3",
           "evidenceRefs": [
             {
@@ -920,14 +1036,87 @@
               "testScript": "tests/codex/stage305_neuron_level_operator_decomposition.py",
               "dataOutput": "results/stage305/",
               "memoRef": "AGI_GLM5_MEMO.md"
+            },
+            {
+              "refId": "Phase26-Exp5",
+              "summary": "推理上下文影响: 可食性delta_BC=7466, 推理不对称cos_yes≈0.81-1.0, cos_no≈0.00",
+              "stage": "Phase 26",
+              "testScript": "tests/glm5/ccmf_phase26_attribute_encoding.py"
+            },
+            {
+              "refId": "Phase26-Exp6",
+              "summary": "干预层级: L0 delta≈0.02→L6≈0.04→L20≈0.5→L24≈1.4→L28混乱",
+              "stage": "Phase 26"
+            },
+            {
+              "refId": "Phase27-ExpD",
+              "summary": "最小因果子空间: 浅层=1D, 中层=1D(干预最强), 深层=3-5D(edible被旋转/分散)",
+              "stage": "Phase 27"
+            },
+            {
+              "refId": "Phase29-ExpC",
+              "summary": "交互效应: edible×animacy=0.40-0.51, edible×color_red=0.36-0.66, color_red×green=0.41-0.79",
+              "stage": "Phase 29",
+              "testScript": "tests/glm5/ccmi_phase29_latent_structure.py"
             }
           ],
           "keyData": [
-            "颜色/身份干预99.56%",
-            "逻辑推理恢复率<4%"
+            "属性干预层级依赖: L0 delta≈0.02→L24 delta≈1.4→L28方向混乱",
+            "可食性推理delta_BC最高7466(其他推理的100-1000倍)",
+            "推理不对称: 肯定推理cos≈0.81-1.00, 否定推理cos≈0.00",
+            "最小因果子空间: L0-L9=1D, L10-L24=1D, L34-L35=3-5D",
+            "属性交互效应=主效应40-70%: edible×animacy=0.40-0.51",
+            "颜色/身份干预99.56%(INV-17)"
           ],
           "goal": "验证属性编码的因果效应强度",
-          "principle": "A级属性(颜色/身份)干预99.56%, 但逻辑推理恢复率<4%, 属性≠推理"
+          "principle": "属性干预层级依赖: 浅层弱有效→中层显著→深层混乱; 可食性推理影响远超其他(100-1000倍); 存在推理不对称性; 属性间强交互(40-70%主效应), 不存在纯属性效应"
+        },
+        {
+          "id": "KN-2d",
+          "title": "属性子空间与非线性编码",
+          "priority": "P0",
+          "status": "partial",
+          "fillRate": 0.5,
+          "knowledgeRate": 0.7,
+          "causalRate": 0.2,
+          "evidence": "Phase 29: MLP R²=0.47-0.54是线性R²=0.20的2.5倍; 交互项仅增加0.05, MLP隐式非线性+0.27-0.34; Phase 30: 10属性k_95=7维子空间; animacy≈3维(R²=0.5-0.8@k=3), edible≈5维, size≈15维, color≈30+维(高度分布式); Probe有效维度1400-2470/Gini=0.43; W_U是属性解码器(SNR提升5-9倍)",
+          "evidenceLevel": "E3",
+          "keyData": [
+            "10属性→7维正交子空间(k_95=7, k_90=6)",
+            "animacy≈3维, edible≈5维, size≈15维, color≈30+维",
+            "MLP R²=0.47-0.54 >> 线性R²=0.20(2.5倍提升)",
+            "交互项贡献仅+0.05, MLP隐式非线性+0.27-0.34",
+            "Probe有效维度=1400-2470(占40-60%总维度)",
+            "Gini=0.43(极度分布式编码)",
+            "PC集中度: animacy 0.48-0.66, color_red 0.18-0.24",
+            "W_U解码: Logit SNR 5-9倍提升, R² 0.55→0.96"
+          ],
+          "goal": "发现属性在hidden state中的精确编码结构和维度",
+          "principle": "属性子空间仅7维: 每个属性是高维向量(1400+维), 但10个高维向量只张成7维子空间; 不同属性需要的维度不同(animacy≈3D→color≈30+D); 编码是强非线性的(MLP R²是线性的2.5倍); W_U是属性解码器, 在logit空间SNR提升5-9倍",
+          "evidenceRefs": [
+            {
+              "refId": "Phase30-ExpA",
+              "summary": "10属性k_95=7维; animacy≈3D(R²≈0.5-0.8@k=3), edible≈5D, color≈30+D",
+              "stage": "Phase 30",
+              "testScript": "tests/glm5/ccmj_phase30_subspace_decode.py"
+            },
+            {
+              "refId": "Phase30-ExpB",
+              "summary": "Probe有效维度1400-2470(40-60%总维度), Gini=0.43(不稀疏); animacy top3_pc=0.48-0.66",
+              "stage": "Phase 30"
+            },
+            {
+              "refId": "Phase30-ExpC",
+              "summary": "W_U行空间R²: GLM4 L0仅0.02-0.08; Logit R² 0.55→0.96; SNR Hidden 15-19→Logit 77-159(5-9x)",
+              "stage": "Phase 30"
+            },
+            {
+              "refId": "Phase29-ExpC",
+              "summary": "MLP R²=0.47-0.54, 交互效应=主效应40-70%; 增强线性+0.05, MLP+0.27-0.34",
+              "stage": "Phase 29",
+              "testScript": "tests/glm5/ccmi_phase29_latent_structure.py"
+            }
+          ]
         },
         {
           "id": "KN-3a",
@@ -1011,10 +1200,10 @@
           "title": "暗物质转导机制",
           "priority": "P0",
           "status": "partial",
-          "fillRate": 0.3,
-          "knowledgeRate": 0.45,
-          "causalRate": 0.1,
-          "evidence": "R12: 暗物质承载75-87%steering; 77-85%概念信号不在W_U+W_E空间; 暗物质通过Attn/MLP非线性转导",
+          "fillRate": 0.5,
+          "knowledgeRate": 0.6,
+          "causalRate": 0.2,
+          "evidence": "R12: 暗物质承载75-87%steering; Phase 30: W_U是属性解码器—GLM4 L0 W_U行空间R²仅0.02-0.08, 正交空间0.47-0.66; Logit空间R²从0.55→0.96(+0.41); SNR提升5-9倍(Hidden 15-19→Logit 77-159); W_U把正交空间的属性信息\"拉回\"到输出空间",
           "evidenceLevel": "E3",
           "evidenceRefs": [
             {
@@ -1032,6 +1221,12 @@
               "testScript": "tests/codex/stage216_dark_matter_quantification.py",
               "dataOutput": "results/stage216/",
               "memoRef": "AGI_GLM5_MEMO.md"
+            },
+            {
+              "refId": "Phase30-ExpC",
+              "summary": "W_U行空间R²: GLM4 L0=0.02-0.08, 正交空间=0.47-0.66; W_U是解码器不是编码器",
+              "stage": "Phase 30",
+              "testScript": "tests/glm5/ccmj_phase30_subspace_decode.py"
             }
           ],
           "keyData": [
@@ -1039,11 +1234,13 @@
             "77-85%概念信号在暗物质空间",
             "W_U-only几乎无效(eff=0.01-0.09)",
             "暗物质steering承载75-87%效果",
-            "暗物质有效秩6.6-7",
-            "级联转导: 注入delta_dark后每层W_U投影比增长1-2%"
+            "W_U行空间R²仅0.02-0.08(GLM4 L0), 正交空间0.47-0.66",
+            "Logit R²: 0.55→0.96(+0.41)→W_U是解码器",
+            "SNR: Hidden 15-19→Logit 77-159(5-9x提升)",
+            "暗物质有效秩6.6-7"
           ],
           "goal": "揭示W_U⊥暗物质承载steering效果的转导机制",
-          "principle": "77-85%概念信号在暗物质空间(W_U⊥∩V_dark), W_U-only steering几乎无效(eff=0.01-0.09); 暗物质通过Attn/MLP非线性转导间接影响输出, 承载75-87%steering效果"
+          "principle": "暗物质通过W_U解码机制影响输出: W_U不是简单线性投影, 而是把正交空间的属性信息\"拉回\"到输出空间; W_U行空间R²极低(0.02-0.08), 但Logit空间R²高达0.96-0.999, SNR提升5-9倍; 暗物质承载75-87%steering效果, 通过Attn/MLP非线性转导间接影响输出"
         },
         {
           "id": "KN-4b",
@@ -3102,6 +3299,34 @@
       "refutedBy": "INV-25/REF-11: category驱动(cat_R2=0.82-0.94), 推翻90%是模板",
       "severity": 5,
       "implication": "残差流主成分由类别信号驱动, 非模板"
+    },
+    {
+      "id": "REF-13",
+      "hypothesis": "属性正交叠加",
+      "refutedBy": "Phase 27: 属性方向不独立, 跨条件cos≈0.15-0.30; edible↔color cos≈0.42",
+      "severity": 5,
+      "implication": "属性编码不是正交方向叠加, 而是联合编码+非线性耦合"
+    },
+    {
+      "id": "REF-14",
+      "hypothesis": "属性坐标系",
+      "refutedBy": "Phase 29: 所有分解方法(sparse/PCA/NMF)的max|corr|<0.7, 没有维度与属性强对齐",
+      "severity": 5,
+      "implication": "属性不是hidden state的线性基底, 而是非线性函数"
+    },
+    {
+      "id": "REF-15",
+      "hypothesis": "属性独立方向",
+      "refutedBy": "Phase 27: 红条件edible方向≠绿条件(cos≈0.15-0.30); Phase 28: 交叉验证R²为负(-0.24~-0.28)",
+      "severity": 5,
+      "implication": "不存在纯属性方向, 属性编码上下文依赖"
+    },
+    {
+      "id": "REF-16",
+      "hypothesis": "线性属性模型 h=A@v+ε",
+      "refutedBy": "Phase 28: 线性R²≈0.15(8属性仅解释15%方差), 交叉验证R²为负; Phase 29: MLP R²=0.47-0.54是线性的2.5倍",
+      "severity": 4,
+      "implication": "属性编码是强非线性的, 线性模型严重欠拟合"
     }
   ],
   "verifiedFacts": {
@@ -3153,6 +3378,36 @@
         "fact": "Δg子空间跨层正交",
         "detail": "cos≈0.03-0.05, angle≈87-88°, INV-67",
         "confidence": "E4"
+      },
+      {
+        "id": "VF-A9",
+        "fact": "属性子空间=7维",
+        "detail": "10属性k_95=7, k_90=6, k_99=8-9; 三模型一致",
+        "confidence": "E4"
+      },
+      {
+        "id": "VF-A10",
+        "fact": "属性维度=值多样性",
+        "detail": "edible=1D(cos=1.0), size=2D(cos≈0.49), color=3+D(cos≈0.18)",
+        "confidence": "E4"
+      },
+      {
+        "id": "VF-A11",
+        "fact": "属性高度分布式",
+        "detail": "Probe有效维度1400-2470(40-60%总维度), Gini=0.43",
+        "confidence": "E3"
+      },
+      {
+        "id": "VF-A12",
+        "fact": "属性编码强非线性",
+        "detail": "MLP R²=0.47-0.54 >> 线性R²=0.20(2.5倍), 交互效应=主效应40-70%",
+        "confidence": "E3"
+      },
+      {
+        "id": "VF-A13",
+        "fact": "PCA潜在空间属性更稳定",
+        "detail": "正交化后跨条件cos提升2-3倍(0.15→0.3-0.7), 三模型一致",
+        "confidence": "E4"
       }
     ],
     "causal": [
@@ -3185,6 +3440,24 @@
         "fact": "逻辑信号被稀释",
         "detail": "Norm增长选择性稀释逻辑(ratio=0.54), 增强属性(1.5-2.2x)",
         "confidence": "E3"
+      },
+      {
+        "id": "VF-B6",
+        "fact": "推理不对称性",
+        "detail": "肯定推理cos≈0.81-1.00, 否定推理cos≈0.00; 可食性delta_BC最高7466",
+        "confidence": "E3"
+      },
+      {
+        "id": "VF-B7",
+        "fact": "属性干预层级依赖",
+        "detail": "浅层弱(delta≈0.02)→中层显著(delta≈0.5-1.4)→深层混乱(失去选择性)",
+        "confidence": "E3"
+      },
+      {
+        "id": "VF-B8",
+        "fact": "W_U是属性解码器",
+        "detail": "W_U行空间R²仅0.02-0.08; Logit R² 0.55→0.96; SNR提升5-9倍",
+        "confidence": "E4"
       }
     ],
     "hierarchy": [
@@ -3223,6 +3496,18 @@
         "fact": "残差传播",
         "detail": "h_{l+1}=h_l+A_l+M_l",
         "confidence": "E4"
+      },
+      {
+        "id": "VF-C7",
+        "fact": "属性需要不同子空间维度",
+        "detail": "animacy≈3D(R²≈0.5-0.8@k=3), edible≈5D, size≈15D, color≈30+D",
+        "confidence": "E3"
+      },
+      {
+        "id": "VF-C8",
+        "fact": "is-a偏移不完美平行",
+        "detail": "cos≈0.45-0.55(非1.0), 预测: fruit 83%, animal 83%, tool 67%",
+        "confidence": "E3"
       }
     ]
   }
