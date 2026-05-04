@@ -3,14 +3,17 @@ import { useState, useEffect } from 'react';
 
 /**
  * 语言分析标签页
- * 展示语言特性分析和当前研究进展
- * 采用从上到下的垂直布局，不使用tab切换
+ * 逆向工程深度神经网络的语言编码机制
+ * 科普 + 研究数据双轨展示
  */
 export const LanguageAnalysisTab = () => {
   const [expandedPuzzle, setExpandedPuzzle] = useState(null);
   const [expandedPreparation, setExpandedPreparation] = useState(null);
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [puzzleData, setPuzzleData] = useState(null);
+  const [viewMode, setViewMode] = useState('puzzle'); // 'puzzle' | 'mindmap'
+  const [expandedMindCategory, setExpandedMindCategory] = useState(null);
+  const [selectedMindCell, setSelectedMindCell] = useState(null);
 
   useEffect(() => {
     fetch('/data/language_analysis_puzzle.json')
@@ -51,6 +54,7 @@ export const LanguageAnalysisTab = () => {
       evidenceStrength: cell.priority === 'P0' ? 5 : cell.priority === 'P1' ? 3 : 2,
       keyData: cell.keyData,
       evidence: cell.evidence,
+      evidenceRefs: cell.evidenceRefs || [],
       completenessCheck: cell.status === 'filled'
         ? ['✅ 已填充', '✅ 三模型验证', '✅ 因果验证']
         : cell.status === 'partial'
@@ -136,18 +140,352 @@ export const LanguageAnalysisTab = () => {
     return stars;
   };
 
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case 'high':
-        return '#ef4444';
-      case 'medium':
-        return '#f59e0b';
-      case 'low':
-        return '#10b981';
-      default:
-        return '#6b7280';
-    }
+  // ===== Mind Map Helpers =====
+  const categoryColors = {
+    KN: '#3b82f6', LG: '#f59e0b', GR: '#10b981', MG: '#a855f7',
+    SE: '#ef4444', WE: '#6366f1', TD: '#ec4899', UN: '#00d2ff',
   };
+
+  const getCategoryAngle = (index, total = 8) => {
+    return (index * 2 * Math.PI / total) - Math.PI / 2;
+  };
+
+  const mindMapCenter = { x: 700, y: 460 };
+  const categoryRadius = 260;
+  const cellRadius = 170;
+
+  // Category name short labels for mind map
+  const catShortNames = {
+    KN: '知识网络', LG: '逻辑推理', GR: '语法体系', MG: '多维度',
+    SE: '系统效率', WE: '词嵌入', TD: '3D-1D映射', UN: '统合',
+  };
+
+  const renderMindMap = () => {
+    if (!puzzleData) return null;
+    const categories = puzzleData.categories;
+
+    // Calculate category positions
+    const catNodes = categories.map((cat, i) => {
+      const angle = getCategoryAngle(i);
+      return {
+        ...cat,
+        x: mindMapCenter.x + categoryRadius * Math.cos(angle),
+        y: mindMapCenter.y + categoryRadius * Math.sin(angle),
+        angle,
+        color: categoryColors[cat.id] || '#6b7280',
+        index: i,
+      };
+    });
+
+    // Calculate cell positions for expanded category
+    const expandedCat = catNodes.find(c => c.id === expandedMindCategory);
+    let cellNodes = [];
+    if (expandedCat) {
+      const cells = expandedCat.cells || [];
+      const cellCount = cells.length;
+      // Adaptive spread: wider for more cells, but cap at 120°
+      const spreadAngle = Math.min(Math.PI * 0.67, cellCount * 0.09 + 0.2);
+      cells.forEach((cell, j) => {
+        const cellAngle = expandedCat.angle - spreadAngle / 2 + (cellCount > 1 ? j * spreadAngle / (cellCount - 1) : 0);
+        cellNodes.push({
+          ...cell,
+          x: expandedCat.x + cellRadius * Math.cos(cellAngle),
+          y: expandedCat.y + cellRadius * Math.sin(cellAngle),
+          cellAngle,
+          parentColor: expandedCat.color,
+        });
+      });
+    }
+
+    // Selected cell data
+    const selectedCell = cellNodes.find(c => c.id === selectedMindCell);
+
+    return (
+      <div style={{ position: 'relative', width: '100%' }}>
+        <svg viewBox="0 0 1400 900" style={{ width: '100%', height: 'auto', minHeight: '600px' }}>
+          <defs>
+            {/* Glow filters */}
+            <filter id="glow-cyan" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="6" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+            <filter id="glow-soft" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+            {/* Radial gradients for each category */}
+            {Object.entries(categoryColors).map(([id, color]) => (
+              <radialGradient key={id} id={`grad-${id}`} cx="40%" cy="35%">
+                <stop offset="0%" stopColor={color} stopOpacity="0.9" />
+                <stop offset="100%" stopColor={color} stopOpacity="0.5" />
+              </radialGradient>
+            ))}
+            <radialGradient id="grad-center" cx="40%" cy="35%">
+              <stop offset="0%" stopColor="#00d2ff" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="#a855f7" stopOpacity="0.6" />
+            </radialGradient>
+          </defs>
+
+          {/* Background grid */}
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.02)" strokeWidth="0.5" />
+          </pattern>
+          <rect width="1400" height="900" fill="url(#grid)" />
+
+          {/* Concentric circles guide */}
+          <circle cx={mindMapCenter.x} cy={mindMapCenter.y} r={categoryRadius} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="1" strokeDasharray="4 8" />
+          {expandedCat && (
+            <circle cx={expandedCat.x} cy={expandedCat.y} r={cellRadius} fill="none" stroke={`${expandedCat.color}15`} strokeWidth="1" strokeDasharray="3 6" />
+          )}
+
+          {/* Lines from center to categories */}
+          {catNodes.map((cat) => {
+            const isExpanded = expandedMindCategory === cat.id;
+            const mx = mindMapCenter.x + (cat.x - mindMapCenter.x) * 0.4;
+            const my = mindMapCenter.y + (cat.y - mindMapCenter.y) * 0.15;
+            return (
+              <path
+                key={`line-${cat.id}`}
+                d={`M ${mindMapCenter.x} ${mindMapCenter.y} Q ${mx} ${my} ${cat.x} ${cat.y}`}
+                fill="none"
+                stroke={isExpanded ? cat.color : `${cat.color}40`}
+                strokeWidth={isExpanded ? 2.5 : 1.5}
+                style={{ transition: 'all 0.3s ease' }}
+              />
+            );
+          })}
+
+          {/* Lines from expanded category to cells */}
+          {expandedCat && cellNodes.map((cell) => {
+            const mx = expandedCat.x + (cell.x - expandedCat.x) * 0.3;
+            const my = expandedCat.y + (cell.y - expandedCat.y) * 0.1;
+            const isSelected = selectedMindCell === cell.id;
+            return (
+              <path
+                key={`line-cell-${cell.id}`}
+                d={`M ${expandedCat.x} ${expandedCat.y} Q ${mx} ${my} ${cell.x} ${cell.y}`}
+                fill="none"
+                stroke={isSelected ? expandedCat.color : `${expandedCat.color}50`}
+                strokeWidth={isSelected ? 2 : 1}
+                style={{ transition: 'all 0.3s ease' }}
+              />
+            );
+          })}
+
+          {/* Center node */}
+          <g onClick={() => { setExpandedMindCategory(null); setSelectedMindCell(null); }} style={{ cursor: 'pointer' }}>
+            <circle cx={mindMapCenter.x} cy={mindMapCenter.y} r={52} fill="url(#grad-center)" filter="url(#glow-cyan)" />
+            <circle cx={mindMapCenter.x} cy={mindMapCenter.y} r={52} fill="none" stroke="#00d2ff" strokeWidth="1.5" opacity="0.6" />
+            <text x={mindMapCenter.x} y={mindMapCenter.y - 10} textAnchor="middle" fill="#fff" fontSize="14" fontWeight="bold">语言分析</text>
+            <text x={mindMapCenter.x} y={mindMapCenter.y + 8} textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize="10">Language Analysis</text>
+            <text x={mindMapCenter.x} y={mindMapCenter.y + 24} textAnchor="middle" fill="#00d2ff" fontSize="12" fontWeight="bold">
+              {(puzzleData.overallProgress.fillRate * 100).toFixed(0)}%
+            </text>
+          </g>
+
+          {/* Category nodes */}
+          {catNodes.map((cat) => {
+            const isExpanded = expandedMindCategory === cat.id;
+            const r = isExpanded ? 38 : 32;
+            const circumference = 2 * Math.PI * (r + 4);
+            const fillOffset = circumference * (1 - cat.fillRate);
+            return (
+              <g
+                key={cat.id}
+                onClick={() => {
+                  setExpandedMindCategory(isExpanded ? null : cat.id);
+                  setSelectedMindCell(null);
+                }}
+                style={{ cursor: 'pointer' }}
+              >
+                {/* Outer glow ring when expanded */}
+                {isExpanded && (
+                  <circle cx={cat.x} cy={cat.y} r={r + 10} fill="none" stroke={cat.color} strokeWidth="1" opacity="0.3">
+                    <animate attributeName="r" values={`${r + 8};${r + 14};${r + 8}`} dur="2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.3;0.1;0.3" dur="2s" repeatCount="indefinite" />
+                  </circle>
+                )}
+                {/* Progress ring */}
+                <circle cx={cat.x} cy={cat.y} r={r + 4} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="3" />
+                <circle cx={cat.x} cy={cat.y} r={r + 4} fill="none" stroke={cat.color} strokeWidth="3"
+                  strokeDasharray={circumference} strokeDashoffset={fillOffset}
+                  strokeLinecap="round" transform={`rotate(-90 ${cat.x} ${cat.y})`}
+                  style={{ transition: 'stroke-dashoffset 0.5s ease' }} opacity="0.7" />
+                {/* Main circle */}
+                <circle cx={cat.x} cy={cat.y} r={r} fill={`url(#grad-${cat.id})`} filter={isExpanded ? 'url(#glow-soft)' : undefined} />
+                <circle cx={cat.x} cy={cat.y} r={r} fill="none" stroke={cat.color} strokeWidth="1" opacity="0.4" />
+                {/* Category ID */}
+                <text x={cat.x} y={cat.y - 6} textAnchor="middle" fill="#fff" fontSize="14" fontWeight="bold">{cat.id}</text>
+                {/* Fill rate */}
+                <text x={cat.x} y={cat.y + 12} textAnchor="middle" fill="rgba(255,255,255,0.85)" fontSize="10">
+                  {(cat.fillRate * 100).toFixed(0)}%
+                </text>
+                {/* Category name label - positioned away from center */}
+                <text
+                  x={cat.x + (cat.x - mindMapCenter.x) * 0.15}
+                  y={cat.y + (cat.y - mindMapCenter.y) * 0.15 + r + 16}
+                  textAnchor="middle" fill={cat.color} fontSize="10" fontWeight="bold"
+                >
+                  {catShortNames[cat.id] || cat.name}
+                </text>
+              </g>
+            );
+          })}
+
+          {/* Cell nodes */}
+          {cellNodes.map((cell) => {
+            const isSelected = selectedMindCell === cell.id;
+            const statusColor = cell.status === 'filled' ? '#10b981' : cell.status === 'partial' ? '#f59e0b' : '#6b7280';
+            const r = isSelected ? 20 : 15;
+            // Determine label position - always outside the node, away from the parent
+            const labelAngle = Math.atan2(cell.y - (expandedCat?.y || 0), cell.x - (expandedCat?.x || 0));
+            const labelX = cell.x + (r + 8) * Math.cos(labelAngle);
+            const labelY = cell.y + (r + 8) * Math.sin(labelAngle);
+            const textAnchor = Math.abs(labelAngle) < Math.PI / 2 ? 'start' : 'end';
+            return (
+              <g
+                key={cell.id}
+                onClick={() => setSelectedMindCell(isSelected ? null : cell.id)}
+                style={{ cursor: 'pointer' }}
+              >
+                {/* Background circle with status color */}
+                <circle cx={cell.x} cy={cell.y} r={r}
+                  fill={isSelected ? `${cell.parentColor}50` : `${cell.parentColor}20`}
+                  stroke={isSelected ? cell.parentColor : `${cell.parentColor}50`}
+                  strokeWidth={isSelected ? 2.5 : 1}
+                  style={{ transition: 'all 0.2s ease' }}
+                />
+                {/* Status dot */}
+                <circle cx={cell.x} cy={cell.y} r={4} fill={statusColor} />
+                {/* Cell ID label at the node */}
+                <text x={cell.x} y={cell.y - r - 4} textAnchor="middle" fill={`${cell.parentColor}cc`} fontSize="8" fontWeight="bold" fontFamily="monospace">
+                  {cell.id}
+                </text>
+                {/* Title label - positioned outward from parent */}
+                <text x={labelX} y={labelY + 3} textAnchor={textAnchor} fill={`${cell.parentColor}aa`} fontSize="7.5" style={{ maxWidth: '80px' }}>
+                  {cell.title && cell.title.length > 8 ? cell.title.substring(0, 7) + '…' : cell.title}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+
+        {/* Floating Detail Panel */}
+        {selectedCell && (
+          <div style={{
+            position: 'absolute',
+            top: '20px',
+            right: '20px',
+            width: '380px',
+            maxHeight: 'calc(100% - 40px)',
+            overflowY: 'auto',
+            background: 'rgba(10,10,20,0.95)',
+            borderRadius: '14px',
+            border: `1px solid ${categoryColors[expandedMindCategory] || '#00d2ff'}40`,
+            padding: '18px',
+            boxShadow: `0 0 30px ${categoryColors[expandedMindCategory] || '#00d2ff'}15`,
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <div>
+                <span style={{ fontSize: '10px', fontFamily: 'monospace', color: categoryColors[expandedMindCategory] || '#00d2ff', background: `${categoryColors[expandedMindCategory] || '#00d2ff'}20`, padding: '2px 6px', borderRadius: '3px', marginRight: '6px' }}>
+                  {selectedCell.id}
+                </span>
+                <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#fff' }}>{selectedCell.title}</span>
+              </div>
+              <span onClick={() => setSelectedMindCell(null)} style={{ cursor: 'pointer', fontSize: '16px', color: '#666' }}>✕</span>
+            </div>
+
+            {/* Status badges */}
+            <div style={{ display: 'flex', gap: '6px', marginBottom: '10px', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '9px', background: selectedCell.priority === 'P0' ? 'rgba(239,68,68,0.2)' : selectedCell.priority === 'P1' ? 'rgba(245,158,11,0.2)' : 'rgba(107,114,128,0.2)', color: selectedCell.priority === 'P0' ? '#ef4444' : selectedCell.priority === 'P1' ? '#f59e0b' : '#6b7280', padding: '2px 6px', borderRadius: '3px', fontFamily: 'monospace' }}>
+                {selectedCell.priority}
+              </span>
+              <span style={{ fontSize: '9px', background: selectedCell.status === 'filled' ? 'rgba(16,185,129,0.2)' : selectedCell.status === 'partial' ? 'rgba(245,158,11,0.2)' : 'rgba(107,114,128,0.2)', color: selectedCell.status === 'filled' ? '#10b981' : selectedCell.status === 'partial' ? '#f59e0b' : '#6b7280', padding: '2px 6px', borderRadius: '3px' }}>
+                {selectedCell.status === 'filled' ? '已填充' : selectedCell.status === 'partial' ? '部分' : '未填充'}
+              </span>
+              <span style={{ fontSize: '9px', background: `${evidenceLevelColor[selectedCell.evidenceLevel] || '#6b7280'}20`, color: evidenceLevelColor[selectedCell.evidenceLevel] || '#6b7280', padding: '2px 6px', borderRadius: '3px', fontFamily: 'monospace' }}>
+                {selectedCell.evidenceLevel}: {evidenceLevelLabel[selectedCell.evidenceLevel]}
+              </span>
+            </div>
+
+            {/* Progress bars */}
+            <div style={{ marginBottom: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '3px' }}>
+                <span style={{ fontSize: '9px', color: '#3b82f6', minWidth: '28px' }}>知识</span>
+                <div style={{ flex: 1, height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
+                  <div style={{ width: `${(selectedCell.knowledgeRate || 0) * 100}%`, height: '100%', background: '#3b82f6', borderRadius: '2px' }} />
+                </div>
+                <span style={{ fontSize: '9px', color: '#3b82f6' }}>{((selectedCell.knowledgeRate || 0) * 100).toFixed(0)}%</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ fontSize: '9px', color: '#f59e0b', minWidth: '28px' }}>因果</span>
+                <div style={{ flex: 1, height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
+                  <div style={{ width: `${(selectedCell.causalRate || 0) * 100}%`, height: '100%', background: '#f59e0b', borderRadius: '2px' }} />
+                </div>
+                <span style={{ fontSize: '9px', color: '#f59e0b' }}>{((selectedCell.causalRate || 0) * 100).toFixed(0)}%</span>
+              </div>
+            </div>
+
+            {/* Goal & Principle */}
+            {selectedCell.goal && (
+              <div style={{ marginBottom: '8px', padding: '8px 10px', background: 'rgba(0,210,255,0.05)', borderRadius: '6px', borderLeft: '2px solid #00d2ff' }}>
+                <div style={{ fontSize: '9px', fontWeight: 'bold', color: '#00d2ff', marginBottom: '2px' }}>目标 GOAL</div>
+                <div style={{ fontSize: '11px', color: '#ccc', lineHeight: '1.5' }}>{selectedCell.goal}</div>
+              </div>
+            )}
+            {selectedCell.principle && (
+              <div style={{ marginBottom: '8px', padding: '8px 10px', background: 'rgba(168,85,247,0.05)', borderRadius: '6px', borderLeft: '2px solid #a855f7' }}>
+                <div style={{ fontSize: '9px', fontWeight: 'bold', color: '#a855f7', marginBottom: '2px' }}>原理 PRINCIPLE</div>
+                <div style={{ fontSize: '11px', color: '#ccc', lineHeight: '1.5' }}>{selectedCell.principle}</div>
+              </div>
+            )}
+
+            {/* Key Data */}
+            {selectedCell.keyData && selectedCell.keyData.length > 0 && (
+              <div style={{ marginBottom: '8px' }}>
+                <div style={{ fontSize: '9px', fontWeight: 'bold', color: '#888', marginBottom: '4px', letterSpacing: '0.5px' }}>关键数据 KEY DATA</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                  {selectedCell.keyData.map((d, i) => (
+                    <span key={i} style={{ fontSize: '10px', color: '#ccc', background: 'rgba(0,210,255,0.06)', padding: '3px 8px', borderRadius: '4px' }}>{d}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Evidence */}
+            {selectedCell.evidence && (
+              <div>
+                <div style={{ fontSize: '9px', fontWeight: 'bold', color: '#888', marginBottom: '4px', letterSpacing: '0.5px' }}>证据 EVIDENCE</div>
+                <div style={{ fontSize: '11px', color: '#00d2ff', lineHeight: '1.5', padding: '8px', background: 'rgba(0,210,255,0.04)', borderRadius: '6px' }}>
+                  {selectedCell.evidence}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Legend */}
+        <div style={{
+          position: 'absolute', bottom: '10px', left: '20px',
+          display: 'flex', gap: '12px', fontSize: '10px', color: '#888',
+        }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981' }} /> 已填充
+          </span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#f59e0b' }} /> 部分填充
+          </span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#6b7280' }} /> 未填充
+          </span>
+          <span style={{ color: '#666' }}>点击类别展开 · 点击格子查看详情</span>
+        </div>
+      </div>
+    );
+  };
+
+
+
 
   return (
     <div style={{
@@ -178,9 +516,11 @@ export const LanguageAnalysisTab = () => {
           margin: 0,
           lineHeight: '1.6',
         }}>
-          深入分析语言的数学结构特性、以及背后的编码机制
+          深入分析语言的数学结构特性与编码机制 — 逆向工程深度神经网络
           <br />
-          In-depth analysis of the mathematical structure characteristics of language, current research progress, and puzzle accumulation
+          <span style={{ fontSize: '13px', color: '#666' }}>
+            Reverse-engineering the encoding mechanisms of language in deep neural networks
+          </span>
         </p>
       </div>
 
@@ -288,6 +628,28 @@ export const LanguageAnalysisTab = () => {
                   </span>
                 </div>
               </div>
+
+              <div>
+                <div style={{
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                  color: '#00d2ff',
+                  marginBottom: '6px',
+                }}>
+                  向量算术 Vector Arithmetic
+                </div>
+                <div style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.5' }}>
+                  经典案例: 国王 - 男性 + 女性 = 女王
+                  <br />
+                  编码推测: 参数空间中语义概念形成几何结构，关系编码为方向和距离
+                  <br />
+                  理论含义: 词嵌入中存在完整数学结构，概念关系可精确表达
+                  <br />
+                  <span style={{ fontSize: '12px', color: '#888' }}>
+                    King - Man + Woman = Queen; Semantic concepts form geometric structures, relationships encoded as directions and distances
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -380,6 +742,32 @@ export const LanguageAnalysisTab = () => {
                   </li>
                 </ul>
               </div>
+
+              <div>
+                <div style={{
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                  color: '#f59e0b',
+                  marginBottom: '6px',
+                }}>
+                  全局唯一性 Global Uniqueness
+                </div>
+                <div style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.5' }}>
+                  现象观察: 所有神经元参与运算，但每次都生成合适的词
+                  <br />
+                  唯一性假说: 语言中某种东西具有<strong style={{ color: '#00d2ff' }}>全局唯一性</strong>
+                  <br />
+                  数学特性: 这种唯一性应具有数学性质，而非偶然现象
+                  <br />
+                  编码推测: 可能存在全局吸引子或稳定编码流形
+                  <br />
+                  研究方向: 分析生成过程中的激活路径和收敛点
+                  <br />
+                  <span style={{ fontSize: '12px', color: '#888' }}>
+                    All neurons compute yet produce suitable words; Uniqueness hypothesis, global attractor, activation path analysis
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -465,11 +853,35 @@ export const LanguageAnalysisTab = () => {
                   </span>
                 </div>
               </div>
+
+              <div>
+                <div style={{
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                  color: '#10b981',
+                  marginBottom: '6px',
+                }}>
+                  脉冲效率原理 Spiking Efficiency Principle
+                </div>
+                <div style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.5' }}>
+                  最小传送量原理: 大脑脉冲天然遵循最小传送量，能量效率优先
+                  <br />
+                  编码原理: 如果网格结构效率高，叠加路径即编码原理
+                  <br />
+                  核心结论: 同时实现及时学习和全局稳态
+                  <br />
+                  研究重点: 脉冲神经网络的3D空间拓扑网络结构
+                  <br />
+                  <span style={{ fontSize: '12px', color: '#888' }}>
+                    Minimal transmission principle; grid structure efficiency; real-time learning + global steady state
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* 核心目标 */}
+        {/* 核心目标与统一假说 */}
         <div style={{
           marginTop: '20px',
           padding: '16px',
@@ -487,12 +899,13 @@ export const LanguageAnalysisTab = () => {
             gap: '8px',
           }}>
             <Sparkles size={18} />
-            核心目标 Core Objective
+            核心目标与统一假说 Core Objective & Unified Hypothesis
           </div>
           <div style={{
             fontSize: '14px',
             color: '#fff',
             lineHeight: '1.7',
+            marginBottom: '10px',
           }}>
             分析以上特性背后的统一<strong style={{ color: '#00d2ff' }}>编码机制</strong>，研究其在<strong style={{ color: '#00d2ff' }}>神经元</strong>和<strong style={{ color: '#00d2ff' }}>参数级别</strong>是如何形成的。
             <br />
@@ -500,402 +913,23 @@ export const LanguageAnalysisTab = () => {
               Analyze the unified encoding mechanism behind these characteristics and understand how it is formed at the neuron and parameter level.
             </span>
           </div>
-        </div>
-      </div>
-
-      {/* Other Critical Features */}
-      <div style={{
-        background: 'rgba(50, 0, 100, 0.2)',
-        borderRadius: '16px',
-        padding: '24px',
-        border: '1px solid rgba(147, 51, 234, 0.2)',
-        marginBottom: '40px',
-      }}>
-        <h2 style={{
-          fontSize: '20px',
-          fontWeight: 'bold',
-          color: '#a855f7',
-          marginBottom: '20px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-        }}>
-          <Sparkles size={24} />
-          其他关键特性 Other Critical Features
-        </h2>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
-          {/* Word Embedding Arithmetic */}
-          <div style={{
-            background: 'rgba(0,0,0,0.3)',
-            borderRadius: '12px',
-            padding: '20px',
-            border: '1px solid rgba(147, 51, 234, 0.1)',
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              marginBottom: '16px',
-            }}>
-              <Target size={20} color="#a855f7" />
-              <h3 style={{
-                fontSize: '16px',
-                fontWeight: 'bold',
-                color: '#fff',
-                margin: 0,
-              }}>
-                词嵌入算术
-                <br />
-                <span style={{ fontSize: '13px', fontWeight: 'normal', color: '#888' }}>
-                  Word Embedding Arithmetic
-                </span>
-              </h3>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{
-                padding: '12px',
-                background: 'rgba(168, 85, 247, 0.1)',
-                borderRadius: '8px',
-                borderLeft: '3px solid #a855f7',
-              }}>
-                <div style={{
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  color: '#a855f7',
-                  marginBottom: '6px',
-                }}>
-                  经典案例 Classic Example
-                </div>
-                <div style={{ fontSize: '14px', color: '#fff', fontFamily: 'monospace' }}>
-                  国王 - 男性 + 女性 = 女王
-                  <br />
-                  <span style={{ fontSize: '12px', color: '#888' }}>
-                    King - Man + Woman = Queen
-                  </span>
-                </div>
-              </div>
-
-              <div>
-                <div style={{
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  color: '#a855f7',
-                  marginBottom: '6px',
-                }}>
-                  理论含义 Theoretical Implication
-                </div>
-                <div style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.5' }}>
-                  词嵌入中存在完整的数学结构，概念关系可以通过向量运算精确表达
-                  <br />
-                  <span style={{ fontSize: '12px', color: '#888' }}>
-                    Word embeddings contain complete mathematical structures where conceptual relationships can be precisely expressed through vector operations
-                  </span>
-                </div>
-              </div>
-
-              <div>
-                <div style={{
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  color: '#f59e0b',
-                  marginBottom: '6px',
-                }}>
-                  编码推测 Encoding Hypothesis
-                </div>
-                <div style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.5' }}>
-                  参数空间中语义概念形成几何结构，关系编码为方向和距离
-                  <br />
-                  <span style={{ fontSize: '12px', color: '#888' }}>
-                    Semantic concepts form geometric structures in parameter space, with relationships encoded as directions and distances
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Neural Efficiency Principle */}
-          <div style={{
-            background: 'rgba(0,0,0,0.3)',
-            borderRadius: '12px',
-            padding: '20px',
-            border: '1px solid rgba(147, 51, 234, 0.1)',
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              marginBottom: '16px',
-            }}>
-              <Zap size={20} color="#a855f7" />
-              <h3 style={{
-                fontSize: '16px',
-                fontWeight: 'bold',
-                color: '#fff',
-                margin: 0,
-              }}>
-                脉冲神经网络原理
-                <br />
-                <span style={{ fontSize: '13px', fontWeight: 'normal', color: '#888' }}>
-                  Spiking Neural Network Principle
-                </span>
-              </h3>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div>
-                <div style={{
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  color: '#a855f7',
-                  marginBottom: '6px',
-                }}>
-                  最小传送量原理 Principle of Minimal Information
-                </div>
-                <div style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.5' }}>
-                  大脑中的脉冲天然遵循最小传送量原理，能量效率优先
-                  <br />
-                  <span style={{ fontSize: '12px', color: '#888' }}>
-                    Spikes in the brain naturally follow the principle of minimal information transmission, prioritizing energy efficiency
-                  </span>
-                </div>
-              </div>
-
-              <div>
-                <div style={{
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  color: '#a855f7',
-                  marginBottom: '6px',
-                }}>
-                  编码原理 Encoding Principle
-                </div>
-                <div style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.5' }}>
-                  如果网格结构效率高，叠加路径即编码原理
-                  <br />
-                  <span style={{ fontSize: '12px', color: '#888' }}>
-                    If the grid structure is efficient, superposition of paths becomes the encoding principle
-                  </span>
-                </div>
-              </div>
-
-              <div style={{
-                padding: '12px',
-                background: 'rgba(168, 85, 247, 0.1)',
-                borderRadius: '8px',
-                borderLeft: '3px solid #a855f7',
-              }}>
-                <div style={{
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  color: '#f59e0b',
-                  marginBottom: '6px',
-                }}>
-                  核心结论 Core Conclusion
-                </div>
-                <div style={{ fontSize: '13px', color: '#fff', lineHeight: '1.5' }}>
-                  同时实现及时学习和全局稳态
-                  <br />
-                  <span style={{ fontSize: '12px', color: '#888' }}>
-                    Achieve real-time learning AND global steady state simultaneously
-                  </span>
-                </div>
-              </div>
-
-              <div>
-                <div style={{
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  color: '#f59e0b',
-                  marginBottom: '6px',
-                }}>
-                  研究重点 Research Focus
-                </div>
-                <div style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.5' }}>
-                  脉冲神经网络的3D空间拓扑网络结构
-                  <br />
-                  <span style={{ fontSize: '12px', color: '#888' }}>
-                    3D spatial topological network structure of spiking neural networks
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Global Uniqueness */}
-          <div style={{
-            background: 'rgba(0,0,0,0.3)',
-            borderRadius: '12px',
-            padding: '20px',
-            border: '1px solid rgba(147, 51, 234, 0.1)',
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              marginBottom: '16px',
-            }}>
-              <Layers size={20} color="#a855f7" />
-              <h3 style={{
-                fontSize: '16px',
-                fontWeight: 'bold',
-                color: '#fff',
-                margin: 0,
-              }}>
-                全局唯一性
-                <br />
-                <span style={{ fontSize: '13px', fontWeight: 'normal', color: '#888' }}>
-                  Global Uniqueness
-                </span>
-              </h3>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div>
-                <div style={{
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  color: '#a855f7',
-                  marginBottom: '6px',
-                }}>
-                  现象观察 Observation
-                </div>
-                <div style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.5' }}>
-                  深度神经网络中，所有神经元都参与运算，但在不同风格、不同逻辑、不同语法下，每次都能生成一个合适的词
-                  <br />
-                  <span style={{ fontSize: '12px', color: '#888' }}>
-                    In deep neural networks, all neurons participate in computation, but under different styles, logic, and syntax, a suitable word is generated each time
-                  </span>
-                </div>
-              </div>
-
-              <div style={{
-                padding: '12px',
-                background: 'rgba(168, 85, 247, 0.1)',
-                borderRadius: '8px',
-                borderLeft: '3px solid #a855f7',
-              }}>
-                <div style={{
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  color: '#f59e0b',
-                  marginBottom: '6px',
-                }}>
-                  唯一性假说 Uniqueness Hypothesis
-                </div>
-                <div style={{ fontSize: '14px', color: '#fff', lineHeight: '1.5' }}>
-                  语言中某种东西具有<strong style={{ color: '#a855f7' }}>全局唯一性</strong>
-                  <br />
-                  <span style={{ fontSize: '12px', color: '#888' }}>
-                    Something in language has global uniqueness
-                  </span>
-                </div>
-              </div>
-
-              <div>
-                <div style={{
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  color: '#a855f7',
-                  marginBottom: '6px',
-                }}>
-                  数学特性 Mathematical Property
-                </div>
-                <div style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.5' }}>
-                  这种唯一性应该具有数学特性，而非偶然现象
-                  <br />
-                  <span style={{ fontSize: '12px', color: '#888' }}>
-                    This uniqueness should have mathematical properties, not just random phenomena
-                  </span>
-                </div>
-              </div>
-
-              <div>
-                <div style={{
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  color: '#f59e0b',
-                  marginBottom: '6px',
-                }}>
-                  编码推测 Encoding Hypothesis
-                </div>
-                <div style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.5' }}>
-                  可能存在全局吸引子或稳定的编码流形
-                  <br />
-                  <span style={{ fontSize: '12px', color: '#888' }}>
-                    May exist global attractors or stable encoding manifolds
-                  </span>
-                </div>
-              </div>
-
-              <div>
-                <div style={{
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  color: '#10b981',
-                  marginBottom: '6px',
-                }}>
-                  研究方向 Research Direction
-                </div>
-                <div style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.5' }}>
-                  分析生成过程中的激活路径和收敛点
-                  <br />
-                  <span style={{ fontSize: '12px', color: '#888' }}>
-                    Analyze activation paths and convergence points during generation
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Unified Mechanism Summary */}
-        <div style={{
-          marginTop: '20px',
-          padding: '16px',
-          background: 'rgba(168, 85, 247, 0.15)',
-          borderRadius: '10px',
-          border: '1px solid rgba(168, 85, 247, 0.3)',
-        }}>
-          <div style={{
-            fontSize: '14px',
-            fontWeight: 'bold',
-            color: '#a855f7',
-            marginBottom: '8px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-          }}>
-            <Brain size={18} />
-            统一机制假说 Unified Mechanism Hypothesis
-          </div>
           <div style={{
             fontSize: '14px',
             color: '#fff',
             lineHeight: '1.7',
-            marginBottom: '12px',
+            padding: '10px 12px',
+            background: 'rgba(0, 210, 255, 0.08)',
+            borderRadius: '8px',
+            borderLeft: '3px solid #00d2ff',
           }}>
-            知识网络、逻辑体系、多维度、词嵌入算术、脉冲编码、全局唯一性等所有特性，都是同一套<strong style={{ color: '#a855f7' }}>编码机制</strong>的结果。
+            <strong style={{ color: '#00d2ff' }}>统一假说:</strong> 知识网络、逻辑体系、多维度、向量算术、脉冲编码、全局唯一性等所有特性，都是同一套<strong style={{ color: '#00d2ff' }}>编码机制</strong>的结果。这套机制在神经元和参数级别形成，核心目标是分析其数学结构。
             <br />
             <span style={{ fontSize: '13px', color: '#888' }}>
-              Knowledge network, logical system, multi-dimensions, word embedding arithmetic, spiking encoding, and global uniqueness are all results of the same encoding mechanism.
-            </span>
-          </div>
-          <div style={{
-            fontSize: '14px',
-            color: '#fff',
-            lineHeight: '1.7',
-          }}>
-            这套机制在<strong style={{ color: '#a855f7' }}>神经元</strong>和<strong style={{ color: '#a855f7' }}>参数级别</strong>形成，核心目标是分析其数学结构。
-            <br />
-            <span style={{ fontSize: '13px', color: '#888' }}>
-              This mechanism is formed at the neuron and parameter level, with the core goal of analyzing its mathematical structure.
+              Unified Hypothesis: Knowledge network, logical system, multi-dimensions, vector arithmetic, spiking encoding, and global uniqueness are all results of the same encoding mechanism, formed at neuron and parameter level.
             </span>
           </div>
         </div>
       </div>
-
 
       {/* SECTION 2: 分析拼图 */}
       <div style={{
@@ -916,8 +950,34 @@ export const LanguageAnalysisTab = () => {
         }}>
           <Puzzle size={22} color="#00d2ff" />
           分析拼图 Analysis Puzzles
+          {/* View mode toggle */}
+          <div style={{ marginLeft: 'auto', display: 'flex', gap: '4px', background: 'rgba(0,0,0,0.3)', borderRadius: '8px', padding: '3px' }}>
+            <button
+              onClick={() => setViewMode('puzzle')}
+              style={{
+                padding: '5px 14px', fontSize: '12px', fontWeight: 'bold', border: 'none', borderRadius: '6px',
+                cursor: 'pointer', transition: 'all 0.2s',
+                background: viewMode === 'puzzle' ? 'rgba(0,210,255,0.2)' : 'transparent',
+                color: viewMode === 'puzzle' ? '#00d2ff' : '#666',
+              }}
+            >
+              拼图 Puzzle
+            </button>
+            <button
+              onClick={() => setViewMode('mindmap')}
+              style={{
+                padding: '5px 14px', fontSize: '12px', fontWeight: 'bold', border: 'none', borderRadius: '6px',
+                cursor: 'pointer', transition: 'all 0.2s',
+                background: viewMode === 'mindmap' ? 'rgba(0,210,255,0.2)' : 'transparent',
+                color: viewMode === 'mindmap' ? '#00d2ff' : '#666',
+              }}
+            >
+              脑图 Mind Map
+            </button>
+          </div>
         </h2>
 
+        {viewMode === 'puzzle' && (<>
         {/* 总览进度条 */}
         {puzzleData && (
           <div style={{
@@ -1291,16 +1351,69 @@ export const LanguageAnalysisTab = () => {
                               }}>
                                 Evidence 证据
                               </div>
-                              <div style={{
-                                fontSize: '13px',
-                                color: '#00d2ff',
-                                lineHeight: '1.6',
-                                padding: '12px',
-                                background: 'rgba(0,210,255,0.05)',
-                                borderRadius: '8px',
-                              }}>
-                                {puzzle.conclusions}
-                              </div>
+                              {/* 结构化证据引用 */}
+                              {puzzle.evidenceRefs && puzzle.evidenceRefs.length > 0 ? (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                  {puzzle.evidenceRefs.map((ref, idx) => (
+                                    <div key={idx} style={{
+                                      padding: '10px 12px',
+                                      background: 'rgba(0,210,255,0.05)',
+                                      borderRadius: '8px',
+                                      borderLeft: '3px solid #00d2ff',
+                                    }}>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                                        <span style={{
+                                          fontSize: '11px',
+                                          fontWeight: 'bold',
+                                          color: '#00d2ff',
+                                          fontFamily: 'monospace',
+                                          background: 'rgba(0,210,255,0.15)',
+                                          padding: '2px 6px',
+                                          borderRadius: '3px',
+                                        }}>
+                                          {ref.refId}
+                                        </span>
+                                        <span style={{ fontSize: '12px', color: '#ccc' }}>
+                                          {ref.summary}
+                                        </span>
+                                      </div>
+                                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                        {ref.stage && (
+                                          <span style={{ fontSize: '10px', color: '#f59e0b', background: 'rgba(245,158,11,0.1)', padding: '2px 6px', borderRadius: '3px', fontFamily: 'monospace' }}>
+                                            {ref.stage}
+                                          </span>
+                                        )}
+                                        {ref.testScript && (
+                                          <span style={{ fontSize: '10px', color: '#10b981', background: 'rgba(16,185,129,0.1)', padding: '2px 6px', borderRadius: '3px', fontFamily: 'monospace' }}>
+                                            📜 {ref.testScript}
+                                          </span>
+                                        )}
+                                        {ref.dataOutput && (
+                                          <span style={{ fontSize: '10px', color: '#6366f1', background: 'rgba(99,102,241,0.1)', padding: '2px 6px', borderRadius: '3px', fontFamily: 'monospace' }}>
+                                            📊 {ref.dataOutput}
+                                          </span>
+                                        )}
+                                        {ref.memoRef && (
+                                          <span style={{ fontSize: '10px', color: '#a855f7', background: 'rgba(168,85,247,0.1)', padding: '2px 6px', borderRadius: '3px', fontFamily: 'monospace' }}>
+                                            📝 {ref.memoRef}
+                                          </span>
+                                        )}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div style={{
+                                  fontSize: '13px',
+                                  color: '#00d2ff',
+                                  lineHeight: '1.6',
+                                  padding: '12px',
+                                  background: 'rgba(0,210,255,0.05)',
+                                  borderRadius: '8px',
+                                }}>
+                                  {puzzle.conclusions}
+                                </div>
+                              )}
                             </div>
                           </div>
                         )}
@@ -1314,6 +1427,20 @@ export const LanguageAnalysisTab = () => {
 
           {/* Right: Framework & Mainlines */}
           <div>
+            {/* A. 理论框架区 */}
+            <div style={{
+              padding: '10px 14px',
+              marginBottom: '16px',
+              background: 'rgba(0,210,255,0.06)',
+              borderRadius: '8px',
+              borderLeft: '3px solid #00d2ff',
+            }}>
+              <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#00d2ff' }}>
+                A. 理论框架 Theory Framework
+              </div>
+              <div style={{ fontSize: '11px', color: '#888' }}>框架 · 主线 · 定律 · 预测</div>
+            </div>
+
             {/* 四层理论框架 */}
             <h3 style={{
               fontSize: '16px',
@@ -1524,6 +1651,20 @@ export const LanguageAnalysisTab = () => {
                 )}
               </div>
             ))}
+
+            {/* B. 问题与验证区 */}
+            <div style={{
+              padding: '10px 14px',
+              margin: '24px 0 16px',
+              background: 'rgba(239,68,68,0.06)',
+              borderRadius: '8px',
+              borderLeft: '3px solid #ef4444',
+            }}>
+              <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#ef4444' }}>
+                B. 问题与验证 Issues & Verification
+              </div>
+              <div style={{ fontSize: '11px', color: '#888' }}>硬伤 · 悖论 · 跨模型 · 训练动态</div>
+            </div>
 
             {/* 10大硬伤 */}
             <h3 style={{
@@ -1753,7 +1894,7 @@ export const LanguageAnalysisTab = () => {
               </div>
             ))}
 
-            {/* 证据等级说明 */}
+            {/* 已推翻假说 */}
             <h3 style={{
               fontSize: '16px',
               fontWeight: 'bold',
@@ -1763,47 +1904,288 @@ export const LanguageAnalysisTab = () => {
               alignItems: 'center',
               gap: '10px',
             }}>
-              <Microscope size={18} color="#6366f1" />
-              证据等级 Evidence Levels
+              <Flame size={18} color="#ef4444" />
+              已推翻假说 Refuted Hypotheses
             </h3>
 
-            {puzzleData && puzzleData.evidenceLevel && Object.entries(puzzleData.evidenceLevel).map(([key, level]) => (
-              <div key={key} style={{
-                display: 'flex', alignItems: 'center', gap: '8px',
-                padding: '4px 8px', marginBottom: '3px',
-                background: `${evidenceLevelColor[key] || '#6b7280'}10`,
-                borderRadius: '4px',
+            {puzzleData && puzzleData.refutedHypotheses && puzzleData.refutedHypotheses.map((ref) => (
+              <div key={ref.id} style={{
+                marginBottom: '8px', padding: '8px 10px',
+                background: 'rgba(239,68,68,0.06)',
+                borderRadius: '6px',
+                borderLeft: `3px solid ${ref.severity >= 5 ? '#ef4444' : ref.severity >= 4 ? '#f59e0b' : '#6b7280'}`,
               }}>
-                <span style={{ fontSize: '10px', fontFamily: 'monospace', color: evidenceLevelColor[key] || '#6b7280', fontWeight: 'bold', minWidth: '20px' }}>{key}</span>
-                <span style={{ fontSize: '11px', color: '#ccc', flex: 1 }}>{level.label}</span>
-                <span style={{ fontSize: '9px', color: '#888' }}>{'★'.repeat(level.strength)}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#fff' }}>
+                    <span style={{ fontSize: '10px', fontFamily: 'monospace', color: '#ef4444', background: 'rgba(239,68,68,0.15)', padding: '1px 5px', borderRadius: '3px', marginRight: '6px' }}>
+                      {ref.id}
+                    </span>
+                    {ref.hypothesis}
+                  </span>
+                  <span style={{ fontSize: '10px', color: ref.severity >= 5 ? '#ef4444' : '#f59e0b' }}>
+                    {'★'.repeat(ref.severity)}
+                  </span>
+                </div>
+                <div style={{ fontSize: '11px', color: '#ccc', marginBottom: '2px' }}>
+                  <span style={{ color: '#ef4444', fontWeight: 'bold' }}>推翻:</span> {ref.refutedBy}
+                </div>
+                <div style={{ fontSize: '10px', color: '#f59e0b' }}>
+                  <span style={{ fontWeight: 'bold' }}>含义:</span> {ref.implication}
+                </div>
               </div>
             ))}
-            <div style={{
-              marginTop: '20px',
-              padding: '16px',
-              background: 'rgba(0,210,255,0.05)',
-              borderRadius: '10px',
-              border: '1px solid rgba(0,210,255,0.2)',
+
+            {/* 已验证事实 */}
+            <h3 style={{
+              fontSize: '16px',
+              fontWeight: 'bold',
+              color: '#fff',
+              margin: '24px 0 16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
             }}>
-              <div style={{
-                fontSize: '12px',
-                fontWeight: 'bold',
-                color: '#00d2ff',
-                marginBottom: '8px',
-              }}>
-                核心理念 Core Philosophy
+              <Sigma size={18} color="#10b981" />
+              已验证事实 Verified Facts
+            </h3>
+
+            {puzzleData && puzzleData.verifiedFacts && [
+              { key: 'encoding', label: '编码层 Encoding', color: '#3b82f6' },
+              { key: 'causal', label: '因果层 Causal', color: '#f59e0b' },
+              { key: 'hierarchy', label: '层级层 Hierarchy', color: '#10b981' },
+            ].map(group => (
+              <div key={group.key} style={{ marginBottom: '12px' }}>
+                <div style={{ fontSize: '11px', fontWeight: 'bold', color: group.color, marginBottom: '6px', paddingLeft: '4px' }}>
+                  {group.label}
+                </div>
+                {puzzleData.verifiedFacts[group.key].map((fact) => (
+                  <div key={fact.id} style={{
+                    display: 'flex', alignItems: 'center', gap: '6px',
+                    padding: '4px 8px', marginBottom: '3px',
+                    background: `${group.color}08`, borderRadius: '4px',
+                  }}>
+                    <span style={{ fontSize: '9px', fontFamily: 'monospace', color: group.color, background: `${group.color}15`, padding: '1px 5px', borderRadius: '3px', minWidth: '40px' }}>
+                      {fact.id}
+                    </span>
+                    <span style={{ fontSize: '11px', color: '#fff', fontWeight: 'bold', minWidth: '120px' }}>
+                      {fact.fact}
+                    </span>
+                    <span style={{ fontSize: '10px', color: '#ccc', flex: 1 }}>
+                      {fact.detail}
+                    </span>
+                    <span style={{ fontSize: '9px', background: `${evidenceLevelColor[fact.confidence] || '#6b7280'}20`, color: evidenceLevelColor[fact.confidence] || '#6b7280', padding: '1px 4px', borderRadius: '3px', fontFamily: 'monospace' }}>
+                      {fact.confidence}
+                    </span>
+                  </div>
+                ))}
               </div>
-              <div style={{
-                fontSize: '12px',
-                color: '#ccc',
-                lineHeight: '1.6',
-              }}>
-                智能的数学理论很可能超过现有数学体系，前期不要预设任何理论，重点在于持续的积累基础数据的拼图，等待最后的突破
-                <br />
-                <br />
-                The mathematical theory of intelligence likely exceeds existing mathematical systems. Do not presuppose any theory in early stages; focus on continuously accumulating basic data puzzles and wait for the final breakthrough.
+            ))}
+
+          </div>
+        </div>
+        </>)}
+
+        {viewMode === 'mindmap' && renderMindMap()}
+      </div>
+
+      {/* SECTION 3: 研究突破路线 Breakthrough Roadmap */}
+      <div style={{
+        background: 'rgba(20, 20, 30, 0.6)',
+        borderRadius: '16px',
+        padding: '24px',
+        border: '1px solid rgba(255,255,255,0.08)',
+        marginBottom: '40px',
+      }}>
+        <h2 style={{
+          fontSize: '20px',
+          fontWeight: 'bold',
+          color: '#fff',
+          marginBottom: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+        }}>
+          <Trophy size={22} color="#f59e0b" />
+          研究突破路线 Breakthrough Roadmap
+        </h2>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+          {breakthroughPreparation.map((prep) => (
+            <div
+              key={prep.id}
+              style={{
+                background: 'rgba(0,0,0,0.3)',
+                borderRadius: '12px',
+                border: '1px solid rgba(255,255,255,0.06)',
+                overflow: 'hidden',
+              }}
+            >
+              <div
+                onClick={() => togglePreparation(`prep_${prep.id}`)}
+                style={{
+                  padding: '16px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  transition: 'background 0.2s',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
+                  <div style={{ color: prep.priority === 'high' ? '#ef4444' : prep.priority === 'medium' ? '#f59e0b' : '#10b981' }}>
+                    {prep.icon}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#fff', marginBottom: '4px' }}>
+                      {prep.title}
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#666' }}>
+                      {prep.description}
+                    </div>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span style={{
+                    fontSize: '11px',
+                    fontWeight: 'bold',
+                    padding: '2px 8px',
+                    borderRadius: '4px',
+                    background: prep.priority === 'high' ? 'rgba(239,68,68,0.2)' : prep.priority === 'medium' ? 'rgba(245,158,11,0.2)' : 'rgba(16,185,129,0.2)',
+                    color: prep.priority === 'high' ? '#ef4444' : prep.priority === 'medium' ? '#f59e0b' : '#10b981',
+                  }}>
+                    {prep.priority === 'high' ? '高优先' : prep.priority === 'medium' ? '中优先' : '低优先'}
+                  </span>
+                  <span style={{ fontSize: '11px', color: '#888', fontFamily: 'monospace' }}>
+                    {prep.timeline}
+                  </span>
+                  {expandedPreparation === `prep_${prep.id}` ? <ChevronUp size={16} color="#f59e0b" /> : <ChevronDown size={16} color="#666" />}
+                </div>
               </div>
+
+              {expandedPreparation === `prep_${prep.id}` && (
+                <div style={{
+                  padding: '16px',
+                  borderTop: '1px solid rgba(255,255,255,0.06)',
+                  background: 'rgba(0,0,0,0.2)',
+                }}>
+                  <div style={{ marginBottom: '12px' }}>
+                    <div style={{
+                      fontSize: '11px',
+                      fontWeight: 'bold',
+                      color: '#888',
+                      textTransform: 'uppercase',
+                      marginBottom: '8px',
+                      letterSpacing: '1px',
+                    }}>
+                      Tasks 关键任务
+                    </div>
+                    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                      {prep.tasks.map((task, idx) => (
+                        <li key={idx} style={{
+                          fontSize: '13px',
+                          color: '#ccc',
+                          marginBottom: '6px',
+                          paddingLeft: '16px',
+                          position: 'relative',
+                        }}>
+                          <span style={{
+                            position: 'absolute',
+                            left: 0,
+                            top: '6px',
+                            width: '6px',
+                            height: '6px',
+                            borderRadius: '50%',
+                            background: '#f59e0b',
+                          }} />
+                          {task}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div style={{
+                    fontSize: '11px',
+                    color: '#888',
+                    padding: '8px 10px',
+                    background: 'rgba(0,0,0,0.3)',
+                    borderRadius: '6px',
+                  }}>
+                    <span style={{ color: '#f59e0b', fontWeight: 'bold' }}>前置依赖:</span> {prep.dependencies.join(', ')}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* SECTION 4: 参考信息 Reference */}
+      <div style={{
+        background: 'rgba(20, 20, 30, 0.4)',
+        borderRadius: '16px',
+        padding: '24px',
+        border: '1px solid rgba(255,255,255,0.05)',
+      }}>
+        <h2 style={{
+          fontSize: '16px',
+          fontWeight: 'bold',
+          color: '#888',
+          marginBottom: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+        }}>
+          <Microscope size={18} color="#6366f1" />
+          参考信息 Reference
+        </h2>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+          {/* 证据等级说明 */}
+          {puzzleData && puzzleData.evidenceLevel && (
+            <div>
+              <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#6366f1', marginBottom: '10px' }}>
+                证据等级 Evidence Levels
+              </div>
+              {Object.entries(puzzleData.evidenceLevel).map(([key, level]) => (
+                <div key={key} style={{
+                  display: 'flex', alignItems: 'center', gap: '8px',
+                  padding: '4px 8px', marginBottom: '3px',
+                  background: `${evidenceLevelColor[key] || '#6b7280'}10`,
+                  borderRadius: '4px',
+                }}>
+                  <span style={{ fontSize: '10px', fontFamily: 'monospace', color: evidenceLevelColor[key] || '#6b7280', fontWeight: 'bold', minWidth: '20px' }}>{key}</span>
+                  <span style={{ fontSize: '11px', color: '#ccc', flex: 1 }}>{level.label}</span>
+                  <span style={{ fontSize: '9px', color: '#888' }}>{'★'.repeat(level.strength)}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* 核心理念 */}
+          <div style={{
+            padding: '16px',
+            background: 'rgba(0,210,255,0.04)',
+            borderRadius: '10px',
+            border: '1px solid rgba(0,210,255,0.15)',
+          }}>
+            <div style={{
+              fontSize: '12px',
+              fontWeight: 'bold',
+              color: '#00d2ff',
+              marginBottom: '8px',
+            }}>
+              核心理念 Core Philosophy
+            </div>
+            <div style={{
+              fontSize: '12px',
+              color: '#999',
+              lineHeight: '1.6',
+            }}>
+              智能的数学理论很可能超过现有数学体系，前期不要预设任何理论，重点在于持续的积累基础数据的拼图，等待最后的突破
+              <br />
+              <br />
+              The mathematical theory of intelligence likely exceeds existing mathematical systems. Do not presuppose any theory in early stages; focus on continuously accumulating basic data puzzles and wait for the final breakthrough.
             </div>
           </div>
         </div>
